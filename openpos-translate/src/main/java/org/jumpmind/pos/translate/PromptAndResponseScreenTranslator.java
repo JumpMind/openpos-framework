@@ -6,6 +6,7 @@ import java.util.Properties;
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.screen.MenuItem;
 import org.jumpmind.pos.core.screen.PromptScreen;
+import org.jumpmind.pos.core.screen.PromptWithOptionsScreen;
 import org.jumpmind.pos.core.template.SellTemplate;
 
 public class PromptAndResponseScreenTranslator<T extends PromptScreen> extends AbstractPromptScreenTranslator<T> {
@@ -50,7 +51,10 @@ public class PromptAndResponseScreenTranslator<T extends PromptScreen> extends A
             List<MenuItem> localNavButtons = generateUIActionsForLocalNavButtons(MenuItem.class, true);
             screen.setLocalMenuItems(localNavButtons);
         }
-        getScreen().setActionButton(new MenuItem("Next", "Next", "keyboard_arrow_right"));
+        if(! (getScreen() instanceof PromptWithOptionsScreen))
+        {
+        	getScreen().setActionButton(new MenuItem("Next", "Next", "keyboard_arrow_right"));
+        }
 
     }
 
