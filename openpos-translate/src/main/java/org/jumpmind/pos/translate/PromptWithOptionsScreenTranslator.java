@@ -27,6 +27,7 @@ public class PromptWithOptionsScreenTranslator extends AbstractPromptScreenTrans
         this.buildOptions();
         this.configureScreenResponseField();
         getScreen().setPrompt(getScreen().getText());
+        getScreen().setActionButton(null);
     }
 
     protected void buildOptions() {
