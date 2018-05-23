@@ -1,0 +1,42 @@
+
+<div fxFlexFill fxLayout="column" style="padding:16px" fxLayoutAlign="start" fxLayoutGap="16px">
+    <mat-card fxFlex="1 1 auto" class="page-content-card lighter scrollable-content-card mat-elevation-z8" fxLayout="column" fxLayoutAlign="start">
+        <mat-card-content fxFlex="1 1 auto">
+            <mat-selection-list exclusiveSelect [(ngModel)]="selectedOptions">
+                <mat-list-option fxLayout="column" *ngFor="let customer of customers" style="height:100px; padding:3px;" [value]= "customer">
+                    <table class="table-style">
+                        <tr>
+                            <td class="table-item">{{customer.email}}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" style="padding-bottom:10px;"><b>{{customer.firstName}} {{customer.lastName}}</b></td>
+                        </tr>
+                        <!-- eventually should be driven by server side -->
+                        <!-- <tr>
+                            <td class="table-item text-xs"><b>Address:</b></td>
+                            <td class="table-item text-xs">{{customer.fullAddress}}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-item text-xs"><b>Email:</b></td>
+                            <td class="table-item text-xs">{{customer.email}}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-item text-xs"><b>Birthday:</b></td>
+                            <td class="table-item text-xs">{{customer.birthday}}</td>
+                        </tr>
+                        <tr>
+                            <td class="table-item text-xs"><b>LoyaltyID:</b></td>
+                            <td class="table-item text-xs">{{customer.loyaltyId}}</td>
+                        </tr> -->
+                    </table>
+                </mat-list-option>
+            </mat-selection-list>
+        </mat-card-content>
+        <mat-card-actions align=end fxFlex="0 0 auto">
+            <button mat-raised-button type="submit" color=primary (click)="onSubmitAction()" [disabled]="isSelectedOptionsEmpty()">
+                <span>Next</span>
+                <mat-icon class="material-icons">keyboard_arrow_right</mat-icon>
+            </button>
+        </mat-card-actions> 
+    </mat-card>
+</div>

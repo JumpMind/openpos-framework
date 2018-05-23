@@ -1,0 +1,16 @@
+<div class="selectable" *ngFor="let item of itemsToShow" style="margin:5px 0px;padding:15px;"
+[class.selected]="isItemSelected(item)"
+[class.mat-elevation-z0]="!isItemSelected(item)" 
+[class.mat-elevation-z15]="isItemSelected(item)"
+(click)="onItemClick(item)">
+    <ng-template ngFor let-item [ngForOf]="[item]" [ngForTemplate]="itemTemplate"></ng-template>
+</div>
+<div fxLayoutAlign="center center" *ngIf="numberOfPages > 1">
+    <button mat-icon-button color="primary" [disabled]="currentPage <= 1" (click)="onPrevPage()">
+        <mat-icon>arrow_back</mat-icon>
+    </button>
+    <span class="text-md">Page&nbsp;{{currentPage}}</span>
+    <button mat-icon-button color="primary" [disabled]="currentPage >= numberOfPages" (click)="onNextPage()">
+        <mat-icon>arrow_forward</mat-icon>
+    </button>
+</div>

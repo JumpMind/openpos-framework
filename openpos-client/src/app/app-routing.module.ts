@@ -1,10 +1,10 @@
-import { PosComponent } from 'openpos-core';
+import { DynamicScreenComponent } from 'openpos-core';
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
   { path: '', redirectTo: '/pos', pathMatch: 'full' },
-  { path: 'pos',  component: PosComponent }
+  { path: 'pos',  component: DynamicScreenComponent }
 ];
 
 @NgModule({

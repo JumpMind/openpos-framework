@@ -1,6 +1,7 @@
 import { IMenuItem } from './../common/imenuitem';
 import { IItem } from './../common/iitem';
-import { Component, ViewChild, DoCheck, OnInit, OnDestroy } from '@angular/core';
+import { Component, ViewChild, DoCheck, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
+import { MatInput } from '@angular/material';
 import { SessionService } from '../services/session.service';
 import { IScreen } from '../common/iscreen';
 import createNumberMask from 'text-mask-addons/dist/createNumberMask';
@@ -10,10 +11,11 @@ import { IFormElement } from '../common/iformfield';
     selector: 'app-tendering',
     templateUrl: './tendering.component.html'
   })
-  export class TenderingComponent implements DoCheck, IScreen, OnInit, OnDestroy {
+  export class TenderingComponent implements IScreen, AfterViewInit, OnDestroy{
 
-    private lastSequenceNum: number;
+    @ViewChild('tenderAmountField') tenderAmountField: MatInput;
 
+    screen: any;
     text: string;
     tenderItems: IItem[];
     tenderAmount: IFormElement;
@@ -31,31 +33,28 @@ import { IFormElement } from '../common/iformfield';
     constructor(public session: SessionService) {
     }
 
-    ngOnInit(): void {
-        this.text = this.session.screen.text;
-        this.tenderItems = this.session.screen.tenderItems;
-        this.tenderAmount = this.session.screen.tenderAmount;
-        this.balanceDue = this.session.screen.balanceDue;
-        this.itemActions = this.session.screen.itemActions;
-
-        this.session.screen.localMenuItems.forEach(element => {
-            this.session.registerActionPayload( element.action, () => this.tenderAmount.value );
-        });
-    }
-
-    ngDoCheck(): void {
-        // re-init the model if the screen is being redisplayed
-        if (this.session.screen.type === 'Tendering'
-            && this.session.screen.sequenceNumber !== this.lastSequenceNum) {
-            this.ngOnInit();
-            this.lastSequenceNum = this.session.screen.sequenceNumber;
-        }
+    ngAfterViewInit(): void {
+        setTimeout(() => this.tenderAmountField.focus(), 0); 
     }
 
     ngOnDestroy(): void {
         this.session.unregisterActionPayloads();
     }
 
-    show(session: SessionService) {
+    show(screen: any): void {
+        this.screen = screen;
+
+        this.text = this.screen.text;
+        this.tenderItems = this.screen.tenderItems;
+        this.tenderAmount = this.screen.tenderAmount;
+        this.balanceDue = this.screen.balanceDue;
+        this.itemActions = this.screen.itemActions;
+
+        if (this.screen.template.localMenuItems) {
+            this.screen.template.localMenuItems.forEach(element => {
+                this.session.registerActionPayload( element.action, () => this.tenderAmount.value );
+            });
+        }
     }
+
 }

@@ -2,16 +2,17 @@ import { IScreen } from '../common/iscreen';
 import { Component, AfterViewInit, DoCheck, HostListener } from '@angular/core';
 import { SessionService } from '../services/session.service';
 import 'signature_pad';
-import { AbstractApp } from '../common/abstract-app';
 
 @Component({
   selector: 'app-signature-capture',
-  templateUrl: './signature-capture.component.html'
+  templateUrl: './signature-capture.component.html',
+  styleUrls: ['./signature-capture.component.scss']
 })
 export class SignatureCaptureComponent implements AfterViewInit, DoCheck, IScreen {
 
   static readonly DEFAULT_MEDIA_TYPE = 'image/jpeg';
 
+  screen:any;
   protected initialized: Boolean = false;
   protected signaturePad: SignaturePad;
   protected canvas: HTMLCanvasElement = null;
@@ -20,7 +21,8 @@ export class SignatureCaptureComponent implements AfterViewInit, DoCheck, IScree
   constructor(public readonly session: SessionService) {
   }
 
-  show(session: SessionService, app: AbstractApp) {
+  show(screen: any) {
+    this.screen = screen;
   }
 
 
@@ -69,8 +71,8 @@ export class SignatureCaptureComponent implements AfterViewInit, DoCheck, IScree
       console.log('Signature is empty');
       return;
     }
-    const mediaType: string = this.session.screen.signatureMediaType ?
-        this.session.screen.signatureMediaType : SignatureCaptureComponent.DEFAULT_MEDIA_TYPE;
+    const mediaType: string = this.screen.signatureMediaType ?
+        this.screen.signatureMediaType : SignatureCaptureComponent.DEFAULT_MEDIA_TYPE;
 
     const dataUrl: string|null = this.signaturePad.toDataURL(mediaType);
     const dataPoints = this.signaturePad.toData();
@@ -86,7 +88,7 @@ export class SignatureCaptureComponent implements AfterViewInit, DoCheck, IScree
     };
 
     this.session.response = signatureData;
-    this.session.onAction('SaveSignature');
+    this.session.onAction(this.screen.saveAction.action);
   }
 }
 

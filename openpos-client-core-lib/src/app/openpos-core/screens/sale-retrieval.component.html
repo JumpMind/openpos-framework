@@ -3,7 +3,7 @@
 		<mat-card-content fxFlex="1 1 auto">
 			<div class="scrollable">
 				<mat-nav-list>
-					<mat-list-item *ngFor="let i of session.screen.transactions" class="sale-line-item" (click)="selected(i.transactionId)">
+					<mat-list-item *ngFor="let i of screen.transactions" class="sale-line-item" (click)="selected(i.transactionId)">
 						<div fxLayout="row" fxLayoutAlign="center center" style="width:100%;">
 							<div fxFlex="80">
 								<strong mat-line>{{i.transactionId}}</strong>

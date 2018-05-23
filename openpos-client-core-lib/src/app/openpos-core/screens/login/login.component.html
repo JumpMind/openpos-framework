@@ -1,10 +1,13 @@
-<div *ngIf="session.screen.type==='Login'" class="page-content" fxLayout="row" fxLayoutAlign="center center" fxLayoutAlign.xs="center" [style.xs]="{'height': '100%'}">
-    <mat-card class="login-card-content" ngClass.xs="login-container-xs" [style.md]="{'width': '50%'}" [style.sm]="{'width': '75%'}">
+<div class="lighter" fxFlexFill fxLayout="row" fxLayoutAlign="center center" fxLayoutAlign.xs="center" [style.xs]="{'height': '100%'}">
+    <mat-card class="login-card-content" [ngClass]="{'mat-elevation-z0': session.dialog, 'login-dialog-div': session.dialog}" ngClass.xs="login-container-xs" [style.md]="{'width': '50%'}" [style.sm]="{'width': '75%'}">
         <mat-card-title *ngIf="title">{{title}}</mat-card-title>
 		<mat-card-content class="login-card-content">
+            <mat-error>
+                <div *ngFor="let error of form.formErrors">{{error}}</div>
+            </mat-error>	
             <mat-form-field style="width:100%">
-                <input [(ngModel)]="loginIdField.value" #loginField="ngModel" matInput placeholder="{{loginIdField.placeholder}}" [pattern]="loginIdField.pattern"
-                    [required]="loginIdField.required" (keyup.enter)="onEnterPressed()">
+                <input type="tel" [(ngModel)]="loginIdField.value" #loginField="ngModel" matInput placeholder="{{loginIdField.placeholder}}" [pattern]="loginIdField.pattern"
+                    [required]="loginIdField.required" (keyup.enter)="onEnterPressed()" novalidate>
             </mat-form-field>
             <mat-form-field style="width:100%">
                 <input type="password" [(ngModel)]="passwordField.value" #passwdField="ngModel" matInput placeholder="{{passwordField.placeholder}}" [pattern]="passwordField.pattern"

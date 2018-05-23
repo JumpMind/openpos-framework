@@ -12,7 +12,7 @@ export class CheckoutListItemComponent {
 
   @Input() item: ISellItem;
   @Input() session: SessionService;
-  @Input() isReadOnly: boolean = false;
+  @Input() isReadOnly = false;
 
   public doMenuItemAction(menuItem: IMenuItem, payLoad: any) {
     this.session.onAction(menuItem.action, payLoad, menuItem.confirmationMessage);

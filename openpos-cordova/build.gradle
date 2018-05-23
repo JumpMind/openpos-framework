@@ -35,7 +35,7 @@ clean.dependsOn(npmClean)
 task develop {}
 
 task deletePlatforms(type: Delete) {
-  dependsOn npm_install
+  dependsOn npmInstall
   delete 'platforms/ios'
 }
 
@@ -53,7 +53,7 @@ task build(type: NodeTask) {
   args = ['build', 'ios']
 }
 
-build.dependsOn(npm_install)
+build.dependsOn(npmInstall)
 
 // assemble task for npm
 task assemble {}

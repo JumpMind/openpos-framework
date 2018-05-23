@@ -9,10 +9,10 @@ import { IFormElement } from '../../common/iformfield';
     templateUrl: './login.component.html',
     styleUrls: ['./login.component.scss']
   })
-  export class LoginComponent implements DoCheck, IScreen, OnInit {
+  export class LoginComponent implements IScreen {
 
-    private lastSequenceNum: number;
     public form: IForm;
+    public screen: any;
     loginIdField: IFormElement;
     passwordField: IFormElement;
     submitAction: string;
@@ -25,31 +25,24 @@ import { IFormElement } from '../../common/iformfield';
     constructor(public session: SessionService) {
     }
 
-    show(session: SessionService) {
-    }
-
-    ngOnInit(): void {
-        this.lastSequenceNum = this.session.screen.sequenceNumber;
-        this.form = this.session.screen.form;
+    show(screen: any): void {
+        this.screen = screen;
+        this.form = this.screen.form;
         this.loginIdField = this.form.formElements.find((e) => e.id === 'userId');
+        if (!this.loginIdField.pattern) {
+            this.loginIdField.pattern = '[0-9]*';
+        }
         this.passwordField = this.form.formElements.find((e) => e.id === 'password');
         this.okButton = this.form.formElements.find((e) => e.id === 'okButton');
         this.cancelButton = this.form.formElements.find((e) => e.id === 'cancelButton');
-        this.submitAction = this.session.screen.submitAction;
-        this.forgotPasswordAction = this.session.screen.forgotPasswordAction;
-        this.changePasswordAction = this.session.screen.changePasswordAction;
+        this.submitAction = this.screen.submitAction;
+        this.forgotPasswordAction = this.screen.forgotPasswordAction;
+        this.changePasswordAction = this.screen.changePasswordAction;
         this.title = this.form.name;
     }
 
     hasSubmitAction(): boolean {
         return this.submitAction !== null;
-    }
-
-    ngDoCheck(): void {
-        if (this.session.screen.sequenceNumber !== this.lastSequenceNum) {
-            this.ngOnInit();
-            this.lastSequenceNum = this.session.screen.sequenceNumber;
-        }
     }
 
     onEnterPressed(): void {

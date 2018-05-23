@@ -5,6 +5,5 @@ export interface IPlugin {
     config?: any;
 
     configure?(params: any): boolean;
-	// TODO: change to a Promise?
     init(successCallback: () => void, errorCallback: (error?: string) => void): void;
 }

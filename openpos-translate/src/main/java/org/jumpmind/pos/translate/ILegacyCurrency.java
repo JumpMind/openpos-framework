@@ -1,5 +1,6 @@
 package org.jumpmind.pos.translate;
 
+import java.math.BigDecimal;
 import java.util.Locale;
 
 public interface ILegacyCurrency {
@@ -11,6 +12,7 @@ public interface ILegacyCurrency {
     String toFormattedString(Locale paramLocale);
     String toGroupFormattedString();
     String toGroupFormattedString(Locale paramLocale);
+    BigDecimal toBigDecimal();
     
     <T> T toTargetPlafCurrency();
 }

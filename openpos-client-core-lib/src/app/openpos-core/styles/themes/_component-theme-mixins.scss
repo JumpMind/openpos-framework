@@ -1,0 +1,7 @@
+@import 'fab-toggle-button';
+@import 'selectable-card';
+
+@mixin component-theme-mixins($theme){
+    @include fab-toggle-button($theme);
+    @include selectable-card($theme);
+}

@@ -1,13 +1,13 @@
-node {
-	version = '9.3.0'
-	npmVersion = '5.6.0'
-	download = true
-}
-
-task clean {}
-
-task nodeClean(type: Delete) {
-	delete "${openposDir}/node"
-	delete "${openposDir}/node_modules"
-}
+node { 
+  version = '9.3.0' 
+  npmVersion = '5.6.0' 
+  download = true 
+} 
+ 
+task clean {} 
+ 
+task nodeClean(type: Delete) { 
+  delete "${openposDir}/node" 
+  delete "${openposDir}/node_modules" 
+} 
 clean.dependsOn nodeClean

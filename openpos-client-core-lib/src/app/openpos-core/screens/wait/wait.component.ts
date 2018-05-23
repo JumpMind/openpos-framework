@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
 import { SessionService } from '../../services/session.service';
-import { AbstractApp } from '../../common/abstract-app';
 
 @Component({
   selector: 'app-wait-component',
@@ -9,16 +8,18 @@ import { AbstractApp } from '../../common/abstract-app';
 })
 export class WaitComponent implements OnInit {
 
-  instructions: string = "";
-  icon: string = "";
+  instructions = '';
+  icon = '';
+  screen: any;
 
   constructor(public session: SessionService) { }
 
-  show(session: SessionService, app: AbstractApp) {
+  show(screen: any) {
+    this.screen = screen;
   }
 
   ngOnInit() {
-    this.instructions = this.session.screen.instructions;
-    this.icon = this.session.screen.icon;
+    this.instructions = this.screen.instructions;
+    this.icon = this.screen.icon;
   }
 }

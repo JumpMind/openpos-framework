@@ -49,7 +49,7 @@ public class DeviceService implements IDeviceService {
         
         String mapKey = makeRequestResponseMapKey(appId, nodeId, request.getDeviceId(), request.getRequestId());
         this.requestToResponseMap.put(mapKey, new DeviceResponseMapEntry(futureResponse));
-        
+        logger.info("Now sending request with id: {}, type: {}, subtype: {} ...", request.getRequestId(), request.getType(), request.getSubType() );
         this.template.convertAndSend(String.format("/topic/app/%s/node/%s", appId, nodeId), request);
         return futureResponse;
     }

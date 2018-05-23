@@ -4,70 +4,99 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.springframework.stereotype.Component;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 // TODO should be called just ActionHandler, need to repackage annotation of the same name.
 @Component
 @org.springframework.context.annotation.Scope("prototype")
 public class ActionHandlerImpl {
-
-    // private Logger logger = LoggerFactory.getLogger(getClass());
+    
     private static final String METHOD_ON_ANY = "onAnyAction";
 
-    private ObjectMapper jsonMapper = new ObjectMapper();
-
-    public boolean handleAction(Object state, Action action, Object deserializedPayload) {
-        Class<?> clazz = state.getClass();
-
-        while (clazz != null) {
-
-            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, ActionHandler.class, true, false);
-
-            Method anyMethod = null;
-
-            String actionName = action.getName();
-            for (Method method : methods) {
-                String matchingMethodName = "on" + actionName;
-                method.setAccessible(true);
-                if (matchingMethodName.equals(method.getName())) {
-                    invokeHandleAction(state, action, method, deserializedPayload);
-                    return true;
-                } else if (METHOD_ON_ANY.equals(method.getName())) {
-                    anyMethod = method;
-                }
-            }
-
-            if (anyMethod != null) {
-                invokeHandleAction(state, action, anyMethod, deserializedPayload);
-                return true;
-            }
-
-            clazz = clazz.getSuperclass();
-
+    
+    public boolean canHandleAction(Object state, Action action) {
+        // if there is an action handler OR an any action handler
+        // AND it's not the current state firing this action.
+        Method actionMethod = getActionMethod(state, action, null);
+        if  (actionMethod != null
+                && !isCalledFromState(state)) {
+            return true;
+        } else {
+            return false;
         }
-
-        return false;
-
     }
 
-    protected void invokeHandleAction(Object state, Action action, Method method, Object deserializedPayload) {
+    public boolean handleAction(Object state, Action action, String overrideActionName) {        
+        Method actionMethod = getActionMethod(state, action, overrideActionName);
+        if (actionMethod != null) {
+            invokeActionMethod(state, action, actionMethod);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean canHandleAnyAction(Object state) {
+        return getAnyActionMethod(state) != null;
+    }
+    
+    public boolean handleAnyAction(Object state, Action action) {
+        Method anyActionMethod = getAnyActionMethod(state);
+        if (anyActionMethod != null) {
+            invokeActionMethod(state, action, anyActionMethod);
+            return true;
+        } else {
+            return false;
+        }
+    }    
+    
+    protected Method getAnyActionMethod(Object state) {
+        Class<?> clazz = state.getClass();
+        
+        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, ActionHandler.class, true, true);
+        
+        for (Method method : methods) {
+            if (METHOD_ON_ANY.equals(method.getName())) {
+                return method;
+            }
+        }
+        
+        return null;
+    }
+    
+    protected Method getActionMethod(Object state, Action action, String overrideActionName) {
+        Class<?> clazz = state.getClass();
+        
+        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, ActionHandler.class, true, true);
+
+        String actionName = null;
+        if (!StringUtils.isEmpty(overrideActionName)) {
+            actionName = overrideActionName;
+        } else {
+            actionName = action.getName();                
+        }
+        
+        for (Method method : methods) {
+            String matchingMethodName = "on" + actionName;
+            method.setAccessible(true);
+            if (matchingMethodName.equals(method.getName())) {
+                return method;
+            }
+        }
+        
+        return null;
+    }
+
+    protected void invokeActionMethod(Object state, Action action, Method method) {
         List<Object> arguments = new ArrayList<Object>();
         try {
             for (Class<?> type : method.getParameterTypes()) {
                 if (type.isAssignableFrom(Action.class)) {
                     arguments.add(action);
-                } else if (deserializedPayload != null && type.isAssignableFrom(deserializedPayload.getClass())) {
-                    arguments.add(deserializedPayload);
-                } else if (action.getData() != null && (action.getData() instanceof String || action.getData() instanceof byte[])) {
-                    Object deserializedTarget = jsonMapper.convertValue(action.getData(), type);
-                    if (deserializedTarget != null) {
-                        arguments.add(deserializedTarget);
-                    } else {
-                        throw new FlowException("Failed to satisfy action method argument " + type);
-                    }
+                } else if (action.getData() != null && type.isAssignableFrom(action.getData().getClass())) {
+                    arguments.add(action.getData());
                 } else {
                     arguments.add(null);
                 }
@@ -78,5 +107,15 @@ public class ActionHandlerImpl {
             throw new FlowException("Failed to invoke method " + method, ex);
         }
     }
+    
+    protected boolean isCalledFromState(Object state) {
+        StackTraceElement[] currentStack = Thread.currentThread().getStackTrace();
+        for (StackTraceElement stackFrame : currentStack) {
+            if (stackFrame.getClassName().equals(state.getClass().getName())) {                
+                return true;
+            }
+        }
+        return false;
+    }    
 
 }

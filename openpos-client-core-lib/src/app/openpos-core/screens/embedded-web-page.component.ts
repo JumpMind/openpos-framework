@@ -3,7 +3,6 @@ import { IScreen } from '../common/iscreen';
 import { IMenuItem } from '../common/imenuitem';
 import { Component, ViewChild, AfterViewInit, DoCheck } from '@angular/core';
 import { SessionService } from '../services/session.service';
-import { AbstractApp } from '../common/abstract-app';
 
 @Component({
   selector: 'app-embedded-web-page',
@@ -11,11 +10,14 @@ import { AbstractApp } from '../common/abstract-app';
 })
 export class EmbeddedWebPageComponent implements IScreen {
 
+  screen: any;
+
   constructor(private session: SessionService,
     private router: Router) {
   }
 
-  show(session: SessionService, app: AbstractApp) {
+  show(screen: any) {
+    this.screen = screen;
   }
 
 }

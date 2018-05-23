@@ -8,5 +8,5 @@ public interface ILegacySubsystem {
     
     public void sendAction(String action, int number);
     
-    public void addLegacyScreenListener(ILegacyScreenListener listener);
+    public void setLegacyScreenListener(ITranslationManager listener);
 }

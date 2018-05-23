@@ -10,6 +10,6 @@ export class IconComponent {
     @Input() iconClass: string;
 
     isLocalIcon(): boolean {
-        return this.iconName.startsWith('local_');
+        return this.iconName && this.iconName.startsWith('openpos_');
     }
 }

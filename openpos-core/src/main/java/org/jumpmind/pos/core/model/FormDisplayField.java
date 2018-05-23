@@ -2,6 +2,7 @@ package org.jumpmind.pos.core.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FormDisplayField implements IFormElement, IField, Serializable {
@@ -31,10 +32,14 @@ public class FormDisplayField implements IFormElement, IField, Serializable {
         this.setValue(value);
     }
 
+    public FormDisplayField(String label, String fieldId, String... values) {
+        this(label, fieldId, values != null ? Arrays.asList(values) : null);
+    }
+    
     public FormDisplayField(String label, String fieldId, List<String> values) {
         this.label = label;
         this.fieldId = fieldId;
-        this.values = new ArrayList<>(values);
+        this.values = values != null ? new ArrayList<>(values) : values;
     }
     
     public FieldElementType getElementType() {

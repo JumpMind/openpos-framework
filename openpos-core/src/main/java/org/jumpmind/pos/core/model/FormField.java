@@ -1,43 +1,41 @@
 package org.jumpmind.pos.core.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 
 public class FormField implements IFormElement, IField, Serializable {
     private static final long serialVersionUID = 1L;
     
+    /**
+     * Put properties in this map if they are optional. When not set, they don't
+     * show up in the json which means less overhead.
+     */
+    private Map<String, Object> optionalProperties = new HashMap<String, Object>();    
     
     private FieldElementType elementType = FieldElementType.Input;
     private FieldInputType inputType = FieldInputType.AlphanumericText;
     private String label;
     private String fieldId;
     private String value;
-    private String placeholder;
-    private String pattern;
     private boolean required = true;
-    private boolean disabled = false;
-    private String valueChangedAction;
-
-    private Integer minLength;
-    private Integer maxLength;
-    
-    @JsonIgnore  // ignore for deserialization from client to server (see https://goo.gl/Gjehox)
-    private IMaskSpec mask;
+    private boolean sensitive = false;
 
     public FormField() {
     }
     
     public FormField(String fieldId, String placeholder) {
         this.fieldId = fieldId;
-        this.placeholder = placeholder;
+        setPlaceholder(placeholder);
     }
 
     public FormField(String fieldId, String label, String placeholder) {
         this.fieldId = fieldId;
         this.label = label;
-        this.placeholder = placeholder;
+        setPlaceholder(placeholder);
     }
     
     public FormField(String fieldId, String label, FieldElementType elementType, FieldInputType inputType, String placeholder) {
@@ -45,7 +43,7 @@ public class FormField implements IFormElement, IField, Serializable {
         this.label = label;
         this.elementType = elementType;
         this.inputType = inputType;
-        this.placeholder = placeholder;
+        setPlaceholder(placeholder);
     }
     
     public FormField(String fieldId, String label, FieldElementType elementType, FieldInputType inputType, boolean required) {
@@ -63,6 +61,26 @@ public class FormField implements IFormElement, IField, Serializable {
         this.inputType = inputType;
         this.required = required;
         this.value = value;
+    }   
+    
+    public FormField(String fieldId, String label, FieldElementType elementType, FieldInputType inputType, boolean required, String value, String iconName) {
+        this.fieldId = fieldId;
+        this.label = label;
+        this.elementType = elementType;
+        this.inputType = inputType;
+        this.required = required;
+        this.value = value;
+        setIconName(iconName);
+    } 
+    
+    @JsonAnyGetter
+    public Map<String, Object> any() {
+        return this.optionalProperties;
+    }
+
+    @JsonAnySetter
+    public void put(String name, Object value) {
+        this.optionalProperties.put(name, value);
     }    
     
     public FieldInputType getInputType() {
@@ -137,12 +155,8 @@ public class FormField implements IFormElement, IField, Serializable {
         return this;
     }
     
-    public String getPlaceholder() {
-        return placeholder;
-    }
-
     public void setPlaceholder(String placeholder) {
-        this.placeholder = placeholder;
+        this.optionalProperties.put("placeholder", placeholder);
     }
 
     public FormField placeholder(String placeholder) {
@@ -151,11 +165,7 @@ public class FormField implements IFormElement, IField, Serializable {
     }
     
     public void setPattern(String pattern) {
-        this.pattern = pattern;
-    }
-
-    public String getPattern() {
-        return pattern;
+        this.put("pattern", pattern);
     }
 
     public FormField pattern(String pattern) {
@@ -174,45 +184,19 @@ public class FormField implements IFormElement, IField, Serializable {
     public FormField required(boolean required) {
         this.setRequired(required);
         return this;
-    }
-    
-    /**
-     * @deprecated Use client-side formatters instead
-     */
-    @Deprecated
-    @JsonProperty
-    public IMaskSpec getMask() {
-        return mask;
-    }
-
-    /**
-     * @deprecated Use client-side formatters instead
-     */
-    @Deprecated
-    @JsonIgnore  // Ignore on deserialization  (see https://goo.gl/Gjehox)
-    public void setMask(IMaskSpec mask) {
-        this.mask = mask;
-    }
-
-    public boolean isDisabled() {
-        return disabled;
-    }
+    }   
 
     public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
+        put("disabled", disabled);
     }
 
     public FormField disabled(boolean disabled) {
         this.setDisabled(disabled);
         return this;
     }
-    
-    public Integer getMinLength() {
-        return minLength;
-    }
 
     public void setMinLength(Integer minLength) {
-        this.minLength = minLength;
+        this.put("minLength", minLength);
     }
 
     public FormField minLength(Integer minLength) {
@@ -220,12 +204,8 @@ public class FormField implements IFormElement, IField, Serializable {
         return this;
     }
     
-    public Integer getMaxLength() {
-        return maxLength;
-    }
-
     public void setMaxLength(Integer maxLength) {
-        this.maxLength = maxLength;
+        this.put("maxLength", maxLength);
     }
 
     public FormField maxLength(Integer maxLength) {
@@ -233,22 +213,42 @@ public class FormField implements IFormElement, IField, Serializable {
         return this;
     }
     
-    public String getValueChangedAction() {
-        return valueChangedAction;
-    }
-
     /**
      * When this value is set, the client will call back upon the selected value changing with an action whose name is the same 
      * as the one given
      * @param valueChangedAction The name of an action to generate when the Combo box selected value changes.
      */
     public void setValueChangedAction(String valueChangedAction) {
-        this.valueChangedAction = valueChangedAction;
+        this.put("valueChangedAction", valueChangedAction);
     }
     
     public FormField valueChangedAction(String valueChangedAction) {
         this.setValueChangedAction(valueChangedAction);
         return this;
     }
-   
+    
+    public void setIconName(String iconName) {
+    		this.put("iconName", iconName);
+    }
+
+    /**
+     * Controls whether or not the text in the field should be selected on a click in the UI
+     */
+    public void setSelectText(boolean selectText) {
+        this.put("select", selectText);
+    }
+
+    public FormField selectText(boolean selectText) {
+        this.setSelectText(selectText);
+        return this;
+    }
+
+    public boolean isSensitive() {
+        return sensitive;
+    }
+
+    public void setSensitive(boolean sensitive) {
+        this.sensitive = sensitive;
+    }
+
 }

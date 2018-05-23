@@ -1,6 +1,6 @@
 package org.jumpmind.pos.core.screen;
 
-public class PaymentStatusScreen extends DefaultScreen {
+public class PaymentStatusScreen extends Screen {
 
     private static final long serialVersionUID = 1L;
     

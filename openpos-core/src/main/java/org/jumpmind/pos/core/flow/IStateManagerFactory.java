@@ -4,6 +4,6 @@ public interface IStateManagerFactory {
 
     IStateManager create(String appId, String nodeId);
     
-    IStateManager retreive(String appId, String nodeId);
+    IStateManager retrieve(String appId, String nodeId);
     
 }

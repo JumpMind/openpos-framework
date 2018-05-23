@@ -4,4 +4,6 @@ public interface ILegacyBus {
 
     ILegacyCargo getLegacyCargo();
     
+    ILegacyMainCargo getMainCargo();
+    
 }

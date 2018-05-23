@@ -20,10 +20,16 @@ export class CordovaDevicePlugin implements IDevicePlugin {
     }
 
     init(successCallback: () => void, errorCallback: (error?: string) => void): void {
-        this.impl.init(successCallback, errorCallback);
+        // TODO: check if init method exists before trying to call it
+        if (typeof this.impl.init === 'function') {
+            this.impl.init(successCallback, errorCallback);
+        } else {
+            console.log(`plugin '${this.pluginId} does not have init() method, nothing to do`);
+            successCallback();
+        }
     }
 
-    processRequest(request: IDeviceRequest, successCallback: (response: string) => any, errorCallback: (error: string) => any) {
+    processRequest(request: IDeviceRequest, successCallback: (response: any) => any, errorCallback: (error: string) => any) {
         this.impl.processRequest(() => request.payload, successCallback, errorCallback);
     }
 }

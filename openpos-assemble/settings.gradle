@@ -1,5 +1,14 @@
 include 'openpos-core'
 include 'openpos-translate'
+include 'openpos-service'
+include 'openpos-persist'
+include 'openpos-context'
+include 'openpos-cache'
+include 'openpos-user'
+include 'openpos-client-core-lib'
+include 'openpos-wrapper'
+include 'openpos-i18n'
+include 'openpos-tax'
 
 rootProject.children.each { project ->
     if (project.projectDir.getName().equals('openpos-client-core-lib')) {
@@ -9,4 +18,11 @@ rootProject.children.each { project ->
     }    
 }
 
+includeFlat 'openpos-client'
 includeFlat 'openpos-server'
+
+rootProject.children.each { project ->    
+  if (!project.projectDir.exists()) {
+      throw new GradleException("Could not find the project ** ${project.projectDir.getName()} **.  Are you sure you have all the projects checked out and have openposDir set properly?");
+  }
+}

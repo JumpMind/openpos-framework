@@ -4,15 +4,13 @@ import { IScreen } from '../common/iscreen';
 import { Component, ViewChild, AfterViewInit, DoCheck, OnInit } from '@angular/core';
 import { SessionService } from '../services/session.service';
 import { MatSelectionList, MatListOption } from '@angular/material';
-import { AbstractApp } from '../common/abstract-app';
 
 @Component({
   selector: 'app-warranty-coverage',
   templateUrl: './warranty-coverage.component.html'
 })
-export class WarrantyCoverageComponent implements DoCheck, IScreen, OnInit {
-  private lastSequenceNum: number;
-
+export class WarrantyCoverageComponent implements IScreen, OnInit {
+  screen: any;
   text: string;
   warrantyItems: IItem[];
   warrantyCostTotal: string;
@@ -23,23 +21,15 @@ export class WarrantyCoverageComponent implements DoCheck, IScreen, OnInit {
 
   }
 
-  show(session: SessionService, app: AbstractApp) {
-  }
-
-  ngDoCheck(): void {
-    // re-init the model if the screen is being redisplayed
-    if (this.session.screen.type === 'WarrantyCoverage'
-        && this.session.screen.sequenceNumber !== this.lastSequenceNum) {
-        this.ngOnInit();
-        this.lastSequenceNum = this.session.screen.sequenceNumber;
-    }
+  show(screen: any) {
+    this.screen = screen;
   }
 
   ngOnInit(): void {
-    this.text = this.session.screen.text;
+    this.text = this.screen.text;
     this.warrantyItemsSelectionList.selectedOptions.clear();
-    this.warrantyItems = this.session.screen.warrantyItems;
-    this.warrantyCostTotal = this.session.screen.warrantyCostTotal;
+    this.warrantyItems = this.screen.warrantyItems;
+    this.warrantyCostTotal = this.screen.warrantyCostTotal;
   }
 
   onItemSelected(event: Event) {

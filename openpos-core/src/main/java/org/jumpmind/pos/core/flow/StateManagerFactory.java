@@ -20,7 +20,9 @@
  */
 package org.jumpmind.pos.core.flow;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
@@ -46,7 +48,7 @@ public class StateManagerFactory implements IStateManagerFactory {
     private Map<String, Map<String, StateManager>> stateManagersByAppIdByNodeId = new HashMap<>();
 
     @Override
-    public IStateManager retreive(String appId, String nodeId) {
+    public IStateManager retrieve(String appId, String nodeId) {
         Map<String, StateManager> stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
         if (stateManagersByNodeId != null) {
             return stateManagersByNodeId.get(nodeId);
@@ -72,13 +74,25 @@ public class StateManagerFactory implements IStateManagerFactory {
             synchronized (this) {
                 if (stateManager == null) {
                     stateManager = applicationContext.getBean(StateManager.class);
-                    stateManager.setFlowConfig(flowConfigProvider.getConfig(appId, nodeId));
+                    stateManager.setInitialFlowConfig(flowConfigProvider.getConfig(appId, nodeId));
                     stateManager.init(appId, nodeId);
                     stateManagersByNodeId.put(nodeId, stateManager);
                 }
             }
         }
         return stateManager;
+    }
+    
+    public List<StateManager> getAllStateManagers() {
+        List<StateManager> allStateManagers = new ArrayList<>();
+        
+        for (Map<String, StateManager> stateManagersByNodeId : stateManagersByAppIdByNodeId.values()) {
+            for (StateManager stateManager : stateManagersByNodeId.values()) {
+                allStateManagers.add(stateManager);
+            }
+        }
+        
+        return allStateManagers;
     }
 
 }

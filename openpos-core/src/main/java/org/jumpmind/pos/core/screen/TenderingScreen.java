@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.FormField;
 
-public class TenderingScreen extends DefaultScreen {
+public class TenderingScreen extends Screen {
     private static final long serialVersionUID = 1L;
 
     private List<IItem> tenderItems = new ArrayList<>();

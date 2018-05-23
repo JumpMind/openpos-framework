@@ -3,7 +3,7 @@ package org.jumpmind.pos.core.screen;
 import org.jumpmind.pos.core.model.Form;
 
 @Deprecated
-public class FormScreen extends DefaultScreen {
+public class FormScreen extends Screen implements IHasForm {
 
     private static final long serialVersionUID = 1L;
 

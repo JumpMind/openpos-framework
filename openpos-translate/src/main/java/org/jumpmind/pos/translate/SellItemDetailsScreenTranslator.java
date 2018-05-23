@@ -5,11 +5,12 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.flow.Action;
+import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.FormDisplayField;
-import org.jumpmind.pos.core.screen.DefaultScreen;
 import org.jumpmind.pos.core.screen.MenuItem;
 import org.jumpmind.pos.core.screen.SellItem;
 import org.jumpmind.pos.core.screen.SellItemDetailScreen;
+import org.jumpmind.pos.core.template.SellTemplate;
 
 public class SellItemDetailsScreenTranslator extends AbstractLegacyScreenTranslator<SellItemDetailScreen> {
 
@@ -23,7 +24,7 @@ public class SellItemDetailsScreenTranslator extends AbstractLegacyScreenTransla
         
         ILegacyPOSListModel legacyPOSListModel = this.getLegacyPOSBeanService().getLegacyPOSListModel(this.getLegacyScreen());
        
-        screen.setTemplate(DefaultScreen.TEMPLATE_SELL);
+        screen.setTemplate(new SellTemplate());
         
         if (!legacyPOSListModel.isEmpty()) {
             ILegacySaleReturnLineItem saleItem = this.legacyPOSBeanService.toILegacyInstance(legacyPOSListModel.firstElement());
@@ -63,12 +64,12 @@ public class SellItemDetailsScreenTranslator extends AbstractLegacyScreenTransla
         buildLocalMenuItems();
     }
 
-    protected void buildLocalMenuItems() {
-        this.screen.addLocalMenuItem(new MenuItem("Remove Item", "Remove", false));
+    protected void buildLocalMenuItems() {        
+        addLocalMenuItem(new MenuItem("Remove Item", "Remove", false));
     }
 
     @Override
-    public void handleAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action, DefaultScreen screen)  {
+    public void handleAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action, Form formResults)  {
         if (action.getName().equals("Remove")) {
             ILegacyPOSListModel legacyPOSListModel = this.getLegacyPOSBeanService().getLegacyPOSListModel(this.getLegacyScreen());
 
@@ -81,7 +82,7 @@ public class SellItemDetailsScreenTranslator extends AbstractLegacyScreenTransla
                 }).sendLetter("Clear"));
             }
         } else {
-            super.handleAction(subscriber, tmServer, action, screen);
+            super.handleAction(subscriber, tmServer, action, formResults);
         }
     }
     

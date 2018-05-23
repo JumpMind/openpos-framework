@@ -25,7 +25,7 @@ export class OpenPosValidators {
                     valid: false
                 }
             };
-         } else {
+        } else {
             return null;
         }
     }
@@ -39,10 +39,10 @@ export class OpenPosValidators {
     }
 
     static RequireAtleastOne(form: FormGroup) {
-        for( let name of Object.getOwnPropertyNames(form.value)){
-            let value = form.value[name];
-            if( value != ""){
-              return null;
+        for (const name of Object.getOwnPropertyNames(form.value)) {
+            const value = form.value[name];
+            if (value !== '') {
+                return null;
             }
         }
         return {
@@ -53,7 +53,7 @@ export class OpenPosValidators {
     }
 
     static DateMMDDYYYY(c: FormControl) {
-        if (c.value) {
+        if (c.value && (typeof c.value  === 'string')) {
             const dateParts = c.value.split('/');
             if (dateParts.length !== 3) {
                 return {
@@ -68,7 +68,7 @@ export class OpenPosValidators {
                 const date = new Date(year, month - 1, dayOfMonth);
                 // console.log(`Checking validity of entered date '${month}/${dayOfMonth}/${year}' ` +
                 // `vs. parsed date '${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}'`);
-                if (month === date.getMonth() + 1 && dayOfMonth === date.getDate() && year === date.getFullYear() ) {
+                if (month === date.getMonth() + 1 && dayOfMonth === date.getDate() && year === date.getFullYear()) {
                     // console.log('Date is valid');
                     return null;
                 } else {

@@ -28,6 +28,10 @@ export class PluginService {
           false);
     }
 
+    public pluginExists(pluginId: string): boolean {
+        return this.plugins.has(pluginId);
+    }
+
     public addPlugin(pluginId: string, plugin: IPlugin) {
         this.plugins[pluginId] = {plugin: plugin, initialized: false};
         console.log(`plugin '${pluginId}' added to the PluginService`);

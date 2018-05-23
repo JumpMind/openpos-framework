@@ -63,5 +63,14 @@ public class Scope {
         scopeValue.setValue(value);
         scope.put(name, scopeValue);
     }
+    public Map<String, ScopeValue> getNodeScope() {
+        return nodeScope;
+    }
+    public Map<String, ScopeValue> getSessionScope() {
+        return sessionScope;
+    }
+    public Map<String, ScopeValue> getConversationScope() {
+        return conversationScope;
+    }
 
 }

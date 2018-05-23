@@ -1,0 +1,9 @@
+---
+queries:
+-
+  name: configLookup
+  where: config_name = ${configName}
+    AND enabled_flag = 1
+    AND (effective_date <= ${currentTime})
+    AND (expiration_date IS NULL OR expiration_date > ${currentTime})
+  orderBy: effective_date asc

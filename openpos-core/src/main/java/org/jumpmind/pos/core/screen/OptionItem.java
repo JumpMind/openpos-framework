@@ -30,6 +30,10 @@ public class OptionItem implements IUIAction, Serializable {
     public OptionItem(String value, String displayValue, boolean enabled) {
         this(value, displayValue, enabled, (String) null);
     }
+    
+    public OptionItem(String value, String displayValue, String icon) {
+        this(value, displayValue, true, icon);
+    }
 
     public OptionItem(String value, String displayValue, boolean enabled, String icon) {
         this.value = value;

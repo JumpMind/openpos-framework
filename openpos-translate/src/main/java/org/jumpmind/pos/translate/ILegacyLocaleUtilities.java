@@ -4,10 +4,8 @@ import java.util.Locale;
 
 
 public interface ILegacyLocaleUtilities {
-    public String formatComplexMessage(String pattern, Object[] vars);
-
-    public Locale getLocale(String localeString);
-    
-    public Locale getCurrentLocale();
-
+    String formatComplexMessage(String pattern, Object[] vars);
+    Locale getLocale(String localeString);
+    Locale getCurrentLocale();
+    String formatDecimalForWholeNumber(Number decimalNumber, Locale locale);
 }

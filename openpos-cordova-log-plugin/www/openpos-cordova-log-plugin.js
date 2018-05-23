@@ -6,12 +6,30 @@ const PLUGIN_NAME = 'OpenPOSCordovaLogPlugin';
 var OpenPOSCordovaLogPlugin = {
   pluginId: 'openPOSCordovaLogPlugin',
   pluginName: PLUGIN_NAME,
-  
+  config: {
+    buildNumber: '0'
+  },
+
   init: function(successCallback, errorCallback) {
     // Nothing to init for this plugin
+    // Make sure plugin at least has default config
+    _configure(null);
     successCallback();
   },
   
+  configure: function(pluginConfig) {
+    return _configure(pluginConfig);
+  },
+
+  getAppVersion: function(successCallback, errorCallback) {
+    exec(
+      successCallback,
+      errorCallback,
+      PLUGIN_NAME, 
+      'getAppVersion', []
+    );
+  },
+
   /** 
    * Lists the name of all the files ending with *.log in the Logs directory.
    * 
@@ -28,7 +46,6 @@ var OpenPOSCordovaLogPlugin = {
         'listLogFiles', []
       );
   },
-  
   
   /** 
    * If the file exists, the successCallback will return the contents
@@ -49,6 +66,14 @@ var OpenPOSCordovaLogPlugin = {
       );
   },
   
+  getLogDirectoryPath: function(successCallback, errorCallback) {
+    exec(
+      successCallback, 
+      errorCallback,
+      PLUGIN_NAME, 
+      'getLogDirectoryPath', []
+    );
+  },
 
   /** 
    * If the file exists, the successCallback will return the full path
@@ -69,6 +94,16 @@ var OpenPOSCordovaLogPlugin = {
       );
   },
 
+  /** Returns the filename of the current log file via successCallback. */
+  getCurrentLogFilePath: function(successCallback, errorCallback) {
+    exec(
+      successCallback, 
+      errorCallback,
+      PLUGIN_NAME, 
+      'getCurrentLogFilePath', []
+    );
+  },
+
   /**
    * Provide the user with an option to share the given log file using
    * standard OS sharing mechanism.
@@ -80,9 +115,37 @@ var OpenPOSCordovaLogPlugin = {
         PLUGIN_NAME, 
         'shareLogFile', [logFilename]
       );
+  },
+
+  /**
+   * Will remove any log files that are older than OpenPOSCordovaLogPlugin.logRetentionDays via 
+	 * which is set via platform preference.
+   */
+  purgeOldLogFiles: function(successCallback, errorCallback) {
+    exec(
+      successCallback, 
+      errorCallback,
+      PLUGIN_NAME, 
+      'purgeOldLogs', []
+    );
+  }
+};
+
+function _configure(pluginConfig) {
+  if (pluginConfig) {
+    if (pluginConfig.buildNumber !== 'undefined' && pluginConfig.buildNumber) {
+      OpenPOSCordovaLogPlugin.config.buildNumber = pluginConfig.buildNumber;
+    }
   }
   
+  exec(
+    function() {},
+    function(error) {},
+    PLUGIN_NAME,
+    'configure', [OpenPOSCordovaLogPlugin.config.buildNumber]
+  );
 
-};
+  return true;
+}
 
 module.exports = OpenPOSCordovaLogPlugin;

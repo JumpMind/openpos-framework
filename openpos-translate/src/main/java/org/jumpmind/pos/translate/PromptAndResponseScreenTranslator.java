@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Properties;
 
 import org.jumpmind.pos.core.model.FieldInputType;
-import org.jumpmind.pos.core.model.IMaskSpec;
-import org.jumpmind.pos.core.screen.DefaultScreen;
 import org.jumpmind.pos.core.screen.MenuItem;
 import org.jumpmind.pos.core.screen.PromptScreen;
+import org.jumpmind.pos.core.template.SellTemplate;
 
 public class PromptAndResponseScreenTranslator<T extends PromptScreen> extends AbstractPromptScreenTranslator<T> {
 
@@ -19,23 +18,7 @@ public class PromptAndResponseScreenTranslator<T extends PromptScreen> extends A
 
     public PromptAndResponseScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, boolean addLocalMenuItems, String appId, Properties properties) {
         this(legacyScreen, screenClass, addLocalMenuItems, (FieldInputType) null, null, null, appId, properties);
-    }
-    
-    /**
-     * 
-     * @param legacyScreen
-     * @param screenClass
-     * @param addLocalMenuItems
-     * @param promptMask
-     * @deprecated IMaskSpec is no longer used for formatting values in the prompt and response field.  Use
-     * the constructor that accepts a FieldInputType instead.  Support FieldInputTypes at the time of this writing are:
-     * Money, Phone, Percent, NumericText, AlphaNumericText 
-     */
-    @Deprecated
-    public PromptAndResponseScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, boolean addLocalMenuItems,
-            IMaskSpec promptMask) {
-        this(legacyScreen, screenClass, addLocalMenuItems, promptMask, null, null);
-    }
+    }   
     
     public PromptAndResponseScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, boolean addLocalMenuItems,
             FieldInputType responseType) {
@@ -51,38 +34,12 @@ public class PromptAndResponseScreenTranslator<T extends PromptScreen> extends A
     public PromptAndResponseScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, boolean addLocalMenuItems,
             FieldInputType responseType, Integer minLength, Integer maxLength, String appId, Properties properties) {
         super(legacyScreen, screenClass, appId, properties);
-        getScreen().setTemplate(DefaultScreen.TEMPLATE_SELL);
+        screen.setTemplate(new SellTemplate());
         this.addLocalMenuItems = addLocalMenuItems;
-        getScreen().setResponseType(responseType != null ? responseType.name() : null);
-        getScreen().setMinLength(minLength);
-        getScreen().setMaxLength(maxLength);
-    }
-    
-   /**
-    * @deprecated IMaskSpec is no longer required for formatting values in the prompt and response field.  Use
-    * the constructor that accepts a FieldInputType instead.  Support FieldInputTypes at the time of this writing are:
-    * Money, Phone, Percent, NumericText, AlphaNumericText 
-    */
-   @Deprecated
-    public PromptAndResponseScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, boolean addLocalMenuItems,
-            IMaskSpec promptMask, Integer minLength, Integer maxLength) {
-        this(legacyScreen, screenClass, addLocalMenuItems, promptMask, minLength, maxLength, null, null);
-    }
-
-   /**
-    * @deprecated IMaskSpec is no longer required for formatting values in the prompt and response field.  Use
-    * the constructor that accepts a FieldInputType instead.  Support FieldInputTypes at the time of this writing are:
-    * Money, Phone, Percent, NumericText, AlphaNumericText 
-    */
-    public PromptAndResponseScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, boolean addLocalMenuItems,
-            IMaskSpec promptMask, Integer minLength, Integer maxLength, String appId, Properties properties) {
-        super(legacyScreen, screenClass, appId, properties);
-        getScreen().setTemplate(DefaultScreen.TEMPLATE_SELL);
-        this.addLocalMenuItems = addLocalMenuItems;
-        getScreen().setPromptMask(promptMask);
-        getScreen().setMinLength(minLength);
-        getScreen().setMaxLength(maxLength);
-    }
+        screen.setResponseType(responseType != null ? responseType.name() : null);
+        screen.setMinLength(minLength);
+        screen.setMaxLength(maxLength);
+    }   
     
     @Override
     protected void buildMainContent() {
@@ -91,10 +48,14 @@ public class PromptAndResponseScreenTranslator<T extends PromptScreen> extends A
         this.configureScreenResponseField();
         if (addLocalMenuItems) {
             List<MenuItem> localNavButtons = generateUIActionsForLocalNavButtons(MenuItem.class, true);
-            screen.setLocalMenuItems(localNavButtons);
+            SellTemplate template = screen.getTemplate();
+            template.setLocalMenuItems(localNavButtons);
         }
-        getScreen().setActionButton(new MenuItem("Next", "Next", "keyboard_arrow_right"));
-
+        addActionButton();
+    }
+    
+    protected void addActionButton() {
+        screen.setActionButton(new MenuItem("Next", "Next", "keyboard_arrow_right"));
     }
 
 }

@@ -1,19 +1,19 @@
 <!-- TODO: discuss with team to fix -->
-<ng-container *ngIf="session.screen.name === 'CHANGE_PASSWORD'; else existingMarkupBlock">
+<ng-container *ngIf="screen.name === 'CHANGE_PASSWORD'; else existingMarkupBlock">
 	<mat-card class="with-header">
 		<mat-card-content style="padding: 0;" (keyup.enter)="onEnter($event)">
 			<mat-toolbar color="accent">
-				{{session.screen.form.name}}
+				{{screen.form.name}}
 				<div style="width: 100%" fxLayout="row" fxLayoutAlign="end ">
-					<button style="top: 28px" *ngIf="session.screen.itemAction" (click)="onItemAction(session.screen.itemAction, $event)" color="primary"
+					<button style="top: 28px" *ngIf="screen.itemAction" (click)="onItemAction(screen.itemAction, $event)" color="primary"
 					 mat-fab>
-						<mat-icon>{{session.screen.itemAction.icon}}</mat-icon>
+						<mat-icon>{{screen.itemAction.icon}}</mat-icon>
 					</button>
 				</div>
 			</mat-toolbar>
 			<div class="pad">
 				<div class="scrollable">
-					<ng-container *ngFor="let formElement of session.screen.form.formElements">
+					<ng-container *ngFor="let formElement of screen.form.formElements">
 						<div *ngIf="formElement.elementType==='Input'">
 							<mat-form-field *ngIf="['AlphanumericText', 'NumericText'].indexOf(formElement.inputType) >= 0" style="width:100%">
 								<input [(ngModel)]="formElement.value" #field="ngModel" matInput placeholder="{{getPlaceholderText(formElement)}}" [pattern]="formElement.pattern"
@@ -87,13 +87,13 @@
 					<mat-card-content fxFlex="1 1 auto">
 	<div class="pad" (keyup.enter)="onEnter($event)">
 		<div style="width: 100%" fxLayout="row" fxLayoutAlign="end ">
-			<button style="top: 28px" *ngIf="session.screen.itemAction" (click)="onItemAction(session.screen.itemAction, $event)" color="primary"
+			<button style="top: 28px" *ngIf="screen.itemAction" (click)="onItemAction(screen.itemAction, $event)" color="primary"
 			 mat-fab>
-				<mat-icon>{{session.screen.itemAction.icon}}</mat-icon>
+				<mat-icon>{{screen.itemAction.icon}}</mat-icon>
 			</button>
 		</div>
 		<div class="scrollable">
-			<ng-container *ngFor="let formElement of session.screen.form.formElements">
+			<ng-container *ngFor="let formElement of screen.form.formElements">
 				<div *ngIf="formElement.elementType==='Input'">
 					<mat-form-field *ngIf="['AlphanumericText', 'NumericText'].indexOf(formElement.inputType) >= 0" style="width:100%">
 						<input [(ngModel)]="formElement.value" #field="ngModel" matInput placeholder="{{getPlaceholderText(formElement)}}" [pattern]="formElement.pattern"

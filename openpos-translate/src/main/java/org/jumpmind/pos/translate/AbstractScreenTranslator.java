@@ -5,16 +5,17 @@ import static org.apache.commons.lang.StringUtils.isBlank;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Properties;
 
 import org.jumpmind.pos.core.flow.Action;
+import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.POSSessionInfo;
-import org.jumpmind.pos.core.screen.DefaultScreen;
-import org.jumpmind.pos.core.screen.DefaultScreen.ScanType;
+import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.core.screen.MenuItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-abstract public class AbstractScreenTranslator<T extends DefaultScreen> {
+abstract public class AbstractScreenTranslator<T extends Screen> implements ITranslator {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -27,9 +28,20 @@ abstract public class AbstractScreenTranslator<T extends DefaultScreen> {
     protected IScreenThemeSelector screenThemeSelector;
 
     protected Map<String, String> iconRegistry = new HashMap<>();
+    
+    protected Class<T> screenClass;
+    
+    protected String appId;
+    
+    protected Properties properties;
 
-    public AbstractScreenTranslator(ILegacyScreen headlessScreen, Class<T> screenClass) {
-        this.legacyScreen = headlessScreen;
+    public AbstractScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass) {
+        this.legacyScreen = legacyScreen;
+        this.screenClass = screenClass;
+        newScreen();
+    }
+    
+    protected void newScreen() {
         try {
             screen = screenClass.newInstance();
         } catch (Exception e) {
@@ -104,7 +116,7 @@ abstract public class AbstractScreenTranslator<T extends DefaultScreen> {
     }
 
     public void handleAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action,
-            DefaultScreen screen) {
+            Form formResults) {
         tmServer.sendAction(action.getName());
     } 
     
@@ -112,10 +124,12 @@ abstract public class AbstractScreenTranslator<T extends DefaultScreen> {
     		this.screen.setBackButton(new MenuItem("Back", action, true));
     }
 
-    protected void enableScan() {
-        screen.setShowScan(true);
-        screen.setScanType(ScanType.CAMERA_CORDOVA);
-        screen.setScanActionName("Scan");
+    public void setAppId(String appId) {
+    	this.appId = appId;
     }
-
+    
+    public void setProperties(Properties properties) {
+    	this.properties = properties;
+    }
+    
 }

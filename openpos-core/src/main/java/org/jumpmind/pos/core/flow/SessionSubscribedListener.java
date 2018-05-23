@@ -31,7 +31,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
         String nodeId = topicName.substring(topicName.indexOf("/node/") + "/node/".length());
         String appId = topicName.substring(topicName.indexOf("/app/") + "/app/".length(), topicName.indexOf("/node/"));
         logger.info("subscribed to {}", topicName);
-        IStateManager stateManager = stateManagerFactory.retreive(appId, nodeId);
+        IStateManager stateManager = stateManagerFactory.retrieve(appId, nodeId);
         try {
             if (stateManager == null) {
                 stateManager = stateManagerFactory.create(appId, nodeId);

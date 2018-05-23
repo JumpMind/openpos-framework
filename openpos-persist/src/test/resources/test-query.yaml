@@ -1,0 +1,41 @@
+---
+queries:
+-
+  name: byMakeAndModel
+  where: make = ${make}
+  optionalWhereClauses: 
+    - model = ${model}
+  orderBy: model_year
+- 
+  name: carSearch
+  optionalWhereClauses: 
+    - make = ${make}
+    - model_year = ${year}
+    - model = ${model}
+  orderBy: model_year, make, model
+-
+  name: carCountByModel
+  select: > 
+    select count(*) as count, model 
+    from car_car 
+    where make = ${make} 
+    group by model 
+    order by model
+-
+  name: carCountByModel_Segmented
+  select: select count(*) as count, model from car_car
+  where: make = ${make}
+  groupBy: model
+  orderBy: model
+- 
+  name: carReport
+  select: > 
+    select count(*) as count, model 
+    from car_car 
+    where make = ${make} 
+      AND model = ${model}
+    group by model 
+    order by model
+
+
+

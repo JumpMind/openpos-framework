@@ -3,24 +3,7 @@ import java.util.Date
 
 apply from: '../openpos-core/common.gradle'
 
-buildscript {
-    repositories {
-        mavenCentral()
-    }
-    dependencies {
-        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.9.RELEASE")
-    }
-}
-
-jar {
-    manifest {
-        attributes("Implementation-Title": project.name,
-                   "Implementation-Version": appVersion,
-                   "Project-Artifact": project.name,                       
-                   "Build-Version": appVersion,
-                   "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()))
-    }    
-}  
+apply plugin: 'distribution'
 
 processResources {
     from ('../openpos-client/dist/') {
@@ -28,8 +11,34 @@ processResources {
     }
 }
 
+distributions {
+   openpos {
+       baseName = 'Client'
+       contents {
+          into ('pos') {
+             from 'src/main/deploy'
+             fileMode 0755
+          }
+          into ('pos/lib') {
+             from configurations.compile
+             from project(":openpos-server").jar
+          }
+          into ('pos/public') {
+             from '../openpos-client/dist'
+          }
+       }
+   }
+}
+
+def projectLabelClient = "OpenPOSBase"
+
 dependencies {
+    compile project(":openpos-wrapper")    
     compile project(":openpos-core")
+    compile project(":openpos-context")
+    compile project(":openpos-user")
+    compile project(":openpos-i18n")
+    compile project(":openpos-tax")
     compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.10.RELEASE'
     testCompile group: 'org.jboss.forge.roaster', name: 'roaster-jdt', version: '2.20.1.Final'
 }

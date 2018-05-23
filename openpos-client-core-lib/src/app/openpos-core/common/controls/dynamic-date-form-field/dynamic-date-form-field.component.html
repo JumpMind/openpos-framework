@@ -1,0 +1,11 @@
+<div [formGroup]="form">
+        <mat-form-field fxFlexFill [ngClass]="{'text-xl': isPrompt}">
+                <input matInput [(ngModel)]="value" [formControlName]="controlName" [placeholder]="placeholder" [textMask]="{mask: dateMask, pipe: autoCorrectedDatePipe, keepCharPositions: true}"
+                    (keyup.enter)="onDateEntered()" (change)="onDateChange()">
+                <input matInput hidden [(ngModel)]="dateValue" [formControlName]="hiddenControl" [matDatepicker]="picker" (dateChange)="onDatePicked($event)">
+                <mat-datepicker-toggle *ngIf="!isPrompt && !hideCalendar" matSuffix [for]="picker" class="primary"></mat-datepicker-toggle>
+                <mat-datepicker-toggle *ngIf="isPrompt && !hideCalendar" matPrefix [for]="picker" class="primary"></mat-datepicker-toggle>
+                <mat-datepicker #picker touchUi="true"></mat-datepicker>
+                <mat-hint *ngIf="isPrompt" align="start">{{hintText}}</mat-hint>
+        </mat-form-field>
+</div>

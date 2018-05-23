@@ -5,21 +5,21 @@ import { SelectionMode } from './../common/selectionmode';
 import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Observable } from 'rxjs/Observable';
-import { AbstractApp } from '../common/abstract-app';
 
 @Component({
     selector: 'app-static-table',
     templateUrl: './static-table.component.html'
 })
-export class StaticTableComponent implements IScreen, DoCheck {
-    private lastSequenceNum: number;
+export class StaticTableComponent implements IScreen {
+
+    screen: any;
     rowData: RowDatabase;
     dataSource: RowDataSource | null;
 
     /** Table columns */
     columns: Array<ColumnDef> = [];
     columnIds: Array<string> = [];
-    columnsById: {[key: string]: ColumnDef} = {};
+    columnsById: { [key: string]: ColumnDef } = {};
 
     selectionMode: SelectionMode;
     selectedRow: number;
@@ -36,10 +36,10 @@ export class StaticTableComponent implements IScreen, DoCheck {
         this.columnsById = {};
         // Create the list of column definitions
         let columnIdx = 0;
-        if (this.session.screen.headerLabels) {
+        if (this.screen.headerLabels) {
             // Initialize the list of column metadata and other convenience
             // column data structures
-            this.session.screen.headerLabels.forEach(
+            this.screen.headerLabels.forEach(
                 (headerLabel) => {
                     this.columns.push(
                         { index: columnIdx++, columnId: headerLabel, headerLabel: headerLabel }
@@ -63,28 +63,19 @@ export class StaticTableComponent implements IScreen, DoCheck {
     }
 
     isRowSelected(rowIndex: number) {
-        return this.selectedRow === rowIndex ;
+        return this.selectedRow === rowIndex;
     }
 
-    ngDoCheck(): void {
-        if (this.session.screen.sequenceNumber !== this.lastSequenceNum) {
-            // Screen changed, re-init
-            this.init();
-            this.lastSequenceNum = this.session.screen.sequenceNumber;
-        }
-    }
+    show(screen: any) {
+        this.screen = screen;
 
-    init(): void {
-        this.selectionMode = SelectionMode[this.session.screen.selectionMode as string];
+        this.selectionMode = SelectionMode[this.screen.selectionMode as string];
         this.initColumnDefs();
-        this.rowData = new RowDatabase(this.session.screen.tableData);
+        this.rowData = new RowDatabase(this.screen.tableData);
 
         this.dataSource = new RowDataSource(this.rowData);
-        this.text = this.session.screen.text;
-        this.selectedRow = this.session.screen.selectedRow;
-    }
-
-    show(session: SessionService, app: AbstractApp) {
+        this.text = this.screen.text;
+        this.selectedRow = this.screen.selectedRow;
     }
 
     onSelectRow(rowIndex: number) {
@@ -143,25 +134,25 @@ export class RowDatabase {
         const copiedData = this.data.slice();
         copiedData.push(this.createNewRow(row));
         this.dataChange.next(copiedData);
-      }
+    }
 
     private createNewRow(row: Array<string>): TableRow {
         return {
-          index: this.data.length,
-          values: row
+            index: this.data.length,
+            values: row
         };
     }
 }
 
 export class RowDataSource extends DataSource<any> {
     constructor(private _rowDatabase: RowDatabase) {
-      super();
+        super();
     }
 
     /** Connect function called by the table to retrieve one stream containing the data to render. */
     connect(): Observable<TableRow[]> {
-      return this._rowDatabase.dataChange;
+        return this._rowDatabase.dataChange;
     }
 
-    disconnect() {}
+    disconnect() { }
 }

@@ -1,10 +1,11 @@
+import { NavListComponent } from './../../dialogs/nav-list/nav-list.component';
+import { MatDialog } from '@angular/material';
 import { DeviceService } from '../../services/device.service';
 import { ISellItem } from '../../common/isellitem';
 import { IScreen } from '../../common/iscreen';
 import { IMenuItem } from '../../common/imenuitem';
-import { Component, ViewChild, AfterViewInit, AfterContentInit, DoCheck, OnInit} from '@angular/core';
+import { Component, ViewChild, AfterViewInit, AfterContentInit, DoCheck, OnInit, AfterViewChecked, ElementRef} from '@angular/core';
 import { SessionService } from '../../services/session.service';
-import { AbstractApp } from '../../common/abstract-app';
 import { ObservableMedia } from '@angular/flex-layout';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs/Observable';
@@ -14,27 +15,26 @@ import { Observable } from 'rxjs/Observable';
   templateUrl: './transaction.component.html',
   styleUrls: ['./transaction.component.scss']
 })
-export class TransactionComponent implements AfterViewInit, DoCheck, IScreen, OnInit {
+export class TransactionComponent implements AfterViewInit, AfterViewChecked, IScreen, OnInit {
 
-
+  screen: any;
   @ViewChild('box') vc;
+  @ViewChild('scrollList') private scrollList: ElementRef;
+  public size = -1;
   initialized = false;
 
   public overFlowListSize: Observable<number>;
 
   public items: ISellItem[];
 
-  constructor(public session: SessionService, devices: DeviceService, private observableMedia: ObservableMedia) {
+  constructor(public session: SessionService, devices: DeviceService, 
+    private observableMedia: ObservableMedia, protected dialog: MatDialog) {
 
     }
 
-  show(session: SessionService, app: AbstractApp) {
-  }
-
-  ngDoCheck(): void {
-    if (typeof this.session.screen !== 'undefined') {
-      this.items = this.session.screen.items;
-    }
+  show(screen: any) {
+    this.screen = screen;
+    this.items = this.screen.items;
   }
 
   ngOnInit(): void {
@@ -46,7 +46,7 @@ export class TransactionComponent implements AfterViewInit, DoCheck, IScreen, On
       ['xl', 5]
     ]);
 
-    let startSize: number = 3;
+    let startSize = 3;
     sizeMap.forEach((size, mqAlias) => {
       if( this.observableMedia.isActive(mqAlias)){
         startSize = size;
@@ -59,26 +59,42 @@ export class TransactionComponent implements AfterViewInit, DoCheck, IScreen, On
     ).startWith(startSize);
   }
 
-
   ngAfterViewInit(): void {
     this.initialized = true;
   }
-
-  public doMenuItemAction(menuItem: IMenuItem, payLoad: any) {
-      this.session.onAction(menuItem.action, payLoad, menuItem.confirmationMessage);
-}
 
   onEnter(value: string) {
     this.session.response = value;
     this.session.onAction('Next');
   }
 
-  public isMenuItemEnabled(m: IMenuItem): boolean {
-    let enabled = m.enabled;
-    if (m.action.startsWith('<') && this.session.isRunningInBrowser()) {
-         enabled = false;
+  openItemDialog(item: ISellItem) {
+    this.session.response = item.index;
+    const dialogRef = this.dialog.open(NavListComponent, {
+      width: '70%',
+      data: {
+        optionItems: item.menuItems,
+        disableClose: false,
+        autoFocus: false
+     }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+    });
+  }
+
+  ngAfterViewChecked() {
+    if (this.items && this.size !== this.items.length) {
+      this.scrollToBottom();
+      this.size = this.items.length;
     }
-    return enabled;
+  }
+
+  scrollToBottom(): void {
+    try {
+      this.scrollList.nativeElement.scrollTop = this.scrollList.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 
 }

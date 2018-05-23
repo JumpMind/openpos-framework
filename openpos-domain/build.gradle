@@ -1,6 +1,0 @@
-apply from: '../openpos-server/common.gradle'
-
-dependencies {
-    compile "org.hibernate:hibernate-entitymanager:5.2.10.Final"
-    compile group: 'org.springframework', name: 'spring-context', version: "${springVersion}"
-}

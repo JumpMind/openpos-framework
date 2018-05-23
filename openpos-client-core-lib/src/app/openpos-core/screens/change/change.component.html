@@ -1,8 +1,7 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding-top:6px;">
 	<mat-card fxFlex="1 1 auto" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
+		<mat-card-title *ngIf="screen.prompt">{{screen.prompt}}</mat-card-title>
 		<mat-card-content>
-
-
 				<mat-table #table [dataSource]="itemsDataSource">
 					<ng-container matColumnDef="type">
 						<mat-header-cell *matHeaderCellDef> Type </mat-header-cell>
@@ -36,7 +35,7 @@
 			</mat-card-title>
 			<mat-card-content>
 				<p class="muted-color text-lg">
-					<span class="super-currency-symbol">$</span>{{session.screen.total}}</p>
+					<span class="super-currency-symbol">$</span>{{screen.total}}</p>
 			</mat-card-content>
 		</mat-card>
 		<mat-card fxFlex class="page-content-card  text-center">
@@ -45,7 +44,7 @@
 			</mat-card-title>
 			<mat-card-content>
 				<p class="muted-color  text-lg">
-					<span class="super-currency-symbol">$</span>{{session.screen.tendered}}</p>
+					<span class="super-currency-symbol">$</span>{{screen.tendered}}</p>
 			</mat-card-content>
 		</mat-card>
 		<mat-card fxFlex class="page-content-card text-center">
@@ -54,7 +53,7 @@
 			</mat-card-title>
 			<mat-card-content>
 				<p class="muted-color text-lg">
-					<span class="super-currency-symbol">$</span>{{session.screen.balanceDue}}</p>
+					<span class="super-currency-symbol">$</span>{{screen.balanceDue}}</p>
 			</mat-card-content>
 		</mat-card>
 	</div>

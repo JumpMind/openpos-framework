@@ -2,7 +2,7 @@
     <mat-card fxFlex="none" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
         <mat-card-content>
             <mat-list class="list-seperator field-list" ngClass="xs">
-                <mat-list-item *ngFor="let field of session.screen.item.fields">
+                <mat-list-item *ngFor="let field of screen.item.fields">
                     <p matLine>{{field.label}}</p>
                     <p matLine>{{field.value || 'N/A'}}</p> 
                 </mat-list-item>
@@ -10,7 +10,7 @@
         </mat-card-content>
     </mat-card>	
     
-    <mat-card fxFlex="shrink" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
+    <mat-card *ngIf="promosDataSource.filteredData.length > 0" fxFlex="shrink" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
 		<mat-card-content>
 
             <mat-table #table [dataSource]="promosDataSource">

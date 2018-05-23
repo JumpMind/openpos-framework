@@ -2,11 +2,10 @@ import { DeviceService } from '../../services/device.service';
 import { ISellItem } from '../../common/isellitem';
 import { IScreen } from '../../common/iscreen';
 import { IMenuItem } from '../../common/imenuitem';
-import { Component, ViewChild, AfterViewInit, DoCheck} from '@angular/core';
+import { Component, ViewChild, AfterViewInit, DoCheck } from '@angular/core';
 import { SessionService } from '../../services/session.service';
-import { AbstractApp } from '../../common/abstract-app';
 import { ITenderItem } from '../../common/itenderitem';
-import {MatTableDataSource} from '@angular/material';
+import { MatTableDataSource } from '@angular/material';
 
 @Component({
   selector: 'app-change',
@@ -15,25 +14,25 @@ import {MatTableDataSource} from '@angular/material';
 })
 export class ChangeComponent implements AfterViewInit, DoCheck, IScreen {
 
-  total : string;
-  tendered : string;
-  balanceDue : string;
+  total: string;
+  tendered: string;
+  balanceDue: string;
+  screen: any;
 
-  itemsDataSource : MatTableDataSource<ITenderItem>;
-  // public items: ITenderItem[];
+  itemsDataSource: MatTableDataSource<ITenderItem>;
 
   constructor(public session: SessionService, devices: DeviceService) {
 
   }
 
-  show(session: SessionService, app: AbstractApp) {
+  show(screen: any) {
+    this.screen = screen;
   }
 
   ngDoCheck(): void {
-      if (typeof this.session.screen !== 'undefined') {
-        // this.items = this.session.screen.items;
-        this.itemsDataSource = new MatTableDataSource(this.session.screen.items);
-      }
+    if (typeof this.screen !== 'undefined') {
+      this.itemsDataSource = new MatTableDataSource(this.screen.items);
+    }
   }
 
   ngAfterViewInit(): void {

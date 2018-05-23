@@ -9,10 +9,11 @@ import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.jumpmind.pos.core.flow.Action;
 import org.jumpmind.pos.core.model.FieldInputType;
-import org.jumpmind.pos.core.screen.DefaultScreen;
+import org.jumpmind.pos.core.model.Form;
+import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.core.screen.IPromptScreen;
 
-public abstract class AbstractPromptScreenTranslator<T extends DefaultScreen> extends AbstractLegacyScreenTranslator<T> {
+public abstract class AbstractPromptScreenTranslator<T extends Screen> extends AbstractLegacyScreenTranslator<T> {
 
 	public AbstractPromptScreenTranslator(ILegacyScreen legacyScreen, Class<T> screenClass) {
 	    this(legacyScreen, screenClass, null, null);
@@ -37,13 +38,18 @@ public abstract class AbstractPromptScreenTranslator<T extends DefaultScreen> ex
 
             String responseFieldType = getResponseFieldType(promptResponseSpec);
 
-            boolean enterData = "true".equals(promptResponseSpec.getPropertyValue("enterData").toLowerCase());
+            String enterDataValue = promptResponseSpec.getPropertyValue("enterData");
+            boolean enterData = "true".equals(enterDataValue != null ? enterDataValue.toLowerCase() : "false");
 
             String minLength = getSpecPropertyValue(promptResponseSpec, "minLength", promptAndResponseBeanModel.getMinLength());
             String maxLength = getSpecPropertyValue(promptResponseSpec, "maxLength", promptAndResponseBeanModel.getMaxLength());
 
             if (isNotBlank(formattedPromptText)) {
-                String text = formattedPromptText.replace(" and press Next", "").replace(" and press next", "").replace(", then press Next", "");
+                String text = formattedPromptText
+                        .replace("Enter number and press Next", "")
+                        .replace(" and press Next", "")
+                        .replace(" and press next", "")
+                        .replace(", then press Next", "");
                 if (text.endsWith(".")) {
                     text = text.substring(0, text.length() - 1);
                 }
@@ -89,6 +95,7 @@ public abstract class AbstractPromptScreenTranslator<T extends DefaultScreen> ex
             String resourceBundleFilename) {
         Optional<String> optPromptText = Optional.empty();
         try {
+          
             ILegacyPromptAndResponseModel promptAndResponseModel = this.legacyPOSBeanService.getLegacyPromptAndResponseModel(legacyScreen);
             
             String formattedPromptText = promptAndResponseModel.getPromptText();
@@ -118,22 +125,22 @@ public abstract class AbstractPromptScreenTranslator<T extends DefaultScreen> ex
         return responseFieldType;
     }
 
-    protected void handleNextAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action, DefaultScreen screen) {
+    protected void handleNextAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action, Form formResults) {
         String prompt = (action != null && action.getData() != null) ? action.getData().toString() : null;
         if (isNotBlank(prompt)) {
             setScreenResponseText(action.toDataString());
             tmServer.sendAction(action.getName());
         } else {
-            super.handleAction(subscriber, tmServer, action, screen);
+            super.handleAction(subscriber, tmServer, action, formResults);
         }
     }
     
     @Override
-    public void handleAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action, DefaultScreen screen) {
+    public void handleAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action, Form formResults) {
         if ("Next".equalsIgnoreCase(action.getName())) {
-            handleNextAction(subscriber, tmServer, action, screen);
+            handleNextAction(subscriber, tmServer, action, formResults);
         } else {
-            super.handleAction(subscriber, tmServer, action, screen);
+            super.handleAction(subscriber, tmServer, action, formResults);
         }
     }
 

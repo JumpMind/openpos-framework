@@ -12,6 +12,6 @@ public interface IDeviceResponse {
     void setDeviceId(String deviceId);
     String getType();
     void setType(String responseType);
-    String getPayload();
-    void setPayload(String payload);
+    Object getPayload();
+    void setPayload(Object payload);
 }

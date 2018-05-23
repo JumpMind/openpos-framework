@@ -7,7 +7,9 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@ngx-material-keyboard/core": "0.1.0",
+    "@angular/cdk": "5.2.4",
+    "@angular/material": "5.2.4",
+    "@oasisdigital/angular-material-search-select": "^0.12.0",
     "@stomp/ng2-stompjs": "0.4.1",
     "@stomp/stompjs": "4.0.0",
     "@types/signature_pad": "0.0.30",

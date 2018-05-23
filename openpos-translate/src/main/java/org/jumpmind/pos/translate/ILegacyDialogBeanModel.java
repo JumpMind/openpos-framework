@@ -5,6 +5,7 @@ import java.util.Locale;
 public interface ILegacyDialogBeanModel {
     enum DialogType {
         CONFIRMATION,
+        CUSTOMER_CONFIRMATION,
         ERROR,
         RETRY_CONTINUE_CANCEL,
         RETRY_CONTINUE,

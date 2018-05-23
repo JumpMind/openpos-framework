@@ -1,31 +1,22 @@
 package org.jumpmind.pos.translate;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractHeadlessUISubsystem implements ILegacySubsystem {
     protected final Logger logger = LoggerFactory.getLogger(getClass());
     
-    protected final static String MOBILE_POS_SCREEN_PREFIX = "MobilePOS_";
+    protected final static String MOBILE_POS_SCREEN_PREFIX = "MobilePOS_";    
 
     protected String configFileName;
     protected String uiPropertyFile;
     protected String factoryName;
-    protected List<ILegacyScreenListener> listeners = new ArrayList<>();
+    protected ITranslationManager translationManager;
     protected boolean statusUpdating = false;  // indicates if the current showScreen call is to 'SHOW_STATUS_ONLY'
     
     
-    public void addLegacyScreenListener(ILegacyScreenListener listener) {
-        if (!listeners.contains(listener)) {
-            this.listeners.add(listener);
-        }
-    }
-
-    public void removeLegacyScreenListener(ILegacyScreenListener listener) {
-        this.listeners.remove(listener);
+    public void setLegacyScreenListener(ITranslationManager listener) {
+        this.translationManager = listener;
     }
 
     public void setConfigFilename(String name) {

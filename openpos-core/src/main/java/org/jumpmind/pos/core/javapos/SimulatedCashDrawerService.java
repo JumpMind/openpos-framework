@@ -1,11 +1,15 @@
 package org.jumpmind.pos.core.javapos;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import jpos.JposException;
 import jpos.services.CashDrawerService19;
 
 public class SimulatedCashDrawerService extends AbstractSimulatedService implements CashDrawerService19 {
+    protected final Log logger = LogFactory.getLog(getClass());
 
-    private boolean cashDrawerOpened;
+    private long cashDrawerOpened = 1;
 
     @Override
     public int getDeviceServiceVersion() throws JposException {
@@ -14,27 +18,29 @@ public class SimulatedCashDrawerService extends AbstractSimulatedService impleme
 
     @Override
     public void reset() {
-        this.cashDrawerOpened = false;
+        this.cashDrawerOpened = 1;
     }
 
-    public void toggleDrawer(boolean open) {
-        if (open) {
-            this.cashDrawerOpened = true;
-        } else {
-            this.cashDrawerOpened = false;
-        }
-    }
+
 
     public boolean getDrawerOpened() throws JposException {
-        return this.cashDrawerOpened;
+        boolean open = System.currentTimeMillis() - this.cashDrawerOpened < 2000;
+        logger.info("The cash drawer was open? " + open);
+        return open;
     }
 
     public void openDrawer() throws JposException {
-        toggleDrawer(true);
+        logger.info("The cash drawer was opened");
+        this.cashDrawerOpened = System.currentTimeMillis();
     }
 
     public void waitForDrawerClose(int arg0, int arg1, int arg2, int arg3) throws JposException {
-
+    	try {
+			Thread.sleep(2000);
+			logger.info("The simulated cash drawer was closed");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
     }
 
     public void compareFirmwareVersion(String arg0, int[] arg1) throws JposException {

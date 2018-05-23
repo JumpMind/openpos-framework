@@ -1,0 +1,30 @@
+<mat-toolbar *ngIf="data" class="mat-elevation-z1 large-statusbar" ngClass.xs="small-statusbar">
+	<div fxFill fxLayout="row" fxLayoutAlign="space-between ">
+		<div fxLayout="row" fxLayoutAlign=" center">
+
+			<button *ngIf="data.showScan" mat-button (click)="showScan()">
+				<mat-icon svgIcon="openpos_search_id_code" class="icon-statusbar"></mat-icon>
+			</button>
+
+			<ng-container *ngIf="data && data.type !='SelfCheckoutTransaction' && data.backButton && data.backButton.enabled; else checkForLogoutButton">
+				<button mat-button style="margin-left:-20px" (click)="doMenuItemAction(data.backButton)">
+					<app-icon iconName="openpos_exit"></app-icon>
+				</button>
+			</ng-container>
+
+		</div>
+
+		<div class="self-checkout-logo"></div>
+
+		<div fxLayout="row" fxLayoutAlign=" center">
+			<button *ngIf="data.showSkip" mat-button (click)="this.session.onAction('Skip')">
+				<h2>SKIP</h2>
+			</button>
+		</div>
+
+		<button *ngIf="data.showAdmin" mat-button (click)="onAdminLogin()">
+			<mat-icon svgIcon="openpos_admin" class="icon-statusbar"></mat-icon>
+		</button>
+
+	</div>
+</mat-toolbar>

@@ -33,6 +33,8 @@ public class SimulatedPOSPrinterService extends AbstractSimulatedService impleme
     protected int rotateSpecial;
     protected boolean slpLetterQuality;
     protected Map<Integer, InMemoryBitmap> inMemoryBitmaps;
+    
+    protected StringBuilder receipt = new StringBuilder();
 
     public SimulatedPOSPrinterService() {
         logger.trace(String.format("%s created", this.getClass()));
@@ -42,8 +44,7 @@ public class SimulatedPOSPrinterService extends AbstractSimulatedService impleme
     }
 
     public void appendText(final int type, final String newText) {
-
-        printerLogger.info(newText);
+        receipt.append(newText);        
     }
 
     public void printBarCode(int i, String s, int j, int k, int l, int i1, int j1) throws JposException {
@@ -67,6 +68,8 @@ public class SimulatedPOSPrinterService extends AbstractSimulatedService impleme
 
     public void cutPaper(int i) throws JposException {
         appendText(i, "\n\n--------------- cut here ---------------\n\n");
+        printerLogger.info("\n" + receipt);
+        receipt.setLength(0);
     }
 
     public void clearPrintArea() throws JposException {

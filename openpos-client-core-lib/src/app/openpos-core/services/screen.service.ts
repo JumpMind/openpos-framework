@@ -1,6 +1,8 @@
+import { FullPageImageComponent } from './../screens/full-page-image/full-page-image.component';
 import { TillCountOtherTenderComponent } from './../screens/till/till-count-other-tender.component';
 import { OptionsComponent } from './../screens/options/options.component';
 import { BlankComponent } from '../templates/blank/blank.component';
+import { BlankWithBarComponent } from '../templates/blank-with-bar/blank-with-bar.component';
 import { LoginComponent } from './../screens/login/login.component';
 import { PersonalizationComponent } from '../screens/personalization.component';
 import { WarrantyCoverageComponent } from '../screens/warranty-coverage.component';
@@ -9,15 +11,17 @@ import { BasicItemSearchComponent } from '../screens/basic-item-search.component
 import { EmbeddedWebPageComponent } from '../screens/embedded-web-page.component';
 import { PromptComponent } from '../screens/prompt.component';
 import { TransactionComponent } from '../screens/transaction/transaction.component';
-import { SelfCheckoutTransactionComponent } from '../screens/self-checkout-transaction/self-checkout-transaction.component';
+import { SelfCheckoutTransactionComponent } from '../self-checkout/self-checkout-transaction/self-checkout-transaction.component';
 import { SellItemDetailComponent } from '../screens/sell-item-detail.component';
 import { SignatureCaptureComponent } from '../screens/signature-capture.component';
 import { PaymentStatusComponent } from '../screens/payment-status.component';
+import { SelfCheckoutPaymentStatusComponent } from '../self-checkout/self-checkout-payment-status/self-checkout-payment-status.component';
 import { FormComponent } from '../screens/form.component';
 import { DynamicFormComponent } from '../screens/dynamic-form/dynamic-form.component';
 import { HomeComponent } from '../screens/home.component';
+import { SelfCheckoutHomeComponent } from '../self-checkout/self-checkout-home/self-checkout-home.component';
 import { ItemListComponent } from '../screens/item-list.component';
-import { ChooseOptionsComponent } from '../screens/choose-options.component';
+import { ChooseOptionsComponent } from '../screens/choose-options/choose-options.component';
 import { PromptWithOptionsComponent } from '../screens/prompt-with-options.component';
 import { PromptWithInfoComponent } from '../screens/prompt-with-info.component';
 import { StaticTableComponent } from '../screens/static-table.component';
@@ -32,13 +36,19 @@ import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { TenderingComponent } from '../screens/tendering.component';
 import { SellComponent } from '../templates/sell/sell.component';
+import { SelfCheckoutWithBarComponent } from '../templates/selfcheckout-with-bar/selfcheckout-with-bar.component';
 import { TillSummaryComponent } from '../screens/till/till-summary.component';
 import { TillCountComponent } from '../screens/till/till-count.component';
 import { ChangeComponent } from '../screens/change/change.component';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { SessionService } from '../services/session.service';
 import { PrintPreviewComponent } from '../screens/print-preview.component';
 import { WaitComponent } from '../screens/wait/wait.component';
+import { CustomerSearchResultsComponent } from '../screens/customer-search-results/customer-search-results.component';
+import { SelfCheckoutOptionsComponent } from '../self-checkout/self-checkout-options/self-checkout-options.component';
+import { CallForAuthorizationComponent } from '../screens/call-for-authorization/call-for-authorization.component'
+import { DialogComponent } from '../screens/dialog/dialog.component';
+import { MultipleDynamicFormComponent } from '../screens/multiple-dynamic-form/multiple-dynamic-form.component';
 
 @Injectable()
 export class ScreenService {
@@ -55,8 +65,10 @@ export class ScreenService {
     this.screens.set('DynamicForm', DynamicFormComponent);
     this.screens.set('Login', LoginComponent);
     this.screens.set('Home', HomeComponent);
+    this.screens.set('SelfCheckoutHome', SelfCheckoutHomeComponent);
     this.screens.set('ItemList', ItemListComponent);
     this.screens.set('PaymentStatus', PaymentStatusComponent);
+    this.screens.set('SelfCheckoutPaymentStatus', SelfCheckoutPaymentStatusComponent);
     this.screens.set('Prompt', PromptComponent);
     this.screens.set('PromptWithOptions', PromptWithOptionsComponent);
     this.screens.set('PromptWithInfo', PromptWithInfoComponent);
@@ -76,10 +88,20 @@ export class ScreenService {
     this.screens.set('Change', ChangeComponent);
     this.screens.set('PrintPreview', PrintPreviewComponent);
     this.screens.set('Wait', WaitComponent);
+    this.screens.set('CustomerSearch', CustomerSearchResultsComponent);
+    this.screens.set('SelfCheckoutOptions', SelfCheckoutOptionsComponent);
+    this.screens.set('FullPageImage', FullPageImageComponent);
+    this.screens.set('CallForAuthorization', CallForAuthorizationComponent);
+    this.screens.set('MultipleDynamicForm', MultipleDynamicFormComponent);
+
+    // Default Dialog 
+    this.screens.set('Dialog', DialogComponent);
 
     // Templates
     this.screens.set('Blank', BlankComponent);
+    this.screens.set('BlankWithBar', BlankWithBarComponent);
     this.screens.set('Sell', SellComponent);
+    this.screens.set('SelfCheckout', SelfCheckoutWithBarComponent);
   }
 
   public addScreen(name: string, type: Type<IScreen>): void {
@@ -104,13 +126,18 @@ export class ScreenService {
     }
   }
 
-  public getFieldValues(fieldId: string): Observable<any> {
+  public getFieldValues(fieldId: string, searchTerm?: string): Observable<any> {
     const url: string = this.sessionService.getApiServerBaseURL() + '/app/'
       + this.sessionService.getAppId() + '/node/'
       + this.sessionService.getNodeId() + '/control/'
       + fieldId;
-      console.log(`Requesting field values from the server using url: ${url}`);
-    return this.http.get(url, {});
+
+    const httpParams = {};
+    if (searchTerm) {
+      httpParams['searchTerm'] = searchTerm;
+    }
+    console.log(`Requesting field values from the server using url: ${url}, params: '${JSON.stringify(httpParams)}'`);
+    return this.http.get(url, {params: httpParams});
   }
 
 }

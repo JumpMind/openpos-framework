@@ -1,0 +1,12 @@
+<h1 mat-dialog-title class="text-md">
+    Please select an option
+</h1>
+<mat-dialog-content>
+    <mat-nav-list>
+        <mat-list-item *ngFor="let o of items" (click)="select(o)">
+            <span>{{o}}</span>
+            <span fxFlex="1 1 auto"></span>
+            <mat-icon color="primary" class="material-icons">keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+    </mat-nav-list>
+</mat-dialog-content>

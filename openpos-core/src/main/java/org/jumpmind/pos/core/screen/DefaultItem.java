@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.screen;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.jumpmind.pos.core.model.FormDisplayField;
@@ -13,7 +14,8 @@ public class DefaultItem implements IItem, Serializable {
     private String description;
     private String subtitle;
     private String amount;
-    private List<FormDisplayField> fields;
+    private List<String> labels = new ArrayList<>();
+    private List<FormDisplayField> fields = new ArrayList<>();;
     private boolean selected = false;
 
     public DefaultItem() {}
@@ -81,6 +83,10 @@ public class DefaultItem implements IItem, Serializable {
         this.fields = fields;
     }
     
+    public void addField(FormDisplayField field) {
+        this.fields.add(field);
+    }
+    
     @Override
     public boolean isSelected() {
         return this.selected;
@@ -91,5 +97,17 @@ public class DefaultItem implements IItem, Serializable {
         this.selected = selected;
     }
 
+    public List<String> getLabels() {
+        return labels;
+    }
+
+    public void setLabels(List<String> labels) {
+        this.labels = labels;
+    } 
+    
+    public void addLabel( String label ) {
+        this.labels.add( label );
+    }
+    
 }
 

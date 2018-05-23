@@ -1,6 +1,6 @@
 <div fxFlexFill fxLayout="row" fxLayoutAlign="center" fxLayoutWrap >
       <mat-card *ngFor="let menuItem of menuItems" fxFlexAlign="center" fxHide.xs>
-          <button mat-raised-button color=primary style="height:150px;width:150px"
+          <button mat-raised-button color=primary style="height:135px;width:135px"
           (click)="onMenuItemClick(menuItem)" >
           <div fxLayoutAlign="center center" fxLayout="column">
               <app-icon fxFlex="1 0 auto" iconName="{{menuItem.icon}}" iconClass="material-icons mat-64"></app-icon>
@@ -18,5 +18,4 @@
           </mat-list-item>
       </mat-nav-list>
     </mat-card>
-  <div class="home-screen-logo"></div>
 </div>

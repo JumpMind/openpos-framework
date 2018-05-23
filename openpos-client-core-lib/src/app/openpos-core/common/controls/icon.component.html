@@ -1,4 +1,3 @@
 <!-- Note that new local icons must be registered in the IconService (icon.service.ts) in order for them to render -->
 <mat-icon *ngIf="isLocalIcon()" [svgIcon]="iconName" [ngClass]="iconClass"></mat-icon>
-<mat-icon *ngIf="! isLocalIcon()" [ngClass]="iconClass">{{iconName}}</mat-icon>
-
+<mat-icon *ngIf="!isLocalIcon()" [ngClass]="iconClass">{{iconName}}</mat-icon>

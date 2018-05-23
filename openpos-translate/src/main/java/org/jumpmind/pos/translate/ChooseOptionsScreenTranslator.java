@@ -5,8 +5,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jumpmind.pos.core.flow.Action;
+import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.screen.ChooseOptionsScreen;
-import org.jumpmind.pos.core.screen.DefaultScreen;
 import org.jumpmind.pos.core.screen.OptionItem;
 import org.jumpmind.pos.core.screen.ScreenType;
 
@@ -30,7 +30,7 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extend
     public ChooseOptionsScreenTranslator(ILegacyScreen headlessScreen, Class<T> screenClass, Function<OptionItem, Boolean> optionFilter) {
         super(headlessScreen, screenClass);
         this.optionItemEvalFunc = optionFilter;
-        getScreen().setType(ScreenType.ChooseOptions);
+        screen.setType(ScreenType.ChooseOptions);
     }
     
     public void setUndoMacro(InteractionMacro undoMacro) {
@@ -44,7 +44,7 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extend
        
         String formattedPromptText = this.getPromptText(this.getLegacyUIModel(), this.getLegacyAssignmentSpec(PROMPT_RESPONSE_PANEL_KEY), 
                 legacyScreen.getResourceBundleFilename()).orElse(null);
-        getScreen().setPromptText(formattedPromptText);
+        screen.setPromptText(formattedPromptText);
     }
     
     protected void buildOptions() {
@@ -52,16 +52,16 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extend
         if (this.optionItemEvalFunc != null) {
             options = options.stream().filter(o -> { return this.optionItemEvalFunc.apply(o); }).collect(Collectors.toList());
         }
-        getScreen().setOptions(options);
+        screen.setOptions(options);
     }
     
     @Override
     public void handleAction(ITranslationManagerSubscriber subscriber, TranslationManagerServer tmServer, Action action,
-            DefaultScreen screen) {
+            Form formResults) {
         if ("Undo".equals(action.getName()) && undoMacro != null) {
             tmServer.executeMacro(undoMacro);
         } else {
-            super.handleAction(subscriber, tmServer, action, screen);
+            super.handleAction(subscriber, tmServer, action, formResults);
         }
     }
     

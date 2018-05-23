@@ -1,16 +1,22 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding:6px">
-  <app-dynamic-form-control fxFlex #tillForm [screenForm]="session.screen.form"></app-dynamic-form-control>
+  <mat-card fxFlex class="page-content-card scrollable-content-card text-left">
+    <mat-card-content>
+        <app-dynamic-form-control fxFlex #tillForm [screenForm]="screen.form" [screen]="screen"></app-dynamic-form-control>
+    </mat-card-content>
+   </mat-card>
   <mat-card fxFlex="0 1 auto" class="page-content-card text-left">
     <mat-card-title ngClass="muted-color text-sm" ngClass.xs="text-xs">
         Total
     </mat-card-title>
     <mat-card-content>
       <p ngClass="muted-color text-lg" ngClass.xs="text-md">
-      <span class="super-currency-symbol"></span>{{session.screen.total}}</p>
+      <span class="super-currency-symbol"></span>{{screen.total}}</p>
     </mat-card-content>
   </mat-card>
-  <button fxFlex="0 1 auto" fxFlexAlign="end" *ngIf="nextAction" type="submit" mat-button color="primary-inverse" (click)="onNextAction()">
-      <span>Next</span>
-      <mat-icon class="material-icons">{{nextAction.icon}}</mat-icon>
-  </button>
+  <div  fxFlexAlign="end" fxFlex="0 1 auto" style="padding:10px 0px">
+      <button *ngIf="nextAction" type="submit" mat-raised-button color=primary (click)="onNextAction()" form="dynamic-form">
+          <span>Next</span>
+          <mat-icon class="material-icons">{{nextAction.icon}}</mat-icon>
+      </button>
+  </div>
 </div>

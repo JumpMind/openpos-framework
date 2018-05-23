@@ -1,49 +1,25 @@
-<mat-toolbar *ngIf="session.screen" fxLayout="row" fxLayoutAlign="space-between center" 
-			class="mat-elevation-z10" (click)="onToolbarClick()">
+<mat-toolbar *ngIf="data" fxLayout="row" fxLayoutAlign="space-between center" 
+			class="mat-elevation-z10" >
 	<span fxFlex fxLayout="row" fxLayoutAlign="start center">
-		<button *ngIf="session.screen && session.screen.backButton && session.screen.backButton.enabled"
-			mat-button style="margin-left:-20px" (click)="session.onAction(session.screen.backButton.action)">
+		<button *ngIf="data && data.backButton && data.backButton.enabled"
+			mat-button style="margin-left:-20px" (click)="session.onAction(data.backButton.action)">
 			<mat-icon class="material-icons mat-48">keyboard_arrow_left</mat-icon>
 		</button>
-		<mat-icon *ngIf="session.screen.icon">{{session.screen.icon}}</mat-icon>
-		<span class="text-sm">&nbsp;{{session.screen.name}}</span>
+		<app-icon *ngIf="data.screenIcon" [iconName]="data.screenIcon"></app-icon>
+		<span class="text-sm">&nbsp;{{data.screenName}}</span>
 	</span>
+	
+	<div *ngIf="data.screenType==='Home'" class="home-screen-logo"></div>
+
 	<span fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
-		<mat-icon *ngIf="session.screen && session.screen.operatorName"  class="material-icons">lock_open</mat-icon>
-		<span *ngIf="session.screen && session.screen.operatorName"  class="text-sm" fxHide.xs>
-			{{session.screen.operatorName}}&nbsp;on Register&nbsp;#{{session.screen.workstation.workstationId}}
+		<mat-icon *ngIf="data && data.operatorText"  class="material-icons">lock_open</mat-icon>
+		<span *ngIf="data && data.operatorText"  class="text-sm" fxHide.xs>
+			{{data.operatorText}}&nbsp;on Register&nbsp;#{{data.workstationId}}
 		</span>
-		<span *ngIf="session.screen && session.screen.operatorName"  class="text-sm" fxShow.xs>
-				{{session.screen.operatorName}}
-			</span>		
-		<button mat-icon-button *ngIf="session.screen && session.screen.logoutButton && session.screen.type != 'Home'"
-			(click)="doMenuItemAction(session.screen.logoutButton)" [disabled]="!isMenuItemEnabled(session.screen.logoutButton)">
-			<app-icon *ngIf="session.screen.logoutButton.icon" [iconName]="session.screen.logoutButton.icon"></app-icon>
+		<button mat-icon-button *ngIf="data && data.logoutButton && data.screenType != 'Home'"
+			(click)="doMenuItemAction(data.logoutButton)" [disabled]="!isMenuItemEnabled(data.logoutButton)">
+			<app-icon *ngIf="data.logoutButton.icon" [iconName]="data.logoutButton.icon"></app-icon>
 		</button>
-		<ng-container *ngIf="devModeEnabled">
-				<button mat-icon-button [matMenuTriggerFor]="devMenu" (click)="onDevMenuClick()"><mat-icon>code</mat-icon></button>
-	
-				<mat-menu #devMenu="matMenu">
-					<button mat-menu-item (click)="onDevClearLocalStorage()">Clear Local Storage</button>
-					<button mat-menu-item [matMenuTriggerFor]="logsMenu">Logs</button>
-					<button mat-menu-item (click)="onDevRefreshView()">Refresh View</button>
-					<button mat-menu-item (click)="onPersonalize()">Personalize</button>
-				</mat-menu>
-	
-				<mat-menu #logsMenu="matMenu">
-					<button mat-menu-item [matMenuTriggerFor]="logShareMenu">Share</button>
-					<button mat-menu-item [matMenuTriggerFor]="logUploadMenu">Upload</button>
-				</mat-menu>
-	
-				<mat-menu #logShareMenu="matMenu">
-					<button mat-menu-item *ngFor="let m of logFilenames" (click)="onLogfileSelected(m)">{{m}}</button> 
-				</mat-menu>
-									
-				<mat-menu #logUploadMenu="matMenu">
-					<button mat-menu-item *ngFor="let m of logFilenames" (click)="onLogfileUpload(m)">{{m}}</button> 
-				</mat-menu>
-	
-			</ng-container>
 	</span>
 			
 </mat-toolbar>

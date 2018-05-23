@@ -4,8 +4,8 @@
 @import '~openpos-core/styles/core';
 @import '~openpos-core/styles/app-theme';
 @import 'training';
-@import '~openpos-core/styles/themes/theme';
+@import 'default';
 
 @include openpos-core();
 @include training-theme();
-@include openpos-theme(); 
+@include default-theme(); 

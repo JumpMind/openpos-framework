@@ -1,3 +1,4 @@
+import { DynamicScreenComponent } from './dynamic-screen/dynamic-screen.component';
 import { IMenuItem } from './../common/imenuitem';
 import { IScreen } from '../common/iscreen';
 import { Component, ViewChild, AfterViewInit, DoCheck, OnInit, Output } from '@angular/core';
@@ -6,7 +7,6 @@ import { MatSelectChange } from '@angular/material';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { ValidatorFn } from '@angular/forms/src/directives/validators';
 import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
-import { AbstractApp } from '../common/abstract-app';
 
 @Component({
     selector: 'app-personalization',
@@ -17,7 +17,6 @@ export class PersonalizationComponent implements IScreen, OnInit {
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
     checkTimeout: any;
-    app: AbstractApp;
 
     constructor(public session: SessionService, private formBuilder: FormBuilder, private http: HttpClient) {
     }
@@ -25,7 +24,8 @@ export class PersonalizationComponent implements IScreen, OnInit {
     ngOnInit() {
         this.firstFormGroup = this.formBuilder.group({
             serverName: ['', [Validators.required]],
-            serverPort: ['', [Validators.required, , Validators.pattern('^[0-9]+$')]]
+            serverPort: ['', [Validators.required, , Validators.pattern('^[0-9]+$')]],
+            sslEnabled: ['']
         }, { asyncValidator: this.serverValidator });
         this.secondFormGroup = this.formBuilder.group({
             storeNumber: ['', [Validators.required, , Validators.pattern('\\d{5}')]],
@@ -33,13 +33,13 @@ export class PersonalizationComponent implements IScreen, OnInit {
         });
     }
 
-    show(session: SessionService, app: AbstractApp): void {
-        this.app = app;
+    show(screen: any): void {
     }
 
     public personalize() {
         this.session.personalize(this.firstFormGroup.get('serverName').value, this.firstFormGroup.get('serverPort').value,
-            this.secondFormGroup.get('storeNumber').value, this.secondFormGroup.get('deviceNumber').value);
+            this.secondFormGroup.get('storeNumber').value, this.secondFormGroup.get('deviceNumber').value, 
+            this.firstFormGroup.get('sslEnabled').value);
     }
 
     serverValidator = (control: AbstractControl) => {
@@ -48,8 +48,13 @@ export class PersonalizationComponent implements IScreen, OnInit {
             this.checkTimeout = setTimeout(() => {
                 const serverName = control.get('serverName').value;
                 const serverPort = control.get('serverPort').value;
+                const sslEnabled: boolean = control.get('sslEnabled').value;
                 if (serverName) {
-                    let url: string = 'http://' + serverName;
+                    let protocol = 'http://';
+                    if (sslEnabled) {
+                        protocol = 'https://';
+                    }
+                    let url: string = protocol + serverName;
                     if (serverPort) {
                         url = url + ':' + serverPort;
                     }

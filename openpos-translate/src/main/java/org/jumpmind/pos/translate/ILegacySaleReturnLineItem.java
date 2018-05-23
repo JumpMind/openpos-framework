@@ -13,4 +13,20 @@ public interface ILegacySaleReturnLineItem {
     ILegacyCurrency getExtendedDiscountedSellingPrice();
     String getItemSizeCode();
     List<String> getUPCList();
+    BigDecimal getQuantityReturnedDecimal();
+    boolean isOrderLineItem();
+    boolean isItemPickedUp();
+    boolean isFromTransaction();
+    boolean isGiftReceiptItem();
+    String getTruncatedGiftCardNumber();
+    String getItemSerial();
+    boolean getItemSendFlag();
+    int getSendLabelCount();
+    String getRegistryID();
+    boolean getSalesAssociateModifiedFlag();
+    String getSalesAssociateFirstName();
+    String getReceiptDescription();
+    ILegacyCurrency getSellingPrice();
+    String getTaxStatusDescriptor();
+    ILegacyCurrency getItemDiscountTotal();
 }

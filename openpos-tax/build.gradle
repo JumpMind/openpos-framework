@@ -1,0 +1,85 @@
+import java.text.SimpleDateFormat
+import java.util.Date
+
+group = 'org.jumpmind.pos'
+
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'eclipse'
+apply plugin: 'java'
+
+sourceCompatibility=1.8
+targetCompatibility=1.8
+
+repositories {
+    maven { url symmetricMavenUrl }
+}
+
+eclipse {
+    classpath {
+        downloadSources = true
+        downloadJavadoc = false
+    }
+}
+
+ext {
+   springBootVersion = '1.5.9.RELEASE'
+   springVersion = '4.3.14.RELEASE'
+}
+
+task develop {
+    description 'Generates Eclipse artifacts and sets up your development environment'
+    dependsOn tasks.cleanEclipse, tasks.eclipse
+    delete '.settings'
+}
+
+dependencies {
+    compile project(":openpos-persist")
+    compile project(":openpos-service")
+    compile "com.h2database:h2:1.4.196"
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    compile(group: 'log4j', name: 'log4j', version: '1.2.17')    
+    compile "io.springfox:springfox-swagger2:$springfoxSwaggerVersion"
+    compile "io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion"
+
+    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+        exclude module: "spring-boot-starter-tomcat"
+        exclude module: "spring-boot-starter-logging"
+    }
+    testCompile("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"){
+        exclude module: "spring-boot-starter-logging"
+    }
+    testCompile("org.springframework.boot:spring-boot-starter-websocket:$springBootVersion"){
+        exclude module: "spring-boot-starter-tomcat"
+        exclude module: "spring-boot-starter-logging"
+    }
+
+    testCompile group: 'org.jboss.forge.roaster', name: 'roaster-jdt', version: '2.20.1.Final'    
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": project.name,
+                   "Implementation-Version": appVersion,
+                   "Project-Artifact": project.name,                       
+                   "Build-Version": appVersion,
+                   "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()))
+    }    
+}  
+
+processResources {
+    from ('../openpos-tax/dist/') {
+        into 'public'
+    }
+}

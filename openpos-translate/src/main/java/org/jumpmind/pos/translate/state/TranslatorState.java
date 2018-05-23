@@ -7,8 +7,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.StreamSupport;
 
-import javax.annotation.PostConstruct;
-
 import org.jumpmind.pos.core.device.DefaultDeviceResponse;
 import org.jumpmind.pos.core.device.IDeviceRequest;
 import org.jumpmind.pos.core.device.IDeviceResponse;
@@ -16,13 +14,18 @@ import org.jumpmind.pos.core.flow.Action;
 import org.jumpmind.pos.core.flow.ActionHandler;
 import org.jumpmind.pos.core.flow.IState;
 import org.jumpmind.pos.core.flow.IStateManager;
-import org.jumpmind.pos.core.screen.DefaultScreen;
+import org.jumpmind.pos.core.flow.In;
+import org.jumpmind.pos.core.flow.Out;
+import org.jumpmind.pos.core.flow.ScopeType;
+import org.jumpmind.pos.core.model.Form;
+import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.core.service.IDeviceService;
 import org.jumpmind.pos.translate.ITranslationManager;
 import org.jumpmind.pos.translate.ITranslationManagerSubscriber;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
@@ -30,45 +33,58 @@ import org.springframework.core.env.MutablePropertySources;
 
 public class TranslatorState implements IState {
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
+    final protected Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+    @In(scope=ScopeType.Node)
     protected IStateManager stateManager;
 
-    @Autowired
+    @In(scope=ScopeType.Node, required=false)
+    @Out(scope=ScopeType.Node)
     protected ITranslationManager translationManager;
 
-    @Autowired(required = false)
+    @In(scope=ScopeType.Node, required=false)
+    @Out(scope=ScopeType.Node)
     protected ITranslationManagerSubscriber subscriber;
 
     @Autowired
     protected IDeviceService deviceService;
 
     @Autowired
-    protected Environment env;
-
-    @PostConstruct
-    public void init() {
-        if (translationManager == null) {
-            throw new IllegalStateException("When using a translation state, we expect an implementation of "
-                    + ITranslationManager.class.getSimpleName() + " to be bound at the prototype scope");
-        }
-    }
+    protected Environment env;   
+    
+    @Autowired
+    ApplicationContext applicationContext;    
 
     @Override
     public void arrive(Action action) {
-        subscribe();
-        translationManager.showActiveScreen();
+        if (subscribe(action)) {
+            translationManager.showActiveScreen();
+        } else {
+            translationManager.doAction(subscriber.getAppId(), action, new Form());
+        }
+    }
+    
+    protected ITranslationManager getTranslationManager() {
+        return this.translationManager;
     }
 
-    protected void subscribe() {
-        if (subscriber == null) {
-            ITranslationManagerSubscriber subscriber = new ITranslationManagerSubscriber() {
-
+    protected boolean subscribe(Action action) {
+        if (subscriber == null || (action != null && "restart".equalsIgnoreCase(action.getName()))) {
+            
+            this.translationManager = applicationContext.getBean(ITranslationManager.class);  
+            if (this.translationManager == null) {
+                throw new IllegalStateException("When using a translation state, we expect an implementation of "
+                        + ITranslationManager.class.getSimpleName() + " to be bound at the prototype scope");
+            }
+            
+            logger.info("Creating new translation manager subscriber");
+            
+            this.subscriber = new ITranslationManagerSubscriber() {
+                private static final long serialVersionUID = 1L;
                 Properties properties;
 
                 @Override
-                public void showScreen(DefaultScreen screen) {
+                public void showScreen(Screen screen) {
                     stateManager.showScreen(screen);
                 }
 
@@ -111,13 +127,20 @@ public class TranslatorState implements IState {
                             request);
                     try {
                         response = futureResponse.get(request.getTimeout(), TimeUnit.MILLISECONDS);
+                        if (response != null) {
+                            logger.info("Reponse of type '{}' received from device '{}', for request id: {}", response.getType(), response.getDeviceId(), response.getRequestId() );
+                        } else {
+                            logger.warn("Received a null response for request id: {}", request.getRequestId());
+                        }
                     } catch (TimeoutException ex) {
+                        logger.warn("Timeout ({}ms) reached for DeviceRequest id: {}, type: {}, subtype: {}.", request.getTimeout(), 
+                                request.getRequestId(), request.getType(), request.getSubType() );
                         futureResponse.cancel(true);
                         response = new DefaultDeviceResponse(request.getRequestId(), request.getDeviceId(),
                                 IDeviceResponse.DEVICE_TIMEOUT_RESPONSE_TYPE, "Timeout reached. " + ex.getMessage());
                     } catch (Exception ex) {
                         futureResponse.cancel(true);
-                        String msg = String.format("Failure waiting for a response. Error: {}", ex.getMessage());
+                        String msg = String.format("Failure waiting for a response for DeviceRequest id: %s. Error: %s", request.getRequestId(), ex.getMessage());
                         response = new DefaultDeviceResponse(request.getRequestId(), request.getDeviceId(),
                                 IDeviceResponse.DEVICE_ERROR_RESPONSE_TYPE, msg);
                         logger.error(msg);
@@ -126,14 +149,21 @@ public class TranslatorState implements IState {
                 }
             };
             translationManager.setTranslationManagerSubscriber(subscriber);
-            stateManager.setNodeScope("translationManager", translationManager);
-            stateManager.setNodeScope("subscriber", subscriber);
+            return true;
+        } else {
+            return false;
         }
     }
 
+    
+    @ActionHandler 
+    public void onRestart(Action action) {
+        this.arrive(action);
+    }
+    
     @ActionHandler
-    public void onAnyAction(Action action, DefaultScreen screen) {
-        translationManager.doAction(stateManager.getAppId(), action, screen);
+    public void onAnyAction(Action action, Form form) {
+        translationManager.doAction(stateManager.getAppId(), action, form);
     }
 
 }

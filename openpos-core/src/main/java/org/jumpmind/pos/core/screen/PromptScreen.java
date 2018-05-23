@@ -1,10 +1,12 @@
 package org.jumpmind.pos.core.screen;
 
 
-import org.jumpmind.pos.core.model.FieldInputType;
-import org.jumpmind.pos.core.model.IMaskSpec;
+import java.util.ArrayList;
+import java.util.List;
 
-public class PromptScreen extends DefaultScreen implements IPromptScreen {
+import org.jumpmind.pos.core.model.FieldInputType;
+
+public class PromptScreen extends Screen implements IPromptScreen {
 
     private static final long serialVersionUID = 1L;
     
@@ -18,9 +20,10 @@ public class PromptScreen extends DefaultScreen implements IPromptScreen {
     private Integer maxLength;
     private String action = "Next";
     private MenuItem actionButton = null;
-    private IMaskSpec promptMask;
     private String comments = "";
     private boolean showComments = false;
+    private List<MenuItem> otherActions;
+    
 
     public PromptScreen() {
         setType(ScreenType.Prompt);
@@ -125,14 +128,6 @@ public class PromptScreen extends DefaultScreen implements IPromptScreen {
     public void setActionButton(MenuItem actionButton) {
         this.actionButton = actionButton;
     }
-    
-    public IMaskSpec getPromptMask() {
-        return this.promptMask;
-    }
-    
-    public void setPromptMask(IMaskSpec mask) {
-        this.promptMask = mask;
-    }
 
 	public String getComments() {
 		return comments;
@@ -148,6 +143,21 @@ public class PromptScreen extends DefaultScreen implements IPromptScreen {
 
 	public void setShowComments(boolean showComments) {
 		this.showComments = showComments;
+	}
+	
+	public List<MenuItem> getOtherActions() {
+        return otherActions;
+    }
+	
+	public void setOtherActions(List<MenuItem> otherActions) {
+        this.otherActions = otherActions;
+    }
+	
+	public void addOtherAction(MenuItem action) {
+	    if (this.otherActions == null) {
+	        this.otherActions = new ArrayList<>();
+	    }
+	    this.otherActions.add(action);
 	}
     
 }

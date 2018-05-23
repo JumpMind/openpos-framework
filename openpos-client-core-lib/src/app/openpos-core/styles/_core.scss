@@ -10,6 +10,8 @@
 @import './mixins/slide-toggle';
 @import './mixins/table';
 @import './mixins/typography';
+@import './mixins/tabs';
+@import './mixins/multiple-dynamic-form-dialog';
 
 $mat-card-default-margin: 24px !default;
 
@@ -27,6 +29,8 @@ $mat-card-default-margin: 24px !default;
   @include openpos-slide-toggle();
   @include openpos-table();
   @include openpos-typography();
+  @include openpos-tabs();
+  @include multiple-dynamic-form-dialog();
 
   html, body {
     font-family: Roboto, sans-serif;
@@ -34,6 +38,7 @@ $mat-card-default-margin: 24px !default;
     padding:0;
     height: 100vh;
     overflow: hidden;
+    cursor: pointer;
   }
 
   .scrollable{
@@ -44,5 +49,12 @@ $mat-card-default-margin: 24px !default;
   .pad {
       padding: $mat-card-default-margin;
   }
+
+  ///This is a hack to get vertical dividers to work
+  mat-divider.mat-divider.mat-divider-vertical{
+    position:unset;
+    left:unset;
+    width:unset;
+}
 
 }

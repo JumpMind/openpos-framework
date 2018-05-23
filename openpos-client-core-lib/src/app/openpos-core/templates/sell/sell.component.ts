@@ -10,6 +10,10 @@ import { IMenuItem } from '../../common/imenuitem';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { ScanSomethingComponent } from '../../common/controls/scan-something/scan-something.component';
 import { ObservableMedia } from '@angular/flex-layout';
+import { ISellScreen } from '../..';
+import { StatusBarData } from '../../common/screen-interfaces/statusBarData';
+import { SellScreenUtils } from './iSellScreen';
+import { ISellTemplate } from './isell-template';
 
 @Component({
   selector: 'app-sell',
@@ -18,6 +22,10 @@ import { ObservableMedia } from '@angular/flex-layout';
 })
 export class SellComponent extends AbstractTemplate implements OnInit {
 
+  template: ISellTemplate;
+  screen: ISellScreen;
+  statusBar: StatusBarData;
+
   @ViewChild('drawer') drawer;
   public drawerOpen: Observable<boolean>;
 
@@ -25,14 +33,19 @@ export class SellComponent extends AbstractTemplate implements OnInit {
 
   public time = Date.now();
 
-  constructor( public session: SessionService, private observableMedia: ObservableMedia) {
+  constructor(public session: SessionService, private observableMedia: ObservableMedia) {
     super();
 
-   }
+  }
+
+  show(screen: any) {
+    this.screen = screen;
+    this.template = screen.template;
+    this.statusBar = SellScreenUtils.getStatusBar(screen);
+  }
 
   public ngOnInit(): void {
-
-    if ( this.session.screen.localMenuItems.length > 0) {
+    if (this.template.localMenuItems.length > 0) {
       this.initializeDrawerMediaSizeHandling();
     } else {
       this.drawerOpen = Observable.of(false);
@@ -41,21 +54,17 @@ export class SellComponent extends AbstractTemplate implements OnInit {
 
   public doMenuItemAction(menuItem: IMenuItem) {
     this.session.onAction(menuItem.action, null, menuItem.confirmationMessage);
-}
-
-public isMenuItemEnabled(m: IMenuItem): boolean {
-  let enabled = m.enabled;
-  if (m.action.startsWith('<') && this.session.isRunningInBrowser()) {
-       enabled = false;
   }
-  return enabled;
-}
 
-onScanInputEnter( value ): void {
-    this.session.onAction('Next', value);
-}
+  public isMenuItemEnabled(m: IMenuItem): boolean {
+    let enabled = m.enabled;
+    if (m.action.startsWith('<') && this.session.isRunningInBrowser()) {
+      enabled = false;
+    }
+    return enabled;
+  }
 
-private initializeDrawerMediaSizeHandling() {
+  private initializeDrawerMediaSizeHandling() {
     const openMap = new Map([
       ['xs', false],
       ['sm', true],
@@ -66,7 +75,7 @@ private initializeDrawerMediaSizeHandling() {
 
     let startOpen: boolean;
     openMap.forEach((open, mqAlias) => {
-      if ( this.observableMedia.isActive(mqAlias)) {
+      if (this.observableMedia.isActive(mqAlias)) {
         startOpen = open;
       }
     });
@@ -86,7 +95,7 @@ private initializeDrawerMediaSizeHandling() {
 
     let startMode: string;
     modeMap.forEach((mode, mqAlias) => {
-      if ( this.observableMedia.isActive(mqAlias)) {
+      if (this.observableMedia.isActive(mqAlias)) {
         startMode = mode;
       }
     });

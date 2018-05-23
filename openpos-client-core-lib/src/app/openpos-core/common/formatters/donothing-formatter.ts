@@ -1,10 +1,10 @@
-import { IFormatter } from "./iformatter";
+import { IFormatter } from './iformatter';
 
 export class DoNothingFormatter implements IFormatter {
     locale?: string;
 
     formatValue(value: string): string {
-        if( !value ) return "";
+        if (!value) { return ''; }
         return value;
     }
 

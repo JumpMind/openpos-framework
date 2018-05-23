@@ -1,0 +1,28 @@
+@mixin openpos-tabs(){
+    mat-tab-group{
+        .mat-tab-label{
+            min-width: 60px;
+        }
+        .mat-tab-body-wrapper{
+            flex: 1 1 auto;
+        }
+        .mat-tab-body-content{
+            display: flex;
+            flex-direction: column;
+        }
+    }
+
+    app-multiple-dynamic-form-dialog{
+        .mat-dialog-actions{
+            margin: 0 0px;
+        }
+        .mat-tab-body-content {
+            height: unset;
+            overflow: visible;
+        }
+        .mat-tab-body.mat-tab-body-active {
+            overflow-x: visible;
+            overflow-y: visible;
+        }
+    }
+}

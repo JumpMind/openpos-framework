@@ -1,0 +1,9 @@
+<h2 mat-dialog-title>{{fileName}}</h2>
+<mat-dialog-content id="file-viewer-content">
+  <pre>{{text}}</pre>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button (click)="onScrollToTop()"><mat-icon>keyboard_arrow_up</mat-icon></button>
+    <button mat-button (click)="onScrollToBottom()"><mat-icon>keyboard_arrow_down</mat-icon></button>
+    <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Dismiss</button>
+</mat-dialog-actions>

@@ -1,0 +1,13 @@
+---
+queries:
+-
+  name: patternLookup
+  select: > 
+    select *
+    from i18n_Resource
+    where (brand = ${brand} 
+      OR brand = ${noBrand})
+      AND string_key = ${key}
+      AND locale = ${locale}
+      AND base_name = ${base}
+      

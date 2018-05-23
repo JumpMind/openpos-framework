@@ -21,16 +21,12 @@
 package org.jumpmind.pos.core.flow;
 
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-public class Action implements Serializable {
+public class Action implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     
     private String name;
-    private String stateHash;
-    private Map<String, String> parameters = new HashMap<>();
     private Object data;
 
     public Action() {
@@ -38,18 +34,12 @@ public class Action implements Serializable {
     }
     
     public Action(String actionName) {
-        this(actionName, null, null);
+        this(actionName, null);
     }
     
     public Action(String actionName, Object data) {
-        this(actionName, null, null);
-        this.data = data;
-    }
-
-    public Action(String actionName, String stateHash, Map<String, String> parameters) {
         this.name = actionName;
-        this.stateHash = stateHash;
-        this.parameters = parameters;
+        this.data = data;
     }
     
     public String getName() {
@@ -60,24 +50,9 @@ public class Action implements Serializable {
         this.name = name;
     }
 
-    public String getStateHash() {
-        return stateHash;
-    }
-
-    public void setStateHash(String stateHash) {
-        this.stateHash = stateHash;
-    }
-
-    public Map<String, String> getParameters() {
-        return parameters;
-    }
-
-    public void setParameters(Map<String, String> parameters) {
-        this.parameters = parameters;
-    }
-
-    public Object getData() {
-        return data;
+    @SuppressWarnings("unchecked")
+    public <T> T getData() {
+        return (T)data;
     }
 
     public void setData(Object data) {
@@ -88,8 +63,9 @@ public class Action implements Serializable {
         return data != null ? data.toString() : null;
     }
 
+    
     @Override
     public String toString() {
-        return "Action [name=" + name + ", stateHash=" + stateHash + ", parameters=" + parameters + "]";
+        return "Action [name=" + name + "]";
     }
 }

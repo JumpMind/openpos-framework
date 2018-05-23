@@ -51,5 +51,7 @@ dependencies {
         exclude module: "spring-boot-starter-tomcat"
         exclude module: "spring-boot-starter-logging"
     }
+    
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'    
 }
 

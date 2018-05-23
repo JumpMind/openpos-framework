@@ -1,7 +1,6 @@
 import { IScreen } from '../../common/iscreen';
 import { Component } from '@angular/core';
 import { SessionService } from '../../services/session.service';
-import { AbstractApp } from '../../common/abstract-app';
 import {NgForm} from '@angular/forms';
 
 
@@ -11,10 +10,13 @@ import {NgForm} from '@angular/forms';
 })
 export class DynamicFormComponent implements IScreen {
 
+  screen: any;
+
   constructor(public session: SessionService) {
   }
 
-  show(session: SessionService, app: AbstractApp) {
+  show(screen: any) {
+    this.screen = screen;
   }
 
 }

@@ -9,8 +9,9 @@
                             <input matInput placeholder="Server Name" formControlName="serverName" required>
                         </mat-form-field>                        
                         <mat-form-field>
-                            <input matInput placeholder="Server Port" formControlName="serverPort" required>
+                            <input matInput placeholder="Server Port" formControlName="serverPort" required novalidate type="tel" pattern="[0-9]*">
                         </mat-form-field>
+                        <mat-checkbox formControlName="sslEnabled">SSL?</mat-checkbox>
                         <span *ngIf="firstFormGroup.status === 'PENDING'">
                             Trying to ping server ...
                         </span>
@@ -29,10 +30,10 @@
                     <form [formGroup]="secondFormGroup">
                         <ng-template matStepLabel>Enter device information</ng-template>
                         <mat-form-field>
-                            <input matInput placeholder="Store Number" formControlName="storeNumber" required>
+                            <input matInput placeholder="Store Number" formControlName="storeNumber" required novalidate type="tel" pattern="[0-9]*">
                         </mat-form-field>
                         <mat-form-field>
-                            <input matInput placeholder="Device Number" formControlName="deviceNumber" required>
+                            <input matInput placeholder="Device Number" formControlName="deviceNumber" required  novalidate type="tel" pattern="[0-9]*">
                         </mat-form-field>
                         <span class="warn" *ngIf="secondFormGroup.get('storeNumber').errors && secondFormGroup.get('storeNumber').errors.pattern ">
                             The store number must be a 5 digit number

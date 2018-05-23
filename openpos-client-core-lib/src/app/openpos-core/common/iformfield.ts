@@ -16,5 +16,15 @@ export interface IFormElement {
     pattern: string;
     minLength: number;
     maxLength: number;
+    iconName: string;
+    disabled: boolean;
+    select: boolean;
+    checked: boolean;
+}
+
+export type LabelPositionType = 'before' | 'after';
+export interface ICheckboxField extends IFormElement {
+    labelPosition: LabelPositionType;
+    checked: boolean;
 }
 

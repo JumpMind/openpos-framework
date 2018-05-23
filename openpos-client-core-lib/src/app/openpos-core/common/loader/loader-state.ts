@@ -11,7 +11,6 @@ export class LoaderState {
     private _show = false;
     private _title: string = null;
     private _message: string = null;
-    private _enabled = true;
 
     private loaderSubject = new Subject<LoaderState>();
     observable = this.loaderSubject.asObservable();
@@ -33,20 +32,11 @@ export class LoaderState {
         return this._message;
     }
 
-    get enabled() {
-        return this._enabled;
-    }
-
-    setEnabled(enabled: boolean) {
-        this._enabled = enabled;
-        this.setVisible(false);
-    }
-
     setVisible(visible: boolean, title?: string, message?: string) {
-        this.setLoaderText(title, message);
-        if (visible && this._enabled) {
+        if (visible && (!this._show || title === LoaderState.DISCONNECTED_TITLE)) {
+            this.setLoaderText(title, message);
             this._show = true;
-        } else {
+        } else if (!visible) {
             this._show = false;
             this._message = null;
             this._title = null;

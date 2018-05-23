@@ -1,12 +1,14 @@
 package org.jumpmind.pos.core.screen;
 
-public class SignatureCaptureScreen extends DefaultScreen {
+public class SignatureCaptureScreen extends Screen {
     private static final long serialVersionUID = 1L;
 
+    private String title;
     private String text;
     private String textIcon;
     private String signatureData;
     private String signatureMediaType;
+    private MenuItem saveAction;
     
 
     public SignatureCaptureScreen() {
@@ -43,6 +45,22 @@ public class SignatureCaptureScreen extends DefaultScreen {
 
     public void setSignatureMediaType(String signatureMediaType) {
         this.signatureMediaType = signatureMediaType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public MenuItem getSaveAction() {
+        return saveAction;
+    }
+
+    public void setSaveAction(MenuItem saveAction) {
+        this.saveAction = saveAction;
     }
     
 }

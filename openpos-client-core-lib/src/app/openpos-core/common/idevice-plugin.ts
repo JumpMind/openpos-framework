@@ -3,5 +3,5 @@ import { Observable } from 'rxjs/Observable';
 import { IDeviceRequest } from './idevicerequest';
 import { IPlugin } from './iplugin';
 export interface IDevicePlugin extends IPlugin {
-    processRequest(deviceRequest: IDeviceRequest, successCallback: (response: string) => void, errorCallback: (error: string) => void);
+    processRequest(deviceRequest: IDeviceRequest, successCallback: (response: any) => void, errorCallback: (error: string) => void);
 }

@@ -1,18 +1,21 @@
-<form fxFlexFill *ngIf="session.screen.type==='Prompt'"
-	fxLayout="column" fxLayoutAlign="center center" [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
-	<mat-card ngStyle.xl="width:30%" ngStyle.lg="width:40%" ngStyle.md="width:60%" ngStyle.sm="width:70%" ngStyle.xs="width:80%">
-		<mat-card-content>
-				<app-prompt-input #promptInput *ngIf="session.screen.editable" [placeholderText]="session.screen.placeholderText" [responseType]="session.screen.responseType"
-				[promptIcon]="session.screen.promptIcon" [responseText]="session.screen.responseText" [hintText]="session.screen.text" [maskSpec]="session.screen.promptMask" 
-				[minLength]="session.screen.minLength" [maxLength]="session.screen.maxLength"
-				[promptFormGroup]="promptFormGroup"></app-prompt-input>
-			<div style="height:50px"></div>
-		</mat-card-content>
-		<mat-card-actions *ngIf="session.screen.actionButton" align="end">
-			<button mat-raised-button type="submit" color=primary>
-				<span>Next</span>
-				<mat-icon *ngIf="session.screen.actionButton.icon" class="material-icons">{{session.screen.actionButton.icon}}</mat-icon>
-			</button>
-		</mat-card-actions>
-	</mat-card>
+<form class="lighter" fxFlexFill fxLayout="column" fxLayoutAlign="center center" [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()"
+    novalidate [markDirtyOnSubmit]="promptFormGroup">
+    <mat-card ngStyle.xl="width:30%" ngStyle.lg="width:40%" ngStyle.md="width:60%" ngStyle.sm="width:70%" ngStyle.xs="width:80%">
+        <mat-card-content>
+            <app-prompt-input #promptInput [placeholderText]="screen.placeholderText" [responseType]="screen.responseType" [promptIcon]="screen.promptIcon"
+                [responseText]="screen.responseText" [hintText]="screen.text" [maskSpec]="screen.promptMask" [minLength]="screen.minLength"
+                [maxLength]="screen.maxLength" [promptFormGroup]="promptFormGroup"></app-prompt-input>
+            <div style="height:50px"></div>
+        </mat-card-content>
+        <mat-card-actions *ngIf="screen.otherActions || screen.actionButton" align="end">
+            <button *ngFor="let menuItem of screen.otherActions" mat-raised-button (click)="session.onAction(menuItem)">
+                <span>{{menuItem.title}}</span>
+                <mat-icon *ngIf="menuItem.icon" class="material-icons">{{menuItem.icon}}</mat-icon>
+            </button>
+            <button mat-raised-button type="submit" color=primary>
+                <span>{{screen.actionButton.title}}</span>
+                <mat-icon *ngIf="screen.actionButton.icon" class="material-icons">{{screen.actionButton.icon}}</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
 </form>

@@ -1,12 +1,13 @@
 import { FormGroup, FormControl, ValidatorFn, Validators } from '@angular/forms';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SessionService } from '../services/session.service';
-import { ChooseOptionsComponent } from './choose-options.component';
+import { ChooseOptionsComponent } from './choose-options/choose-options.component';
 import { PromptInputComponent } from '../common/controls/prompt-input.component';
 
 import { PhoneUSValidatorDirective } from '../common/validators/phone.directive';
 import { OpenPosValidators } from '../common/validators/openpos-validators';
 import { ValidatorsService } from '../services/validators.service';
+import { IMenuItem } from '..';
 
 @Component({
   selector: 'app-prompt-with-options',
@@ -14,6 +15,7 @@ import { ValidatorsService } from '../services/validators.service';
 })
 export class PromptWithOptionsComponent extends ChooseOptionsComponent implements OnInit {
 
+  actionButton: IMenuItem;
   promptFormGroup: FormGroup;
 
   constructor(public session: SessionService, private validatorsService: ValidatorsService) {
@@ -22,30 +24,36 @@ export class PromptWithOptionsComponent extends ChooseOptionsComponent implement
 
   public ngOnInit(): void {
 
-    let group: any = {};
-    let validators: ValidatorFn[] = [];
+    const group: any = {};
+    const validators: ValidatorFn[] = [];
     validators.push(Validators.required);
-    validators.push(this.validatorsService.getValidator(this.session.screen.responseType));
+    validators.push(this.validatorsService.getValidator(this.screen.responseType));
 
-    group["promptInputControl"] = new FormControl(this.session.screen.responseText, validators);
+    group['promptInputControl'] = new FormControl(this.screen.responseText, validators);
 
-    if(this.session.screen.showComments){
-      group["comments"] = new FormControl(this.session.screen.comments, Validators.required);
+    if (this.screen.showComments) {
+      group['comments'] = new FormControl(this.screen.comments, Validators.required);
     }
     this.promptFormGroup = new FormGroup(group);
+    this.actionButton = this.screen.actionButton;
   }
 
-  onAction( action: string ): void {
-    if ( this.promptFormGroup.valid ) {
-      if( this.session.screen.showComments ){
-        this.session.onAction( action, 
-          { 
-            response: this.promptFormGroup.value["promptInputControl"],
-            comment: this.promptFormGroup.value["comments"]
+  onAction(action: string): void {
+    if (this.promptFormGroup.valid) {
+      if (this.screen.showComments) {
+        this.session.onAction(action,
+          {
+            response: this.promptFormGroup.value['promptInputControl'],
+            comment: this.promptFormGroup.value['comments']
           });
       } else {
-        this.session.onAction( action, this.promptFormGroup.value["promptInputControl"]);
+        this.session.onAction(action, this.promptFormGroup.value['promptInputControl']);
       }
-     }
+    }
   }
+
+  onFormSubmit(): void {
+    this.onAction(this.actionButton.action);
+  }
+
 }

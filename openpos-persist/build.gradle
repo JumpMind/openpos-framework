@@ -1,0 +1,37 @@
+apply from: '../openpos-core/common.gradle'
+
+dependencies {
+	compile group: 'org.yaml', name: 'snakeyaml', version: '1.20'
+	compile group: 'org.apache.commons', name: 'commons-text', version: '1.3'
+	compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
+    compile "org.springframework:spring-context:$springVersion"
+    testCompile "org.springframework:spring-test:$springVersion"
+    compile "com.h2database:h2:1.4.196"
+    compile group: 'org.slf4j', name: 'slf4j-api', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: '1.7.25'
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.25'
+    compile(group: 'log4j', name: 'log4j', version: '1.2.17')    
+    compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.10.RELEASE'
+    compile "org.jumpmind.symmetric:symmetric-jdbc:$symmetricVersion"
+    compile "org.jumpmind.symmetric:symmetric-db:$symmetricVersion"
+    compile "org.jumpmind.symmetric:symmetric-io:$symmetricVersion"
+    compile "org.jumpmind.symmetric:symmetric-util:$symmetricVersion"    
+    compile "io.springfox:springfox-swagger2:$springfoxSwaggerVersion"
+    compile "io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion"
+
+    testCompile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+        exclude module: "spring-boot-starter-tomcat"
+        exclude module: "spring-boot-starter-logging"
+    }
+    testCompile("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"){
+        exclude module: "spring-boot-starter-logging"
+    }
+    testCompile("org.springframework.boot:spring-boot-starter-websocket:$springBootVersion"){
+        exclude module: "spring-boot-starter-tomcat"
+        exclude module: "spring-boot-starter-logging"
+    }
+
+    testCompile group: 'org.jboss.forge.roaster', name: 'roaster-jdt', version: '2.20.1.Final'    
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}

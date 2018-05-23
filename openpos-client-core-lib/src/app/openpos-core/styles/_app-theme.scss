@@ -1,8 +1,11 @@
 @import '~@angular/material/theming';
+@import './themes/component-theme-mixins';
 
 @include mat-core();
 
 @mixin app-theme($theme) {
+
+    @include component-theme-mixins($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
@@ -10,6 +13,7 @@
 
     $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
+    $success-color: green;
 
     // this is a hack to get around a default value in angular material that they removed in future versions
     // if we ever upgrade we can probably remove this. This allows the field to be sized by flex instead of being
@@ -31,11 +35,15 @@
     }
 
     .success{
-        color:green;
+        color:$success-color;
     }
 
     .muted-color {
         color:mat-color($foreground, disabled);
+    }
+
+    .grey-background {
+        background-color: map-get($mat-grey, 300);
     }
 
     mat-card.dark{
@@ -43,7 +51,11 @@
         color: white;
     }
 
-    mat-card.lighter{
+    .lighter{
+        background-color: mat-color($background, app-bar);
+    }
+
+    .mat-drawer-container{
         background-color: mat-color($background, app-bar);
     }
 
@@ -77,8 +89,19 @@
         background-color: white;
     }
 
+    .mat-fab .mat-button-wrapper {
+        padding: 0;
+    }
+
     .mat-progress-bar-buffer{
         background-color:mat-color($background, app-bar); 
+    }
+
+    .mat-button-toggle{
+        background-color: white;
+        border: solid mat-color(map-get($theme, primary)) 1px;
+        color: mat-color(map-get($theme, primary));
+        text-align: center;
     }
 
     .mat-button-toggle-checked{
@@ -91,10 +114,26 @@
         box-shadow: unset;
     } 
 
+    .mat-expansion-indicator::after{
+        color:$app-primary;
+    }
+
     app-statusbar{
         .mat-toolbar{
-            background-color: black;
+            background-color: $app-primary;
             color: whitesmoke;
         }
     }
+
+    app-self-checkout-statusbar{
+        .mat-toolbar{
+            background-color: white;
+            color: $app-primary;
+        }
+    }
+
+    .mat-tab-label-active{
+        color: $app-primary;
+    }
+    
 }

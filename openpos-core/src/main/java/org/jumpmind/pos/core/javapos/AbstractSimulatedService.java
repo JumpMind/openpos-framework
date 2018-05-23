@@ -4,7 +4,6 @@ import java.awt.Component;
 import java.awt.Container;
 import java.awt.GridBagConstraints;
 
-import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
 import org.apache.commons.logging.Log;
@@ -15,10 +14,11 @@ import jpos.JposException;
 import jpos.services.EventCallbacks;
 
 public abstract class AbstractSimulatedService {
+    
     public final static int DEVICE_VERSION = 1009000;
+    
     protected final Log logger = LogFactory.getLog(getClass());
 
-    private JFrame window;
     protected EventCallbacks callbacks;
 
     private int state = JposConst.JPOS_S_CLOSED;
@@ -67,7 +67,7 @@ public abstract class AbstractSimulatedService {
         this.open = true;
         this.state = JposConst.JPOS_S_IDLE;
         this.callbacks = eventcallbacks;
-
+        logger.info("The device was opened");
     }
 
     public void close() throws JposException {
@@ -81,11 +81,13 @@ public abstract class AbstractSimulatedService {
         freezeEvents = false;
         claimed = false;
         reset();
+        logger.info("The device was closed");
     }
 
     public void claim(int arg0) throws JposException {
         checkIfOpen();
         claimed = true;
+        logger.info("The device was claimed");
     }
 
     public void release() throws JposException {
@@ -94,6 +96,7 @@ public abstract class AbstractSimulatedService {
         this.claimed = false;
         this.enabled = false;
         this.state = JposConst.JPOS_S_IDLE;
+        logger.info("The device was released");
     }
 
     public int getState() throws JposException {
@@ -129,14 +132,6 @@ public abstract class AbstractSimulatedService {
 
     public void setPowerNotify(int powerNotify) {
         this.powerNotify = powerNotify;
-    }
-
-    public JFrame getWindow() {
-        return window;
-    }
-
-    public void setWindow(JFrame window) {
-        this.window = window;
     }
 
     public EventCallbacks getCallbacks() {

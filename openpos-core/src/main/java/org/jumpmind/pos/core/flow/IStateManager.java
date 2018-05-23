@@ -22,27 +22,25 @@ package org.jumpmind.pos.core.flow;
 
 import java.util.Map;
 
-import org.jumpmind.pos.core.screen.DefaultScreen;
+import org.jumpmind.pos.core.screen.Screen;
 
 
 public interface IStateManager {
 
+    public void keepAlive();
     public void init(String appId, String nodeId);
     public String getNodeId();
     public String getAppId();
     public void doAction(String action);
     public void doAction(String action, Map<String, String> params);
     public void doAction(Action action);    
+    public void transitionTo(Action action, IState newState);
     public void endConversation();
     public void endSession();
-    public ScopeValue getScopeValue(String name);
-    public void setNodeScope(String name, Object value);
-    public void setSessionScope(String name, Object value);
-    public void setConversationScope(String name, Object value);
-    public String toJSONPretty(Object o);
-    public void showScreen(DefaultScreen screen);    
-    public DefaultScreen getLastScreen();    
+    public <T> T getScopeValue(String name);
+    public void showScreen(Screen screen);
     public void refreshScreen();
     public IState getCurrentState();
+    public IUI getUI();
     
 }

@@ -1,0 +1,6 @@
+---
+queries:
+-
+  name: passwordHistoryLookup
+  where: username = ${username}
+  orderBy: password_sequence

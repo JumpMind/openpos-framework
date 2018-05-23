@@ -3,7 +3,6 @@ import { IScreen } from '../common/iscreen';
 import { IMenuItem } from '../common/imenuitem';
 import {Component, ViewChild, AfterViewInit, DoCheck, OnInit} from '@angular/core';
 import {SessionService} from '../services/session.service';
-import { AbstractApp } from '../common/abstract-app';
 
 @Component({
   selector: 'app-sale-retrieval',
@@ -11,13 +10,15 @@ import { AbstractApp } from '../common/abstract-app';
 })
 export class SaleRetrievalComponent implements AfterViewInit, DoCheck, IScreen, OnInit {
 
+  screen: any;
   constructor(public session: SessionService) {
 
   }
   public ngOnInit(): void {
   }
 
-  show(session: SessionService, app: AbstractApp) {
+  show(screen: any) {
+    this.screen = screen;
   }
 
   ngDoCheck(): void {

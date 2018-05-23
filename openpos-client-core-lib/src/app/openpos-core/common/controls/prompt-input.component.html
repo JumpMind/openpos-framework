@@ -1,29 +1,14 @@
-<ng-container  [ngSwitch]="responseType">
-    <div [formGroup]="promptFormGroup">
-        <mat-form-field fxFlexFill *ngSwitchCase="'DATE'" ngClass="text-xl">
-            <!-- Can't use the masking component AND date picker on the same input, so use a hidden input for the picker and
-                visible input for the masking component -->
-            <input matInput placeholder="{{placeholderText}}" [(ngModel)]="dateText"
-                [textMask]="{mask: dateMask, pipe: autoCorrectedDatePipe, keepCharPositions: true}"
-                (keyup.enter)="onDateEntered()" [formControlName]="'promptInputControl'">
-            <input matInput hidden [matDatepicker]="picker" [(ngModel)]="datePickerValue" (dateChange)="onDatePicked()" [formControlName]="'promptInputHiddenDateControl'">
-            <mat-hint align="start">{{hintText}}</mat-hint>
-            <mat-datepicker-toggle matPrefix [for]="picker" class="primary"></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
-            <mat-error class="text-sm">
-                    <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"></app-show-errors>
-                </mat-error>
-        </mat-form-field>
-    
-        <mat-form-field fxFlexFill *ngSwitchDefault ngClass="text-xl">
+<div [formGroup]="promptFormGroup">
+    <ng-container  *ngIf="responseType!='DATE'&& responseType!='NOYEARDATE'"[ngSwitch]="responseType">   
+        <mat-form-field fxFlexFill *ngSwitchDefault ngClass="text-lg">
             <!-- Was using this:
                 <mat-icon matPrefix class="material-icons" color="primary">{{promptIcon}}</mat-icon>
                 but want to be able to use local icons.  TODO: problem with styling however, sizing not working
                 for SVG icon
             -->
             <app-icon matPrefix iconClass="material-icons primary" [iconName]="promptIcon"></app-icon>
-            <input matInput [formControlName]="'promptInputControl'" [formatterName]="formatter" [appFocus]="true" 
-                   [attr.minlength]="minLength" [attr.maxlength]="maxLength" autoSelectOnFocus>
+            <input matInput [formControlName]="'promptInputControl'" [formatterName]="formatter" [appFocus]="!readOnly" 
+                   [attr.minlength]="minLength" [attr.maxlength]="maxLength" [readonly]="readOnly" [attr.type]="isNumericField() ? 'tel' : 'text'" autoSelectOnFocus>
             <mat-placeholder>{{placeholderText}}</mat-placeholder>
             <mat-hint class="text-sm" align="start">{{hintText}}</mat-hint>
             <mat-error class="text-sm">
@@ -35,7 +20,7 @@
             {{placeholderText}} {{onOffModel===true ? 'On' : 'Off'}}
         </mat-slide-toggle>
     
-        <mat-form-field fxFlexFill *ngSwitchCase="'ALPHANUMERICPASSWORD'" ngClass="text-xl">
+        <mat-form-field fxFlexFill *ngSwitchCase="'ALPHANUMERICPASSWORD'" ngClass="text-lg">
             <mat-icon  matPrefix class="material-icons" color="primary">{{promptIcon}}</mat-icon>
             <input matInput [formControlName]="'promptInputControl'" [appFocus]="true" autoSelectOnFocus
                 type="password" [textMask]="_textMask" [attr.minlength]="minLength" [attr.maxlength]="maxLength">
@@ -45,5 +30,14 @@
                 <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"></app-show-errors>
             </mat-error>
         </mat-form-field>
-    </div>        
-</ng-container>
+       
+    </ng-container>
+
+    <ng-container *ngIf="responseType ==='DATE' || responseType ==='NOYEARDATE'" >
+        <app-dynamic-date-form-field [controlName]="'promptInputControl'" [hiddenControl]="'promptInputHiddenDateControl'" [form]="promptFormGroup"
+        [type]="responseType" [(value)]="responseText" [placeholder]="placeholderText" [isPrompt]=true [hintText]="hintText"></app-dynamic-date-form-field>
+        <mat-error class="text-sm">
+            <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"></app-show-errors>
+        </mat-error>
+    </ng-container>
+</div> 

@@ -11,11 +11,14 @@ public class Form implements Serializable {
     public static final String PATTERN_MONEY =  "^(\\d{0,9}\\.\\d{0,2}|\\d{1,9})$";
     public static final String PATTERN_PERCENT =  "^100$|^\\d{0,2}(\\.\\d{1,2})?$|^\\d{0,2}(\\.)?"; // 100-0, Only two decimal places allowed.
     public static final String PATTERN_DATE = "^(\\d{2})/(\\d{2})/(\\d{4}$)";
+    public static final String PATTERN_NO_YEAR_DATE = "^(\\d{2})/(\\d{2})$";
     // TODO: This pattern may be too restrictive. 
     public static final String PATTERN_US_PHONE_NUMBER = "^\\d{10}$";
     private static final long serialVersionUID = 1L;
 
     private List<IFormElement> formElements = new ArrayList<IFormElement>();
+    
+    private List<String> formErrors = new ArrayList<String>();
     
     private boolean requiresAtLeastOneValue = false;
     
@@ -34,6 +37,16 @@ public class Form implements Serializable {
         return formElement;
     }
     
+    public CheckboxField addCheckbox(String id, String label) {
+        return this.addCheckbox(id, label, false);
+    }
+    
+    public CheckboxField addCheckbox(String id, String label, boolean checked) {
+        CheckboxField field = new CheckboxField(id, label, checked);
+        formElements.add(field);
+        return field;
+    }
+    
     public ComboField addComboBox(String fieldId, String label, String... values) {
         return addComboBox(fieldId, label, values != null && values.length > 0 ? Arrays.asList(values) : new ArrayList<>());
     }
@@ -45,21 +58,102 @@ public class Form implements Serializable {
 
     }
     
+    public ComboField addComboBox(String fieldId, String label, List<String> values, boolean required) {
+        ComboField field = new ComboField(fieldId, label, null, values);
+        field.setRequired(required);
+        formElements.add(field);
+        return field;        
+
+    }
+    
+    public ComboField addComboBox(String fieldId, String label, String value, List<String> values, boolean required) {
+        ComboField field = new ComboField(fieldId, label, null, values);
+        field.setRequired(required);
+        field.setValue(value);
+        formElements.add(field);
+        return field;        
+    }
+    
+    public PopTartField addPopTart(String fieldId, String label, String... values) {
+        return addPopTart(fieldId, label, values != null && values.length > 0 ? Arrays.asList(values) : new ArrayList<>());
+    }
+    
+    public PopTartField addPopTart(String fieldId, String label, List<String> values) {
+        PopTartField field = new PopTartField(fieldId, label, null, values);
+        formElements.add(field);
+        return field;        
+
+    }
+    
+    public PopTartField addPopTart(String fieldId, String label, List<String> values, boolean required) {
+        PopTartField field = new PopTartField(fieldId, label, null, values);
+        field.setRequired(required);
+        formElements.add(field);
+        return field;        
+
+    }
+    
+    public PopTartField addPopTart(String fieldId, String label, String value, List<String> values, boolean required) {
+        PopTartField field = new PopTartField(fieldId, label, null, values);
+        field.setRequired(required);
+        field.setValue(value);
+        formElements.add(field);
+        return field;        
+    }
+    
+    public FormListField addListField(String fieldId, String label, String placeholder, boolean required, List<String> values) {
+    		FormListField field = new FormListField(fieldId, label, placeholder, values);
+    		field.setRequired(required);
+    		formElements.add(field);
+    		return field;
+    }
+    
     public ToggleField addToggleButton(String fieldId, String label, List<String> values, String defaultVal) {
     		ToggleField field = new ToggleField(fieldId, label, values, defaultVal);
     		formElements.add(field);
     		return field;
     }
     
-    public static FormField createDateField(String fieldId, String label, String value, boolean required) {
-        FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.AlphanumericText, required);
+    public static FormField createDateField(String fieldId, String label, String value, boolean required, boolean hideCalendar) {
+        FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.Date, required);
         formField.setPattern(PATTERN_DATE);
         formField.setValue(value);
+        formField.put("hideCalendar", hideCalendar);
         return formField;
     }
     
+    public FormField addDateField(String fieldId, String label, String value, boolean required, boolean hideCalendar) {
+        FormField formField = createDateField(fieldId, label, value, required, hideCalendar);
+        formElements.add(formField);
+        return formField;
+    }
+
     public FormField addDateField(String fieldId, String label, String value, boolean required) {
-        FormField formField = createDateField(fieldId, label, value, required);
+        return this.addDateField(fieldId, label, value, required, false);
+    }
+    
+	public static FormField createNoYearDateField(String fieldId, String label, String value, boolean required,
+			boolean hideCalendar) {
+		FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.NoYearDate, required);
+		formField.setPattern(PATTERN_NO_YEAR_DATE);
+		formField.setValue(value);
+		formField.put("hideCalendar", hideCalendar);
+		return formField;
+	}
+
+	public FormField addNoYearDateField(String fieldId, String label, String value, boolean required,
+			boolean hideCalendar) {
+		FormField formField = createNoYearDateField(fieldId, label, value, required, hideCalendar);
+		formElements.add(formField);
+		return formField;
+	}
+
+	public FormField addNoYearDateField(String fieldId, String label, String value, boolean required) {
+		return this.addNoYearDateField(fieldId, label, value, required, false);
+	}
+    
+    public FormField addIncomeField(String fieldId, String label, String value, boolean required) {
+        FormField formField = createIncomeField(fieldId, label, value, required);
         formElements.add(formField);
         return formField;
     }
@@ -72,6 +166,24 @@ public class Form implements Serializable {
     
     public static FormField createNumericField(String fieldId, String label, String value, boolean required) {
         FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.NumericText, required);
+        formField.setValue(value);
+        return formField;
+    }
+    
+    public FormField addDecimalField(String fieldId, String label, String value, boolean required) {
+        FormField formField = createDecimalField(fieldId, label, value, required);
+        formElements.add(formField);
+        return formField;
+    }
+    
+    public static FormField createDecimalField(String fieldId, String label, String value, boolean required) {
+        FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.Decimal, required);
+        formField.setValue(value);
+        return formField;
+    }
+
+    public static FormField createIncomeField(String fieldId, String label, String value, boolean required) {
+        FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.Income, required);
         formField.setValue(value);
         return formField;
     }
@@ -140,6 +252,13 @@ public class Form implements Serializable {
         return formField;
     }
     
+    public FormField addTextAreaField(String fieldId, String label, String value, boolean required) {
+    		FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.TextArea, required);
+    		formField.setValue(value);
+    		formElements.add(formField);
+    		return formField;
+    }
+    
     public FormField addDisplayField( String fieldId, String label, String value, FieldInputType type ) {
     		FormField formField = new FormField(fieldId, label, null );
     		formField.setElementType(FieldElementType.Display);
@@ -186,6 +305,16 @@ public class Form implements Serializable {
         return formElements.stream().filter(f->elementId.equals(f.getId())).findFirst().orElse(null);
     }
     
+    public String getFormElementValue(String elementId) {
+        String returnValue = null;
+        IFormElement formElement = this.getFormElement(elementId);
+        if (formElement != null && formElement instanceof FormField) {
+            returnValue = ((FormField) formElement).getValue();
+        }
+        
+        return returnValue;
+    }
+    
     public void setName(String name) {
         this.name = name;
     }
@@ -214,5 +343,18 @@ public class Form implements Serializable {
         }
         return null;
     }
+
+	public List<String> getFormErrors() {
+		return formErrors;
+	}
+
+	public void setFormErrors(List<String> formErrors) {
+		this.formErrors = formErrors;
+	}
+	
+	public void addFormError(String error) {
+		formErrors.add(error);
+	}
+
     
 }

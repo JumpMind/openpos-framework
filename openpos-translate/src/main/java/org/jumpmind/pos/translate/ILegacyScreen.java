@@ -24,4 +24,6 @@ public interface ILegacyScreen {
     
     public boolean isDialog();
     
+    public ITranslationManager getTranslationManager();
+    
 }

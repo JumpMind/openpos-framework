@@ -1,22 +1,23 @@
+import { Subscription } from 'rxjs/Subscription';
 import { Directive, ElementRef, EventEmitter, HostListener, Input, OnDestroy, Optional, Output, Self } from '@angular/core';
 import { MatInput } from '@angular/material';
-
-import { MatKeyboardRef, MatKeyboardService, MatKeyboardComponent } from '@ngx-material-keyboard/core';
-
+import { MatKeyboardRef, MatKeyboardService, MatKeyboardComponent } from '../keyboard';
 import { NgControl } from '@angular/forms';
-
-
-
 import { SessionService } from '../services/session.service';
 
 @Directive({
+  // tslint:disable-next-line:directive-selector
   selector: 'input:not([type=checkbox]), textarea'
 })
 export class KeyboardDirective implements OnDestroy {
 
   private _keyboardRef: MatKeyboardRef<MatKeyboardComponent>;
 
-  @Input() matKeyboard: string;
+  private screen: any;
+
+  private screenSubscription: Subscription;
+
+  @Input() keyboardLayout: string;
 
   @Input() darkTheme: boolean;
 
@@ -34,17 +35,20 @@ export class KeyboardDirective implements OnDestroy {
 
   constructor(public session: SessionService, private _elementRef: ElementRef,
     private _keyboardService: MatKeyboardService,
-    @Optional() @Self() private _control?: NgControl) { }
+    @Optional() @Self() private _control?: NgControl) {
+      this.screenSubscription = this.session.subscribeForScreenUpdates((screen: any): void => this.screen = screen);
+    }
 
   ngOnDestroy() {
     this._hideKeyboard();
+    this.screenSubscription.unsubscribe();
   }
 
   @HostListener('focus', ['$event'])
   private _showKeyboard() {
-    if (this.session.screen.useOnScreenKeyboard) {
+    if (this.screen && this.screen.useOnScreenKeyboard) {
 
-      this._keyboardRef = this._keyboardService.open(this.matKeyboard, {
+      this._keyboardRef = this._keyboardService.open(this.keyboardLayout, {
         darkTheme: true,
         duration: this.duration,
         isDebug: this.isDebug
@@ -53,30 +57,25 @@ export class KeyboardDirective implements OnDestroy {
       // Massive HACK!!!! this is to fix a but in the Mat Keyboard library we are using
       // and should be removed whenever it gets fixed.
       if (!this._elementRef.nativeElement.value) {
-        this._elementRef.nativeElement.value = "";
-        let inputEvent = new Event("input");
+        this._elementRef.nativeElement.value = '';
+        const inputEvent = new Event('input');
         this._elementRef.nativeElement.dispatchEvent(inputEvent);
       }
 
       // reference the input element
       this._keyboardRef.instance.setInputInstance(this._elementRef);
 
-      // set control if given, cast to smth. non-abstract
-      if (this._control) {
-        this._keyboardRef.instance.attachControl(this._control.control);
-      }
-
       // connect outputs
       this._keyboardRef.instance.enterClick.subscribe(() => {
-        let event = new Event("submit", { cancelable: true, bubbles: true });
+        const event = new Event('submit', { cancelable: true, bubbles: true });
         if (this._elementRef.nativeElement.form) {
           this._elementRef.nativeElement.form.dispatchEvent(event);
         }
-        let enterPressedEvent = new KeyboardEvent("keypress", { key: "Enter", code: "Enter", cancelable: true, bubbles: true });
+        const enterPressedEvent = new KeyboardEvent('keypress', { key: 'Enter', code: 'Enter', cancelable: true, bubbles: true });
         this._elementRef.nativeElement.dispatchEvent(enterPressedEvent);
-        let enterDownEvent = new KeyboardEvent("keydown", { key: "Enter", code: "Enter", cancelable: true, bubbles: true });
+        const enterDownEvent = new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', cancelable: true, bubbles: true });
         this._elementRef.nativeElement.dispatchEvent(enterDownEvent);
-        let enterUpEvent = new KeyboardEvent("keyup", { key: "Enter", code: "Enter", cancelable: true, bubbles: true });
+        const enterUpEvent = new KeyboardEvent('keyup', { key: 'Enter', code: 'Enter', cancelable: true, bubbles: true });
         this._elementRef.nativeElement.dispatchEvent(enterUpEvent);
 
         this.enterClick.next();

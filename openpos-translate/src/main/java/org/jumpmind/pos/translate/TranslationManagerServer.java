@@ -9,9 +9,10 @@ import org.jumpmind.pos.core.device.IDeviceMessageDispatcher;
 import org.jumpmind.pos.core.device.IDeviceRequest;
 import org.jumpmind.pos.core.device.IDeviceResponse;
 import org.jumpmind.pos.core.flow.Action;
+import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.POSSessionInfo;
-import org.jumpmind.pos.core.screen.DefaultScreen;
-import org.jumpmind.pos.core.screen.ScreenType;
+import org.jumpmind.pos.core.screen.Screen;
+import org.jumpmind.pos.core.screen.NoOpScreen;
 import org.jumpmind.pos.translate.InteractionMacro.AbortMacro;
 import org.jumpmind.pos.translate.InteractionMacro.DoOnActiveScreen;
 import org.jumpmind.pos.translate.InteractionMacro.DoOnScreen;
@@ -20,7 +21,7 @@ import org.jumpmind.pos.translate.InteractionMacro.WaitForScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TranslationManagerServer implements ILegacyScreenListener, ITranslationManager, IDeviceMessageDispatcher {
+public class TranslationManagerServer implements ITranslationManager, IDeviceMessageDispatcher {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -28,19 +29,21 @@ public class TranslationManagerServer implements ILegacyScreenListener, ITransla
 
     private ILegacySubsystem legacySubsystem;
 
-    private ILegacyScreenTranslatorFactory screenTranslatorFactory;
+    private ITranslatorFactory screenTranslatorFactory;
 
     private ILegacyScreenInterceptor screenInterceptor;
 
     private InteractionMacro activeMacro;
 
-    private Map<String, AbstractScreenTranslator<? extends DefaultScreen>> lastTranslatorByAppId = new HashMap<>();
+    private Map<String, ITranslator> lastTranslatorByAppId = new HashMap<>();
 
     private Map<String, ITranslationManagerSubscriber> subscriberByAppId = new HashMap<>();
 
     private POSSessionInfo posSessionInfo = new POSSessionInfo();
+    
+    private boolean lastScreenWasNoOp = false;
 
-    public TranslationManagerServer(ILegacyScreenInterceptor interceptor, ILegacyScreenTranslatorFactory screenTranslatorFactory,
+    public TranslationManagerServer(ILegacyScreenInterceptor interceptor, ITranslatorFactory screenTranslatorFactory,
             Class<?> subsystemClass) {
         this.subsystemClass = subsystemClass;
         this.posSessionInfo = new POSSessionInfo();
@@ -54,43 +57,65 @@ public class TranslationManagerServer implements ILegacyScreenListener, ITransla
 
     @Override
     public void showActiveScreen() {
-        showLegacyScreen(getLegacyUISubsystem().getActiveScreen());
+        processLegacyScreen(getLegacyUISubsystem().getActiveScreen());
     }
 
     @Override
     public void setTranslationManagerSubscriber(ITranslationManagerSubscriber subscriber) {
-        if (this.subscriberByAppId.get(subscriber.getAppId()) == null) {
+        ITranslationManagerSubscriber currentSubscriber = this.subscriberByAppId.get(subscriber.getAppId());
+        
+        if (currentSubscriber == null) {
             this.subscriberByAppId.put(subscriber.getAppId(), subscriber);
-            getLegacyUISubsystem().addLegacyScreenListener(this);
+            getLegacyUISubsystem().setLegacyScreenListener(this);
         }
     }
 
     @Override
-    public void doAction(String appId, Action action, DefaultScreen screen) {
-        AbstractScreenTranslator<? extends DefaultScreen> lastTranslator = this.lastTranslatorByAppId.get(appId);
+    public void doAction(String appId, Action action, Form formResults) {
+        ITranslator lastTranslator = this.lastTranslatorByAppId.get(appId);
+        logger.debug("lastTranslator = {}", lastTranslator);
         if (lastTranslator != null) {
-            lastTranslator.handleAction(subscriberByAppId.get(appId), this, action, screen);
+            lastTranslator.handleAction(subscriberByAppId.get(appId), this, action, formResults);
         } else {
             sendAction(action.getName());
         }
     }
 
     @Override
-    public void showLegacyScreen(ILegacyScreen screen) {
+    public boolean processLegacyScreen(ILegacyScreen screen) {
+        boolean screenShown = false;
         if (screen != null && screen.isStatusUpdate()) {
-            // We don't currently handle updates to the status panel only
-            logger.info("Suppressing SHOW_STATUS_ONLY update for screen {}, sending NoOp", screen.getSpecName());
-            // Some scenarios (such as 'Print Store Address' on Item Inventory
-            // screen) end the flow with simply a status update. This
-            // would leave clients waiting for a response. Send a no-op response
-            // so that clients know the server is still alive.
-            show(new DefaultScreen(ScreenType.NoOp));
+            if (!this.lastScreenWasNoOp) {
+                // We don't currently handle updates to the status panel only
+                logger.info("Suppressing SHOW_STATUS_ONLY update for screen {}, sending NoOp", screen.getSpecName());
+                /*
+                 * Some scenarios (such as 'Print Store Address' on Item
+                 * Inventory screen) end the flow with simply a status update.
+                 * This would leave clients waiting for a response. Send a no-op
+                 * response so that clients know the server is still alive.
+                 */
+                show(new NoOpScreen());
+                this.lastScreenWasNoOp = true;
+            }
         } else {
             if (executeActiveMacro(screen)) {
-                translateAndShow(screen);
+                screenShown = translateAndShow(screen);
+                lastScreenWasNoOp = false;
             }
         }
+        return screenShown;
     }
+    
+	@Override
+	public boolean showLegacyScreen(ILegacyScreen screen) {
+		boolean screenShown = false;
+		if (screen != null) {
+			screenShown = translateAndShow(screen);
+			lastScreenWasNoOp = false;
+
+		}
+		return screenShown;
+	}
 
     public void executeMacro(InteractionMacro macro) {
         this.activeMacro = macro;
@@ -165,7 +190,7 @@ public class TranslationManagerServer implements ILegacyScreenListener, ITransla
         }
     }
 
-    protected void show(DefaultScreen screen) {
+    protected void show(Screen screen) {
         for (ITranslationManagerSubscriber subscriber : this.subscriberByAppId.values()) {
             if (screen != null && subscriber.isInTranslateState()) {
                 subscriber.showScreen(screen);
@@ -173,30 +198,41 @@ public class TranslationManagerServer implements ILegacyScreenListener, ITransla
         }
     }
 
-    protected void translateAndShow(ILegacyScreen screen) {
+    protected boolean translateAndShow(ILegacyScreen legacyScreen) {
+        boolean screenShown = false;
         for (ITranslationManagerSubscriber subscriber : this.subscriberByAppId.values()) {
-            if (screen != null && subscriber.isInTranslateState()) {
-                AbstractScreenTranslator<?> lastTranslator = this.lastTranslatorByAppId.get(subscriber.getAppId());
-                ILegacyScreen previousScreen = lastTranslator != null ? lastTranslator.getLegacyScreen() : null;
-                if (!screenInterceptor.intercept(screen, previousScreen, subscriber, this, posSessionInfo)) {
-                    subscriber.showScreen(toScreen(screen, subscriber));
+            if (legacyScreen != null && subscriber.isInTranslateState()) {
+                ITranslator lastTranslator = this.lastTranslatorByAppId.get(subscriber.getAppId());
+                
+                ILegacyScreen previousScreen = null;
+                if (lastTranslator instanceof AbstractScreenTranslator<?>) {
+                    previousScreen = ((AbstractScreenTranslator<?>) lastTranslator).getLegacyScreen();
+                }
+                
+                if (!screenInterceptor.intercept(legacyScreen, previousScreen, subscriber, this, posSessionInfo)) {
+                    ITranslator newTranslator = screenTranslatorFactory.createScreenTranslator(legacyScreen, subscriber.getAppId(),
+                            subscriber.getProperties());
+                    
+                    if (newTranslator != null) {
+                        newTranslator.setPosSessionInfo(posSessionInfo);
+                    }
+                    if (newTranslator instanceof AbstractScreenTranslator<?>) {
+                        AbstractScreenTranslator<?> screenTranslator = (AbstractScreenTranslator<?>) newTranslator;                        
+                        Screen screen = screenTranslator.build();
+                        subscriber.showScreen(screen);
+                        screenShown = true;
+                    } else if (newTranslator instanceof IActionTranslator) {
+                        ((IActionTranslator)newTranslator).translate(this, subscriber);
+                    }                    
+
+                    this.lastTranslatorByAppId.put(subscriber.getAppId(), newTranslator);
+
                 } else {
                     this.lastTranslatorByAppId.put(subscriber.getAppId(), null);
                 }
             }
         }
-    }
-
-    protected DefaultScreen toScreen(ILegacyScreen headlessScreen, ITranslationManagerSubscriber subscriber) {
-        AbstractScreenTranslator<? extends DefaultScreen> lastTranslator = screenTranslatorFactory.createScreenTranslator(headlessScreen, subscriber.getAppId(), subscriber.getProperties());
-        DefaultScreen screen = null;
-        if (lastTranslator != null) {
-            lastTranslator.setPosSessionInfo(posSessionInfo);
-            screen = lastTranslator.build();
-        }
-        this.lastTranslatorByAppId.put(subscriber.getAppId(), lastTranslator);
-
-        return screen;
+        return screenShown;
     }
 
     public ILegacyScreen getActiveScreen() {

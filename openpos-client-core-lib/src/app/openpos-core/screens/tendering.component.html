@@ -1,23 +1,26 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
     <div fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center"  fxLayoutGap="16px">
             <mat-card fxFlex class="page-content-card text-center">
-                <mat-card-title class="muted-color text-sm">
-                    <div>Balance Due</div>
-                </mat-card-title>
-
-                <mat-card-content class="muted-color text-md">
-                        <span class="super-currency-symbol">$</span>{{balanceDue}}
-                </mat-card-content>
-            </mat-card>
+                    <mat-card-content fxLayout="column" fxLayoutAlign="end">
+                        <mat-form-field ngClass="text-md" >
+                            <input matInput #balance #field="ngModel" style="text-align:right"
+                                [(ngModel)]="balanceDue"
+                                placeholder="Balance Due"
+                                readonly="true"
+                                [formatterName]="'money'">
+                        </mat-form-field>
+                    </mat-card-content>
+                </mat-card>
+                
 
             <mat-card fxFlex class="page-content-card text-center">
                 <mat-card-content fxLayout="column" fxLayoutAlign="end">
                     <mat-form-field ngClass="text-md" >
-                        <input matInput #input #field="ngModel" [appFocus]="true" autoSelectOnFocus style="text-align:right"
+                        <input matInput #tenderAmountField="matInput" #field="ngModel" autoSelectOnFocus style="text-align:right"
                             [(ngModel)]="tenderAmount.value"
-                            placeholder="{{tenderAmount.placeholder}}"
+                            [placeholder]="tenderAmount.placeholder"
                             [required]="tenderAmount.required"
-                            [formatterName]="'money'">
+                            [formatterName]="'money'" novalidate type="tel" pattern="[0-9]*" autofocus>
                         <mat-error>
                                 <app-show-errors [control]="field"></app-show-errors>
                         </mat-error>

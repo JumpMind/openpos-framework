@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jumpmind.pos.core.model.Form;
+import org.jumpmind.pos.core.template.SellTemplate;
 
-public class DynamicFormScreen extends DefaultScreen {
+public class DynamicFormScreen extends Screen implements IHasForm {
 
     private static final long serialVersionUID = 1L;
 
@@ -14,11 +15,13 @@ public class DynamicFormScreen extends DefaultScreen {
     
     private String submitAction = "Next";
     
+    private String submitButtonText = "Next";
+    
     private List<String> alternateSubmitActions = new ArrayList<String>();
 
     public DynamicFormScreen() {
         setType(ScreenType.DynamicForm);
-        setTemplate(DefaultScreen.TEMPLATE_SELL);
+        setTemplate(new SellTemplate());
     }
 
     public void setForm(Form form) {
@@ -52,5 +55,13 @@ public class DynamicFormScreen extends DefaultScreen {
     public void setAlternateSubmitActions(List<String> alternateActions) {
         this.alternateSubmitActions = alternateActions;
     }
+
+	public String getSubmitButtonText() {
+		return submitButtonText;
+	}
+
+	public void setSubmitButtonText(String submitButtonText) {
+		this.submitButtonText = submitButtonText;
+	}
     
 }

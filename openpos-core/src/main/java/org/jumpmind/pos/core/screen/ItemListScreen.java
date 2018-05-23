@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ItemListScreen extends DefaultScreen {
+public class ItemListScreen extends Screen {
 
     private static final long serialVersionUID = 1L;
     
     private List<IItem> items = new ArrayList<>();
     private SelectionMode selectionMode = SelectionMode.None;
     private int selectedIndex = -1;
+    private List<Integer> selectedIndexes = new ArrayList<>();
     private String itemActionName = "Item";
     private String text;
     private List<MenuItem> itemActions = new ArrayList<>();
     private boolean condensedListDisplay = false;
+    private String action = "Next";
+    private MenuItem actionButton = null;
 
     public ItemListScreen() {
         setType(ScreenType.ItemList);
@@ -57,6 +60,15 @@ public class ItemListScreen extends DefaultScreen {
         return this.selectedIndex;
     }
     
+    public List<Integer> getSelectedIndexes() {
+        return this.selectedIndexes;
+    }
+
+    public void setSelectedIndexes(List<Integer> selectedIndexes) {
+        this.selectedIndexes = selectedIndexes;
+    }
+
+
     public boolean isCondensedListDisplay() {
         return condensedListDisplay;
     }
@@ -87,6 +99,22 @@ public class ItemListScreen extends DefaultScreen {
 
     public void addItemAction(MenuItem itemAction) {
         this.getItemActions().add(itemAction);
+    }
+    
+    public String getAction() {
+        return action;
+    }
+    
+    public void setAction(String action) {
+        this.action = action;
+    }
+
+    public MenuItem getActionButton() {
+        return actionButton;
+    }
+
+    public void setActionButton(MenuItem actionButton) {
+        this.actionButton = actionButton;
     }
 
     

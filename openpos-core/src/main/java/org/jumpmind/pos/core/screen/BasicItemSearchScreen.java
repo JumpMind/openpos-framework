@@ -12,7 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class BasicItemSearchScreen extends DefaultScreen {
+public class BasicItemSearchScreen extends Screen {
     private static final long serialVersionUID = 1L;
     @SuppressWarnings("unused")
     private final Logger logger = LoggerFactory.getLogger(getClass());

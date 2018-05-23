@@ -1,30 +1,35 @@
-<div fxFlexFill *ngIf="session.screen.type==='PromptWithOptions'"
-fxLayout="column" fxLayoutAlign="center center">
+<div fxFlexFill *ngIf="screen.type==='PromptWithOptions'" fxLayout="column" fxLayoutAlign="center center">
     <mat-card ngStyle.xl="width:30%" ngStyle.lg="width:40%" ngStyle.md="width:60%" ngStyle.sm="width:70%" ngStyle.xs="width:80%">
-        <mat-card-content>
-            <form [formGroup]="promptFormGroup">
-                <app-prompt-input #promptInput [placeholderText]="session.screen.placeholderText" [responseType]="session.screen.responseType" 
-                    [responseText]="session.screen.responseText" [promptIcon]="session.screen.promptIcon" [hintText]="promptText" 
-                    [maskSpec]="session.screen.promptMask" [minLength]="session.screen.minLength" [maxLength]="session.screen.maxLength"
-                    [promptFormGroup]="promptFormGroup"></app-prompt-input>
-                <mat-form-field fxFlexFill *ngIf="session.screen.showComments" >
-                    <textarea #box matInput [formControlName]="'comments'" placeholder="Comments"></textarea> 
+        <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()">
+            <mat-card-content>
+                <app-prompt-input #promptInput [placeholderText]="screen.placeholderText" [responseType]="screen.responseType"
+                    [responseText]="screen.responseText" [promptIcon]="screen.promptIcon" [hintText]="promptText"
+                    [maskSpec]="screen.promptMask" [minLength]="screen.minLength" [maxLength]="screen.maxLength"
+                    [promptFormGroup]="promptFormGroup" [readOnly]="screen.readOnly"></app-prompt-input>
+                <mat-form-field fxFlexFill *ngIf="screen.showComments">
+                    <textarea #box matInput [formControlName]="'comments'" placeholder="Comments"></textarea>
                     <mat-error>
                         <app-show-errors [control]="box"></app-show-errors>
                     </mat-error>
 
                 </mat-form-field>
-            </form>
-        </mat-card-content>
+            </mat-card-content>
         <mat-card-actions>
             <mat-nav-list>
-                    <!-- material doesn't yet support enable/disable of mat-list-item, workaround ... -->
-                    <mat-list-item *ngFor="let o of optionItems" (click)="o.enabled && onAction(o.value)" style="border-color: black">
-                        <span *ngIf="!o.enabled; else elseBlock" class="muted-color">{{o.displayValue}}</span>
-                        <ng-template #elseBlock>{{o.displayValue}}</ng-template>
-                        <mat-icon class="material-icons pull-right line-item-caret" style="top: 10px;">keyboard_arrow_right</mat-icon>
-                    </mat-list-item>
-                </mat-nav-list>
+                <!-- material doesn't yet support enable/disable of mat-list-item, workaround ... -->
+                <mat-list-item *ngFor="let o of optionItems" (click)="o.enabled && onAction(o.value)" style="border-color: black">
+                    <span [ngClass]="{'muted-color' : !o.enabled}">{{o.displayValue}}</span>
+                    <mat-icon class="material-icons pull-right line-item-caret" [ngClass]="{'muted-color' : !o.enabled}" style="top: 10px;">keyboard_arrow_right</mat-icon>
+                </mat-list-item>
+            </mat-nav-list>
         </mat-card-actions>
-    </mat-card>
+        <mat-card-actions align="end">
+            <button *ngIf="actionButton" mat-raised-button type="submit" color=primary>
+                <span>{{actionButton.title}}</span>
+                <mat-icon *ngIf="actionButton.icon" class="material-icons">{{actionButton.icon}}</mat-icon>
+            </button>
+
+        </mat-card-actions>
+    </form>
+</mat-card>
 </div>

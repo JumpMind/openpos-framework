@@ -1,21 +1,54 @@
-import { Directive, Input, ElementRef } from '@angular/core';
+import { Directive, Input, ElementRef, HostListener } from '@angular/core';
+import { DeviceService } from '../services';
 
 @Directive({
-    selector: '[autoSelectOnFocus]',
-    host: { '(focus)': 'onFocus($event)' },
+    selector: '[autoSelectOnFocus]'
 })
 export class AutoSelectOnFocus {
 
     private element: ElementRef;
+    private touchEvent: boolean;
 
-    constructor(el: ElementRef) {
+    constructor(el: ElementRef, private deviceService: DeviceService) {
         this.element = el;
     }
 
-    onFocus($event: Event){
-        // This is a hack, but for some reason on the tendering screen it focus but doesn't select the first time the page loads
-        // It works every time after that when you focus on the input and it works on other pages, and setting a timeout seems to make it
-        // work and I don't want to waste more time on this. Maybe someday we will find out way and can make this work without the timeout 
-        setTimeout(() => this.element.nativeElement.select(), 100);
+    @HostListener('touchend', ['$event'])
+    onTouchEnd($event: Event) {
+        // console.log('autoSelect: Got touchend event');
+        this.touchEvent = true;
     }
+
+
+    @HostListener('focus', ['$event'])
+    onFocus($event: Event) {
+
+        if (this.deviceService.isRunningInCordova()) {
+            // console.log('autoSelect: Got focus event');
+            // There is not enough information on the event object to know
+            // if the focus event came from a touch event or keyboard event.  On iOS
+            // with Cordova if the event was NOT a touch event, then do the selection.
+            // This will occur when user uses iOS keyboard controls to move between
+            // fields
+            if (! this.touchEvent) {
+                // console.log('autoSelect: cordova, not touch event, selectingRange');
+                this.element.nativeElement.setSelectionRange(0, 9999);
+            }
+        } else {
+            // console.log('autoSelect: browser, selectingRange');
+            this.element.nativeElement.setSelectionRange(0, 9999);
+        }
+        this.touchEvent = false;
+    }
+
+    @HostListener('click', ['$event'])
+    onClick($event: Event) {
+        // When running on iPad with Cordova, onClick is only thing that seems to really work
+        // for selecting the field.
+        if (this.deviceService.isRunningInCordova()) {
+            // console.log('autoSelect: cordova click event, selectingRange');
+            this.element.nativeElement.setSelectionRange(0, 9999);
+        }
+    }
+
 }

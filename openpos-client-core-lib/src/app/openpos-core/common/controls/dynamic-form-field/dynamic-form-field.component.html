@@ -1,50 +1,67 @@
 <div [formGroup]="formGroup">
 
-    <mat-button-toggle-group *ngIf="formField.inputType==='ToggleButton'" [formControlName]="formField.id" (change)="onFormElementChanged(formField)" >
-        <mat-button-toggle *ngFor="let value of values | async" [value]="value">
-          {{value}}
+    <mat-button-toggle-group *ngIf="formField.inputType==='ToggleButton'" [formControlName]="formField.id" (change)="onFormElementChanged(formField)">
+        <mat-button-toggle *ngFor="let value of values" [value]="value">
+            {{value}}
         </mat-button-toggle>
-    </mat-button-toggle-group> 
+    </mat-button-toggle-group>
 
-    <ng-container *ngIf="formField.elementType==='Input' && formField.inputType != 'ToggleButton'">
-        <mat-form-field style="width:100%" [ngSwitch]="formField.inputType">
+    <ng-container *ngIf="formField.elementType==='Input' && ['ToggleButton', 'Checkbox', 'AutoComplete', 'Date', 'NoYearDate'].indexOf(formField.inputType) < 0">
+        <mat-form-field fxFlexFill [ngSwitch]="formField.inputType">
+            <app-icon *ngIf="formField.iconName" matPrefix iconName="{{formField.iconName}}" iconClass="material-icons"></app-icon>
 
-            <input *ngSwitchDefault matInput [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" 
-                [placeholder]="getPlaceholderText(formField)" [formatterName]="formField.inputType" [required]="formField.required"
-                (change)="onFormElementChanged(formField)" [attr.minlength]="formField.minLength" [attr.maxlength]="formField.maxLength">
+            <input *ngSwitchDefault matInput [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
+                [formatterName]="formField.inputType" [required]="formField.required" (change)="onFormElementChanged(formField)"
+                [attr.minlength]="formField.minLength" [attr.maxlength]="formField.maxLength" [readonly]="formField.disabled"
+                [keyboardLayout]="keyboardLayout" [attr.type]="isNumericField() ? 'tel' : 'text'" autoSelectOnFocus>
 
-            <input *ngSwitchCase="'AlphanumericPassword'" matInput [formControlName]="formField.id"  [placeholder]="getPlaceholderText(formField)"
+            <input class="poptart" *ngSwitchCase="'PopTart'" matInput [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
+                 [required]="formField.required" (click)="openPopTart()" 
+                 onfocus="this.blur()" readonly>                
+
+            <button *ngIf="formField.inputType==='PopTart'" type="button" mat-button matSuffix mat-icon-button (click)="openPopTart()">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <input *ngSwitchCase="'AlphanumericPassword'" matInput [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)"
                 type="password" [required]="formField.required">
 
-            <mat-select  *ngSwitchCase="'ComboBox'" [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)" (change)="onFormElementChanged(formField)" [required]="formField.required">
-                <mat-option *ngFor="let value of values | async" [value]="value">{{value}}</mat-option>
+            <mat-select *ngSwitchCase="'ComboBox'" [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)" (change)="onFormElementChanged(formField)"
+                [required]="formField.required">
+                <mat-option *ngFor="let value of values" [value]="value">{{value}}</mat-option>
             </mat-select>
 
-            <textarea *ngSwitchCase="'TextArea'" style="width:50%" [value]="formField.value" [name]="formField.id" [placeholder]="getPlaceholderText(formField)" 
-                matInput matTextareaAutosize matAutosizeMinRows="2" [disabled]="formField.disabled" [required]="formField.required"></textarea>
+            <textarea *ngSwitchCase="'TextArea'" style="width:50%" [value]="formField.value" [formControlName]="formField.id" [name]="formField.id" [placeholder]="getPlaceholderText(formField)"
+                matInput matTextareaAutosize matAutosizeMinRows="2" [disabled]="formField.disabled" [required]="formField.required" (change)="onFormElementChanged(formField)"></textarea>       
 
-            <!--We should probably deprectate this since it is only used for the void options screen on biglots and 
-            there is probably a better way to do it now.-->
-            <ng-container *ngSwitchCase="'SubmitOptionList'">
-                <label class="prompt-text">{{formField.label}}</label>
-                <mat-nav-list>
-                    <mat-list-item *ngFor="let value of values | async; let valueIndex=index" (click)="onSubmitOptionSelected(formField, valueIndex, $event)"
-                    style="border-color: black">{{value}}
-                    <mat-icon class="material-icons pull-right line-item-caret" style="top: 10px;">keyboard_arrow_right</mat-icon>
-                    </mat-list-item>
-                </mat-nav-list>
-            </ng-container>
-            
             <mat-error>
                 <app-show-errors [control]="formGroup.controls[formField.id]"></app-show-errors>
             </mat-error>
         </mat-form-field>
-			
+    </ng-container>
+
+    <ng-container *ngIf="formField.inputType ==='Date' || formField.inputType ==='NoYearDate'">
+        <app-dynamic-date-form-field *ngIf="formField.hideCalendar" [type]="formField.inputType" [(value)]="formField.value" [placeholder]="getPlaceholderText(formField)" 
+        [hideCalendar]="formField.hideCalendar" [controlName]="formField.id" [hiddenControl]="formField.id+'Hidden'"[form]="formGroup"></app-dynamic-date-form-field>
+        <app-dynamic-date-form-field *ngIf="!formField.hideCalendar" [type]="formField.inputType" [(value)]="formField.value" [placeholder]="getPlaceholderText(formField)" 
+        [controlName]="formField.id" [hiddenControl]="formField.id+'Hidden'"[form]="formGroup"></app-dynamic-date-form-field>
+        <mat-error>
+            <app-show-errors [control]="formGroup.controls[formField.id]"></app-show-errors>
+        </mat-error>
+    </ng-container>
+
+    <search-select *ngIf="formField.inputType==='AutoComplete'" width='100%' [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)"
+        (change)="onFormElementChanged(formField)" [dataSource]="autoCompleteDataSource"></search-select>
+
+    <ng-container *ngIf="formField.inputType==='Checkbox'">
+        <mat-checkbox [formControlName]="formField.id" [required]="formField.required" [value]="formField.value" [labelPosition]="formField.labelPosition"
+            [attr.disabled]="formField.disabled" [checked]="formField.checked" (change)="onFormElementChanged(formField)">{{formField.label}}</mat-checkbox>
     </ng-container>
 
     <ng-container *ngIf="formField.elementType==='Display'">
-        <mat-form-field style="width:100%">
-            <input [value]="formField.value" [name]="formField.id" [placeholder]="formField.label" matInput readonly=true>
+        <mat-form-field style="width:100%" [ngSwitch]="formField.valueDisplayMode">
+            <input *ngSwitchDefault [value]="formField.value" [name]="formField.id" [placeholder]="formField.label" matInput readonly=true>
+            <textarea *ngSwitchCase="'Multiple'" [name]="formField.id" [placeholder]="formField.label" matTextareaAutosize matInput readonly=true>{{formField.values.join('')}}</textarea>
         </mat-form-field>
     </ng-container>
 

@@ -1,6 +1,6 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding-top:6px;">
 	<mat-card fxFlex="1 1 auto" class="page-content-card scrollable-content-card serrated-edge" fxLayout="column" fxLayoutAlign="start">
-		<mat-card-content>
+		<mat-card-content #scrollList>
 			<mat-list class="list-seperator" ngClass.xs="xs">
 				<mat-list-item *ngFor="let item of items">
 					<p matLine>{{item.description}}</p>
@@ -11,40 +11,41 @@
 						</mat-chip-list>
 					</p>
 
-            		<span [hidden]="!item.isGiftReceipt"><mat-icon color="muted-color">redeem</mat-icon></span>
-					<span class="primary text-md">{{item.amount|currency:'USD':true:'1.2'}}<br>
-						<p [hidden]="!item.discountAmount" class="muted-color text-xs" style="text-align: right; margin:0px; text-decoration:line-through">{{item.originalAmount|currency:'USD':true:'1.2'}}</p>
-						<p [hidden]="!item.discountAmount" class="muted-color text-xs" style="text-align: right; margin:0px">( -{{item.discountAmount|currency:'USD':true:'1.2'}} )</p>
+					<span [hidden]="!item.isGiftReceipt">
+						<mat-icon color="muted-color">redeem</mat-icon>
 					</span>
-					<button *ngIf ="!session.screen.readOnly" mat-icon-button color="primary" [matMenuTriggerFor]="itemMenu">
-						<mat-icon>expand_more</mat-icon>
+					<span class="primary text-md">
+						<span class="super-currency-symbol">$</span>{{item.amount}}
+						<br>
+						<p [hidden]="!item.discountAmount" class="muted-color text-xs" style="text-align: right; margin:0px; text-decoration:line-through">
+							<span class="super-currency-symbol">$</span>{{item.originalAmount}}</p>
+						<p [hidden]="!item.discountAmount" class="muted-color text-xs" style="text-align: right; margin:0px">-
+							<span class="super-currency-symbol">$</span>{{item.discountAmount}}</p>
+					</span>
+					<button *ngIf="!screen.readOnly" mat-icon-button color="primary" (click)="openItemDialog(item)">
+						<mat-icon>more_vert</mat-icon>
 					</button>
-					<mat-menu #itemMenu="matMenu">
-						<button mat-menu-item *ngFor="let m of item.menuItems" (click)="doMenuItemAction(m, item.index)"
-							[disabled]="!isMenuItemEnabled(m)">
-							<app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
-							<span [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
-						</button>
-					</mat-menu>
 				</mat-list-item>
 			</mat-list>
-			<div *ngIf="items.length == 0" fxLayout="column" fxLayoutAlign="center center" class="muted-color">
+			<div *ngIf="!items || items.length == 0" fxLayout="column" fxLayoutAlign="center center" class="muted-color">
 				<mat-icon ngClass="material-icons mat-180" ngClass="material-icons mat-128" color=icon svgIcon="barcode"></mat-icon>
-				<span class="text-md">Scan something to get started.</span>
+				<span class="text-md">Scan/Key something to get started</span>
 			</div>
 		</mat-card-content>
 	</mat-card>
 
-	<app-overflow-list fxFlex="0 0 auto"  *ngIf="session.screen.transaction.transactionNumber" [numberItemsToShow]="overFlowListSize | async" [items]="session.screen.totals" ></app-overflow-list>
+	<app-overflow-list fxFlex="0 0 auto" *ngIf="screen.transaction.transactionNumber" [numberItemsToShow]="overFlowListSize | async"
+	 [items]="screen.totals"></app-overflow-list>
 
-	<mat-card *ngIf="session.screen.transaction.transactionNumber" fxFlex="0 0 auto" class="page-content-card dark">
+	<mat-card *ngIf="screen.transaction.transactionNumber" fxFlex="0 0 auto" class="page-content-card dark">
 		<mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="text-lg">
-			<span fxFlex class="text-md">{{items.length}} Items</span>
+			<div *ngIf="items.length == 1"><span fxFlex class="text-md">{{items.length}} Item</span></div>
+			<div *ngIf="items.length > 1"><span fxFlex class="text-md">{{items.length}} Items</span></div>
 			<span fxFlex="1 1 auto"></span>
 			<span fxFlex class="text-right">Total</span>
-			<span fxFlex [ngClass]="{'text-center': !session.screen.readOnly, 'text-right': session.screen.readOnly}" (click)="!session.screen.readOnly ? session.onAction('Checkout','special') : false">
-				<span class="super-currency-symbol">$</span>{{session.screen.grandTotal}}</span>
-			<button fxFlex="0 1 auto" *ngIf="!session.screen.readOnly" mat-button color="primary-inverse" style="height:100%; margin:-4px;" [disabled]="!session.screen.transaction.active || items.length == 0"
+			<span fxFlex [ngClass]="{'text-center': !screen.readOnly, 'text-right': screen.readOnly}">
+				<span class="super-currency-symbol">$</span>{{screen.grandTotal}}</span>
+			<button fxFlex="0 1 auto" *ngIf="!screen.readOnly" mat-button color="primary-inverse" style="height:100%; margin:-4px;" [disabled]="!screen.transaction.active || items.length == 0"
 			 (click)="session.onAction('Checkout')">
 				<mat-icon class="material-icons mat-48">keyboard_arrow_right</mat-icon>
 			</button>

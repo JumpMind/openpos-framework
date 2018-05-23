@@ -1,0 +1,14 @@
+<h1 mat-dialog-title class="text-md">
+    Please select an option to continue
+</h1>
+<mat-dialog-content>
+    <mat-nav-list>
+        <!-- material doesn't yet support enable/disable of mat-list-item, workaround ... -->
+        <mat-list-item *ngFor="let o of optionItems" (click)="o.enabled && doMenuItemAction(o)">
+            <mat-icon style="margin-right:15px" color="primary">{{o.icon}}</mat-icon>
+            <span [ngClass]="{'muted-color' : !o.enabled}">{{o.title}}</span>
+            <span fxFlex="1 1 auto"></span>
+            <mat-icon color="primary" class="material-icons">keyboard_arrow_right</mat-icon>
+        </mat-list-item>
+    </mat-nav-list>
+</mat-dialog-content>

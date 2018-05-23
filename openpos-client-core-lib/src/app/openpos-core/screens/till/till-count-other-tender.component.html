@@ -1,6 +1,6 @@
 <div fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding: 0 16px 0 16px">
-  <input fxFlexFill fxFlex #amountInput class="bordered text-md" style="text-align: right" (keyup.enter)="onEnterAmount($event)"
-    [(ngModel)]="amountValue" placeholder="{{session.screen.promptPlaceHolderText}}" [formatterName]="'money'" [attr.maxlength]="10">
+  <input fxFlexFill fxFlex #amountInput class="bordered text-md input-md" style="text-align: right" (keyup.enter)="onEnterAmount($event)"
+    [(ngModel)]="amountValue" placeholder="{{screen.promptPlaceHolderText}}" [formatterName]="'money'" [attr.maxlength]="10" type="tel">
   <mat-card fxFlex="0 0 auto" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
     <mat-list *ngIf="items.length > 0" class="list-seperator" ngClass.xs="xs">
       <mat-list-item *ngFor="let item of items">
@@ -11,7 +11,7 @@
           <mat-icon>expand_more</mat-icon>
         </button>
         <mat-menu #itemMenu="matMenu">
-          <button mat-menu-item *ngFor="let m of session.screen.itemActions" (click)="doMenuItemAction(m, item.index)" [disabled]="!m.enabled">
+          <button mat-menu-item *ngFor="let m of screen.itemActions" (click)="doMenuItemAction(m, item.index)" [disabled]="!m.enabled">
             <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
             <span [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
           </button>

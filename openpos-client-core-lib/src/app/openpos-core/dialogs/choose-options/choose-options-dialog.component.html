@@ -1,0 +1,42 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" [ngSwitch]="currentView">
+
+    <ng-template ngSwitchCase="ButtonList">
+            <mat-card-title fxLayoutAlign="space-between">
+                <span>{{promptText}}</span>
+                <button mat-icon-button [mat-dialog-close]="'Close'" style="margin:-15px">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-card-title>
+            <mat-card-content>
+                <mat-nav-list>
+                    <!-- material doesn't yet support enable/disable of mat-list-item, workaround ... -->
+                    <mat-list-item *ngFor="let o of optionItems" (click)="o.enabled && onMakeOptionSelection(o)">
+                        <mat-icon style="margin-right:15px" color="primary">{{o.icon}}</mat-icon>
+                        <span [ngClass]="{'muted-color' : !o.enabled}">{{o.displayValue}}</span>
+                        <span fxFlex="1 1 auto"></span>
+                        <mat-icon color="primary" class="material-icons">keyboard_arrow_right</mat-icon>
+                    </mat-list-item>
+                </mat-nav-list>
+            </mat-card-content>
+    </ng-template>
+
+    <ng-template ngSwitchCase="ButtonGrid">
+            <mat-card-content fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="30px">
+                <button fxFlex="0 0 auto" mat-raised-button color=primary style="height:150px;width:150px" *ngFor="let o of optionItems"
+                    (click)="onMakeOptionSelection(o)">
+                    <div fxLayoutAlign="center center" fxLayout="column">
+                        <app-icon fxFlex="1 0 auto" iconName="{{o.icon}}" iconClass="material-icons mat-64"></app-icon>
+                        <span fxFlex="1 0 auto" class="text-sm">{{o.displayValue}}</span>
+                    </div>
+                </button>
+            </mat-card-content>
+    </ng-template>
+
+    <ng-template ngSwitchCase="OptionForm">
+            <mat-card-content>
+                <app-dynamic-form-control [screen]="screen" [screenForm]="selectedOption.form" [submitAction]="selectedOption.value"></app-dynamic-form-control>
+            </mat-card-content>
+     </ng-template>
+
+
+</div>

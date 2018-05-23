@@ -1,0 +1,15 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="stretch center">
+    <div fxFlex="1 1 auto" fxLayoutAlign="center center" style="padding: 32px;">
+        <span class="text-md text-center" style="padding-right: 8px;">Order Total:</span>
+        <b class="text-md text-center">{{balanceDue|currency:'USD':true:'1.2'}}</b>
+    </div>
+    <div fxFlex="1 1 auto" fxLayoutAlign="center center" style="padding: 32px;">
+        <b class="text-md text-center">{{instructions}}</b>
+    </div>
+    <div fxFlex="1 1 auto" *ngIf="additionalInstructions" fxLayoutAlign="center center" style="padding: 32px;" class="text-md text-center">
+        {{additionalInstructions}}
+    </div>
+    <div fxFlex="1 1 auto">
+        <div class="payment-auth-icon"></div>
+    </div>
+</div>

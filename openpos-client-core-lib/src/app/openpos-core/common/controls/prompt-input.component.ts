@@ -1,5 +1,5 @@
 import { FormControl, Validators, FormGroup, FormGroupDirective, NgForm } from '@angular/forms';
-import { Component, Input, OnInit, ViewChild, Output, EventEmitter, AfterContentInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import createAutoCorrectedDatePipe from 'text-mask-addons/dist/createAutoCorrectedDatePipe';
 import { TextMask, IMaskSpec, ITextMask } from '../textmask';
@@ -10,7 +10,8 @@ import { ErrorStateMatcher } from '@angular/material';
     templateUrl: './prompt-input.component.html'
 })
 
-export class PromptInputComponent implements OnInit, AfterContentInit {
+export class PromptInputComponent implements OnInit{
+
     @Input() placeholderText: string;
     @Input() responseType: string;
     @Input() responseText: string;
@@ -20,13 +21,9 @@ export class PromptInputComponent implements OnInit, AfterContentInit {
     @Input() minLength: number;
     @Input() maxLength: number;
     @Input() promptFormGroup: FormGroup;
+    @Input() readOnly: boolean = false;
 
     inputType: string;
-    dateText: string;  // value entered by user or copied from datePickerValue
-    datePickerValue: Date;  // retains value picked using datepicker
-    // Configuration for date masking
-    dateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
-    autoCorrectedDatePipe = createAutoCorrectedDatePipe('mm/dd/yyyy');
 
     onOffModel: boolean;
     formatter: string;
@@ -36,22 +33,18 @@ export class PromptInputComponent implements OnInit, AfterContentInit {
     }
 
     public onSlideChange(): void {
-      if( this.responseType === "ONOFF" ) {
-        this.responseText = this.onOffModel ? "ON" : "OFF";
-      }
-    }
-
-    public onDateEntered(): void {
-        if (this.dateText) {
-            this.dateText = this.dateText.replace(/_/g, '');
-            if (this.dateText.length === 10) {
-               this.responseText = this.dateText;
-            }
+        if (this.responseType === 'ONOFF') {
+            this.responseText = this.onOffModel ? 'ON' : 'OFF';
         }
     }
 
-    public onDatePicked(): void {
-        this.dateText = this.datePipe.transform(this.datePickerValue, 'MM/dd/yyyy');
+    isNumericField(): boolean {
+        if (this.responseType) {
+            return ['numerictext', 'money', 'phone', 'postalCode', 'percent', 'income', 'decimal']
+              .indexOf(this.responseType.toLowerCase()) >= 0;
+        } else {
+            return false;
+        }
     }
 
     ngOnInit(): void {
@@ -64,19 +57,13 @@ export class PromptInputComponent implements OnInit, AfterContentInit {
             this._textMask = TextMask.NO_MASK;
         }
 
-        if ( this.responseType === "ONOFF" ){
-          if( !this.responseText ) {
-            this.responseText = "OFF";
-          }
-          this.onOffModel = this.responseText === "ON";
-        }
-    }
-    ngAfterContentInit(): void {
-        if (this.responseType === 'DATE') {
-            // Angular doesn't like updating the date input during ngOnInit, but it's ok with this
-            if (this.responseText) {
-                this.dateText = this.responseText;
+        if (this.responseType === 'ONOFF') {
+            if (!this.responseText) {
+                this.responseText = 'OFF';
             }
+            this.onOffModel = this.responseText === 'ON';
         }
+        
     }
+
 }

@@ -3,7 +3,8 @@
       <span>Scan</span>
       <mat-icon svgIcon="barcode"></mat-icon>
     </button>
-    <input #input fxFlexFill fxFlex="1 1 auto" class="bordered prompt-input-scan-something text-md" 
-      (keyup.enter)="onEnter()" [(ngModel)]="barcode" (keydown)="onBarcodeKeydown($event)" (paste)="onBarcodePaste($event)"
-      placeholder="{{placeholderText}}" autofocus>
+    <input #input matInput cdkFocusInitial="true" [keyboardLayout]="'Numeric'" fxFlexFill fxFlex="1 1 auto" class="bordered prompt-input-scan-something text-md" 
+      (keyup.enter)="onEnter()" [(ngModel)]="barcode" (paste)="onBarcodePaste($event)"
+      [placeholder]="scanSomethingData.scanSomethingText ? scanSomethingData.scanSomethingText : 'Scan/Enter Something'" novalidate type="tel" pattern="[0-9]*"
+      [attr.minlength]="scanSomethingData.scanMinLength" [attr.maxlength]="scanSomethingData.scanMaxLength">
   </div>

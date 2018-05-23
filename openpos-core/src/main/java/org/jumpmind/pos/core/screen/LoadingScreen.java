@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * Represents status screen/dialog.
  */
-public class LoadingScreen extends DefaultScreen {
+public class LoadingScreen extends Screen {
 
     private static final long serialVersionUID = 1L;
 

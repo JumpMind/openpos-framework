@@ -26,6 +26,15 @@ export class ShowErrorsComponent {
     @Input()
     private control: AbstractControlDirective | AbstractControl;
 
+    /**
+     * Provides a means to add or override errors provided by the ShowErrorsComponents.
+     * @param errorName Name of the error to add or override
+     * @param errorFn A function returning a string error message that will be displayed to the user.
+     */
+    public static registerError(errorName: string, errorFn: () => string): void {
+        ShowErrorsComponent.errorMessages[errorName] = errorFn;
+    }
+
     shouldShowErrors(): boolean {
         return this.control &&
         this.control.errors &&

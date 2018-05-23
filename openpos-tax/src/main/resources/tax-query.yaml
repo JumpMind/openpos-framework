@@ -1,0 +1,12 @@
+---
+queries:
+-
+  name: taxJurisdictionLookup
+  where: geoCode = ${geoCode}
+-
+  name: taxGroupRuleLookup
+  where: authorityID = ${authorityID}
+-
+  name: taxRateRuleLookup
+  where: groupID = ${groupID}
+      AND authorityID = ${authorityID}

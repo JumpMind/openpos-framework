@@ -1,0 +1,43 @@
+<div [ngClass]="session.getTheme()" inactivityMonitor (issueKeepAlive)="session.keepAlive()">
+    <div [ngClass]="classes" style="height: 100vh">
+
+        <button *ngIf="showDevMenu" #devMenuButton class="float" mat-mini-fab color="accent" [matMenuTriggerFor]="devMenu">
+            <mat-icon>code</mat-icon>
+        </button>
+
+        <div [matMenuTriggerFor]="devMenu">
+            <mat-menu #devMenu="matMenu">
+                <ng-container *ngIf="logsAvailable">
+                    <button mat-menu-item [matMenuTriggerFor]="logsMenu">Logs</button>
+                    <mat-divider></mat-divider>
+                </ng-container>
+                <button mat-menu-item (click)="onPersonalize()">Personalize</button>
+                <button mat-menu-item (click)="onDevRefreshView()">Refresh View</button>
+                <button mat-menu-item (click)="onDevClearLocalStorage()">Clear Local Storage</button>
+                <mat-divider></mat-divider>
+                <button mat-menu-item (click)="onDevRestartNode()">Restart Node</button>
+            </mat-menu>
+
+            <mat-menu #logsMenu="matMenu">
+                <button mat-menu-item [matMenuTriggerFor]="logShareMenu">Share</button>
+                <button mat-menu-item [matMenuTriggerFor]="logUploadMenu">Upload</button>
+                <button mat-menu-item [matMenuTriggerFor]="logViewMenu">View</button>
+            </mat-menu>
+
+            <mat-menu #logShareMenu="matMenu">
+                <button mat-menu-item *ngFor="let m of logFilenames" (click)="onLogfileSelected(m)">{{m}}</button>
+            </mat-menu>
+
+            <mat-menu #logUploadMenu="matMenu">
+                <button mat-menu-item *ngFor="let m of logFilenames" (click)="onLogfileUpload(m)">{{m}}</button>
+            </mat-menu>
+
+            <mat-menu #logViewMenu="matMenu">
+                <button mat-menu-item *ngFor="let m of logFilenames" (click)="onLogfileView(m)">{{m}}</button>
+            </mat-menu>
+        </div>
+
+        <ng-template appTemplate></ng-template>
+
+    </div>
+</div>

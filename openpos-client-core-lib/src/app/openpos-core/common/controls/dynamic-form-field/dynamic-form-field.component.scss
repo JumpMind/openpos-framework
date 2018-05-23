@@ -19,3 +19,16 @@
       margin-bottom:15px;
     }
   }
+
+textarea {
+  line-height: 1.5em;
+}
+
+:host::ng-deep .mat-form-field{
+
+  font-size: 18px;
+}
+
+.poptart {
+  user-select: none;
+}

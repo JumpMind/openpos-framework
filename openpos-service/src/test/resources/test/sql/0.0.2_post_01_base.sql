@@ -1,0 +1,2 @@
+insert into tst_test_table (id,example,create_time,create_by,last_update_time,last_update_by) values(3,'test', current_timestamp, 'me', current_timestamp, 'me');
+insert into tst_test_table (id,example,create_time,create_by,last_update_time,last_update_by) values(4,'test', current_timestamp, 'me', current_timestamp, 'me');

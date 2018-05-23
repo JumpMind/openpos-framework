@@ -1,38 +1,38 @@
 package org.jumpmind.pos.core.screen;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class DialogScreen extends DefaultScreen {
+public class DialogScreen extends Screen {
 
     private static final long serialVersionUID = 1L;
     
-    String subType;
+    private List<MenuItem> buttons = new ArrayList<>();
     
-    List<MenuItem> buttons = new ArrayList<>();
+    private String title;
     
-    String title;
+    private String subType;
     
-    List<String> message = new ArrayList<>();
-
+    private List<String> message = new ArrayList<>();
+    
+    private DialogProperties dialogProperties;
+    
     public DialogScreen() {
         setType(ScreenType.Dialog);
+        getTemplate().setDialog(true);
     }
     
-    public void setSubType(String subType) {
-        this.subType = subType;
-    }
-    
-    public String getSubType() {
-        return subType;
-    }
-
     public List<MenuItem> getButtons() {
         return buttons;
     }
 
     public void setButtons(List<MenuItem> buttons) {
         this.buttons = buttons;
+    }
+    
+    public void addButton(MenuItem button) {
+        this.buttons.add(button);
     }
     
     public String getTitle() {
@@ -43,12 +43,37 @@ public class DialogScreen extends DefaultScreen {
         this.title = title;
     }
 
+    public DialogScreen addMessage(String message) {
+        this.message.add(message);
+        return this;
+    }
+    
+    public void setMessage(String...messages) {
+        this.setMessage(Arrays.asList(messages));
+    }
+    
     public void setMessage(List<String> message) {
         this.message = message;
     }
     
     public List<String> getMessage() {
         return message;
+    }
+
+    protected DialogProperties getDialogProperties() {
+        return dialogProperties;
+    }
+
+    protected void setDialogProperties(DialogProperties dialogProperties) {
+        this.dialogProperties = dialogProperties;
+    }
+    
+    public void setSubType(String subType) {
+        this.subType = subType;
+    }
+    
+    public String getSubType() {
+        return subType;
     }
     
 }

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jumpmind.pos.core.model.Total;
+import org.jumpmind.pos.core.template.SellTemplate;
 
 public class SellItemScreen extends PromptScreen {
 
@@ -18,16 +19,14 @@ public class SellItemScreen extends PromptScreen {
     private String taxTotal;
     private String itemActionName = "Item";
     private Transaction transaction = new Transaction();
-    private Customer customer;
+    private String customerName;
+    private String noCustomerText;
     private List<Total> totals = new ArrayList<>();
-    
-    private List<MenuItem> transactionMenuItems = new ArrayList<>();
+    private MenuItem loyaltyButton;
 
     public SellItemScreen() {
         this.setType(ScreenType.Transaction);
-        this.setTemplate(DefaultScreen.TEMPLATE_SELL);
-        this.setShowScan(true);
-        this.setScanType(ScanType.CAMERA_CORDOVA);
+        this.setTemplate(new SellTemplate().enableScan(false));
     }
 
     public List<SellItem> getItems() {
@@ -87,12 +86,12 @@ public class SellItemScreen extends PromptScreen {
         this.transaction = transaction;
     }
     
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
     }
     
-    public Customer getCustomer() {
-        return customer;
+    public String getCustomerName() {
+        return customerName;
     }
 
     public String getItemActionName() {
@@ -101,19 +100,7 @@ public class SellItemScreen extends PromptScreen {
 
     public void setItemActionName(String itemActionName) {
         this.itemActionName = itemActionName;
-    }
-    
-    public void addTransactionMenuItem(MenuItem menuItem) {
-        this.transactionMenuItems.add(menuItem);
-    }
-    
-    public void setTransactionMenuItems(List<MenuItem> transactionMenuItems) {
-        this.transactionMenuItems = transactionMenuItems;
-    }
-    
-    public List<MenuItem> getTransactionMenuItems() {
-        return transactionMenuItems;
-    }
+    }    
 
 	public List<Total> getTotals() {
 		return totals;
@@ -125,5 +112,21 @@ public class SellItemScreen extends PromptScreen {
 	
 	public void addTotal(String name, String amount) {
 		this.totals.add(new Total(name, amount ));
+	}
+
+	public String getNoCustomerText() {
+		return noCustomerText;
+	}
+
+	public void setNoCustomerText(String noCustomerText) {
+		this.noCustomerText = noCustomerText;
+	}
+
+	public MenuItem getLoyaltyButton() {
+		return loyaltyButton;
+	}
+
+	public void setLoyaltyButton(MenuItem loyaltyButton) {
+		this.loyaltyButton = loyaltyButton;
 	}
 }

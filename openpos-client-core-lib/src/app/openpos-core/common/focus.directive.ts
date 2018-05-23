@@ -1,9 +1,9 @@
-import { Directive, Input, ElementRef, OnInit } from '@angular/core';
+import { Directive, Input, ElementRef, AfterContentInit } from '@angular/core';
 
 @Directive({
     selector: '[appFocus]'
 })
-export class FocusDirective implements OnInit {
+export class FocusDirective implements AfterContentInit {
 
     @Input()
     appFocus: boolean;
@@ -11,7 +11,7 @@ export class FocusDirective implements OnInit {
     constructor(private element: ElementRef) {
     }
 
-    ngOnInit(): void {
+    ngAfterContentInit(): void {
         if (this.appFocus) {
             this.element.nativeElement.focus();
         }

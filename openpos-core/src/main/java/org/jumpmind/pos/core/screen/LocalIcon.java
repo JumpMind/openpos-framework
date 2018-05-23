@@ -12,7 +12,7 @@ public class LocalIcon implements IIcon, Serializable {
     private String name;
     
     public LocalIcon(String name) {
-        this.name = String.format("local_%s", name);
+        this.name = String.format("openpos_%s", name);
     }
     
     @Override

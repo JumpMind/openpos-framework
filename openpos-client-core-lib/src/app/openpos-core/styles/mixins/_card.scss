@@ -21,6 +21,11 @@
           overflow-y:auto
       }
   }
+  
+  mat-card.scrollable-card{
+    margin-bottom:0px;
+    overflow-y:auto
+  }
 
   mat-card.page-content-card{
       margin: 2px;
@@ -31,9 +36,19 @@
           margin: 0px;
       }
 
+      mat-card-subtitle{
+          padding:10px;
+          margin: 0px;
+      }
+
       mat-card-content{
           padding:10px;
           margin:0px;
+      }
+
+      .mat-card-actions:last-child{
+          padding:10px;
+          margin:0;
       }
 
       mat-card-footer{
