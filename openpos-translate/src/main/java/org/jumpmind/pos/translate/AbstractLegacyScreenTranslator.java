@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.WordUtils;
@@ -134,11 +135,11 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
 
     protected void buildStatusItems() {
         screen.setName(getScreenName());
-        
+
         if (isBlank(screen.getIcon())) {
             screen.setIcon(iconRegistry.get(legacyScreen.getSpecName()));
         }
-        
+
         if (screen.getTemplate() instanceof SellTemplate) {
             SellTemplate template = screen.getTemplate();
             String operatorText;
@@ -450,8 +451,11 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
                 // GlobalNavigationButtonBean
                 if (buttonModel.getNewButtons() != null && buttonModel.getNewButtons().length > 0) {
                     buttonSpecs = buttonModel.getNewButtons();
-                } else {
-                    buttonSpecs = ((ILegacyButtonSpec[]) ArrayUtils.addAll(localNavSpec.getButtons(), buttonModel.getNewButtons()));
+                } else if(buttonModel.getModifyButtons() != null && buttonModel.getModifyButtons().length > 0) {
+                	buttonSpecs = Arrays.stream(localNavSpec.getButtons()).filter(origB -> Arrays.stream(buttonModel.getModifyButtons()).anyMatch(modifyB -> modifyB.getActionName().equals(origB.getActionName()))).toArray(ILegacyButtonSpec[]::new);
+                } else
+                {
+                    buttonSpecs =  localNavSpec.getButtons();
                 }
             } else {
                 buttonSpecs = localNavSpec.getButtons();
