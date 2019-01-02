@@ -26,15 +26,10 @@ import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerFactory;
 import org.jumpmind.pos.core.flow.SessionTimer;
 import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.model.FormField;
 import org.jumpmind.pos.core.model.IDynamicListField;
 import org.jumpmind.pos.core.model.IFormElement;
-import org.jumpmind.pos.core.model.annotations.FormButton;
-import org.jumpmind.pos.core.model.annotations.FormTextField;
-import org.jumpmind.pos.core.screen.FormScreen;
 import org.jumpmind.pos.core.screen.IHasForm;
 import org.jumpmind.pos.core.screen.Screen;
-import org.jumpmind.pos.core.screen.ScreenType;
 import org.jumpmind.pos.core.screen.Toast;
 import org.jumpmind.pos.core.util.LogFormatter;
 import org.jumpmind.pos.server.model.Action;
@@ -56,7 +51,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@SuppressWarnings("deprecation")
+import springfox.documentation.annotations.ApiIgnore;
+
+@ApiIgnore
 @CrossOrigin
 @Controller
 public class ScreenService implements IScreenService, IActionListener {
@@ -220,11 +217,6 @@ public class ScreenService implements IScreenService, IActionListener {
             ApplicationState applicationState = stateManager.getApplicationState();
             screen.setSequenceNumber(applicationState.incrementAndScreenSequenceNumber());
             try {
-                applyAnnotations(screen);
-                if (screen.isScreenOfType(ScreenType.Form) && !(screen instanceof FormScreen)) {
-                    Form form = buildForm(screen);
-                    screen.put("form", form);
-                }
                 screen = interceptScreen(appId, deviceId, screen);
                 logScreenTransition(deviceId, screen);
             } catch (Exception ex) {
@@ -283,42 +275,6 @@ public class ScreenService implements IScreenService, IActionListener {
             return applicationState.getLastDialog() instanceof IHasForm;
         } else {
             return applicationState.getLastScreen() instanceof IHasForm;
-        }
-    }
-
-    protected Form buildForm(Screen screen) {
-        Form form = new Form();
-        for (Field field : screen.getClass().getDeclaredFields()) {
-            FormTextField textFieldAnnotation = field.getAnnotation(FormTextField.class);
-            if (textFieldAnnotation != null) {
-                FormField formField = new FormField();
-                formField.setElementType(textFieldAnnotation.fieldElementType());
-                formField.setInputType(textFieldAnnotation.fieldInputType());
-                formField.setId(field.getName());
-                formField.setLabel(textFieldAnnotation.label());
-                formField.setPlaceholder(textFieldAnnotation.placeholder());
-                formField.setPattern(textFieldAnnotation.pattern());
-                formField.setValue(getFieldValueAsString(field, screen));
-                formField.setRequired(textFieldAnnotation.required());
-                form.addFormElement(formField);
-            }
-            FormButton buttonAnnotation = field.getAnnotation(FormButton.class);
-            if (buttonAnnotation != null) {
-                org.jumpmind.pos.core.model.FormButton button = new org.jumpmind.pos.core.model.FormButton();
-                button.setLabel(buttonAnnotation.label());
-                button.setButtonAction(getFieldValueAsString(field, screen));
-                form.addFormElement(button);
-            }
-        }
-        return form;
-    }
-
-    protected void applyAnnotations(Screen screen) {
-        org.jumpmind.pos.core.model.annotations.Screen screenAnnotation = screen.getClass()
-                .getAnnotation(org.jumpmind.pos.core.model.annotations.Screen.class);
-        if (screenAnnotation != null) {
-            screen.setName(screenAnnotation.name());
-            screen.setScreenType(screenAnnotation.type());
         }
     }
 

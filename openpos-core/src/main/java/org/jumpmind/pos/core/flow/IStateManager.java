@@ -30,8 +30,10 @@ import org.jumpmind.pos.server.model.Action;
 public interface IStateManager {
 
     public void keepAlive();
-    public void init(String appId, String nodeId);
+    public void init(String appId, String deviceId);
+    @Deprecated
     public String getNodeId();
+    public String getDeviceId();
     public String getAppId();
     public void doAction(String action);
     public void doAction(String action, Map<String, String> params);

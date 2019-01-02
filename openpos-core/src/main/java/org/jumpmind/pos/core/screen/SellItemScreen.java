@@ -31,6 +31,7 @@ public class SellItemScreen extends PromptScreen {
     private List<MenuItem> multiSelectedMenuItems;
 
     public SellItemScreen() {
+        this.setId("sell");
         this.setScreenType(ScreenType.Transaction);
         this.setTemplate(new SellTemplate().enableScan(false));
     }

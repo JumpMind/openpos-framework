@@ -10,6 +10,7 @@ public interface IPromptScreen {
     public static final String TYPE_NO_YEAR_DATE = "NOYEARDATE";
     public static final String TYPE_ONOFF = "ONOFF";
     public static final String TYPE_EMAIL = "EMAIL";
+    public static final String TYPE_MONEY = "MONEY";
 
     public Integer getMinLength();
     public void setMinLength(Integer minLength);

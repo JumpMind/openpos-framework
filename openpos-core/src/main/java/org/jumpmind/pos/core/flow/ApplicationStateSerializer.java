@@ -138,7 +138,7 @@ public class ApplicationStateSerializer {
                                                                             // available
                                                                             // after
                                                                             // deserialize
-            stateContext.setFlowConfig(flowConfigProvider.getConfigByName(stateManager.getAppId(), stateManager.getNodeId(), flowConfigName));
+            stateContext.setFlowConfig(flowConfigProvider.getConfigByName(stateManager.getAppId(), stateManager.getDeviceId(), flowConfigName));
         }
     }
 

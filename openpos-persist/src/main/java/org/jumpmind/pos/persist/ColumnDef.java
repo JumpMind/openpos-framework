@@ -28,7 +28,7 @@ import java.sql.Types;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface Column {
+public @interface ColumnDef {
     String name() default "";
     int type() default Types.OTHER;
     String size() default "";

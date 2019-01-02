@@ -81,6 +81,12 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
 
         } catch (Exception ex) {
             logger.error("Failed to subscribe to " + topicName, ex);
+            DialogScreen errorDialog = new DialogScreen();
+            errorDialog.asDialog(new DialogProperties(false));
+            errorDialog.setIcon(IconType.Error);
+            errorDialog.setTitle("Failed To Subscribe");
+            errorDialog.setMessage(Arrays.asList(ex.getMessage()));
+            messageService.sendMessage(appId, nodeId, errorDialog);
         }
     }
 

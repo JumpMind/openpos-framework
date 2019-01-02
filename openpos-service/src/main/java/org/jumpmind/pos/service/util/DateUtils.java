@@ -8,13 +8,16 @@ import java.util.Date;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.service.PosServerException;
 
-public class DateUtils {
+public final class DateUtils {
     
     private static final String ISO_DATE_TIME_MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
     private static final String ISO_DATE_TIME_MILLIS_T = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     private static final String ISO_DATE_TIME_SECONDS = "yyyy-MM-dd HH:mm:ss";
     private static final String ISO_DATE_TIME_SECONDS_T = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String ISO_DATE = "yyyy-MM-dd";
+    
+    private DateUtils() {
+    }
     
     private static String[] FORMATS = new String[] {
             ISO_DATE_TIME_MILLIS,

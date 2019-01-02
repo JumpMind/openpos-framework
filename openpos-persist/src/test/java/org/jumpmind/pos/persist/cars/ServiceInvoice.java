@@ -3,23 +3,23 @@ package org.jumpmind.pos.persist.cars;
 import java.math.BigDecimal;
 import java.util.Date;
 
-import org.jumpmind.pos.persist.Column;
+import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.TableDef;
 
-@Table(name="service_invoice")
+@TableDef(name="service_invoice")
 public class ServiceInvoice extends AbstractModel {
     
     private static final long serialVersionUID = 1L;
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     private Date invoiceDate;
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     private long invoiceLocation;
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     private long invoiceNumber;
-    @Column
+    @ColumnDef
     private BigDecimal invoiceTotal;
-    @Column
+    @ColumnDef
     private String invoiceStatus;    
     
     public Date getInvoiceDate() {

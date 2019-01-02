@@ -12,7 +12,7 @@ import javax.annotation.PostConstruct;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jumpmind.pos.service.Module;
+import org.jumpmind.pos.service.IModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class ModuleRegistry {
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Autowired(required = false)
-    List<Module> modules;
+    List<IModule> modules;
     
     public ModuleRegistry() {
        logger.info("Creating module registry");
@@ -43,7 +43,7 @@ public class ModuleRegistry {
 
                 int pos = 0;
                 if (out != null) {
-                    for (Module module : modules) {
+                    for (IModule module : modules) {
                         try {
                             out.write(pos + "=" + StringUtils.capitalize(module.getName()) + "|");
                             out.write(module.getDriver() + "|");
@@ -62,7 +62,7 @@ public class ModuleRegistry {
         }
     }
 
-    public List<Module> getModules() {
+    public List<IModule> getModules() {
         return modules;
     }
 

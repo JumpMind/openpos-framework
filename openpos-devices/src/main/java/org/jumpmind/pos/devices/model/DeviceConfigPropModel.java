@@ -1,27 +1,27 @@
 package org.jumpmind.pos.devices.model;
 
 import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.Column;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.ColumnDef;
+import org.jumpmind.pos.persist.TableDef;
 
-@Table(name="config_prop")
+@TableDef(name="config_prop")
 public class DeviceConfigPropModel extends AbstractModel {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     String profile;
     
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     String deviceName;
     
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     String propertyName;
     
-    @Column
+    @ColumnDef
     String propertyValue;
     
-    @Column
+    @ColumnDef
     String propertyType;
 
     public String getProfile() {

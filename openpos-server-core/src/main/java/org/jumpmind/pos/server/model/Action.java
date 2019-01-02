@@ -26,6 +26,8 @@ public class Action implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     
+    public static final Action ACTION_TIMEOUT = new Action("Timeout");
+    
     private String name;
     private Object data;
     private String type;

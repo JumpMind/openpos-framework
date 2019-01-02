@@ -78,7 +78,7 @@ public class StateManager implements IStateManager {
 
     private String appId;
     
-    private String nodeId;
+    private String deviceId;
     
     private FlowConfig initialFlowConfig;
     
@@ -96,7 +96,7 @@ public class StateManager implements IStateManager {
 
     public void init(String appId, String nodeId) {
         this.appId = appId;
-        this.nodeId = nodeId;
+        this.deviceId = nodeId;
         this.applicationState.setAppId(appId);
         this.applicationState.setNodeId(nodeId);
         this.uiManager.init(this);
@@ -278,8 +278,8 @@ public class StateManager implements IStateManager {
     @Override
     public void refreshScreen() {
         /* Hang onto the dialog since showing the last screen first will clear the last dialog from the screen service */
-        Screen lastDialog = screenService.getLastDialog(appId, nodeId);
-        showScreen(screenService.getLastScreen(appId, nodeId));
+        Screen lastDialog = screenService.getLastDialog(appId, deviceId);
+        showScreen(screenService.getLastScreen(appId, deviceId));
         showScreen(lastDialog);
     }
 
@@ -437,7 +437,7 @@ public class StateManager implements IStateManager {
             throw new FlowException("There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
         }               
         
-        screenService.showToast(appId, nodeId, toast);
+        screenService.showToast(appId, deviceId, toast);
     }
 
     @Override
@@ -448,7 +448,7 @@ public class StateManager implements IStateManager {
             throw new FlowException("There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
         }
         if (applicationState.getCurrentContext().getState() != null && applicationState.getCurrentContext().getState() instanceof IScreenInterceptor) {
-            screen = ((IScreenInterceptor)applicationState.getCurrentContext().getState()).intercept(appId, nodeId, screen);            
+            screen = ((IScreenInterceptor)applicationState.getCurrentContext().getState()).intercept(appId, deviceId, screen);            
         }
                 
         if (screen != null) {
@@ -459,18 +459,18 @@ public class StateManager implements IStateManager {
             sessionTimeoutAction = null;
         }
         
-        screenService.showScreen(appId, nodeId, screen);
+        screenService.showScreen(appId, deviceId, screen);
         
-//        if (autoSaveState) {            
-//            if (this.getApplicationState().getCurrentTransition() == null) {
-//                applicationStateSerializer.serialize(this, applicationState, "./openpos-state.json");
-//            }
-//        }
+    }
+    
+    @Override
+    public String getNodeId() {        
+        return deviceId;
     }
 
     @Override
-    public String getNodeId() {
-        return nodeId;
+    public String getDeviceId() {
+        return deviceId;
     }
     
     @Override
@@ -496,7 +496,7 @@ public class StateManager implements IStateManager {
 
     protected void sessionTimeout() {
         try {
-            logger.info(String.format("Node %s session timed out.", nodeId));
+            logger.info(String.format("Node %s session timed out.", deviceId));
             if (!CollectionUtils.isEmpty(sessionTimeoutListeners)) {
                 Action localSessionTimeoutAction = sessionTimeoutAction != null 
                         ? sessionTimeoutAction : new Action("Timeout");

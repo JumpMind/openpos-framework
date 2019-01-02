@@ -2,16 +2,16 @@ package org.jumpmind.pos.persist.model;
 
 import java.util.Date;
 
-import org.jumpmind.pos.persist.Column;
+import org.jumpmind.pos.persist.ColumnDef;
 
 abstract public class AbstractEffectiveTaggedModel extends AbstractTaggedModel {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     Date effectiveStartTime;
     
-    @Column 
+    @ColumnDef 
     Date effectiveEndTime;
     
     public void setEffectiveStartTime(Date effectiveStartTime) {

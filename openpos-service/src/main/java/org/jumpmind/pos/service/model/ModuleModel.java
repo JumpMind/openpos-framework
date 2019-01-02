@@ -1,18 +1,18 @@
 package org.jumpmind.pos.service.model;
 
-import org.jumpmind.pos.persist.Column;
+import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.TableDef;
 
-@Table(name="module")
+@TableDef(name="module", description="This table is used to track runtime information about the module.")
 public class ModuleModel extends AbstractModel {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(primaryKey=true) 
+    @ColumnDef(primaryKey=true) 
     String installationId;
     
-    @Column
+    @ColumnDef
     String currentVersion;
     
     public ModuleModel() {

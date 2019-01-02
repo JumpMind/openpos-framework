@@ -53,33 +53,46 @@ public class UIManager implements IUI {
 
     @Override
     public void prompt(PromptConfig promptConfig) {
-        PromptScreen screen = new PromptScreen();   
-         
-        if (promptConfig.getName() != null) {            
+        this.prompt(promptConfig, false);
+    }
+    
+    @Override
+    public void prompt(PromptConfig promptConfig, boolean isDialog) {
+        PromptScreen screen = new PromptScreen();
+
+        if (promptConfig.getName() != null) {
             screen.setName(promptConfig.getName());
         } else if (promptConfig.getPlaceholder() != null) {
             screen.setName(promptConfig.getPlaceholder());
         } else {
             screen.setName("Prompt " + StringUtils.abbreviate(promptConfig.getPromptText(), 25));
         }
-        
+
         screen.setOtherActions(promptConfig.getOtherActions());
         screen.setRefreshAlways(true);
         screen.setResponseType(promptConfig.getPromptType());
-        if (promptConfig.getBackAction() != null) {            
+        if (promptConfig.getBackAction() != null) {
             screen.setBackButton(new MenuItem(promptConfig.getBackAction(), "Back"));
         }
         screen.setPromptIcon(promptConfig.getIcon());
         screen.setIcon(promptConfig.getIcon());
         screen.setPlaceholderText(promptConfig.getPlaceholder());
         screen.setText(promptConfig.getPromptText());
-        if (promptConfig.getActionMenuItem() != null) {            
+        if (promptConfig.getActionMenuItem() != null) {
             screen.setActionButton(promptConfig.getActionMenuItem());
         } else {
             screen.setActionButton(new MenuItem("Next", "UsernameEntered", true));
         }
-        stateManager.showScreen(screen);
+
+        if (isDialog) {
+            if (promptConfig.getDialogProperties() != null) {
+                screen.setDialogProperties(promptConfig.getDialogProperties());
+            }
+            stateManager.showScreen(screen.asDialog());
+        } else {
+            stateManager.showScreen(screen);
+        }
+
     }
-    
 
 }

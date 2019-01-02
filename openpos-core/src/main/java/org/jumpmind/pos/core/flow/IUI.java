@@ -9,5 +9,6 @@ public interface IUI {
     public void prompt(String message, String action);
     public void askYesNo(String message, String yesAction, String noAction);       
     public void prompt(PromptConfig promptConfig);
+    public void prompt(PromptConfig promptConfig, boolean isDialog);
     
 }

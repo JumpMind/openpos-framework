@@ -95,7 +95,7 @@ public class TranslatorState implements IState {
 
                 @Override
                 public String getNodeId() {
-                    return stateManager.getNodeId();
+                    return stateManager.getDeviceId();
                 }
 
                 @Override
@@ -123,7 +123,7 @@ public class TranslatorState implements IState {
                 @Override
                 public IDeviceResponse sendDeviceRequest(IDeviceRequest request) {
                     IDeviceResponse response = null;
-                    CompletableFuture<IDeviceResponse> futureResponse = deviceService.send(stateManager.getAppId(), stateManager.getNodeId(),
+                    CompletableFuture<IDeviceResponse> futureResponse = deviceService.send(stateManager.getAppId(), stateManager.getDeviceId(),
                             request);
                     try {
                         response = futureResponse.get(request.getTimeout(), TimeUnit.MILLISECONDS);

@@ -21,14 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import springfox.documentation.annotations.ApiIgnore;
 
 @Controller
+@ApiIgnore
 @RequestMapping(value = "fileupload")
-@Api("Web service to handle file uploads from clients")
 public class FileUploadService implements IFileUploadService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 

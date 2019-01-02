@@ -4,27 +4,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.Column;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.ColumnDef;
+import org.jumpmind.pos.persist.TableDef;
 
-@Table(name = "config")
+@TableDef(name = "config")
 public class DeviceConfigModel extends AbstractModel {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(primaryKey = true)
+    @ColumnDef(primaryKey = true)
     String profile;
 
-    @Column(primaryKey = true)
+    @ColumnDef(primaryKey = true)
     String deviceName;
 
-    @Column
+    @ColumnDef
     String description;
 
-    @Column
+    @ColumnDef
     String serviceClass;
 
-    @Column
+    @ColumnDef
     String factoryClass;
 
     List<DeviceConfigPropModel> properties = new ArrayList<>();

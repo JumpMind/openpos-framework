@@ -1,14 +1,14 @@
 package org.jumpmind.pos.persist.cars;
 
-import org.jumpmind.pos.persist.Column;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.ColumnDef;
+import org.jumpmind.pos.persist.TableDef;
 
-@Table(name="race_car")
+@TableDef(name="race_car")
 public class RaceCarModel extends CarModel {
 
     private static final long serialVersionUID = 1L;
     
-    @Column
+    @ColumnDef
     private boolean turboCharged;
     
     public void setTurboCharged(boolean turboCharged) {

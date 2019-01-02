@@ -1,22 +1,22 @@
 package org.jumpmind.pos.persist.cars;
 
-import org.jumpmind.pos.persist.Column;
+import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.TableDef;
 
-@Table(name="car",
+@TableDef(name="car",
         description = "A basic concept of an automobile fit to drive down the road.")
 public class CarModel extends AbstractModel {
 
     private static final long serialVersionUID = 1L;
     
-    @Column(primaryKey=true)
+    @ColumnDef(primaryKey=true)
     private String vin;
-    @Column    
+    @ColumnDef    
     private String modelYear;
-    @Column
+    @ColumnDef
     private String make;
-    @Column
+    @ColumnDef
     private String model;
     
     public String getModelYear() {

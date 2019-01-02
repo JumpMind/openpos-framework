@@ -12,18 +12,18 @@ public abstract class AbstractModel implements Serializable {
     
     private static final long serialVersionUID = 1L;
 
-    @Column(required=true,
+    @ColumnDef(required=true,
             description="Timestamp when this entry was created.")
     private Date createTime = new Date();
 
-    @Column(required=true, size="50",
+    @ColumnDef(required=true, size="50",
             description="The user who last updated this entry.")    
     private String createBy;
 
-    @Column(description="Timestamp when a user last updated this entry.")
+    @ColumnDef(description="Timestamp when a user last updated this entry.")
     private Date lastUpdateTime = new Date();
 
-    @Column(required=true, size="50",
+    @ColumnDef(required=true, size="50",
             description="The user who last updated this entry.")    
     private String lastUpdateBy;
     

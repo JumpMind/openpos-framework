@@ -24,6 +24,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import springfox.documentation.annotations.ApiIgnore;
+
+@ApiIgnore
 @CrossOrigin
 @Controller
 public class MessageService implements IMessageService {

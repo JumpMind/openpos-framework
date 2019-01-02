@@ -16,49 +16,56 @@ import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_TEST
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_URL;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_USER;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_VALIDATION_QUERY;
+import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
 
-import java.lang.annotation.Annotation;
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.apache.commons.io.IOUtils;
+import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
 import org.jumpmind.db.platform.JdbcDatabasePlatformFactory;
 import org.jumpmind.db.sql.SqlTemplateSettings;
 import org.jumpmind.db.util.BasicDataSourceFactory;
 import org.jumpmind.db.util.ConfigDatabaseUpgrader;
+import org.jumpmind.exception.IoException;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.persist.DatabaseScriptContainer;
 import org.jumpmind.pos.persist.PersistException;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.TableDef;
 import org.jumpmind.pos.persist.driver.Driver;
 import org.jumpmind.pos.persist.model.TagConfig;
 import org.jumpmind.pos.service.model.ModuleModel;
 import org.jumpmind.properties.TypedProperties;
 import org.jumpmind.security.ISecurityService;
 import org.jumpmind.security.SecurityServiceFactory;
+import org.jumpmind.symmetric.io.data.DbExport;
+import org.jumpmind.symmetric.io.data.DbExport.Compatible;
+import org.jumpmind.symmetric.io.data.DbExport.Format;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
-import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @EnableTransactionManagement
 @DependsOn("tagConfig")
-abstract public class AbstractModule extends AbstractServiceFactory implements Module {
+abstract public class AbstractModule extends AbstractServiceFactory implements IModule {
 
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -90,22 +97,6 @@ abstract public class AbstractModule extends AbstractServiceFactory implements M
     @Autowired
     private ApplicationContext applicationContext;
 
-    protected List<Class<?>> getClassesForPackageAndAnnotation(String packageName, Class<? extends Annotation> annotation) {
-        List<Class<?>> classes = new ArrayList<Class<?>>();
-        classes.add(ModuleModel.class);
-        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(true);
-        scanner.addIncludeFilter(new AnnotationTypeFilter(annotation));
-        for (BeanDefinition bd : scanner.findCandidateComponents(packageName)) {
-            try {
-                final Class<?> clazz = Class.forName(bd.getBeanClassName());
-                classes.add(clazz);
-            } catch (ClassNotFoundException ex) {
-                logger.error(ex.getMessage());
-            }
-        }
-        return classes;
-    }
-
     protected PlatformTransactionManager txManager() {
         if (txManager == null) {
             this.txManager = new DataSourceTransactionManager(dataSource());
@@ -129,12 +120,12 @@ abstract public class AbstractModule extends AbstractServiceFactory implements M
 
     @Override
     public String getDriver() {
-            return env.getProperty(DB_POOL_DRIVER, "org.h2.Driver");
+        return env.getProperty(DB_POOL_DRIVER, "org.h2.Driver");
     }
 
     @Override
     public String getURL() {
-            return env.getProperty(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName());
+        return env.getProperty(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName());
     }
 
     protected DataSource dataSource() {
@@ -157,10 +148,10 @@ abstract public class AbstractModule extends AbstractServiceFactory implements M
                 properties.put(DB_POOL_URL, getURL());
                 properties.put(DB_POOL_USER, env.getProperty(DB_POOL_USER));
                 properties.put(DB_POOL_PASSWORD, env.getProperty(DB_POOL_PASSWORD));
-                properties.put(DB_POOL_INITIAL_SIZE, env.getProperty(DB_POOL_INITIAL_SIZE, "20"));
-                properties.put(DB_POOL_MAX_ACTIVE, env.getProperty(DB_POOL_MAX_ACTIVE, "20"));
-                properties.put(DB_POOL_MAX_IDLE, env.getProperty(DB_POOL_MAX_IDLE, "20"));
-                properties.put(DB_POOL_MIN_IDLE, env.getProperty(DB_POOL_MIN_IDLE, "20"));
+                properties.put(DB_POOL_INITIAL_SIZE, env.getProperty(DB_POOL_INITIAL_SIZE, "5"));
+                properties.put(DB_POOL_MAX_ACTIVE, env.getProperty(DB_POOL_MAX_ACTIVE, "5"));
+                properties.put(DB_POOL_MAX_IDLE, env.getProperty(DB_POOL_MAX_IDLE, "5"));
+                properties.put(DB_POOL_MIN_IDLE, env.getProperty(DB_POOL_MIN_IDLE, "5"));
                 properties.put(DB_POOL_MAX_WAIT, env.getProperty(DB_POOL_MAX_WAIT, "30000"));
                 properties.put(DB_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS, env.getProperty(DB_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS, "120000"));
                 properties.put(DB_POOL_VALIDATION_QUERY, env.getProperty(DB_POOL_VALIDATION_QUERY));
@@ -188,7 +179,7 @@ abstract public class AbstractModule extends AbstractServiceFactory implements M
 
             String packageName = this.getClass().getPackage().getName();
 
-            List<Class<?>> tableClasses = getClassesForPackageAndAnnotation(packageName, Table.class);
+            List<Class<?>> tableClasses = getClassesForPackageAndAnnotation(packageName, TableDef.class);
 
             Map<String, String> sessionContext = new HashMap<>();
 
@@ -206,6 +197,25 @@ abstract public class AbstractModule extends AbstractServiceFactory implements M
     @Override
     public void start() {
         updateDataModel(session());
+    }
+
+    public void exportData(String format, String dir, boolean includeModuleTables) {
+        OutputStream os = null;
+        try {
+            os = new BufferedOutputStream(new FileOutputStream(new File(dir, String.format("%s_post_01_%s.sql", getVersion(), getName().toLowerCase()))));  
+            List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[] { ModuleModel.class } );
+            DbExport dbExport = new DbExport(this.databasePlatform);
+            dbExport.setCompatible(Compatible.H2);
+            dbExport.setUseQuotedIdentifiers(false);
+            dbExport.setNoData(false);
+            dbExport.setFormat(Format.valueOf(format));
+            dbExport.setNoCreateInfo(true);
+            dbExport.exportTables(os, tables.toArray(new Table[tables.size()]));
+        } catch (IOException e) {
+            throw new IoException(e);
+        } finally {
+            IOUtils.closeQuietly(os);
+        }
     }
 
     public void updateDataModel(DBSession session) {

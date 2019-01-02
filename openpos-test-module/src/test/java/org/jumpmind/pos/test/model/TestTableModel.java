@@ -1,18 +1,18 @@
 package org.jumpmind.pos.test.model;
 
-import org.jumpmind.pos.persist.Column;
+import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.Table;
+import org.jumpmind.pos.persist.TableDef;
 
-@Table(name="table")
+@TableDef(name="table")
 public class TestTableModel extends AbstractModel {
 
     private static final long serialVersionUID = 1L;
 
-    @Column(primaryKey = true)
+    @ColumnDef(primaryKey = true)
     int id;
 
-    @Column
+    @ColumnDef
     String example;
 
     public void setId(int id) {

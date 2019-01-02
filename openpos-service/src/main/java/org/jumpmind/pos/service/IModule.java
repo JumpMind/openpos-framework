@@ -1,6 +1,6 @@
 package org.jumpmind.pos.service;
 
-public interface Module {
+public interface IModule {
 
     public String getName();
     
@@ -8,6 +8,8 @@ public interface Module {
     
     public default void start() {
     }
+    
+    public void exportData(String format, String dir, boolean includeModuleTables);
     
     public String getTablePrefix();
 

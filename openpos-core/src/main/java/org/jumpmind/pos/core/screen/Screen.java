@@ -18,6 +18,7 @@ public class Screen extends Message {
 
     private static final long serialVersionUID = 1L;
 
+    private String id;
     private String name;
     private String screenType;
     private String icon;
@@ -30,11 +31,24 @@ public class Screen extends Message {
     public Screen() {
         this.setType(MessageType.Screen);
     }
-
+    
     public Screen(String name, String screenType) {
+        this(name, screenType, name);
+    }
+
+    public Screen(String name, String screenType, String id) {
         this();
         this.screenType = screenType;
         this.name = name;
+        this.id = id;
+    }
+    
+    public void setId(String id) {
+        this.id = id;
+    }
+    
+    public String getId() {
+        return id;
     }
     
     public boolean isDialog() {
