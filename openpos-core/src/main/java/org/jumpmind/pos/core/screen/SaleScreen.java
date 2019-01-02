@@ -14,7 +14,7 @@ public class SaleScreen extends Screen {
     private static final long serialVersionUID = 1L;
     public static final String ITEM_TOTAL_NAME = "itemTotal";
     
-    private HeaderBarPart header;
+    private HeaderBarPart headerBar;
     private ScanPart scan;
     
     private List<SellItem> items = new ArrayList<>();
@@ -216,20 +216,20 @@ public class SaleScreen extends Screen {
         return transactionMenuItems;
     }
 
-    public HeaderBarPart getHeader() {
-        return header;
-    }
-
-    public void setHeader(HeaderBarPart header) {
-        this.header = header;
-    }
-
     public ScanPart getScan() {
         return scan;
     }
 
     public void setScan(ScanPart scan) {
         this.scan = scan;
+    }
+
+    public HeaderBarPart getHeaderBar() {
+        return headerBar;
+    }
+
+    public void setHeaderBar(HeaderBarPart headerBar) {
+        this.headerBar = headerBar;
     }
     
 }
