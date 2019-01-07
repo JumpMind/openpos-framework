@@ -6,15 +6,16 @@ import org.jumpmind.pos.core.template.Scan.ScanType;
 public class BlankWithBarTemplate extends AbstractTemplate {
 
     private static final long serialVersionUID = 1L;
-    
+
     Scan scan;
     private Workstation workstation;
     private String operatorText;
-    
+    protected StatusBar statusBar = new StatusBar();
+
     public BlankWithBarTemplate() {
         super("BlankWithBar");
     }
-    
+
     public BlankWithBarTemplate enableScan(boolean autoFocusOnScan) {
         Scan scan = new Scan();
         scan.setAutoFocusOnScan(autoFocusOnScan);
@@ -23,7 +24,7 @@ public class BlankWithBarTemplate extends AbstractTemplate {
         setScan(scan);
         return this;
     }
-    
+
     public void setScan(Scan scan) {
         this.scan = scan;
     }
@@ -46,6 +47,14 @@ public class BlankWithBarTemplate extends AbstractTemplate {
 
     public void setOperatorText(String operatorText) {
         this.operatorText = operatorText;
+    }
+
+    public StatusBar getStatusBar() {
+        return statusBar;
+    }
+
+    public void setStatusBar(StatusBar statusBar) {
+        this.statusBar = statusBar;
     }
 
 }

@@ -1,10 +1,6 @@
 package org.jumpmind.pos.util.model;
 
-import java.io.Serializable;
-
-public class ServiceResult implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+public class ServiceResult {
 
     private Object extension;
 

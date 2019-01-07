@@ -31,6 +31,24 @@ eclipse {
         downloadSources = true
         downloadJavadoc = false
     }
+    
+    project {
+        resourceFilter {
+          appliesTo = 'FOLDERS'
+          type = 'EXCLUDE_ALL'
+          matcher {
+            id = 'org.eclipse.ui.ide.orFilterMatcher'
+//               matcher {
+//                 id = 'org.eclipse.ui.ide.multiFilter'
+//                 arguments = '1.0-projectRelativePath-matches-false-false-bin'
+//               }            
+               matcher {
+                 id = 'org.eclipse.ui.ide.multiFilter'
+                 arguments = '1.0-projectRelativePath-matches-false-false-build'
+               }
+          }            
+        }    
+    }
 }
 
 test {
@@ -60,6 +78,7 @@ artifacts {
 dependencies {
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
     compile "org.springframework:spring-context:$springVersion"
     compile group: 'org.springframework.data', name: 'spring-data-commons', version: '1.13.10.RELEASE'  
     compile group: 'org.joda', name: 'joda-money', version: '1.0.1'
