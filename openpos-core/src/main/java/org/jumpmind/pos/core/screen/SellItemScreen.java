@@ -22,7 +22,7 @@ public class SellItemScreen extends PromptScreen {
     private String subTotal;
     private String taxTotal;
     private String itemActionName = "Item";
-    private Transaction transaction = new Transaction();
+    private Transaction transaction = null;
     private String customerName;
     private String noCustomerText;
     private List<Total> totals = new ArrayList<>();

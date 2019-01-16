@@ -30,8 +30,6 @@ import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.server.HandshakeInterceptor;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
@@ -47,11 +45,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Autowired
     private ApplicationEventPublisher applicationEventPublisher;
 
-    ObjectMapper mapper = new ObjectMapper();
-
-    @Value("${openpos.compatibility.version:v1}") // Default to 'v1' so
-                                                  // pre-existing clients aren't
-                                                  // broken
+    /*
+     * Default to 'v1' so pre-existing clients aren't broken
+     */
+    @Value("${openpos.compatibility.version:v1}")
     String serverCompatibilityVersion;
 
     @Override

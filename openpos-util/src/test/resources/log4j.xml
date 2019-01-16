@@ -55,6 +55,9 @@
         <priority value="DEBUG" />
     </category> 
     
+    <category name="org.eclipse.jetty">
+        <priority value="ERROR" />
+    </category>         
     
     <root>
         <priority value="WARN" />

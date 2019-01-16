@@ -10,15 +10,13 @@ import org.jumpmind.pos.persist.TableDef;
 @TableDef(name = "config")
 public class DeviceConfigModel extends AbstractModel {
 
-    private static final long serialVersionUID = 1L;
-
     @ColumnDef(primaryKey = true)
     String profile;
 
     @ColumnDef(primaryKey = true)
     String deviceName;
 
-    @ColumnDef
+    @ColumnDef(size = "255")
     String description;
 
     @ColumnDef

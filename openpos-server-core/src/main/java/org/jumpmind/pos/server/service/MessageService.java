@@ -39,7 +39,7 @@ public class MessageService implements IMessageService {
     @Autowired
     SimpMessagingTemplate template;
 
-    @Value("${org.jumpmind.pos.core.service.ScreenService.jsonIncludeNulls:true}")
+    @Value("${openpos.screenService.jsonIncludeNulls:true}")
     boolean jsonIncludeNulls = true;
     
     @Autowired(required=false)
@@ -59,7 +59,6 @@ public class MessageService implements IMessageService {
         logger.info("Received a ping request");
         return "{ \"pong\": \"true\" }";
     }
-
 
     @MessageMapping("action/app/{appId}/node/{nodeId}")
     public void action(@DestinationVariable String appId, @DestinationVariable String nodeId, @Payload Action action, Message<?> message) {

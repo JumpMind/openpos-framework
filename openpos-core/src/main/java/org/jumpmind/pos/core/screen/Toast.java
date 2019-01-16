@@ -10,6 +10,7 @@ public class Toast extends Message {
     private String message;
     private ToastType toastType;
     private int duration = 2500;
+    private String verticalPosition = "bottom";
 
     public static Toast createSuccessToast(String message) {
         Toast toast = new Toast(message);
@@ -39,6 +40,11 @@ public class Toast extends Message {
         this.toastType = toastType;
         this.duration = duration;
     }
+    
+    public Toast(String message, ToastType toastType, int duration, String verticalPosition) {
+        this(message, toastType, duration);
+        this.verticalPosition = verticalPosition;
+    }
 
     public String getMessage() {
         return message;
@@ -62,5 +68,13 @@ public class Toast extends Message {
 
     public void setDuration(int duration) {
         this.duration = duration;
+    }
+    
+    public void setVerticalPosition(String verticalPosition) {
+        this.verticalPosition = verticalPosition;
+    }
+    
+    public String getVerticalPosition() {
+        return verticalPosition;
     }
 }

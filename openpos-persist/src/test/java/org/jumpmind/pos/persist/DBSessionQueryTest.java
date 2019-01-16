@@ -1,4 +1,4 @@
-package org.jumpmind.pos.persist.cars;
+package org.jumpmind.pos.persist;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -13,6 +13,10 @@ import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.persist.PersistException;
 import org.jumpmind.pos.persist.Query;
+import org.jumpmind.pos.persist.cars.CarModel;
+import org.jumpmind.pos.persist.cars.CarStats;
+import org.jumpmind.pos.persist.cars.RaceCarModel;
+import org.jumpmind.pos.persist.cars.TestPersistCarsConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

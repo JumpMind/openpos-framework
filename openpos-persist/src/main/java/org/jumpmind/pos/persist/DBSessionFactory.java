@@ -91,7 +91,7 @@ public class DBSessionFactory {
     }
 
     public DBSession createDbSession() {
-        return new DBSession(null, null, databaseSchema, databasePlatform, sessionContext, queryTemplates, dmlTemplates);
+        return new DBSession(null, null, databaseSchema, databasePlatform, sessionContext, queryTemplates, dmlTemplates, tagConfig);
     }
 
     public org.jumpmind.db.model.Table getTableForEnhancement(Class<?> entityClazz) {

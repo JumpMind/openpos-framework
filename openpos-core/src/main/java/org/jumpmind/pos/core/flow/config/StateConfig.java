@@ -23,6 +23,7 @@ package org.jumpmind.pos.core.flow.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jumpmind.pos.core.flow.CompleteState;
 import org.jumpmind.pos.core.flow.IState;
 
 
@@ -33,6 +34,10 @@ public class StateConfig {
     private Map<String, Class<? extends IState>> actionToStateMapping = new HashMap<>();
     private Map<String, SubTransition> actionToSubStateMapping = new HashMap<>();
 
+    public StateConfig() {
+        actionToStateMapping.put("EndConverstation", CompleteState.class);
+    }
+    
     public String getStateName() {
         return stateName;
     }

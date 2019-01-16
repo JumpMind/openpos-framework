@@ -8,7 +8,7 @@ import org.jumpmind.pos.persist.PersistException;
 public class QueryTemplate implements Cloneable {
 
     private String name;
-    private List<String> selects;
+    private String select;
     private List<String> optionalWhereClauses;
     private String groupBy;
     private String where;
@@ -27,20 +27,13 @@ public class QueryTemplate implements Cloneable {
     }
     
     public void setSelect(String select) {
-        this.getSelects().add(select);
+        this.select = select;
     }
     
-    public void setSelects(List<String> selects) {
-        this.selects = selects;
-    }
+    public String getSelect() {
+        return select;
+    }    
     
-    public List<String> getSelects() {
-        if (selects == null) {
-            selects = new ArrayList<>();
-        }
-        return selects;
-    }
-
     public List<String> getOptionalWhereClauses() {
         if (optionalWhereClauses == null) {
             optionalWhereClauses = new ArrayList<>();

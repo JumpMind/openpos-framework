@@ -4,6 +4,9 @@ import java.util.Arrays;
 
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerFactory;
+import org.jumpmind.pos.core.model.ClientConfiguration;
+import org.jumpmind.pos.core.model.ConfigChangedMessage;
+import org.jumpmind.pos.core.model.IConfigSelector;
 import org.jumpmind.pos.core.screen.DialogProperties;
 import org.jumpmind.pos.core.screen.DialogScreen;
 import org.jumpmind.pos.core.screen.IconType;
@@ -35,6 +38,9 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
     
     @Value("${openpos.incompatible.version.message:The compatibility version of the client does not match the server}")
     String incompatibleVersionMessage; 
+
+    @Autowired(required = false)
+    private IConfigSelector configSelector;
 
     @Override
     public void onApplicationEvent(SessionSubscribedEvent event) {
@@ -76,6 +82,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                 errorDialog.setMessage(Arrays.asList(incompatibleVersionMessage.split("\n")));
                 messageService.sendMessage(appId, nodeId, errorDialog);
             } else {
+                sendClientConfiguration(appId, nodeId, sessionId);
                 stateManager.refreshScreen();
             }
 
@@ -87,6 +94,18 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             errorDialog.setTitle("Failed To Subscribe");
             errorDialog.setMessage(Arrays.asList(ex.getMessage()));
             messageService.sendMessage(appId, nodeId, errorDialog);
+        }
+    }
+
+    private void sendClientConfiguration(String appId, String nodeId, String sessionId) {
+        if (configSelector != null) {
+            String deviceType = sessionAuthTracker.getDeviceType(sessionId);
+            String brandId = sessionAuthTracker.getBrandId(sessionId);
+            logger.info("Getting client configuration for brandId '{}' and deviceType '{}'", brandId, deviceType);
+            String theme = configSelector.getTheme(brandId);
+            ClientConfiguration config = configSelector.getClientConfig(brandId, deviceType);
+            ConfigChangedMessage configMessage = new ConfigChangedMessage(theme, config);
+            messageService.sendMessage(appId, nodeId, configMessage);
         }
     }
 

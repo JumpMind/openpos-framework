@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 import io.swagger.annotations.Api;
 
 @Api(tags = "Devices Service", description = "This service exposes device functionality for sharing devices across multiple clients")
-@RestController
+@RestController("devices")
 @RequestMapping("/devices")
 public interface IDevicesService {
 

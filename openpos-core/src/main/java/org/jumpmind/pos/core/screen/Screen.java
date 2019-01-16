@@ -130,6 +130,7 @@ public class Screen extends Message {
         put("sequenceNumber", sequenceNumber);
     }
 
+    @Deprecated
     public void setTheme(String theme) {
         this.put("theme", theme);
     }

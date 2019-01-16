@@ -39,6 +39,7 @@ public interface IStateManager {
     public void doAction(String action, Map<String, String> params);
     public void doAction(Action action);    
     public void transitionTo(Action action, IState newState);
+    public void timeout();
     public void endConversation();
     public void endSession();
     public void showScreen(Screen screen);

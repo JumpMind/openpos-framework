@@ -1,23 +1,28 @@
 package org.jumpmind.pos.service;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.Collection;
+import static org.apache.commons.lang.StringUtils.isNotBlank;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.Map;
+
+import org.jumpmind.pos.service.strategy.IInvocationStrategy;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @Component
 public class EndpointDispatchInvocationHandler implements InvocationHandler {
 
     @Autowired
-    private ApplicationContext applicationContext;
+    Map<String, IInvocationStrategy> strategies;
 
     @Autowired
-    private EndpointInjector endpointInjector;
+    private ServiceConfig serviceConfig;
+
+    @Value("${openpos.installationId}")
+    String installationId;
 
     public EndpointDispatchInvocationHandler() {
     }
@@ -28,49 +33,25 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
             return false;
         }
 
-        String path = buildPath(method);
-        Object obj = applicationContext.getBean(path);
-        Collection<Object> beans = applicationContext.getBeansWithAnnotation(EndpointOverride.class).values();
-        for (Object testObj : beans) {
-            EndpointOverride override = testObj.getClass().getAnnotation(EndpointOverride.class);
-            if (override.path().equals(path)) {
-                obj = testObj;
-            }
-        }
-
-        if (obj != null) {
-            endpointInjector.performInjections(obj, new InjectionContext(args));
-            Method targetMethod = obj.getClass().getMethod(method.getName(), method.getParameterTypes());
-            if (targetMethod != null) {
-                try {
-                    return targetMethod.invoke(obj, args);
-                } catch (InvocationTargetException e) {
-                    throw e.getTargetException();
-                }
-            }
-        }
-
-        throw new PosServerException(String.format("No endpoint found for path '%s' Please define a Spring-discoverable @Componant class, "
-                + "with a method annotated like  @Endpoint(\"%s\")", path, path));
+        ServiceSpecificConfig config = getSpecificConfig(method);
+        IInvocationStrategy strategy = strategies.get(config.getStrategy().name());
+        return strategy.invoke(config, proxy, method, args);
 
     }
-
-    private String buildPath(Method method) {
-        StringBuilder path = new StringBuilder();
+    
+    private ServiceSpecificConfig getSpecificConfig(Method method) {
         Class<?> methodClazz = method.getDeclaringClass();
-        RequestMapping clazzMapping = methodClazz.getAnnotation(RequestMapping.class);
-        if (clazzMapping != null) {
-            path.append(clazzMapping.value()[0]);
+        RestController restController = methodClazz.getAnnotation(RestController.class);
+        if (restController != null && isNotBlank(restController.value())) {
+            return serviceConfig.getServiceConfig(installationId, restController.value());
+        } else {
+            throw new IllegalStateException(methodClazz.getSimpleName() + " must declare @" + RestController.class.getSimpleName()
+                    + " and it must have the value() attribute set");
         }
-        RequestMapping methodMapping = method.getAnnotation(RequestMapping.class);
-        if (methodMapping != null) {
-            if (methodMapping.path() != null && methodMapping.path().length > 0) {
-                path.append(methodMapping.path()[0]);
-            } else if (methodMapping.value() != null && methodMapping.value().length > 0) {
-                path.append(methodMapping.value()[0]);
-            }
-        }
-        return path.toString();
     }
+    
+
+
+
 
 }

@@ -9,6 +9,7 @@ public enum FieldInputType {
     Checkbox,
     ComboBox,
     PopTart,
+    SearchablePopTart,
     Decimal,
     TextArea,
     StateIDNumber,

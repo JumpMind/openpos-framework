@@ -13,6 +13,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.h2.tools.RunScript;
+import org.joda.money.Money;
 import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
@@ -33,10 +35,11 @@ import org.jumpmind.db.sql.Row;
 import org.jumpmind.pos.persist.impl.DatabaseSchema;
 import org.jumpmind.pos.persist.impl.DefaultMapper;
 import org.jumpmind.pos.persist.impl.DmlTemplate;
-import org.jumpmind.pos.persist.impl.EntitySystemInfo;
+import org.jumpmind.pos.persist.impl.ModelMetaData;
+import org.jumpmind.pos.persist.impl.ModelWrapper;
 import org.jumpmind.pos.persist.impl.QueryTemplate;
 import org.jumpmind.pos.persist.impl.ReflectUtils;
-import org.jumpmind.pos.persist.impl.Transaction;
+import org.jumpmind.pos.persist.model.TagConfig;
 import org.jumpmind.util.LinkedCaseInsensitiveMap;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -44,8 +47,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class DBSession {
 
     private static final Logger log = Logger.getLogger(DBSession.class);
-
-    private Transaction currentTransaction;
 
     private DatabaseSchema databaseSchema;
     private IDatabasePlatform databasePlatform;
@@ -55,7 +56,8 @@ public class DBSession {
     private Map<String, DmlTemplate> dmlTemplates;
 
     public DBSession(String catalogName, String schemaName, DatabaseSchema databaseSchema, IDatabasePlatform databasePlatform,
-            Map<String, String> sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates) {
+            Map<String, String> sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates,
+            TagConfig tagConfig) {
         super();
         this.dmlTemplates = dmlTemplates;
         this.databaseSchema = databaseSchema;
@@ -83,7 +85,7 @@ public class DBSession {
 
         ModelId entityId = new ModelId() {
             public Map<String, Object> getIdFields() {
-                Map<String, Object> fields = new HashMap<>();
+                Map<String, Object> fields = new HashMap<>(1);
                 String fieldName = naturalColumnsToFields.values().iterator().next();
                 fields.put(fieldName, id);
                 return fields;
@@ -103,63 +105,68 @@ public class DBSession {
     }
 
     public <T extends AbstractModel> T findByNaturalId(Class<T> entityClass, ModelId id) {
-        Map<String, String> entityIdColumnsToFields = databaseSchema.getEntityIdColumnsToFields(entityClass);
-
         QueryTemplate queryTemplate = new QueryTemplate();
+        queryTemplate.setSelect(getSelectSql(entityClass, id.getIdFields()));
+        Query<T> query = new Query<T>().result(entityClass);
+        query.setQueryTemplate(queryTemplate);
+        List<T> results = query(query, id.getIdFields());
 
-        try {
-            Map<String, Object> params = new HashMap<>();
-            Map<String, Object> fieldValues = id.getIdFields();
-
-            for (String columnName : entityIdColumnsToFields.keySet()) {
-                String fieldName = entityIdColumnsToFields.get(columnName);
-                queryTemplate.optionalWhere(String.format("%s = ${%s}", columnName, fieldName));
-                if (fieldValues != null) {
-                    Object value = fieldValues.get(fieldName);
-                    params.put(fieldName, value);
-                } else {
-                    Field field = id.getClass().getDeclaredField(fieldName);
-                    field.setAccessible(true);
-                    Object value = field.get(id);
-                    params.put(fieldName, value);
-                }
-            }
-
-            Query<T> query = new Query<T>().result(entityClass);
-            query.setQueryTemplate(queryTemplate);
-            List<T> results = query(query, params);
-
-            if (results != null) {
-                if (results.size() == 1) {
-                    return results.get(0);
-                } else {
-                    return null;
-                }
+        if (results != null) {
+            if (results.size() == 1) {
+                return results.get(0);
             } else {
                 return null;
             }
-        } catch (Exception ex) {
-            throw new PersistException("findByNaturalId failed", ex);
+        } else {
+            return null;
         }
     }
 
-    public <T extends AbstractModel> List<T> findByFields(Class<T> entityClass, Map<String, Object> fieldValues) {
-        Map<String, String> fieldsToColumns = databaseSchema.getEntityFieldsToColumns(entityClass);
+    /**
+     * This method will use any field on the entity that is set for search
+     * criteria in the database. It will ignore all audit fields. Be sure to
+     * null out any fields that might be set by default.
+     */
+    @SuppressWarnings("unchecked")
+    public <T extends AbstractModel> List<T> findByCriteria(T entity) {
+        Map<String, Object> fieldValues = toParamMap(entity, false);
+        List<T> list = (List<T>) findByFields(entity.getClass(), fieldValues);
+        return list;
+    }
 
-        QueryTemplate queryTemplate = new QueryTemplate();
-
-        try {
-            for (String fieldName : fieldValues.keySet()) {
-                String columnName = fieldsToColumns.get(fieldName);
-                queryTemplate.optionalWhere(String.format("%s = ${%s}", columnName, fieldName));
+    public Map<String, Object> toParamMap(AbstractModel entity, boolean includeNullValues) {
+        Map<String, Object> params = new HashMap<>();
+        Class<?> clazz = entity.getClass();
+        while (!clazz.equals(AbstractModel.class)) {
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(ColumnDef.class)) {
+                    try {
+                        Object value = field.get(entity);
+                        if (includeNullValues || value != null) {
+                            params.put(field.getName(), value);
+                        }
+                    } catch (RuntimeException e) {
+                        throw e;
+                    } catch (Exception e) {
+                        throw new RuntimeException(e);
+                    }
+                }
             }
 
-            Query<T> query = new Query<T>().result(entityClass);
-            query.setQueryTemplate(queryTemplate);
-            return query(query, fieldValues);
-        } catch (Exception ex) {
-            throw new PersistException("findByFields failed", ex);
+            clazz = clazz.getSuperclass();
         }
+
+        return params;
+    }
+
+    public <T extends AbstractModel> List<T> findByFields(Class<T> entityClass, Map<String, Object> fieldValues) {
+        QueryTemplate queryTemplate = new QueryTemplate();
+        queryTemplate.setSelect(getSelectSql(entityClass, fieldValues));
+        Query<T> query = new Query<T>().result(entityClass);
+        query.setQueryTemplate(queryTemplate);
+        return query(query, fieldValues);
     }
 
     public void executeScript(File file) {
@@ -202,8 +209,8 @@ public class DBSession {
     public <T extends AbstractModel> List<T> query(Query<T> query, String singleParam) {
         populdateDefaultSelect(query);
         try {
-            List<SqlStatement> sqlStatements = query.generateSQL(singleParam);
-            return (List<T>) queryInternal(query.getResultClass(), sqlStatements);
+            SqlStatement sqlStatement = query.generateSQL(singleParam);
+            return (List<T>) queryInternal(query.getResultClass(), sqlStatement);
         } catch (Exception ex) {
             throw new PersistException("Failed to query target class " + query.getResultClass(), ex);
         }
@@ -213,8 +220,8 @@ public class DBSession {
     public <T extends AbstractModel> List<T> query(Query<T> query, Map<String, Object> params) {
         populdateDefaultSelect(query);
         try {
-            List<SqlStatement> sqlStatements = query.generateSQL(params);
-            return (List<T>) queryInternal(query.getResultClass(), sqlStatements);
+            SqlStatement sqlStatement = query.generateSQL(params);
+            return (List<T>) queryInternal(query.getResultClass(), sqlStatement);
         } catch (Exception ex) {
             throw new PersistException("Failed to query result class " + query.getResultClass(), ex);
         }
@@ -227,128 +234,140 @@ public class DBSession {
             query.setQueryTemplate(queryTemplates.get(query.getName()).copy());
         }
 
-        if (isEntityResult && (query.getQueryTemplate().getSelects() == null || query.getQueryTemplate().getSelects().size() == 0)) {
+        if (isEntityResult && query.getQueryTemplate().getSelect() == null) {
             Class<? extends AbstractModel> entityClass = (Class<? extends AbstractModel>) query.getResultClass();
-            query.getQueryTemplate().getSelects().addAll(getSelectSql(entityClass));
+            query.getQueryTemplate().setSelect(getSelectSql(entityClass, null));
         }
     }
 
-    protected LinkedHashMap<String, Column> mapObjectToTable(Class<?> resultClass, Table table) {
-        LinkedHashMap<String, Column> columnNames = new LinkedHashMap<String, Column>();
-        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(resultClass);
-        for (int i = 0; i < propertyDescriptors.length; i++) {
-            String propName = propertyDescriptors[i].getName();
-            Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(propName));
-            if (column != null) {
-                columnNames.put(propName, column);
+    protected String getSelectSql(Class<?> entity, Map<String, Object> params) {
+        List<Class<?>> toProcess = new ArrayList<>();
+        Class<?> current = entity;
+        /*
+         * Add in reverse order because the superclass is going to have the
+         * common denominator of primary keys
+         */
+        while (!current.equals(AbstractModel.class)) {
+            if (current.isAnnotationPresent(TableDef.class)) {
+                toProcess.add(0, current);
             }
+            current = current.getSuperclass();
         }
-        return columnNames;
+
+        final String AND = " and ";
+        final String JOIN = " join ";
+        final String WHERE = " where ";
+        final String COMMA = ", ";
+        StringBuilder columns = new StringBuilder("select ");
+        StringBuilder joins = new StringBuilder(" from ");
+        StringBuilder where = new StringBuilder(WHERE);
+        Set<String> columnsProcessed = new HashSet<>();
+        int tableCount = 0;
+        for (Class<?> processing : toProcess) {
+            String tableAlias = "c" + tableCount;
+            Table table = databaseSchema.getTable(entity, processing);
+            joins.append(table.getName()).append(" ").append(tableAlias);
+            if (tableCount > 0) {
+                String previousTableAlias = "c" + (tableCount - 1);
+                Column[] pks = table.getPrimaryKeyColumns();
+                joins.append(" on ");
+                for (Column pk : pks) {
+                    joins.append(previousTableAlias).append(".").append(pk.getName().toLowerCase()).append("=").append(tableAlias)
+                            .append(".").append(pk.getName().toLowerCase()).append(AND);
+                }
+                joins.replace(joins.length() - AND.length(), joins.length(), "");
+            }
+            joins.append(JOIN);
+
+            Map<String, String> columnToFieldMapping = databaseSchema.getColumnsToEntityFields(processing);
+            for (Column column : table.getColumns()) {
+                if (!columnsProcessed.contains(column.getName())) {                   
+                    columns.append(tableAlias).append(".").append(column.getName().toLowerCase()).append(COMMA);
+
+                    String fieldName = columnToFieldMapping.get(column.getName());
+                    if (params != null && params.containsKey(fieldName)) {
+                        where.append(tableAlias).append(".").append(column.getName().toLowerCase()).append("=${").append(fieldName)
+                                .append("}").append(AND);
+                    }
+
+                    columnsProcessed.add(column.getName());
+                }
+            }
+            tableCount++;
+
+        }
+
+        if (where.length() > WHERE.length()) {
+            where.replace(where.length() - AND.length(), where.length(), "");
+        } else {
+            where.setLength(0);
+        }
+        columns.replace(columns.length() - COMMA.length(), columns.length(), "");
+        joins.replace(joins.length() - JOIN.length(), joins.length(), "");
+
+        return columns.toString() + joins.toString() + where.toString();
+
     }
 
-    public void save(AbstractModel entity) {
-        List<Table> tables = getValidatedTables(entity);
+
+
+    public void save(AbstractModel argModel) {
+        List<Table> tables = getValidatedTables(argModel);
         for (Table table : tables) {
-
-            EntitySystemInfo entitySystemInfo = new EntitySystemInfo(entity);
-
-            if (entitySystemInfo.isNew()) {
+            ModelWrapper model = 
+                    new ModelWrapper(argModel, table, databaseSchema.getModelMetaData(argModel.getClass(), table));
+            if (StringUtils.isEmpty(model.getCreateBy())) {
+                model.setCreateBy(sessionContext.get("CREATE_BY"));
+            }
+            if (StringUtils.isEmpty(model.getLastUpdateBy())) {
+                model.setLastUpdateBy(sessionContext.get("LAST_UPDATE_BY"));
+            }            
+            model.load();
+            
+            if (model.isNew()) {
                 try {
-                    insert(entity, table);
+                    insert(model);
                 } catch (DuplicateKeyException ex) {
-                    log.debug("Insert of entity failed, failing over to an update. " + entity, ex);
-                    int updateCount = update(entity, table);
+                    log.debug("Insert of entity failed, failing over to an update. " + argModel, ex);
+                    int updateCount = update(model);
                     if (updateCount < 1) {
                         throw new PersistException("Failed to perform an insert or update on entity. Do the DB primary key and unique fields "
-                                + "match what's understood by the code?  " + entity, ex);
+                                + "match what's understood by the code?  " + argModel, ex);
                     }
                 }
             } else {
-                if (update(entity, table) == 0) {
-                    insert(entity, table);
+                if (update(model) == 0) {
+                    insert(model);
                 }
             }
         }
     }
 
-    protected List<String> getSelectSql(Class<? extends AbstractModel> entity) {
-        List<String> sqls = new ArrayList<>();
-        List<Table> tables = getValidatedTables(entity);
-        for (Table table : tables) {
-            DmlStatement statement = databasePlatform.createDmlStatement(DmlType.SELECT_ALL, table.getCatalog(), table.getSchema(),
-                    table.getName(), null, table.getColumns(), null, null);
-            sqls.add(statement.getSql());
-        }
-        return sqls;
+    protected void insert(ModelWrapper model) {
+        excecuteDml(DmlType.INSERT, model);
     }
 
-    protected void insert(AbstractModel entity, Table table) {
-        if (StringUtils.isEmpty(entity.getCreateBy())) {
-            entity.setCreateBy(sessionContext.get("CREATE_BY"));
-        }
-        if (StringUtils.isEmpty(entity.getLastUpdateBy())) {
-            entity.setLastUpdateBy(sessionContext.get("LAST_UPDATE_BY"));
-        }
-        excecuteDml(DmlType.INSERT, entity, table);
+    protected int update(ModelWrapper model) {
+        return excecuteDml(DmlType.UPDATE, model);
     }
 
-    protected int update(AbstractModel entity, Table table) {
-        if (StringUtils.isEmpty(entity.getCreateBy())) {
-            entity.setCreateBy(sessionContext.get("CREATE_BY"));
-        }
-        if (StringUtils.isEmpty(entity.getLastUpdateBy())) {
-            entity.setCreateBy(sessionContext.get("LAST_UPDATE_BY"));
-        }
-
-        return excecuteDml(DmlType.UPDATE, entity, table);
-    }
-
-    protected int excecuteDml(DmlType type, Object object, org.jumpmind.db.model.Table table) {
-        LinkedHashMap<String, Column> objectToTableMapping = mapObjectToTable(object.getClass(), table);
-        LinkedHashMap<String, Object> objectValuesByColumnName = getObjectValuesByColumnName(object, objectToTableMapping);
-
-        Column[] columns = objectToTableMapping.values().toArray(new Column[objectToTableMapping.size()]);
-        List<Column> keys = new ArrayList<Column>(1);
-        for (Column column : columns) {
-            if (column.isPrimaryKey()) {
-                keys.add(column);
-            }
-        }
-
-        boolean[] nullKeyValues = new boolean[keys.size()];
-        int i = 0;
-        for (Column column : keys) {
-            nullKeyValues[i++] = objectValuesByColumnName.get(column.getName()) == null;
-        }
-
+    protected int excecuteDml(DmlType type, ModelWrapper model) {
+        Table table = model.getTable();
+        boolean[] nullKeyValues = model.getNullKeys();
+        List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
+        
         DmlStatement statement = databasePlatform.createDmlStatement(type, table.getCatalog(), table.getSchema(), table.getName(),
-                keys.toArray(new Column[keys.size()]), columns, nullKeyValues, null);
+                primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(), nullKeyValues, null);
         String sql = statement.getSql();
-        Object[] values = statement.getValueArray(objectValuesByColumnName);
+        Object[] values = statement.getValueArray(model.getColumnNamesToValues());
         int[] types = statement.getTypes();
 
         return jdbcTemplate.update(sql, values, types);
-
-    }
-
-    protected LinkedHashMap<String, Object> getObjectValuesByColumnName(Object object, LinkedHashMap<String, Column> objectToTableMapping) {
-        try {
-            LinkedHashMap<String, Object> objectValuesByColumnName = new LinkedHashMap<String, Object>();
-            Set<String> propertyNames = objectToTableMapping.keySet();
-            for (String propertyName : propertyNames) {
-                objectValuesByColumnName.put(objectToTableMapping.get(propertyName).getName(),
-                        PropertyUtils.getProperty(object, propertyName));
-            }
-            return objectValuesByColumnName;
-        } catch (Exception ex) {
-            throw new PersistException(
-                    "Failed to getObjectValuesByColumnName on object " + object + " objectToTableMapping: " + objectToTableMapping);
-        }
     }
 
     protected List<Table> getValidatedTables(AbstractModel entity) {
         if (entity == null) {
-            throw new PersistException("Failed to locate a database table for null entity class.");
+            throw new PersistException("Failed to locate a database table for null entity class");
         }
         return getValidatedTables(entity.getClass());
     }
@@ -362,54 +381,101 @@ public class DBSession {
         return tables;
     }
 
-    protected void checkTransactionStarted() {
-        if (currentTransaction == null) {
-            throw new PersistException("No transaction was started - call startTransaction() before using this.");
-        }
-    }
-
-    protected <T extends AbstractModel> List<T> queryInternal(Class<T> resultClass, List<SqlStatement> statements)
-            throws InstantiationException, IllegalAccessException, InvocationTargetException {
-
+    protected <T extends AbstractModel> List<T> queryInternal(Class<T> resultClass, SqlStatement statement)
+            throws Exception {
         List<T> objects = new ArrayList<T>();
-        for(SqlStatement statement : statements) {
-            List<Row> rows = jdbcTemplate.query(statement.getSql(), new DefaultMapper(), statement.getValues().toArray());
-            for (int j = 0; j < rows.size(); j++) {
-                Row row = rows.get(j);
-                T object = null;
-                if (objects.size() > j) {
-                    object = objects.get(j);
-                } else {
-                    object = resultClass.newInstance();
-                    objects.add(object);
-                }
+        List<Row> rows = jdbcTemplate.query(statement.getSql(), new DefaultMapper(), statement.getValues().toArray());
+        
+        LinkedHashMap<String, Object> defferredValues = new LinkedHashMap<>();
+        
+ 
+        for (int j = 0; j < rows.size(); j++) {
+            Row row = rows.get(j);
+            T object = null;
+            
+            ModelWrapper model = null;
+            if (AbstractModel.class.isAssignableFrom(resultClass)) {
+                object = mapModel(resultClass, row);
+            } else {
+                object = mapNonModel(resultClass, row);
+            }
+            objects.add(object);
 
-                PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(object);
 
-                LinkedCaseInsensitiveMap<String> matchedColumns = new LinkedCaseInsensitiveMap<String>();
 
-                for (int i = 0; i < propertyDescriptors.length; i++) {
-                    String propertyName = propertyDescriptors[i].getName();
-                    String columnName = DatabaseSchema.camelToSnakeCase(propertyName);
+            if (model != null) {
 
-                    if (row.containsKey(columnName)) {
-                        Object value = row.get(columnName);
-                        ReflectUtils.setProperty(object, propertyName, value);
-                        matchedColumns.put(columnName, null);
-                    }
-                }
-
-                if (object instanceof AbstractModel) {
-                    addUnmatchedColumns(row, matchedColumns, (AbstractModel) object);
-                    decorateRetrievedEntity((AbstractModel) object);
-                }
-              
             }
 
         }
-        
+
         return objects;
 
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T> T mapModel(Class<T> resultClass, Row row) throws Exception {
+        Table table = databaseSchema.getTable(resultClass, resultClass);
+        ModelMetaData modelMetaData = databaseSchema.getModelMetaData(resultClass, table);
+        
+        T object = resultClass.newInstance();
+        ModelWrapper model = new ModelWrapper((AbstractModel) object, table, modelMetaData);
+        model.load();
+        
+        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(object);
+
+        LinkedCaseInsensitiveMap<String> matchedColumns = new LinkedCaseInsensitiveMap<String>();
+        LinkedHashMap<String, Object> defferedLoadValues = new LinkedHashMap<>();
+
+        for (int i = 0; i < propertyDescriptors.length; i++) {
+            String propertyName = propertyDescriptors[i].getName();
+            String columnName = DatabaseSchema.camelToSnakeCase(propertyName);
+
+            if (row.containsKey(columnName)) {
+                Object value = row.get(columnName);
+                if (isDefferedLoadField(model.getField(propertyName))) {
+                    defferedLoadValues.put(propertyName, value);
+                } else {                    
+                    model.setValue(propertyName, value);
+                    matchedColumns.put(columnName, null);
+                }
+            }
+        }
+        
+        for (String propertyName : defferedLoadValues.keySet()) {
+            Object value = defferedLoadValues.get(propertyName);
+            model.setValue(propertyName, value);
+            String columnName = DatabaseSchema.camelToSnakeCase(propertyName);
+            matchedColumns.put(columnName, null);
+        }
+        
+        addUnmatchedColumns(row, matchedColumns, (AbstractModel) object);
+        decorateRetrievedModel(model);
+        
+        return (T) model.getModel();
+    }
+
+    private boolean isDefferedLoadField(Field field) {
+        return field.getType().isAssignableFrom(Money.class);
+    }
+
+    private <T> T mapNonModel(Class<T> resultClass, Row row) throws Exception {
+        T object = resultClass.newInstance();
+        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(object);
+
+        LinkedCaseInsensitiveMap<String> matchedColumns = new LinkedCaseInsensitiveMap<String>();
+
+        for (int i = 0; i < propertyDescriptors.length; i++) {
+            String propertyName = propertyDescriptors[i].getName();
+            String columnName = DatabaseSchema.camelToSnakeCase(propertyName);
+
+            if (row.containsKey(columnName)) {
+                Object value = row.get(columnName);
+                ReflectUtils.setProperty(object, propertyName, value);
+                matchedColumns.put(columnName, null);
+            }
+        }
+        return object;
     }
 
     private void addUnmatchedColumns(Row row, Map<String, String> matchedColumns, AbstractModel entity) {
@@ -420,9 +486,8 @@ public class DBSession {
         }
     }
 
-    protected void decorateRetrievedEntity(AbstractModel entity) {
-        EntitySystemInfo entitySystemInfo = new EntitySystemInfo(entity);
-        entitySystemInfo.setRetrievalTime(new Date());
+    protected void decorateRetrievedModel(ModelWrapper model) {
+        model.setRetrievalTime(new Date());
     }
 
     public void saveAll(List<? extends AbstractModel> entities) {

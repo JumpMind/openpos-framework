@@ -1,6 +1,7 @@
 package org.jumpmind.pos.persist.cars;
 
 import org.jumpmind.pos.persist.ColumnDef;
+import org.joda.money.Money;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.TableDef;
 
@@ -18,6 +19,10 @@ public class CarModel extends AbstractModel {
     private String make;
     @ColumnDef
     private String model;
+    @ColumnDef(crossReference="isoCurrencyCode")
+    private Money estimatedValue;
+    @ColumnDef
+    private String isoCurrencyCode;    
     
     public String getModelYear() {
         return modelYear;
@@ -42,6 +47,18 @@ public class CarModel extends AbstractModel {
     }
     public void setVin(String vin) {
         this.vin = vin;
+    }
+    public Money getEstimatedValue() {
+        return estimatedValue;
+    }
+    public void setEstimatedValue(Money estimatedValue) {
+        this.estimatedValue = estimatedValue;
+    }
+    public String getIsoCurrencyCode() {
+        return isoCurrencyCode;
+    }
+    public void setIsoCurrencyCode(String isoCurrencyCode) {
+        this.isoCurrencyCode = isoCurrencyCode;
     }
     
     

@@ -35,7 +35,7 @@ import org.jumpmind.pos.core.screen.Screen;
 public class ApplicationState {
 
     private String appId;
-    private String nodeId;
+    private String deviceId;
     private Scope scope = new Scope();
     private LinkedList<StateContext> stateStack = new LinkedList<>();
     private StateContext currentContext;
@@ -162,12 +162,12 @@ public class ApplicationState {
         return appId;
     }
 
-    public void setNodeId(String nodeId) {
-        this.nodeId = nodeId;
+    public void setDeviceId(String nodeId) {
+        this.deviceId = nodeId;
     }
 
-    public String getNodeId() {
-        return nodeId;
+    public String getDeviceId() {
+        return deviceId;
     }
 
 }

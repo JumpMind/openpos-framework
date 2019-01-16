@@ -5,4 +5,5 @@ dependencies {
 	compile project(":openpos-persist")
 	compile project(":openpos-util")
 	testCompile project(path: ':openpos-util', configuration: 'testArtifacts') 
+	testCompile 'com.github.tomakehurst:wiremock:2.19.0'
 }
