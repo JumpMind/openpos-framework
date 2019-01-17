@@ -114,8 +114,8 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
             workstation.setWorkstationId(legacyStoreProperties.getWorkstationNumber());
             workstation.setTillThresholdStatus(tillStatus);
             template.setWorkstation(workstation);
-        }
-        
+        } 
+
         if (legacyStoreProperties != null && screen.getTemplate() instanceof BlankWithBarTemplate) {
             BlankWithBarTemplate template = screen.getTemplate();
             Workstation workstation = new Workstation();
@@ -124,6 +124,7 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
             workstation.setTillThresholdStatus(tillStatus);
             template.setWorkstation(workstation);
         }
+                
         setScreenProperties();
 
         if (getLegacyUIModel() != null) {
@@ -135,6 +136,18 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
 
         if (this.isSelfCheckout()) {
             this.screen.getTemplate().disableDevMenu();
+        }
+    }
+    
+    protected String getDeviceId() {
+        return legacyStoreProperties.getStoreNumber() + "-" + legacyStoreProperties.getWorkstationNumber();
+    }
+    
+    protected String getOperatorText() {
+        if (properties != null && STATUS_BAR_USER_TEXT_FIRST_LAST_NAME.equals(properties.get(STATUS_BAR_USER_TEXT_PROP))) {
+            return posSessionInfo.getOperatorName();
+        } else {
+            return posSessionInfo.getOperatorLoginId();
         }
     }
 
@@ -156,13 +169,7 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
         
         if (screen.getTemplate() instanceof SellTemplate) {
             SellTemplate template = screen.getTemplate();
-            String operatorText;
-            if (properties != null && STATUS_BAR_USER_TEXT_FIRST_LAST_NAME.equals(properties.get(STATUS_BAR_USER_TEXT_PROP))) {
-                operatorText = posSessionInfo.getOperatorName();
-            } else {
-                operatorText = posSessionInfo.getOperatorLoginId();
-            }
-            template.setOperatorText(WordUtils.capitalizeFully(operatorText));
+            template.setOperatorText(WordUtils.capitalizeFully(getOperatorText()));
             
             ILegacyStatusBeanModel statusModel = legacyPOSBeanService.getLegacyStatusBeanModel(legacyScreen);
             template.setSystemStatus(statusModel.getSystemStatus());
@@ -170,13 +177,7 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
         
         if (screen.getTemplate() instanceof BlankWithBarTemplate) {
             BlankWithBarTemplate template = screen.getTemplate();
-            String operatorText;
-            if (properties != null && STATUS_BAR_USER_TEXT_FIRST_LAST_NAME.equals(properties.get(STATUS_BAR_USER_TEXT_PROP))) {
-                operatorText = posSessionInfo.getOperatorName();
-            } else {
-                operatorText = posSessionInfo.getOperatorLoginId();
-            }
-            template.setOperatorText(WordUtils.capitalizeFully(operatorText));
+            template.setOperatorText(WordUtils.capitalizeFully(getOperatorText()));
              }
     }
 
@@ -231,6 +232,11 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
     }
 
     protected void buildBackButton() {
+        screen.setBackButton(getBackButton());
+    }
+    
+    protected MenuItem getBackButton() {
+        MenuItem backButton = null;
         ILegacyAssignmentSpec assignmentPanelSpec = getLegacyAssignmentSpec(GLOBAL_NAV_PANEL_KEY);
         if (null != assignmentPanelSpec) {
             ILegacyBeanSpec globalNavSpec = this.legacyPOSBeanService.getLegacyBeanSpec(this.legacyScreen,
@@ -260,15 +266,15 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
                 }
             }
             
-            Arrays.stream(globalNavSpec.getButtons())
+            ILegacyButtonSpec backButtonSpec = Arrays.stream(globalNavSpec.getButtons())
                     .filter(buttonSpec -> Optional.ofNullable(enabledState.get(buttonSpec.getActionName())).orElse(buttonSpec.getEnabled()))
-                    .forEachOrdered(enabledButtonSpec -> {
-                        if ("Undo".equals(enabledButtonSpec.getLabelTag()) || (cancelAsBack && "Cancel".equals(enabledButtonSpec.getLabelTag()))) {
-                            screen.setBackButton(new MenuItem("Back", enabledButtonSpec.getActionName(), true));
-                        }
-                    });
+                    .filter(enabledButtonSpec -> ("Undo".equals(enabledButtonSpec.getLabelTag()) || (cancelAsBack && "Cancel".equals(enabledButtonSpec.getLabelTag())))).findFirst().orElse(null);
 
+            if(backButtonSpec != null) {
+                backButton = new MenuItem("Back", backButtonSpec.getActionName(), true);
+            }
         }
+        return backButton;
     }
 
     protected void clearTransactionMenuItems() {

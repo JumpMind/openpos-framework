@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import org.jumpmind.pos.core.screen.MenuItem;
 
-public class HeaderBarPart implements Serializable{
+public class BaconStripPart implements Serializable{
 
     private static final long serialVersionUID = 1L;
 

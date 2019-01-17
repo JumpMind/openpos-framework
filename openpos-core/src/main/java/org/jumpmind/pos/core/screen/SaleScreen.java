@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.model.Total.TotalType;
-import org.jumpmind.pos.core.screenpart.HeaderBarPart;
+import org.jumpmind.pos.core.screenpart.BaconStripPart;
 import org.jumpmind.pos.core.screenpart.ScanPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -14,7 +14,7 @@ public class SaleScreen extends Screen {
     private static final long serialVersionUID = 1L;
     public static final String ITEM_TOTAL_NAME = "itemTotal";
     
-    private HeaderBarPart headerBar;
+    private BaconStripPart baconStrip;
     private ScanPart scan;
     
     private List<SellItem> items = new ArrayList<>();
@@ -224,12 +224,12 @@ public class SaleScreen extends Screen {
         this.scan = scan;
     }
 
-    public HeaderBarPart getHeaderBar() {
-        return headerBar;
+    public BaconStripPart getBaconStrip() {
+        return baconStrip;
     }
 
-    public void setHeaderBar(HeaderBarPart headerBar) {
-        this.headerBar = headerBar;
+    public void setBaconStrip(BaconStripPart baconStrip) {
+        this.baconStrip = baconStrip;
     }
     
 }
