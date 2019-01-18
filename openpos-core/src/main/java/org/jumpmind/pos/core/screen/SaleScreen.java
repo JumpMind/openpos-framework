@@ -18,7 +18,7 @@ public class SaleScreen extends Screen {
     private ScanPart scan;
     
     private List<SellItem> items = new ArrayList<>();
-    private List<SellItem> selectedItems = new ArrayList<>();
+    private List<Integer> selectedItemIndexes = new ArrayList<>();
     private List<MenuItem> localMenuItems = new ArrayList<>();
     private List<MenuItem> transactionMenuItems = new ArrayList<>();
     
@@ -48,14 +48,6 @@ public class SaleScreen extends Screen {
         this.items = items;
     }
     
-    public List<SellItem> getSelectedItems() {
-        return selectedItems;
-    }
-    
-    public void setSelectedItems(List<SellItem> selectedItems) {
-        this.selectedItems = selectedItems;
-    }
-
     public String getBalanceDue() {
         return balanceDue;
     }
@@ -230,6 +222,14 @@ public class SaleScreen extends Screen {
 
     public void setBaconStrip(BaconStripPart baconStrip) {
         this.baconStrip = baconStrip;
+    }
+
+    public List<Integer> getSelectedItemIndexes() {
+        return selectedItemIndexes;
+    }
+
+    public void setSelectedItemIndexes(List<Integer> selectedItemIndexes) {
+        this.selectedItemIndexes = selectedItemIndexes;
     }
     
 }

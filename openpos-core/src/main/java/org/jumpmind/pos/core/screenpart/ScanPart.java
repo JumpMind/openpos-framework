@@ -14,6 +14,7 @@ public class ScanPart implements Serializable{
     private Integer scanMinLength = 1;
     private Integer scanMaxLength = 22;
     private ScanType scanType;
+    private String scanIcon;
     private String scanActionName = "Scan";
     private String scanSomethingText = "Scan/Key Something";
     private boolean autoFocusOnScan = false;
@@ -73,5 +74,13 @@ public class ScanPart implements Serializable{
 
     public void setInputType(FieldInputType inputType) {
         this.inputType = inputType;
+    }
+
+    public String getScanIcon() {
+        return scanIcon;
+    }
+
+    public void setScanIcon(String scanIcon) {
+        this.scanIcon = scanIcon;
     }
 }
