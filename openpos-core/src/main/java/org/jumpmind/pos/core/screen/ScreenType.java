@@ -29,6 +29,7 @@ public interface ScreenType {
     public static final String Prompt = "Prompt";
     public static final String PromptWithInfo = "PromptWithInfo";
     public static final String PromptWithOptions = "PromptWithOptions";
+    public static final String Return = "Return";
     public static final String SaleRetrieval = "SaleRetrieval";
     public static final String SelfCheckoutHome = "SelfCheckoutHome";
     public static final String SelfCheckoutOptions = "SelfCheckoutOptions";

@@ -35,7 +35,7 @@ public class DatabaseSchema {
     private IDatabasePlatform platform;
     private List<Class<?>> entityClasses;
     private List<Class<?>> entityExtensionClasses;
-    private Map<Class<?>, List<ModelMetaData>> classMetadata = new HashMap<>();
+    private Map<Class<?>, List<ModelClassMetaData>> classMetadata = new HashMap<>();
     private Database desiredModel;
 
     public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses) {
@@ -62,9 +62,9 @@ public class DatabaseSchema {
     }
     
     public Table getTable(Class<?> entityClass, Class<?> superClass) {
-        List<ModelMetaData> metas = classMetadata.get(entityClass);
+        List<ModelClassMetaData> metas = classMetadata.get(entityClass);
         if (metas != null) {
-            for (ModelMetaData modelMetaData : metas) {
+            for (ModelClassMetaData modelMetaData : metas) {
                 if (modelMetaData.getClazz().equals(superClass)) {
                     return modelMetaData.getTable();
                 }
@@ -79,9 +79,9 @@ public class DatabaseSchema {
         }
 
         List<Table> tables = new ArrayList<>();
-        List<ModelMetaData> metas = classMetadata.get(entityClass);
+        List<ModelClassMetaData> metas = classMetadata.get(entityClass);
         if (metas != null) {
-            for (ModelMetaData ModelMetaData : metas) {
+            for (ModelClassMetaData ModelMetaData : metas) {
                 tables.add(ModelMetaData.getTable());
             }
         }
@@ -89,9 +89,9 @@ public class DatabaseSchema {
     }
 
     protected void refreshMetaData(Database actualModel) {
-        for (List<ModelMetaData> ModelMetaDatas : classMetadata.values()) {
+        for (List<ModelClassMetaData> ModelMetaDatas : classMetadata.values()) {
             for (Table actualTable : actualModel.getTables()) {
-                for (ModelMetaData ModelMetaData : ModelMetaDatas) {
+                for (ModelClassMetaData ModelMetaData : ModelMetaDatas) {
 
                     Table desiredTable = ModelMetaData.getTable();
                     if (desiredTable.getName().equalsIgnoreCase(actualTable.getName())) {
@@ -146,10 +146,10 @@ public class DatabaseSchema {
     protected Collection<Table> loadTables(String tablePrefix) {
         Set<Table> tables = new TreeSet<>();
         for (Class<?> entityClass : entityClasses) {
-            List<ModelMetaData> metas = createMetaDatas(entityClass);
-            for (ModelMetaData meta : metas) {
+            List<ModelClassMetaData> metas = createMetaDatas(entityClass);
+            for (ModelClassMetaData meta : metas) {
                 validateTable(tablePrefix, meta.getTable());
-                List<ModelMetaData> cachedMetas = this.classMetadata.get(entityClass);
+                List<ModelClassMetaData> cachedMetas = this.classMetadata.get(entityClass);
                 if (cachedMetas == null) {
                     cachedMetas = new ArrayList<>();
                     this.classMetadata.put(entityClass, cachedMetas);
@@ -170,8 +170,8 @@ public class DatabaseSchema {
         for (Class<?> extensionClass : entityExtensionClasses) {
             Extends extendsAnnotation = extensionClass.getAnnotation(Extends.class);
             Class<?> baseClass = extendsAnnotation.entityClass();
-            List<ModelMetaData> metas = this.classMetadata.get(baseClass);
-            ModelMetaData meta = metas != null ? metas.get(0) : null;
+            List<ModelClassMetaData> metas = this.classMetadata.get(baseClass);
+            ModelClassMetaData meta = metas != null ? metas.get(0) : null;
             if (meta == null) {
                 throw new PersistException("Failed to process extension entity " + extensionClass
                         + " Could not find table mapped for base entity class: " + baseClass);
@@ -221,15 +221,15 @@ public class DatabaseSchema {
         }
     }
 
-    public static List<ModelMetaData> createMetaDatas(Class<?> clazz) {
-        List<ModelMetaData> list = new ArrayList<>();
+    public static List<ModelClassMetaData> createMetaDatas(Class<?> clazz) {
+        List<ModelClassMetaData> list = new ArrayList<>();
 
         Class<?> entityClass = clazz;
         while (entityClass != null && entityClass != Object.class) {
             org.jumpmind.pos.persist.TableDef tblAnnotation = entityClass.getAnnotation(org.jumpmind.pos.persist.TableDef.class);
             if (tblAnnotation != null) {
 
-                ModelMetaData meta = new ModelMetaData();
+                ModelClassMetaData meta = new ModelClassMetaData();
                 meta.setClazz(entityClass);
                 Table dbTable = new Table();
                 dbTable.setName(tblAnnotation.name());
@@ -371,14 +371,14 @@ public class DatabaseSchema {
     }
 
     protected List<Field> gettEntityIdFields(Class<?> entityClass) {
-        List<ModelMetaData> metas = this.classMetadata.get(entityClass);
-        ModelMetaData meta = metas != null ? metas.get(0) : null;
+        List<ModelClassMetaData> metas = this.classMetadata.get(entityClass);
+        ModelClassMetaData meta = metas != null ? metas.get(0) : null;
         return meta != null ? meta.getEntityIdFields() : Collections.emptyList();
     }
 
     protected List<Field> getEntityFields(Class<?> entityClass) {
-        List<ModelMetaData> metas = this.classMetadata.get(entityClass);
-        ModelMetaData meta = metas != null ? metas.get(0) : null;
+        List<ModelClassMetaData> metas = this.classMetadata.get(entityClass);
+        ModelClassMetaData meta = metas != null ? metas.get(0) : null;
         return meta != null ? meta.getEntityFields() : Collections.emptyList();
     }
 
@@ -410,16 +410,20 @@ public class DatabaseSchema {
         }
     }
     
-    public ModelMetaData getModelMetaData(Class<?> entityClass, Table table) {
-        List<ModelMetaData> metas = this.classMetadata.get(entityClass);
-        for (ModelMetaData meta : metas) {
-            if (meta.getTable().equals(table)) {
-                return meta;
-            }
-        }
-        
-        return null;
+    public List<ModelClassMetaData> getModelMetaData(Class<?> modelClass) {
+        return this.classMetadata.get(modelClass);
     }
+    
+//    public ModelClassMetaData getModelMetaData(Class<?> entityClass, Table table) {
+//        List<ModelClassMetaData> metas = 
+//        for (ModelClassMetaData meta : metas) {
+//            if (meta.getTable().equals(table)) {
+//                return meta;
+//            }
+//        }
+//        
+//        return null;
+//    }
 
     private static int getDefaultType(Field field) {
         if (field.getType().isAssignableFrom(String.class) || field.getType().isEnum()) {

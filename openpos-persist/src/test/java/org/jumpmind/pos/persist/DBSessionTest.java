@@ -173,4 +173,32 @@ public class DBSessionTest {
             fail("Should not reach here, model has mix of CAD and USD currency.");
         }        
     }
+    
+    @Test
+    public void testModelInheritance() {
+        final String VIN1 = "KMHCN46C58U242743";
+        {
+            DBSession db = sessionFactory.createDbSession();
+            RaceCarModel hyundai = new RaceCarModel();
+            hyundai.setVin(VIN1);
+            hyundai.setMake("Hyundai");
+            hyundai.setModel("Tiburon");
+            hyundai.setModelYear("2005");
+            hyundai.setTurboCharged(true);
+            hyundai.setEstimatedValue(Money.of(CurrencyUnit.USD, new BigDecimal("988.34")));
+            db.save(hyundai);
+        }
+        {
+            DBSession db = sessionFactory.createDbSession();
+            RaceCarModel hyundaiLookupedUp = db.findByNaturalId(RaceCarModel.class, VIN1);
+            assertNotNull(hyundaiLookupedUp);
+            assertEquals(VIN1, hyundaiLookupedUp.getVin());
+            assertEquals("Hyundai", hyundaiLookupedUp.getMake());
+            assertEquals("Tiburon", hyundaiLookupedUp.getModel());
+            assertEquals("2005", hyundaiLookupedUp.getModelYear());
+            assertEquals("USD", hyundaiLookupedUp.getIsoCurrencyCode());
+            assertEquals(new BigDecimal("988.34"), hyundaiLookupedUp.getEstimatedValue().getAmount());
+            assertEquals(true, hyundaiLookupedUp.isTurboCharged());
+        }         
+    }
 }

@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -35,7 +34,7 @@ import org.jumpmind.db.sql.Row;
 import org.jumpmind.pos.persist.impl.DatabaseSchema;
 import org.jumpmind.pos.persist.impl.DefaultMapper;
 import org.jumpmind.pos.persist.impl.DmlTemplate;
-import org.jumpmind.pos.persist.impl.ModelMetaData;
+import org.jumpmind.pos.persist.impl.ModelClassMetaData;
 import org.jumpmind.pos.persist.impl.ModelWrapper;
 import org.jumpmind.pos.persist.impl.QueryTemplate;
 import org.jumpmind.pos.persist.impl.ReflectUtils;
@@ -313,51 +312,52 @@ public class DBSession {
 
     public void save(AbstractModel argModel) {
         List<Table> tables = getValidatedTables(argModel);
+        ModelWrapper model = 
+                new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()));
+        
+        if (StringUtils.isEmpty(model.getCreateBy())) {
+            model.setCreateBy(sessionContext.get("CREATE_BY"));
+        }
+        if (StringUtils.isEmpty(model.getLastUpdateBy())) {
+            model.setLastUpdateBy(sessionContext.get("LAST_UPDATE_BY"));
+        }
+        
+        model.load();
+        
         for (Table table : tables) {
-            ModelWrapper model = 
-                    new ModelWrapper(argModel, table, databaseSchema.getModelMetaData(argModel.getClass(), table));
-            if (StringUtils.isEmpty(model.getCreateBy())) {
-                model.setCreateBy(sessionContext.get("CREATE_BY"));
-            }
-            if (StringUtils.isEmpty(model.getLastUpdateBy())) {
-                model.setLastUpdateBy(sessionContext.get("LAST_UPDATE_BY"));
-            }            
-            model.load();
-            
             if (model.isNew()) {
                 try {
-                    insert(model);
+                    insert(model, table);
                 } catch (DuplicateKeyException ex) {
                     log.debug("Insert of entity failed, failing over to an update. " + argModel, ex);
-                    int updateCount = update(model);
+                    int updateCount = update(model, table);
                     if (updateCount < 1) {
                         throw new PersistException("Failed to perform an insert or update on entity. Do the DB primary key and unique fields "
                                 + "match what's understood by the code?  " + argModel, ex);
                     }
                 }
             } else {
-                if (update(model) == 0) {
-                    insert(model);
+                if (update(model, table) == 0) {
+                    insert(model, table);
                 }
             }
         }
     }
 
-    protected void insert(ModelWrapper model) {
-        excecuteDml(DmlType.INSERT, model);
+    protected void insert(ModelWrapper model, Table table) {
+        excecuteDml(DmlType.INSERT, model, table);
     }
 
-    protected int update(ModelWrapper model) {
-        return excecuteDml(DmlType.UPDATE, model);
+    protected int update(ModelWrapper model, Table table) {
+        return excecuteDml(DmlType.UPDATE, model, table);
     }
 
-    protected int excecuteDml(DmlType type, ModelWrapper model) {
-        Table table = model.getTable();
+    protected int excecuteDml(DmlType type, ModelWrapper model, Table table) {
         boolean[] nullKeyValues = model.getNullKeys();
         List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
         
         DmlStatement statement = databasePlatform.createDmlStatement(type, table.getCatalog(), table.getSchema(), table.getName(),
-                primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(), nullKeyValues, null);
+                primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
         String sql = statement.getSql();
         Object[] values = statement.getValueArray(model.getColumnNamesToValues());
         int[] types = statement.getTypes();
@@ -386,40 +386,32 @@ public class DBSession {
         List<T> objects = new ArrayList<T>();
         List<Row> rows = jdbcTemplate.query(statement.getSql(), new DefaultMapper(), statement.getValues().toArray());
         
-        LinkedHashMap<String, Object> defferredValues = new LinkedHashMap<>();
-        
- 
         for (int j = 0; j < rows.size(); j++) {
             Row row = rows.get(j);
             T object = null;
             
-            ModelWrapper model = null;
-            if (AbstractModel.class.isAssignableFrom(resultClass)) {
+            if (isModel(resultClass)) {
                 object = mapModel(resultClass, row);
             } else {
                 object = mapNonModel(resultClass, row);
             }
             objects.add(object);
-
-
-
-            if (model != null) {
-
-            }
-
         }
 
         return objects;
+    }
 
+    protected boolean isModel(Class<?> resultClass) {
+        return AbstractModel.class.isAssignableFrom(resultClass)
+                && resultClass.getDeclaredAnnotation(TableDef.class) != null;
     }
 
     @SuppressWarnings("unchecked")
-    private <T> T mapModel(Class<T> resultClass, Row row) throws Exception {
-        Table table = databaseSchema.getTable(resultClass, resultClass);
-        ModelMetaData modelMetaData = databaseSchema.getModelMetaData(resultClass, table);
+    protected <T> T mapModel(Class<T> resultClass, Row row) throws Exception {
+        List<ModelClassMetaData> modelMetaData = databaseSchema.getModelMetaData(resultClass);
         
         T object = resultClass.newInstance();
-        ModelWrapper model = new ModelWrapper((AbstractModel) object, table, modelMetaData);
+        ModelWrapper model = new ModelWrapper((AbstractModel) object, modelMetaData);
         model.load();
         
         PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(object);
@@ -455,11 +447,11 @@ public class DBSession {
         return (T) model.getModel();
     }
 
-    private boolean isDefferedLoadField(Field field) {
+    protected  boolean isDefferedLoadField(Field field) {
         return field.getType().isAssignableFrom(Money.class);
     }
 
-    private <T> T mapNonModel(Class<T> resultClass, Row row) throws Exception {
+    protected <T> T mapNonModel(Class<T> resultClass, Row row) throws Exception {
         T object = resultClass.newInstance();
         PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(object);
 
@@ -478,7 +470,7 @@ public class DBSession {
         return object;
     }
 
-    private void addUnmatchedColumns(Row row, Map<String, String> matchedColumns, AbstractModel entity) {
+    protected void addUnmatchedColumns(Row row, Map<String, String> matchedColumns, AbstractModel entity) {
         for (String rowColumn : row.keySet()) {
             if (!matchedColumns.containsKey(rowColumn)) {
                 entity.setAdditionalField(rowColumn, row.get(rowColumn));

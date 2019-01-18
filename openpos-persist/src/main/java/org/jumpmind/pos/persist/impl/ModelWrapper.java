@@ -3,7 +3,6 @@ package org.jumpmind.pos.persist.impl;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +20,6 @@ import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
-import org.jumpmind.db.sql.ColumnNotFoundException;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.PersistException;
@@ -33,8 +31,7 @@ public class ModelWrapper {
     
     public static final String ENTITY_RETRIEVAL_TIME = "entity.retrieval.time";
     
-    private ModelMetaData modelMetaData;
-    private Table table;
+    private List<ModelClassMetaData> modelMetaData;
     private AbstractModel model;
     
     private Map<String, Object> systemData;
@@ -44,8 +41,7 @@ public class ModelWrapper {
     private List<Column> primaryKeyColumns;
     
     @SuppressWarnings("unchecked")
-    public ModelWrapper(AbstractModel model, Table table, ModelMetaData modelMetaData) {
-        this.table = table;
+    public ModelWrapper(AbstractModel model, List<ModelClassMetaData> modelMetaData) {
         this.model = model;
         this.modelMetaData = modelMetaData;
         
@@ -137,20 +133,23 @@ public class ModelWrapper {
         LinkedHashMap<String, Column> fieldsToColumns = new LinkedHashMap<String, Column>();
         PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(resultClass);
         
-        for (int i = 0; i < propertyDescriptors.length; i++) {
-            String propName = propertyDescriptors[i].getName();
-            Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(propName));
-            if (column != null) {
-                fieldsToColumns.put(propName, column);
-                
+        for (ModelClassMetaData classMetaData : modelMetaData) {   
+            Table table = classMetaData.getTable();
+            for (int i = 0; i < propertyDescriptors.length; i++) {
+                String propName = propertyDescriptors[i].getName();
+                Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(propName));
+                if (column != null) {
+                    fieldsToColumns.put(propName, column);
+                    
+                }
             }
-        }
-
-        if (ITaggedModel.class.isAssignableFrom(resultClass)) {
-            Column[] columns = table.getColumns();
-            for (Column column : columns) {
-                if (column.getName().toLowerCase().startsWith("tag_")) {
-                    fieldsToColumns.put(column.getName(), column);
+            
+            if (ITaggedModel.class.isAssignableFrom(resultClass)) {
+                Column[] columns = table.getColumns();
+                for (Column column : columns) {
+                    if (column.getName().toLowerCase().startsWith("tag_")) {
+                        fieldsToColumns.put(column.getName(), column);
+                    }
                 }
             }
         }
@@ -273,8 +272,8 @@ public class ModelWrapper {
     }
     
     protected String getXrefName(String fieldName) {
-        Field field = modelMetaData.getField(fieldName);
-        
+
+        Field field = getField(fieldName);
         ColumnDef mainColumnDef = field.getDeclaredAnnotation(ColumnDef.class);
         String crossReference = mainColumnDef.crossReference();
         return crossReference;
@@ -286,13 +285,29 @@ public class ModelWrapper {
             throw new PersistException("Field " + fieldName + " must define a crossReference to a field, "
                     + " such as: @ColumnDef(crossReference=\"isoCurrencyCode\"). model: " + model);
         }
-        Field xRefField = modelMetaData.getField(crossReference);
+        Field xRefField = getField(crossReference);
         if (xRefField == null) {
             throw new PersistException("Field " + fieldName + " has a crossReference= " + crossReference
                     + " but we could not find a field with that name on this model. Model: " + model);
         }
         xRefField.setAccessible(true);
         return xRefField;
+    }
+    
+    public Field getField(String fieldName) {
+        Field field = null;
+        for (ModelClassMetaData classMetaData : modelMetaData) {
+            field = classMetaData.getField(fieldName);
+            if (field != null) {
+                break;
+            }
+        }
+        
+        if (field != null) {
+            return field;
+        }  else {
+            throw new PersistException("Could not find field named " + fieldName + " on model " + this);
+        }
     }
 
     public List<Column> getPrimaryKeyColumns() {
@@ -322,12 +337,16 @@ public class ModelWrapper {
                 || name.equals("UPDATE_TIME");
     }
 
-    public Table getTable() {
-        return table;
-    }
+//    public Table getTable() {
+//        return table;
+//    }
 
-    public void setTable(Table table) {
-        this.table = table;
+//    public void setTable(Table table) {
+//        this.table = table;
+//    }
+    
+    public List<ModelClassMetaData> getModelMetaData() {
+        return modelMetaData;
     }
 
     public AbstractModel getModel() {
@@ -342,11 +361,18 @@ public class ModelWrapper {
         return columnNamesToValues;
     }
 
-    public Column[] getColumns() {
-        return fieldsToColumns.values().toArray(new Column[fieldsToColumns.size()]);
-    }
-
-    public Field getField(String name) {
-        return modelMetaData.getField(name);
+    public Column[] getColumns(Table table) {
+        List<Column> columns = new ArrayList<>();
+        
+        for (Column modelColumn : fieldsToColumns.values()) {
+            for (Column tableColumn : table.getColumns()) {                
+                if (modelColumn.equals(tableColumn)) {
+                    columns.add(tableColumn);
+                    break;
+                }
+            }
+        }
+        
+        return columns.toArray(new Column[columns.size()]);
     }
 }
