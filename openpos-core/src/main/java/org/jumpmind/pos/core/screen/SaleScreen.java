@@ -7,6 +7,7 @@ import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.model.Total.TotalType;
 import org.jumpmind.pos.core.screenpart.BaconStripPart;
 import org.jumpmind.pos.core.screenpart.ScanPart;
+import org.jumpmind.pos.core.screenpart.StatusStripPart;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -16,6 +17,7 @@ public class SaleScreen extends Screen {
     
     private BaconStripPart baconStrip;
     private ScanPart scan;
+    private StatusStripPart statusStrip;
     
     private List<SellItem> items = new ArrayList<>();
     private List<Integer> selectedItemIndexes = new ArrayList<>();
@@ -231,5 +233,13 @@ public class SaleScreen extends Screen {
     public void setSelectedItemIndexes(List<Integer> selectedItemIndexes) {
         this.selectedItemIndexes = selectedItemIndexes;
     }
+
+	public StatusStripPart getStatusStrip() {
+		return statusStrip;
+	}
+
+	public void setStatusStrip(StatusStripPart statusStrip) {
+		this.statusStrip = statusStrip;
+	}
     
 }
