@@ -8,4 +8,5 @@ public interface ILegacyPromptAndResponseModel {
     public String getResponseText();
     public String getPromptText();
     public void setScanned(boolean value);
+    public boolean getResponseEnabled();
 }
