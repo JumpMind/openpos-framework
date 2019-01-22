@@ -37,6 +37,7 @@ public class DatabaseSchema {
     private List<Class<?>> entityExtensionClasses;
     private Map<Class<?>, List<ModelClassMetaData>> classMetadata = new HashMap<>();
     private Database desiredModel;
+    private static ModelValidator modelClassValidator = new ModelValidator();
 
     public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses) {
         this.platform = platform;
@@ -166,6 +167,8 @@ public class DatabaseSchema {
         return tables;
     }
 
+
+
     protected void loadExtensions() {
         for (Class<?> extensionClass : entityExtensionClasses) {
             Extends extendsAnnotation = extensionClass.getAnnotation(Extends.class);
@@ -253,7 +256,7 @@ public class DatabaseSchema {
                 }
 
                 meta.setTable(dbTable);
-
+                modelClassValidator.validate(meta);
                 list.add(meta);
 
             }

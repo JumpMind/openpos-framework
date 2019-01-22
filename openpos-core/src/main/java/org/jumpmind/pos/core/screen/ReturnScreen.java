@@ -21,6 +21,7 @@ public class ReturnScreen extends Screen {
     private String itemActionName = "Item";
     private Transaction transaction = null;
     private List<Total> totals = new ArrayList<>();
+    private String grandTotal;
     private List<MenuItem> multiSelectedMenuItems;
 
     public ReturnScreen() {
@@ -86,6 +87,14 @@ public class ReturnScreen extends Screen {
 
     public void addTotal(Total total) {
         this.totals.add(total);
+    }
+
+    public String getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(String grandTotal) {
+        this.grandTotal = grandTotal;
     }
 
     public void setItemTotal(String total) {

@@ -221,7 +221,7 @@ public class ModelWrapper {
                 String modelCurrencyCode = (String)xRefField.get(model);
                 if (StringUtils.isEmpty(modelCurrencyCode)) {
                     throw new PersistException("Money field " + fieldName + " cannot be loaded because crossReference= " + getXrefName(fieldName)
-                    + " doe not have a currency code. Model: " + model); 
+                    + " does not have a value. Model: " + model); 
                 }
                 CurrencyUnit currency = CurrencyUnit.of(modelCurrencyCode);
                 BigDecimal decimalValue = (BigDecimal)value;

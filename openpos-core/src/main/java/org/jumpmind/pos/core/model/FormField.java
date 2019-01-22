@@ -23,7 +23,8 @@ public class FormField implements IFormElement, IField, Serializable {
     private FieldInputType inputType = FieldInputType.AlphanumericText;
     private String label;
     private String fieldId;
-    private String value;
+    /* has to be set to a blank value by default because null values are not serialized in nu commerce and therefore aren't bound on the client side */
+    private String value = "";
     private boolean required = true;
     private boolean sensitive = false;
 

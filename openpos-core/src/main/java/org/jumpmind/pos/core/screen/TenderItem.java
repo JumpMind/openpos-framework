@@ -103,4 +103,14 @@ public class TenderItem implements IItem, Serializable {
     public void setNumber(String number) {
         this.number = number;
     }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        // Not implemented
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }

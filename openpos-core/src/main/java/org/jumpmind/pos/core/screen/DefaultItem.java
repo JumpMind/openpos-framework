@@ -18,6 +18,7 @@ public class DefaultItem implements IItem, Serializable {
     private List<FormDisplayField> fields = new ArrayList<>();;
     private boolean selected = false;
     private String type;
+    private boolean enabled = true;
 
     public DefaultItem() {}
     
@@ -116,6 +117,16 @@ public class DefaultItem implements IItem, Serializable {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;        
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
     }
     
 }

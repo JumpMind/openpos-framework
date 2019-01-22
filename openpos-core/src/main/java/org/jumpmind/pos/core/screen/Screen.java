@@ -1,18 +1,26 @@
 package org.jumpmind.pos.core.screen;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
+import org.joda.money.Money;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.template.AbstractTemplate;
 import org.jumpmind.pos.core.template.BlankWithBarTemplate;
 import org.jumpmind.pos.server.model.Action;
+import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.jumpmind.pos.util.model.Message;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 
 public class Screen extends Message {
 
@@ -86,7 +94,7 @@ public class Screen extends Message {
 
     // TODO i don't really like this method here
     public static <T> T convertActionData(Object actionData, Class<T> convertToInstanceOf) {
-        return new ObjectMapper().convertValue(actionData, convertToInstanceOf);
+        return DefaultObjectMapper.build().convertValue(actionData, convertToInstanceOf);
     }
 
     public void setName(String name) {

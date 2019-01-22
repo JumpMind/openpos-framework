@@ -143,7 +143,7 @@ public class DBSession {
                 if (field.isAnnotationPresent(ColumnDef.class)) {
                     try {
                         Object value = field.get(entity);
-                        if (includeNullValues || value != null) {
+                        if (includeNullValues || (value != null && !value.equals(""))) {
                             params.put(field.getName(), value);
                         }
                     } catch (RuntimeException e) {

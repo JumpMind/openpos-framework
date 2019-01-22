@@ -23,10 +23,33 @@ public class MoneyCalculator {
         return Money.zero(currency).getAmount();
     }
     
-    
     public BigDecimal amount(BigDecimal amount) {
         return money(amount).getAmount();
     }
+    
+    public Money money(double amount) {
+        return money(new BigDecimal(amount));
+    }
+    
+    public static Money zero(String currencyId) {
+        return money(currencyId, BigDecimal.ZERO);
+    }
+    
+
+    public static Money money(String currencyId, double d) {
+        return money(currencyId, new BigDecimal(d), RoundingMode.HALF_UP);
+    }
+    
+    public static Money money(String currencyId, BigDecimal value) {
+        return Money.of(CurrencyUnit.of(currencyId), value);
+    }
+    public static Money money(String currencyId, BigDecimal value, RoundingMode roundingMode) {
+        return Money.of(CurrencyUnit.of(currencyId), value, roundingMode);
+    }
+    
+    public static boolean isZero(Money money) {
+        return money.getAmount().signum() == 0;
+    }    
     
     public Money money(BigDecimal amount) {
         if (amount != null) {
@@ -44,5 +67,6 @@ public class MoneyCalculator {
     public BigDecimal subtract(BigDecimal amount1, BigDecimal amount2) {
         return MoneyUtils.subtract(money(amount1), money(amount2)).getAmount();
     }
+
     
 }

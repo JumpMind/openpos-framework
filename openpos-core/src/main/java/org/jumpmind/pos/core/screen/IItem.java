@@ -19,5 +19,6 @@ public interface IItem {
     public void setAmount(String amount);
     public boolean isSelected();
     public void setSelected(boolean selected);
-    
+    public void setEnabled(boolean enabled);
+    public boolean isEnabled();
 }
