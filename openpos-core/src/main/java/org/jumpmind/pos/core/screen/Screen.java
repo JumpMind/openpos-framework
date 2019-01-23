@@ -124,6 +124,10 @@ public class Screen extends Message {
     public void setTemplate(AbstractTemplate template) {
         this.template = template;
     }
+    
+    public void setLogoutButton(MenuItem logoutButton) {
+        put("logoutButton", logoutButton);
+    }
 
     @SuppressWarnings("unchecked")
     public <T extends AbstractTemplate> T getTemplate() {
