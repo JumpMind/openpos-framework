@@ -8,14 +8,17 @@ import org.jumpmind.pos.persist.AbstractModel;
 
 abstract public class AbstractTaggedModel extends AbstractModel implements ITaggedModel {
 
+    @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
 
     Map<String, String> tags = new HashMap<String, String>();
 
+    @Override
     public Map<String, String> getTags() {
         return new LinkedHashMap<>(tags);
     }
 
+    @Override
     public void setTags(Map<String, String> tags) {
         this.tags = tags;
     }

@@ -5,9 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.jumpmind.pos.persist.model.IAuditableModel;
 
 
-public abstract class AbstractModel {
+public abstract class AbstractModel implements IAuditableModel {
 
     @ColumnDef(required=true,
             description="Timestamp when this entry was created.")
@@ -29,34 +30,42 @@ public abstract class AbstractModel {
     
     private transient Map<String, Object> additionalFields = new CaseInsensitiveMap<String, Object>();
 
+    @Override
     public Date getCreateTime() {
         return createTime;
     }
 
+    @Override
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
+    @Override
     public String getCreateBy() {
         return createBy;
     }
 
+    @Override
     public void setCreateBy(String createBy) {
         this.createBy = createBy;
     }
 
+    @Override
     public Date getLastUpdateTime() {
         return lastUpdateTime;
     }
 
+    @Override
     public void setLastUpdateTime(Date lastUpdateTime) {
         this.lastUpdateTime = lastUpdateTime;
     }
 
+    @Override
     public String getLastUpdateBy() {
         return lastUpdateBy;
     }
 
+    @Override
     public void setLastUpdateBy(String lastUpdateBy) {
         this.lastUpdateBy = lastUpdateBy;
     }

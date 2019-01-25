@@ -23,8 +23,8 @@ public class Injector {
 
     @Autowired
     private AutowireCapableBeanFactory applicationContext;
-    
-    @Autowired(required=false)
+
+    @Autowired(required = false)
     private List<IScopeValueProvider> scopeValueProviders;
 
     public void performInjections(Object target, Scope scope, StateContext currentContext) {
@@ -57,7 +57,7 @@ public class Injector {
             }
 
             if (in != null) {
-                injectField(targetClass, target, scope, currentContext, in.name(), in.scope(), in.required(), field);
+                injectField(targetClass, target, scope, currentContext, in.name(), in.scope(), in.required(), in.autoCreate(), field);
             }
 
             InOut inOut = field.getAnnotation(InOut.class);
@@ -66,14 +66,15 @@ public class Injector {
             }
 
             if (inOut != null) {
-                injectField(targetClass, target, scope, currentContext, inOut.name(), inOut.scope(), inOut.required(), field);
+                injectField(targetClass, target, scope, currentContext, inOut.name(), inOut.scope(), inOut.required(), inOut.autoCreate(),
+                        field);
             }
 
         }
     }
 
     protected void injectField(Class<?> targetClass, Object target, Scope scope, StateContext currentContext, String name,
-            ScopeType scopeType, boolean required, Field field) {
+            ScopeType scopeType, boolean required, boolean autoCreate, Field field) {
         if (StringUtils.isEmpty(name)) {
             name = field.getName();
         }
@@ -87,7 +88,7 @@ public class Injector {
                         : null;
                 if (configScopeValue != null) {
                     value = new ScopeValue(configScopeValue);
-                }
+                } 
                 break;
             case Node:
                 value = scope.getNodeScope().get(name);
@@ -103,6 +104,10 @@ public class Injector {
                 break;
             default:
                 break;
+        }
+        
+        if (value == null && autoCreate) {
+            value = autoCreate(name, scopeType, scope, currentContext);
         }
         
         if (value == null) {
@@ -121,6 +126,13 @@ public class Injector {
         } else if (required) {            
             throw failedToResolveInjection(field, name, targetClass, target, scope, currentContext);
         }
+    }
+
+    protected ScopeValue autoCreate(String name, ScopeType scopeType, Scope scope, StateContext currentContext) {
+        Object bean = applicationContext.getBean(name);
+        performInjections(bean, scope, currentContext);
+        scope.setScopeValue(scopeType, name, bean);
+        return scope.getScopeValue(scopeType, name);
     }
 
     protected ScopeValue resolveThroughValueProviders(String name, ScopeType scopeType, Object target, Field field) {
@@ -151,7 +163,12 @@ public class Injector {
         }
     }
 
-    private FlowException failedToResolveInjection(Field field, String name, Class<?> targetClass, Object target, Scope scope,
+    private FlowException failedToResolveInjection(
+            Field field,
+            String name,
+            Class<?> targetClass,
+            Object target,
+            Scope scope,
             StateContext currentContext) {
 
         StringBuilder buff = new StringBuilder();
@@ -166,7 +183,7 @@ public class Injector {
 
         StringBuilder buff = new StringBuilder();
 
-        try {            
+        try {
             buff.append(reportScope("NODE SCOPE", scope.getNodeScope()));
             buff.append(reportScope("SESSION SCOPE", scope.getSessionScope()));
             buff.append(reportScope("CONVERSATION SCOPE", scope.getConversationScope()));
@@ -194,7 +211,7 @@ public class Injector {
                     if (entry.getValue() == null || entry.getValue().getValue() == null) {
                         buff.append("null").append("\n");
                     } else {
-                        buff.append(StringUtils.abbreviate(entry.getValue().getValue().toString(), MAX_VALUE_WIDTH)).append("\n");                        
+                        buff.append(StringUtils.abbreviate(entry.getValue().getValue().toString(), MAX_VALUE_WIDTH)).append("\n");
                     }
                 }
             }

@@ -10,16 +10,18 @@ public class SelectionListItem implements Serializable {
 
     private String title;
 
-    private List<String> body;
+    private List<SelectionListItemDisplayProperty> properties;
+    
+    private boolean isSelected;
 
     public SelectionListItem() {
-        this.body = new ArrayList<String>();
+        this.properties = new ArrayList<SelectionListItemDisplayProperty>();
     }
 
-    public SelectionListItem(String title, String body) {
+    public SelectionListItem(String title, SelectionListItemDisplayProperty property) {
         this.title = title;
-        this.body = new ArrayList<String>();
-        this.body.add(body);
+        this.properties = new ArrayList<SelectionListItemDisplayProperty>();
+        this.properties.add(property);
     }
 
     public String getTitle() {
@@ -30,16 +32,24 @@ public class SelectionListItem implements Serializable {
         this.title = title;
     }
 
-    public List<String> getBody() {
-        return body;
+    public List<SelectionListItemDisplayProperty> getProperties() {
+        return properties;
     }
 
-    public void setBody(List<String> body) {
-        this.body = body;
+    public void setProperties(List<SelectionListItemDisplayProperty> properties) {
+        this.properties = properties;
     }
     
-    public void addLine(String line) {
-        this.body.add(line);
+    public void addProperty(SelectionListItemDisplayProperty property) {
+        this.properties.add(property);
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean isSelected) {
+        this.isSelected = isSelected;
     }
 
 }

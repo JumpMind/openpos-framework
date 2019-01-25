@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface In {
     public String name() default "";
+    public boolean autoCreate() default false;
     public boolean required() default true;
     public ScopeType scope();
 }

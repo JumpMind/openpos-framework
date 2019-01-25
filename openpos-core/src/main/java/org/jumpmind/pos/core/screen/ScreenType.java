@@ -45,6 +45,7 @@ public interface ScreenType {
     public static final String Transaction = "Transaction";
     public static final String Version = "Version";
     public static final String SelectionList = "SelectionList";
+    public static final String SelectionListDialog = "SelectionListDialog";
     public static final String Wait = "Wait";
     public static final String ItemSearchResults = "ItemSearchResults";
     public static final String ItemOptions = "ItemOptions";

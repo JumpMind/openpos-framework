@@ -207,7 +207,7 @@ public class DatabaseSchema {
         if (nameToValidate.length() == 0) {
             throw new PersistException(String.format("Invalid %s name \"%s\". The name cannot be blank.", type, nameToValidate));
         } else if (nameToValidate.length() > ORACLE_MAX_NAME_LENGTH) {
-            throw new PersistException(String.format("Invalid %s name \"%s\". Must be 30 characeters or less.", type, nameToValidate));
+            throw new PersistException(String.format("Invalid %s name \"%s\". Must be 30 characters or less.", type, nameToValidate));
         } else if (ReservedWords.isReserved(nameToValidate)) {
             throw new PersistException(
                     String.format("Invalid %s name \"%s\" for table \"%s\". This is a reserved word. Try making the name more specific.",
