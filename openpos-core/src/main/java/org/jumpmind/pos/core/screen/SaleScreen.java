@@ -1,15 +1,13 @@
 package org.jumpmind.pos.core.screen;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import org.jumpmind.pos.core.model.Total;
-import org.jumpmind.pos.core.model.Total.TotalType;
 import org.jumpmind.pos.core.screenpart.BaconStripPart;
 import org.jumpmind.pos.core.screenpart.ScanPart;
 import org.jumpmind.pos.core.screenpart.StatusStripPart;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class SaleScreen extends Screen {
     private static final long serialVersionUID = 1L;
@@ -26,19 +24,15 @@ public class SaleScreen extends Screen {
     private String transactionMenuPrompt;
     private List<ActionItem> transactionMenuItems = new ArrayList<>();
 
-    private String balanceDue;
-    private String discountTotal;
+    private String itemCount;
     private String grandTotal;
-    private String subTotal;
-    private String taxTotal;
-    private String itemActionName = "Item";
     private boolean transactionActive = false;
     private String customerName;
     private String noCustomerText;
-    private String checkoutButtonText = "";
-    private List<Total> totals = new ArrayList<>();
+    private Map<String, String> totals;
     private ActionItem loyaltyButton;
     private ActionItem promoButton;
+    private ActionItem checkoutButton;
     private List<ActionItem> multiSelectedMenuItems;
 
     public SaleScreen() {
@@ -55,44 +49,12 @@ public class SaleScreen extends Screen {
         this.items = items;
     }
 
-    public String getBalanceDue() {
-        return balanceDue;
-    }
-
-    public void setBalanceDue(String balanceDue) {
-        this.balanceDue = balanceDue;
-    }
-
-    public String getDiscountTotal() {
-        return discountTotal;
-    }
-
-    public void setDiscountTotal(String discountTotal) {
-        this.discountTotal = discountTotal;
-    }
-
     public String getGrandTotal() {
         return grandTotal;
     }
 
     public void setGrandTotal(String grandTotal) {
         this.grandTotal = grandTotal;
-    }
-
-    public String getSubTotal() {
-        return subTotal;
-    }
-
-    public void setSubTotal(String subTotal) {
-        this.subTotal = subTotal;
-    }
-
-    public String getTaxTotal() {
-        return taxTotal;
-    }
-
-    public void setTaxTotal(String taxTotal) {
-        this.taxTotal = taxTotal;
     }
 
     public void setCustomerName(String customerName) {
@@ -103,43 +65,19 @@ public class SaleScreen extends Screen {
         return customerName;
     }
 
-    public String getItemActionName() {
-        return itemActionName;
-    }
-
-    public void setItemActionName(String itemActionName) {
-        this.itemActionName = itemActionName;
-    }
-
-    public List<Total> getTotals() {
+    public Map<String, String> getTotals() {
         return totals;
     }
 
-    public void setTotals(List<Total> totals) {
+    public void setTotals(Map<String, String> totals) {
         this.totals = totals;
     }
 
-    public void addTotal(String name, String amount) {
-        this.totals.add(new Total(name, amount));
-    }
-
-    public void addTotal(Total total) {
-        this.totals.add(total);
-    }
-
-    public void setItemTotal(String total) {
-        Total itemTotal = this.getItemTotal();
-        if (itemTotal == null) {
-            this.totals.add(new Total(ITEM_TOTAL_NAME, total, TotalType.Quantity));
-        } else {
-            itemTotal.setAmount(total);
-        }
-    }
-
-    @JsonIgnore
-    public Total getItemTotal() {
-        return this.totals.stream().filter(t -> t.getType() == TotalType.Quantity && ITEM_TOTAL_NAME.equalsIgnoreCase(t.getName()))
-                .findFirst().orElse(null);
+    public void setTotal(String name, String amount) {
+    	if( totals == null ) {
+    		totals = new HashMap<String, String>();
+    	}
+        totals.put(name, amount);
     }
 
     public String getNoCustomerText() {
@@ -245,15 +183,7 @@ public class SaleScreen extends Screen {
     public void setStatusStrip(StatusStripPart statusStrip) {
         this.statusStrip = statusStrip;
     }
-    
-    public String getCheckoutButtonText() {
-        return checkoutButtonText;
-    }
-    
-    public void setCheckoutButtonText(String checkoutButtonText) {
-        this.checkoutButtonText = checkoutButtonText;
-    }
-    
+        
     public void setTransactionActive(boolean isTransactionActive) {
         this.transactionActive = isTransactionActive;
     }
@@ -261,5 +191,21 @@ public class SaleScreen extends Screen {
     public boolean isTransactionActive() {
         return transactionActive;
     }
+
+	public String getItemCount() {
+		return itemCount;
+	}
+
+	public void setItemCount(String itemCount) {
+		this.itemCount = itemCount;
+	}
+
+	public ActionItem getCheckoutButton() {
+		return checkoutButton;
+	}
+
+	public void setCheckoutButton(ActionItem checkoutButton) {
+		this.checkoutButton = checkoutButton;
+	}
 
 }
