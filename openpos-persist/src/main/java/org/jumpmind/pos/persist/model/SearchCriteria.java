@@ -58,5 +58,9 @@ public class SearchCriteria {
     public boolean isUseAnd() {
         return useAnd;
     }
+    
+    public boolean contains(String name) {
+        return criteria.containsKey(name);
+    }
 
 }

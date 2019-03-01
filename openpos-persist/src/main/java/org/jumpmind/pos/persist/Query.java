@@ -69,6 +69,7 @@ public class Query<T> {
             buff.append(preppedWhereClause);
         }
 
+        boolean firstIncluded = true;
         for (String optionalWhereClause : queryTemplate.getOptionalWhereClauses()) {
             Set<String> optionalWhereClauseKeys = new LinkedHashSet<>();
             String preppedOptionalWhereClause = literalSubtitution.replace(optionalWhereClause);
@@ -96,7 +97,7 @@ public class Query<T> {
                     buff.append(" WHERE 1=1 ");
                     hasWhereKeyword = true;
                 }
-                if (useAnd) {
+                if (useAnd || firstIncluded) {
                     buff.append(" AND (");
                 } else {
                     buff.append(" OR (");
@@ -104,6 +105,10 @@ public class Query<T> {
                 buff.append(preppedOptionalWhereClause);
                 buff.append(")");
                 keys.addAll(optionalWhereClauseKeys);
+            }
+            
+            if (shouldInclude) {
+               firstIncluded = false;
             }
         }
 

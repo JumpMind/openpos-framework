@@ -76,12 +76,15 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
 
     @Value("${openpos.installationId:undefined}")
     protected String installationId;
+    
+    @Value("${openpos.businessUnitId:undefined}")
+    protected String businessUnitId;
 
     @Autowired
     protected TagHelper tagHelper;
     
     @Autowired
-    private ApplicationContext applicationContext;
+    protected ApplicationContext applicationContext;
 
     protected IDatabasePlatform databasePlatform;
 

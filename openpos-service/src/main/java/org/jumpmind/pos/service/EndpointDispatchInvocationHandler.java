@@ -42,7 +42,9 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     String installationId;
     
     static BasicThreadFactory factory = new BasicThreadFactory.Builder()
-            .namingPattern("service-instrumentation-thread-%d").build();
+            .namingPattern("service-instrumentation-thread-%d")
+            .daemon(true)
+            .build();
     private static final ExecutorService instrumentationExecutor = Executors.newSingleThreadExecutor(factory);    
     
     public EndpointDispatchInvocationHandler() {
