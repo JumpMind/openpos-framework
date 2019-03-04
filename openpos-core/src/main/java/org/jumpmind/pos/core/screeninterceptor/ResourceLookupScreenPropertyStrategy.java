@@ -22,7 +22,7 @@ public class ResourceLookupScreenPropertyStrategy implements IScreenPropertyStra
 					String group = lookupObject.getGroup() != null ? lookupObject.getGroup() : "common";
 					String newValue = lookupService.getString(appId, deviceId, group, lookupObject.getKey());
 					if(lookupObject.getParameters() != null) {
-						lookupObject.getParameters().entrySet().forEach( entry -> newValue.replaceAll("{{"+entry.getKey()+"}}", entry.getValue()));
+						newValue = lookupObject.getParameters().keySet().stream().reduce( newValue, (acc, key) -> acc.replace("{{" + key + "}}", lookupObject.getParameters().get(key)));
 					}
 					return newValue;
 				} catch( IllegalArgumentException | MissingResourceException e) {

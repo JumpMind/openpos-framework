@@ -5,35 +5,36 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jumpmind.pos.core.model.DisplayProperty;
+import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.screenpart.BaconStripPart;
 import org.jumpmind.pos.core.screenpart.ScanPart;
 import org.jumpmind.pos.core.screenpart.StatusStripPart;
 
 public class SaleScreen extends Screen {
     private static final long serialVersionUID = 1L;
-    public static final String ITEM_TOTAL_NAME = "itemTotal";
 
     private BaconStripPart baconStrip = new BaconStripPart();
     private ScanPart scan = new ScanPart();
     private StatusStripPart statusStrip = new StatusStripPart();
 
-    private List<SellItem> items = new ArrayList<>();
-    private int[] selectedItemIndexes = new int[0];
     private List<ActionItem> sausageLinks = new ArrayList<>();
 
     private String transactionMenuPrompt;
     private List<ActionItem> transactionMenuItems = new ArrayList<>();
+    private List<ActionItem> multiSelectedMenuItems;
+    private List<SellItem> items = new ArrayList<>();
+    private int[] selectedItemIndexes = new int[0];
+    private List<Total> totals;
 
     private String itemCount;
-    private String grandTotal;
+    private DisplayProperty grandTotal;
     private boolean transactionActive = false;
     private String customerName;
     private String noCustomerText;
-    private Map<String, String> totals;
     private ActionItem loyaltyButton;
     private ActionItem promoButton;
     private ActionItem checkoutButton;
-    private List<ActionItem> multiSelectedMenuItems;
 
     public SaleScreen() {
         this.setScreenType(ScreenType.Sale);
@@ -49,11 +50,11 @@ public class SaleScreen extends Screen {
         this.items = items;
     }
 
-    public String getGrandTotal() {
+    public DisplayProperty getGrandTotal() {
         return grandTotal;
     }
 
-    public void setGrandTotal(String grandTotal) {
+    public void setGrandTotal(DisplayProperty grandTotal) {
         this.grandTotal = grandTotal;
     }
 
@@ -65,19 +66,19 @@ public class SaleScreen extends Screen {
         return customerName;
     }
 
-    public Map<String, String> getTotals() {
+    public List<Total> getTotals() {
         return totals;
     }
 
-    public void setTotals(Map<String, String> totals) {
+    public void setTotals(List<Total> totals) {
         this.totals = totals;
     }
 
     public void setTotal(String name, String amount) {
     	if( totals == null ) {
-    		totals = new HashMap<String, String>();
+    		totals = new ArrayList<>();
     	}
-        totals.put(name, amount);
+        totals.add(new Total(name, amount));
     }
 
     public String getNoCustomerText() {

@@ -147,7 +147,7 @@ public class SellItemScreen extends PromptScreen {
         return this.totals.stream().filter(
             t -> t.getType() == TotalType.Quantity && ITEM_TOTAL_NAME.equalsIgnoreCase(t.getName())).findFirst().orElse(null);
     }
-    
+
 	public String getNoCustomerText() {
 		return noCustomerText;
 	}
