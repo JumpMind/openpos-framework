@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.screeninterceptor;
 
+import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.screen.ActionItem;
 import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.core.service.IKeyMappingService;
@@ -16,7 +17,10 @@ public class KeyMappingScreenPropertyStrategy implements IScreenPropertyStrategy
 		if(property != null 
 		        && ActionItem.class.isAssignableFrom(clazz)) {
 			ActionItem item = (ActionItem)property;
-			item.setKeybind(keyMappingService.getKeyMapping(screen.getId(), item.getAction()));
+			String keyMapping = keyMappingService.getKeyMapping(screen.getId(), item.getAction());
+			if (!StringUtils.isEmpty(keyMapping)) {			    
+			    item.setKeybind(keyMapping);
+			}
 			return item;
 		}
 		return property;

@@ -35,6 +35,8 @@ public class ReturnScreen extends Screen {
     private String itemActionName = "Item";
     private List<Total> totals = new ArrayList<>();
     private String grandTotal;
+    private String customerName;
+    private String noCustomerText;
 
     public ReturnScreen() {
         this.setScreenType(ScreenType.Return);
@@ -178,5 +180,21 @@ public class ReturnScreen extends Screen {
 
     public void setMultiSelectedMenuItems(List<ActionItem> multiSelectedMenuItems) {
         this.multiSelectedMenuItems = multiSelectedMenuItems;
+    }
+
+    public String getCustomerName() {
+        return customerName;
+    }
+
+    public void setCustomerName(String customerName) {
+        this.customerName = customerName;
+    }
+
+    public String getNoCustomerText() {
+        return noCustomerText;
+    }
+
+    public void setNoCustomerText(String noCustomerText) {
+        this.noCustomerText = noCustomerText;
     }
 }

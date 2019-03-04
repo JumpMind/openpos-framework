@@ -14,13 +14,21 @@ public class ModuleEnabledCondition implements Condition {
 
     @Override
     public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
-        boolean include = true;
         Environment env = context.getEnvironment();
+        boolean include = !env.containsProperty("openpos.modules.include[0]");
         if (env != null) {
-            String includedModules = env.getProperty("openpos.modules.include");
-            if (isNotBlank(includedModules)) {
-                Map<String, Object> attrs = metadata.getAnnotationAttributes(Configuration.class.getName());
-                include = includedModules.contains((String) attrs.get("value"));
+            for (int i = 0; i < 50; i++) {
+                String includedModules = env.getProperty(String.format("openpos.modules.include[%d]", i));
+                if (isNotBlank(includedModules)) {
+                    Map<String, Object> attrs = metadata.getAnnotationAttributes(Configuration.class.getName());
+                    include = includedModules.contains((String) attrs.get("value"));
+                }
+
+                String excludedModules = env.getProperty(String.format("openpos.modules.exclude[%d]", i));
+                if (isNotBlank(excludedModules)) {
+                    Map<String, Object> attrs = metadata.getAnnotationAttributes(Configuration.class.getName());
+                    include &= !excludedModules.contains((String) attrs.get("value"));
+                }
             }
 
         }

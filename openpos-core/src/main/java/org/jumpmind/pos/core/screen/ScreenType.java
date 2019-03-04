@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.screen;
 
 public interface ScreenType {
+    public static final String AutoCompleteAddress = "AutoCompleteAddress";
     public static final String BasicItemSearch = "BasicItemSearch";
     public static final String Blank = "Blank";
     public static final String CallForAuthorization = "CallForAuthorization";

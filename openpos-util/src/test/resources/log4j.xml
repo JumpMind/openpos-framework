@@ -57,7 +57,19 @@
     
     <category name="org.eclipse.jetty">
         <priority value="ERROR" />
-    </category>         
+    </category>
+    
+    <category name="org.jumpmind.symmetric.util.PropertiesFactoryBean">
+        <priority value="ERROR" />
+    </category>    
+
+    <category name="org.jumpmind.symmetric.service.impl.ParameterService">
+        <priority value="ERROR" />
+    </category>
+
+    <category name="org.jumpmind.symmetric.db.SqlScript">
+        <priority value="ERROR" />
+    </category>             
     
     <root>
         <priority value="WARN" />

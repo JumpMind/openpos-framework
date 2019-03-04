@@ -69,7 +69,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @DependsOn({"tagConfig"})
 abstract public class AbstractModule extends AbstractServiceFactory implements IModule {
 
-    protected final Logger logger = LoggerFactory.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     @Autowired
     protected Environment env;
@@ -155,9 +155,9 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
             if (this.dataSourceBeanName != null) {
                 try {
                     dataSource = this.applicationContext.getBean(this.dataSourceBeanName, DataSource.class);
-                    logger.info("Using dataSource bean '{}' for {} module dataSource", this.dataSourceBeanName, getName());
+                    log.info("Using dataSource bean '{}' for {} module dataSource", this.dataSourceBeanName, getName());
                 } catch (Exception ex) {
-                    logger.warn("Failed to load dataSource with name '{}', will load default dataSource instead. Reason: {}",
+                    log.warn("Failed to load dataSource with name '{}', will load default dataSource instead. Reason: {}",
                             this.dataSourceBeanName, ex.getMessage());
                 }
             }
@@ -181,7 +181,7 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
                 properties.put(DB_POOL_TEST_WHILE_IDLE, env.getProperty(DB_POOL_TEST_WHILE_IDLE, "true"));
                 properties.put(DB_POOL_INIT_SQL, env.getProperty(DB_POOL_INIT_SQL));
                 properties.put(DB_POOL_CONNECTION_PROPERTIES, env.getProperty(DB_POOL_CONNECTION_PROPERTIES));
-                logger.info(String.format(
+                log.info(String.format(
                         "About to initialize the '%s' module datasource using the following driver:"
                                 + " '%s' and the following url: '%s' and the following user: '%s'",
                         getName(), properties.get(DB_POOL_DRIVER), properties.get(DB_POOL_URL), properties.get(DB_POOL_USER)));
@@ -245,10 +245,10 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
                 fromVersion = info.getCurrentVersion();
             }
         } catch (PersistException e) {
-            logger.info("The module table is not available");
+            log.info("The module table is not available");
         }
 
-        logger.info("The previous version of {} was {} and the current version is {}", getName(), fromVersion, getVersion());
+        log.info("The previous version of {} was {} and the current version is {}", getName(), fromVersion, getVersion());
 
         DatabaseScriptContainer scripts = new DatabaseScriptContainer(String.format("%s/sql/%s", getName(), sqlScriptProfile),
                 databasePlatform());

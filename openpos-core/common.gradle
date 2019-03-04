@@ -7,6 +7,7 @@ repositories {
 apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'groovy'
+apply plugin: 'idea'
 
 sourceSets {
     // In order to reference groovy from Java, the source sets need to be considered together during compilation (in 
@@ -72,7 +73,7 @@ task testJar(type: Jar) {
 
 task develop {
     description 'Generates Eclipse artifacts and sets up your development environment'
-    dependsOn tasks.cleanEclipse, tasks.eclipse
+    dependsOn tasks.cleanEclipse, tasks.eclipse, tasks.cleanIdea, tasks.idea
     delete '.settings'
 }
 
