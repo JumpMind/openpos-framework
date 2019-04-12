@@ -3,6 +3,9 @@ package org.jumpmind.pos.core.screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jumpmind.pos.core.ui.AssignKeyBindings;
+
+@AssignKeyBindings
 public class SellItemDetailScreen extends Screen {
 
     private static final long serialVersionUID = 1L;

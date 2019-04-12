@@ -21,18 +21,17 @@
 package org.jumpmind.pos.core.flow.config;
 
 import org.jumpmind.pos.core.flow.CompleteState;
-import org.jumpmind.pos.core.flow.IState;
 
 public class FlowBuilder implements IFlowBuilder {
     
     private StateConfig stateConfig;
 
-    public static FlowBuilder addInitialState(Class<? extends IState> state) {
+    public static FlowBuilder addInitialState(Class<? extends Object> state) {
         FlowBuilder builder = addState(state);
         return builder;
     }
     
-    public static FlowBuilder addState(Class<? extends IState> state) {
+    public static FlowBuilder addState(Class<? extends Object> state) {
         FlowBuilder builder = new FlowBuilder();
         builder.stateConfig = new StateConfig();
         builder.stateConfig.setStateName(FlowUtil.getStateName(state));
@@ -41,7 +40,7 @@ public class FlowBuilder implements IFlowBuilder {
     }
     
     @Override
-    public IFlowBuilder withTransition(String actionName, Class<? extends IState> destination) {
+    public IFlowBuilder withTransition(String actionName, Class<? extends Object> destination) {
         stateConfig.getActionToStateMapping().put(actionName, destination);        
         return this;
     }
@@ -52,7 +51,7 @@ public class FlowBuilder implements IFlowBuilder {
     }
     
     @Override
-    public IFlowBuilder withSubTransition(String actionName, Class<? extends IState> destination, String... returnActions) {
+    public IFlowBuilder withSubTransition(String actionName, Class<? extends Object> destination, String... returnActions) {
         FlowConfig flowConfig = new FlowConfig(destination.getSimpleName());
         FlowBuilder builder = FlowBuilder.addState(destination);
         for (String returnAction : returnActions) {

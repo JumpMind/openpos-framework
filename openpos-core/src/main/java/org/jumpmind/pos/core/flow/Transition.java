@@ -20,7 +20,7 @@ public class Transition {
 
     private List<? extends ITransitionStep> transitionSteps;
     private StateContext sourceStateContext;
-    private IState targetState;
+    private Object targetState;
     private StateManager stateManager;
     private Action originalAction;
     private TransitionResult transitionResult;
@@ -28,7 +28,7 @@ public class Transition {
     private AtomicReference<ITransitionStep> currentTransitionStep = new AtomicReference<ITransitionStep>(null);
     private AtomicInteger stepIndex = new AtomicInteger(0);
     
-    public Transition(List<? extends ITransitionStep> transitionSteps, StateContext sourceStateContext, IState targetState) {
+    public Transition(List<? extends ITransitionStep> transitionSteps, StateContext sourceStateContext, Object targetState) {
         super();
         this.transitionSteps = cloneSteps(transitionSteps);
         this.sourceStateContext = sourceStateContext;
@@ -148,7 +148,7 @@ public class Transition {
         return sourceStateContext;
     }
 
-    public IState getTargetState() {
+    public Object getTargetState() {
         return targetState;
     }
     

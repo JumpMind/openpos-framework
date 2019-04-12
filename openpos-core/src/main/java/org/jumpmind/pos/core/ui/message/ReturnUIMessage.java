@@ -6,11 +6,13 @@ import org.jumpmind.pos.core.screen.ActionItem;
 import org.jumpmind.pos.core.screen.ActionItemGroup;
 import org.jumpmind.pos.core.screen.SellItem;
 import org.jumpmind.pos.core.screen.TransactionReceipt;
+import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AssignKeyBindings
 public class ReturnUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
     public static final String ITEM_TOTAL_NAME = "itemTotal";

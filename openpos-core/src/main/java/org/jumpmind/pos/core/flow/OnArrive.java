@@ -18,16 +18,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jumpmind.pos.core.flow.config;
+package org.jumpmind.pos.core.flow;
 
-public interface IFlowBuilder {
-    
-    public IFlowBuilder withTransition(String actionName, Class<? extends Object> destination);
-        
-    public IFlowBuilder withSubTransition(String actionName, FlowConfig flowConfig, String... returnAction);
-    
-    public IFlowBuilder withSubTransition(String actionName, Class<? extends Object> destination, String... returnAction);
-    
-    public StateConfig build();
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface OnArrive {
 
 }

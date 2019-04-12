@@ -10,6 +10,9 @@ task generateSourceArtifact(type: Copy) {
                 'openpos-client-seed','openpos-cordova', 'openpos-test-module', 'openpos-cordova-log-plugin',
                 'node', 'azure-pipelines*.yml', '**/*.iml', '**/.project', '**/.classpath', '**/.gitignore',
                 'openpos-assemble', '**/.idea', '**/.settings', '**/.gradle'
+    }
+    from('../') {
+        include '**/openpos-version.properties'
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
                     'version': appVersion,
                     'buildTime': new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(new java.util.Date()),

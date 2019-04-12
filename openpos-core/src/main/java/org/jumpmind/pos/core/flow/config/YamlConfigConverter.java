@@ -1,20 +1,28 @@
 package org.jumpmind.pos.core.flow.config;
 
+import java.lang.reflect.Method;
+
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.jumpmind.pos.core.flow.CompleteState;
 import org.jumpmind.pos.core.flow.FlowException;
 import org.jumpmind.pos.core.flow.IState;
+import org.jumpmind.pos.core.flow.OnArrive;
 import org.jumpmind.pos.util.ClassUtils;
 
 
 public class YamlConfigConverter {
     
-    private static Map<String, Class<IState>> knownStateClasses;
+    private static final Logger log = LogManager.getLogger(YamlConfigConverter.class);
+    
+    private static Map<String, Class<Object>> knownStateClasses;
     
     private final static String GLOBAL_CONFIG = "Global";
 
@@ -72,7 +80,7 @@ public class YamlConfigConverter {
         StateConfig stateConfig = new StateConfig();
         stateConfig.setStateName(yamlStateConfig.getStateName());
         
-        Class<? extends IState> stateClass = resolveStateClass(yamlStateConfig);
+        Class<? extends Object> stateClass = resolveStateClass(yamlStateConfig);
         
         if (stateClass != null) {
             stateConfig.setStateClass(resolveStateClass(yamlStateConfig));            
@@ -86,7 +94,7 @@ public class YamlConfigConverter {
     }
 
     protected void handleGlobalConfig(FlowConfig flowConfig, List<YamlFlowConfig> yamlFlowConfigs, YamlStateConfig yamlStateConfig) {
-        Map<String, Class<? extends IState>> actionToStateMapping = buildActionToStateMapping(yamlFlowConfigs, yamlStateConfig);
+        Map<String, Class<? extends Object>> actionToStateMapping = buildActionToStateMapping(yamlFlowConfigs, yamlStateConfig);
         for (String actionName : actionToStateMapping.keySet()) {
             flowConfig.addGlobalTransition(actionName, actionToStateMapping.get(actionName));
         }
@@ -98,13 +106,13 @@ public class YamlConfigConverter {
         }
     }
 
-    protected Map<String, Class<? extends IState>> buildActionToStateMapping(List<YamlFlowConfig> yamlFlowConfigs, YamlStateConfig yamlStateConfig) {
-        Map<String, Class<? extends IState>> actionToStateMapping = new LinkedHashMap<>();
+    protected Map<String, Class<? extends Object>> buildActionToStateMapping(List<YamlFlowConfig> yamlFlowConfigs, YamlStateConfig yamlStateConfig) {
+        Map<String, Class<? extends Object>> actionToStateMapping = new LinkedHashMap<>();
         
         for (String actionName : yamlStateConfig.getActionToStateConfigs().keySet()) {
             YamlStateConfig stateConfig = yamlStateConfig.getActionToStateConfigs().get(actionName);
             if (!stateConfig.isSubTransition()) {
-                Class<? extends IState> stateClass = resolveStateClass(stateConfig);
+                Class<? extends Object> stateClass = resolveStateClass(stateConfig);
                 
                 if (stateClass != null) {                    
                     actionToStateMapping.put(actionName, stateClass);
@@ -131,12 +139,8 @@ public class YamlConfigConverter {
                     FlowConfig flowConfig = convertToFlowConfig(yamlFlowConfigs, yamlFlowConfig);
                     subTransition.setSubFlowConfig(flowConfig);
                 } else {
-                    Class<? extends IState> stateClass = resolveStateClass(stateConfig);
+                    Class<? extends Object> stateClass = resolveStateClass(stateConfig);
                     if (stateClass == null) {
-                        System.out.println("Known flows: ");
-                        for (YamlFlowConfig flow : yamlFlowConfigs) {
-                            System.out.println("\t" + flow.getFlowName() + " ..... " + flow);
-                        }
                         throw new FlowException("Failed to resolve substate reference to a subflow or a state class: " + 
                                 stateConfig.getStateName() + " referred to by action: " + actionName);
                     }
@@ -165,14 +169,17 @@ public class YamlConfigConverter {
     }
 
     @SuppressWarnings("rawtypes")
-    protected Class<? extends IState> resolveStateClass(YamlStateConfig yamlStateConfig) {
+    protected Class<? extends Object> resolveStateClass(YamlStateConfig yamlStateConfig) {
         
         if (knownStateClasses == null) {
-            List<Class<IState>> knownStateClassList = ClassUtils.getClassesForPackageAndType("org.jumpmind", IState.class);
-            knownStateClasses = knownStateClassList.stream().collect(Collectors.toMap(e -> ((Class)e).getSimpleName(), v -> v) );
+            List<Class<Object>> knownStateClassList = ClassUtils.getClassesForPackageAndType("org.jumpmind.pos", Object.class);
+            
+            knownStateClasses = knownStateClassList.stream()
+                    .filter(clazz -> FlowUtil.isState(clazz))
+                    .collect(Collectors.toMap(e -> ((Class)e).getSimpleName(), v -> v) );
         }
         
-        Class<IState> state = knownStateClasses.get(yamlStateConfig.getStateName());
+        Class<Object> state = knownStateClasses.get(yamlStateConfig.getStateName());
         
         if (state != null) {
             return state;

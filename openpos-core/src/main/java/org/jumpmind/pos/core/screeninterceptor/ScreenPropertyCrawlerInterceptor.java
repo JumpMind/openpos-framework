@@ -57,19 +57,23 @@ public class ScreenPropertyCrawlerInterceptor implements IScreenInterceptor {
         }
     }
 
-    private void processOptionals(String appId, String deviceId, Map<String, Object> optionals, UIMessage screen, Map<String, Object> screenContext) {
+    private void processOptionals(
+            String appId,
+            String deviceId,
+            Map<String, Object> optionals,
+            UIMessage screen,
+            Map<String, Object> screenContext) {
         if (optionals.size() > 0) {
             Set<String> keys = optionals.keySet();
             for (String key : keys) {
                 Object value = optionals.get(key);
-                if (value != null) {
-                    doStrategies(appId, deviceId, value, value.getClass(), screen, screenContext);
+                if (value != null && !processCollections(appId, deviceId, value, screen, screenContext) && shouldProcess(value.getClass())) {
+                    processFields(appId, deviceId, value, screen, screenContext);
                 }
             }
         }
     }
 
-    @SuppressWarnings({ "rawtypes", "unchecked" })
     private final void processFields(String appId, String deviceId, Object obj, UIMessage screen, Map<String, Object> screenContext) {
         Class<?> clazz = obj.getClass();
         while (clazz != null && obj != null) {
@@ -77,77 +81,78 @@ public class ScreenPropertyCrawlerInterceptor implements IScreenInterceptor {
             for (Field field : fields) {
                 field.setAccessible(true);
                 Class<?> type = field.getType();
-
                 try {
-                    if (!Modifier.isFinal(field.getModifiers())) {
-                        field.set(obj, doStrategies(appId, deviceId, field, obj, screen, screenContext));
-                    }
-                } catch (IllegalArgumentException | IllegalAccessException e) {
-                    logger.error("Failed to set property value", e);
-                }
+                    Object value = field.get(obj);
 
-                if (List.class.isAssignableFrom(type)) {
                     try {
-                        List<Object> list = (List<Object>) field.get(obj);
-                        if (list != null) {
-                            for (int i = 0; i < list.size(); i++) {
-                                Object fieldObj = list.get(i);
-                                if (fieldObj != null) {
-                                    list.set(i, doStrategies(appId, deviceId, fieldObj, fieldObj.getClass(), screen, screenContext));
-                                    if (shouldProcessFields(field, fieldObj.getClass())) {
-                                        processFields(appId, deviceId, fieldObj, screen, screenContext);
-                                    }
-                                }
-                            }
+                        if (!Modifier.isFinal(field.getModifiers())) {
+                            field.set(obj, doStrategies(appId, deviceId, field, obj, screen, screenContext));
                         }
-                    } catch (Exception e) {
-                        logger.warn("", e);
+                    } catch (IllegalArgumentException | IllegalAccessException e) {
+                        logger.error("Failed to set property value", e);
                     }
 
-                } else if (Collection.class.isAssignableFrom(type)) {
-                    try {
-                        Collection<?> collection = (Collection<?>) field.get(obj);
-                        if (collection != null) {
-                            Iterator<?> i = collection.iterator();
-                            while (i.hasNext()) {
-                                Object fieldObj = i.next();
-                                if (fieldObj != null && shouldProcessFields(field, fieldObj.getClass())) {
-                                    processFields(appId, deviceId, fieldObj, screen, screenContext);
-                                }
-                            }
+                    if (!processCollections(appId, deviceId, value, screen, screenContext) && shouldProcess(field) && shouldProcess(type)) {
+
+                        if (value != null) {
+                            processFields(appId, deviceId, value, screen, screenContext);
                         }
-                    } catch (Exception e) {
-                        logger.warn("", e);
+
                     }
-                } else if (Map.class.isAssignableFrom(type)) {
-                    try {
-                        Map<?, ?> map = (Map<?, ?>) field.get(obj);
-                        if (map != null) {
-                            for (Entry entry : map.entrySet()) {
-                                Object entryValue = entry.getValue();
-                                if (entryValue != null) {
-                                    entry.setValue(doStrategies(appId, deviceId, entryValue, entryValue.getClass(), screen, screenContext));
-                                    if (shouldProcessFields(field, entryValue.getClass())) {
-                                        processFields(appId, deviceId, entryValue, screen, screenContext);
-                                    }
-                                }
-                            }
-                        }
-                    } catch (Exception e) {
-                        logger.warn("", e);
-                    }
-                } else if (shouldProcessFields(field, type)) {
-                    try {
-                        Object fieldObj = field.get(obj);
-                        if (fieldObj != null) {
-                            processFields(appId, deviceId, fieldObj, screen, screenContext);
-                        }
-                    } catch (Exception e) {
-                        logger.warn("", e);
-                    }
+
+                } catch (Exception e) {
+                    logger.warn("", e);
                 }
             }
             clazz = clazz.getSuperclass();
+        }
+
+    }
+
+    private boolean processCollections(String appId, String deviceId, Object value, UIMessage screen, Map<String, Object> screenContext) {
+        if (value instanceof List<?>) {
+            @SuppressWarnings("unchecked")
+            List<Object> list = (List<Object>) value;
+            for (int i = 0; i < list.size(); i++) {
+                Object fieldObj = list.get(i);
+                if (fieldObj != null) {
+                    list.set(i, doStrategies(appId, deviceId, fieldObj, fieldObj.getClass(), screen, screenContext));
+                    if (!processCollections(appId, deviceId, fieldObj, screen, screenContext) && shouldProcess(fieldObj.getClass())) {
+                        processFields(appId, deviceId, fieldObj, screen, screenContext);
+                    }
+                }
+            }
+            return true;
+
+        } else if (value instanceof Collection<?>) {
+            Collection<?> collection = (Collection<?>) value;
+            Iterator<?> i = collection.iterator();
+            while (i.hasNext()) {
+                Object fieldObj = i.next();
+                if (fieldObj != null && !processCollections(appId, deviceId, fieldObj, screen, screenContext)
+                        && shouldProcess(fieldObj.getClass())) {
+                    processFields(appId, deviceId, fieldObj, screen, screenContext);
+                }
+            }
+            return true;
+
+        } else if (value instanceof Map) {
+            @SuppressWarnings("unchecked")
+            Map<Object, Object> map = (Map<Object, Object>) value;
+            for (Entry<Object, Object> entry : map.entrySet()) {
+                Object entryValue = entry.getValue();
+                if (entryValue != null) {
+                    entry.setValue(doStrategies(appId, deviceId, entryValue, entryValue.getClass(), screen, screenContext));
+                    if (entryValue != null && !processCollections(appId, deviceId, entryValue, screen, screenContext)
+                            && shouldProcess(entryValue.getClass())) {
+                        processFields(appId, deviceId, entryValue, screen, screenContext);
+                    }
+                }
+            }
+            return true;
+
+        } else {
+            return false;
         }
     }
 
@@ -162,7 +167,13 @@ public class ScreenPropertyCrawlerInterceptor implements IScreenInterceptor {
         return obj;
     }
 
-    private Object doStrategies(String appId, String deviceId, Object property, Class<?> clazz, UIMessage screen, Map<String, Object> screenContext) {
+    private Object doStrategies(
+            String appId,
+            String deviceId,
+            Object property,
+            Class<?> clazz,
+            UIMessage screen,
+            Map<String, Object> screenContext) {
         for (IScreenPropertyStrategy s : screenProprtyStrategies) {
             property = s.doStrategy(appId, deviceId, property, clazz, screen, screenContext);
         }
@@ -170,9 +181,13 @@ public class ScreenPropertyCrawlerInterceptor implements IScreenInterceptor {
         return property;
     }
 
-    private boolean shouldProcessFields(Field field, Class<?> clazz) {
-        return clazz != null && !isWrapperType(clazz) && !Modifier.isStatic(field.getModifiers()) && !clazz.isPrimitive() && !clazz.isEnum()
-                && !clazz.equals(Logger.class) && clazz.getPackage() != null && !clazz.getPackage().getName().startsWith("sun");
+    private boolean shouldProcess(Field field) {
+        return !Modifier.isStatic(field.getModifiers());
+    }
+
+    private boolean shouldProcess(Class<?> clazz) {
+        return clazz != null && !isWrapperType(clazz) && !clazz.isPrimitive() && !clazz.isEnum() && !clazz.equals(Logger.class)
+                && clazz.getPackage() != null && !clazz.getPackage().getName().startsWith("sun");
     }
 
 }

@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.Set;
 
+import org.apache.commons.lang3.SerializationUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -295,6 +296,20 @@ public class TypeCodeTest {
         ObjectMapper mapper = new ObjectMapper();
         MyTypeCode myTypeCodeReadFromJson = mapper.readValue(EXPECTED_MyTypeCode_CODE1_JSON, MyTypeCode.class);
         assertEquals(MyTypeCode.CODE1, myTypeCodeReadFromJson);
+    }
+    
+    @Test
+    public void testSerialize() throws IOException {
+        byte[] serialized = SerializationUtils.serialize(MyTypeCode.CODE1);
+        Object deserialized = SerializationUtils.deserialize(serialized);
+        assertEquals(MyTypeCode.CODE1, deserialized);
+        assertSame(MyTypeCode.CODE1, deserialized);
+    }
+    
+    @Test
+    public void testNameMethod() throws IOException {
+        assertEquals(MyTypeCode.CODE1.value(), MyTypeCode.CODE1.name());
+        assertEquals("CODE1", MyTypeCode.CODE1.name());
     }
     
 }

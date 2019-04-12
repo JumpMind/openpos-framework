@@ -34,7 +34,7 @@ import org.springframework.web.socket.server.HandshakeInterceptor;
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
-    final protected Logger logger = LoggerFactory.getLogger(getClass());
+    final protected Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
 
     @Autowired
     MutableBoolean initialized;

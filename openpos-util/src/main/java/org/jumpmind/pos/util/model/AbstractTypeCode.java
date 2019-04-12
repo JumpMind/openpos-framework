@@ -1,5 +1,6 @@
 package org.jumpmind.pos.util.model;
 
+import java.io.ObjectStreamException;
 import java.util.Set;
 
 /**
@@ -32,7 +33,6 @@ public abstract class AbstractTypeCode implements ITypeCode {
     private static final long serialVersionUID = 1L;
     
     private String value;
-
     protected AbstractTypeCode(String value) {
         if (value == null) {
             throw new NullPointerException(String.format("Cannot have null value for instance of %s", this.getClass().getName()));
@@ -54,13 +54,14 @@ public abstract class AbstractTypeCode implements ITypeCode {
      * @return
      */
     protected static <T extends ITypeCode> T of(Class<T> clazz, String value) {
+
         T returnCode = null;
         if (ITypeCodeRegistry.exists(clazz, value)) {
             returnCode = ITypeCode.make(clazz, value);
         }
         return returnCode;
     }
-
+    
     /**
      * Retrieves the set of values for the given ITypeCode subclass
      * @param <T> An ITypeCode subclass
@@ -90,5 +91,17 @@ public abstract class AbstractTypeCode implements ITypeCode {
     public int hashCode() {
         return this.hash();
     }
+
+    /**
+     * Hooks into Java deserialization so that we can return the static
+     * instance of the TypeCode whenever possible.
+     * @return The static TypeCode when possible
+     * @throws ObjectStreamException
+     */
+    protected Object readResolve() throws ObjectStreamException {
+        //return deserializeStaticInstance(this.value);
+        return of(this.getClass(), this.value);
+    }
+    
     
 }

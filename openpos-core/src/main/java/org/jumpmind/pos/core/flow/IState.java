@@ -22,6 +22,10 @@ package org.jumpmind.pos.core.flow;
 
 import org.jumpmind.pos.server.model.Action;
 
+/**
+ * @deprecated use @OnArrive instead.
+ */
+@Deprecated
 public interface IState {
     
     public void arrive(Action action);

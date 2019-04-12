@@ -11,7 +11,7 @@ public class StateContext {
 
     private FlowConfig flowConfig;
     private Action action;
-    private IState state;
+    private Object state;
     private Map<String, ScopeValue> flowScope = new HashMap<String, ScopeValue>(4);
     private SubTransition subTransition;
     
@@ -25,7 +25,7 @@ public class StateContext {
         this.action = action;        
     }
     
-    public StateContext(FlowConfig flowConfig, Action action, IState state) {
+    public StateContext(FlowConfig flowConfig, Action action, Object state) {
         super();
         this.flowConfig = flowConfig;
         this.action = action;
@@ -66,10 +66,10 @@ public class StateContext {
     public void setAction(Action action) {
         this.action = action;
     }
-    public IState getState() {
+    public Object getState() {
         return state;
     }
-    public void setState(IState state) {
+    public void setState(Object state) {
         this.state = state;
     }
     

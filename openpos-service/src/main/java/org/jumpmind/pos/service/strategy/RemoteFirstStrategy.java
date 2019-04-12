@@ -22,12 +22,17 @@ public class RemoteFirstStrategy implements IInvocationStrategy {
     RemoteOnlyStrategy remoteStrategy;
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Object[] args) throws Throwable {        
         try {
             return remoteStrategy.invoke(config, proxy, method, args);
         } catch (Exception ex) {
-            logger.warn("Remote call failed.  Trying local", ex);
-            return localStrategy.invoke(config, proxy, method, args);
+            try {
+                logger.info("Remote call failed.  Trying local", ex);
+                return localStrategy.invoke(config, proxy, method, args);
+            } catch (Exception e) {
+                logger.info("Local call failed.  Throwing original exception", e);
+                throw ex;
+            }
         }
     }
 

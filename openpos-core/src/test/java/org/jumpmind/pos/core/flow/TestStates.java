@@ -9,7 +9,7 @@ import org.jumpmind.pos.server.model.Action;
 
 public class TestStates {
 
-    public static class HomeState implements IState {
+    public static class HomeState {
 
         @Out(scope = ScopeType.Conversation, required = false)
         private String optionalInjectionFullfiled = "optionalInjectionFullfiled";
@@ -17,6 +17,7 @@ public class TestStates {
         boolean departToSubflowCalled = false;
         boolean departStateCalled = false;
         boolean departGeneralCalled = false;
+        boolean arriveCalled = false;
         Action departAction;
 
         public HomeState() {
@@ -26,9 +27,9 @@ public class TestStates {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
 
-        @Override
-        public void arrive(Action action) {
-
+        @OnArrive
+        public void arrivedAtHome(Action action) {
+            arriveCalled = true;
         }
         
         @OnDepart

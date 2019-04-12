@@ -38,14 +38,14 @@ public interface IStateManager {
     public void doAction(String action);
     public void doAction(String action, Map<String, String> params);
     public void doAction(Action action);    
-    public void transitionTo(Action action, IState newState);
+    public void transitionTo(Action action, Object newState);
     public void timeout();
     public void endConversation();
     public void endSession();
     public void showScreen(UIMessage screen);
     public void showToast(Toast toast);
     public void refreshScreen();
-    public IState getCurrentState();
+    public Object getCurrentState();
     public ApplicationState getApplicationState();
 	public void performOutjections(Object object);
 	public void setApplicationState(ApplicationState applicationState);

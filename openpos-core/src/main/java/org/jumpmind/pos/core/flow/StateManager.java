@@ -82,6 +82,9 @@ public class StateManager implements IStateManager {
 
     @Value("${org.jumpmind.pos.core.flow.StateManager.autoSaveState:false}")
     private boolean autoSaveState = false;
+    
+    @Autowired
+    private StateLifecycle stateLifecyce;
 
     private FlowConfig initialFlowConfig;
 
@@ -131,6 +134,10 @@ public class StateManager implements IStateManager {
 
     public void setErrorHandler(IErrorHandler errorHandler) {
         this.errorHandler = errorHandler;
+    }
+    
+    public IErrorHandler getErrorHandler() {
+        return errorHandler;
     }
 
     @Override
@@ -182,22 +189,22 @@ public class StateManager implements IStateManager {
     }
 
     protected void transitionTo(Action action, StateConfig stateConfig) {
-        IState newState = buildState(stateConfig);
+        Object newState = buildState(stateConfig);
         transitionTo(action, newState);
     }
 
     @Override
-    public void transitionTo(Action action, IState newState) {
+    public void transitionTo(Action action, Object newState) {
         transitionTo(action, newState, null, null);
     }
 
-    protected void transitionTo(Action action, IState newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState) {
+    protected void transitionTo(Action action, Object newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState) {
         transitionTo(action, newState, enterSubStateConfig, resumeSuspendedState, false);
     }
 
     protected void transitionTo(
             Action action,
-            IState newState,
+            Object newState,
             SubTransition enterSubStateConfig,
             StateContext resumeSuspendedState,
             boolean autoTransition) {
@@ -230,7 +237,7 @@ public class StateManager implements IStateManager {
                     enterSubStateConfig, exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
                             resumeSuspendedState);
 
-            executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
+            stateLifecyce.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
             if (enterSubState) {
                 applicationState.getStateStack().push(applicationState.getCurrentContext());
@@ -244,15 +251,7 @@ public class StateManager implements IStateManager {
             performInjections(newState);
 
             if (resumeSuspendedState == null || returnActionName == null || autoTransition) {
-                try {
-                    applicationState.getCurrentContext().getState().arrive(action);
-                } catch (RuntimeException ex) {
-                    if (this.errorHandler != null) {
-                        this.errorHandler.handleError(this, ex);
-                    } else {
-                        throw ex;
-                    }
-                }
+                stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), action);
             } else {
                 Action returnAction = new Action(returnActionName, action.getData());
                 returnAction.setCausedBy(action);
@@ -266,39 +265,9 @@ public class StateManager implements IStateManager {
                 }
             }
         } else {
-            applicationState.getCurrentContext().getState().arrive(action);
+            stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), action);
         }
 
-    }
-
-    protected void executeDepart(IState oldState, IState newState, boolean enterSubState, Action action) {
-        if (oldState == null) {
-            return;
-        }
-
-        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(oldState.getClass(), OnDepart.class, true, true);
-        if (methods != null && !methods.isEmpty()) {
-            for (Method method : methods) {
-                OnDepart onDepart = method.getAnnotation(OnDepart.class);
-                if (enterSubState && onDepart.toSubflow()) {
-                    invokeDepart(oldState, action, method);
-                } else if (!enterSubState && onDepart.toAnotherState() && oldState != newState) {                    
-                    invokeDepart(oldState, action, method);
-                }
-            }
-        }
-    }
-
-    protected void invokeDepart(IState oldState, Action action, Method method) {
-        try {            
-            if (method.getParameters() != null && method.getParameters().length == 1) {                        
-                method.invoke(oldState, action);
-            } else {
-                method.invoke(oldState);
-            }
-        } catch (Exception ex) {
-            throw new FlowException("Failed to execute depart method on state. Method: " + method + " state: " + oldState, ex);
-        }
     }
 
     protected String getReturnActionName(Action action) {
@@ -356,7 +325,7 @@ public class StateManager implements IStateManager {
         outjector.performOutjections(stateOrStep, applicationState.getScope(), applicationState.getCurrentContext());
     }
 
-    protected TransitionResult executeTransition(StateContext sourceStateContext, IState newState, Action action) {
+    protected TransitionResult executeTransition(StateContext sourceStateContext, Object newState, Action action) {
         if (CollectionUtils.isEmpty(transitionSteps)) {
             return TransitionResult.PROCEED;
         }
@@ -370,12 +339,12 @@ public class StateManager implements IStateManager {
         return result;
     }
 
-    protected IState buildState(StateConfig stateConfig) {
+    protected Object buildState(StateConfig stateConfig) {
         return createNewState(stateConfig.getStateClass());
     }
 
     @Override
-    public IState getCurrentState() {
+    public Object getCurrentState() {
         return applicationState.getCurrentContext().getState();
     }
 
@@ -431,8 +400,8 @@ public class StateManager implements IStateManager {
 
             validateStateConfig(applicationState.getCurrentContext().getState(), stateConfig);
 
-            Class<? extends IState> transitionStateClass = stateConfig.getActionToStateMapping().get(action.getName());
-            Class<? extends IState> globalTransitionStateClass = flowConfig.getActionToStateMapping().get(action.getName());
+            Class<? extends Object> transitionStateClass = stateConfig.getActionToStateMapping().get(action.getName());
+            Class<? extends Object> globalTransitionStateClass = flowConfig.getActionToStateMapping().get(action.getName());
             SubTransition subStateConfig = stateConfig.getActionToSubStateMapping().get(action.getName());
             SubTransition globalSubStateConfig = flowConfig.getActionToSubStateMapping().get(action.getName());
 
@@ -486,7 +455,7 @@ public class StateManager implements IStateManager {
             return false;
         }
 
-        Class<? extends IState> targetStateClass = stateConfig.getActionToStateMapping().get(action.getName());
+        Class<? extends Object> targetStateClass = stateConfig.getActionToStateMapping().get(action.getName());
 
         if (targetStateClass == null) {
             targetStateClass = applicationState.getCurrentContext().getFlowConfig().getActionToStateMapping().get(action.getName());
@@ -504,7 +473,7 @@ public class StateManager implements IStateManager {
                     returnAction = applicationState.getCurrentContext().getPrimarySubstateReturnAction();
                 }
 
-                Class<? extends IState> autoTransitionStateClass = suspendedStateConfig.getActionToStateMapping().get(returnAction);
+                Class<? extends Object> autoTransitionStateClass = suspendedStateConfig.getActionToStateMapping().get(returnAction);
                 if (autoTransitionStateClass != null && autoTransitionStateClass != CompleteState.class) {
                     transitionTo(action, createNewState(autoTransitionStateClass), null, suspendedState, true);
                 } else {
@@ -527,11 +496,11 @@ public class StateManager implements IStateManager {
     }
 
     protected void transitionToSubState(Action action, SubTransition subStateConfig) {
-        Class<? extends IState> subState = subStateConfig.getSubFlowConfig().getInitialState().getStateClass();
+        Class<? extends Object> subState = subStateConfig.getSubFlowConfig().getInitialState().getStateClass();
         transitionTo(action, createNewState(subState), subStateConfig, null);
     }
 
-    protected IState createNewState(Class<? extends IState> clazz) {
+    protected Object createNewState(Class<? extends Object> clazz) {
         try {
             return clazz.newInstance();
         } catch (Exception ex) {
@@ -539,7 +508,7 @@ public class StateManager implements IStateManager {
         }
     }
 
-    protected void transitionToState(Action action, Class<? extends IState> newStateClass) {
+    protected void transitionToState(Action action, Class<? extends Object> newStateClass) {
         StateConfig newStateConfig = applicationState.getCurrentContext().getFlowConfig().getStateConfig(newStateClass);
         if (newStateConfig != null) {
             transitionTo(action, newStateConfig);
@@ -548,7 +517,7 @@ public class StateManager implements IStateManager {
         }
     }
 
-    protected void validateStateConfig(IState state, StateConfig stateConfig) {
+    protected void validateStateConfig(Object state, StateConfig stateConfig) {
         if (stateConfig == null) {
             throw new FlowException("No configuration found for state. \"" + state
                     + "\" This state needs to be mapped in a IFlowConfigProvider implementation. ");
@@ -578,7 +547,7 @@ public class StateManager implements IStateManager {
     private void clearScopeOnStates(ScopeType scopeType) {
         List<StateContext> stack = applicationState.getStateStack();
         for (StateContext stateContext : stack) {
-            IState state = stateContext.getState();
+            Object state = stateContext.getState();
             injector.resetInjections(state, scopeType);
         }
 

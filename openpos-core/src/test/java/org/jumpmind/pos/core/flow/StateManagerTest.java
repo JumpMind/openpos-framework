@@ -127,6 +127,7 @@ public class StateManagerTest {
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());
         TestUtil.setField(stateManager, "transitionSteps", Arrays.asList(new TestTransitionStepCancel(), new TestTransitionStepProceed()));
+        TestUtil.setField(stateManager, "stateLifecyce", new StateLifecycle());
 
     }
     
@@ -134,14 +135,13 @@ public class StateManagerTest {
     public void testSubStateTransitionBackToAnotherState() {
         stateManager.init("pos", "100-1");
         
-        
-        
         HomeState homeState = (HomeState) stateManager.getCurrentState();
         homeState.departGeneralCalled = false;
         homeState.departToSubflowCalled = false;
         homeState.departStateCalled = false;
         
         assertEquals(HomeState.class, homeState.getClass());
+        assertTrue(homeState.arriveCalled);
         stateManager.doAction("ToSubState1");
         
         assertTrue(homeState.departGeneralCalled);

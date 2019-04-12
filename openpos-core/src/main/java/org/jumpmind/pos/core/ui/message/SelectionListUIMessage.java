@@ -5,8 +5,10 @@ import java.util.List;
 
 import org.jumpmind.pos.core.screen.ActionItem;
 import org.jumpmind.pos.core.screen.SelectionListItem;
+import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
+@AssignKeyBindings
 public class SelectionListUIMessage extends UIMessage {
 
     private static final long serialVersionUID = -4859870631964238380L;

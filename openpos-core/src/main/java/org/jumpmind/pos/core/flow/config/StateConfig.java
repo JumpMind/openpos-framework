@@ -24,14 +24,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jumpmind.pos.core.flow.CompleteState;
-import org.jumpmind.pos.core.flow.IState;
 
 
 public class StateConfig {
     
     private String stateName;
-    private Class<? extends IState> stateClass;
-    private Map<String, Class<? extends IState>> actionToStateMapping = new HashMap<>();
+    private Class<? extends Object> stateClass;
+    private Map<String, Class<? extends Object>> actionToStateMapping = new HashMap<>();
     private Map<String, SubTransition> actionToSubStateMapping = new HashMap<>();
 
     public StateConfig() {
@@ -44,16 +43,16 @@ public class StateConfig {
     public void setStateName(String stateName) {
         this.stateName = stateName;
     }
-    public Class<? extends IState> getStateClass() {
+    public Class<? extends Object> getStateClass() {
         return stateClass;
     }
-    public void setStateClass(Class<? extends IState> stateClass) {
+    public void setStateClass(Class<? extends Object> stateClass) {
         this.stateClass = stateClass;
     }
-    public Map<String, Class<? extends IState>> getActionToStateMapping() {
+    public Map<String, Class<? extends Object>> getActionToStateMapping() {
         return actionToStateMapping;
     }
-    public void setActionToStateMapping(Map<String, Class<? extends IState>> actionToStateMapping) {
+    public void setActionToStateMapping(Map<String, Class<? extends Object>> actionToStateMapping) {
         this.actionToStateMapping = actionToStateMapping;
     }
     public Map<String, SubTransition> getActionToSubStateMapping() {

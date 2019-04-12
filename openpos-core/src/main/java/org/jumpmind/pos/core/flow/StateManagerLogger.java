@@ -31,7 +31,7 @@ public class StateManagerLogger {
         this.log = log;
     }
 
-    protected void logStateTransition(IState oldState, IState newState, Action action, String returnAction, SubTransition enterSubState, StateContext exitSubState, ApplicationState applicationState, StateContext resumeSuspendedState) {
+    protected void logStateTransition(Object oldState, Object newState, Action action, String returnAction, SubTransition enterSubState, StateContext exitSubState, ApplicationState applicationState, StateContext resumeSuspendedState) {
         if (oldState == newState) {
             return;
         }

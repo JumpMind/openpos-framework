@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.jumpmind.pos.core.flow.config.FlowUtil;
 import org.jumpmind.pos.server.model.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -124,7 +125,7 @@ public class ActionHandlerImpl {
 
         for (StackTraceElement stackFrame : currentStack) {
             Class<?> currentClass = getClassFrom(stackFrame);
-            if (currentClass != null && !Modifier.isAbstract(currentClass.getModifiers()) && IState.class.isAssignableFrom(currentClass)
+            if (currentClass != null && !Modifier.isAbstract(currentClass.getModifiers()) && FlowUtil.isState(currentClass)
                     && currentClass != state.getClass()) {
                 return false;
             } else if (stackFrame.getClassName().equals(state.getClass().getName())) {

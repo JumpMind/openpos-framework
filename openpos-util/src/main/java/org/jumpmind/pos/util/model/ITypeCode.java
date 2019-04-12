@@ -104,6 +104,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 public interface ITypeCode extends Serializable, Comparable<ITypeCode>  {
     
     public String value();
+    
+    /**
+     * Returns the same result as value().  This is a convenience method
+     * to replicate similar results that you would get with the {@link java.lang.Enum#name()} method.
+     * @return The value of the ITypeCode instance.
+     */
+    default public String name() {
+        return value();
+    }
 
     @SuppressWarnings("unchecked")
     public static <T extends ITypeCode> T make(Class<T> typeCodeClass, String value) {

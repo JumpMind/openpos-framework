@@ -109,7 +109,7 @@ public class DBSessionFactory {
                 QueryTemplates queryTemplates = new Yaml(new Constructor(QueryTemplates.class)).load(queryYamlStream);
                 return queryTemplates;
             } else {
-                log.info("Could not locate " + tablePrefix + "-query.yml on the classpath.");
+                log.debug("Could not locate " + tablePrefix + "-query.yml on the classpath.");
                 return new QueryTemplates();
             }
         } catch (Exception ex) {
@@ -126,7 +126,7 @@ public class DBSessionFactory {
                 DmlTemplates queryTemplates = new Yaml(new Constructor(DmlTemplates.class)).load(queryYamlStream);
                 return queryTemplates;
             } else {
-                log.info("Could not locate " + tablePrefix + "-query.yml on the classpath.");
+                log.debug("Could not locate " + tablePrefix + "-query.yml on the classpath.");
                 return new DmlTemplates();
             }
         } catch (Exception ex) {

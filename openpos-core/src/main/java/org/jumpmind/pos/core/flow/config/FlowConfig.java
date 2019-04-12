@@ -25,7 +25,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jumpmind.pos.core.flow.IState;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -36,11 +35,11 @@ public class FlowConfig {
     @JsonIgnore
     private StateConfig initialState;
     @JsonIgnore
-    private Map<Class<? extends IState>, StateConfig> stateConfigs = new HashMap<>();
+    private Map<Class<? extends Object>, StateConfig> stateConfigs = new HashMap<>();
     @JsonIgnore
     private Map<String, Object> configScope = new HashMap<>();
     @JsonIgnore
-    private Map<String, Class<? extends IState>> actionToStateMapping = new HashMap<>();
+    private Map<String, Class<? extends Object>> actionToStateMapping = new HashMap<>();
     @JsonIgnore
     private Map<String, SubTransition> actionToSubStateMapping = new HashMap<>();
     
@@ -56,11 +55,11 @@ public class FlowConfig {
         this.configScope = configScope;
     }
     
-    public StateConfig getStateConfig(IState state) {
+    public StateConfig getStateConfig(Object state) {
         return stateConfigs.get(state.getClass());
     }
     
-    public StateConfig getStateConfig(Class<? extends IState> stateClass) {
+    public StateConfig getStateConfig(Class<? extends Object> stateClass) {
         return stateConfigs.get(stateClass);
     }
     
@@ -70,15 +69,15 @@ public class FlowConfig {
     }
     
     protected void autoConfigureTargetStates(StateConfig config) {
-        Collection<Class<? extends IState>> targetStateClasses = 
+        Collection<Class<? extends Object>> targetStateClasses = 
                 config.getActionToStateMapping().values();
         
-        for (Class<? extends IState> targetStateClass : targetStateClasses) {
+        for (Class<? extends Object> targetStateClass : targetStateClasses) {
             autoConfigureTargetState(targetStateClass);
         }
     }
     
-    protected void autoConfigureTargetState(Class<? extends IState> targetStateClass) {
+    protected void autoConfigureTargetState(Class<? extends Object> targetStateClass) {
         if (!stateConfigs.containsKey(targetStateClass)) {
             StateConfig stateConfig = new StateConfig();
             stateConfig.setStateName(FlowUtil.getStateName(targetStateClass));
@@ -105,7 +104,7 @@ public class FlowConfig {
         this.configScope = configScope;
     }
     
-    public void addGlobalTransition(String actionName, Class<? extends IState> destination) {
+    public void addGlobalTransition(String actionName, Class<? extends Object> destination) {
         actionToStateMapping.put(actionName, destination);
         autoConfigureTargetState(destination);
     }
@@ -115,19 +114,19 @@ public class FlowConfig {
         actionToSubStateMapping.put(string, subTransition);
     }
 
-    public Map<Class<? extends IState>, StateConfig> getStateConfigs() {
+    public Map<Class<? extends Object>, StateConfig> getStateConfigs() {
         return stateConfigs;
     }
 
-    public void setStateConfigs(Map<Class<? extends IState>, StateConfig> stateConfigs) {
+    public void setStateConfigs(Map<Class<? extends Object>, StateConfig> stateConfigs) {
         this.stateConfigs = stateConfigs;
     }
 
-    public Map<String, Class<? extends IState>> getActionToStateMapping() {
+    public Map<String, Class<? extends Object>> getActionToStateMapping() {
         return actionToStateMapping;
     }
 
-    public void setActionToStateMapping(Map<String, Class<? extends IState>> actionToStateMapping) {
+    public void setActionToStateMapping(Map<String, Class<? extends Object>> actionToStateMapping) {
         this.actionToStateMapping = actionToStateMapping;
     }
 

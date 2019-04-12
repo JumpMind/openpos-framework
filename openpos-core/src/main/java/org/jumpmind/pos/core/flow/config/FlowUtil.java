@@ -20,11 +20,34 @@
  */
 package org.jumpmind.pos.core.flow.config;
 
+import java.lang.reflect.Method;
+import java.util.List;
+
+import org.apache.commons.lang3.reflect.MethodUtils;
+import org.apache.log4j.Logger;
 import org.jumpmind.pos.core.flow.IState;
+import org.jumpmind.pos.core.flow.OnArrive;
 
 public class FlowUtil {
-    public static String getStateName(Class<? extends IState> state) {
+    
+    private static final Logger log = Logger.getLogger(FlowUtil.class);
+    
+    public static String getStateName(Class<? extends Object> state) {
         // TODO may consider annotation in the future.
         return state.getSimpleName();
+    }
+    
+    public static boolean isState(Class<? extends Object> clazz) {
+        try {            
+            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnArrive.class, true, true);
+            if ((IState.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(IState.class)) || (methods != null && !methods.isEmpty())) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Throwable ex) {
+            log.debug("Failed to check isState on clazz " + clazz, ex);
+            return false;
+        }
     }
 }

@@ -12,7 +12,6 @@ import java.util.Set;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.ApplicationStateSerializer;
 import org.jumpmind.pos.core.flow.FlowException;
-import org.jumpmind.pos.core.flow.IState;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.core.flow.ScopeValue;
@@ -105,7 +104,7 @@ public class DevToolsActionListener implements IActionListener {
         loadSaveFiles(message);
 
         List<String> actions = new ArrayList<>();
-        IState currentState = sm.getCurrentState();
+        Object currentState = sm.getCurrentState();
         FlowConfig fc = sm.getApplicationState().getCurrentContext().getFlowConfig();
         if (fc != null) {
             StateConfig sc = fc.getStateConfig(currentState);
