@@ -1,12 +1,10 @@
 package org.jumpmind.pos.core.ui;
 
 import org.jumpmind.pos.core.model.MessageType;
-import org.jumpmind.pos.core.screen.ActionItem;
 import org.jumpmind.pos.core.screen.DialogProperties;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.model.Message;
 
-import java.util.List;
 
 public class UIMessage extends Message {
     private static final long serialVersionUID = 1L;
@@ -101,9 +99,5 @@ public class UIMessage extends Message {
 
     public void addMessagePart(String messagePartName, Object messagePart) {
         this.put(messagePartName, messagePart);
-    }
-
-    public void setSausageLinks(List<ActionItem> sausageLinks) {
-        this.put("sausageLinks", sausageLinks);
     }
 }

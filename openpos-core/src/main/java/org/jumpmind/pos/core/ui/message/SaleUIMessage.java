@@ -16,12 +16,6 @@ import org.jumpmind.pos.core.ui.messagepart.StatusStripPart;
 public class SaleUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
-    private BaconStripPart baconStrip = new BaconStripPart();
-    private ScanPart scan = new ScanPart();
-    private StatusStripPart statusStrip = new StatusStripPart();
-
-    private List<ActionItem> sausageLinks = new ArrayList<>();
-
     private String transactionMenuPrompt;
     private ActionItemGroup transactionMenu = new ActionItemGroup();
     private List<ActionItem> multiSelectedMenuItems;
@@ -114,25 +108,14 @@ public class SaleUIMessage extends UIMessage {
         this.multiSelectedMenuItems = multiSelectedMenuItems;
     }
 
-    public ActionItem getLocalSausageLinkByAction(String action) {
+  /*  public ActionItem getLocalSausageLinkByAction(String action) {
         return this.sausageLinks.stream().filter(mi -> action.equalsIgnoreCase(mi.getAction())).findFirst().orElse(null);
     }
 
     public ActionItem getSausageLinkByTitle(String title) {
         return this.sausageLinks.stream().filter(mi -> title.equalsIgnoreCase(mi.getTitle())).findFirst().orElse(null);
-    }
+    }*/
 
-    public void addSausageLink(ActionItem menuItem) {
-        this.sausageLinks.add(menuItem);
-    }
-
-    public void setSausageLinks(List<ActionItem> localMenuItems) {
-        this.sausageLinks = localMenuItems;
-    }
-
-    public List<ActionItem> getSausageLinks() {
-        return sausageLinks;
-    }
 
     public String getTransactionMenuPrompt() {
         return transactionMenuPrompt;
@@ -140,22 +123,6 @@ public class SaleUIMessage extends UIMessage {
 
     public void setTransactionMenuPrompt(String transactionMenuPrompt) {
         this.transactionMenuPrompt = transactionMenuPrompt;
-    }
-
-    public ScanPart getScan() {
-        return scan;
-    }
-
-    public void setScan(ScanPart scan) {
-        this.scan = scan;
-    }
-
-    public BaconStripPart getBaconStrip() {
-        return baconStrip;
-    }
-
-    public void setBaconStrip(BaconStripPart baconStrip) {
-        this.baconStrip = baconStrip;
     }
 
     public int[] getSelectedItemIndexes() {
@@ -166,14 +133,6 @@ public class SaleUIMessage extends UIMessage {
         this.selectedItemIndexes = selectedItemIndexes;
     }
 
-    public StatusStripPart getStatusStrip() {
-        return statusStrip;
-    }
-
-    public void setStatusStrip(StatusStripPart statusStrip) {
-        this.statusStrip = statusStrip;
-    }
-        
     public void setTransactionActive(boolean isTransactionActive) {
         this.transactionActive = isTransactionActive;
     }
