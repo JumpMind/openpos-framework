@@ -1,9 +1,8 @@
 package org.jumpmind.pos.core.service;
 
-import java.io.InputStream;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public interface IFileUploadService {
-    public void registerNodeUploadHandler(String nodeId, String context, BiConsumer<String, InputStream> handler);
+    public void registerNodeUploadHandler(String nodeId, String context, Consumer<FileUploadInfo> handler);
     public void registerNodeUploadHandler(IFileUploadHandler handler);
 }

@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.FormField;
 import org.jumpmind.pos.core.model.IFormElement;
+import org.jumpmind.pos.core.ui.AssignKeyBindings;
 
+@AssignKeyBindings
 public class TenderingScreen extends Screen {
     private static final long serialVersionUID = 1L;
 

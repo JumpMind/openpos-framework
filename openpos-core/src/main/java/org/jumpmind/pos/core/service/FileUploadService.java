@@ -1,12 +1,10 @@
 package org.jumpmind.pos.core.service;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
@@ -32,9 +30,9 @@ import springfox.documentation.annotations.ApiIgnore;
 public class FileUploadService implements IFileUploadService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    protected Map<String, BiConsumer<String,InputStream>> nodeUploadHandlers = new HashMap<>();
+    protected Map<String, Consumer<FileUploadInfo>> nodeUploadHandlers = new HashMap<>();
     
-    public void registerNodeUploadHandler(String nodeId, String context, BiConsumer<String,InputStream> handler) {
+    public void registerNodeUploadHandler(String nodeId, String context, Consumer<FileUploadInfo> handler) {
         this.nodeUploadHandlers.put(this.makeNodeUploadHandlerKey(nodeId, context), handler);
         logger.info("Node file upload handler successfully registered for node '{}' at context '{}'", nodeId, context);
     }
@@ -72,19 +70,21 @@ public class FileUploadService implements IFileUploadService {
         @RequestParam("nodeId") String nodeId, 
         @RequestParam("targetContext") String context,
         @RequestParam("filename") String filename,
-        @RequestParam("file") MultipartFile file) throws IOException {
-        
+        @RequestParam("file") MultipartFile file,
+        @RequestParam("chunkIndex") Integer chunkIndex) throws IOException {
+            
         String handlerKey = this.makeNodeUploadHandlerKey(nodeId, context);
         if (this.nodeUploadHandlers.containsKey(handlerKey)) {
-            BufferedInputStream is = new BufferedInputStream(file.getInputStream());
-            this.nodeUploadHandlers.get(handlerKey).accept(filename, is);
+            FileUploadInfo fileUploadInfo = new FileUploadInfo(nodeId, context, filename, file);
+            fileUploadInfo.setChunkIndex(chunkIndex);
+            this.nodeUploadHandlers.get(handlerKey).accept(fileUploadInfo);
         } else {
             String err = String.format("No upload handler exists for %s, has one been registered?", this.makeNodeUploadHandlerKey(nodeId, context));
             logger.error(err);
             throw new ContextNotFoundException(err);
         }
     }
-    
+
     @ExceptionHandler(Throwable.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

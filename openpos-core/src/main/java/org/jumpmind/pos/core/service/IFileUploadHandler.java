@@ -1,12 +1,11 @@
 package org.jumpmind.pos.core.service;
 
 import java.io.File;
-import java.io.InputStream;
-import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public interface IFileUploadHandler {
     
-    BiConsumer<String, InputStream> getUploadHandler();
+    Consumer<FileUploadInfo> getUploadHandler();
     String getUploadContext();
     String getNodeId();
     void setUploadDirectory(File file);
