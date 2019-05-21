@@ -8,8 +8,6 @@ import static org.jumpmind.pos.util.BoxLogging.UPPER_RIGHT_CORNER;
 import static org.jumpmind.pos.util.BoxLogging.VERITCAL_LINE;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
@@ -24,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jumpmind.pos.core.content.ContentProviderService;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.FlowException;
 import org.jumpmind.pos.core.flow.IScreenInterceptor;
@@ -83,6 +82,9 @@ public class ScreenService implements IScreenService, IActionListener {
     List<IScreenInterceptor> screenInterceptors = new ArrayList<>();
 
     boolean atRest = true;
+    
+    @Autowired
+    ContentProviderService contentProviderService;
 
     @PostConstruct
     public void init() {
@@ -106,29 +108,13 @@ public class ScreenService implements IScreenService, IActionListener {
     @RequestMapping(method = RequestMethod.GET, value = "api/content")
     public void getImageAsByteArray(HttpServletResponse response, @RequestParam(name = "contentPath", required = false) String contentPath)
             throws IOException {
-        logger.debug("Received a request for asset: {}", contentPath);
+        logger.info("Received a request for asset: {}", contentPath);
 
         if (contentPath.endsWith(".svg")) {
             response.setContentType("image/svg+xml");
         }
 
-        InputStream in = getClass().getResourceAsStream("/content/" + contentPath);
-
-        if( in == null ) {
-            in =  System.class.getResourceAsStream( "/content/" + contentPath);
-        }
-
-        File file = new File(contentPath);
-
-        /*
-         * If we find the content on the file system use that over the class
-         * path
-         */
-        if (file.exists()) {
-            in = new FileInputStream(file);
-        } else {
-            logger.debug("File resource not found for asset: {}", contentPath);
-        }
+        InputStream in = contentProviderService.getContentInputStream(contentPath);
 
         if (in != null) {
             try {
