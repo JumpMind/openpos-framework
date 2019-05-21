@@ -4,17 +4,17 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-@Component("fileSystemContentProvider")
-@ConfigurationProperties(prefix = "openpos.ui.content.file-system")
+@Component("classPathContentProvider")
+@ConfigurationProperties(prefix = "openpos.ui.content.class-path")
 @Scope("device")
-public class FileSystemContentProvider extends AbstractFileContentProvider {
+public class ClassPathContentProvider extends AbstractFileContentProvider {
 
     String baseContentPath;
 
     @Override
     public String getContentUrl(String deviceId, String key) {
-        String filePathContent = "file:" + this.baseContentPath;
-        String contentPath = getMostSpecificContent(deviceId, key, filePathContent);
+        String classPathContent = "classpath*:/" + this.baseContentPath;
+        String contentPath = getMostSpecificContent(deviceId, key, classPathContent);
 
         if (contentPath != null) {
             StringBuilder urlBuilder = new StringBuilder(AbstractFileContentProvider.SERVER_URL);
@@ -39,7 +39,7 @@ public class FileSystemContentProvider extends AbstractFileContentProvider {
     }
 
     public String getUrlPattern() {
-        return "${file-system}";
+        return "${class-path}";
     }
 
 }

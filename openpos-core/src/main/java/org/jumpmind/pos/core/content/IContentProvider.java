@@ -4,4 +4,6 @@ public interface IContentProvider {
 
     public String getContentUrl(String deviceId, String key);
 
+    public String getUrlPattern();
+
 }
