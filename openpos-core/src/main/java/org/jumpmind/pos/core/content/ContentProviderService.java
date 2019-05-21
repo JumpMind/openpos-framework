@@ -1,8 +1,6 @@
 package org.jumpmind.pos.core.content;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,7 @@ public class ContentProviderService {
     private Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${openpos.ui.content.providers:null}")
-    List<String> providers;
+    String[] providers;
 
     @Autowired
     protected Map<String, IContentProvider> contentProviders;
@@ -40,10 +38,6 @@ public class ContentProviderService {
         return contentUrl;
     }
 
-    public File getContentStream() {
-        return null;
-    }
-
     private List<IContentProvider> getProviderPriorities() {
         List<IContentProvider> providerPriorities = new ArrayList<>();
 
@@ -58,27 +52,26 @@ public class ContentProviderService {
         return providerPriorities;
     }
 
-    public InputStream getContentInputStream(String contentPath) throws FileNotFoundException {
+    public InputStream getContentInputStream(String contentPath) {
 
-        InputStream in = getClass().getResourceAsStream("/content/" + contentPath);
-
-        if (in == null) {
-            in = System.class.getResourceAsStream("/content/" + contentPath);
+        List<IContentProvider> providerPriorities = getProviderPriorities();
+        for (IContentProvider provider : providerPriorities) {
+            if (provider instanceof AbstractFileContentProvider) {
+                InputStream contentInputStream = null;
+                try {
+                    contentInputStream = ((AbstractFileContentProvider) provider).getContentInputStream(contentPath);
+                    if (contentInputStream != null) {
+                        return contentInputStream;
+                    }
+                } catch (IOException e) {
+                    logger.debug("Unable to get content input stream", e);
+                }
+            }
         }
 
-        File file = new File(contentPath);
+        logger.info("Resource not found for content: {}", contentPath);
 
-        /*
-         * If we find the content on the file system use that over the class
-         * path
-         */
-        if (file.exists()) {
-            in = new FileInputStream(file);
-        } else {
-            logger.info("File resource not found for asset: {}", contentPath);
-        }
-
-        return in;
+        return null;
     }
 
 }

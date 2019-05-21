@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.content;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,7 +23,7 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 @Scope("device")
 public abstract class AbstractFileContentProvider implements IContentProvider {
 
-    public static final String SERVER_URL = "${apiServerBaseUrl}/content?contentPath=";
+    public static final String SERVER_URL = "${apiServerBaseUrl}/appId/${appId}/deviceId/${deviceId}/content?contentPath=";
 
     final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -36,6 +37,8 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
     IStateManager stateManager;
 
     static Map<String, ContentIndex> deviceContent = new HashMap<>();
+
+    public abstract InputStream getContentInputStream(String contentPath) throws IOException;
 
     public String getMostSpecificContent(String deviceId, String key, String baseContentPath) {
 
@@ -87,7 +90,7 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
                 }
 
             } catch (IOException e) {
-                logger.warn("Error searching for content", e);
+                logger.debug("Unable to find resource content", e);
             }
         }
 
@@ -136,7 +139,6 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
         fileTypes.add(".jpeg");
         fileTypes.add(".gif");
         return fileTypes;
-
     }
 
     protected int getDeviceIndex(String deviceId, String key, int size) {

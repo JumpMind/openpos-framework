@@ -1,7 +1,13 @@
 package org.jumpmind.pos.core.content;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
+import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 @Component("fileSystemContentProvider")
@@ -38,8 +44,20 @@ public class FileSystemContentProvider extends AbstractFileContentProvider {
         return this.baseContentPath;
     }
 
-    public String getUrlPattern() {
-        return "${file-system}";
+    @Override
+    public InputStream getContentInputStream(String contentPath) throws IOException {
+        if (isFileSupported(contentPath)) {
+            String filePathContent = "file:" + contentPath;
+            ClassLoader cl = this.getClass().getClassLoader();
+            ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
+            Resource[] resources = resolver.getResources(filePathContent);
+
+            if (resources != null && resources.length > 0) {
+                return resources[0].getInputStream();
+            }
+        }
+
+        return null;
     }
 
 }

@@ -82,9 +82,6 @@ public class ScreenService implements IScreenService, IActionListener {
     List<IScreenInterceptor> screenInterceptors = new ArrayList<>();
 
     boolean atRest = true;
-    
-    @Autowired
-    ContentProviderService contentProviderService;
 
     @PostConstruct
     public void init() {
@@ -105,25 +102,33 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @SuppressWarnings("deprecation")
-    @RequestMapping(method = RequestMethod.GET, value = "api/content")
-    public void getImageAsByteArray(HttpServletResponse response, @RequestParam(name = "contentPath", required = false) String contentPath)
-            throws IOException {
-        logger.info("Received a request for asset: {}", contentPath);
+    @RequestMapping(method = RequestMethod.GET, value = "api/appId/{appId}/deviceId/{deviceId}/content")
+    public void getImageAsByteArray(HttpServletResponse response, @PathVariable String appId, @PathVariable String deviceId,
+            @RequestParam(name = "contentPath", required = true) String contentPath) throws IOException {
 
-        if (contentPath.endsWith(".svg")) {
-            response.setContentType("image/svg+xml");
-        }
+        logger.info("Received a request for content: {}", contentPath);
 
-        InputStream in = contentProviderService.getContentInputStream(contentPath);
+        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+        if (stateManager != null) {
+            stateManagerContainer.setCurrentStateManager(stateManager);
 
-        if (in != null) {
-            try {
-                IOUtils.copy(in, response.getOutputStream());
-            } finally {
-                IOUtils.closeQuietly(in);
+            if (contentPath.endsWith(".svg")) {
+                response.setContentType("image/svg+xml");
             }
-        } else {
-            response.setStatus(HttpStatus.NOT_FOUND.value());
+
+            ContentProviderService contentProviderService = applicationContext.getBean(ContentProviderService.class);
+            InputStream in = contentProviderService.getContentInputStream(contentPath);
+
+            if (in != null) {
+                try {
+                    IOUtils.copy(in, response.getOutputStream());
+                } finally {
+                    IOUtils.closeQuietly(in);
+                }
+            } else {
+                response.setStatus(HttpStatus.NOT_FOUND.value());
+            }
+            stateManagerContainer.setCurrentStateManager(null);
         }
     }
 
