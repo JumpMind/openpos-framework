@@ -67,7 +67,7 @@ abstract public class AbstractScreenTranslator<T extends Screen> implements ITra
     protected void chooseScreenTheme() {
         if (this.screenThemeSelector != null) {
             boolean trainingOn = posSessionInfo.getTrainingMode();
-            getScreen().setTheme(this.screenThemeSelector.getScreenThemeName(trainingOn));
+
         }
     }
 

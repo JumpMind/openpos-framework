@@ -30,6 +30,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
+import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
@@ -38,8 +40,12 @@ import org.jumpmind.pos.core.service.IScreenService;
 import org.jumpmind.pos.core.service.spring.DeviceScope;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;
+import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.server.service.MessageService;
+import org.jumpmind.pos.util.Versions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -75,6 +81,12 @@ public class StateManager implements IStateManager {
 
     @Autowired(required = false)
     private List<? extends ISessionListener> sessionListeners;
+
+    @Autowired
+    private IMessageService messageService;
+
+    @Autowired
+    private IClientConfigSelector clientConfigSelector;
 
     private ApplicationState applicationState = new ApplicationState();
 
@@ -128,6 +140,8 @@ public class StateManager implements IStateManager {
         } else {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
+
+        sendConfigurationChangedMessage();
     }
 
     public void setErrorHandler(IErrorHandler errorHandler) {
@@ -671,6 +685,30 @@ public class StateManager implements IStateManager {
 
     public void setTransactionRestFlag(boolean transitionRestFlag) {
         this.transitionRestFlag.set(transitionRestFlag);
+    }
+
+    public void sendConfigurationChangedMessage() {
+        String appId = applicationState.getAppId();
+        String deviceId = applicationState.getDeviceId();
+
+        Map<String, String> properties = applicationState.getScopeValue( "personalizationProperties");
+        List<String> additionalTags = applicationState.getScopeValue("additionalTagsForConfiguration");
+
+        try{
+            if( clientConfigSelector != null) {
+                Map<String, Map<String,String>> configs = clientConfigSelector.getConfigurations(properties, additionalTags);
+                configs.forEach((name, clientConfiguration) -> messageService.sendMessage(appId, deviceId, new ClientConfigChangedMessage(name, clientConfiguration)));
+            }
+
+            // Send versions
+            ClientConfigChangedMessage versionConfiguration = new ClientConfigChangedMessage("versions");
+            versionConfiguration.put("versions", Versions.getVersions());
+            messageService.sendMessage( appId, deviceId, versionConfiguration);
+
+        } catch (NoSuchBeanDefinitionException e) {
+            logger.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
+                    IClientConfigSelector.class.getSimpleName());
+        }
     }
 }
 

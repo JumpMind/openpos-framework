@@ -45,6 +45,8 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
 
     private boolean lastScreenWasNoOp = false;
 
+    private boolean lastScreenTrainingMode = false;
+
     public TranslationManagerServer(ILegacyScreenInterceptor interceptor, ITranslatorFactory translatorFactory,
             Class<?> subsystemClass) {
         this.subsystemClass = subsystemClass;
@@ -221,6 +223,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
             if (legacyScreen != null && subscriber.isInTranslateState()) {
                 ITranslator lastTranslator = this.lastTranslatorByAppId.get(subscriber.getAppId());
 
+
                 ILegacyScreen previousScreen = null;
                 if (lastTranslator instanceof AbstractScreenTranslator<?>) {
                     previousScreen = ((AbstractScreenTranslator<?>) lastTranslator).getLegacyScreen();
@@ -231,7 +234,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                             subscriber.getProperties());
 
                     this.lastTranslatorByAppId.put(subscriber.getAppId(), newTranslator);
-                    
+
                     if (newTranslator != null) {
                         newTranslator.setPosSessionInfo(posSessionInfo);
                     }
@@ -241,20 +244,29 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                         subscriber.showScreen(screen);
                         screenShown = true;
                     }
-                    if( newTranslator instanceof  AbstractUIMessageTranslator<?>) {
+                    if (newTranslator instanceof AbstractUIMessageTranslator<?>) {
                         AbstractUIMessageTranslator<?> messageTranslator = (AbstractUIMessageTranslator) newTranslator;
-                        UIMessage message =  messageTranslator.build();
+                        UIMessage message = messageTranslator.build();
                         subscriber.showScreen(message);
                         screenShown = true;
                     }
-                    
+
                     this.lastTranslatorByAppId.put(subscriber.getAppId(), newTranslator);
-                    
+
                     if (newTranslator instanceof IActionTranslator) {
                         ((IActionTranslator) newTranslator).translate(this, subscriber, legacyScreen);
                     }
+                }
 
-                } 
+                if( lastScreenTrainingMode != posSessionInfo.isTrainingMode() ){
+                    if(posSessionInfo.isTrainingMode()) {
+                        subscriber.addConfigurationTag("training-mode");
+                    } else {
+                        subscriber.removeConfigurationTag("training-mode");
+                    }
+                    lastScreenTrainingMode = posSessionInfo.isTrainingMode();
+                }
+
             }
         }
         return screenShown;

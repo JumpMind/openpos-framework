@@ -21,4 +21,7 @@ public interface ITranslationManagerSubscriber extends IDeviceMessageDispatcher,
     
     public Properties getProperties();
 
+    public void addConfigurationTag(String tag);
+    public void removeConfigurationTag(String tag);
+
 }
