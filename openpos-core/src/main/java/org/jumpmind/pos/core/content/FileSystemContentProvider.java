@@ -24,11 +24,9 @@ public class FileSystemContentProvider extends AbstractFileContentProvider {
 
         if (contentPath != null) {
             StringBuilder urlBuilder = new StringBuilder(AbstractFileContentProvider.SERVER_URL);
-            urlBuilder.append(this.baseContentPath);
-            if (!this.baseContentPath.endsWith("/")) {
-                urlBuilder.append("/");
-            }
             urlBuilder.append(contentPath);
+            urlBuilder.append(PROVIDER_TOKEN);
+            urlBuilder.append("fileSystemContentProvider");
 
             return urlBuilder.toString();
         }
@@ -47,7 +45,13 @@ public class FileSystemContentProvider extends AbstractFileContentProvider {
     @Override
     public InputStream getContentInputStream(String contentPath) throws IOException {
         if (isFileSupported(contentPath)) {
-            String filePathContent = "file:" + contentPath;
+            StringBuilder pathBuilder = new StringBuilder("file:");
+            if (!contentPath.contains(this.baseContentPath)) {
+                pathBuilder.append(this.baseContentPath);
+            }
+            pathBuilder.append(contentPath);
+            String filePathContent = pathBuilder.toString();
+
             ClassLoader cl = this.getClass().getClassLoader();
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(cl);
             Resource[] resources = resolver.getResources(filePathContent);

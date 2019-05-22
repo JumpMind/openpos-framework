@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -15,9 +14,9 @@ import org.springframework.stereotype.Component;
 @Scope("device")
 public class ClassPathContentProvider extends AbstractFileContentProvider {
 
-    private static final String DEFAULT_LOCATION = "content/icons/";
+    private static final String DEFAULT_LOCATION = "content/";
 
-    @Value("${openpos.ui.content.class-path.baseContentPath:content/icons/}")
+    @Value("${openpos.ui.content.class-path.baseContentPath:content/}")
     String baseContentPath;
 
     @Override
@@ -27,11 +26,9 @@ public class ClassPathContentProvider extends AbstractFileContentProvider {
 
         if (contentPath != null) {
             StringBuilder urlBuilder = new StringBuilder(AbstractFileContentProvider.SERVER_URL);
-            urlBuilder.append(this.baseContentPath);
-            if (!this.baseContentPath.endsWith("/")) {
-                urlBuilder.append("/");
-            }
             urlBuilder.append(contentPath);
+            urlBuilder.append(PROVIDER_TOKEN);
+            urlBuilder.append("classPathContentProvider");
 
             return urlBuilder.toString();
         }
