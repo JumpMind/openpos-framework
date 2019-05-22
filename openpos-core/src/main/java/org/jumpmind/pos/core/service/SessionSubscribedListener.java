@@ -2,12 +2,15 @@ package org.jumpmind.pos.core.service;
 
 import java.util.Arrays;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
-import org.jumpmind.pos.core.model.ClientConfiguration;
 import org.jumpmind.pos.core.model.ConfigChangedMessage;
 import org.jumpmind.pos.core.model.IConfigSelector;
+import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
+import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
+import org.jumpmind.pos.core.clientconfiguration.ClientConfiguration;
 import org.jumpmind.pos.core.screen.DialogProperties;
 import org.jumpmind.pos.core.screen.DialogScreen;
 import org.jumpmind.pos.core.screen.IconType;
@@ -107,6 +110,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                 messageService.sendMessage(appId, deviceId, errorDialog);
             } else {
                 sendClientConfiguration(appId, deviceId, sessionId);
+                sendClientConfigurations(appId, deviceId, sessionId);
                 if (!created) {
                     stateManager.refreshScreen();
                 }
@@ -128,7 +132,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
     private void sendClientConfiguration(String appId, String deviceId, String sessionId) {
         try {
             String theme = null;
-            ClientConfiguration config = null;
+            org.jumpmind.pos.core.model.ClientConfiguration config = null;
             IConfigSelector configSelector = applicationContext.getBean(IConfigSelector.class);
             if (configSelector != null) {
                 theme = configSelector.getTheme();
@@ -142,6 +146,26 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
         } catch (NoSuchBeanDefinitionException e) {
             log.info("An {} is not configured.  Will not be sending client configuration to the client",
                     IConfigSelector.class.getSimpleName());
+        }
+    }
+
+    private void sendClientConfigurations(String appId, String deviceId, String sessionId) {
+        try{
+            Map<String, Map<String,String>> configs = null;
+            IClientConfigSelector selector = applicationContext.getBean(IClientConfigSelector.class);
+            if( selector != null) {
+                configs = selector.getConfigurations();
+                configs.forEach((name, clientConfiguration) -> messageService.sendMessage(appId, deviceId, new ClientConfigChangedMessage(name, clientConfiguration)));
+            }
+
+            // Send versions
+            ClientConfigChangedMessage versionConfiguration = new ClientConfigChangedMessage("versions");
+            versionConfiguration.put("versions", Versions.getVersions());
+            messageService.sendMessage( appId, deviceId, versionConfiguration);
+
+        } catch (NoSuchBeanDefinitionException e) {
+            log.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
+                    IClientConfigSelector.class.getSimpleName());
         }
     }
 
