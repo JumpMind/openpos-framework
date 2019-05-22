@@ -1,14 +1,10 @@
 package org.jumpmind.pos.core.content;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.In;
 import org.jumpmind.pos.core.flow.ScopeType;
@@ -25,10 +21,15 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
 
     public static final String SERVER_URL = "${apiServerBaseUrl}/appId/${appId}/deviceId/${deviceId}/content?contentPath=";
 
+    public static final String PROVIDER_TOKEN = "&provider=";
+
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${openpos.ui.content.file.providerProperties:null}")
-    List<String> providerProperties;
+    String[] providerProperties;
+
+    @Value("${openpos.ui.content.file.supportedFileTypes:null}")
+    String[] supportedFileTypes;
 
     @In(scope = ScopeType.Device, required = false)
     Map<String, String> personalizationProperties;
@@ -37,8 +38,6 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
     IStateManager stateManager;
 
     static Map<String, ContentIndex> deviceContent = new HashMap<>();
-
-    public abstract InputStream getContentInputStream(String contentPath) throws IOException;
 
     public String getMostSpecificContent(String deviceId, String key, String baseContentPath) {
 
@@ -50,9 +49,9 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
         if (contentPaths != null) {
             int index = getDeviceIndex(deviceId, key, contentPaths.size());
             mostSpecific = contentPaths.get(index);
-            logger.info("Found content for key: {}, content: {}", key, mostSpecific);
+            logger.debug("Found content for key: {}, content: {}", key, mostSpecific);
         } else {
-            logger.warn("No content found for key: {}", key);
+            logger.debug("No content found for key: {}", key);
         }
 
         return mostSpecific;
@@ -73,7 +72,7 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
 
             Resource[] resources;
             try {
-                logger.info("Searching for content in path: {}", resourcePath);
+                logger.debug("Searching for content in path: {}", resourcePath);
                 resources = resolver.getResources(resourcePath);
 
                 List<String> files = new ArrayList<>();
@@ -100,11 +99,11 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
     protected List<String> getPossibleContentDirs(String key) {
         List<String> possibleContentDirs = new ArrayList<>();
         if (providerProperties != null && personalizationProperties != null) {
-            for (int prop = providerProperties.size(); prop >= 0; prop--) {
+            for (int prop = providerProperties.length; prop >= 0; prop--) {
                 StringBuilder builder = new StringBuilder(key);
 
                 for (int i = 0; i < prop; i++) {
-                    String property = providerProperties.get(i);
+                    String property = providerProperties[i];
                     if (personalizationProperties.containsKey(property)) {
                         builder.append("/").append(personalizationProperties.get(property));
                     }
@@ -120,25 +119,15 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
     }
 
     public boolean isFileSupported(String filename) {
-        Set<String> fileTypes = getSupportedFileTypes();
-
-        for (String fileType : fileTypes) {
-            if (filename.endsWith(fileType)) {
-                return true;
+        if (this.supportedFileTypes != null) {
+            for (String fileType : this.supportedFileTypes) {
+                if (filename.endsWith(fileType)) {
+                    return true;
+                }
             }
         }
 
         return false;
-    }
-
-    public Set<String> getSupportedFileTypes() {
-        Set<String> fileTypes = new HashSet<>();
-        fileTypes.add(".svg");
-        fileTypes.add(".png");
-        fileTypes.add(".jpg");
-        fileTypes.add(".jpeg");
-        fileTypes.add(".gif");
-        return fileTypes;
     }
 
     protected int getDeviceIndex(String deviceId, String key, int size) {
@@ -164,12 +153,20 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
         return index;
     }
 
-    public List<String> getProviderProperties() {
+    public String[] getProviderProperties() {
         return providerProperties;
     }
 
-    public void setProviderProperties(List<String> providerProperties) {
+    public void setProviderProperties(String[] providerProperties) {
         this.providerProperties = providerProperties;
+    }
+
+    public String[] getSupportedFileTypes() {
+        return supportedFileTypes;
+    }
+
+    public void setSupportedFileTypes(String[] supportedFileTypes) {
+        this.supportedFileTypes = supportedFileTypes;
     }
 
     public class ContentIndex {

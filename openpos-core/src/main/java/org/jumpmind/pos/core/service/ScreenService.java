@@ -104,9 +104,10 @@ public class ScreenService implements IScreenService, IActionListener {
     @SuppressWarnings("deprecation")
     @RequestMapping(method = RequestMethod.GET, value = "api/appId/{appId}/deviceId/{deviceId}/content")
     public void getImageAsByteArray(HttpServletResponse response, @PathVariable String appId, @PathVariable String deviceId,
-            @RequestParam(name = "contentPath", required = true) String contentPath) throws IOException {
+            @RequestParam(name = "contentPath", required = true) String contentPath,
+            @RequestParam(name = "provider", required = true) String provider) throws IOException {
 
-        logger.info("Received a request for content: {}", contentPath);
+        logger.debug("Received a request for content: {}", contentPath);
 
         IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
         if (stateManager != null) {
@@ -117,7 +118,7 @@ public class ScreenService implements IScreenService, IActionListener {
             }
 
             ContentProviderService contentProviderService = applicationContext.getBean(ContentProviderService.class);
-            InputStream in = contentProviderService.getContentInputStream(contentPath);
+            InputStream in = contentProviderService.getContentInputStream(contentPath, provider);
 
             if (in != null) {
                 try {

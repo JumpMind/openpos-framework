@@ -52,24 +52,21 @@ public class ContentProviderService {
         return providerPriorities;
     }
 
-    public InputStream getContentInputStream(String contentPath) {
+    public InputStream getContentInputStream(String contentPath, String provider) {
 
-        List<IContentProvider> providerPriorities = getProviderPriorities();
-        for (IContentProvider provider : providerPriorities) {
-            if (provider instanceof AbstractFileContentProvider) {
-                InputStream contentInputStream = null;
-                try {
-                    contentInputStream = ((AbstractFileContentProvider) provider).getContentInputStream(contentPath);
-                    if (contentInputStream != null) {
-                        return contentInputStream;
-                    }
-                } catch (IOException e) {
-                    logger.debug("Unable to get content input stream", e);
-                }
+        IContentProvider contentProvider = contentProviders.get(provider);
+        InputStream contentInputStream = null;
+        try {
+            contentInputStream = contentProvider.getContentInputStream(contentPath);
+            if (contentInputStream != null) {
+                return contentInputStream;
             }
+        } catch (IOException e) {
+            logger.debug("Unable to get content input stream", e);
+
         }
 
-        logger.info("Resource not found for content: {}", contentPath);
+        logger.debug("Resource not found for content: {}", contentPath);
 
         return null;
     }
