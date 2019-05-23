@@ -1,7 +1,5 @@
 package org.jumpmind.pos.core.clientconfiguration;
 
-import org.jumpmind.pos.core.flow.In;
-import org.jumpmind.pos.core.flow.ScopeType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -13,28 +11,30 @@ import java.util.stream.Collectors;
 
 @Component
 @ConfigurationProperties(prefix = "openpos.clientConfiguration")
-@Scope("device")
+@Scope("prototype")
 public class DefaultClientConfigSelector implements IClientConfigSelector {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private List<String> personalizationParamsForTags = new ArrayList<>();
+    private List<String> propertiesForTags = new ArrayList<>();
     private List<ClientConfigurationSet> clientConfigSets = new ArrayList<>();
 
-    @In(scope = ScopeType.Device, required = false)
-    Map<String, String> personalizationProperties;
-
     @Override
-    public Map<String, Map<String, String>> getConfigurations() {
+    public Map<String, Map<String, String>> getConfigurations(Map<String, String> properties, List<String> additionalTags) {
 
         Map<String, Map<String, String>> configurations = new HashMap<>();
         List<List<String>> tagGroups = new ArrayList<>();
         List<String> tagsForSpecificity = new ArrayList<>();
 
+        if( additionalTags != null ) {
+            // Pass along all the additional tags
+            tagsForSpecificity.addAll(additionalTags);
+        }
+
         // Lookup the values for our tags
-        personalizationParamsForTags.forEach(s -> {
-            if (personalizationProperties.containsKey(s)) {
-                tagsForSpecificity.add(personalizationProperties.get(s));
+        propertiesForTags.forEach(s -> {
+            if (properties.containsKey(s)) {
+                tagsForSpecificity.add(properties.get(s));
             } else {
                 logger.error("Could not find personalization parameter {}", s);
             }
@@ -70,19 +70,19 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
         return configurations;
     }
 
-    public List<String> getPersonalizationParamsForTags() {
-        return personalizationParamsForTags;
-    }
-
-    public void setPersonalizationParamsForTags(List<String> personalizationParamsForTags) {
-        this.personalizationParamsForTags = personalizationParamsForTags;
-    }
-
     public List<ClientConfigurationSet> getClientConfigSets() {
         return clientConfigSets;
     }
 
     public void setClientConfigSets(List<ClientConfigurationSet> clientConfigSets) {
         this.clientConfigSets = clientConfigSets;
+    }
+
+    public List<String> getPropertiesForTags() {
+        return propertiesForTags;
+    }
+
+    public void setPropertiesForTags(List<String> propertiesForTags) {
+        this.propertiesForTags = propertiesForTags;
     }
 }

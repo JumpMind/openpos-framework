@@ -109,8 +109,6 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                 errorDialog.setMessage(Arrays.asList(incompatibleVersionMessage.split("\n")));
                 messageService.sendMessage(appId, deviceId, errorDialog);
             } else {
-                sendClientConfiguration(appId, deviceId, sessionId);
-                sendClientConfigurations(appId, deviceId, sessionId);
                 if (!created) {
                     stateManager.refreshScreen();
                 }
@@ -128,45 +126,4 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             stateManagerContainer.setCurrentStateManager(null);
         }
     }
-
-    private void sendClientConfiguration(String appId, String deviceId, String sessionId) {
-        try {
-            String theme = null;
-            org.jumpmind.pos.core.model.ClientConfiguration config = null;
-            IConfigSelector configSelector = applicationContext.getBean(IConfigSelector.class);
-            if (configSelector != null) {
-                theme = configSelector.getTheme();
-                log.info("Config Selector Chose theme: {}", theme);
-                config = configSelector.getClientConfig();
-            } 
-            
-            ConfigChangedMessage configMessage = new ConfigChangedMessage(theme, config, Versions.getVersions());
-            messageService.sendMessage(appId, deviceId, configMessage);
-
-        } catch (NoSuchBeanDefinitionException e) {
-            log.info("An {} is not configured.  Will not be sending client configuration to the client",
-                    IConfigSelector.class.getSimpleName());
-        }
-    }
-
-    private void sendClientConfigurations(String appId, String deviceId, String sessionId) {
-        try{
-            Map<String, Map<String,String>> configs = null;
-            IClientConfigSelector selector = applicationContext.getBean(IClientConfigSelector.class);
-            if( selector != null) {
-                configs = selector.getConfigurations();
-                configs.forEach((name, clientConfiguration) -> messageService.sendMessage(appId, deviceId, new ClientConfigChangedMessage(name, clientConfiguration)));
-            }
-
-            // Send versions
-            ClientConfigChangedMessage versionConfiguration = new ClientConfigChangedMessage("versions");
-            versionConfiguration.put("versions", Versions.getVersions());
-            messageService.sendMessage( appId, deviceId, versionConfiguration);
-
-        } catch (NoSuchBeanDefinitionException e) {
-            log.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
-                    IClientConfigSelector.class.getSimpleName());
-        }
-    }
-
 }

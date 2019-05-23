@@ -1,7 +1,6 @@
 package org.jumpmind.pos.translate.state;
 
-import java.util.Arrays;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -10,12 +9,7 @@ import java.util.stream.StreamSupport;
 import org.jumpmind.pos.core.device.DefaultDeviceResponse;
 import org.jumpmind.pos.core.device.IDeviceRequest;
 import org.jumpmind.pos.core.device.IDeviceResponse;
-import org.jumpmind.pos.core.flow.ActionHandler;
-import org.jumpmind.pos.core.flow.IState;
-import org.jumpmind.pos.core.flow.IStateManager;
-import org.jumpmind.pos.core.flow.In;
-import org.jumpmind.pos.core.flow.Out;
-import org.jumpmind.pos.core.flow.ScopeType;
+import org.jumpmind.pos.core.flow.*;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.core.service.IDeviceService;
@@ -119,6 +113,34 @@ public class TranslatorState implements IState {
                 @Override
                 public void doAction(Action action) {
                     stateManager.doAction(action);
+                }
+
+                @Override
+                public void addConfigurationTag(String tag){
+                    List<String> tags = stateManager.getApplicationState().getScopeValue("additionalTagsForConfiguration");
+                    if( tags == null ){
+                        tags = new ArrayList<>();
+                        stateManager.getApplicationState().getScope().setDeviceScope("additionalTagsForConfiguration", tags);
+                    }
+                    if( tags.stream().filter(t -> t.equals(tag)).count() < 1){
+                        tags.add(tag);
+                    }
+                    stateManager.sendConfigurationChangedMessage();
+                }
+
+                @Override
+                public void removeConfigurationTag(String tag){
+                    List<String> tags = stateManager.getApplicationState().getScopeValue("additionalTagsForConfiguration");
+                    if( tags != null) {
+                        for (int i = 0; i < tags.size(); i++) {
+                            if( tags.get(i).equals(tag)){
+                                tags.remove(i);
+                                break;
+                            }
+                        }
+
+                    }
+                    stateManager.sendConfigurationChangedMessage();
                 }
 
                 @Override
