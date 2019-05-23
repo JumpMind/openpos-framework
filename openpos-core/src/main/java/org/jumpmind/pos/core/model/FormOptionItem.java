@@ -13,8 +13,15 @@ public class FormOptionItem implements Serializable {
     private ActionItem optionAction;
     private String instructions;
     private boolean enabled=true;
+    
+    public FormOptionItem() {}
 
-    public Form getForm() {
+    public FormOptionItem(String id, String label, String iconType) {
+    	setName(label);
+    	setIcon(iconType);
+	}
+
+	public Form getForm() {
         return form;
     }
     public void setForm(Form form) {
