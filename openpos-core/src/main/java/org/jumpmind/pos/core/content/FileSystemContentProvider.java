@@ -3,7 +3,7 @@ package org.jumpmind.pos.core.content;
 import java.io.IOException;
 import java.io.InputStream;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -11,10 +11,10 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 import org.springframework.stereotype.Component;
 
 @Component("fileSystemContentProvider")
-@ConfigurationProperties(prefix = "openpos.ui.content.file-system")
 @Scope("device")
 public class FileSystemContentProvider extends AbstractFileContentProvider {
 
+    @Value("${openpos.ui.content.file-system.baseContentPath:content/}")
     String baseContentPath;
 
     @Override
@@ -27,6 +27,10 @@ public class FileSystemContentProvider extends AbstractFileContentProvider {
             urlBuilder.append(contentPath);
             urlBuilder.append(PROVIDER_TOKEN);
             urlBuilder.append("fileSystemContentProvider");
+            if (this.contentVersion != null) {
+                urlBuilder.append(VERSION_TOKEN);
+                urlBuilder.append(this.contentVersion);
+            }
 
             return urlBuilder.toString();
         }

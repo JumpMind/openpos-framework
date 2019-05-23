@@ -23,6 +23,8 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
 
     public static final String PROVIDER_TOKEN = "&provider=";
 
+    public static final String VERSION_TOKEN = "&version=";
+    
     final Logger logger = LoggerFactory.getLogger(getClass());
 
     @Value("${openpos.ui.content.file.providerProperties:null}")
@@ -30,6 +32,9 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
 
     @Value("${openpos.ui.content.file.supportedFileTypes:null}")
     String[] supportedFileTypes;
+
+    @Value("${openpos.ui.content.file.contentVersion:null}")
+    String contentVersion;
 
     @In(scope = ScopeType.Device, required = false)
     Map<String, String> personalizationProperties;
@@ -167,6 +172,14 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
 
     public void setSupportedFileTypes(String[] supportedFileTypes) {
         this.supportedFileTypes = supportedFileTypes;
+    }
+
+    public String getContentVersion() {
+        return contentVersion;
+    }
+
+    public void setContentVersion(String contentVersion) {
+        this.contentVersion = contentVersion;
     }
 
     public class ContentIndex {

@@ -29,6 +29,10 @@ public class ClassPathContentProvider extends AbstractFileContentProvider {
             urlBuilder.append(contentPath);
             urlBuilder.append(PROVIDER_TOKEN);
             urlBuilder.append("classPathContentProvider");
+            if (this.contentVersion != null) {
+                urlBuilder.append(VERSION_TOKEN);
+                urlBuilder.append(this.contentVersion);
+            }
 
             return urlBuilder.toString();
         }
