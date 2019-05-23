@@ -116,7 +116,7 @@ public class TranslatorState implements IState {
                 }
 
                 @Override
-                public void addConfigurationTag(String tag){
+                public void addClientConfigurationTag(String tag){
                     List<String> tags = stateManager.getApplicationState().getScopeValue("additionalTagsForConfiguration");
                     if( tags == null ){
                         tags = new ArrayList<>();
@@ -129,7 +129,7 @@ public class TranslatorState implements IState {
                 }
 
                 @Override
-                public void removeConfigurationTag(String tag){
+                public void removeClientConfigurationTag(String tag){
                     List<String> tags = stateManager.getApplicationState().getScopeValue("additionalTagsForConfiguration");
                     if( tags != null) {
                         for (int i = 0; i < tags.size(); i++) {

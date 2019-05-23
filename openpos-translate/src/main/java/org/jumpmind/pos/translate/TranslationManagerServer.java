@@ -260,9 +260,9 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
 
                 if( lastScreenTrainingMode != posSessionInfo.isTrainingMode() ){
                     if(posSessionInfo.isTrainingMode()) {
-                        subscriber.addConfigurationTag("training-mode");
+                        subscriber.addClientConfigurationTag("training-mode");
                     } else {
-                        subscriber.removeConfigurationTag("training-mode");
+                        subscriber.removeClientConfigurationTag("training-mode");
                     }
                     lastScreenTrainingMode = posSessionInfo.isTrainingMode();
                 }

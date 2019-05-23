@@ -77,6 +77,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             } else {
                 stateManager.registerQueryParams(queryParams);
                 stateManager.registerPersonalizationProperties(personalizationProperties);
+                stateManager.sendConfigurationChangedMessage();
             }
 
             stateManagerContainer.setCurrentStateManager(stateManager);
