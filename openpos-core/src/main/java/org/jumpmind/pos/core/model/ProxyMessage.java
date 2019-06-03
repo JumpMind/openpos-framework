@@ -2,7 +2,7 @@ package org.jumpmind.pos.core.model;
 
 import org.jumpmind.pos.util.model.Message;
 
-public class NativeMessage extends Message {
+public class ProxyMessage extends Message {
 
     private static final long serialVersionUID = 1L;
     
@@ -10,8 +10,8 @@ public class NativeMessage extends Message {
     
     Object payload;
 
-    public NativeMessage() {
-        this.setType(MessageType.Native);
+    public ProxyMessage() {
+        this.setType(MessageType.Proxy);
     }
     
     public void setSubType(String subType) {

@@ -10,6 +10,6 @@ public final class MessageType {
     public static final String Toast = "Toast";
     public static final String Loading = "Loading";
     public static final String ConfigChanged = "ConfigChanged";
-    public static final String Native = "Native";
+    public static final String Proxy = "Proxy";
     
 }
