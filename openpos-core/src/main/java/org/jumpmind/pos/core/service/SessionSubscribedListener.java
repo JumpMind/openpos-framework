@@ -1,13 +1,12 @@
 package org.jumpmind.pos.core.service;
 
-import java.util.Arrays;
-import java.util.Map;
-
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.core.screen.DialogProperties;
-import org.jumpmind.pos.core.screen.DialogScreen;
 import org.jumpmind.pos.core.screen.IconType;
+import org.jumpmind.pos.core.ui.message.DialogUIMessage;
+import org.jumpmind.pos.core.ui.messagepart.DialogHeaderPart;
+import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 import org.jumpmind.pos.server.config.MessageUtils;
 import org.jumpmind.pos.server.config.PersonalizationParameters;
 import org.jumpmind.pos.server.config.SessionSubscribedEvent;
@@ -22,6 +21,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
+
+import java.util.Arrays;
+import java.util.Map;
 
 @Component
 public class SessionSubscribedListener implements ApplicationListener<SessionSubscribedEvent>, MessageUtils {
@@ -79,16 +81,18 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             stateManager.setSessionCompatible(sessionId, sessionAuthTracker.isSessionCompatible(sessionId));
 
             if (!stateManager.isSessionAuthenticated(sessionId)) {
-                DialogScreen errorDialog = new DialogScreen();
+                DialogUIMessage errorDialog = new DialogUIMessage();
+                DialogHeaderPart header = new DialogHeaderPart();
                 errorDialog.asDialog(new DialogProperties(false));
-                errorDialog.setIcon(IconType.Error);
-                errorDialog.setTitle("Failed Authentication");
+                header.setHeaderIcon(IconType.Error);
+                header.setHeaderText("Failed Authentication");
+                errorDialog.addMessagePart(MessagePartConstants.DialogHeader, header);
                 errorDialog.setMessage(Arrays.asList("The client and server authentication tokens did not match"));
                 messageService.sendMessage(appId, deviceId, errorDialog);
             } else if (!stateManager.isSessionCompatible(sessionId)) {
                 log.warn("Client compatiblity version of '{}' for deviceId '{}' is not compatible with the server", compatibilityVersion,
                         deviceId);
-                DialogScreen errorDialog = new DialogScreen();
+                DialogUIMessage errorDialog = new DialogUIMessage();
                 // If there is no compatibility version, the client is an older
                 // client that used the type attribute
                 // instead of the screenType attribute for the screen type
@@ -98,8 +102,10 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                     errorDialog.setType(errorDialog.getScreenType());
                 }
                 errorDialog.asDialog(new DialogProperties(false));
-                errorDialog.setIcon(IconType.Error);
-                errorDialog.setTitle("Incompatible Versions");
+                DialogHeaderPart header = new DialogHeaderPart();
+                header.setHeaderIcon(IconType.Error);
+                header.setHeaderText("Incompatible Versions");
+                errorDialog.addMessagePart(MessagePartConstants.DialogHeader, header);
                 errorDialog.setMessage(Arrays.asList(incompatibleVersionMessage.split("\n")));
                 messageService.sendMessage(appId, deviceId, errorDialog);
             } else {
@@ -110,10 +116,12 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
 
         } catch (Exception ex) {
             log.error("Failed to subscribe to " + topicName, ex);
-            DialogScreen errorDialog = new DialogScreen();
+            DialogUIMessage errorDialog = new DialogUIMessage();
             errorDialog.asDialog(new DialogProperties(false));
-            errorDialog.setIcon(IconType.Error);
-            errorDialog.setTitle("Failed To Subscribe");
+            DialogHeaderPart header = new DialogHeaderPart();
+            header.setHeaderIcon(IconType.Error);
+            header.setHeaderText("Failed To Subscribe");
+            errorDialog.addMessagePart(MessagePartConstants.DialogHeader, header);
             errorDialog.setMessage(Arrays.asList(ex.getMessage()));
             messageService.sendMessage(appId, deviceId, errorDialog);
         } finally {
