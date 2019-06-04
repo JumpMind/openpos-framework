@@ -79,5 +79,4 @@ public interface IconType {
     public static final String KebabMenu = "KebabMenu"; //more_vert
     public static final String OrderHistory = "OrderHistory";
     public static final String OrderSearch = "OrderSearch";//shopping_cart
-            
-}
+    public static final String EChecks = "EChecks";//EChecks
