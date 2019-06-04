@@ -21,6 +21,7 @@ import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.content.ContentProviderService;
 import org.jumpmind.pos.core.flow.ApplicationState;
@@ -81,17 +82,11 @@ public class ScreenService implements IScreenService, IActionListener {
 
     List<IScreenInterceptor> screenInterceptors = new ArrayList<>();
 
-    boolean atRest = true;
-
     @PostConstruct
     public void init() {
         if (!jsonIncludeNulls) {
             mapper.setSerializationInclusion(Include.NON_NULL);
         }
-    }
-
-    public boolean isAtRest() {
-        return atRest;
     }
 
     public void setScreenInterceptors(List<IScreenInterceptor> screenInterceptors) {
@@ -103,7 +98,10 @@ public class ScreenService implements IScreenService, IActionListener {
 
     @SuppressWarnings("deprecation")
     @RequestMapping(method = RequestMethod.GET, value = "api/appId/{appId}/deviceId/{deviceId}/content")
-    public void getImageAsByteArray(HttpServletResponse response, @PathVariable String appId, @PathVariable String deviceId,
+    public void getImageAsByteArray(
+            HttpServletResponse response,
+            @PathVariable String appId,
+            @PathVariable String deviceId,
             @RequestParam(name = "contentPath", required = true) String contentPath,
             @RequestParam(name = "provider", required = true) String provider) throws IOException {
 
@@ -193,40 +191,35 @@ public class ScreenService implements IScreenService, IActionListener {
 
     @Override
     public void actionOccured(String appId, String deviceId, Action action) {
-        try {
-            atRest = false;
-            IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
-            if (stateManager != null) {
-                try {
-                    stateManagerContainer.setCurrentStateManager(stateManager);
-                    if (SessionTimer.ACTION_KEEP_ALIVE.equals(action.getName())) {
-                        stateManager.keepAlive();
-                    } else if ("Refresh".equals(action.getName())) {
-                        UIMessage lastDialog = getLastDialog(appId, deviceId);
-                        logger.info("Received Refresh action from {}", deviceId);
-                        showScreen(appId, deviceId, getLastScreen(appId, deviceId));
-                        showScreen(appId, deviceId, lastDialog);
-                    } else {
+        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+        if (stateManager != null) {
+            try {
+                stateManagerContainer.setCurrentStateManager(stateManager);
+                if (SessionTimer.ACTION_KEEP_ALIVE.equals(action.getName())) {
+                    stateManager.keepAlive();
+                } else if ("Refresh".equals(action.getName())) {
+                    UIMessage lastDialog = getLastDialog(appId, deviceId);
+                    logger.info("Received Refresh action from {}", deviceId);
+                    showScreen(appId, deviceId, getLastScreen(appId, deviceId));
+                    showScreen(appId, deviceId, lastDialog);
+                } else {
 
-                        deserializeForm(stateManager.getApplicationState(), action);
+                    deserializeForm(stateManager.getApplicationState(), action);
 
-                        logger.info("Received action from {}\n{}", deviceId, logFormatter.toJsonString(action));
+                    logger.info("Received action from {}\n{}", deviceId, logFormatter.toJsonString(action));
 
-                        try {
-                            logger.debug("Posting action {}", action);
-                            stateManager.doAction(action);
-                        } catch (Throwable ex) {
-                            logger.error(String.format("Unexpected exception while processing action from %s: %s", deviceId, action), ex);
-                            messageService.sendMessage(appId, deviceId, Toast.createWarningToast(
-                                    "The application received an unexpected error. Please report to the appropriate technical personnel"));
-                        }
+                    try {
+                        logger.debug("Posting action {}", action);
+                        stateManager.doAction(action);
+                    } catch (Throwable ex) {
+                        logger.error(String.format("Unexpected exception while processing action from %s: %s", deviceId, action), ex);
+                        messageService.sendMessage(appId, deviceId, Toast.createWarningToast(
+                                "The application received an unexpected error. Please report to the appropriate technical personnel"));
                     }
-                } finally {
-                    stateManagerContainer.setCurrentStateManager(null);
                 }
+            } finally {
+                stateManagerContainer.setCurrentStateManager(null);
             }
-        } finally {
-            atRest = true;
         }
     }
 
@@ -263,57 +256,73 @@ public class ScreenService implements IScreenService, IActionListener {
             return null;
         }
     }
+    
+    @Override
+    public UIMessage getLastPreInterceptedScreen(String appId, String deviceId) {
+        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+        ApplicationState applicationState = stateManager != null ? stateManager.getApplicationState() : null;
+        if (applicationState != null) {
+            return applicationState.getLastPreInterceptedScreen();
+        } else {
+            return null;
+        }
+    }
+    
+    @Override
+    public UIMessage getLastPreInterceptedDialog(String appId, String deviceId) {
+        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+        ApplicationState applicationState = stateManager != null ? stateManager.getApplicationState() : null;
+        if (applicationState != null) {
+            return applicationState.getLastPreInterceptedDialog();
+        } else {
+            return null;
+        }
+    }
 
     @Override
     public void showToast(String appId, String nodeId, Toast toast) {
-        try {
-            atRest = false;
-            messageService.sendMessage(appId, nodeId, toast);
-        } finally {
-            atRest = true;
-        }
-
+        messageService.sendMessage(appId, nodeId, toast);
     }
 
     @Override
     public void showScreen(String appId, String deviceId, UIMessage screen) {
-        try {
-            atRest = false;
-            IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
-            if (screen != null && stateManager != null) {
-                ApplicationState applicationState = stateManager.getApplicationState();
-                screen.setSequenceNumber(applicationState.incrementAndScreenSequenceNumber());
-                try {
-                    interceptScreen(appId, deviceId, screen);
-                    logScreenTransition(deviceId, screen);
-                } catch (Exception ex) {
-                    if (ex.toString().contains("org.jumpmind.pos.core.screen.ChangeScreen")) {
-                        logger.error(
-                                "Failed to write screen to JSON. Verify the screen type has been configured by calling setType() on the screen object.",
-                                ex);
-                    } else {
-                        logger.error("Failed to write screen to JSON", ex);
-                    }
-                }
-                if (!stateManager.areAllSessionsAuthenticated()) {
-                    logger.warn("Not sending screen because a session is attached that is not authenticated");
-                } else if (!stateManager.areAllSessionsCompatible()) {
-                    logger.warn("Not sending screen because a session is attached that is not compatible");
+        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+        if (screen != null && stateManager != null) {
+            ApplicationState applicationState = stateManager.getApplicationState();
+            screen.setSequenceNumber(applicationState.incrementAndScreenSequenceNumber());
 
+            UIMessage preInterceptedScreen = null;
+            try {
+                preInterceptedScreen = SerializationUtils.clone(screen);
+                interceptScreen(appId, deviceId, screen);
+                logScreenTransition(deviceId, screen);
+            } catch (Exception ex) {
+                if (ex.toString().contains("org.jumpmind.pos.core.screen.ChangeScreen")) {
+                    logger.error(
+                            "Failed to write screen to JSON. Verify the screen type has been configured by calling setType() on the screen object.",
+                            ex);
                 } else {
-                    messageService.sendMessage(appId, deviceId, screen);
-                }
-                if (screen.isDialog()) {
-                    applicationState.setLastDialog(screen);
-                } else if (!screen.getScreenType().equals("NoOp")) {
-                    applicationState.setLastScreen(screen);
-                    applicationState.setLastDialog(null);
+                    logger.error("Failed to write screen to JSON", ex);
                 }
             }
-        } finally {
-            atRest = true;
-        }
+            if (!stateManager.areAllSessionsAuthenticated()) {
+                logger.warn("Not sending screen because a session is attached that is not authenticated");
+            } else if (!stateManager.areAllSessionsCompatible()) {
+                logger.warn("Not sending screen because a session is attached that is not compatible");
 
+            } else {
+                messageService.sendMessage(appId, deviceId, screen);
+            }
+            if (screen.isDialog()) {
+                applicationState.setLastDialog(screen);
+                applicationState.setLastPreInterceptedDialog(preInterceptedScreen);
+            } else if (!screen.getScreenType().equals("NoOp")) {
+                applicationState.setLastScreen(screen);
+                applicationState.setLastPreInterceptedScreen(preInterceptedScreen);
+                applicationState.setLastDialog(null);
+                applicationState.setLastPreInterceptedDialog(null);
+            }
+        }
     }
 
     protected void interceptScreen(String appId, String deviceId, UIMessage screen) {

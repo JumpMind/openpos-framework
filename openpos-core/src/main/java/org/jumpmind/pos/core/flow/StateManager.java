@@ -359,8 +359,9 @@ public class StateManager implements IStateManager {
          * Hang onto the dialog since showing the last screen first will clear
          * the last dialog from the screen service
          */
-        UIMessage lastDialog = screenService.getLastDialog(applicationState.getAppId(), applicationState.getDeviceId());
-        showScreen(screenService.getLastScreen(applicationState.getAppId(), applicationState.getDeviceId()));
+        UIMessage lastDialog = screenService.getLastPreInterceptedDialog(applicationState.getAppId(), applicationState.getDeviceId());
+        UIMessage lastScreen = screenService.getLastPreInterceptedScreen(applicationState.getAppId(), applicationState.getDeviceId());
+        showScreen(lastScreen);
         showScreen(lastDialog);
     }
 

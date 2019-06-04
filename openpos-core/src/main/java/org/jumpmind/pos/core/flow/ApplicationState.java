@@ -43,6 +43,8 @@ public class ApplicationState {
     private int screenSequenceNumber = 0;
     private UIMessage lastScreen;
     private UIMessage lastDialog;
+    private UIMessage lastPreInterceptedScreen;
+    private UIMessage lastPreInterceptedDialog;
 
     public Scope getScope() {
         return scope;
@@ -102,6 +104,22 @@ public class ApplicationState {
     
     public UIMessage getLastScreen() {
         return lastScreen;
+    }
+    
+    public void setLastPreInterceptedScreen(UIMessage lastPreInterceptedScreen) {
+        this.lastPreInterceptedScreen = lastPreInterceptedScreen;
+    }
+    
+    public UIMessage getLastPreInterceptedScreen() {
+        return lastPreInterceptedScreen;
+    }
+    
+    public void setLastPreInterceptedDialog(UIMessage lastPreInterceptedDialog) {
+        this.lastPreInterceptedDialog = lastPreInterceptedDialog;
+    }
+    
+    public UIMessage getLastPreInterceptedDialog() {
+        return lastPreInterceptedDialog;
     }
 
     public Object getScopeValue(ScopeType scopeType, String name) {

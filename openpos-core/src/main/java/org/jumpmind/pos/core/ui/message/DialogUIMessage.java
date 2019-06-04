@@ -7,9 +7,11 @@ import org.jumpmind.pos.core.ui.messagepart.DialogHeaderPart;
 import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class DialogUIMessage extends UIMessage {
+    private static final long serialVersionUID = 1L;
 
     private List<ActionItem> buttons = new ArrayList<>();
 
@@ -30,6 +32,11 @@ public class DialogUIMessage extends UIMessage {
         this.addButton(button);
     }
 
+    public void setTitle(String title) {
+        DialogHeaderPart dialogHeader = new DialogHeaderPart(title);
+        addMessagePart(MessagePartConstants.DialogHeader, dialogHeader);
+    }
+
     public List<ActionItem> getButtons() {
         return buttons;
     }
@@ -46,6 +53,10 @@ public class DialogUIMessage extends UIMessage {
         return message;
     }
 
+    public void setMessage(String... messages) {
+        this.setMessage(Arrays.asList(messages));
+    }
+    
     public void setMessage(List<String> message) {
         this.message = message;
     }
