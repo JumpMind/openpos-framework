@@ -2,6 +2,7 @@ package org.jumpmind.pos.core.flow;
 
 import java.util.Locale;
 
+import org.apache.commons.lang3.LocaleUtils;
 import org.jumpmind.pos.core.model.LocaleChangedMessage;
 import org.jumpmind.pos.core.service.ClientLocaleService;
 import org.jumpmind.pos.server.model.Action;
@@ -22,7 +23,7 @@ public class LanguageSelectedGlobalActionHandler {
     @OnGlobalAction
     public void handleAction(Action action) {
 
-        Locale locale = new Locale(action.getData());
+        Locale locale = LocaleUtils.toLocale(action.getData());
         clientLocaleService.setLocale(locale);
         messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), new LocaleChangedMessage(locale));
         stateManager.refreshScreen();
