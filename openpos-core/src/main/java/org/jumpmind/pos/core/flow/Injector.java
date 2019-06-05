@@ -171,14 +171,14 @@ public class Injector {
             }            
         }
 
-        if (value != null) {
+        if (value != null && value.getValue() != null) {
             try {
                 field.set(target, value.getValue());
             } catch (Exception ex) {
                 throw new FlowException("Failed to set target field " + field + " to value " + value.getValue(), ex);
             }
         } else if (required) {            
-            throw failedToResolveInjection(field, name, targetClass, target, scope, currentContext);
+            throw failedToResolveInjection(field, name, targetClass, target, scope, currentContext, scopeType);
         }
     }
 
@@ -223,11 +223,11 @@ public class Injector {
             Class<?> targetClass,
             Object target,
             Scope scope,
-            StateContext currentContext) {
+            StateContext currentContext, ScopeType scopeType) {
 
         StringBuilder buff = new StringBuilder();
-        buff.append(String.format("Failed to resolve required injection '%s' for field %s\n", name, field));
-        buff.append("Tried the following contexts:\n");
+        buff.append(String.format("Failed to resolve required injection '%s' for field %s at scope %s\n", name, field, scopeType));
+        buff.append("The following values are in scope:\n");
         buff.append(printScopeValues(scope, currentContext));
 
         throw new FlowException(buff.toString());
