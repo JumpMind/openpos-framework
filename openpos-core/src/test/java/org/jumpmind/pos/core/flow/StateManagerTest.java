@@ -90,7 +90,7 @@ public class StateManagerTest {
                 .withTransition("CustomerSelected", CompleteState.class)
                 .withSubTransition("CustomerSignup", customerSignupFlow, "CustomerSignupComplete").build());
         customerFlow.add(FlowBuilder.addState(CustomerSearchState.class).withTransition("CustomerSelected", CompleteState.class).build());
-        customerFlow.addGlobalTransition("Help", HelpState.class);
+        customerFlow.addGlobalTransitionOrActionHandler("Help", HelpState.class);
         customerFlow.addGlobalSubTransition("CustomerSignup", customerSignupFlow);
         customerFlow.add(FlowBuilder.addState(HelpState.class).withTransition("Back", CustomerState.class).build());
         
@@ -123,13 +123,13 @@ public class StateManagerTest {
         
 
 
-        config.addGlobalTransition("Help", HelpState.class);
-        config.addGlobalTransition("About", AboutState.class);
-        config.addGlobalTransition("Home", HomeState.class);
-        config.addGlobalTransition("RepostActionState", RepostActionState.class);
-        config.addGlobalTransition("RepostActionStateGotToSell", SellState.class);
-        config.addGlobalTransition("TestTransitionProceed", HomeState.class);
-        config.addGlobalTransition("TestTransitionCancel", HomeState.class);
+        config.addGlobalTransitionOrActionHandler("Help", HelpState.class);
+        config.addGlobalTransitionOrActionHandler("About", AboutState.class);
+        config.addGlobalTransitionOrActionHandler("Home", HomeState.class);
+        config.addGlobalTransitionOrActionHandler("RepostActionState", RepostActionState.class);
+        config.addGlobalTransitionOrActionHandler("RepostActionStateGotToSell", SellState.class);
+        config.addGlobalTransitionOrActionHandler("TestTransitionProceed", HomeState.class);
+        config.addGlobalTransitionOrActionHandler("TestTransitionCancel", HomeState.class);
         config.addGlobalSubTransition("CustomerLookupGlobal", customerFlow);
         // config.addGlobalSubTransition("VendorList", vendorFlow);
 

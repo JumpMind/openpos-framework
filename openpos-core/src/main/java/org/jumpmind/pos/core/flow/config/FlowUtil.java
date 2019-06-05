@@ -27,18 +27,19 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
 import org.jumpmind.pos.core.flow.IState;
 import org.jumpmind.pos.core.flow.OnArrive;
+import org.jumpmind.pos.core.flow.OnGlobalAction;
 
 public class FlowUtil {
-    
+
     private static final Logger log = Logger.getLogger(FlowUtil.class);
-    
+
     public static String getStateName(Class<? extends Object> state) {
         // TODO may consider annotation in the future.
         return state.getSimpleName();
     }
-    
+
     public static boolean isState(Class<? extends Object> clazz) {
-        try {            
+        try {
             List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnArrive.class, true, true);
             if ((IState.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(IState.class)) || (methods != null && !methods.isEmpty())) {
                 return true;
@@ -50,4 +51,19 @@ public class FlowUtil {
             return false;
         }
     }
+
+    public static boolean isGlobalActionHandler(Class<? extends Object> clazz) {
+        try {
+            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnGlobalAction.class, true, true);
+            if (methods != null && !methods.isEmpty()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Throwable ex) {
+            log.debug("Failed to check isGlobalActionHandler on clazz " + clazz, ex);
+            return false;
+        }
+    }
+
 }

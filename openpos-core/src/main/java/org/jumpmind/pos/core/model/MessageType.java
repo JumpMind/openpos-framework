@@ -11,5 +11,6 @@ public final class MessageType {
     public static final String Loading = "Loading";
     public static final String ConfigChanged = "ConfigChanged";
     public static final String Proxy = "Proxy";
+    public static final String LocaleChanged = "LocaleChanged";
     
 }
