@@ -1,29 +1,21 @@
 package org.jumpmind.pos.service.strategy;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.jumpmind.pos.service.PosServerException;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.web.ConfiguredRestTemplate;
 import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 @Component(RemoteOnlyStrategy.REMOTE_ONLY_STRATEGY)
 public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements IInvocationStrategy {
@@ -35,7 +27,7 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
     }
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
         int httpTimeoutInSecond = config.getHttpTimeout();
         ConfiguredRestTemplate template = new ConfiguredRestTemplate(httpTimeoutInSecond);
         RequestMapping mapping = method.getAnnotation(RequestMapping.class);

@@ -8,6 +8,7 @@ import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
+import java.util.Map;
 
 @Component(SimulatedRemoteStrategy.SIMULATED_REMOTE_STRATEGY)
 public class SimulatedRemoteStrategy extends LocalOnlyStrategy implements IInvocationStrategy {
@@ -20,7 +21,7 @@ public class SimulatedRemoteStrategy extends LocalOnlyStrategy implements IInvoc
     }
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Object[] args) throws Throwable {
+    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
         ObjectMapper mapper = DefaultObjectMapper.build();
         mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -28,7 +29,7 @@ public class SimulatedRemoteStrategy extends LocalOnlyStrategy implements IInvoc
         for (int i = 0; i < args.length; i++) {
             newArgs[i] = mapper.readValue(mapper.writeValueAsString(args[i]), args[i].getClass());
         }
-        Object retObj = super.invoke(config, proxy, method, newArgs);
+        Object retObj = super.invoke(config, proxy, method, endpoints, newArgs);
         return mapper.readValue(mapper.writeValueAsString(retObj), retObj.getClass());
     }
 }
