@@ -1,8 +1,5 @@
 package org.jumpmind.pos.service.strategy;
 
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-
 import org.jumpmind.pos.service.EndpointInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 
 abstract public class AbstractInvocationStrategy {
 
@@ -21,7 +21,7 @@ abstract public class AbstractInvocationStrategy {
     @Autowired
     protected EndpointInjector endpointInjector;
     
-    protected String buildPath(Method method) {
+    public static String buildPath(Method method) {
         StringBuilder path = new StringBuilder();
         RequestMapping clazzMapping = getRequestMapping(method);
         if (clazzMapping != null) {

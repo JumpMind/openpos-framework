@@ -18,11 +18,19 @@ public class YamlConfigProvider implements IFlowConfigProvider {
     private static final Logger log = Logger.getLogger(YamlConfigProvider.class);
 
     private YamlFlowConfigFileLoader flowConfigLoader = new YamlFlowConfigFileLoader();
-    private YamlConfigConverter flowConfigConverter = new YamlConfigConverter();
+    private YamlConfigConverter flowConfigConverter;
 
     protected Map<String, List<FlowConfig>> loadedFlowConfigs = new LinkedHashMap<String, List<FlowConfig>>();
     protected Map<String, List<YamlFlowConfig>> loadedYamlFlowConfigs = new HashMap<String, List<YamlFlowConfig>>();
     protected Map<String, String> appIdToStartFlowName = new HashMap<>();
+
+    public YamlConfigProvider() {
+        this(null);
+    }
+
+    public YamlConfigProvider(List<String> additionalPackages) {
+        flowConfigConverter = new YamlConfigConverter(additionalPackages);
+    }
 
     public void load(String appId, String path, String startFlowName) {
         appIdToStartFlowName.put(appId, startFlowName);

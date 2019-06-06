@@ -1,18 +1,8 @@
 package org.jumpmind.pos.service;
 
-import static com.github.tomakehurst.wiremock.client.WireMock.aResponse;
-import static com.github.tomakehurst.wiremock.client.WireMock.get;
-import static com.github.tomakehurst.wiremock.client.WireMock.post;
-import static com.github.tomakehurst.wiremock.client.WireMock.put;
-import static com.github.tomakehurst.wiremock.client.WireMock.status;
-import static com.github.tomakehurst.wiremock.client.WireMock.stubFor;
-import static com.github.tomakehurst.wiremock.client.WireMock.urlEqualTo;
-import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.math.BigDecimal;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
+import com.github.tomakehurst.wiremock.junit.WireMockRule;
 import org.jumpmind.pos.service.strategy.RemoteOnlyStrategy;
 import org.jumpmind.pos.util.model.ErrorResult;
 import org.jumpmind.pos.util.web.ConfiguredRestTemplate;
@@ -22,15 +12,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tomakehurst.wiremock.common.ConsoleNotifier;
-import com.github.tomakehurst.wiremock.junit.WireMockRule;
+import java.math.BigDecimal;
+
+import static com.github.tomakehurst.wiremock.client.WireMock.*;
+import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestServiceConfig.class })
@@ -49,7 +38,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(post(urlEqualTo("/check/deviceid/test001/version")).willReturn(status(200).withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(new TestResponse(new BigDecimal("1.11"), "abcd")))));
 
-        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testPost", String.class),
+        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testPost", String.class), null,
                 new Object[] { "test001" });
 
         assertNotNull(response);
@@ -62,7 +51,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(put(urlEqualTo("/check/deviceid/test001/yada")).willReturn(status(200).withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(new TestResponse(new BigDecimal("3.14"), "xyz")))));
 
-        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testPut", String.class, TestRequest.class),
+        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testPut", String.class, TestRequest.class), null,
                 new Object[] { "test001", new TestRequest("one", 1) });
 
         assertNotNull(response);
@@ -74,7 +63,7 @@ public class RemoteOnlyStrategyTest {
     public void testInvokeRemotePutWithNoResponse() throws Throwable {
         stubFor(put(urlEqualTo("/check/deviceid/test001/nuttin")).willReturn(status(200)));
 
-        handler.invoke(config(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class),
+        handler.invoke(config(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class), null,
                 new Object[] { "test001", new TestRequest("one", 1) });
 
     }
@@ -86,7 +75,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(put(urlEqualTo("/check/deviceid/test001/nuttin")).willReturn(aResponse().withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(result)).withStatus(501)));
         
-        handler.invoke(config(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class),
+        handler.invoke(config(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class), null,
                 new Object[] { "test001", new TestRequest("one", 1) });
 
     }
@@ -96,7 +85,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(get(urlEqualTo("/check/getmesomeofthat")).willReturn(status(200).withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(new TestResponse(new BigDecimal("3.14"), "xyz")))));
 
-        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testGet"), null);
+        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testGet"), null, null);
 
         assertNotNull(response);
         assertEquals(new BigDecimal("3.14"), response.total);
