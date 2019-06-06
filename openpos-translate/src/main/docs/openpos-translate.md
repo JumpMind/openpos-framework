@@ -1,6 +1,6 @@
 ---
 id: openpos-translate
-title: Openpos Translate
+title: OpenPOS Translate
 ---
 
 # Overview

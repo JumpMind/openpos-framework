@@ -8,13 +8,12 @@ import static org.junit.Assert.fail;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.IOUtils;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
-import org.jumpmind.pos.persist.DBSession;
-import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.persist.cars.CarModel;
 import org.jumpmind.pos.persist.cars.CarTrimTypeCode;
 import org.jumpmind.pos.persist.cars.RaceCarModel;
@@ -365,6 +364,46 @@ public class DBSessionTest {
             assertEquals(VIN1, hyundaiLookupedUp.getVin());
             assertEquals(CarTrimTypeCode.of("NEW_EX"), hyundaiLookupedUp.getCarTrimTypeCode());
             assertEquals(NEW_EX_CODE, hyundaiLookupedUp.getCarTrimTypeCode());
+            
+            db.close();
+        }
+    }
+    
+    @Test
+    public void testFindByFields() {
+        final String VIN1 = "KMHCN46C58U242743";
+        final String VIN2 = "KMHCN46C58U2427432342";
+        
+        {
+            DBSession db = sessionFactory.createDbSession();
+            CarModel someHyundai = new CarModel();
+            someHyundai.setVin(VIN1);
+            someHyundai.setMake("Hyundai");
+            someHyundai.setModel("Accent");
+            someHyundai.setModelYear("2005");
+            db.save(someHyundai);
+            db.close();
+        }
+        {
+            DBSession db = sessionFactory.createDbSession();
+            CarModel someHyundai = new CarModel();
+            someHyundai.setVin(VIN2);
+            someHyundai.setMake("Hyundai");
+            someHyundai.setModel("Elantra");
+            someHyundai.setModelYear("2005");
+            db.save(someHyundai);
+            db.close();
+        }        
+        
+        Map<String, Object> fieldValues = new HashMap<>();
+        fieldValues.put("vin", VIN1);
+        
+        {
+            DBSession db = sessionFactory.createDbSession();
+            List<CarModel> cars = db.findByFields(CarModel.class, fieldValues);
+            assertNotNull(cars);
+            assertEquals(1, cars.size());
+            assertEquals(VIN1, cars.get(0).getVin());
             
             db.close();
         }

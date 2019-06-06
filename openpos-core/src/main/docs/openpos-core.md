@@ -1,6 +1,6 @@
 ---
 id: openpos-core
-title: Core Project
+title: OpenPOS Flow Framework
 ---
 
 # Overview
@@ -63,9 +63,38 @@ public class HomeState {
 }
 ~~~~
 
-Scoped context values represent values which need to be held in memory and shared between states.  The currently logged in user or current transaction are common exmamples
+### Scoped Context Values (@In, @InOut, and @Out)
 
-TODO describe the scopes here.
+Scoped context values represent values which need to be **shared between states, transition steps, and action handlers.**  The currently logged in user or current transaction are common exmamples of scoped context values.
+
+Scoped values are injected into States using the @In annotation. You can also set scoped context values using the @Out annotation. The @InOut annotation combines the 2 concepts and will both attempt to inject an existing value and also "outject" the value back into the contet  after the state runs.
+
+~~~
+public class SaleState {
+
+    @In(scope = ScopeType.Session, required=false)
+    BusinessDate businessDate;
+
+    @InOut(scope = ScopeType.Conversation, required=false)
+    private RetailTransModel currentTransaction;
+
+    @OnArrive
+    public void arrive(Action action) {
+        showScreen();
+    }    
+
+}    
+~~~
+
+#### @In annotation options:
+* **name** - defaults to the name of the field. In the example above, the system will look for a value named businessDate and a value named currentTransaction.
+* **autoCreate** - defaults to false.  If if's true and no context value is found for the given name, then try to create and a supply a new object that matches the target type. The newly created object will then be in the contect and available for injection into other states per the scope rules.
+* **required** - defaults to true, it is a pre-condition of the state the named value must exist in the context prior to arriving at this state. For example all states that assume a transaciton and operate on the currentTransaction can leave this as the default of true and assume that there will be  a non-null currentTransaction when the state runs.
+* **scope** - scope defines how long a particular value will live and is useful for making sure that stale values don't bleed between flows, transactions, etc.  Each context value must be assigned to a specific scope.
+
+![eclipse](assets/openpos-scopes.png)
+
+### Flow Yaml Config Files
 
 States and their transitions are represented in "flow" yaml config files.  Consider this example"
 
@@ -97,11 +126,37 @@ Steps which execute during the transition from one state to another and can show
 
 ![eclipse](assets/openpos-state-transition.png)
 
+Transition steps are Spring beans which implement the ITransitionStep interface. Each TransitionStep has an **isApplication** method and **arrive** method which both receive a Transition object.  Transition steps can also use @Autowired and @In fields just like any state.
 
+When a transition step is complete, it should call **transition.proceed()**.  If the transition needs to be canceled, then call **stransition.cancel()**.
+
+~~~
+@Component
+@Order(150)
+public class UserLoginStep implements ITransitionStep {
+
+    @InOut(scope = ScopeType.Session, required = false)
+    protected UserModel currentUser;
+
+    @Override
+    public boolean isApplicable(Transition transition) {
+        return true;
+    }
+
+    @Override
+    public void arrive(Transition transition) {
+        promptForLogin();
+    }
+}
+~~~
 
 ### Substate / Subflows
 
-TODO diagram and explain sub flows.
+Normally, the state machine goes from state to state, with no concept of going "back" to a previous state.  All that is known (by default) is the current state and where that current state can transition to next. 
+
+But sometimes you want to run a shared state or flow, such as customer lookup, and then **return** to the current state. That is what a subflow does: it allows for transition to a new state (or a series of states, as defined by a subflow yaml, for example) without exiting the current state.  When the subflow completes, control is returned to the state where the subflow was launched from (using a **ReturnAction**)
+
+
 
 
 

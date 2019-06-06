@@ -6,7 +6,7 @@ task generateSourceArtifact(type: Copy) {
     }
     into('build/openpos-server-core-lib')
     from('../') {
-        exclude '**/target', '**/build', '**/bin', '**/src/test', 'openpos.code-workspace',
+        exclude '**/target', '**/build', '**/bin', '**/src/test/java', 'openpos.code-workspace',
                 'openpos-client-seed','openpos-cordova', 'openpos-test-module', 'openpos-cordova-log-plugin',
                 'node', 'azure-pipelines*.yml', '**/*.iml', '**/.project', '**/.classpath', '**/.gitignore', 
                 '**/.idea', '**/.settings', '**/.gradle'

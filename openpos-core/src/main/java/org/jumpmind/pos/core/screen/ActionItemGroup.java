@@ -1,9 +1,11 @@
 package org.jumpmind.pos.core.screen;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ActionItemGroup {
+public class ActionItemGroup implements Serializable {
+    private static final long serialVersionUID = 1L;
     
     private String title;
     private String keybind;

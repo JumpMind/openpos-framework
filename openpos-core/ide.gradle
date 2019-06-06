@@ -102,10 +102,10 @@ task testJar(type: Jar) {
 task develop {
     description 'Generates Eclipse artifacts and sets up your development environment'
     dependsOn tasks.cleanEclipse, tasks.eclipse, tasks.cleanIdea, tasks.idea
-    delete '.settings'
     doFirst {
-        println "Removing bin directory"
+        println "Removing bin and .settings directories"
         delete "./bin"
+        delete '.settings'
     }
 }
 

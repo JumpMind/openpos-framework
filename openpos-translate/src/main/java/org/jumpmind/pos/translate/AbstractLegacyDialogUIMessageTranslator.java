@@ -6,26 +6,23 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.jumpmind.pos.core.screen.DialogScreen;
+import org.jumpmind.pos.core.ui.message.DialogUIMessage;
 import org.jumpmind.pos.core.screen.ActionItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * @deprecated Use AbstractLegacyDialogUIMessageTranslator instead.
- */
-@Deprecated
-public abstract class AbstractLegacyDialogScreenTranslator extends AbstractLegacyScreenTranslator<DialogScreen> {
+public abstract class AbstractLegacyDialogUIMessageTranslator extends AbstractLegacyUIMessageTranslator<DialogUIMessage> {
     
     protected final Logger logger = LoggerFactory.getLogger(getClass());
 
     /** Maximum number of lines OrPOS supports on a dialog */
     public static final int MAX_DIALOG_LINES = 17; // Defined in OrPOS DialogBean.MAX_LINES, but protected there
 
-    public AbstractLegacyDialogScreenTranslator(ILegacyScreen headlessScreen, Class<DialogScreen> screenClass) {
+    public AbstractLegacyDialogUIMessageTranslator(ILegacyScreen headlessScreen, Class<DialogUIMessage> screenClass) {
         super(headlessScreen, screenClass);
     }
-
-    public AbstractLegacyDialogScreenTranslator(ILegacyScreen headlessScreen, Class<DialogScreen> screenClass, String appId, Properties properties) {
+    
+    public AbstractLegacyDialogUIMessageTranslator(ILegacyScreen headlessScreen, Class<DialogUIMessage> screenClass, String appId, Properties properties) {
     		super(headlessScreen, screenClass, appId, properties);
     }
 

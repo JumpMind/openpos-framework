@@ -73,9 +73,7 @@ public class DBSession {
     }
 
     public <T extends AbstractModel> List<T> findAll(Class<T> clazz) {
-        QueryTemplate queryTemplate = new QueryTemplate();
         Query<T> query = new Query<T>().result(clazz);
-        query.setQueryTemplate(queryTemplate);
         return query(query, new HashMap<>());
     }
 
@@ -113,8 +111,7 @@ public class DBSession {
         QueryTemplate queryTemplate = new QueryTemplate();
         queryTemplate.setSelect(getSelectSql(entityClass, id.getIdFields()));
         Query<T> query = new Query<T>().result(entityClass);
-        query.setQueryTemplate(queryTemplate);
-        List<T> results = query(query, id.getIdFields());
+        List<T> results = query(query, queryTemplate, id.getIdFields());
 
         if (results != null) {
             if (results.size() == 1) {
@@ -178,8 +175,7 @@ public class DBSession {
         QueryTemplate queryTemplate = new QueryTemplate();
         queryTemplate.setSelect(getSelectSql(entityClass, fieldValues));
         Query<T> query = new Query<T>().result(entityClass);
-        query.setQueryTemplate(queryTemplate);
-        return query(query, fieldValues);
+        return query(query, queryTemplate, fieldValues);
     }
 
     public void executeScript(File file) {
@@ -220,20 +216,24 @@ public class DBSession {
 
     @SuppressWarnings("unchecked")
     public <T> List<T> query(Query<T> query, String singleParam) {
-        populdateDefaultSelect(query);
+        QueryTemplate queryTemplate = getQueryTemplate(query);
         try {
-            SqlStatement sqlStatement = query.generateSQL(singleParam);
+            SqlStatement sqlStatement = queryTemplate.generateSQL(query, singleParam);
             return (List<T>) queryInternal(query.getResultClass(), sqlStatement);
         } catch (Exception ex) {
             throw new PersistException("Failed to query target class " + query.getResultClass(), ex);
         }
     }
 
-    @SuppressWarnings("unchecked")
     public <T> List<T> query(Query<T> query, Map<String, Object> params) {
-        populdateDefaultSelect(query);
+        QueryTemplate queryTemplate = getQueryTemplate(query);
+        return query(query, queryTemplate, params);
+    }
+    
+    @SuppressWarnings("unchecked")
+    public <T> List<T> query(Query<T> query, QueryTemplate queryTemplate, Map<String, Object> params) {
         try {
-            SqlStatement sqlStatement = query.generateSQL(params);
+            SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
             return (List<T>) queryInternal(query.getResultClass(), sqlStatement);
         } catch (Exception ex) {
             throw new PersistException("Failed to query result class " + query.getResultClass(), ex);
@@ -241,16 +241,22 @@ public class DBSession {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> void populdateDefaultSelect(Query<T> query) {
+    protected <T> QueryTemplate getQueryTemplate(Query<T> query) {
+        QueryTemplate queryTemplate = new QueryTemplate();
         boolean isEntityResult = AbstractModel.class.isAssignableFrom(query.getResultClass());
+        // defined in config
         if (queryTemplates.containsKey(query.getName())) {
-            query.setQueryTemplate(queryTemplates.get(query.getName()).copy());
+            queryTemplate = queryTemplates.get(query.getName()).copy();
+        } else {            
+            queryTemplate.setName(query.getName());
         }
 
-        if (isEntityResult && query.getQueryTemplate().getSelect() == null) {
+        // generated from an Entity model.
+        if (isEntityResult && queryTemplate.getSelect() == null) {
             Class<? extends AbstractModel> entityClass = (Class<? extends AbstractModel>) query.getResultClass();
-            query.getQueryTemplate().setSelect(getSelectSql(entityClass, null));
+            queryTemplate.setSelect(getSelectSql(entityClass, null));
         }
+        return queryTemplate;
     }
 
     protected String getSelectSql(Class<?> entity, Map<String, Object> params) {

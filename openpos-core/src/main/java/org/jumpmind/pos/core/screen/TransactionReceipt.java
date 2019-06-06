@@ -1,8 +1,11 @@
 package org.jumpmind.pos.core.screen;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
-public class TransactionReceipt {
+public class TransactionReceipt implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private long transactionNumber;
 

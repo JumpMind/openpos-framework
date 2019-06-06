@@ -26,6 +26,7 @@ import java.util.List;
 public class YamlFlowConfig {
     
     private String flowName;
+
     List<YamlStateConfig> flowStateConfigs = new ArrayList<>();
     
     public String getFlowName() {
@@ -44,5 +45,4 @@ public class YamlFlowConfig {
     public String toString() {
         return "YamlFlowConfig [flowName=" + flowName + ", flowStateConfigs=" + flowStateConfigs + "]";
     }
-
 }

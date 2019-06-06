@@ -191,6 +191,7 @@ public class ScreenService implements IScreenService, IActionListener {
 
     @Override
     public void actionOccured(String appId, String deviceId, Action action) {
+        logger.trace("actionOccurred -> appId: {}, deviceId: {}, action: {}", appId, deviceId, action != null ? action.getName() : null);
         IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
         if (stateManager != null) {
             try {

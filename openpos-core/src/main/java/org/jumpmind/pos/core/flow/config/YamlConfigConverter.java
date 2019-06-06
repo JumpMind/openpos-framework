@@ -26,6 +26,15 @@ public class YamlConfigConverter {
     
     private final static String GLOBAL_CONFIG = "Global";
 
+    private List<String> additionalPackages;
+
+    public YamlConfigConverter() {
+    }
+
+    public YamlConfigConverter(List<String> additionalPackages) {
+        this.additionalPackages = additionalPackages;
+    }
+
     public FlowConfig convertToFlowConfig(List<YamlFlowConfig> loadedYamlFlowConfigs, YamlFlowConfig yamlFlowConfig) {
         FlowConfig flowConfig = converFlowConfig(loadedYamlFlowConfigs, yamlFlowConfig);
         return flowConfig;
@@ -172,8 +181,12 @@ public class YamlConfigConverter {
     protected Class<? extends Object> resolveStateClass(YamlStateConfig yamlStateConfig) {
         
         if (knownStateClasses == null) {
+
             List<Class<Object>> knownStateClassList = ClassUtils.getClassesForPackageAndType("org.jumpmind.pos", Object.class);
-            
+            if(additionalPackages != null) {
+                additionalPackages.forEach( p -> knownStateClassList.addAll( ClassUtils.getClassesForPackageAndType( p, Object.class)));
+            }
+
             knownStateClasses = knownStateClassList.stream()
                     .filter(clazz -> FlowUtil.isState(clazz))
                     .collect(Collectors.toMap(e -> ((Class)e).getSimpleName(), v -> v) );

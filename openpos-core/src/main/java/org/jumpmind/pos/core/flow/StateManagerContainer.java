@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
 import org.jumpmind.pos.core.service.IScreenService;
@@ -75,12 +76,16 @@ public class StateManagerContainer implements IStateManagerContainer {
     }
 
     @Override
-    public synchronized IStateManager create(String appId, String deviceId, Map<String, Object> queryParams, Map<String, String> personalizationProperties) {
-        Map<String, StateManager> stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
-        if (stateManagersByNodeId == null) {
+    public IStateManager create(String appId, String deviceId, Map<String, Object> queryParams, Map<String, String> personalizationProperties) {
+        
+        Map<String, StateManager> stateManagersByNodeId;
+        synchronized (this) {            
+            stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
             if (stateManagersByNodeId == null) {
-                stateManagersByNodeId = new HashMap<>();
-                stateManagersByAppIdByNodeId.put(appId, stateManagersByNodeId);
+                if (stateManagersByNodeId == null) {
+                    stateManagersByNodeId = new ConcurrentHashMap<>();
+                    stateManagersByAppIdByNodeId.put(appId, stateManagersByNodeId);
+                }
             }
         }
 
