@@ -1,5 +1,10 @@
 apply plugin: 'groovy'
 
+tasks.withType(GroovyCompile) {
+    options.compilerArgs = ['-Xlint:none']
+}
+
+
 sourceSets {
     // In order to reference groovy from Java, the source sets need to be considered together during compilation (in
     // the groovy plugin, which extends the java plugin and handles java sources).

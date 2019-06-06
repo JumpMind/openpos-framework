@@ -1,1 +1,1 @@
-apply plugin: 'java'
+apply from: 'src/main/resources/java.gradle'
