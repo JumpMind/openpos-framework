@@ -1,6 +1,6 @@
 ---
 id: openpos-core
-title: OpenPOS Server Application Library
+title: OpenPOS Flow Framework
 ---
 
 # Overview

@@ -1,6 +1,6 @@
 ---
 id: openpos-devices
-title: OpenPOS Devices
+title: OpenPOS Device Library
 ---
 
 # Overview
