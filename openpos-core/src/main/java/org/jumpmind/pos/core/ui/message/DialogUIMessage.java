@@ -32,6 +32,8 @@ public class DialogUIMessage extends UIMessage {
         this.addButton(button);
     }
 
+    // Intentionally omitted getter for title so Jackson won't add title
+    // attribute to serialized JSON
     public void setTitle(String title) {
         DialogHeaderPart dialogHeader = new DialogHeaderPart(title);
         addMessagePart(MessagePartConstants.DialogHeader, dialogHeader);

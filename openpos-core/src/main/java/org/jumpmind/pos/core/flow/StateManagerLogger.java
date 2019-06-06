@@ -112,7 +112,7 @@ public class StateManagerLogger {
         String toStateName = transition.getTargetState() != null ? transition.getTargetState().getClass().getSimpleName() : "<no state>"; 
 
         log.info("Transition step [" + stepName + "] running between " + 
-                fromStateName + " and " + toStateName + "\r\n" + boxed);
+                fromStateName + " and " + toStateName + boxed);
     }
 
 
