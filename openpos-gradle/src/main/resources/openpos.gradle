@@ -1,5 +1,3 @@
-apply from: "${buildscript.sourceFile.parent}/ide.gradle"
-
 apply plugin: 'groovy'
 
 sourceSets {

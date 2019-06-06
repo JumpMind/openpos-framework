@@ -1,3 +1,4 @@
+includeFlat 'openpos-gradle'
 includeFlat 'openpos-server-core'
 includeFlat 'openpos-core'
 includeFlat 'openpos-wrapper'

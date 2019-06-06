@@ -1,13 +1,14 @@
 import java.text.SimpleDateFormat
 import java.util.Date
 
-apply from: 'common.gradle'
-
 buildscript {
     repositories {
         mavenCentral()
     }
 }
+
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
+apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 
 jar {
     manifest {
