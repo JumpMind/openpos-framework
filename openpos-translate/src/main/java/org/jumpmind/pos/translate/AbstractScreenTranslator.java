@@ -82,7 +82,6 @@ abstract public class AbstractScreenTranslator<T extends Screen> implements ITra
         if (isBlank(screen.getIcon())) {
             screen.setIcon(iconRegistry.get(screen.getName()));
         }
-        chooseLocale();
         chooseScreenName();
         updatePosSessionInfo();
         chooseScreenTheme();
@@ -100,10 +99,6 @@ abstract public class AbstractScreenTranslator<T extends Screen> implements ITra
 
     protected T getScreen() {
         return screen;
-    }
-
-    protected void chooseLocale() {
-        getScreen().setLocale(Locale.getDefault().toLanguageTag());
     }
     
     public POSSessionInfo getPOSSessionInfo() {
