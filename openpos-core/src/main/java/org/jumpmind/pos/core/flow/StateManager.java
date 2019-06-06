@@ -35,6 +35,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
+import org.jumpmind.pos.core.clientconfiguration.LocaleChangedMessage;
+import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
@@ -97,6 +99,9 @@ public class StateManager implements IStateManager {
 
     @Autowired
     private StateLifecycle stateLifecyce;
+
+    @Autowired
+    LocaleMessageFactory localeMessageFactory;
 
     private FlowConfig initialFlowConfig;
 
@@ -395,6 +400,7 @@ public class StateManager implements IStateManager {
             Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
             if (globalActionHandler != null) {
                 callGlobalActionHandler(action, globalActionHandler);
+                return;
             }
 
             if (applicationState.getCurrentTransition() != null) {
@@ -791,6 +797,10 @@ public class StateManager implements IStateManager {
             ClientConfigChangedMessage versionConfiguration = new ClientConfigChangedMessage("versions");
             versionConfiguration.put("versions", Versions.getVersions());
             messageService.sendMessage(appId, deviceId, versionConfiguration);
+
+            // Send supported locales
+            LocaleChangedMessage localeMessage = localeMessageFactory.getMessage();
+            messageService.sendMessage(appId, deviceId, localeMessage);
 
         } catch (NoSuchBeanDefinitionException e) {
             logger.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",

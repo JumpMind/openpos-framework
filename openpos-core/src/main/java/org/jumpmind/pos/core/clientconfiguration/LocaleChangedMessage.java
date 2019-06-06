@@ -1,7 +1,8 @@
-package org.jumpmind.pos.core.model;
+package org.jumpmind.pos.core.clientconfiguration;
 
 import java.util.Locale;
 
+import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.util.model.Message;
 
 public class LocaleChangedMessage extends Message {
@@ -9,6 +10,8 @@ public class LocaleChangedMessage extends Message {
     private static final long serialVersionUID = 1L;
 
     private String locale;
+
+    String[] supportedLocales;
 
     public LocaleChangedMessage() {
         super(MessageType.LocaleChanged);
@@ -21,7 +24,7 @@ public class LocaleChangedMessage extends Message {
 
     public LocaleChangedMessage(Locale locale) {
         this();
-        this.locale = locale.getLanguage();
+        setLocale(locale);
     }
 
     public String getLocale() {
@@ -33,7 +36,15 @@ public class LocaleChangedMessage extends Message {
     }
 
     public void setLocale(Locale locale) {
-        this.locale = locale.getLanguage();
+        this.locale = locale.toString();
+    }
+
+    public String[] getSupportedLocales() {
+        return supportedLocales;
+    }
+
+    public void setSupportedLocales(String[] supportedLocales) {
+        this.supportedLocales = supportedLocales;
     }
 
 }
