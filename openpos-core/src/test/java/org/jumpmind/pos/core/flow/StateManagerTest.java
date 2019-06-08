@@ -9,6 +9,7 @@ import static org.mockito.Mockito.doNothing;
 
 import java.util.Arrays;
 
+import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.flow.TestStates.AboutState;
 import org.jumpmind.pos.core.flow.TestStates.ActionTestingState;
 import org.jumpmind.pos.core.flow.TestStates.CustomerSearchState;
@@ -32,8 +33,6 @@ import org.jumpmind.pos.core.flow.TestStates.TestScopesState;
 import org.jumpmind.pos.core.flow.TestStates.TransitionInterceptionState;
 import org.jumpmind.pos.core.flow.config.FlowBuilder;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
-import org.jumpmind.pos.core.flow.config.YamlConfigProvider;
-import org.jumpmind.pos.core.flow.config.YamlFlowConfigFileLoader;
 import org.jumpmind.pos.core.service.ScreenService;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
@@ -43,8 +42,6 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import net.bytebuddy.agent.builder.AgentBuilder.Listener.WithTransformationsOnly;
 
 @RunWith(MockitoJUnitRunner.class)
 public class StateManagerTest {
@@ -132,13 +129,18 @@ public class StateManagerTest {
         config.addGlobalTransitionOrActionHandler("TestTransitionCancel", HomeState.class);
         config.addGlobalSubTransition("CustomerLookupGlobal", customerFlow);
         // config.addGlobalSubTransition("VendorList", vendorFlow);
-
+        
+        LocaleMessageFactory localeMessageFactory = new LocaleMessageFactory();
+        TestUtil.setField(localeMessageFactory, "supportedLocales", new String[] {"en_US"});
+        TestUtil.setField(stateManager, "localeMessageFactory", localeMessageFactory);
+        
         stateManager.setInitialFlowConfig(config);
         TestUtil.setField(stateManager, "actionHandler", new ActionHandlerImpl());
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());
         TestUtil.setField(stateManager, "transitionSteps", Arrays.asList(new TestTransitionStepCancel(), new TestTransitionStepProceed()));
         TestUtil.setField(stateManager, "stateLifecyce", new StateLifecycle());
+        
 
     }
 
