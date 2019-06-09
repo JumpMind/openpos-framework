@@ -3,7 +3,6 @@ package org.jumpmind.pos.core.flow;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.fail;
 
 import org.jumpmind.pos.server.model.Action;
 
@@ -54,34 +53,34 @@ public class TestStates {
         }
     }
 
-    public static class HelpState implements IState {
+    public static class HelpState {
 
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
 
-        @Override
+        @OnArrive
         public void arrive(Action action) {
 
         }
     }
 
-    public static class AboutState implements IState {
+    public static class AboutState {
 
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
 
-        @Override
+        @OnArrive
         public void arrive(Action action) {
 
         }
     }
 
-    public static class SellState implements IState {
+    public static class SellState {
 
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
 
-        @Override
+        @OnArrive
         public void arrive(Action action) {
 
         }

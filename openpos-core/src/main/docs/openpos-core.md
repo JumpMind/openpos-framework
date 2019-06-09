@@ -63,6 +63,39 @@ public class HomeState {
 }
 ~~~~
 
+#### Responding to Actions
+
+Except for global actions (below) states have first dibs on handling actions.
+
+1. Check if a Global Action Handler is configured for the action handler.  The state manager will look at the current flow and any parent flows (if the current flow is a subflow).
+2. The current state 
+
+a. Check for a specific method annotated with **@ActionHandler**.  The @ActionHandler methods follow a naming convention of onActionName, where the ActionName portion of the method name shoud match up with the action name.
+```
+@ActionHandler
+    public void onSell(Action action) {
+        if (appContext.isTransactionActive()) {
+            doAction(action);
+        } else {
+            // other logic
+        }
+    }
+```
+
+b. A state can also define a special @Action called **onAnyAction**.   An action can be forwarded back to the StateManager from an action handler method.
+
+```
+    @ActionHandler
+    public void onAnyAction(Action action) {
+        if (appContext.isTransactionActive()) {
+            // do logic    
+        } else {
+            doAction(action);
+        }
+    }
+```
+![eclipse](assets/openpos-action-handling.png)
+
 ### Scoped Context Values (@In, @InOut, and @Out)
 
 Scoped context values represent values which need to be **shared between states, transition steps, and action handlers.**  The currently logged in user or current transaction are common exmamples of scoped context values.
@@ -156,8 +189,84 @@ Normally, the state machine goes from state to state, with no concept of going "
 
 But sometimes you want to run a shared state or flow, such as customer lookup, and then **return** to the current state. That is what a subflow does: it allows for transition to a new state (or a series of states, as defined by a subflow yaml, for example) without exiting the current state.  When the subflow completes, control is returned to the state where the subflow was launched from (using a **ReturnAction**)
 
+Here is an example which depicts a good use case for a subflow.  You are in a sale, and which to offer an item inquiry function (ie, item search, item lookup). You want the item inquriry flow to run, and then when it completes, you want the system to come back to your sale.
+
+![eclipse](assets/openpos-subflow.png)
+
+Details about the subflow example:
+1. The user starts in the **SaleState** (i.e., a tthe selling screen of a POS.)
+2. The user taps the "Item Inquiry" button which in turn fires the **ItemInquiry action**.
+3. In the flow config for sale, the ItemInquiry is mapped to a subflow of **ItemInquiry** subflow.
+
+```
+SaleFlow:
+  - SaleState:
+      Back: CompleteState
+      ItemInquiry: {subflow: ItemInquiryFlow, ReturnAction: ItemInquiryFinished}
+      ...
+```
+
+A subflow does not require a seperate flow config.  You can configure a subflow to transition to single state.  For example:
+
+```
+SaleFlow:
+  - SaleState:
+      Back: CompleteState
+      CustomerLookup: {subflow: CustomerLookupState, ReturnActions: CustomerSelected; CustomerLookupCancelled}
+      ...
+```
+
+In this case, the CustomerLookup action causes the StateManager to proceed to a subflow with state CustomerLookupState. When any of the **ReturnActions** are fired (CustomerSelected or CustomerLookupCancelled), then the state machine logically treats that as a transition to the CompleteState, and will return control to the SaleState.
 
 
+4. The ItemInquiry subflow has the ItemInquirySearchState as it's initial state, so the **ItemInquirySearchState** becomes the current state.
 
+```
+---
+ItemInquiryFlow:
+  - ItemInquirySearchState:
+      Next: 
+        ItemInquiryResultsState:
+          Select: CompleteState
+```
+
+5. The user moves through the item inqury process by tapping Search (issuing the **Next** action) and selected an item search results (issuing the **Select** action.)
+6. A subflow should always be designed to terminate by going to a special state call **CompleteState**. Once the CompleteState is reached, control will return to the calling state. The **ReturnAction** specified in the subflow invocation (in this case **ItemInquiryFinished**) will be fired at the calling state.
+
+You can call Action.getCausedBy() on an return action to get the actual action that lead to the transition to the CompleteState in the subflow. It a context value need to get propogated up to the calling state (in this case, the selected item, for example) then it is recommended to set and retrieve that data on the action itself.  (See Action.getData().  The data coud be set to a Map to contain multiple values.)
+
+### Globals Transitions
+
+It is possible per flow to configure global transitions. What this means is that regardless of the current state that is active, the StateManager can handle a certain Action.  For example, mpte the "Global" secion in the following DefaultFlow config.  What that means is that if the **BackToMain** action is fired anytime during the default flow, the framework will automatically transition to the HomeScreenState.
+```
+DefaultFlow:
+  - HomeScreenState: 
+      Sell: {subflow: SaleFlow, ReturnAction: SaleFinished}
+      Returns: {subflow: ReturnFlow, ReturnAction: BlindReturnFinished}
+
+  - Global:  
+      BackToMain: HomeScreenState
+```
+It is also possible to configure global subflows in a very similiar fashion using the **Global** identifier.
+
+### Global Action Handlers
+
+Similiar to a global transition, it is possible to configure a global action handler.  A global action handler works exactly like a global transition, except that it does not transition anywhere and control remains with the current state.  But this allows for the client to fire an action, and have a bit of logic respond to that action without transitioning to a different state.  
+
+Say the application has a language dropdown on every screen. An example of a global action handler would be a piece of logic that responds to a change in the users' language.  The action handler would receive the action and the new language, change it accordingly and refresh the screen, and be done.
+
+A Global action handler is the same as a state (including full access to Injections through @In) except that is has a method called **@OnGlobalAction** instead of @OnArrive like a state.
+
+```
+public class LanguageChangedActionHanlder  {
+
+    @In(scope = ScopeType.Device)
+    private IStateManager stateManager;    
+
+    @Override
+    public void arrive(Action action) {
+        // change the language here.
+    }
+```
 
 

@@ -12,7 +12,6 @@ public class UIMessage extends Message {
     private String id;
     private int sessionTimeoutMillis;
     private Action sessionTimeoutAction;
-    private String locale;
 
     public UIMessage(String screenType, String id) {
         this();
@@ -54,14 +53,6 @@ public class UIMessage extends Message {
 
     public void setSessionTimeoutAction(Action sessionTimeoutAction) {
         this.sessionTimeoutAction = sessionTimeoutAction;
-    }
-
-    public String getLocale() {
-        return locale;
-    }
-
-    public void setLocale(String locale) {
-        this.locale = locale;
     }
 
     public boolean isDialog() {

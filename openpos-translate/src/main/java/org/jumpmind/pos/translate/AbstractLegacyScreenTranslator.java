@@ -473,13 +473,6 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
         ILegacyAssignmentSpec spec = this.legacyPOSBeanService.getLegacyAssignmentSpec(this.legacyScreen, panelKey);
         return spec;
     }
-    
-    
-
-    @Override
-    protected void chooseLocale() {
-        getScreen().setLocale(this.getLegacyPOSBeanService().getLegacyLocaleUtilities().getCurrentLocale().toLanguageTag());
-    }
 
     @Override
     protected void chooseScreenName() {

@@ -25,31 +25,31 @@ import org.springframework.remoting.rmi.RmiProxyFactoryBean;
 public abstract class AbstractLegacyStartupService implements ILegacyStartupService {
     private final static Logger logger = LoggerFactory.getLogger(AbstractLegacyStartupService.class);
 
-    @Value("${external.process.enabled}")
+    @Value("${openpos.translate.external.process.enabled}")
     private boolean externalProcessEnabled;
 
-    @Value("${orpos.headless.working.dir}")
+    @Value("${openpos.translate.orpos.headless.working.dir}")
     private String appWorkingDir;
 
-    @Value("${rmi.registry.port:9598}")
+    @Value("${openpos.translate.rmi.registry.port:9598}")
     private int rmiRegistryPort;
 
     /** Comma separated list of port numbers to use for remote debugging */
-    @Value("${external.process.debug.ports:}")
+    @Value("${openpos.translate.external.process.debug.ports:}")
     private String remoteDebugPortValues;
 
-    @Value("${external.process.extra.vm.args:}")
+    @Value("${openpos.translate.external.process.extra.vm.args:}")
     private String externalProcessExtraVmArgs;
     
     private String[] remoteDebugPorts = {};
 
-    @Value("${prefix.classpath}")
+    @Value("${openpos.translate.prefix.classpath}")
     private String prefixClassPath;
     
-    @Value("${postfix.classpath}")
+    @Value("${openpos.translate.postfix.classpath}")
     private String postfixClasspath;
 
-    @Value("${library.path}")
+    @Value("${openpos.translate.library.path}")
     private String libraryPath;
     
     private int externalProcessCount = 0;
