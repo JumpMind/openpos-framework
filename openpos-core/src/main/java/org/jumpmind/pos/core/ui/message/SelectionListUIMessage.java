@@ -15,15 +15,16 @@ public class SelectionListUIMessage extends UIMessage {
     private static final long serialVersionUID = -4859870631964238380L;
 
     private List<SelectionListItem> selectionList = new ArrayList<SelectionListItem>();
+    private boolean multiSelect = false;
+    private int defaultSelectItemIndex = 0;
+    private int numberItemsPerPage;
+
     private List<ActionItem> nonSelectionButtons = new ArrayList<>();
     private List<ActionItem> selectionButtons = new ArrayList<>();
-    private boolean multiSelect = false;
     private boolean defaultSelect = false;
     private boolean showScan = false;
-    private int defaultSelectItemIndex = 0;
     private String selectionChangedAction;
     private String instructions;
-    private int numberItemsPerPage;
     private String noListItemsPlaceholderText;
     private String noListItemsPlaceholderIcon;
     
@@ -38,7 +39,31 @@ public class SelectionListUIMessage extends UIMessage {
     public void setSelectionList(List<SelectionListItem> selectionList) {
         this.selectionList = selectionList;
     }
-    
+
+    public boolean isMultiSelect() {
+        return multiSelect;
+    }
+
+    public void setMultiSelect(boolean multiSelect) {
+        this.multiSelect = multiSelect;
+    }
+
+    public int getDefaultSelectItemIndex() {
+        return defaultSelectItemIndex;
+    }
+
+    public void setDefaultSelectItemIndex(int defaultSelectItemIndex) {
+        this.defaultSelectItemIndex = defaultSelectItemIndex;
+    }
+
+    public int getNumberItemsPerPage() {
+        return  numberItemsPerPage;
+    }
+
+    public void setNumberItemsPerPage(int numberItemsPerPage) {
+        this.numberItemsPerPage = numberItemsPerPage;
+    }
+
     public void setSelectionButtons(List<ActionItem> selectionButtons) {
         this.selectionButtons = selectionButtons;
     }
@@ -66,14 +91,6 @@ public class SelectionListUIMessage extends UIMessage {
         this.nonSelectionButtons.add(nonSelectionButton);
     }
 
-    public boolean isMultiSelect() {
-        return multiSelect;
-    }
-
-    public void setMultiSelect(boolean multiSelect) {
-        this.multiSelect = multiSelect;
-    }
-
     public boolean isDefaultSelect() {
         return defaultSelect;
     }
@@ -90,14 +107,6 @@ public class SelectionListUIMessage extends UIMessage {
         this.showScan = showScan;
     }
 
-    public int getDefaultSelectItemIndex() {
-        return defaultSelectItemIndex;
-    }
-
-    public void setDefaultSelectItemIndex(int defaultSelectItemIndex) {
-        this.defaultSelectItemIndex = defaultSelectItemIndex;
-    }
-
     public String getSelectionChangedAction() {
         return selectionChangedAction;
     }
@@ -112,14 +121,6 @@ public class SelectionListUIMessage extends UIMessage {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
-    }
-
-    public int getNumberItemsPerPage() {
-        return  numberItemsPerPage;
-    }
-
-    public void setNumberItemsPerPage(int numberItemsPerPage) {
-        this.numberItemsPerPage = numberItemsPerPage;
     }
 
     public String getNoListItemsPlaceholderText() {
