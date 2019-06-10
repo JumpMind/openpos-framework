@@ -18,9 +18,27 @@ public class PriceCheckerItemDetailsUIMessage extends UIMessage {
     private String logoUrl;
     private List<String> itemMessages;
     private String disclaimer;
+    private String itemNotFoundMessage;
+    private String helpMessage;
 
     public PriceCheckerItemDetailsUIMessage() {
         setScreenType(UIMessageType.PRICE_CHECKER_ITEM_DETAIL);
+    }
+
+    public String getItemNotFoundMessage() {
+        return itemNotFoundMessage;
+    }
+
+    public void setItemNotFoundMessage(String itemNotFoundMessage) {
+        this.itemNotFoundMessage = itemNotFoundMessage;
+    }
+
+    public String getHelpMessage() {
+        return helpMessage;
+    }
+
+    public void setHelpMessage(String helpMessage) {
+        this.helpMessage = helpMessage;
     }
 
     public ActionItem getPrintButton() {

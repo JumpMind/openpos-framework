@@ -374,11 +374,6 @@ public abstract class AbstractLegacyUIMessageTranslator<T extends UIMessage> ext
         return spec;
     }
 
-    @Override
-    protected void chooseLocale() {
-        getScreen().setLocale(this.getLegacyPOSBeanService().getLegacyLocaleUtilities().getCurrentLocale().toLanguageTag());
-    }
-
     protected Map<String, Boolean> parseButtonStates(ILegacyAssignmentSpec spec) {
         Map<String, Boolean> states = new HashMap<>();
         String propValue = spec.getPropertyValue("buttonStates");

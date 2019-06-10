@@ -17,6 +17,7 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
     private boolean showScan;
     private boolean showAdmin;
     private boolean showSkip;
+    private boolean showLanguageSelector = true;
 
     public String getDeviceId() {
         return deviceId;
@@ -80,5 +81,13 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
 
     public void setShowSkip(boolean showSkip) {
         this.showSkip = showSkip;
+    }
+
+    public boolean isShowLanguageSelector() {
+        return showLanguageSelector;
+    }
+
+    public void setShowLanguageSelector(boolean showLanguageSelector) {
+        this.showLanguageSelector = showLanguageSelector;
     }
 }

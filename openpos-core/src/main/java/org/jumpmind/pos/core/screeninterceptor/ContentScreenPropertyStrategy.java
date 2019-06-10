@@ -5,7 +5,14 @@ import java.util.Map;
 import org.jumpmind.pos.core.content.ContentProviderService;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.Order;
+import org.springframework.stereotype.Component;
 
+@Component
+@Order(110)
+@Scope("device")
 public class ContentScreenPropertyStrategy implements IScreenPropertyStrategy {
 
     @Autowired

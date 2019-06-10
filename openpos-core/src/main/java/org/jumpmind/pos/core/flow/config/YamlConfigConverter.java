@@ -89,10 +89,10 @@ public class YamlConfigConverter {
         StateConfig stateConfig = new StateConfig();
         stateConfig.setStateName(yamlStateConfig.getStateName());
         
-        Class<? extends Object> stateClass = resolveStateClass(yamlStateConfig);
+        Class<? extends Object> stateClass = resolveStateClass(yamlStateConfig, true);
         
         if (stateClass != null) {
-            stateConfig.setStateClass(resolveStateClass(yamlStateConfig));            
+            stateConfig.setStateClass(resolveStateClass(yamlStateConfig, true));            
         } else {
             throw new FlowException("Failed to resolve state class for name from yaml: " + yamlStateConfig.getStateName());
         }
@@ -105,7 +105,7 @@ public class YamlConfigConverter {
     protected void handleGlobalConfig(FlowConfig flowConfig, List<YamlFlowConfig> yamlFlowConfigs, YamlStateConfig yamlStateConfig) {
         Map<String, Class<? extends Object>> actionToStateMapping = buildActionToStateMapping(yamlFlowConfigs, yamlStateConfig);
         for (String actionName : actionToStateMapping.keySet()) {
-            flowConfig.addGlobalTransition(actionName, actionToStateMapping.get(actionName));
+            flowConfig.addGlobalTransitionOrActionHandler(actionName, actionToStateMapping.get(actionName));
         }
         
         Map<String, SubTransition> actionToSubStateMapping = buildActionToSubStateMapping(yamlFlowConfigs, yamlStateConfig);
@@ -121,7 +121,7 @@ public class YamlConfigConverter {
         for (String actionName : yamlStateConfig.getActionToStateConfigs().keySet()) {
             YamlStateConfig stateConfig = yamlStateConfig.getActionToStateConfigs().get(actionName);
             if (!stateConfig.isSubTransition()) {
-                Class<? extends Object> stateClass = resolveStateClass(stateConfig);
+                Class<? extends Object> stateClass = resolveStateClass(stateConfig, true);
                 
                 if (stateClass != null) {                    
                     actionToStateMapping.put(actionName, stateClass);
@@ -148,7 +148,7 @@ public class YamlConfigConverter {
                     FlowConfig flowConfig = convertToFlowConfig(yamlFlowConfigs, yamlFlowConfig);
                     subTransition.setSubFlowConfig(flowConfig);
                 } else {
-                    Class<? extends Object> stateClass = resolveStateClass(stateConfig);
+                    Class<? extends Object> stateClass = resolveStateClass(stateConfig, false);
                     if (stateClass == null) {
                         throw new FlowException("Failed to resolve substate reference to a subflow or a state class: " + 
                                 stateConfig.getStateName() + " referred to by action: " + actionName);
@@ -178,7 +178,7 @@ public class YamlConfigConverter {
     }
 
     @SuppressWarnings("rawtypes")
-    protected Class<? extends Object> resolveStateClass(YamlStateConfig yamlStateConfig) {
+    protected Class<? extends Object> resolveStateClass(YamlStateConfig yamlStateConfig, boolean allowGlobalActionHandler) {
         
         if (knownStateClasses == null) {
 
@@ -188,7 +188,7 @@ public class YamlConfigConverter {
             }
 
             knownStateClasses = knownStateClassList.stream()
-                    .filter(clazz -> FlowUtil.isState(clazz))
+                    .filter(clazz -> filterStateClass(clazz, allowGlobalActionHandler))
                     .collect(Collectors.toMap(e -> ((Class)e).getSimpleName(), v -> v) );
         }
         
@@ -198,6 +198,14 @@ public class YamlConfigConverter {
             return state;
         } else {
             return null;
+        }
+    }
+
+    private boolean filterStateClass(Class<Object> clazz, boolean allowGlobalActionHandler) {
+        if (allowGlobalActionHandler) {
+            return (FlowUtil.isState(clazz)) || FlowUtil.isGlobalActionHandler(clazz);
+        } else {
+            return FlowUtil.isState(clazz);
         }
     }
 

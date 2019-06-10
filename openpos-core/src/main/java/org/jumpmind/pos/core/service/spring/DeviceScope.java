@@ -76,7 +76,7 @@ public class DeviceScope implements Scope {
         
         IStateManager stateManager = stateManagerContainer.getCurrentStateManager();
         if (stateManager == null) {
-            throw new FlowException("Illegal use of custom spring \"device\" stope. There is no current statemanager."
+            throw new FlowException("Illegal use of custom spring \"device\" scope. There is no current statemanager. "
                     + "This scope can only function when stateManagerContainer.getCurrentStateManager() returns non-null.");
         }
         

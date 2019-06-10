@@ -63,7 +63,6 @@ abstract public class AbstractUIMessageTranslator<T extends UIMessage> implement
 
     public T build() {
         logger.info("{} is building a screen of type '{}'", getClass().getSimpleName(), getScreen().getScreenType());
-        chooseLocale();
         updatePosSessionInfo();
         buildMainContent();
         return screen;
@@ -79,10 +78,6 @@ abstract public class AbstractUIMessageTranslator<T extends UIMessage> implement
 
     protected T getScreen() {
         return screen;
-    }
-
-    protected void chooseLocale() {
-        getScreen().setLocale(Locale.getDefault().toLanguageTag());
     }
 
     public POSSessionInfo getPOSSessionInfo() {

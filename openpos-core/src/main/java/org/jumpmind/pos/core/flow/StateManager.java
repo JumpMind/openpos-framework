@@ -19,9 +19,11 @@
  */
 package org.jumpmind.pos.core.flow;
 
+import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -30,8 +32,11 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
+import org.jumpmind.pos.core.clientconfiguration.LocaleChangedMessage;
+import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
@@ -94,6 +99,9 @@ public class StateManager implements IStateManager {
 
     @Autowired
     private StateLifecycle stateLifecyce;
+
+    @Autowired
+    LocaleMessageFactory localeMessageFactory;
 
     private FlowConfig initialFlowConfig;
 
@@ -213,11 +221,7 @@ public class StateManager implements IStateManager {
         transitionTo(action, newState, enterSubStateConfig, resumeSuspendedState, false);
     }
 
-    protected void transitionTo(
-            Action action,
-            Object newState,
-            SubTransition enterSubStateConfig,
-            StateContext resumeSuspendedState,
+    protected void transitionTo(Action action, Object newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState,
             boolean autoTransition) {
         if (applicationState.getCurrentContext() == null) {
             throw new FlowException(
@@ -361,6 +365,12 @@ public class StateManager implements IStateManager {
          */
         UIMessage lastDialog = screenService.getLastPreInterceptedDialog(applicationState.getAppId(), applicationState.getDeviceId());
         UIMessage lastScreen = screenService.getLastPreInterceptedScreen(applicationState.getAppId(), applicationState.getDeviceId());
+        if (lastScreen != null) {
+            lastScreen.put("refreshAlways", true);
+        }
+        if (lastDialog != null) {
+            lastDialog.put("refreshAlways", true);
+        }
         showScreen(lastScreen);
         showScreen(lastDialog);
     }
@@ -392,6 +402,13 @@ public class StateManager implements IStateManager {
         activeCalls.incrementAndGet();
 
         try {
+            // Global action handler takes precedence over all actions (for now)
+            Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
+            if (globalActionHandler != null) {
+                callGlobalActionHandler(action, globalActionHandler);
+                return;
+            }
+
             if (applicationState.getCurrentTransition() != null) {
                 applicationState.getCurrentTransition().handleAction(action);
                 return;
@@ -399,6 +416,7 @@ public class StateManager implements IStateManager {
 
             FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
             StateConfig stateConfig = applicationState.findStateConfig(flowConfig);
+
             if (handleTerminatingState(action, stateConfig)) {
                 return;
             }
@@ -410,17 +428,23 @@ public class StateManager implements IStateManager {
             SubTransition subStateConfig = stateConfig.getActionToSubStateMapping().get(action.getName());
             SubTransition globalSubStateConfig = flowConfig.getActionToSubStateMapping().get(action.getName());
 
+            // Execute state specific action handlers
             if (actionHandler.canHandleAction(applicationState.getCurrentContext().getState(), action)) {
                 handleAction(action);
             } else if (transitionStateClass != null) {
+                // Execute state transition
                 transitionToState(action, transitionStateClass);
             } else if (subStateConfig != null) {
+                // Execute sub-state transition
                 transitionToSubState(action, subStateConfig);
             } else if (actionHandler.canHandleAnyAction(applicationState.getCurrentContext().getState(), action)) {
+                // Execute action handler for onAnyAction
                 actionHandler.handleAnyAction(this, applicationState.getCurrentContext().getState(), action);
             } else if (globalTransitionStateClass != null) {
-                transitionToState(action, globalTransitionStateClass);
+                // Execute global state transition
+                handleGlobalStateTransition(action, globalTransitionStateClass);
             } else if (globalSubStateConfig != null) {
+                // Execute global sub-state transition
                 transitionToSubState(action, globalSubStateConfig);
             } else {
                 throw new FlowException(String.format(
@@ -430,6 +454,81 @@ public class StateManager implements IStateManager {
             }
         } finally {
             activeCalls.decrementAndGet();
+        }
+    }
+
+    protected Class<? extends Object> getGlobalActionHandler(Action action) {
+        FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
+        Class<? extends Object> currentActionHandler = flowConfig.getActionToStateMapping().get(action.getName());
+        LinkedList<StateContext> stateStack = applicationState.getStateStack();
+
+        if (isActionHandler(currentActionHandler)) {
+            return currentActionHandler;
+        } else {
+            for (StateContext state : stateStack) {
+                Class<? extends Object> actionHandler = state.getFlowConfig().getActionToStateMapping().get(action.getName());
+                if (isActionHandler(actionHandler)) {
+                    return actionHandler;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    protected boolean isState(Class<? extends Object> stateOrActionHandler) {
+        if (stateOrActionHandler != null) {
+            List<Method> arriveMethods = MethodUtils.getMethodsListWithAnnotation(stateOrActionHandler, OnArrive.class, true, true);
+            return arriveMethods != null && !arriveMethods.isEmpty();
+        }
+        return false;
+    }
+
+    protected boolean isActionHandler(Class<? extends Object> stateOrActionHandler) {
+        if (stateOrActionHandler != null) {
+            List<Method> globalMethods = MethodUtils.getMethodsListWithAnnotation(stateOrActionHandler, OnGlobalAction.class);
+            return globalMethods != null && !globalMethods.isEmpty();
+        }
+        return false;
+    }
+
+    private void callGlobalActionHandler(Action action, Class<? extends Object> globalActionHandler) {
+        logger.info("Calling global action handler: {}", globalActionHandler.getName());
+
+        if (isState(globalActionHandler) && isActionHandler(globalActionHandler)) {
+            throw new FlowException("Class cannot implement @OnArrive and @OnGlobalAction: " + globalActionHandler.getClass().getName());
+        }
+
+        Object actionHandler;
+        try {
+            actionHandler = globalActionHandler.newInstance();
+        } catch (Exception ex) {
+            throw new FlowException("Failed to execute global action handler: " + globalActionHandler, ex);
+        }
+        performInjections(actionHandler);
+        List<Method> globalMethods = MethodUtils.getMethodsListWithAnnotation(globalActionHandler, OnGlobalAction.class);
+        for (Method method : globalMethods) {
+            invokeGlobalAction(action, method, actionHandler);
+        }
+    }
+
+    protected void invokeGlobalAction(Action action, Method method, Object actionHandler) {
+        try {
+            if (method.getParameters() != null && method.getParameters().length == 1) {
+                method.invoke(actionHandler, action);
+            } else {
+                method.invoke(actionHandler);
+            }
+        } catch (Exception ex) {
+            throw new FlowException("Failed to execute global action handler. Method: " + method + " actionHandler: " + actionHandler, ex);
+        }
+    }
+
+    protected void handleGlobalStateTransition(Action action, Class<? extends Object> stateOrActionHandler) {
+        if (isState(stateOrActionHandler) && isActionHandler(stateOrActionHandler)) {
+            throw new FlowException("Class cannot implement @OnArrive and @OnGlobalAction: " + stateOrActionHandler.getClass().getName());
+        } else if (isState(stateOrActionHandler)) {
+            transitionToState(action, stateOrActionHandler);
         }
     }
 
@@ -690,19 +789,24 @@ public class StateManager implements IStateManager {
         String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
 
-        Map<String, String> properties = applicationState.getScopeValue( "personalizationProperties");
+        Map<String, String> properties = applicationState.getScopeValue("personalizationProperties");
         List<String> additionalTags = applicationState.getScopeValue("additionalTagsForConfiguration");
 
-        try{
-            if( clientConfigSelector != null) {
-                Map<String, Map<String,String>> configs = clientConfigSelector.getConfigurations(properties, additionalTags);
-                configs.forEach((name, clientConfiguration) -> messageService.sendMessage(appId, deviceId, new ClientConfigChangedMessage(name, clientConfiguration)));
+        try {
+            if (clientConfigSelector != null) {
+                Map<String, Map<String, String>> configs = clientConfigSelector.getConfigurations(properties, additionalTags);
+                configs.forEach((name, clientConfiguration) -> messageService.sendMessage(appId, deviceId,
+                        new ClientConfigChangedMessage(name, clientConfiguration)));
             }
 
             // Send versions
             ClientConfigChangedMessage versionConfiguration = new ClientConfigChangedMessage("versions");
             versionConfiguration.put("versions", Versions.getVersions());
-            messageService.sendMessage( appId, deviceId, versionConfiguration);
+            messageService.sendMessage(appId, deviceId, versionConfiguration);
+
+            // Send supported locales
+            LocaleChangedMessage localeMessage = localeMessageFactory.getMessage();
+            messageService.sendMessage(appId, deviceId, localeMessage);
 
         } catch (NoSuchBeanDefinitionException e) {
             logger.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
@@ -710,5 +814,3 @@ public class StateManager implements IStateManager {
         }
     }
 }
-
-

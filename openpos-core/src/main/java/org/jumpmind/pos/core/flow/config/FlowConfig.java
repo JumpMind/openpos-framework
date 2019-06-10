@@ -104,9 +104,9 @@ public class FlowConfig {
         this.configScope = configScope;
     }
     
-    public void addGlobalTransition(String actionName, Class<? extends Object> destination) {
-        actionToStateMapping.put(actionName, destination);
-        autoConfigureTargetState(destination);
+    public void addGlobalTransitionOrActionHandler(String actionName, Class<? extends Object> destinationOrActionHandler) {
+        actionToStateMapping.put(actionName, destinationOrActionHandler);
+        autoConfigureTargetState(destinationOrActionHandler);
     }
 
     public void addGlobalSubTransition(String string, FlowConfig flowConfig) {
