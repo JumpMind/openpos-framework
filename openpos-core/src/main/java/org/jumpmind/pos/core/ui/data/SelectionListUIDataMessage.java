@@ -14,7 +14,7 @@ public class SelectionListUIDataMessage extends UIDataMessage {
     private List<SelectionListItem> disabledItems;
     private int numberItemsPerPage;
     private int numberTotalItems;
-    private int defaultSelectItemIndex;
+    private int defaultSelectItemIndex = 0;
     private SelectionMode selectionMode;
 
     public SelectionListUIDataMessage() {
