@@ -30,5 +30,4 @@ import java.lang.annotation.Target;
 public @interface TableDef {
     String name();
     String description() default "";
-    boolean definesPrimaryKey() default false;
 }
