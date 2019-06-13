@@ -140,7 +140,7 @@ public class SelectionListUIMessage extends UIMessage {
     }
 
     public void setNumberTotalItems(int numberTotalItems) {
-        this.numberTotalItems = this.numberTotalItems;
+        this.numberTotalItems = numberTotalItems;
     }
 
     public int getCurrentPage() {
