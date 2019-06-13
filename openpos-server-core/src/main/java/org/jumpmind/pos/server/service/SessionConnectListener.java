@@ -50,6 +50,10 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
         String queryParams = getHeader(event.getMessage(), QUERY_PARAMS_HEADER);
         sessionQueryParamsMap.put(sessionId, toQueryParams(queryParams));
         sessionAuthenticated.put(sessionId, serverAuthToken == null || serverAuthToken.equals(authToken));
+        if (serverAuthToken != null && ! serverAuthToken.equals(authToken)) {
+            String clientAuthTokenValueIfNull = authToken == null || "".equals(authToken) || "undefined".equals(authToken) ? String.format(" (value is: '%s')", authToken) : "";
+            this.log.warn("Client auth token{} does not match server auth token, client connection will be rejected.", clientAuthTokenValueIfNull);
+        };
         sessionCompatible.put(sessionId, serverCompatibilityVersion == null || serverCompatibilityVersion.equals(compatibilityVersion));
 
         setPersonalizationResults(sessionId, event);

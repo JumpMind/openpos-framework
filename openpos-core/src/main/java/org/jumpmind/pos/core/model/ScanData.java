@@ -1,14 +1,14 @@
 package org.jumpmind.pos.core.model;
 
 public class ScanData {
-    private String type;
+    private OpenposBarcodeType type;
     private String data;
 
-    public String getType() {
+    public OpenposBarcodeType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(OpenposBarcodeType type) {
         this.type = type;
     }
 

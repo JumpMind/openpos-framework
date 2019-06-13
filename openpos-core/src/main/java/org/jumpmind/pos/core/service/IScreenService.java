@@ -1,6 +1,6 @@
 package org.jumpmind.pos.core.service;
 
-import org.jumpmind.pos.core.flow.IScreenInterceptor;
+import org.jumpmind.pos.core.flow.IMessageInterceptor;
 import org.jumpmind.pos.core.screen.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
 
@@ -14,9 +14,13 @@ public interface IScreenService {
 
     public UIMessage getLastDialog(String appId, String nodeId);
 
-    public void addScreenInterceptor(IScreenInterceptor interceptor);
+    public void addToastInterceptor(IMessageInterceptor<Toast> interceptor);
 
-    public void removeScreenInterceptor(IScreenInterceptor interceptor);
+    public void removeToastInterceptor(IMessageInterceptor<Toast> interceptor);
+    
+    public void addScreenInterceptor(IMessageInterceptor<UIMessage> interceptor);
+
+    public void removeScreenInterceptor(IMessageInterceptor<UIMessage> interceptor);
 
     public UIMessage getLastPreInterceptedScreen(String appId, String deviceId);
 

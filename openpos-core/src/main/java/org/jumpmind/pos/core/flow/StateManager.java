@@ -139,16 +139,20 @@ public class StateManager implements IStateManager {
 
         applicationState.getScope().setDeviceScope("stateManager", this);
 
+
+
         if (resumeState) {
+            sendConfigurationChangedMessage();
             refreshScreen();
         } else if (initialFlowConfig != null) {
             applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
+            sendConfigurationChangedMessage();
+            // TODO: think about making this ASYNC so it doesn't hold up the rest of initialization
             transitionTo(new Action("Startup"), initialFlowConfig.getInitialState());
         } else {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
 
-        sendConfigurationChangedMessage();
     }
 
     public void setErrorHandler(IErrorHandler errorHandler) {
@@ -176,6 +180,7 @@ public class StateManager implements IStateManager {
             }
         }
         this.sessionAuthenticated.remove(sessionId);
+        this.logger.info("Session {} removed from cache of authenticated sessions", sessionId);
     }
 
     @Override
@@ -689,6 +694,7 @@ public class StateManager implements IStateManager {
         screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void showScreen(UIMessage screen) {
         keepAlive();
@@ -698,8 +704,8 @@ public class StateManager implements IStateManager {
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
         }
         if (applicationState.getCurrentContext().getState() != null
-                && applicationState.getCurrentContext().getState() instanceof IScreenInterceptor) {
-            ((IScreenInterceptor) applicationState.getCurrentContext().getState()).intercept(applicationState.getAppId(),
+                && applicationState.getCurrentContext().getState() instanceof IMessageInterceptor) {
+            ((IMessageInterceptor<UIMessage>) applicationState.getCurrentContext().getState()).intercept(applicationState.getAppId(),
                     applicationState.getDeviceId(), screen);
         }
 

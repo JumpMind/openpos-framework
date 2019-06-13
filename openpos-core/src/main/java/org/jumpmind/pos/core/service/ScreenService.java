@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
@@ -26,7 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.content.ContentProviderService;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.FlowException;
-import org.jumpmind.pos.core.flow.IScreenInterceptor;
+import org.jumpmind.pos.core.flow.IMessageInterceptor;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.core.flow.SessionTimer;
@@ -45,6 +44,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.ResolvableType;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -80,7 +80,9 @@ public class ScreenService implements IScreenService, IActionListener {
     @Autowired
     ApplicationContext applicationContext;
 
-    List<IScreenInterceptor> screenInterceptors = new ArrayList<>();
+    List<IMessageInterceptor<UIMessage>> screenInterceptors = new ArrayList<>();
+    List<IMessageInterceptor<Toast>> toastInterceptors = new ArrayList<>();
+    
 
     @PostConstruct
     public void init() {
@@ -89,13 +91,20 @@ public class ScreenService implements IScreenService, IActionListener {
         }
     }
 
-    public void setScreenInterceptors(List<IScreenInterceptor> screenInterceptors) {
+    public void setScreenInterceptors(List<IMessageInterceptor<UIMessage>> screenInterceptors) {
         this.screenInterceptors.clear();
-        for (IScreenInterceptor screenInterceptor : screenInterceptors) {
+        for (IMessageInterceptor<UIMessage> screenInterceptor : screenInterceptors) {
             this.screenInterceptors.add(screenInterceptor);
         }
     }
 
+    public void setToastInterceptors(List<IMessageInterceptor<Toast>> toastInterceptors) {
+        this.toastInterceptors.clear();
+        for (IMessageInterceptor<Toast> toastInterceptor : toastInterceptors) {
+            this.toastInterceptors.add(toastInterceptor);
+        }
+    }
+    
     @SuppressWarnings("deprecation")
     @RequestMapping(method = RequestMethod.GET, value = "api/appId/{appId}/deviceId/{deviceId}/content")
     public void getImageAsByteArray(
@@ -281,8 +290,9 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public void showToast(String appId, String nodeId, Toast toast) {
-        messageService.sendMessage(appId, nodeId, toast);
+    public void showToast(String appId, String deviceId, Toast toast) {
+        interceptToast(appId, deviceId, toast);
+        messageService.sendMessage(appId, deviceId, toast);
     }
 
     @Override
@@ -326,18 +336,39 @@ public class ScreenService implements IScreenService, IActionListener {
         }
     }
 
+    protected void interceptToast(String appId, String deviceId, Toast toast) {
+        if (this.toastInterceptors != null) {
+            for (IMessageInterceptor<Toast> toastInterceptors : toastInterceptors) {
+                toastInterceptors.intercept(appId, deviceId, toast);
+            }
+        }
+
+        String[] toastInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, Toast.class));
+
+        if (toastInterceptorBeanNames != null) {
+            for (String beanName: toastInterceptorBeanNames) {
+                @SuppressWarnings("unchecked")
+                IMessageInterceptor<Toast> toastInterceptor =  (IMessageInterceptor<Toast>) applicationContext.getBean(beanName);
+                toastInterceptor.intercept(appId, deviceId, toast);
+            }
+        }
+    }
+    
     protected void interceptScreen(String appId, String deviceId, UIMessage screen) {
         if (this.screenInterceptors != null) {
-            for (IScreenInterceptor screenInterceptor : screenInterceptors) {
+            for (IMessageInterceptor<UIMessage> screenInterceptor : screenInterceptors) {
                 screenInterceptor.intercept(appId, deviceId, screen);
             }
         }
 
-        Map<String, IScreenInterceptor> screenInterceptorsSpring = applicationContext.getBeansOfType(IScreenInterceptor.class);
+        String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, UIMessage.class));
 
-        if (screenInterceptorsSpring != null) {
-            for (IScreenInterceptor screenInterceptor : screenInterceptorsSpring.values()) {
+        if (screenInterceptorBeanNames != null) {
+            for (String beanName: screenInterceptorBeanNames) {
+                @SuppressWarnings("unchecked")
+                IMessageInterceptor<UIMessage> screenInterceptor =  (IMessageInterceptor<UIMessage>) applicationContext.getBean(beanName);
                 screenInterceptor.intercept(appId, deviceId, screen);
+                
             }
         }
     }
@@ -441,15 +472,25 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public void addScreenInterceptor(IScreenInterceptor interceptor) {
+    public void addScreenInterceptor(IMessageInterceptor<UIMessage> interceptor) {
         this.screenInterceptors.add(interceptor);
     }
 
     @Override
-    public void removeScreenInterceptor(IScreenInterceptor interceptor) {
+    public void removeScreenInterceptor(IMessageInterceptor<UIMessage> interceptor) {
         this.screenInterceptors.remove(interceptor);
     }
 
+    @Override
+    public void addToastInterceptor(IMessageInterceptor<Toast> interceptor) {
+        this.toastInterceptors.add(interceptor);
+    }
+
+    @Override
+    public void removeToastInterceptor(IMessageInterceptor<Toast> interceptor) {
+        this.toastInterceptors.remove(interceptor);
+    }
+    
     protected String drawTop1(int boxWidth) {
         StringBuilder buff = new StringBuilder();
         buff.append(UPPER_LEFT_CORNER).append(StringUtils.repeat(HORIZONTAL_LINE, boxWidth - 2)).append(UPPER_RIGHT_CORNER);

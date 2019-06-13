@@ -67,7 +67,6 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
             .build();
     private static final ExecutorService instrumentationExecutor = Executors.newSingleThreadExecutor(factory);
 
-
     public EndpointDispatchInvocationHandler() {
     }
 
@@ -123,7 +122,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
         }
     }
 
-    protected Object findMatch(String path, Collection<Object> endpoints, String implementation ) {
+    protected Object findMatch(String path, Collection<Object> endpoints, String implementation) {
         for (Object endpointBean : endpoints) {
             Endpoint endPoint = ClassUtils.resolveAnnotation(Endpoint.class, endpointBean);
             if (endPoint.path().equals(path) && endPoint.implementation().equals(implementation)) {
@@ -149,8 +148,11 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
             }
         }
         IInvocationStrategy strategy;
-        if (endConfig != null) strategy = strategies.get(endConfig.getStrategy().name());
-        else strategy = strategies.get(config.getStrategy().name());
+        if (endConfig != null) {
+            strategy = strategies.get(endConfig.getStrategy().name());
+        } else {
+            strategy = strategies.get(config.getStrategy().name());
+        }
         ServiceSample sample = startSample(strategy, config, proxy, method, args);
         Object result = null;
         try {

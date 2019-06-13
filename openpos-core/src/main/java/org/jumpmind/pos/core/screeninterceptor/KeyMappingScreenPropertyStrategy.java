@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
 // ProxyMode so this becomes a DeviceScope bean when being @Autowired into a
 // list of interfaces
 @Scope(proxyMode = org.springframework.context.annotation.ScopedProxyMode.TARGET_CLASS, value = "device")
-public class KeyMappingScreenPropertyStrategy implements IScreenPropertyStrategy {
+public class KeyMappingScreenPropertyStrategy implements IMessagePropertyStrategy<UIMessage> {
 
     @Autowired(required = false)
     IKeyMappingService keyMappingService;

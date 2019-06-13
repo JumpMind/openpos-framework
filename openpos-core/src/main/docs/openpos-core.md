@@ -255,18 +255,26 @@ Similiar to a global transition, it is possible to configure a global action han
 
 Say the application has a language dropdown on every screen. An example of a global action handler would be a piece of logic that responds to a change in the users' language.  The action handler would receive the action and the new language, change it accordingly and refresh the screen, and be done.
 
-A Global action handler is the same as a state (including full access to Injections through @In) except that is has a method called **@OnGlobalAction** instead of @OnArrive like a state.
+Global action handlers can be configured through the application properties similar to global transitions.  For example, the configuration below would map the action **LanguageChanged** to the **LanguageChangedActionHandler** class:
 
 ```
-public class LanguageChangedActionHanlder  {
+DefaultFlow:
+  ...
+  - Global:  
+      LanguageChanged: LanguageChangedActionHandler
+```
+
+A global action handler has the same behaviour as a state (including full access to Injections through @In) except that is has a method called **@OnGlobalAction** instead of @OnArrive like a state.
+
+```
+public class LanguageChangedActionHandler  {
 
     @In(scope = ScopeType.Device)
     private IStateManager stateManager;    
 
-    @Override
-    public void arrive(Action action) {
+    @OnGlobalAction
+    public void handleGlobalAction(Action action) {
         // change the language here.
     }
 ```
-
 
