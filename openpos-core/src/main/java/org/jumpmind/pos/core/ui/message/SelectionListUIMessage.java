@@ -27,7 +27,6 @@ public class SelectionListUIMessage extends UIMessage {
     private int defaultSelectItemIndex = 0;
     private int numberItemsPerPage;
     private int numberTotalItems;
-    private int currentPage = 0;
     private String selectionChangedAction;
     private String fetchDataAction;
 
@@ -141,14 +140,6 @@ public class SelectionListUIMessage extends UIMessage {
 
     public void setNumberTotalItems(int numberTotalItems) {
         this.numberTotalItems = numberTotalItems;
-    }
-
-    public int getCurrentPage() {
-        return currentPage;
-    }
-
-    public void setCurrentPage(int currentPage) {
-        this.currentPage = currentPage;
     }
 
     public String getSelectionChangedAction() {
