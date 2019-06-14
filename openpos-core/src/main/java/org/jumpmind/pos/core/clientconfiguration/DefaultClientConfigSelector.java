@@ -65,7 +65,7 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
         });
 
         tagGroups.forEach(tags -> {
-            if( clientConfigsByTagsAndName.containsKey(tags)){
+            if( clientConfigsByTagsAndName.containsKey(tags) && clientConfigsByTagsAndName.get(tags) != null){
                 configurations.putAll(clientConfigsByTagsAndName.get(tags));
             }
         });

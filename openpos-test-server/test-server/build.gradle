@@ -1,0 +1,10 @@
+apply from: "../../openpos-core/common.gradle"
+
+repositories {
+	maven { url "http://maven.cns.com/artifactory/libs-releases" }
+}
+
+dependencies {
+     compile project(":openpos-wrapper")
+     compile project(":openpos-core")
+ }
