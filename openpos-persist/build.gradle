@@ -1,5 +1,7 @@
-apply from: "../openpos-core/common.gradle"
-apply from: "../openpos-service/common.gradle"
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
+apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
+apply from: '../openpos-gradle/src/main/resources/spring.gradle'
+
 
 dependencies {
     compile project(':openpos-util')

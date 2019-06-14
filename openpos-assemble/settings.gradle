@@ -1,5 +1,6 @@
+includeFlat 'openpos-gradle'
 includeFlat 'openpos-server-core'
-includeFlat 'openpos-core'
+includeFlat 'openpos-flow'
 includeFlat 'openpos-wrapper'
 includeFlat 'openpos-util'
 includeFlat 'openpos-devices'

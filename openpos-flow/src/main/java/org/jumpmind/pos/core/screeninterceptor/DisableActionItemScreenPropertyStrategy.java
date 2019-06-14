@@ -7,7 +7,7 @@ import org.jumpmind.pos.core.service.IDisableActionItemService;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class DisableActionItemScreenPropertyStrategy implements IScreenPropertyStrategy {
+public class DisableActionItemScreenPropertyStrategy implements IMessagePropertyStrategy<UIMessage> {
 
 	@Autowired( required = false )
 	IDisableActionItemService disableActionItemService;

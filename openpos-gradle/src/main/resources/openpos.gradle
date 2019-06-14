@@ -1,6 +1,9 @@
-apply from: "${buildscript.sourceFile.parent}/ide.gradle"
-
 apply plugin: 'groovy'
+
+tasks.withType(GroovyCompile) {
+    options.compilerArgs = ['-Xlint:none']
+}
+
 
 sourceSets {
     // In order to reference groovy from Java, the source sets need to be considered together during compilation (in

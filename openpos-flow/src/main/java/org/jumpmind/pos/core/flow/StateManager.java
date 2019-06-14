@@ -180,6 +180,7 @@ public class StateManager implements IStateManager {
             }
         }
         this.sessionAuthenticated.remove(sessionId);
+        this.logger.info("Session {} removed from cache of authenticated sessions", sessionId);
     }
 
     @Override
