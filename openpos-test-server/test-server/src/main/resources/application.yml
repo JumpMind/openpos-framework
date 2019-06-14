@@ -32,5 +32,8 @@ openpos:
     clientConfigSets:
       -
         tags: default
+        configsForTags:
+          uiConfig:
+            enableKeybinds: true
 
 spring.main.allow-bean-definition-overriding: true

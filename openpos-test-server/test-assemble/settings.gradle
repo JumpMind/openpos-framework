@@ -1,5 +1,5 @@
 include 'openpos-server-core'
-include 'openpos-core'
+include 'openpos-flow'
 include 'openpos-wrapper'
 include 'openpos-util'
 

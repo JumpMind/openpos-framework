@@ -40,7 +40,7 @@ public class ActionItem implements Serializable {
     private String fontSize;
     private String keybind;    
     @JsonIgnore
-    private transient boolean autoAssignEnabled = true;
+    private boolean autoAssignEnabled = true;
 
     public final static String FONT_SIZE_XS = "text-xs";
     public final static String FONT_SIZE_SM = "text-sm";
