@@ -64,23 +64,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
 
         try {
             log.info("session {} subscribed to {}", sessionId, topicName);
-            IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
-            boolean created = false;
-            if (stateManager == null) {
-                stateManager = stateManagerContainer.create(appId, deviceId, queryParams, personalizationProperties);
-                created = true;
-            } else {
-                stateManager.registerQueryParams(queryParams);
-                stateManager.registerPersonalizationProperties(personalizationProperties);
-                stateManager.sendConfigurationChangedMessage();
-            }
-
-            stateManagerContainer.setCurrentStateManager(stateManager);
-
-            stateManager.setSessionAuthenticated(sessionId, sessionAuthTracker.isSessionAuthenticated(sessionId));
-            stateManager.setSessionCompatible(sessionId, sessionAuthTracker.isSessionCompatible(sessionId));
-
-            if (!stateManager.isSessionAuthenticated(sessionId)) {
+            if (!sessionAuthTracker.isSessionAuthenticated(sessionId)) {
                 DialogUIMessage errorDialog = new DialogUIMessage();
                 DialogHeaderPart header = new DialogHeaderPart();
                 errorDialog.asDialog(new DialogProperties(false));
@@ -89,7 +73,8 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                 errorDialog.addMessagePart(MessagePartConstants.DialogHeader, header);
                 errorDialog.setMessage(Arrays.asList("The client and server authentication tokens did not match"));
                 messageService.sendMessage(appId, deviceId, errorDialog);
-            } else if (!stateManager.isSessionCompatible(sessionId)) {
+                return;
+            } else if (!sessionAuthTracker.isSessionCompatible(sessionId)) {
                 log.warn("Client compatiblity version of '{}' for deviceId '{}' is not compatible with the server", compatibilityVersion,
                         deviceId);
                 DialogUIMessage errorDialog = new DialogUIMessage();
@@ -108,10 +93,28 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                 errorDialog.addMessagePart(MessagePartConstants.DialogHeader, header);
                 errorDialog.setMessage(Arrays.asList(incompatibleVersionMessage.split("\n")));
                 messageService.sendMessage(appId, deviceId, errorDialog);
+                return;
+            }
+
+            IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+            boolean created = false;
+            if (stateManager == null) {
+                // If your first state has a
+                stateManager = stateManagerContainer.create(appId, deviceId, queryParams, personalizationProperties);
+                created = true;
             } else {
-                if (!created) {
-                    stateManager.refreshScreen();
-                }
+                stateManager.registerQueryParams(queryParams);
+                stateManager.registerPersonalizationProperties(personalizationProperties);
+                stateManager.sendConfigurationChangedMessage();
+            }
+
+            stateManagerContainer.setCurrentStateManager(stateManager);
+
+            stateManager.setSessionAuthenticated(sessionId, sessionAuthTracker.isSessionAuthenticated(sessionId));
+            stateManager.setSessionCompatible(sessionId, sessionAuthTracker.isSessionCompatible(sessionId));
+
+            if (!created) {
+                stateManager.refreshScreen();
             }
 
         } catch (Exception ex) {
