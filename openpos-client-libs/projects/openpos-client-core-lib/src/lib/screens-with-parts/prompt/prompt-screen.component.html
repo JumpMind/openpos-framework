@@ -1,0 +1,10 @@
+<app-waffle [showDrawer]="screen.sausageLinks && screen.sausageLinks.length > 0">
+    <app-bacon-strip waffle-header fxFlex="100%"></app-bacon-strip>
+    <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
+        fxLayoutGap="4px" fxLayoutGap.lg="20px">
+        <app-sausage-links waffle-drawer-content></app-sausage-links>
+    </div>
+    <div waffle-body>
+        <app-prompt-form-part></app-prompt-form-part>
+    </div>
+</app-waffle>

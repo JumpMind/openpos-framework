@@ -1,0 +1,7 @@
+@mixin primary-button-theme($theme) {
+    $disabled: map-get($theme, disabled );
+
+    .disabled{
+        background-color: $disabled;
+    }
+}

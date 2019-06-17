@@ -1,0 +1,12 @@
+<button mat-button *ngIf="customerName || screenType === 'Transaction'" color="accent" style="text-align: left" (click)="onClick()"
+    disableRipple="!loyaltyButton" [ngClass]="{'customer-read-only': !loyaltyButton}" class="link-customer-button">
+    <ng-container *ngIf="customerName">
+        <mat-icon>person</mat-icon>&nbsp;
+        <span class="text-sm">{{customerName}}</span>
+    </ng-container>
+    <ng-container *ngIf="!customerName && !noCustomerText">
+        <mat-icon class="muted-color">link</mat-icon>&nbsp;
+        <span class="muted-color">No Linked Customer</span>
+    </ng-container>
+    <div id="noCustomer" fxFlex="1 1 150px" style="white-space: pre-wrap" *ngIf="noCustomerText && !customerName" class="muted-color text-center">{{noCustomerText}}</div>
+</button>

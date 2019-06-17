@@ -1,0 +1,19 @@
+<app-waffle [showDrawer]="screen.sausageLinks && screen.sausageLinks.length > 0">
+	<app-bacon-strip waffle-header fxFlex="100%"></app-bacon-strip>
+
+	<div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
+		fxLayoutGap="4px" fxLayoutGap.lg="20px">
+		<app-sausage-links waffle-drawer-content></app-sausage-links>
+		<div fxFlex="1 1 auto"></div>
+	</div>
+
+	<div waffle-body class="body-content" gdAreas="form | status" gdRows="minmax(200px, 100%) auto" gdGap="6px">
+
+		<app-auto-complete-address-part gdArea="form" [formName]="'form'" [submitButton]="screen.submitButton"
+			[alternateSubmitActions]="screen.alternateSubmitActions">
+		</app-auto-complete-address-part>
+
+		<app-status-strip gdArea="status" waffle-footer></app-status-strip>
+	</div>
+
+</app-waffle>

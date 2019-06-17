@@ -1,0 +1,20 @@
+<form fxFlex="1 1 auto" (ngSubmit)="submitForm()" [formGroup]="form" novalidate [markDirtyOnSubmit]="form" id="dynamic-form" fxLayout="column">
+    <mat-card-content fxFlex="1 1 auto" mat-dialog-content fxLayout="column">
+        <app-dynamic-form-field *ngFor="let field of screenForm.formElements" [formGroup]="form" [formField]="field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+        <mat-error>
+            <div id="formErrorsWrapper"><app-show-errors #formErrors [control]="form"></app-show-errors></div>
+            <div *ngFor="let error of screenForm.formErrors">{{error}}</div>
+        </mat-error>	
+    </mat-card-content>
+    <mat-card-actions fxFlex="0 0 auto" fxLayoutAlign="end" mat-dialog-actions >
+        <button fxFlex="0 0 auto" mat-raised-button type="button" color="primary-inverse" *ngFor="let button of buttons" (click)="onButtonClick(button)">
+            <span>{{button.label}}</span>
+            <app-icon *ngIf="button.icon" [iconClass]="'material-icons'" [iconName]="button.icon"></app-icon>
+        </button>
+        <button fxFlex="0 0 auto" type="submit" mat-raised-button color=primary *ngIf="submitButton">
+            <span>{{submitButton.title}}</span>
+            <app-icon *ngIf="submitButton.icon" [iconClass]="'material-icons'" [iconName]="submitButton.icon"></app-icon>
+        </button>
+    </mat-card-actions>
+</form>
+

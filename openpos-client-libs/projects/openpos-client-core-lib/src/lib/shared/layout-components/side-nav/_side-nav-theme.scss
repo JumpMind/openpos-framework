@@ -1,0 +1,19 @@
+@mixin side-nav-theme($theme) {
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+
+    .desktop-header{
+        border-color: $app-primary;
+    }
+
+    .side-nav{
+        border-color: mat-color($foreground, divider);
+    }
+
+    .side-nav-footer{
+        border-color: mat-color($foreground, divider);
+    }
+}

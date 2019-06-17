@@ -1,0 +1,7 @@
+@import 'openpos-default-theme';
+@import 'bang-orange-theme';
+
+@mixin openpos-themes{
+    @include openpos-default-theme();
+    @include bang-orange-theme();
+}

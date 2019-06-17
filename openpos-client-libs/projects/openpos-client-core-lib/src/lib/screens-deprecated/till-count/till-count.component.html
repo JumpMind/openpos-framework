@@ -1,0 +1,25 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px">
+    <mat-card fxFlex="1 1 auto" fxLayout="column" class="page-content-card scrollable-content-card">
+        <mat-card-content>
+            <app-dynamic-form-control id="till-form" #tillForm [screenForm]="screen.form"
+                [alternateSubmitActions]="screen.alternateSubmitActions"></app-dynamic-form-control>
+        </mat-card-content>
+    </mat-card>
+    <mat-card fxFlex="0 0 auto" class="page-content-card text-left">
+        <mat-card-title ngClass="muted-color text-sm" ngClass.xs="text-xs">
+            Total
+        </mat-card-title>
+        <mat-card-content>
+            <p class="muted-color text-lg">
+                <app-currency-text [amountText]="screen.total"></app-currency-text>
+            </p>
+        </mat-card-content>
+    </mat-card>
+    <div fxFlex="0 0 auto" fxLayoutAlign="end">
+        <button *ngIf="nextAction" type="submit" mat-raised-button color=primary (click)="onNextAction()"
+            form="dynamic-form">
+            <span>Next</span>
+            <app-icon [iconClass]="'material-icons'" [iconName]="nextAction.icon"></app-icon>
+        </button>
+    </div>
+</div>

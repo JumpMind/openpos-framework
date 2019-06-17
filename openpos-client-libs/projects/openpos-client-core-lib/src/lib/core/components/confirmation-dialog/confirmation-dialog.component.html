@@ -1,0 +1,6 @@
+<h1 mat-dialog-title>{{confirmDialog.title}}</h1>
+<mat-dialog-content><div [innerHTML]="confirmDialog.message | markdownFormatter"></div></mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="end">
+  <button mat-raised-button color="primary-inverse" mat-dialog-close>{{confirmDialog.cancelButtonName}}</button>
+  <button color="primary" cdkFocusInitial mat-raised-button [mat-dialog-close]="true">{{confirmDialog.confirmButtonName}}</button>
+</mat-dialog-actions>

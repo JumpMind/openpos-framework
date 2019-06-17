@@ -1,0 +1,17 @@
+<mat-card class="page-content-card dark">
+    <mat-card-content class="text-lg container">
+        <div class="item-count text-md">{{screenData.itemCount}}</div>
+        <div class="total">
+            <span *ngIf="screenData.grandTotal">{{screenData.grandTotal.label}}&nbsp;</span>
+            <span *ngIf="screenData.grandTotal">{{screenData.grandTotal.value | valueFormatter:screenData.grandTotal.valueFormatter}}</span>
+        </div>
+        <button mat-raised-button color="primary"
+            class="checkout-button mat-elevation-z0"
+            [disabled]="!screenData.checkoutButton.enabled"
+            (click)="onMenuItemClick(screenData.checkoutButton)"
+            >
+            <span class="text-md">{{screenData.checkoutButton.title}}</span>
+            <app-icon [iconClass]="'mat-48'" [iconName]="screenData.checkoutButton.icon"></app-icon>
+        </button>
+    </mat-card-content>
+</mat-card>

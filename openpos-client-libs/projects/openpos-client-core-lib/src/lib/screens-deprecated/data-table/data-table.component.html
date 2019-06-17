@@ -1,0 +1,29 @@
+<app-waffle>
+    <app-bacon-strip waffle-header></app-bacon-strip>
+
+    <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
+        fxLayoutGap="4px" fxLayoutGap.lg="20px">
+        <app-sausage-links waffle-drawer-content></app-sausage-links>
+    </div>
+
+    <div waffle-body class="body-content">
+        <mat-card fxLayout="column" class="page-content-card data-table-card">
+
+            <mat-card-content fxFlex="1 1 100%">
+                <app-grid-table [rows]="rows" [columnHeaders]="columnHeaders"></app-grid-table>
+            </mat-card-content>
+
+            <mat-card-actions *ngIf="screen.actionButton" align="end">
+                <button mat-button color="primary-inverse" (click)="onMenuItemClick(screen.actionButton)">
+                    <span *ngIf="screen.actionButton.title">{{screen.actionButton.title}}</span>
+                    <app-icon *ngIf="screen.actionButton.icon" [iconName]="screen.actionButton.icon"
+                        [iconClass]="'material-icons'"></app-icon>
+                </button>
+            </mat-card-actions>
+
+        </mat-card>
+
+        <app-status-strip waffle-footer></app-status-strip>
+    </div>
+
+</app-waffle>

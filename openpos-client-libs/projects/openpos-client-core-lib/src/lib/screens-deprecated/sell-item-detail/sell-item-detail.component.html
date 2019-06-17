@@ -1,0 +1,65 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" class="serrated-edge">
+        <mat-card fxFlexFill class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
+            <mat-card-content>
+                <mat-list fxFlexFill class="list-seperator field-list" ngClass="xs" >
+    
+                    <mat-list-item *ngFor="let field of screen.item.fields" style="height: unset;" >
+                        <div class="itemContent" fxFlexFill fxLayout="row" fxLayout.xs="column" 
+                            fxLayoutAlign="space-between start" fxLayoutGap="10px" style="padding: 5px;">
+    
+                            <ng-container *ngIf="!field.subfields; else multifield">
+                                <div fxLayout="column">
+                                    <span matLine header>{{field.label}}</span>
+                                    <span matLine class="text-md">{{field.value || 'N/A'}}</span>
+                                </div>
+                            </ng-container>
+                            <ng-template #multifield>
+                                <div *ngFor="let subfield of field.subfields" fxLayout="column">
+                                    <span matLine header>{{subfield.label}}</span>
+                                    <span matLine class="text-md">{{subfield.value || 'N/A'}}</span>
+                                    <span matLine *ngFor="let id of subfield.list" class="text-md">
+                                        {{id}}
+                                    </span>
+                                    <span matLine *ngFor="let id of subfield.links" class="text-md primary" (click)="onIdClick(id)">
+                                        {{id}}
+                                    </span>
+                                </div>
+                            </ng-template>
+
+                        </div>
+                    </mat-list-item>
+                    
+                    <mat-list-item *ngIf="screen.promos">
+                        <p matLine>Promotions</p>
+                        <p matLine *ngIf="promosDataSource.filteredData.length === 0" class="text-md">N/A</p> 
+                    </mat-list-item>
+                </mat-list>
+    
+                <ng-container *ngIf="promosDataSource.filteredData.length > 0">
+                    <mat-table #table [dataSource]="promosDataSource">
+                        <ng-container matColumnDef="desc">
+                            <mat-header-cell *matHeaderCellDef> Promotion Description </mat-header-cell>
+                            <mat-cell *matCellDef="let promo"> {{promo.description}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="price">
+                            <mat-header-cell *matHeaderCellDef> Price </mat-header-cell>
+                            <mat-cell *matCellDef="let promo"> {{promo.price}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="disc">
+                            <mat-header-cell *matHeaderCellDef> Discount </mat-header-cell>
+                            <mat-cell *matCellDef="let promo"> {{promo.discount}} </mat-cell>
+                        </ng-container>
+                        <ng-container matColumnDef="ext">
+                            <mat-header-cell *matHeaderCellDef> Ext Price </mat-header-cell>
+                            <mat-cell *matCellDef="let promo"> {{promo.extPrice}} </mat-cell>
+                        </ng-container>
+                        
+                        <mat-header-row *matHeaderRowDef="['desc', 'price', 'disc', 'ext']"></mat-header-row>
+                        <mat-row *matRowDef="let row; columns: ['desc', 'price', 'disc', 'ext'];"></mat-row>
+                    </mat-table>
+                </ng-container>
+            </mat-card-content>
+        </mat-card>
+    </div>
+    
+    

@@ -1,0 +1,91 @@
+<form id="dynamic-list" (ngSubmit)="onSubmit()" novalidate>
+    <div class="dynamic-list" fxLayout="column" fxLayoutAlign="start">
+        <div fxLayout="row" fxLayoutAlign="start">
+            <!--  Add Value field. -->
+            <mat-card *ngIf="list.addValueField" fxFlex="1 1 auto" class="page-content-card value-field" fxLayout="row" fxLayoutAlign="start">
+                <mat-card-content fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start">
+                    <mat-form-field style="width:92%;vertical-align:middle;">
+                        <div class="label">
+                            {{list.addValueField.label}} 
+                        </div>
+                        <app-icon *ngIf="list.addValueField.iconName" matPrefix iconName="{{list.addValueField.iconName}}" iconClass="material-icons"></app-icon>
+                        <!-- [formControlName]="addValueField" [formControl]="formGroup.controls[list.addValueField.name]"
+                        -->
+                        <input class="field" matInput 
+                            [value]="displayValue(list.addValueField.value)" [formatterName]="list.addValueField.inputType" [required]="false"
+                            [placeholder]="list.addValueField.placeholder" [readonly]="false" [keyboardLayout]="keyboardLayout"
+                            [attr.minlength]="list.addValueField.minLength" [attr.maxlength]="list.addValueField.maxLength"
+                            [attr.type]="isNumericType() ? 'tel' : 'text'" (change)="onAddValueFieldChange($event.target.value)"
+                            autoSelectOnFocus>
+                    </mat-form-field>
+                    <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start" style="width:8%;">
+                        <div>&nbsp;</div>  <!-- spacer -->
+                        <div>&nbsp;</div>  <!-- spacer -->
+                        <button type="button" mat-icon-button mat-button matSuffix color="primary" (click)="addValue(list.addValueField.value)">
+                            <mat-icon>add_circle</mat-icon>
+                        </button>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+            <!--  Summary field. -->
+            <mat-card *ngIf="list.summaryField" fxFlex="1 1 auto" class="page-content-card value-field" fxLayout="row" fxLayoutAlign="end">
+                <mat-card-content fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="end">
+                    <mat-form-field style="width:100%">
+                        <div class="label">
+                            {{list.summaryField.label}}
+                        </div>
+                        <app-icon *ngIf="list.summaryField.iconName" matPrefix iconName="{{list.summaryField.iconName}}" iconClass="material-icons"></app-icon>
+                        <!-- [formControlName]="list.summaryField.name" [formControl]="formGroup.controls[list.summaryField.name]" -->
+                        <input class="field" matInput [value]="displayValue(list.summaryField.value)" [formatterName]="list.summaryField.inputType" [required]="false" 
+                            [readonly]="true" [keyboardLayout]="keyboardLayout" [attr.type]="isNumericType() ? 'tel' : 'text'"
+                            (change)="onSummaryFieldChanged($event.target.value)">
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+        </div>
+        <!--  List field. -->
+        <mat-card fxFlex="1 1 auto" class="page-content-card scrollable-content-card serrated-edge list-field" fxLayout="column" fxLayoutAlign="start">
+            <mat-card-content fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start">
+                <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start">
+                    <app-icon *ngIf="list.valueListIconName"  iconName="{{list.valueListIconName}}" iconClass="material-icons"></app-icon>
+                    <div class="list-field-label">
+                        {{list.valueListHeader}} ({{list.valueList.length}} Item{{list.valueList.length === 1 ? '' : 's'}})
+                    </div>
+                </div>
+                <mat-list-item *ngFor="let value of list.valueList; index as i">
+                    <div class="list-item" fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="start">
+                        <div style="margin:10px 5px 2px 12px">
+                            {{i + 1}}.&nbsp;&nbsp;{{displayValue(list.valueList[i])}}&nbsp;&nbsp;
+                        </div>
+                        <button *ngIf="list.removingAllowed" type="button" mat-icon-button mat-button matSuffix color="primary" (click)="removeValue(i)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </div>
+                </mat-list-item>
+            </mat-card-content>
+        </mat-card>
+        <!--  Buttons. -->
+        <mat-card-actions fxFlex="0 0 auto" mat-dialog-actions >
+            <button fxFlex="0 0 auto" mat-raised-button type="button" color="primary-inverse" *ngFor="let button of buttons" (click)="onButtonClick(button)">
+                <span>{{button.label}}</span>
+                <app-icon *ngIf="button.icon" [iconClass]="'material-icons'" [iconName]="button.icon"></app-icon>
+            </button>
+            <div fxFlex="1 1 auto"></div>
+            <button fxFlex="0 0 auto" type="submit" mat-raised-button color="primary" *ngIf="submitButton">
+                <span>{{submitButton.title}}</span>
+                <app-icon *ngIf="submitButton.icon" [iconClass]="'material-icons'" [iconName]="submitButton.icon"></app-icon>
+            </button>
+        </mat-card-actions>
+    </div>
+    <!--  Display errors. -->
+    <mat-error *ngIf="list.formErrors && list.formErrors.length > 0">
+        <mat-card-footer fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start">
+            <mat-list-item *ngFor="let error of list.formErrors">
+                <div class="warn">
+                    {{error}}
+                </div>
+            </mat-list-item>            
+        </mat-card-footer>
+        <!--<app-show-errors class="error"></app-show-errors> -->
+    </mat-error>
+</form>

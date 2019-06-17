@@ -1,0 +1,41 @@
+<!--I didn't want to put the time in to make this truly generic so right now its specific to totals
+    but if we want to use this for something else I think we could either pass in a component or template
+    to render in place of the card for different data types -->
+<div fxLayout="row" fxLayoutAlign="start" fxLayoutGap="6px">
+    <ng-container *ngFor="let total of items; index as i">
+        <mat-card fxFlex class="page-content-card text-center total" *ngIf="i <= ((numberItemsToShow | async)-1)"
+            [ngClass]="{ 'total': i === items.length-1 }">
+
+            <div class="muted-color text-sm overflow-title" ngClass.xs="overflow-title-sm"
+                ngClass.sm="overflow-title-sm">
+                {{total.name}}
+            </div>
+            <div class="muted-color text-lg overflow-content" ngClass.xs="overflow-content-sm"
+                ngClass.sm="overflow-content-sm">
+                <app-currency-text [amountText]="total.amount"></app-currency-text>
+            </div>
+        </mat-card>
+    </ng-container>
+    <button *ngIf="(numberItemsToShow | async) < items.length" mat-icon-button color="accent"
+        [matMenuTriggerFor]="totalsMenu">
+        <mat-icon>more_vert</mat-icon>
+    </button>
+</div>
+
+<mat-menu #totalsMenu="matMenu" overlapTrigger=false class="overflow-menu-panel" panelClass="overflow-menu-panel">
+    <div fxFlex="0 0 auto" fxLayout="column" fxLayoutAlign="center" fxLayoutGap="6px">
+        <ng-container *ngFor="let total of items; index as i">
+            <mat-card fxFlex class="page-content-card text-center" *ngIf="i > ((numberItemsToShow | async)-1)"
+                [ngClass]="{ 'total': i === items.length-1 }">
+                <mat-card-title class="muted-color text-sm">
+                    {{total.name}}
+                </mat-card-title>
+                <mat-card-content>
+                    <p class="muted-color text-lg">
+                        <app-currency-text [amountText]="total.amount"></app-currency-text>
+                    </p>
+                </mat-card-content>
+            </mat-card>
+        </ng-container>
+    </div>
+</mat-menu>

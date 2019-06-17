@@ -1,0 +1,10 @@
+.list{
+    height: 100%;
+}
+
+:host{
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 100%;
+    min-height: 200px;
+}

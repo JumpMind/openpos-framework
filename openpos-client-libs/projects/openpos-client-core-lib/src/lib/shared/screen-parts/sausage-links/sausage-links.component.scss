@@ -1,0 +1,9 @@
+.sausage-link {
+    text-align: left;
+}
+
+:host {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+}

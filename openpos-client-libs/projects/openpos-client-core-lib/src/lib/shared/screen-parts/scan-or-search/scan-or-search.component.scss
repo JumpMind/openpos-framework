@@ -1,0 +1,31 @@
+:host{
+    border-radius: 4px;
+}
+
+.scan-button{
+    width: 100px;
+    height: 55px;
+}
+
+.scan-button-xs {
+    width: 60px;
+    height: 35px;
+}
+
+.scan-input{
+    font-size: 24px;
+    height: 55px;
+    margin: 0px;
+    padding: 4px;
+}
+
+.scan-input-xs {
+    font-size: 16px;
+    height: 35px;
+    margin: 0px;
+    padding: 4px;
+}
+
+.scan-input:focus{
+    outline:none;
+}

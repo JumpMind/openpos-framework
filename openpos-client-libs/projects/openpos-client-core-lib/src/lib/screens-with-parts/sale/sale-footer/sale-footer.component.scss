@@ -1,0 +1,21 @@
+.container{
+    display: flex;
+    align-items: center;
+}
+
+.item-count{
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.total{
+    display: inline-block;
+    width: 100%;
+    text-align: right;
+    margin-right: 20px;
+}
+
+.checkout-button{
+    display: inline-block;
+    min-width: auto;
+}

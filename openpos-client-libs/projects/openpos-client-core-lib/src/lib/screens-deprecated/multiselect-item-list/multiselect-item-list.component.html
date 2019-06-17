@@ -1,0 +1,66 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px">
+    <!-- The mat-card tag below was copied from transaction.component. -->
+
+    <mat-card fxFlex="0 1 100%" class="page-content-card scrollable-content-card serrated-edge" fxLayout="column" fxLayoutAlign="start" style="padding-top:6px;">
+        <mat-toolbar *ngIf="areAnyItemsSelected()" class="page-content-card" color="primary" style="padding-top:20px;padding-bottom:20px;">
+            <span>{{selectedItems.length}} Item{{selectedItems.length === 1 ? '' : 's'}} Selected</span>
+            <span fxFlex="1 1 auto"></span>
+            <span>
+                <button *ngIf="!screen.readOnly && isAddActionPresent() && 
+                (selectedItems.length > 1 || (selectedItems.length === 1 && itemActions.length === 1))" mat-icon-button color="primary-inverse" 
+                (click)="addItemsToSale(selectedItems)">
+                    <mat-icon>add_circle</mat-icon>
+                </button>
+                <button *ngIf="!screen.readOnly && isAddActionPresent() && 
+                selectedItems.length === 1 && itemActions.length > 1" mat-icon-button color="primary-inverse" 
+                (click)="openItemDialog(selectedItems[0])">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+            </span>
+        </mat-toolbar>
+        <mat-card-content #scrollList ngClass.xs="xs" style="padding-top:6px;">
+            <app-selectable-item-list [configuration]="listConfig" [selectedItemList]="selectedItems" (selectedItemListChange)="onItemListChange($event)">
+                <ng-template let-item>
+                    <div fxLayoutAlign="space-between" fxLayout.xs="column">
+                        <div fxFlex="90" fxAlign="left" >
+                            {{item.description}}<br/>
+                            <span class="muted-color">
+                                {{item.subtitle}}&nbsp;
+                            </span>
+                        </div>	
+                        <div fxAlign="right">
+                            <span class="primary text-md">
+                                <app-currency-text [amountText]="item.amount"></app-currency-text>
+                            </span>
+                        </div>	
+                        <div fxAlign="right" >
+                            <button *ngIf="isAnyActionPresent() && selectedItems.length == 0 && itemActions.length > 1" mat-icon-button color="primary" (click)="openItemDialog(item)">
+                                <mat-icon>more_vert</mat-icon>
+                            </button>
+                            <button *ngIf="isAnyActionPresent() && !isAddActionPresent() && 
+                            selectedItems.length == 0 && itemActions.length === 1" mat-icon-button color="primary" 
+                            (click)="doItemAction(item)">
+                                <mat-icon>keyboard_arrow_right</mat-icon>
+                            </button>
+                            <button *ngIf="isAnyActionPresent() && isAddActionPresent() && 
+                            selectedItems.length == 0 && itemActions.length === 1" mat-icon-button color="primary" 
+                            (click)="addItemsToSale([item])">
+                                <mat-icon *ngIf="isAddActionPresent()">add_circle</mat-icon>
+                            </button>
+                        </div>
+                     </div>
+                </ng-template>
+            </app-selectable-item-list> 
+        </mat-card-content>
+
+        <div *ngIf="screen.actionButton" fxFlex="1 1 auto"></div>
+        <mat-card-actions *ngIf="screen.actionButton" fxLayoutAlign="end">
+			<button mat-raised-button (click)="onActionButtonClick()" color="primary">
+                <span *ngIf="screen.actionButton.name" class="text-md">{{screen.actionButton.name}}</span>
+                <span *ngIf="!screen.actionButton.name" class="text-md">Next</span>
+                <mat-icon class="material-icons mat-48">keyboard_arrow_right</mat-icon>
+			</button>
+        </mat-card-actions>
+
+    </mat-card>
+</div>

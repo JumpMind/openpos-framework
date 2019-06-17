@@ -1,0 +1,10 @@
+<div fxFlex="auto" fxLayout="column" fxLayoutAlign="space-between" >
+    <div class="text-xs" style="overflow-wrap: break-word; font-weight: bold">{{item.posItemId}}</div>
+    <ng-container *ngIf="showImage(); else descriptionOnly">
+        <img class="item-img" [src]="imageSrc"  alt="{{item.posItemId}}" (error)="onImageLoadError()" (load)="onImageLoaded()" >
+        <div class="text-xs" style="overflow-wrap: break-word">{{item.description}}</div>
+    </ng-container>
+    <ng-template #descriptionOnly>
+        <div class="text-xs" style="overflow-wrap: break-word">{{item.description}}</div>
+    </ng-template> 
+</div>

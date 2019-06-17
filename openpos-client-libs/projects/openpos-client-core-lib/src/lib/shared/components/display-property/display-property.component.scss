@@ -1,0 +1,11 @@
+.display-property-value{
+    &.column{
+        overflow-wrap: break-word;
+    }
+}
+
+.display-property-label{
+    &.colon::after{
+        content: ':'
+    }
+}

@@ -1,0 +1,81 @@
+<form style="display: inherit" [formGroup]="tenderFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="tenderFormGroup">
+    <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="16px">
+        <div fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center"  fxLayoutGap="16px">
+
+            <mat-card *ngIf="totalAmount" fxFlex class="page-content-card text-center">
+                <mat-card-title class="muted-color text-sm text-left">
+                    {{totalAmount.label}}
+                </mat-card-title>
+                <mat-card-content>
+                    <p class="muted-color text-lg text-center">
+                        <app-currency-text [amountText]="totalAmount.value"></app-currency-text>
+                    </p>
+                </mat-card-content>
+            </mat-card>
+            <mat-card fxFlex class="page-content-card text-center">
+                <ng-container *ngIf="balanceDueAmount; else deprecatedBalanceDueBlock">
+                    <mat-card-title class="muted-color text-sm text-left">
+                            {{balanceDueAmount.label}}
+                    </mat-card-title>
+                    <mat-card-content>
+                        <p class="muted-color text-lg text-center">
+                            <app-currency-text [amountText]="balanceDueAmount.value"></app-currency-text>
+                        </p>
+                    </mat-card-content>
+                </ng-container>
+                <ng-template #deprecatedBalanceDueBlock>
+                    <mat-card-title class="muted-color text-sm text-left">
+                            Balance Due
+                    </mat-card-title>
+                    <mat-card-content>
+                        <p class="muted-color text-lg text-center">
+                            <app-currency-text [amountText]="balanceDue"></app-currency-text>
+                        </p>
+                    </mat-card-content>
+                </ng-template>
+            </mat-card>
+
+            <mat-card fxFlex class="page-content-card text-center">
+                <mat-card-content fxLayout="column" fxLayoutAlign="end" style="text-align: center">
+                    <mat-form-field ngClass="text-md">
+                        <input matInput #tenderAmountField="matInput" autoSelectOnFocus
+                            cdkFocusInitial
+                            formControlName="tenderAmtFld"
+                            style="text-align: center" 
+                            [placeholder]="tenderAmount.placeholder"
+                            [required]="tenderAmount.required"
+                            [formatterName]="'money'" novalidate type="tel" pattern="{{tenderAmount.pattern ? tenderAmount.pattern : ''}}" autofocus>
+                        <mat-error class="text-xs">
+                            <app-show-errors [control]="tenderFormGroup.controls['tenderAmtFld']"></app-show-errors>
+                        </mat-error>
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+        </div>
+
+        <mat-card fxFlex="1 1 auto" ngClass="page-content-card scrollable-content-card serrated-edge" fxLayout="column">
+            <mat-card-title class="text-md" style="padding:16px">
+                Completed Tenders
+            </mat-card-title>
+            <mat-card-content fxFlex="1 1 auto">
+                <mat-list class="list-seperator" ngClass.xs="xs">
+                    <mat-list-item *ngFor="let item of tenderItems">
+                        <p matLine>{{item.description}}</p>
+                        <span *ngIf="item.amount" class="text-md no-wrap">{{item.amount.indexOf('(') >=0 ? item.amount : item.amount|currency:session.getCurrencyDenomination():'symbol':'1.2'}}</span>
+                    </mat-list-item>
+                </mat-list>
+                <div *ngIf="tenderItems.length == 0" class="text-md"
+                fxLayout="column" fxLayoutAlign="center center">
+                    <app-icon iconName="credit_card" class="muted-color" iconClass="mat-128"></app-icon>
+                    Completed tenders will appear here.
+                </div>
+            </mat-card-content>
+            <mat-card-actions align="end">
+                <button *ngIf="actionButton" mat-raised-button type="submit" color=primary [disabled]="! actionButton.enabled">
+                    <span>{{actionButton.title}}</span>
+                    <app-icon *ngIf="actionButton.icon" [iconClass]="'material-icons'" [iconName]="actionButton.icon"></app-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </div>
+</form>

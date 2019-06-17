@@ -1,0 +1,23 @@
+<ng-container [ngSwitch]="alignmentType">
+    <div    *ngSwitchCase="DisplayPropertyAlignment.column" 
+            class="display-property column"
+            gdAreas="label value"
+            gdColumns="1fr 1fr">
+        <span gdArea="label" class="display-property-label column">{{property.label}}</span>
+        <span gdArea="value" *ngIf="property.value" class="display-property-value column">{{property.value | valueFormatter: property.valueFormatter}}</span>
+    </div>
+    <div *ngSwitchCase="DisplayPropertyAlignment.vertical" 
+        class="display-property vertical"
+        gdAreas="label | value">
+        <span gdArea="label" class="display-property-label vertical">{{property.label}}</span>
+        <span gdArea="value" *ngIf="property.value"  class="display-property-value vertical">{{property.value | valueFormatter: property.valueFormatter}}</span>
+    </div>
+    <div *ngSwitchCase="DisplayPropertyAlignment.colon" 
+            class="display-property colon"
+            gdAreas="label value"
+            gdGap="4px"
+            gdColumns="auto 1fr">
+        <span gdArea="label" class="display-property-label colon">{{property.label}}</span>
+        <span gdArea="value" *ngIf="property.value"  class="display-property-value colon">{{property.value | valueFormatter: property.valueFormatter}}</span>
+    </div>
+</ng-container>

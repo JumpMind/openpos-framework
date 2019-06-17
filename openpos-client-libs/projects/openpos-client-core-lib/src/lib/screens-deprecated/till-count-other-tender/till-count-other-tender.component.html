@@ -1,0 +1,49 @@
+<div fxLayout="column" fxFlexFill fxLayoutAlign="start" fxLayoutGap="6px" style="padding: 0 16px 0 16px">
+  <mat-card fxFlex="0 0 auto" class="amount-entry-card">
+    <mat-form-field id="amountEntryField" fxFlexFill appearance="outline" class="text-md" style="text-align: right" >
+      <input matInput fxFlexFill fxFlex #amountInput (keyup.enter)="onEnterAmount($event)"
+        [(ngModel)]="amountValue" placeholder="{{screen.promptPlaceHolderText}}" [formatterName]="'money'" [attr.maxlength]="10" type="tel">
+      <button mat-icon-button color="primary" (click)="onEnterAmount($event)">
+        <mat-icon>keyboard_return</mat-icon>
+      </button>
+    </mat-form-field>
+  </mat-card>
+  <mat-card fxFlex="0 1 100%" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
+    <mat-card-content>
+      <mat-list *ngIf="items.length > 0" class="list-seperator" ngClass.xs="xs">
+        <mat-list-item *ngFor="let item of items; index as i">
+          <p matLine>{{item.description}}</p>
+          <p matLine class="muted-color">{{item.subtitle}}</p>
+          <span class="primary text-md">{{item.amount|currency:'USD':'symbol':'1.2'}}</span>
+          <button mat-icon-button color="primary" [matMenuTriggerFor]="itemMenu">
+            <mat-icon>expand_more</mat-icon>
+          </button>
+          <mat-menu #itemMenu="matMenu">
+            <button mat-menu-item *ngFor="let m of screen.itemActions" (click)="doMenuItemAction(m, i)" [disabled]="!m.enabled">
+              <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
+              <span [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
+            </button>
+          </mat-menu>
+        </mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card fxFlex="0 0 auto" class="page-content-card">
+    <mat-card-content>
+      <p ngClass="muted-color text-lg" ngClass.xs="text-md" style="text-align: right; padding-right: 50px">
+        Total:
+        <app-currency-text [amountText]="totalAmount"></app-currency-text>
+      </p>
+    </mat-card-content>
+  </mat-card>
+
+  <ng-container *ngIf="nextAction">
+    <div fxFlex="0 0 auto" fxLayoutAlign="end">
+      <button type="submit" mat-button color="primary-inverse" (click)="onNextAction()">
+        <span>Next</span>
+        <app-icon [iconClass]="'material-icons'" [iconName]="nextAction.icon"></app-icon>
+      </button>      
+    </div>
+  </ng-container>
+</div>

@@ -1,0 +1,20 @@
+.screen-icon{
+    display: flex;
+}
+
+.mat-toolbar{
+    font-weight: normal;
+}
+
+.back-button{
+    margin-left:-20px; 
+    z-index:10;
+}
+
+.large-statusbar {
+    height: 100px;
+}
+
+.small-statusbar {
+    height: 56px;
+}

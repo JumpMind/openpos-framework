@@ -1,0 +1,31 @@
+.self-checkout-tender-outer {
+    height: 100%;
+    background-color: inherit;
+}
+
+.self-checkout-tender-body {
+    padding: 24px 16px;
+    width: 60%;
+    justify-self: center;
+    align-self: center;
+}
+
+.payment-title {
+    font-size: 36px;
+    font-weight: bold;
+}
+
+.payment-instructions {
+    font-size: 26px;
+}
+
+.payment-amount-due {
+    padding-top: 32px;
+    font-weight: bold;
+}
+
+.payment-remaining-balance {
+    font-weight: bold;
+    border-top: 1px solid black;
+    padding-top: 32px;
+}

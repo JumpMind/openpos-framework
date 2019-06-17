@@ -1,0 +1,10 @@
+@import './sale/sale-theme';
+@import './home/home-theme';
+@import './choose-options-dialog/choose-options-screen-dialog-theme';
+@import './return/return-theme';
+
+@mixin screen-with-parts-themes($theme){
+    @include sale-theme($theme);
+    @include home-theme($theme);
+    @include choose-options-screen-dialog-theme($theme);
+}

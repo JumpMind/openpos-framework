@@ -1,0 +1,13 @@
+<mat-card-title fxLayout="row">
+    <span *ngIf="screen.prompt" class="text-md text-left" [ngClass]="{'warn':screen.customerFacing}">{{screen.prompt}}</span>
+    <div fxFlex="1 1 auto"></div>
+    <button *ngIf="screen.backButton" mat-icon-button style="margin:-15px" (click)="session.onAction(screen.backButton.action)" [actionItem]="screen.backButton">
+        <mat-icon>close</mat-icon>
+    </button>
+</mat-card-title>
+<div *ngIf="screen.instructions" class="text-sm" style="margin-bottom: 16px;">
+    {{screen.instructions}}
+</div>
+<app-dynamic-form-part fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding-top:6px;padding-bottom:6px"
+    [formName]="'form'" [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
+</app-dynamic-form-part>

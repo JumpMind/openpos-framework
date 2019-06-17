@@ -1,0 +1,22 @@
+<div fxFlexFill fxLayout="row wrap" fxLayoutAlign="center" [ngStyle]="screen.backgroundImage | backgroundImageUrl">
+    <mat-card *ngFor="let menuItem of menuItems" fxFlexAlign="center" fxHide.xs>
+        <button mat-raised-button color=primary [ngClass]="menuItem.buttonSize || 'menuItem-md'" [disabled]="!menuItem.enabled"
+            (click)="onMenuItemClick(menuItem)" [actionItem]="menuItem">
+            <div fxLayoutAlign="center center" fxLayout="column">
+                <app-icon fxFlex="1 0 auto" iconName="{{menuItem.icon}}" iconClass="material-icons mat-64"></app-icon>
+                <div>{{menuItem.title}}</div>
+                <div *ngIf="menuItem.keybind && keybindsEnabled()" style="padding-bottom: 8px;" class="text-xs">{{menuItem.keybind}}</div>
+            </div>
+        </button>
+    </mat-card>
+    <mat-card *ngIf="menuItems.length > 0" fxFlex fxHide fxShow.xs>
+        <mat-nav-list>
+            <mat-list-item *ngFor="let menuItem of menuItems" (click)="onMenuItemClick(menuItem)">
+                <app-icon class="primary text-lg" iconName="{{menuItem.icon}}" iconClass="material-icons"></app-icon>
+                <span class="primary text-lg">&nbsp;{{menuItem.title}}</span>
+                <span fxFlex></span>
+                <mat-icon class="material-icons">keyboard_arrow_right</mat-icon>
+            </mat-list-item>
+        </mat-nav-list>
+    </mat-card>
+</div>

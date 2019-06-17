@@ -1,0 +1,8 @@
+@mixin openpos-slide-toggle{
+  .mat-slide-toggle-content{
+    // For some reason this is
+    // hard coded to 14px and Roboto so it can't be styled
+    font:unset;
+  }
+
+}

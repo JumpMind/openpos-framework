@@ -1,0 +1,39 @@
+<div class="waffle">
+    <div class="waffle-header-container mat-elevation-z10">
+        <div class="waffle-header">
+            <ng-content select="[waffle-header]"></ng-content>
+        </div>
+        <div class="drawer-button" *ngIf="showDrawer">
+            <app-icon-button [iconName]="'HamburgerMenu'" (buttonClick)="waffledrawer.toggle()"></app-icon-button>
+        </div>
+    </div>
+    <mat-sidenav-container class="sidenav-container">
+        <mat-sidenav    
+            #waffledrawer 
+            class="waffle-drawer-content" 
+            position="end" 
+            [mode]="drawerMode | async" 
+            [opened]="(drawerOpen | async) && showDrawer">
+            <div scrollable class="waffle-drawer-scroller">
+                <ng-content select="[waffle-drawer-content]"></ng-content>
+            </div>
+        </mat-sidenav>
+        <mat-sidenav-content class="side-nav-content">
+            <div>
+                <ng-content select="[waffle-top-content]"></ng-content>
+            </div>
+            <div>
+                <ng-content select="[waffle-title]"></ng-content>
+            </div>
+            <div class="waffle-body">
+                <ng-content select="[waffle-body]"></ng-content>
+            </div>
+            <div>
+                <ng-content select="[waffle-footer]"></ng-content>
+            </div>
+
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
+
+

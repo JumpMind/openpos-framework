@@ -1,0 +1,18 @@
+@mixin display-property-theme($theme) {
+
+    $foreground: map-get($theme, foreground);
+
+    .display-property-label{
+        color: mat-color($foreground, secondary-text);
+
+        &.colon{
+            color: mat-color($foreground, text);
+        }
+    }
+
+    .display-property-value{
+        &.colon{
+            color: mat-color($foreground, secondary-text);
+        }
+    }
+}

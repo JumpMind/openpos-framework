@@ -1,0 +1,23 @@
+<div class="lighter" fxFlexFill fxLayout="row" fxLayoutAlign="center center">
+    <mat-card class="login-card-content" class="login-card-content mat-elevation-z0 login-dialog-div">
+        <mat-card-title *ngIf="title">{{title}}</mat-card-title>
+        <mat-card-content class="login-card-content" style="padding: 24px;">
+            <mat-error>
+                <div *ngFor="let error of form.formErrors">{{error}}</div>
+            </mat-error>
+            <mat-form-field style="width:100%">
+                <input [(ngModel)]="loginIdField.value" #loginField="ngModel" matInput placeholder="{{loginIdField.placeholder}}"
+                    [required]="loginIdField.required" (keyup.enter)="onEnterPressed()" novalidate>
+            </mat-form-field>
+            <mat-form-field style="width:100%">
+                <input type="password" [(ngModel)]="passwordField.value" #passwdField="ngModel" matInput placeholder="{{passwordField.placeholder}}"
+                    [pattern]="passwordField.pattern" [required]="passwordField.required" (keyup.enter)="onEnterPressed()">
+            </mat-form-field>
+        </mat-card-content>
+        <div style="padding-bottom: 0px; margin-top: 24px; margin-left: -24px; margin-right: -24px; margin-bottom: -24px;">
+            <div *ngIf="hasSubmitAction()" fxLayout="row" class="grey-background" fxLayoutGap="2px" fxLayoutAlign="stretch stretch" style="width: 100%; padding-top: 2px;">
+                <button mat-button fxFlex type="submit" (click)="onSubmitAction()" style="background-color: white; padding: 4px;" class="text-sm">Next</button>
+            </div>
+        </div>
+    </mat-card>
+</div>

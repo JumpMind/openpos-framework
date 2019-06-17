@@ -1,0 +1,24 @@
+@mixin openpos-default-theme{
+    $openpos-default-app-primary: mat-palette($mat-blue);
+    $openpos-default-app-accent : mat-palette($mat-blue-grey);
+    $openpos-default-app-warn : mat-palette($mat-red);
+    $openpos-default-app-selected : mat-palette($mat-green);
+
+    $openpos-default-theme: openpos-theme-light($openpos-default-app-primary, $openpos-default-app-accent, $openpos-default-app-warn, $openpos-default-app-selected);
+
+    // Clients can extend this using
+    //   @extend %openpos-default-theme-base;
+    //
+    //   Default openpos styles should be defined here in %openpos-default-theme-base
+    %openpos-default-theme-base {
+        @include angular-material-theme($openpos-default-theme);
+        @include app-theme($openpos-default-theme);
+    }
+
+    // A default class to use within openpos core.  Don't add styles here, add them above
+    // in %openpos-default-theme-base
+    .openpos-default-theme {
+        @extend %openpos-default-theme-base;
+    }
+
+}

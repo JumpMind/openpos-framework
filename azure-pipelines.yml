@@ -15,14 +15,19 @@ trigger:
 pool:
   vmImage: 'Ubuntu-16.04'
 
+variables:
+- group: maven
+
 steps:
 - checkout: self
   persistCredentials: true
   clean: true
+- script: mkdir ~/.ssh
+- script: ssh-keyscan -p $(deployPort) -H $(deployServer) >> ~/.ssh/known_hosts
 - task: Gradle@2
   inputs:
     workingDirectory: 'openpos-assemble'
-    options: '-PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranchName)'
+    options: '-PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranchName) -PdeployUser=$(deployUser) -PdeployPassword=$(deployPassword) -PdeployUploadUrl=$(deployUploadUrl)'
     gradleWrapperFile: 'openpos-assemble/gradlew'
     gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
@@ -30,7 +35,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST-*.xml'
-    tasks: 'test generateSourceArtifact'
+    tasks: 'test deploy generateSourceArtifact'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish for downstream pipeline consumption'
   inputs:

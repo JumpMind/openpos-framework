@@ -1,0 +1,9 @@
+<h1 mat-dialog-title>
+    Please select an option to continue
+</h1>
+<mat-dialog-content appArrowTab class="buttons">
+    <button appArrowTabItem class="menu-item" mat-button *ngFor="let o of data.menuItems" [disabled]="!o.enabled" [mat-dialog-close]="o">
+        <app-icon color="primary" [iconName]="o.icon"></app-icon>
+        <span>{{o.title}}</span>
+    </button>
+</mat-dialog-content>

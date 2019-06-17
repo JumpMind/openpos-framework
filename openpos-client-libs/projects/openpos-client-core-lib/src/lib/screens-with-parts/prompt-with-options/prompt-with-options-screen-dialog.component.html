@@ -1,0 +1,19 @@
+<div fxLayout="column" fxFlexFill>
+    <app-dialog-header fxFlex="100%"></app-dialog-header>
+    <app-prompt-form-part>
+        <div optionsDialog fxFlex="1 1 auto" style="overflow-x: hidden; overflow-y: auto;" fxLayout="column" appArrowTab>   
+            <button *ngFor="let o of optionItems; let i = index" 
+            [attr.cdkFocusInitial]="0 == i ? '' : null"
+            mat-button 
+            appArrowTabItem 
+            (click)="onOptionSelected(o.value)"
+            [disabled]="!o.enabled">
+                <div gdColumns="auto 1fr" gdGap="6px" style="width: 100%;text-align: left;">
+                        <span [ngClass]="{'muted-color' : !o.enabled}">{{o.displayValue}}</span>
+                        <mat-icon class="material-icons pull-right line-item-caret" [ngClass]="{'muted-color' : !o.enabled}"
+                        style="top: 10px;">keyboard_arrow_right</mat-icon>
+                </div>
+            </button>
+        </div>
+    </app-prompt-form-part>
+</div>

@@ -1,0 +1,47 @@
+<div fxLayout="column" fxFlexFill>
+    <app-dialog-header fxFlex="100%"></app-dialog-header>
+    <mat-dialog-content>
+        <div fxFlex="0 0 100%" class="lighter dialog-content" fxLayout="column" fxLayoutAlign="start">
+            <div *ngIf="screen.instructions" class="text-sm"> {{screen.instructions}}</div>
+            <app-selectable-item-list fxFlex="0 1 100%" [configuration]="listConfig"
+                (selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)"
+                [defaultSelect]="screen.defaultSelect">
+                <ng-template let-item>
+                    <div #items gdAreas="img info" gdColumns="auto 2fr" [ngClass]="{'muted-color' : !item.enabled}">
+                        <div gdArea="img">
+                            <img *ngIf="item.itemImageUrl" src="{{item.itemImageUrl}}" alt="{{item.title}}"
+                                class="item-card-image">
+                        </div>
+                        <div gdArea="info">
+                            <div fxShow fxHide.xs="true" fxHide.lg="false" *ngIf="item.title" class="text-sm">
+                                {{item.title}}</div>
+                            <div fxHide fxHide.xs="false" fxHide.lg="true" *ngIf="item.title" class="text-md">
+                                {{item.title}}</div>
+                            <div *ngIf="item.properties" fxLayout="row wrap" fxLayoutAlign="space-between">
+                                <div *ngFor="let property of item.properties">
+                                    <div *ngIf="property.label" class="item-property-label">{{property.label}}</div>
+                                    <p class="item-property-line" *ngFor="let line of property.lines">{{line}}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </ng-template>
+            </app-selectable-item-list>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayoutAlign="end">
+        <button *ngFor="let m of screen.nonSelectionButtons" mat-raised-button color="primary-inverse" [actionItem]="m"
+            (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)" [disabled]="index >= 0">
+            <span>{{m.title}}</span>&nbsp;
+            <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>
+        </button>
+        <button *ngFor="let m of screen.selectionButtons;  let i = index"
+            [attr.cdkFocusInitial]="screen.selectionButtons.length-1 == i ? '' : null" mat-raised-button
+            [color]="screen.selectionButtons.length-1 == i ? 'primary' : 'primary-inverse'" [disabled]="index<0"
+            [actionItem]="m" (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)">
+            <span>{{m.title}}</span>&nbsp;
+            <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>
+        </button>
+
+    </mat-dialog-actions>
+</div>

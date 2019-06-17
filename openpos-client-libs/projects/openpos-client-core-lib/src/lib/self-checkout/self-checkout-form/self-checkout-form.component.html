@@ -1,0 +1,15 @@
+<div class="self-checkout-form-outer" gdAreas="header | content" gdRows="auto 1fr">
+    <div gdArea="header" gdAreas="menu" gdColumns="1fr">
+        <app-self-checkout-menu></app-self-checkout-menu>
+        <app-progress-bar-part></app-progress-bar-part>
+    </div>
+
+    <div class="self-checkout-form-body" gdArea="content" gdAreas="icon | form" gdRows="auto 1fr">
+
+        <img *ngIf="screen.imageUrl" gdArea="icon" [src]="screen.imageUrl | imageUrl" class="self-checkout-form-image">
+
+        <app-auto-complete-address-part gdArea="form" [formName]="'form'" [submitButton]="screen.submitButton"
+            [alternateSubmitActions]="screen.alternateSubmitActions">
+        </app-auto-complete-address-part>
+    </div>
+</div>

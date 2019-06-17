@@ -1,0 +1,15 @@
+<div fxHide>
+    <ng-template openposScreenOutlet unsubscribe="false" (componentEmitter)="handleScreenChange($event)"></ng-template>
+</div>
+<mat-card class="training-dialog">
+    <mat-card-title class="training-title">Training</mat-card-title>
+    <mat-card-content *ngIf="trainingData" fxLayout="row" fxLayoutGap="32px">
+        <div fxFlex="1 1 auto" *ngFor="let element of trainingData">
+            <ng-template [ngComponentOutlet]="trainingDialogComponent" [ngComponentOutletInjector]="element.instructions"
+                [ngComponentOutletContent]="element.projectableNodes"></ng-template>
+        </div>
+    </mat-card-content>
+    <div fxLayout="row" fxLayoutAlign="end center">
+        <button mat-raised-button color="primary" (click)="close()"> Ok </button>
+    </div>
+</mat-card>

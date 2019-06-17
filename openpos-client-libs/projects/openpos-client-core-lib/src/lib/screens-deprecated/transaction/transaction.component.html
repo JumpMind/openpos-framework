@@ -1,0 +1,26 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding-top:6px;">
+
+	<app-transaction-item-list [listConfig]="listConfig" [selectedItems]="selectedItems" [selectedItemIndexes]="selectedItemIndexes"
+	 [multiSelectedMenuItems]="screen.multiSelectedMenuItems" [transactionMenu]="transactionMenu"
+	 [prompt]="transactionMenuPrompt" [readOnly]="screen.readOnly" (selectedItemListChange)="onItemListChange($event)"
+	 (menuAction)="onMenuAction($event)">
+	</app-transaction-item-list>
+
+	<app-overflow-list fxFlex="0 0 auto" *ngIf="screen.transaction" [numberItemsToShow]="overFlowListSize" [items]="amountTotals"></app-overflow-list>
+
+	<mat-card *ngIf="screen.transaction" fxFlex="0 0 auto" class="page-content-card dark">
+		<mat-card-content fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="10px" class="text-lg">
+			<div *ngIf="itemTotal === 1"><span fxFlex class="text-md">{{itemTotal}} Item</span></div>
+			<div *ngIf="itemTotal !== 1"><span fxFlex class="text-md">{{itemTotal}} Items</span></div>
+			<span fxFlex="1 1 auto"></span>
+			<span fxFlex class="text-right">Total</span>
+			<span fxFlex [ngClass]="{'text-center': !screen.readOnly, 'text-right': screen.readOnly}">
+				<app-currency-text [amountText]="screen.grandTotal"></app-currency-text>
+			</span>
+			<button fxFlex="0 1 auto" *ngIf="!screen.readOnly" mat-button color="primary-inverse" style="height:100%; margin:-4px;"
+			 [disabled]="!screen.transaction.active || items.length == 0" (click)="session.onAction('Checkout')">
+				<mat-icon class="material-icons mat-48">keyboard_arrow_right</mat-icon>
+			</button>
+		</mat-card-content>
+	</mat-card>
+</div>

@@ -1,0 +1,15 @@
+[
+    {
+        "title": "Platforms",
+        "file": "platforms.md"
+    },
+    {
+        "title": "Platfrom Plugins",
+        "file": "platform-plugins.md"
+    },
+    {
+        "title": "Wedge Scanner",
+        "file": "wedge-scanner.md"
+    }
+
+]

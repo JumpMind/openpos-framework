@@ -1,0 +1,27 @@
+<div *ngIf="screen.screenType==='SignatureCapture'" fxLayout="column" fxLayoutAlign="center center">
+	<div *ngIf="screen.title" class="modal-header">
+		<h2 mat-card-title [ngClass]="{'warn text-lg':screen.customerFacing}">{{screen.title}}</h2>
+	</div>
+	<mat-card ngStyle.xl="width:50%" ngStyle.lg="width:60%" ngStyle.md="width:90%" ngStyle.sm="width:90%" ngStyle.xs="width:90%">
+		<mat-card-content>
+			<div style="margin-bottom:10px" fxLayout="row" fxLayoutAlign=" center">
+				<app-icon *ngIf="screen.textIcon" color="primary" style="margin-right:5px" [iconClass]="'material-icons'"[iconName]="screen.textIcon"></app-icon>
+				<label class="text-md">{{screen.text}}</label>
+            </div>
+            <div *ngIf="screen.instructions" class="text-sm">{{screen.instructions}}</div>
+			<div id="signature-pad" fxLayout="column" class="sigcap-container">
+				<canvas style="background-color: white;" height="325"></canvas>
+			</div>
+		</mat-card-content>
+
+		<mat-card-actions id="signature-actions" style="margin-left:0px;margin-right:0px">
+			<div fxLayout="row" fxLayoutAlign="space-between start">
+				<button mat-raised-button (click)="onClearSignature()" class="sigcap-button">Clear</button>
+				<button *ngIf="screen.saveAction.action.indexOf('SaveSignature') >= 0; else elseBlock" mat-raised-button (click)="onSaveSignature()" color="primary" class="sigcap-button">{{screen.saveAction.title}}</button>
+				<ng-template #elseBlock>
+					<button mat-raised-button (click)="session.onAction(screen.saveAction.action)" class="sigcap-button">{{screen.saveAction.title}}</button>
+				</ng-template>
+			</div>
+		</mat-card-actions>
+	</mat-card>
+</div>

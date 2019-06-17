@@ -1,0 +1,32 @@
+<div fxFlexFill fxLayout="column">
+
+	<mat-card #scrollList fxFlex="1 1 auto" class="lighter" style="margin: 0px; padding-right: 8px; overflow: auto;">
+		<app-selectable-item-list fxFlex="0 1 100%" [configuration]="listConfig" [defaultSelect]="true"
+			(selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)">
+			<app-item-card *ngFor="let i of screen.items" [item]="i" [session]="session" [isReadOnly]="screen.readOnly">
+			</app-item-card>
+		</app-selectable-item-list>
+	</mat-card>
+
+	<div fxFlex="0 0 auto" fxLayout="row" fxLayoutGap="16px" style="padding-top: 16px; padding-bottom: 8px;">
+		<button *ngIf="screen.previousButton" mat-raised-button color="primary"
+			[disabled]="!screen.previousButton.enabled" (click)="doMenuItemAction(screen.previousButton)">
+			<app-icon *ngIf="screen.previousButton.icon" [iconName]="screen.previousButton.icon"
+				[iconClass]="'material-icons'"></app-icon>
+			<span>{{screen.previousButton.title}}</span>
+		</button>
+		<button *ngIf="screen.nextButton" mat-raised-button color="primary" [disabled]="!screen.nextButton.enabled"
+			(click)="doMenuItemAction(screen.nextButton)">
+			<span>{{screen.nextButton.title}}</span>
+			<app-icon *ngIf="screen.nextButton.icon" [iconName]="screen.nextButton.icon" [iconClass]="'material-icons'">
+			</app-icon>
+		</button>
+		<div fxFlex="1 1 auto"></div>
+		<button *ngIf="screen.actionButton" mat-raised-button color="primary" [disabled]="selectDisabled()"
+			(click)="doMenuItemAction(screen.actionButton)">
+			<span>{{screen.actionButton.title ? screen.actionButton.title : 'Next'}}</span>
+			<app-icon *ngIf="screen.actionButton.icon" [iconName]="screen.actionButton.icon"
+				[iconClass]="'material-icons'"></app-icon>
+		</button>
+	</div>
+</div>

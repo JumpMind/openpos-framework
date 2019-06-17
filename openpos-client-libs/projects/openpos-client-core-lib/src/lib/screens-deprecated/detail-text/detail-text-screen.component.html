@@ -1,0 +1,12 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" class="serrated-edge">
+
+    <mat-card fxFlex="1 1 100%" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
+        <mat-card-title *ngIf="screen.title" >{{screen.title}}</mat-card-title>
+
+        <mat-card-content fxFlex="1 1 100%">
+                <textarea fxFlex="1 1 100%" readonly style="resize: none;">{{screen.text}}</textarea>
+        </mat-card-content>
+    </mat-card>
+    
+</div>
+

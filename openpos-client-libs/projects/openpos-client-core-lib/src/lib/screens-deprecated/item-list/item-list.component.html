@@ -1,0 +1,30 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px">
+    <mat-card fxFlex="1 1 auto" class="page-content-card scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
+        <mat-card-content>
+            <ng-container *ngIf="selectionMode === 'Single'; else elseblock">
+                <mat-nav-list>
+                    <ng-container *ngTemplateOutlet="itemsList"></ng-container>
+                </mat-nav-list>
+            </ng-container>
+            <ng-template #elseblock>
+                <!-- Angular will not allow a mat-selection-list here, get  "NullInjectorError: No provider for MatSelectionList!" -->
+                    <ng-container *ngTemplateOutlet="itemsList"></ng-container>
+            </ng-template>
+        </mat-card-content>
+        <mat-card-actions *ngIf="screen.actionButton" fxFlexAlign="end">
+			<button mat-raised-button type="submit" (click)="onActionButtonClick()" [disabled]="!this.isActionEnabled()" color=primary>
+				<span>Next</span>
+				<mat-icon *ngIf="screen.actionButton.icon" class="material-icons">{{screen.actionButton.icon}}</mat-icon>
+			</button>
+		</mat-card-actions>
+    </mat-card>
+</div>
+
+<ng-template #itemsList>
+    <app-product-list #productList [showItemIcon]="! isItemClickDisabled() && selectionMode ==='Single'" [items]="items" 
+        (itemClick)="isItemClickDisabled() || onItemClick($event)"
+        (itemSelected)="isItemSelectedDisabled() || onItemSelected($event)"
+        [showItemMenu]="itemActions.length > 0" [menuItemActions]="itemActions" (menuItemClick)="onMenuItemClick($event.menuItem, $event.item)"
+        [itemClass]="condensedListDisplay ? 'item-list-condensed' : ''" [selectionMode]='getSelectionModeAsEnum()'>
+    </app-product-list>
+</ng-template>

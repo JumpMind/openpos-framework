@@ -1,0 +1,47 @@
+:host:first-of-type {
+  mat-button-toggle-group {
+    margin-bottom:15px;  
+  }
+}
+  
+:host:last-of-type {
+  mat-button-toggle-group {
+    margin-top:15px;
+  }
+}
+  
+:host:not(:last-of-type):not(:first-of-type) {
+  mat-button-toggle-group {
+    margin-top:15px;
+    margin-bottom:15px;
+  }
+}
+
+textarea {
+  line-height: 1.5em;
+}
+
+:host::ng-deep .mat-form-field{
+  font-size: 18px;
+}
+
+.poptart {
+  user-select: none;
+}
+
+.form-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+
+  mat-label {
+    padding-bottom: 8px;
+  }
+
+  mat-radio-button {
+    padding-bottom: 16px;
+  }
+}
+
+.form-slider-toggle {
+  padding-bottom: 8px;
+}

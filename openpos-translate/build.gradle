@@ -1,6 +1,7 @@
-apply from: '../openpos-core/common.gradle'
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
+apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 
 dependencies {
-    compile project(":openpos-core")
+    compile project(":openpos-flow")
     
 }

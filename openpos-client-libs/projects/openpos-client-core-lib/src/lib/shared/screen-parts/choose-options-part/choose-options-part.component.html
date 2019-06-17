@@ -1,0 +1,37 @@
+<div>
+    <div *ngIf="showOptions" fxLayout="column" appArrowTab>   
+        <button 
+        *ngFor="let formOption of options; let i = index" 
+        [attr.cdkFocusInitial]="0 == i ? '' : null"
+        mat-button 
+        appArrowTabItem 
+        (click)="onMakeOptionSelection(formOption, formGroups[i])"
+        [disabled]="!formOption.enabled">
+            <div gdColumns="auto 1fr auto" gdGap="6px" class="option">
+                <app-icon [ngClass]="{'muted-color' : !formOption.enabled}" color="primary" [iconName]="formOption.icon"></app-icon>
+                <span [ngClass]="{'muted-color' : !formOption.enabled}">{{formOption.name}}</span>
+                <app-icon [iconClass]="'primary'" [ngClass]="{'muted-color' : !formOption.enabled}" [iconName]="'keyboard_arrow_right'"></app-icon>
+            </div>
+        </button>
+    </div>
+    <div *ngIf="!showOptions">
+        <span>{{selectedOption.name}}</span>
+        <ng-container *ngTemplateOutlet="form; context:{formGroup:selectedForm, option: selectedOption, showBackButton: true}"></ng-container>
+    </div>
+</div>
+
+<ng-template #form let-option="option" let-formGroup="formGroup" let-showBackButton="showBackButton">
+    <app-form (submitFormEvent)="onSubmitForm(option, formGroup)" [form]="formGroup">
+        <app-dynamic-form-field *ngFor="let field of option.form.formElements" [formGroup]="formGroup" [formField]="field" (onFieldChanged)="onFieldChanged($event, formGroup, option)"></app-dynamic-form-field>
+        <div gdAreas="back . submit" gdColumns="auto 1fr auto">
+            <app-secondary-button *ngIf="showBackButton" gdArea="back" inputType="button" (buttonClick)="onBackButtonPressed()" class="back-button">
+                <app-icon [iconName]="'keyboard_arrow_left'"></app-icon>
+                <span>Back</span>
+            </app-secondary-button>
+            <app-primary-button gdArea="submit" inputType="submit" class="submit-button">
+                <span>{{option.optionAction.title}}</span>
+                <app-icon *ngIf="option.optionAction.icon" [iconName]="option.optionAction.icon"></app-icon>
+            </app-primary-button>
+        </div>
+    </app-form>
+</ng-template>

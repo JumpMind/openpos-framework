@@ -1,0 +1,11 @@
+:not(:host-context(.prompt)) mat-card {
+    margin:2px; 
+    padding-left:2px;
+}
+
+:host-context(.prompt) mat-card {
+    .mat-card-content {
+        font-size:20px;
+        justify-content: center;
+    }
+}

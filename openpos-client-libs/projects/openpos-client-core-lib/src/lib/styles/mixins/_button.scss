@@ -1,0 +1,10 @@
+@mixin openpos-button{
+    .mat-button-wrapper{
+        display: flex;
+        align-items: center;
+        justify-items: center;
+        align-content: center;
+        justify-content: center;
+    }
+
+}

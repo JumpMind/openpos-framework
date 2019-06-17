@@ -1,0 +1,27 @@
+@mixin bang-orange-theme{
+    $openpos-app-primary:  mat-palette($mat-orange, 800, 600, 900);
+    $openpos-app-accent :  mat-palette($mat-blue, 600, 600, 900);
+    $openpos-app-warn : mat-palette($mat-red);
+    $openpos-app-selected :  mat-palette($mat-green, 800, 600, 900);
+    $mat-card-default-margin: 24px !default;
+    $app-logo-url: url(assets/logo.png);
+    $openpos-theme: openpos-theme-light($openpos-app-primary, $openpos-app-accent, $openpos-app-warn, $openpos-app-selected);
+
+    .bang-orange-theme {
+
+        @include angular-material-theme($openpos-theme);
+        @include app-theme($openpos-theme);
+
+        app-bacon-strip{
+            .container{
+                background-color: black;
+            }
+        }
+    
+        app-waffle{
+            .waffle-header{
+                background-color: black;
+            }
+        }
+    }
+}

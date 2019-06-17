@@ -1,0 +1,48 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" [ngSwitch]="currentView">
+
+    <ng-template ngSwitchCase="ButtonList">
+            <mat-card-title fxLayoutAlign="space-between">
+                <span>{{promptText}}</span>
+                <button *ngIf="screen.backButton" mat-icon-button style="margin:-15px" (click)="session.onAction(screen.backButton.action)" [actionItem]="screen.backButton">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-card-title>
+            <mat-card-content appArrowTab fxLayout="column" style="padding-top:16px">
+                    <button 
+                        *ngFor="let o of optionItems; let i = index" 
+                        [attr.cdkFocusInitial]="0 == i ? '' : null"
+                        mat-button 
+                        appArrowTabItem 
+                        (click)="onMakeOptionSelection(o)"
+                        [disabled]="!o.enabled"
+                        >
+                        <app-icon style="margin-right:15px" color="primary" [iconName]="o.icon"></app-icon>
+                        <span>{{o.displayValue}}</span>
+                        <span fxFlex="1 1 auto"></span>
+                        <span *ngIf="o.keybind && keybindsEnabled()" class="muted-color">{{o.keybind}}</span>
+                        <app-icon [iconName]="'keyboard_arrow_right'"></app-icon>
+                    </button>
+            </mat-card-content>
+    </ng-template>
+
+    <ng-template ngSwitchCase="ButtonGrid">
+            <mat-card-content fxLayout.xs="column" fxLayoutAlign="center center" fxLayoutGap="30px">
+                <button fxFlex="0 0 auto" mat-raised-button color=primary style="height:150px;width:150px" *ngFor="let o of optionItems"
+                    (click)="onMakeOptionSelection(o)" >
+                    <div fxLayoutAlign="center center" fxLayout="column">
+                        <app-icon fxFlex="1 0 auto" [iconName]="o.icon" iconClass="material-icons mat-64"></app-icon>
+                        <span fxFlex="1 0 auto" class="text-sm">{{o.displayValue}}</span>
+                        <span *ngIf="o.keybind && keybindsEnabled()" class="muted-color">{{o.keybind}}</span>
+                    </div>
+                </button>
+            </mat-card-content>
+    </ng-template>
+
+    <ng-template ngSwitchCase="OptionForm">
+            <mat-card-content>
+                <app-dynamic-form-control [screenForm]="selectedOption.form" [submitButton]="{title: 'Next', action:selectedOption.value, icon:'keyboard_arrow_right'}" ></app-dynamic-form-control>
+            </mat-card-content>
+     </ng-template>
+
+
+</div>

@@ -1,0 +1,18 @@
+@mixin openpos-menu{
+  .main-menu-item-icon {
+    position: relative;
+    top: 30px;
+  }
+
+  .main-menu-item-text {
+      top: 10px;
+      zoom: 150%;
+      font-weight: normal;
+  }
+
+  .main-menu-item {
+      flex: 1 1 auto;
+      height: 150px;
+      width: 150px;
+  }
+}

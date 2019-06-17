@@ -1,0 +1,26 @@
+<div fxFlexFill>
+    <mat-card-title fxLayoutAlign="space-between">
+        <div class="header" fxFlex="1 1 auto" fxLayoutAlign="space-between" fxLayout.xs="column">
+            <div fxFlex="0 0 50%">
+                <b>{{deviceHeader}}</b>
+            </div>
+            <div fxFlex="0 0 50%">
+                <b>{{statusHeader}}</b>
+            </div>
+        </div>
+        <button mat-icon-button style="margin:-15px" (click)="onClose()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </mat-card-title>
+    <mat-divider></mat-divider>
+    <mat-card-content>
+        <div class="device-list" *ngFor="let device of devices" fxLayoutAlign="space-between">
+            <div fxFlex="0 0 50%">
+                {{device.deviceName}}
+            </div>
+            <div fxFlex="0 0 50%" [ngClass]="{'success': device.online, 'warn': !device.online}">
+                {{getOnlineString(device)}}
+            </div>
+        </div>
+    </mat-card-content>
+</div>

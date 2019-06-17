@@ -1,0 +1,72 @@
+@import './app-theme';
+@import './themes/openpos-themes';
+@import './mixins/button';
+@import './mixins/card';
+@import './mixins/container';
+@import './mixins/icon';
+@import './mixins/list';
+@import './mixins/menu';
+@import './mixins/progress-bar';
+@import './mixins/serrated-edge';
+@import './mixins/slide-toggle';
+@import './mixins/table';
+@import './mixins/typography';
+@import './mixins/tabs';
+@import './mixins/multiple-dynamic-form-dialog';
+
+$mat-card-default-margin: 24px !default;
+
+@mixin openpos-core{
+
+  @include openpos-button();
+  @include openpos-card();
+  @include openpos-container();
+  @include openpos-icon();
+  @include openpos-list();
+  @include openpos-menu();
+  @include openpos-progress-bar();
+  @include serrated-edge();
+  @include openpos-slide-toggle();
+  @include openpos-table();
+  @include openpos-typography();
+  @include openpos-tabs();
+  @include multiple-dynamic-form-dialog();
+
+  @include openpos-themes();
+
+  html, body {
+    font-family: Roboto, sans-serif;
+    margin:0;
+    padding:0;
+    height: 100vh;
+    overflow: hidden;
+    cursor: pointer;
+  }
+
+  .scrollable{
+      overflow-y:auto;
+      height: 100%;
+  }
+
+  .pad {
+      padding: $mat-card-default-margin;
+  }
+
+  //Fix for modal elements disappearing on ios devices.
+  .mat-dialog-container * {
+    -webkit-transform: translate3d(0, 0, 0);
+  }
+
+  ///This is a hack to get vertical dividers to work
+  mat-divider.mat-divider.mat-divider-vertical{
+    position:unset;
+    left:unset;
+    width:unset;
+  }
+
+  .transaction-prompt {
+    font-size: 24px;
+    padding-bottom: 8px;
+  }
+
+}

@@ -1,0 +1,13 @@
+<ng-container *ngIf="menuItems && menuItems.length === 1">
+    <button mat-icon-button color=primary (click)="menuItemClicked.emit(menuItems[0])">
+        <app-icon [iconName]="menuItems[0].icon"></app-icon>
+    </button>
+</ng-container>
+<ng-container *ngIf="menuItems && menuItems.length > 1">
+    <button mat-icon-button color=primary [matMenuTriggerFor]="menu">
+        <app-icon iconName="more_vert"></app-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button *ngFor="let item of menuItems" mat-menu-item (click)="menuItemClicked.emit(item)">{{item.title}}</button>
+    </mat-menu>
+</ng-container>

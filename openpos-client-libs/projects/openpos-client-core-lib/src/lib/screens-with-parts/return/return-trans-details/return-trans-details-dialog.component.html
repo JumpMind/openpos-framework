@@ -1,0 +1,25 @@
+<div fxLayout="column" fxFlexFill>
+    <app-dialog-header fxFlex="100%"></app-dialog-header>
+    <mat-dialog-content>
+        <div fxFlex="0 0 100%" class="lighter dialog-content" fxLayout="column" fxLayoutAlign="start">
+            <div *ngIf="screen.instructions" class="text-sm"> {{screen.instructions}}</div>
+            <app-selectable-item-list [configuration]="listConfig" 
+            (selectedItemChange)="onItemChange($event)">
+                <ng-template let-item>
+                    <app-sell-item-line [item]="item" [readOnly]="false" [hideButton]="index >= 0"></app-sell-item-line>
+                </ng-template>
+    
+            </app-selectable-item-list>
+        </div>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayoutAlign="end">
+        <button
+            cdkFocusInitial  mat-raised-button
+            color="primary" [disabled]="index<0"
+            [actionItem]="selectionButton" (actionClick)="doMenuItemAction(selectionButton)" (click)="doMenuItemAction(selectionButton)">
+            <span>{{selectionButton.title}}</span>&nbsp;
+            <span *ngIf="keybindsEnabled(selectionButton)" class="muted-color">{{selectionButton.keybind}}</span>
+        </button>
+
+    </mat-dialog-actions>
+</div>

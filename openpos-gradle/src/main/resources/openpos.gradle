@@ -1,0 +1,35 @@
+apply plugin: 'groovy'
+
+tasks.withType(GroovyCompile) {
+    options.compilerArgs = ['-Xlint:none']
+}
+
+
+sourceSets {
+    // In order to reference groovy from Java, the source sets need to be considered together during compilation (in
+    // the groovy plugin, which extends the java plugin and handles java sources).
+    main {
+        java { srcDirs = []}
+        groovy { srcDirs += ['src/main/java']}
+    }
+}
+
+dependencies {
+    compile group: 'org.codehaus.groovy', name: 'groovy', version: '2.5.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+    compile group: 'commons-io', name: 'commons-io', version: '2.6'
+    compile "org.springframework:spring-context:$springVersion"
+    compile group: 'org.springframework.data', name: 'spring-data-commons', version: "${springDataCommon}"
+    compile group: 'org.joda', name: 'joda-money', version: '1.0.1'
+
+    compile group: 'org.slf4j', name: 'slf4j-api', version: "${slf4jVersion}"
+    compile group: 'org.slf4j', name: 'jcl-over-slf4j', version: "${slf4jVersion}"
+    compile group: 'org.slf4j', name: 'slf4j-log4j12', version: "${slf4jVersion}"
+    compile(group: 'log4j', name: 'log4j', version: "${log4jVersion}")
+
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.9.5'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'com.vmlens', name: 'concurrent-junit', version: '1.0.2'
+    testCompile "org.springframework:spring-test:$springVersion"
+}

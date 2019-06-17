@@ -1,0 +1,45 @@
+.toolbar-header-text{
+    width: 100%;
+    text-align: center;
+    font-size: 17px;
+}
+
+.mat-drawer-content{
+    padding:0px;
+}
+
+.side-nav-content{
+    padding-top: 16px;
+    flex:1 1 50%; 
+    min-height: 50%; 
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.sid-nav-content-scrollblock{
+    overflow-y: hidden;
+}
+
+.side-nav{
+    padding:0px;
+    border-right-width: 1px;
+    border-right-style: solid;
+}
+
+.side-nav-body{
+    overflow-y: auto; 
+    min-height: 50%; 
+    flex: 1 1 50%; 
+    display:flex; 
+    flex-direction: column;
+}
+
+.side-nav-footer{
+    border-top-width: 1px;
+    border-top-style: solid;
+}
+
+.desktop-header{
+    border-top-width: 5px;
+    border-top-style: solid;
+}

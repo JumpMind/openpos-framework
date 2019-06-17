@@ -1,0 +1,14 @@
+@mixin searchable-pop-tart-theme($theme){
+
+    $foreground: map-get($theme, foreground);
+    app-searchable-pop-tart{
+        .mat-list-item-content{
+            padding:0px !important;
+        }
+
+
+        .search-result:not(:last-child){
+            border-bottom: dashed 1px mat-color($foreground, divider);;
+        }
+    }
+}

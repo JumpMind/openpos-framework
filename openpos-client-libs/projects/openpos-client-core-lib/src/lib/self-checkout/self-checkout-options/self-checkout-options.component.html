@@ -1,0 +1,24 @@
+<div class="self-checkout-options-outer" gdAreas="header | content" gdRows="auto 1fr">
+    <div gdArea="header" gdAreas="menu" gdColumns="1fr">
+        <app-self-checkout-menu gdArea="menu"></app-self-checkout-menu>
+    </div>
+
+    <div class="self-checkout-options-body" gdArea="content" fxLayout="column" fxLayoutAlign="center stretch">
+
+        <div *ngIf="screen.icon" fxFlex="0 0 auto" fxLayoutAlign="center center">
+            <app-icon [iconName]="screen.icon" class="options-icon"></app-icon>
+        </div>
+        <div *ngIf="screen.title" fxFlex="0 0 auto" class="options-title">
+            {{screen.title}}
+        </div>
+        <div *ngIf="screen.imageUrl" fxFlex="0 0 auto" fxLayoutAlign="center center">
+            <div [ngStyle]="screen.imageUrl | backgroundImageUrl" class="self-checkout-options-image"></div>
+        </div>
+        <div *ngIf="screen.prompt" fxFlex="0 0 auto" class="text-center options-prompt">
+            {{screen.prompt}}
+        </div>
+
+        <app-self-checkout-options-part></app-self-checkout-options-part>
+
+    </div>
+</div>

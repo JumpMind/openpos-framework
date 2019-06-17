@@ -1,0 +1,63 @@
+<div *ngIf="!(isMobile | async)">
+    <div fxLayout="column" fxFlexFill >
+        <mat-card-title fxLayout="row" style="margin-bottom:10px">
+            <span *ngIf="screen.name" class="text-md">{{screen.name}}</span>
+            <div fxFlex="1 1 auto"></div>
+            <button *ngIf="screen.backButton" mat-icon-button style="margin:-15px" (click)="session.onAction(screen.backButton.action)" [actionItem]="screen.backButton">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-card-title>
+        <mat-tab-group [@.disabled]="true" (selectChange)="current=$event.index" #tabGroup>
+            <mat-tab *ngFor="let formOption of screen.forms; let i=index" fxLayout="column">
+                <ng-template mat-tab-label>
+                    <div fxLayoutAlign="start center">
+                        <app-icon [iconName]="formOption.icon"></app-icon><span>{{formOption.name}}</span>
+                    </div>
+                </ng-template>
+                <ng-template matTabContent>
+                    <div style="margin-bottom: 16px; margin-top: 16px;">
+                        <div *ngIf="formOption.instructions" class="text-sm" style="margin-bottom: 16px;">{{formOption.instructions}}</div>
+                        <app-dynamic-form-control #frm [screenForm]="formOption.form" [submitButton]="formOption.submitButton"></app-dynamic-form-control>
+                    </div>
+                </ng-template>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>
+<div *ngIf="(isMobile | async)">
+    <div fxLayout="column" fxFlexFill >
+        <mat-card-title fxLayout="row" style="margin-bottom:10px">
+            <span *ngIf="screen.name" class="text-md">{{screen.name}}</span>
+            <div fxFlex="1 1 auto"></div>
+            <button *ngIf="screen.backButton" mat-icon-button style="margin:-15px" (click)="session.onAction(screen.backButton.action)">
+                <mat-icon>close</mat-icon>
+            </button>
+        </mat-card-title>
+        <div *ngIf="showOptions">
+            <mat-card-content>
+                <mat-nav-list>
+                    <mat-list-item *ngFor="let formOption of screen.forms" (click)="onMakeOptionSelection(formOption)">
+                        <app-icon style="margin-right:15px" color="primary" [iconName]="formOption.icon"></app-icon>
+                        <span>{{formOption.name}}</span>
+                        <span fxFlex="1 1 auto"></span>
+                        <mat-icon color="primary" class="material-icons">keyboard_arrow_right</mat-icon>
+                    </mat-list-item>
+                </mat-nav-list>
+            </mat-card-content>
+            <app-secondary-button type="button" inputType="Button" (click)="session.onAction('Back')">Cancel</app-secondary-button>
+        </div>
+        <div *ngIf="!showOptions">
+            <button mat-icon-button style="margin:-15px; margin-bottom: 16px;" (click)="showOptions = !showOptions">
+                <mat-icon color="primary">keyboard_arrow_left</mat-icon>
+            </button>
+            <div>{{selectedOption.name}}</div> 
+            <mat-card-title fxLayout="row" style="margin-bottom:10px">
+                <span *ngIf="screen.name" class="text-md">{{screen.name}}</span>
+                <div fxFlex="1 1 auto"></div>
+            </mat-card-title>
+            <mat-card-content>
+                <app-dynamic-form-control #frm [screenForm]="selectedOption.form" [submitButton]="selectedOption.submitButton" ></app-dynamic-form-control>
+            </mat-card-content>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+<div [class]="(getLocalTheme() | async) + ' ' + getHiddenClass()">
+    <mat-card class="loader-overlay center" ngStyle.xl="width:30%" ngStyle.lg="width:40%" ngStyle.md="width:60%" ngStyle.sm="width:70%" ngStyle.xs="width:80%">
+            <mat-card-title>
+                {{title}}
+            </mat-card-title>
+            <mat-card-content>
+                <div *ngIf="reconnecting">{{time}}</div>
+                <p>{{message}}</p>
+                <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+            </mat-card-content>
+    </mat-card>
+    <div id='overlay'></div> 
+</div>

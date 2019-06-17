@@ -1,0 +1,71 @@
+.content-top {
+    margin-bottom: 5px;
+}
+
+:host ::ng-deep app-counter div.counter {
+    // reduce icon sizes
+    padding: 2px;
+    display: block;
+    height: 30px;
+    button.mat-icon-button {
+        width: 30px;
+        height: 30px;
+        line-height: 18px;
+
+        mat-icon.material-icons{
+            height: 18px;
+            width: 18px;
+            line-height: 18px;
+            font-size: 18px;
+        }
+    }
+
+    div.mat-form-field-infix {
+        border-top: 0 solid transparent;
+    }
+
+}
+
+.catalog-browser-item-button {
+    -webkit-appearance: none;  // turn off gradient and rounding of buttons on iOS
+    border: none;
+}
+
+.line-spacing-sm {
+    line-height: 18px;
+}
+
+.grid-wrapper {
+    overflow-y: auto; 
+    height: 475px;
+}
+
+.filter-drawer {
+    overflow-x:hidden;
+    padding-bottom:20px; 
+    padding-left: 5px
+}
+
+.item-card {
+    padding: 4px;
+    margin: 5px;
+    width: 200px;
+    height: 200px;
+}
+
+.browser-card {
+    padding: 4px;
+    margin: 5px;
+}
+
+.paginator {
+    font-size: 16px;
+}
+// Increase font size on paginator components
+::ng-deep .mat-select-value-text {
+    font-size: 16px;
+}
+// Increase font size on paginator components
+::ng-deep .mat-option-text {
+    font-size: 16px;
+}
