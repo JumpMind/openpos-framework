@@ -1,7 +1,7 @@
 <div fxFlexFill fxLayout="column">
 
 	<mat-card #scrollList fxFlex="1 1 auto" class="lighter" style="margin: 0px; padding-right: 8px; overflow: auto;">
-		<app-selectable-item-list fxFlex="0 1 100%" [configuration]="listConfig" [defaultSelect]="true"
+		<app-selectable-item-list fxFlex="0 1 100%" [listData]="listData" [configuration]="listConfig" [defaultSelect]="true"
 			(selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)">
 			<app-item-card *ngFor="let i of screen.items" [item]="i" [session]="session" [isReadOnly]="screen.readOnly">
 			</app-item-card>

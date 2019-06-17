@@ -1,19 +1,21 @@
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
-import { SelectionListItem } from './selection-list-item.interface';
+import { ISelectionListItem } from './selection-list-item.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 
 export interface SelectionListInterface extends IAbstractScreen {
-    selectionList: SelectionListItem[];
+    instructions: string;
+    noListItemsPlaceholderText: string;
+    noListItemsPlaceholderIcon: string;
+    showScan: boolean;
     selectionButtons: IActionItem[];
     nonSelectionButtons: IActionItem[];
-    showScan: boolean;
+    selectionList: ISelectionListItem[];
     multiSelect: boolean;
     defaultSelect: boolean;
     defaultSelectItemIndex: number;
-    selectionChangedAction: string;
-    instructions: string;
     numberItemsPerPage: number;
-    noListItemsPlaceholderText: string;
-    noListItemsPlaceholderIcon: string;
+    numberTotalItems: number;
+    selectionChangedAction: string;
+    fetchDataAction: string;
     sausageLinks: IActionItem[];
 }

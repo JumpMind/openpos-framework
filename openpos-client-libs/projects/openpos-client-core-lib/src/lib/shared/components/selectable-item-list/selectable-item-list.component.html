@@ -1,5 +1,5 @@
 <ng-content select="[header]"></ng-content>
-<div class="selectable selection-list" *ngFor="let item of itemsToShow"
+<div #items class="selectable selection-list" *ngFor="let item of itemsToShow"
 [class.selected]="isItemSelected(item)"
 [class.mat-elevation-z0]="!isItemSelected(item)" 
 [class.mat-elevation-z15]="isItemSelected(item)"

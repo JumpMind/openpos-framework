@@ -4,6 +4,8 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
+import { Observable } from 'rxjs';
+import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
 
 /**
  * @ignore
@@ -20,7 +22,8 @@ export class ItemSearchResultsComponent extends PosScreen<any> {
 
   @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
 
-  listConfig = new SelectableItemListComponentConfiguration<any>();
+  listConfig = new SelectableItemListComponentConfiguration();
+  listData: Observable<ISelectableListData<any>>;
   index = -1;
 
   constructor() {
@@ -28,15 +31,29 @@ export class ItemSearchResultsComponent extends PosScreen<any> {
   }
 
   buildScreen() {
-    this.listConfig = new SelectableItemListComponentConfiguration<any>();
-    if (this.screen.multiSelect) {
-      this.listConfig.selectionMode = SelectionMode.Multiple;
-    } else {
-      this.listConfig.selectionMode = SelectionMode.Single;
+    const allItems = new Map<number, any>();
+    const allDisabledItems = new Map<number, any>();
+    for (let i = 0; i < this.screen.items.length; i++) {
+        const item = this.screen.items[i];
+        allItems.set(i, item);
+        if (!item.enabled) {
+            allDisabledItems.set(i, item);
+        }
     }
-    this.listConfig.numResultsPerPage = Number.MAX_VALUE;
-    this.listConfig.items = this.screen.items;
+
+    this.listData = new Observable<ISelectableListData<any>>((observer) => {
+        observer.next({
+            items: allItems,
+            disabledItems: allDisabledItems,
+        } as ISelectableListData<any>);
+    });
+
+    this.listConfig = new SelectableItemListComponentConfiguration();
+    this.listConfig.selectionMode = this.screen.multiSelect ? SelectionMode.Multiple : SelectionMode.Single;
+    this.listConfig.numItemsPerPage = Number.MAX_VALUE;
+    this.listConfig.totalNumberOfItems = this.screen.items.length;
     this.listConfig.defaultSelectItemIndex = 0;
+
     this.scrollToTop();
   }
 
@@ -44,7 +61,7 @@ export class ItemSearchResultsComponent extends PosScreen<any> {
   }
 
   public onItemChange(event: any): void {
-    this.index = this.listConfig.items.indexOf(event);
+    this.index = event;
   }
 
   public doMenuItemAction(menuItem: IActionItem) {

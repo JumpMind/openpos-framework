@@ -103,10 +103,18 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         }
     }
 
-    protected updateTemplateAndScreen(screen?: any): void {
+    protected async updateTemplateAndScreen(screen?: any) {
         if (!screen) {
             screen = new SplashScreen();
         }
+
+        // Close any open dialogs
+        if (this.dialogService.isDialogOpenOrOpening()) {
+            await this.dialogService.closeDialog();
+        }
+
+        // Cancel the loading message
+        this.session.cancelLoading();
 
         let trap = false;
         const original = document.activeElement as HTMLElement;
@@ -178,7 +186,6 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         }
 
         this.updateClasses(screen);
-        this.dialogService.closeDialog(true);
 
         // Output the componentRef and screen to the training-wrapper
         this.componentEmitter.emit({ componentRef: this.componentRef, screen });

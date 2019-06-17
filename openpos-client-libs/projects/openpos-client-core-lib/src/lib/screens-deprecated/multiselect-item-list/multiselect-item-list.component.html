@@ -19,7 +19,8 @@
             </span>
         </mat-toolbar>
         <mat-card-content #scrollList ngClass.xs="xs" style="padding-top:6px;">
-            <app-selectable-item-list [configuration]="listConfig" [selectedItemList]="selectedItems" (selectedItemListChange)="onItemListChange($event)">
+            <app-selectable-item-list [listData]="listData" [configuration]="listConfig" 
+            [selectedItemList]="selectedItems" (selectedItemListChange)="onItemListChange($event)">
                 <ng-template let-item>
                     <div fxLayoutAlign="space-between" fxLayout.xs="column">
                         <div fxFlex="90" fxAlign="left" >

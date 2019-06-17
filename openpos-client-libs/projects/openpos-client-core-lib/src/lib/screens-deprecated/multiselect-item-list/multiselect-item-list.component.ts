@@ -8,6 +8,8 @@ import { SelectableItemListComponentConfiguration } from '../../shared/component
 import { ItemClickAction } from '../../shared/components/product-list/product-list.component';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
+import { Observable } from 'rxjs';
+import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
 
 /**
  * @ignore
@@ -31,7 +33,8 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     @ViewChild('scrollList') private scrollList: ElementRef;
     public size = -1;
     initialized = false;
-    listConfig = new SelectableItemListComponentConfiguration<IItem>();
+    listConfig = new SelectableItemListComponentConfiguration();
+    listData: Observable<ISelectableListData<IItem>>;
     selectedItems: IItem[] = new Array<IItem>();
     individualMenuClicked = false;
     //  ----------------------------------
@@ -55,13 +58,31 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
         this.selectionMode = this.screen.selectionMode;
 
         //  Copied from transaction.component buildScreen() method...
+        const allItems = new Map<number, IItem>();
+        const allDisabledItems = new Map<number, IItem>();
+        for (let i = 0; i < this.screen.items.length; i++) {
+            const item = this.screen.items[i];
+            allItems.set(i, item);
+            if (!item.enabled) {
+                allDisabledItems.set(i, item);
+            }
+        }
 
-        this.listConfig = new SelectableItemListComponentConfiguration<IItem>();
+        this.listData = new Observable<ISelectableListData<IItem>>((observer) => {
+            observer.next({
+                items: allItems,
+                disabledItems: allDisabledItems,
+            } as ISelectableListData<IItem>);
+        });
+
+        this.listConfig = new SelectableItemListComponentConfiguration();
         this.listConfig.selectionMode = this.getSelectionModeAsEnum();
-        this.listConfig.numResultsPerPage = Number.MAX_VALUE;
-        this.listConfig.items = this.screen.items;
+        this.listConfig.numItemsPerPage = Number.MAX_VALUE;
+        this.listConfig.totalNumberOfItems = this.screen.items.length;
+
         if (this.screen.selectedItems) {
-            this.selectedItems = this.screen.items.filter(item => this.screen.selectedItems.find(selectedItem => item.index === selectedItem.index));
+            this.selectedItems = this.screen.items
+            .filter(item => this.screen.selectedItems.find(selectedItem => item.index === selectedItem.index));
         } else {
             this.selectedItems = new Array<IItem>();
         }
@@ -99,13 +120,15 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     onItemSelected(itemInfo: ItemClickAction): void {
     }
 
-    public onItemListChange(event: IItem[]): void {
+    public onItemListChange(event: number[]): void {
+        const indexes = event;
+        this.selectedItems = this.screen.items.array.filter(element => {
+            indexes.includes(element.index);
+        });
 
         if (this.individualMenuClicked) {
             this.individualMenuClicked = false;
         }
-
-        this.selectedItems = event;
     }
 
     onActionButtonClick(): void {
@@ -160,7 +183,8 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
 
     addItemsToSale(items: IItem[]) {
         //  Send the appropriate Add action to the page.
-        const message = (items.length === 1 ? 'Add the selected item to the transaction?' : 'Add the ' + items.length + ' selected items to the transaction?');
+        const message = (items.length === 1 ? 'Add the selected item to the transaction?'
+            : 'Add the ' + items.length + ' selected items to the transaction?');
         this.session.onAction(this.getAddActionName(), items, message);
     }
 
@@ -170,19 +194,19 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     }
 
     openItemsDialog(items: IItem[]): void {
-        let optionItems = [];
+        let options = [];
 
         if (items.length > 1) {
             //  NOTE: There are currently no available options for multiple selections.
             // optionItems = this.screen.multiSelectedMenuItems;
         } else {
-            optionItems = this.itemActions;
+            options = this.itemActions;
         }
 
         const dialogRef = this.dialog.open(NavListComponent, {
             width: '70%',
             data: {
-                optionItems: optionItems,
+                optionItems: options,
                 payload: this.selectedItems,
                 disableClose: false,
                 autoFocus: false

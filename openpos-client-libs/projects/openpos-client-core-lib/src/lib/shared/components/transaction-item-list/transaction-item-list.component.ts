@@ -5,6 +5,8 @@ import { Configuration } from '../../../configuration/configuration';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
 import { IActionItemGroup } from '../../../core/interfaces/action-item-group.interface';
 import { IItem } from '../../../core/interfaces/item.interface';
+import { Observable } from 'rxjs';
+import { ISelectableListData } from '../selectable-item-list/selectable-list-data.interface';
 
 @Component({
   selector: 'app-transaction-item-list',
@@ -15,7 +17,8 @@ export class TransactionItemListComponent implements AfterViewChecked {
 
   @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
 
-  @Input() listConfig: SelectableItemListComponentConfiguration<ISellItem>;
+  @Input() listData: Observable<ISelectableListData<ISellItem>>;
+  @Input() listConfig: SelectableItemListComponentConfiguration;
   @Input() selectedItems: ISellItem[];
   @Input() selectedItemIndexes: number[];
   @Input() multiSelectedMenuItems: IActionItem[];
@@ -23,20 +26,20 @@ export class TransactionItemListComponent implements AfterViewChecked {
   @Input() prompt: string;
   @Input() readOnly: boolean;
 
-  @Output() selectedItemListChange = new EventEmitter<ISellItem[]>();
+  @Output() selectedItemListChange = new EventEmitter<number[]>();
   @Output() menuAction = new EventEmitter<any>();
 
   individualMenuClicked = false;
 
   size = -1;
 
-  public onItemListChange(items: ISellItem[]): void {
-    this.selectedItems = items;
+  public onItemListChange(event: number[]): void {
+    this.selectedItemIndexes = event;
     if (this.individualMenuClicked) {
       this.individualMenuClicked = false;
       return;
     }
-    this.selectedItemListChange.emit(items);
+    this.selectedItemListChange.emit(event);
   }
 
   public onItemActionsMultiMenulick(menuItem: IActionItem, selectedItemIndexes: number[],  selectedItems: IItem[]) {
@@ -56,9 +59,9 @@ export class TransactionItemListComponent implements AfterViewChecked {
   }
 
   ngAfterViewChecked() {
-    if (this.listConfig && this.listConfig.items && this.size !== this.listConfig.items.length) {
+    if (this.listConfig && this.listConfig.totalNumberOfItems && this.size !== this.listConfig.totalNumberOfItems) {
       this.scrollToBottom();
-      this.size = this.listConfig.items.length;
+      this.size = this.listConfig.totalNumberOfItems;
     }
   }
 

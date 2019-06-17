@@ -2,7 +2,7 @@
 	<mat-card fxLayout="column" class="lighter scrollable-content-card selection-list-card">
 		<mat-card-title *ngIf="screen.instructions" class="text-sm">{{screen.instructions}}</mat-card-title>
 		<mat-card-content fxFlex="1 1 100%">
-			<app-selectable-item-list [configuration]="listConfig" (selectedItemChange)="onItemChange($event)"
+			<app-selectable-item-list [listData]="listData" [configuration]="listConfig" (selectedItemChange)="onItemChange($event)"
 				(selectedItemListChange)="onItemListChange($event)" [defaultSelect]="screen.defaultSelect">
 				<ng-template let-item>
 					<div [ngClass]="{'muted-color' : !item.enabled}">

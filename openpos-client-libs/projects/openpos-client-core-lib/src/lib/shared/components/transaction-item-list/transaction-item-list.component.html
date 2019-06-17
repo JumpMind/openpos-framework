@@ -14,14 +14,14 @@
 
 <mat-card class="page-content-card scrollable-content-card serrated-edge">
     <mat-card-content #scrollList ngClass.xs="xs">
-        <app-selectable-item-list [configuration]="listConfig" [selectedItemList]="selectedItems"
+        <app-selectable-item-list [listData]="listData" [configuration]="listConfig" [selectedItemList]="selectedItems"
             (selectedItemListChange)="onItemListChange($event)">
             <ng-template let-item>
-                <app-sell-item-line [item]="item" [readOnly]="readOnly" [hideButton]="selectedItems.length >= 1"></app-sell-item-line>
+                <app-sell-item-line [item]="item" [readOnly]="readOnly" [hideButton]="selectedItemIndexes.length >= 1"></app-sell-item-line>
             </ng-template>
         </app-selectable-item-list>
 
-        <div *ngIf="!listConfig.items || listConfig.items.length == 0" fxLayout="column" fxLayoutAlign="center center"
+        <div *ngIf="listConfig.totalNumberOfItems == 0" fxLayout="column" fxLayoutAlign="center center"
             class="muted-color" style="height: 100%;">
             <app-icon iconClass="material-icons mat-128" iconName="barcode"></app-icon>
             <span class="text-md">Scan/Key something to get started</span>

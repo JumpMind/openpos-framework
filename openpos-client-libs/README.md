@@ -1,3 +1,6 @@
+# ** DEPRECATED **
+Moved to https://github.com/JumpMind/openpos-framework/tree/master/openpos-client-libs
+
 # OpenposClientCoreLib
 
 This is the parent project for OpenPos Client Core Lib that orchestrats the building and packaging of the core library as well as running the test suite.

@@ -1,15 +1,19 @@
-import { Component, Input, ContentChild, TemplateRef, ElementRef, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { OnDestroy, Component, Input, Output, EventEmitter, ContentChild, TemplateRef, ElementRef, OnInit,
+    ViewChildren, QueryList, AfterViewInit, AfterContentInit, AfterViewChecked } from '@angular/core';
+import { Subscription } from 'rxjs/internal/Subscription';
+import { Observable } from 'rxjs';
+import { ISelectableListData } from './selectable-list-data.interface';
 import { KeyPressProvider } from '../../providers/keypress.provider';
-import { Subscription } from 'rxjs';
 import { Configuration } from '../../../configuration/configuration';
 import { SelectionMode } from '../../../core/interfaces/selection-mode.enum';
+import { SessionService } from '../../../core/services/session.service';
 
-export class SelectableItemListComponentConfiguration<ItemType> {
-    numResultsPerPage: number;
-    items: ItemType[];
-    disabledItems: ItemType[] = [];
+export class SelectableItemListComponentConfiguration {
+    numItemsPerPage: number;
+    totalNumberOfItems: number;
     defaultSelectItemIndex: number;
     selectionMode: SelectionMode;
+    fetchDataAction: string;
 }
 
 @Component({
@@ -17,18 +21,20 @@ export class SelectableItemListComponentConfiguration<ItemType> {
     templateUrl: './selectable-item-list.component.html',
     styleUrls: ['./selectable-item-list.component.scss']
 })
-export class SelectableItemListComponent<ItemType> implements OnDestroy {
-
+export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit, AfterViewInit {
     @ContentChild(TemplateRef) itemTemplate: TemplateRef<ElementRef>;
+    @ViewChildren('items') private itemsRef: QueryList<ElementRef>;
 
-    @Input() defaultSelect = false;
     @Input() keyboardControl = true;
+    @Input() defaultSelect = false;
+    @Input() listData: Observable<ISelectableListData<ItemType>>;
+
     @Input()
-    set configuration(config: SelectableItemListComponentConfiguration<ItemType>) {
+    set configuration(config: SelectableItemListComponentConfiguration) {
         this._config = config;
         this.updateResultsToShow();
     }
-    get configuration(): SelectableItemListComponentConfiguration<ItemType> {
+    get configuration(): SelectableItemListComponentConfiguration {
         return this._config;
     }
 
@@ -40,38 +46,43 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy {
     get selectedItem(): ItemType {
         return this._selectedItem;
     }
-    @Output() selectedItemChange = new EventEmitter<ItemType>();
+    @Output() selectedItemChange = new EventEmitter<number>();
 
     @Input()
-    set selectedItemList ( itemList: ItemType[] ) {
+    set selectedItemList( itemList: ItemType[] ) {
         this._selectedItemList = itemList;
         this.updateKeySubscriptions();
     }
-    get selectedItemList (): ItemType[] {
+    get selectedItemList(): ItemType[] {
         return this._selectedItemList;
     }
-    @Output() selectedItemListChange = new EventEmitter<ItemType[]>();
+    @Output() selectedItemListChange = new EventEmitter<number[]>();
 
     numberOfPages: number;
-    itemsToShow: ItemType[];
-    disabledItems: ItemType[];
     currentPage = 1;
+    useDefaultSelectIndexToStart = true;
+    items: Map<number, ItemType>;
+    disabledItems: Map<number, ItemType>;
+    itemsToShow: ItemType[];
+    itemPageMap: Map<number, ItemType[]> = new Map<number, ItemType[]>();
+    scrollToIndex: number;
 
     private _selectedItem: ItemType;
     private _selectedItemList = new Array<ItemType>();
-    private _config: SelectableItemListComponentConfiguration<ItemType>;
+    private _config: SelectableItemListComponentConfiguration;
 
     private subscription: Subscription;
     private selectedItemSubscription: Subscription;
 
-    constructor(private keyPresses: KeyPressProvider) {
+    constructor(private keyPresses: KeyPressProvider, private session: SessionService) {
+
         // we only want to be subscribed for keypresses when we have selected items
         // so watch the selected item changes and add remove the key bindings.
-        this.selectedItemChange.subscribe( item => {
+        this.selectedItemChange.subscribe(item => {
             this.updateKeySubscriptions();
         });
 
-        this.selectedItemListChange.subscribe( list => {
+        this.selectedItemListChange.subscribe(list => {
             this.updateKeySubscriptions();
         });
 
@@ -146,6 +157,33 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy {
             });
     }
 
+    ngOnInit(): void {
+        this.subscription.add(this.listData.subscribe((selectableListData: ISelectableListData<ItemType>) => {
+            if (selectableListData != null) {
+                this.items = selectableListData.items;
+                this.disabledItems = selectableListData.disabledItems;
+                this.updateResultsToShow();
+            }
+        }));
+
+        this.numberOfPages = this.configuration.totalNumberOfItems / this.configuration.numItemsPerPage;
+        if (this.defaultSelect && this.useDefaultSelectIndexToStart && this.configuration.defaultSelectItemIndex) {
+            this.currentPage = Math.trunc(this.configuration.defaultSelectItemIndex / this.configuration.numItemsPerPage) + 1;
+        }
+
+        if (this.configuration.fetchDataAction) {
+            this.session.onValueChange(this.configuration.fetchDataAction, this.currentPage);
+        }
+    }
+
+    ngAfterViewInit(): void {
+        this.itemsRef.changes.subscribe(() => {
+            if (this.scrollToIndex) {
+                this.scrollToItem(this.scrollToIndex);
+            }
+        });
+    }
+
     ngOnDestroy(): void {
         if (this.subscription) {
             this.subscription.unsubscribe();
@@ -156,74 +194,114 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy {
     }
 
     updateResultsToShow(): void {
-        if (this._config.items.length > 0) {
-            this.numberOfPages = this._config.items.length / this._config.numResultsPerPage;
-        }
-        this.itemsToShow = this._config.items.slice((this.currentPage - 1) *
-            this._config.numResultsPerPage, this._config.numResultsPerPage * this.currentPage);
-
-        this.disabledItems = this._config.disabledItems;
-
-        if (this.defaultSelect && this._config.defaultSelectItemIndex !== null && this._config.defaultSelectItemIndex !== undefined) {
-            switch (this._config.selectionMode) {
-                case SelectionMode.Single:
-                    this.selectedItem = this.itemsToShow[this._config.defaultSelectItemIndex];
-                    this.selectedItemChange.emit(this.selectedItem);
-                    break;
-                case SelectionMode.Multiple:
-                    this.selectedItemList.push(this.itemsToShow[this._config.defaultSelectItemIndex]);
-                    this.selectedItemListChange.emit(this.selectedItemList);
-                    break;
+        if (this.items) {
+            if (this.items.size === this.configuration.totalNumberOfItems) {
+                this.itemsToShow = Array.from(this.items.values()).slice((this.currentPage - 1) *
+                this.configuration.numItemsPerPage, this.configuration.numItemsPerPage * this.currentPage);
+            } else if (this.isPageSavedInMap()) {
+                this.itemsToShow = this.itemPageMap.get(this.currentPage);
+            } else {
+                this.itemsToShow = Array.from(this.items.values());
+                if (this.itemsToShow.length > 0) {
+                    this.itemPageMap.set(this.currentPage, this.itemsToShow);
+                }
             }
-        } else if (this.defaultSelect && this.itemsToShow.length === 1) {
-            switch (this._config.selectionMode) {
-                case SelectionMode.Single:
-                    this.selectedItem = this.itemsToShow[0];
-                    this.selectedItemChange.emit(this.selectedItem);
-                    break;
-                case SelectionMode.Multiple:
-                    this.selectedItemList.push(this.itemsToShow[0]);
-                    this.selectedItemListChange.emit(this.selectedItemList);
-                    break;
+
+            if (this.defaultSelect && this.useDefaultSelectIndexToStart && this.configuration.defaultSelectItemIndex) {
+                const index = this.configuration.defaultSelectItemIndex % this.configuration.numItemsPerPage;
+                this.scrollToIndex = index;
+                switch (this.configuration.selectionMode) {
+                    case SelectionMode.Single:
+                        this.selectedItem = this.itemsToShow[index];
+                        this.selectedItemChange.emit(this.configuration.defaultSelectItemIndex);
+                        break;
+                    case SelectionMode.Multiple:
+                        this.selectedItemList.push(this.itemsToShow[index]);
+                        const indexes = this.selectedItemList.map(i => this.selectedItemList.indexOf(i));
+                        this.selectedItemListChange.emit(indexes);
+                        break;
+                }
+            } else if (this.defaultSelect && this.useDefaultSelectIndexToStart &&  this.itemsToShow.length === 1) {
+                this.scrollToIndex = 0;
+                switch (this.configuration.selectionMode) {
+                    case SelectionMode.Single:
+                        this.selectedItem = this.itemsToShow[0];
+                        this.selectedItemChange.emit(0);
+                        break;
+                    case SelectionMode.Multiple:
+                        this.selectedItemList.push(this.itemsToShow[0]);
+                        const indexes = this.selectedItemList.map(i => this.selectedItemList.indexOf(i));
+                        this.selectedItemListChange.emit(indexes);
+                        break;
+                }
             }
         }
+
     }
 
     onNextPage() {
         this.currentPage++;
-        this.updateResultsToShow();
+        this.useDefaultSelectIndexToStart = false;
+        if (this.isPageSavedInMap() || !this.configuration.fetchDataAction) {
+            this.updateResultsToShow();
+        } else {
+            this.session.onValueChange(this.configuration.fetchDataAction, this.currentPage);
+        }
     }
 
     onPrevPage() {
         this.currentPage--;
-        this.updateResultsToShow();
+        this.useDefaultSelectIndexToStart = false;
+        if (this.isPageSavedInMap() || !this.configuration.fetchDataAction) {
+            this.updateResultsToShow();
+        } else {
+            this.session.onValueChange(this.configuration.fetchDataAction, this.currentPage);
+        }
     }
 
     onItemClick(item: ItemType, event: any) {
         // look for block-selection attribute and don't do the selection if we find it in our path
         if ( event.path.find(element => element.attributes && element.attributes.getNamedItem('block-selection')) ||
-            this.disabledItems.includes(item)) {
+            Array.from(this.disabledItems.values()).includes(item)) {
             return;
         }
-        switch (this._config.selectionMode) {
+
+        switch (this.configuration.selectionMode) {
             case SelectionMode.Multiple:
-                const i = this.selectedItemList.indexOf(item);
-                if (i >= 0) {
-                    this.selectedItemList.splice(i, 1);
+                const index = this.selectedItemList.indexOf(item);
+                if (index >= 0) {
+                    this.selectedItemList.splice(index, 1);
+                    this.scrollToItem(index);
                 } else {
                     this.selectedItemList.push(item);
+                    this.scrollToItem(this.itemsToShow.indexOf(item));
                 }
-                this.selectedItemListChange.emit(this.selectedItemList);
+                const indexes = [];
+                this.selectedItemList.forEach(i =>
+                    indexes.push(this.itemsToShow.indexOf(i) + ((this.currentPage - 1) * this.configuration.numItemsPerPage)));
+                this.selectedItemListChange.emit(indexes);
                 break;
             case SelectionMode.Single:
+                const itemIndex = this.itemsToShow.indexOf(item);
                 this.selectedItem = item;
-                this.selectedItemChange.emit(item);
+                this.scrollToItem(itemIndex);
+                this.selectedItemChange.emit(itemIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage));
                 break;
         }
     }
 
+    scrollToItem(index: number) {
+        let indexToView = index;
+        if (this.configuration.numItemsPerPage !== 0) {
+            indexToView -= Math.trunc(index / this.configuration.numItemsPerPage) * this.configuration.numItemsPerPage;
+        }
+        if (this.itemsRef && this.itemsRef.toArray()[indexToView]) {
+            this.itemsRef.toArray()[indexToView].nativeElement.scrollIntoView({block: 'center'});
+        }
+    }
+
     isItemSelected(item: ItemType): boolean {
-        switch (this._config.selectionMode) {
+        switch (this.configuration.selectionMode) {
             case SelectionMode.Multiple:
                 return this.selectedItemList.includes(item);
             case SelectionMode.Single:
@@ -231,19 +309,24 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy {
         }
     }
 
+    isPageSavedInMap(): boolean {
+        return this.itemPageMap && this.itemPageMap.get(this.currentPage) !== undefined
+            && this.itemPageMap.get(this.currentPage) !== null;
+    }
+
     handleEscape(event: KeyboardEvent) {
-        switch (this._config.selectionMode) {
+        switch (this.configuration.selectionMode) {
             case SelectionMode.Single:
                 if (this.selectedItem != null) {
                     this.selectedItem = null;
-                    this.selectedItemChange.emit(this.selectedItem);
+                    this.selectedItemChange.emit(-1);
                     event.preventDefault();
                 }
                 break;
             case SelectionMode.Multiple:
                 if (this.selectedItemList.length > 0) {
                     this.selectedItemList.length = 0;
-                    this.selectedItemListChange.emit(this.selectedItemList);
+                    this.selectedItemListChange.emit([]);
                     event.preventDefault();
                 }
                 break;
@@ -263,49 +346,61 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy {
         // debugger;
         const itemIndexToSelect = -1;
 
-        switch (this._config.selectionMode) {
+        switch (this.configuration.selectionMode) {
             case SelectionMode.Single:
                 let currentListIndex = this.itemsToShow.findIndex(item => item === this.selectedItem);
                 if (currentListIndex === -1  && direction === -1) {
                     return; // only allow key down to start selecting on the list.
                 }
                 let newIndex = currentListIndex + direction;
-                while ( this.disabledItems.includes(this.itemsToShow[newIndex]) ) {
+                let originalItemIndex = newIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
+                while (this.disabledItems.get(originalItemIndex)) {
                     newIndex = newIndex + direction;
+                    originalItemIndex = newIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
                 }
 
                 if (newIndex < 0) {
                     newIndex = 0;
-                    while (this.disabledItems.includes(this.itemsToShow[newIndex])) {
+                    originalItemIndex = newIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
+                    while (this.disabledItems.get(originalItemIndex)) {
                         newIndex++;
+                        originalItemIndex = newIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
                     }
                 }
                 if (this.itemsToShow.length > newIndex) {
                     this.selectedItem = this.itemsToShow[newIndex];
-                    this.selectedItemChange.emit(this.selectedItem);
+                    this.scrollToItem(newIndex);
+                    this.selectedItemChange.emit(originalItemIndex);
                 }
                 break;
             case SelectionMode.Multiple:
                 if (this.selectedItemList && this.selectedItemList.length === 1) {
                     currentListIndex = this.itemsToShow.findIndex(item => item === this.selectedItemList[0]);
                     newIndex = currentListIndex + direction;
-                    while ( this.disabledItems.includes(this.itemsToShow[newIndex]) ) {
+                    originalItemIndex = newIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
+                    while (this.disabledItems.get(originalItemIndex)) {
                         newIndex = newIndex + direction;
+                        originalItemIndex = newIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
                     }
                     if (this.itemsToShow.length > newIndex && newIndex > -1) {
                         this.selectedItemList = [this.itemsToShow[newIndex]];
-                        this.selectedItemListChange.emit(this.selectedItemList);
+                        const indexes = this.selectedItemList.map(i => this.selectedItemList.indexOf(i));
+                        this.scrollToItem(newIndex);
+                        this.selectedItemListChange.emit(indexes);
                     }
                 } else if (this.itemsToShow.length > 0) { // only allow key down to start selecting on the list.
                     let index = 0;
                     if (direction === -1) {
                         index = this.itemsToShow.length - 1;
                     }
-                    while (this.disabledItems.includes(this.itemsToShow[index])) {
+                    originalItemIndex = index + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
+                    while (this.disabledItems.get(originalItemIndex)) {
                         index = index + direction;
+                        originalItemIndex = index + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
                     }
                     this.selectedItemList = [this.itemsToShow[index]];
-                    this.selectedItemListChange.emit(this.selectedItemList);
+                    this.scrollToItem(index);
+                    this.selectedItemListChange.emit([index]);
                 }
                 break;
         }
@@ -320,4 +415,5 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy {
           event.preventDefault();
         }
     }
+
 }

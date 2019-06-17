@@ -12,6 +12,7 @@ import { IActionItemGroup } from '../../core/interfaces/action-item-group.interf
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { DeviceService } from '../../core/services/device.service';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
+import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
 
 /**
  * @ignore
@@ -25,7 +26,8 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
 
   @ViewChild('box') vc;
   initialized = false;
-  listConfig = new SelectableItemListComponentConfiguration<ISellItem>();
+  listData: Observable<ISelectableListData<ISellItem>>;
+  listConfig = new SelectableItemListComponentConfiguration();
   selectedItems: ISellItem[] = new Array<ISellItem>();
   selectedItemIndexes: number[] = new Array<number>();
   individualMenuClicked = false;
@@ -39,21 +41,40 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
   public amountTotals: ITotal[];
   public itemTotal: number;
 
-  constructor(devices: DeviceService,
-    private observableMedia: ObservableMedia, protected dialog: MatDialog) {
+  constructor(devices: DeviceService, private observableMedia: ObservableMedia, protected dialog: MatDialog) {
     super();
   }
 
   buildScreen() {
-    this.selectedItems = this.screen.items.filter(item => this.screen.selectedItems.find(selectedItem => item.index === selectedItem.index));
+    this.selectedItems = this.screen.items
+      .filter(item => this.screen.selectedItems.find(selectedItem => item.index === selectedItem.index));
     this.selectedItemIndexes = this.screen.selectedItems.map(item => item.index);
-    this.listConfig = new SelectableItemListComponentConfiguration<ISellItem>();
+
+    const allItems = new Map<number, ISellItem>();
+    const allDisabledItems = new Map<number, ISellItem>();
+    for (let i = 0; i < this.screen.items.length; i++) {
+        const item = this.screen.items[i];
+        allItems.set(i, item);
+        if (!item.enabled) {
+            allDisabledItems.set(i, item);
+        }
+    }
+    this.listData = new Observable<ISelectableListData<ISellItem>>((observer) => {
+        observer.next({
+            items: allItems,
+            disabledItems: allDisabledItems,
+        } as ISelectableListData<ISellItem>);
+    });
+
+    this.listConfig = new SelectableItemListComponentConfiguration();
     this.listConfig.selectionMode = SelectionMode.Multiple;
-    this.listConfig.numResultsPerPage = Number.MAX_VALUE;
-    this.listConfig.items = this.screen.items;
+    this.listConfig.numItemsPerPage = Number.MAX_VALUE;
+    this.listConfig.totalNumberOfItems = this.screen.items.length;
+
     this.items = this.screen.items;
     this.amountTotals = this.screen.totals ? (<ITotal[]>this.screen.totals).filter(t => t.type === TotalType.Amount) : null;
-    const screenItemTotal = this.screen.totals ? (<ITotal[]>this.screen.totals).find(t => t.type === TotalType.Quantity && t.name === 'itemTotal') : null;
+    const screenItemTotal = this.screen.totals ?
+    (<ITotal[]>this.screen.totals).find(t => t.type === TotalType.Quantity && t.name === 'itemTotal') : null;
     this.itemTotal = screenItemTotal ? Number(screenItemTotal.amount) : this.items.length;
     if (this.screen.template) {
       this.transactionMenuPrompt = this.screen.template.transactionMenuPrompt;
@@ -98,16 +119,16 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
   }
 
   openItemsDialog(items: ISellItem[]) {
-    let optionItems = [];
+    let options = [];
     if (items.length > 1) {
-      optionItems = this.screen.multiSelectedMenuItems;
+      options = this.screen.multiSelectedMenuItems;
     } else {
-      optionItems = items[0].menuItems;
+      options = items[0].menuItems;
     }
     const dialogRef = this.dialog.open(NavListComponent, {
       width: '70%',
       data: {
-        optionItems: optionItems,
+        optionItems: options,
         payload: this.getIndexes(items),
         disableClose: false,
         autoFocus: false
@@ -125,9 +146,9 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
     return indexes;
   }
 
-  public onItemListChange(items: ISellItem[]): void {
-    this.selectedItemIndexes = items.map(item => item.index);
-    this.session.onValueChange('SelectedItemsChanged', items);
+  public onItemListChange(event: number[]): void {
+    this.selectedItemIndexes = event;
+    this.session.onValueChange('SelectedItemsChanged', this.screen.items.filter(item => this.selectedItemIndexes.includes(item.index)));
   }
 
   public onMenuAction(event: any) {

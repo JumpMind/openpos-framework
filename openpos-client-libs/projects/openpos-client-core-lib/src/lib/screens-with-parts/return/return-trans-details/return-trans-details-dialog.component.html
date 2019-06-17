@@ -3,12 +3,11 @@
     <mat-dialog-content>
         <div fxFlex="0 0 100%" class="lighter dialog-content" fxLayout="column" fxLayoutAlign="start">
             <div *ngIf="screen.instructions" class="text-sm"> {{screen.instructions}}</div>
-            <app-selectable-item-list [configuration]="listConfig" 
+            <app-selectable-item-list [listData]="listData" [configuration]="listConfig" 
             (selectedItemChange)="onItemChange($event)">
                 <ng-template let-item>
                     <app-sell-item-line [item]="item" [readOnly]="false" [hideButton]="index >= 0"></app-sell-item-line>
                 </ng-template>
-    
             </app-selectable-item-list>
         </div>
     </mat-dialog-content>

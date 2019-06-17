@@ -1,6 +1,6 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding-top:6px;">
 
-	<app-transaction-item-list [listConfig]="listConfig" [selectedItems]="selectedItems" [selectedItemIndexes]="selectedItemIndexes"
+	<app-transaction-item-list [listData]="listData" [listConfig]="listConfig" [selectedItems]="selectedItems" [selectedItemIndexes]="selectedItemIndexes"
 	 [multiSelectedMenuItems]="screen.multiSelectedMenuItems" [transactionMenu]="transactionMenu"
 	 [prompt]="transactionMenuPrompt" [readOnly]="screen.readOnly" (selectedItemListChange)="onItemListChange($event)"
 	 (menuAction)="onMenuAction($event)">

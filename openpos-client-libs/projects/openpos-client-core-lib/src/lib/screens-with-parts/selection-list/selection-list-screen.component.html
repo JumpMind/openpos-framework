@@ -10,9 +10,11 @@
             <mat-card fxLayout="column" class="lighter scrollable-content-card selection-list-card">
                 <mat-card-title *ngIf="screen.instructions" class="text-sm">{{screen.instructions}}</mat-card-title>
                 <mat-card-content fxFlex="1 1 100%">
-                    <app-selectable-item-list *ngIf="screen.selectionList && screen.selectionList.length > 0" 
-                        [configuration]="listConfig" (selectedItemChange)="onItemChange($event)"
-                        (selectedItemListChange)="onItemListChange($event)" [defaultSelect]="screen.defaultSelect">
+                    <app-selectable-item-list *ngIf="screen.selectionList" 
+                        [listData]="listData" [configuration]="listConfig"
+                        [defaultSelect]="screen.defaultSelect"
+                        (selectedItemChange)="onItemChange($event)"
+                        (selectedItemListChange)="onItemListChange($event)">
                         <ng-template let-item>
                             <div #items gdAreas="img info" gdColumns="auto 4fr"
                                 [ngClass]="{'muted-color' : !item.enabled}">

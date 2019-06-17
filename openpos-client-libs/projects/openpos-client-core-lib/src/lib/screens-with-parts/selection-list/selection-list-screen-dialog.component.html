@@ -3,9 +3,9 @@
     <mat-dialog-content>
         <div fxFlex="0 0 100%" class="lighter dialog-content" fxLayout="column" fxLayoutAlign="start">
             <div *ngIf="screen.instructions" class="text-sm"> {{screen.instructions}}</div>
-            <app-selectable-item-list fxFlex="0 1 100%" [configuration]="listConfig"
-                (selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)"
-                [defaultSelect]="screen.defaultSelect">
+            <app-selectable-item-list fxFlex="0 1 100%" [listData]="listData"
+                [configuration]="listConfig" [defaultSelect]="screen.defaultSelect"
+                (selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)">
                 <ng-template let-item>
                     <div #items gdAreas="img info" gdColumns="auto 2fr" [ngClass]="{'muted-color' : !item.enabled}">
                         <div gdArea="img">

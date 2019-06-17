@@ -1,6 +1,6 @@
 export enum SelectionMode {
-    None,
-    Multiple,
-    Single,
-    SingleCheckbox,
+    None = 'None',
+    Multiple = 'Multiple',
+    Single = 'Single',
+    SingleCheckbox = 'SingleCheckbox',
 }

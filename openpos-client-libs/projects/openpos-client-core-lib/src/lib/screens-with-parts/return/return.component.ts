@@ -12,6 +12,7 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
 
 /**
  * @ignore
@@ -28,8 +29,7 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
 
     @ViewChild('scrollList') private scrollList: ElementRef;
     public size = -1;
-    initialized = false;
-    listConfig = new SelectableItemListComponentConfiguration<ISellItem>();
+    initialized = false;    // listData: Observable<ISelectableListData<ISellItem>>;
     selectedItems: ISellItem[] = new Array<ISellItem>();
     individualMenuClicked = false;
 
@@ -49,10 +49,7 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     buildScreen() {
         this.selectedItems =
           this.screen.items.filter(item => this.screen.selectedItems.find(selectedItem => item.index === selectedItem.index));
-        this.listConfig = new SelectableItemListComponentConfiguration<ISellItem>();
-        this.listConfig.selectionMode = SelectionMode.Multiple;
-        this.listConfig.numResultsPerPage = Number.MAX_VALUE;
-        this.listConfig.items = this.screen.items;
+
         this.items = this.screen.items;
         this.amountTotals = this.screen.totals ? (this.screen.totals as ITotal[]).filter(t => t.type === TotalType.Amount) : null;
         const screenItemTotal =
@@ -135,7 +132,8 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
         }
     }
 
-    public onItemListChange(items: ISellItem[]): void {
+    public onItemListChange(event: number[]): void {
+        const items = this.screen.items.filter(item => event.includes(item.index));
         this.session.onValueChange('SelectedItemsChanged', items);
     }
 

@@ -5,6 +5,8 @@ import { SelectableItemListComponentConfiguration } from '../../../shared/compon
 import { MessageProvider } from '../../../shared/providers/message.provider';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 import { SelectionMode } from '../../../core/interfaces/selection-mode.enum';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { ISelectableListData } from '../../../shared/components/selectable-item-list/selectable-list-data.interface';
 
 @Component({
     selector: 'app-sale-item-list',
@@ -14,23 +16,45 @@ export class SaleItemListComponent extends ScreenPartComponent<SaleItemListInter
 
     items: ISellItem[];
     selectedItems: ISellItem[] = new Array<ISellItem>();
-    listConfig = new SelectableItemListComponentConfiguration<ISellItem>();
+    listConfig = new SelectableItemListComponentConfiguration();
+    listData = new Observable<ISelectableListData<ISellItem>>();
 
+    private screenData$ = new BehaviorSubject<ISelectableListData<ISellItem>>(null);
     constructor( messageProivder: MessageProvider) {
         super(messageProivder);
+        this.listData = this.screenData$;
     }
 
     screenDataUpdated() {
-        this.selectedItems = this.screenData.items.filter(item => this.screenData.selectedItemIndexes.find(index => item.index === index) !== undefined);
-        this.listConfig = new SelectableItemListComponentConfiguration<ISellItem>();
+        const allItems = new Map<number, ISellItem>();
+        const allDisabledItems = new Map<number, ISellItem>();
+        for (let i = 0; i < this.screenData.items.length; i++) {
+            const item = this.screenData.items[i];
+            allItems.set(i, item);
+            if (!item.enabled) {
+                allDisabledItems.set(i, item);
+            }
+        }
+
+        this.screenData$.next({
+            items: allItems,
+            disabledItems: allDisabledItems,
+        } as ISelectableListData<ISellItem>
+        );
+
+        this.selectedItems = this.screenData.items
+            .filter(item => this.screenData.selectedItemIndexes.find(index => item.index === index) !== undefined);
+
+        this.listConfig = new SelectableItemListComponentConfiguration();
         this.listConfig.selectionMode = SelectionMode.Multiple;
-        this.listConfig.numResultsPerPage = Number.MAX_VALUE;
-        this.listConfig.items = this.screenData.items;
+        this.listConfig.numItemsPerPage = Number.MAX_VALUE;
+        this.listConfig.totalNumberOfItems = this.screenData.items.length;
+
         this.items = this.screenData.items;
     }
 
-    public onItemListChange(items: ISellItem[]): void {
-        this.screenData.selectedItemIndexes = items.map(item => item.index);
+    public onItemListChange(event: any[]): void {
+        this.screenData.selectedItemIndexes = event;
         this.sessionService.onValueChange('SelectedItemsChanged', this.screenData.selectedItemIndexes);
     }
 

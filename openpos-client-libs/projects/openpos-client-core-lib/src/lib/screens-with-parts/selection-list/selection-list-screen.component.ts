@@ -6,6 +6,11 @@ import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.compon
 import { SelectionListInterface } from './selection-list.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { Configuration } from '../../configuration/configuration';
+import { Observable, of, merge, Subject, BehaviorSubject } from 'rxjs';
+import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
+import { MessageProvider } from '../../shared/providers/message.provider';
+import { filter, map } from 'rxjs/operators';
+import { ISelectionListItem } from './selection-list-item.interface';
 
 @ScreenComponent({
     name: 'SelectionList'
@@ -18,33 +23,67 @@ import { Configuration } from '../../configuration/configuration';
 export class SelectionListScreenComponent extends PosScreen<SelectionListInterface> implements AfterViewInit {
     @ViewChildren('items') private items: QueryList<ElementRef>;
 
-    listConfig: SelectableItemListComponentConfiguration<any>;
+    listData: Observable<ISelectableListData<ISelectionListItem>>;
+    listConfig: SelectableItemListComponentConfiguration;
+    selectionMode: SelectionMode;
     index = -1;
+    indexes = [];
     lastSelection = -1;
+
+    private screenData$ = new BehaviorSubject<ISelectableListData<ISelectionListItem>>(null);
 
     constructor() {
         super();
+        this.listData = merge( this.session.getMessages('UIData').pipe(
+            filter( d => d.dataType === 'SelectionListData'),
+            map((d) => {
+                const items = new Map<string, ISelectionListItem>();
+                const disabledItems = new Map<string, ISelectionListItem>();
+                Object.getOwnPropertyNames(d.items).forEach(element => {
+                    items.set( element, d.items[element]);
+                });
+                Object.getOwnPropertyNames(d.disabledItems).forEach(element => {
+                    disabledItems.set( element, d.disabledItems[element]);
+                });
+                d.items = items;
+                d.disabledItems = disabledItems;
+                return d;
+            })
+        ), this.screenData$);
     }
 
     buildScreen() {
-        this.listConfig = new SelectableItemListComponentConfiguration<any>();
-        if (this.screen.multiSelect) {
-            this.listConfig.selectionMode = SelectionMode.Multiple;
+        if (this.screen.selectionList && this.screen.selectionList.length > 0) {
+            const allItems = new Map<number, ISelectionListItem>();
+            const allDisabledItems = new Map<number, ISelectionListItem>();
+            for (let i = 0; i < this.screen.selectionList.length; i++) {
+                const item = this.screen.selectionList[i];
+                allItems.set(i, item);
+                if (!item.enabled) {
+                    allDisabledItems.set(i, item);
+                }
+            }
+            this.screenData$.next({
+                items: allItems,
+                disabledItems: allDisabledItems,
+            } as ISelectableListData<ISelectionListItem>
+            );
+        }
+
+        this.listConfig = new SelectableItemListComponentConfiguration();
+        if (this.screen.numberItemsPerPage <= 0) {
+            this.listConfig.numItemsPerPage = Number.MAX_VALUE;
         } else {
-            this.listConfig.selectionMode = SelectionMode.Single;
+            this.listConfig.numItemsPerPage = this.screen.numberItemsPerPage;
         }
-        this.listConfig.numResultsPerPage = Number.MAX_VALUE;
-
-        this.listConfig.items = this.screen.selectionList;
-        this.listConfig.disabledItems = this.screen.selectionList.filter(e => !e.enabled);
-
-        if (this.screen.defaultSelectItemIndex !== null && this.screen.defaultSelectItemIndex !== undefined) {
-            this.listConfig.defaultSelectItemIndex = this.screen.defaultSelectItemIndex;
+        if (this.screen.selectionList && this.screen.selectionList.length > 0) {
+            this.listConfig.totalNumberOfItems = this.screen.selectionList.length;
+        } else {
+            this.listConfig.totalNumberOfItems = this.screen.numberTotalItems;
         }
-
-        if (this.screen.numberItemsPerPage !== 0) {
-            this.listConfig.numResultsPerPage = this.screen.numberItemsPerPage;
-        }
+        this.listConfig.defaultSelectItemIndex = this.screen.defaultSelectItemIndex;
+        this.listConfig.selectionMode = this.screen.multiSelect ? SelectionMode.Multiple : SelectionMode.Single;
+        this.listConfig.fetchDataAction = this.screen.fetchDataAction;
     }
 
     ngAfterViewInit() {
@@ -54,37 +93,24 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     }
 
     public onItemListChange(event: any[]): void {
-        // this.selectedItems = event;
-        // this.session.onAction("SelectedItemsChanged", this.selectedItems);
+        this.indexes = event;
     }
 
     public onItemChange(event: any): void {
-        this.index = this.screen.selectionList.indexOf(event);
-        if (this.items) {
-            this.scrollToItem();
-        }
+        this.index = event;
+
         if (this.screen.selectionChangedAction && this.index !== this.lastSelection) {
             this.lastSelection = this.index;
             this.session.onAction(this.screen.selectionChangedAction, this.index);
         }
     }
 
-    public scrollToItem() {
-        let indexToView = this.index;
-        if (this.screen.numberItemsPerPage !== 0) {
-            indexToView -= Math.trunc(this.index / this.screen.numberItemsPerPage) * this.screen.numberItemsPerPage;
-        }
-        if (this.items.toArray()[indexToView]) {
-            this.items.toArray()[indexToView].nativeElement.scrollIntoView({ block: 'center' });
-            // Smooth scrolling does not seem to work in Chrome dialog windows (IE: Resume transaction window).
-            // Firefox will work fine though.
-            //
-            // this.items.toArray()[indexToView].nativeElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }
-    }
-
     public doMenuItemAction(menuItem: IActionItem) {
-        this.session.onAction(menuItem, this.index);
+        if (this.screen.multiSelect) {
+            this.session.onAction(menuItem, this.indexes);
+        } else {
+            this.session.onAction(menuItem, this.index);
+        }
     }
 
     public keybindsEnabled(menuItem: IActionItem): boolean {
