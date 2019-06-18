@@ -384,9 +384,8 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
                     }
                     if (this.itemsToShow.length > newIndex && newIndex > -1) {
                         this.selectedItemList = [this.itemsToShow[newIndex]];
-                        const indexes = this.selectedItemList.map(i => this.selectedItemList.indexOf(i));
                         this.scrollToItem(newIndex);
-                        this.selectedItemListChange.emit(indexes);
+                        this.selectedItemListChange.emit([newIndex]);
                     }
                 } else if (this.itemsToShow.length > 0) { // only allow key down to start selecting on the list.
                     let index = 0;
