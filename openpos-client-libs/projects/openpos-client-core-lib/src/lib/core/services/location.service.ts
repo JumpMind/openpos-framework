@@ -5,15 +5,17 @@ import { ILocationProvider } from '../location-providers/location-provider.inter
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ILocationData } from '../location-providers/location-data.interface';
 
-export const SCANNERS = new InjectionToken<ILocationProvider[]>('LocationProviders');
-
-@Injectable()
+export const PROVIDERS = new InjectionToken<ILocationProvider[]>('LocationProviders');
+@Injectable({
+    providedIn: 'root',
+})
 export class LocationService implements OnDestroy {
 
     subscription: Subscription;
     previousLocationData: ILocationData;
 
-    constructor(public sessionService: SessionService,  @Optional() @Inject(SCANNERS) private locationProviders: Array<ILocationProvider>) {
+    constructor(public sessionService: SessionService,
+                @Optional() @Inject(PROVIDERS) private locationProviders: Array<ILocationProvider>) {
         sessionService.getMessages('ConfigChanged').pipe(
             filter( m => m.configType === 'LocationService')
         ).subscribe( message => {
@@ -26,7 +28,8 @@ export class LocationService implements OnDestroy {
                     this.subscription.unsubscribe();
                 }
                 this.subscription = provider.getCurrentLocation().subscribe((locationData: ILocationData) => {
-                    if (this.previousLocationData === undefined || this.previousLocationData.postalCode !== locationData.postalCode) {
+                    if (!this.previousLocationData ||
+                        (this.previousLocationData && locationData && this.previousLocationData.postalCode !== locationData.postalCode)) {
                         this.previousLocationData = locationData;
                         sessionService.onAction('LocationChanged', locationData);
                     }
