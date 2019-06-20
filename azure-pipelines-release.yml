@@ -24,7 +24,6 @@ variables:
 steps:
 - checkout: self
   persistCredentials: true
-  clean: true
 - task: Gradle@2
   inputs:
     workingDirectory: 'openpos-assemble'
