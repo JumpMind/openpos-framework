@@ -1,5 +1,5 @@
 apply from: '../openpos-gradle/src/main/resources/java.gradle'
-apply from: '../openpos-gradle/src/main/resources/release.gradle'
+//apply from: '../openpos-gradle/src/main/resources/release.gradle'
 
 task generateSourceArtifact(type: Copy) {
     doFirst {
