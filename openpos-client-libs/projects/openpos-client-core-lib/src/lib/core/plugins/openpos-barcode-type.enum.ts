@@ -1,8 +1,8 @@
 export enum OpenposBarcodeType {
     UPCA = 'UPCA',
     CODABAR = 'CODABAR',
-    CODE25_NI2OF5 = 'CODE25_NI205',
-    CODE25_I2OF5 = 'CODE25_I20F5',
+    CODE25_NI2OF5 = 'CODE25_NI2OF5',
+    CODE25_I2OF5 = 'CODE25_I2OF5',
     CODE39 = 'CODE39',
     CODE93 = 'CODE93',
     CODE128 = 'CODE128',

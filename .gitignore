@@ -44,3 +44,11 @@ openpos-client-core-lib/\.settings/org\.eclipse\.buildship\.core\.prefs
 openpos-client-core-lib/\.project
 /.metadata/
 .azure-pipelines.yml.swp
+
+**/dist/
+**/node_modules/
+
+**/version.ts
+openpos-assemble/.classpath
+openpos-assemble/.project
+openpos-assemble/openpos-assemble.iws

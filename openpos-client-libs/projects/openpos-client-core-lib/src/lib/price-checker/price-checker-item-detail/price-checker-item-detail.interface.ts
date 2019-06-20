@@ -14,4 +14,5 @@ export interface PriceCheckerItemDetailInterface extends IAbstractScreen {
     logoUrl: string;
     itemMessages: string[];
     disclaimer: string;
+    scanAction: string;
 }
