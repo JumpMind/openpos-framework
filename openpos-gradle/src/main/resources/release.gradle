@@ -18,8 +18,9 @@ def gitCommit = { file ->
         commandLine 'git', 'commit', '-m', "releasing ${version}"
     }
     println('push')
+    def branch = gitBranch.startsWith('refs/heads/') ? gitBranch.substring('refs/heads/'.length()) : gitBranch
     exec {
-        commandLine 'git', 'push', '--force', remoteRepoUrl.replace('${personalAccessToken}', personalAccessToken), gitBranch
+        commandLine 'git', 'push', '--force', remoteRepoUrl.replace('${personalAccessToken}', personalAccessToken), branch
     }
 }
 
