@@ -1,6 +1,10 @@
 
 
 def gitCommit = { file ->
+    println('checkout')
+    exec {
+        commandLine 'git', 'checkout', gitBranch
+    }
     println('add')
     exec {
         commandLine 'git', 'add', file
