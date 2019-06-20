@@ -7,7 +7,7 @@ def gitCommit = { file ->
     }
     println('commit')
     exec {
-        commandLine 'git', 'commit', '-m', "releasing ${version}"
+        commandLine 'git', 'commit', '--author', 'build@jumpmind.com', '-m', "releasing ${version}"
     }
     println('push')
     exec {
