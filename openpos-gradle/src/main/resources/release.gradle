@@ -1,0 +1,33 @@
+
+
+def gitCommit = { file ->
+    println('add')
+    exec {
+        commandLine 'git', 'add', file
+    }
+    println('commit')
+    exec {
+        commandLine 'git', 'commit', '-m', "releasing ${version}"
+    }
+    println('push')
+    exec {
+        commandLine 'git', 'push'
+    }
+}
+
+task prerelease() {
+
+    doLast {
+        if (version.endsWith('-SNAPSHOT')) {
+            version = version.substring(0, version.length()-'-SNAPSHOT'.length())
+        }
+
+        def propertyFile = file "gradle.properties"
+        def props = new Properties()
+        propertyFile.withInputStream { props.load(it) }
+        props['version'] = version
+        propertyFile.withWriter { props.store(it, null) }
+        gitCommit propertyFile.name
+        println "prerelease ${version}"
+    }
+}
