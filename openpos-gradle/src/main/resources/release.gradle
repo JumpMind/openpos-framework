@@ -1,10 +1,6 @@
 
 
 def gitCommit = { file ->
-    println('checkout')
-    exec {
-        commandLine 'git', 'checkout', '-b', 'build'
-    }
     println('add')
     exec {
         commandLine 'git', 'add', file
@@ -16,6 +12,9 @@ def gitCommit = { file ->
     exec {
         commandLine 'git', 'config', 'user.name', 'build'
     }
+    exec {
+        commandLine 'git', 'config', 'remote.origin.url', remoteRepoUrl.replace('${personalAccessToken}', personalAccessToken)
+    }
 
     println('commit')
     exec {
@@ -23,7 +22,7 @@ def gitCommit = { file ->
     }
     println('push')
     exec {
-        commandLine 'git', 'push', '--force', remoteRepoUrl.replace('${personalAccessToken}', personalAccessToken), gitBranch
+        commandLine 'git', 'push', 'origin', 'HEAD:'+ gitBranch
     }
 }
 
