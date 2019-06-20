@@ -54,6 +54,8 @@ import { SplashScreenComponent } from './components/splash-screen/splash-screen.
 import { registerLocaleData } from '@angular/common';
 import locale_enCA from '@angular/common/locales/en-CA';
 import locale_frCA from '@angular/common/locales/fr-CA';
+import { LocationService, PROVIDERS } from './services/location.service';
+import { LocationProviderDefault } from './location-providers/location-provider-default';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -119,6 +121,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
+        LocationService,
+        { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
         TrainingOverlayService,
         ConfigurationService,
         KeyPressProvider,
