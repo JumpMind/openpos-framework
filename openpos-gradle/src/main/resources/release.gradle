@@ -3,7 +3,7 @@
 def gitCommit = { file ->
     println('checkout')
     exec {
-        commandLine 'git', 'checkout', gitBranch
+        commandLine 'git', 'checkout', '-b', 'build'
     }
     println('add')
     exec {
