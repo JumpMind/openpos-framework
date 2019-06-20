@@ -47,8 +47,7 @@
     "showdown": "^1.9.0",
     "signature_pad": "2.3.0",
     "text-mask-addons": "^3.7.2",
-    "zone.js": "^0.8.26",
-    "geocoder": "^0.2.3"
+    "zone.js": "^0.8.26"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",
