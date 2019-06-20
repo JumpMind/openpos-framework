@@ -11,7 +11,7 @@ def gitCommit = { file ->
     }
     println('push')
     exec {
-        commandLine 'git', 'push'
+        commandLine 'git', 'push', remoteRepoUrl.replace('${personalAccessToken}', personalAccessToken)
     }
 }
 
