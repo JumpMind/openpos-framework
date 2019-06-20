@@ -1,5 +1,4 @@
 group = 'org.jumpmind.pos'
-version = appVersion.endsWith("SNAPSHOT") ? appVersion : "${appVersion}.${buildNumber}"
 
 apply plugin: 'eclipse'
 apply plugin: 'java'
@@ -27,7 +26,7 @@ processResources {
     eachFile { details ->
         if (details.name.endsWith('version.properties')) {
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'version': appVersion,
+                    'version': version,
                     'buildTime': new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(new java.util.Date()),
                     'gitBranch' : gitBranch,
                     'gitHash' : gitHash,

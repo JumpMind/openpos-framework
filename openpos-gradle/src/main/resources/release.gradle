@@ -1,4 +1,18 @@
+apply plugin: "com.moowork.node"
 
+node {
+    version = '10.5.0'
+    npmVersion = '6.1.0'
+    download = downloadNode.toBoolean()
+    println """
+      **************************************************************************************************
+        Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties 
+        if you want to use downloaded versions of node and npm
+      **************************************************************************************************
+      """
+    workDir = file("${projectDir}/node")
+    nodeModulesDir = file("./")
+}
 
 def gitCommit = { file ->
     println('add')
@@ -19,18 +33,19 @@ def gitCommit = { file ->
     println('commit')
     exec {
         commandLine 'git', 'commit', '-m', "releasing ${version}"
+        ignoreExitValue true
     }
     println('push')
     exec {
-        commandLine 'git', 'push', 'origin', 'HEAD:'+ gitBranch
+        commandLine 'git', 'push', 'origin', 'HEAD:' + gitBranch
+        ignoreExitValue true
     }
 }
 
-task prerelease() {
-
+task updateVersionAndGradleProperties() {
     doLast {
         if (version.endsWith('-SNAPSHOT')) {
-            version = version.substring(0, version.length()-'-SNAPSHOT'.length())
+            version = version.substring(0, version.length() - '-SNAPSHOT'.length())
         }
 
         def propertyFile = file "gradle.properties"
@@ -38,7 +53,24 @@ task prerelease() {
         propertyFile.withInputStream { props.load(it) }
         props['version'] = version
         propertyFile.withWriter { props.store(it, null) }
-        gitCommit propertyFile.name
+    }
+}
+
+task setPackageJsonVersion(type: NpmTask) {
+    dependsOn updateVersionAndGradleProperties
+    workingDir = file(packageJsonDir)
+    args = [ 'version', '--allow-same-version', version ]
+}
+
+task prereleaseCommit() {
+    dependsOn setPackageJsonVersion
+    gitCommit 'gradle.properties'
+    gitCommit packageJsonDir + '/package.json'
+}
+
+task prerelease() {
+    dependsOn prereleaseCommit
+    doLast {
         println "prerelease ${version}"
     }
 }
