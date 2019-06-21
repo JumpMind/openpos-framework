@@ -2,3 +2,6 @@
 /bin/
 **/.okhttpcache/
 **/.gradle/
+/.classpath
+/.project
+/.settings/

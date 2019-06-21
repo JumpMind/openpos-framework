@@ -71,7 +71,7 @@ public class ScreenService implements IScreenService, IActionListener {
     @Value("${openpos.screenService.jsonIncludeNulls:true}")
     boolean jsonIncludeNulls = true;
 
-    @Value("${openpos.ui.content.maxage}")
+    @Value("${openpos.ui.content.maxage:null}")
     String contentMaxAge;
 
     @Autowired
@@ -83,28 +83,10 @@ public class ScreenService implements IScreenService, IActionListener {
     @Autowired
     ApplicationContext applicationContext;
 
-    List<IMessageInterceptor<UIMessage>> screenInterceptors = new ArrayList<>();
-    List<IMessageInterceptor<Toast>> toastInterceptors = new ArrayList<>();
-    
-
     @PostConstruct
     public void init() {
         if (!jsonIncludeNulls) {
             mapper.setSerializationInclusion(Include.NON_NULL);
-        }
-    }
-
-    public void setScreenInterceptors(List<IMessageInterceptor<UIMessage>> screenInterceptors) {
-        this.screenInterceptors.clear();
-        for (IMessageInterceptor<UIMessage> screenInterceptor : screenInterceptors) {
-            this.screenInterceptors.add(screenInterceptor);
-        }
-    }
-
-    public void setToastInterceptors(List<IMessageInterceptor<Toast>> toastInterceptors) {
-        this.toastInterceptors.clear();
-        for (IMessageInterceptor<Toast> toastInterceptor : toastInterceptors) {
-            this.toastInterceptors.add(toastInterceptor);
         }
     }
     
@@ -343,12 +325,6 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     protected void interceptToast(String appId, String deviceId, Toast toast) {
-        if (this.toastInterceptors != null) {
-            for (IMessageInterceptor<Toast> toastInterceptors : toastInterceptors) {
-                toastInterceptors.intercept(appId, deviceId, toast);
-            }
-        }
-
         String[] toastInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, Toast.class));
 
         if (toastInterceptorBeanNames != null) {
@@ -361,12 +337,6 @@ public class ScreenService implements IScreenService, IActionListener {
     }
     
     protected void interceptScreen(String appId, String deviceId, UIMessage screen) {
-        if (this.screenInterceptors != null) {
-            for (IMessageInterceptor<UIMessage> screenInterceptor : screenInterceptors) {
-                screenInterceptor.intercept(appId, deviceId, screen);
-            }
-        }
-
         String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, UIMessage.class));
 
         if (screenInterceptorBeanNames != null) {
@@ -477,26 +447,6 @@ public class ScreenService implements IScreenService, IActionListener {
         return buff.toString();
     }
 
-    @Override
-    public void addScreenInterceptor(IMessageInterceptor<UIMessage> interceptor) {
-        this.screenInterceptors.add(interceptor);
-    }
-
-    @Override
-    public void removeScreenInterceptor(IMessageInterceptor<UIMessage> interceptor) {
-        this.screenInterceptors.remove(interceptor);
-    }
-
-    @Override
-    public void addToastInterceptor(IMessageInterceptor<Toast> interceptor) {
-        this.toastInterceptors.add(interceptor);
-    }
-
-    @Override
-    public void removeToastInterceptor(IMessageInterceptor<Toast> interceptor) {
-        this.toastInterceptors.remove(interceptor);
-    }
-    
     protected String drawTop1(int boxWidth) {
         StringBuilder buff = new StringBuilder();
         buff.append(UPPER_LEFT_CORNER).append(StringUtils.repeat(HORIZONTAL_LINE, boxWidth - 2)).append(UPPER_RIGHT_CORNER);

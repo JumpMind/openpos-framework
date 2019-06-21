@@ -64,7 +64,7 @@
         <div gdArea="disclaimer" class="disclaimer">
             {{screen.disclaimer}}
         </div>
-        <button mat-raised-button  gdArea="printButton" color=primary class="button" (click)="onPrint()">
+        <button *ngIf="!!screen.printButton" mat-raised-button  gdArea="printButton" color=primary class="button" (click)="onPrint()">
             <app-icon [iconName]="screen.printButton.icon"></app-icon>
             <span>&nbsp;{{screen.printButton.title}}</span>
         </button>
