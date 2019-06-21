@@ -28,6 +28,9 @@ public class SaleUIMessage extends UIMessage {
     private String customerName;
     private String noCustomerText;
     private ActionItem loyaltyButton;
+    private String postalCode;
+    private boolean locationEnabled;
+    private ActionItem locationButton;
     private ActionItem promoButton;
     private ActionItem checkoutButton;
 
@@ -89,6 +92,30 @@ public class SaleUIMessage extends UIMessage {
 
     public void setLoyaltyButton(ActionItem loyaltyButton) {
         this.loyaltyButton = loyaltyButton;
+    }
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) {
+        this.postalCode = postalCode;
+    }
+
+    public boolean isLocationEnabled() {
+        return locationEnabled;
+    }
+
+    public void setLocationEnabled(boolean locationEnabled) {
+        this.locationEnabled = locationEnabled;
+    }
+
+    public ActionItem getLocationButton() {
+        return locationButton;
+    }
+
+    public void setLocationButton(ActionItem locationButton) {
+        this.locationButton = locationButton;
     }
 
     public ActionItem getPromoButton() {
