@@ -90,8 +90,10 @@ task prerelease() {
 }
 
 task release() {
-    if (!releaseBuildEnabled.toBoolean()) {
-        throw new GradleException('You need to specify -PreleaseBuildEnabled=true when running the release task')
+    doFirst {
+        if (!releaseBuildEnabled.toBoolean()) {
+            throw new GradleException('You need to specify -PreleaseBuildEnabled=true when running the release task')
+        }
     }
     dependsOn githubRelease
     doLast {
