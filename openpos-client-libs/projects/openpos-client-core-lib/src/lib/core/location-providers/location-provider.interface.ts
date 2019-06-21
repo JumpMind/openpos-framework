@@ -3,5 +3,5 @@ import { Observable } from 'rxjs/internal/Observable';
 
 export interface ILocationProvider {
     getProviderName(): string;
-    getCurrentLocation(): Observable<ILocationData>;
+    getCurrentLocation(coordinateBuffer: number): Observable<ILocationData>;
 }

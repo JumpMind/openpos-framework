@@ -3,44 +3,41 @@ import { ILocationData } from './location-data.interface';
 import { Observable } from 'rxjs/internal/Observable';
 import { Http } from '@angular/http';
 import { Configuration } from '../../configuration/configuration';
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root'
 })
-export class LocationProviderDefault implements ILocationProvider, OnDestroy {
+export class LocationProviderDefault implements ILocationProvider {
 
     prevLat: number;
     prevLong: number;
-    watchId: number;
 
     private $locationData = new BehaviorSubject<ILocationData>(null);
 
     constructor(private http: Http) {
     }
 
-    ngOnDestroy(): void {
-        if (this.watchId) {
-            navigator.geolocation.clearWatch(this.watchId);
-        }
-    }
-
     getProviderName(): string {
         return 'default';
     }
 
-    getCurrentLocation(): Observable<ILocationData> {
+    getCurrentLocation(coordinateBuffer: number): Observable<ILocationData> {
         if (navigator.geolocation && Configuration.googleApiKey) {
             let zipCode = '';
             let  countryName = '';
-            this.watchId = navigator.geolocation.watchPosition((position) => {
+            const previous = {latitude: 0, longitude: 0};
+            const buffer = coordinateBuffer;
+            navigator.geolocation.watchPosition((position) => {
                 const lat = position.coords.latitude;
                 const long = position.coords.longitude;
-                if (lat !== this.prevLat || long !== this.prevLong) {
-                    this.prevLat = lat;
-                    this.prevLong = long;
+                if (lat > previous.latitude + buffer || lat < previous.latitude - buffer
+                    || long > previous.longitude + buffer || long < previous.longitude - buffer) {
+                    previous.latitude = lat;
+                    previous.longitude = long;
                     const latlong = lat + ',' + long;
+                    console.log('calling google maps geocode api');
                     this.reverseGeocode(Configuration.googleApiKey, latlong)
                         .then((response) => {
                             const address = response.results[0].address_components;
@@ -56,7 +53,6 @@ export class LocationProviderDefault implements ILocationProvider, OnDestroy {
                 }
             });
         }
-
         return this.$locationData;
     }
 

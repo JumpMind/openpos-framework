@@ -27,11 +27,14 @@ export class LocationService implements OnDestroy {
                 if (this.subscription) {
                     this.subscription.unsubscribe();
                 }
-                this.subscription = provider.getCurrentLocation().subscribe((locationData: ILocationData) => {
+                this.subscription = provider.getCurrentLocation(message.coordinateBuffer ? message.coordinateBuffer : 0)
+                .subscribe((locationData: ILocationData) => {
                     if (!this.previousLocationData ||
                         (this.previousLocationData && locationData && this.previousLocationData.postalCode !== locationData.postalCode)) {
                         this.previousLocationData = locationData;
-                        sessionService.onAction('LocationChanged', locationData);
+                        if (locationData && locationData.postalCode && locationData.country) {
+                            sessionService.onAction('LocationChanged', locationData);
+                        }
                     }
                 });
             }
