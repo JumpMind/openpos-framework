@@ -5,6 +5,13 @@ apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
 
+def removeSnapshot = { v ->
+    if (v.endsWith('-SNAPSHOT')) {
+        v = v.substring(0, v.length() - '-SNAPSHOT'.length())
+    }
+    return v;
+}
+
 sourceCompatibility=1.8
 targetCompatibility=1.8
 
@@ -23,6 +30,9 @@ ext {
 
 // update jar files with version information
 processResources {
+    if (releaseBuildEnabled.toBoolean()) {
+        version = removeSnapshot(version)
+    }
     eachFile { details ->
         if (details.name.endsWith('version.properties')) {
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
@@ -142,3 +152,4 @@ task deploy {
     dependsOn tasks.uploadArchives
 }
 
+tasks.uploadArchives.dependsOn build
