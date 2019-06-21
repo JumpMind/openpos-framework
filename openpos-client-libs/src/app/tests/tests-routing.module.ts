@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { StartupService, DynamicScreenComponent } from 'openpos-client-core-lib';
 
 const routes: Routes = [
-    { path: 'loadingscreen', canActivate: [StartupService], component: DynamicScreenComponent}
+    { path: '**', canActivate: [StartupService], component: DynamicScreenComponent}
 ];
 
 @NgModule({

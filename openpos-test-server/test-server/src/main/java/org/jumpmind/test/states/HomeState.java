@@ -37,6 +37,6 @@ public class HomeState {
     public void onF1(Action action) throws InterruptedException {
         Thread.sleep(5000);
 
-        stateManager.showScreen(buildScreen());
+        stateManager.doAction("Next");
     }
 }

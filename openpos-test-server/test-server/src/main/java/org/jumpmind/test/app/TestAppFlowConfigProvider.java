@@ -17,6 +17,8 @@ public class TestAppFlowConfigProvider extends YamlConfigProvider {
 
     @PostConstruct
     public void init() {
+
         super.load("loadingscreen", "flows", "LoadingScreenFlow");
+        super.load("backtobackdialog", "flows", "BackToBackDialogFlow");
     }
 }
