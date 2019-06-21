@@ -111,6 +111,7 @@ import { ToggleButtonComponent } from './components/toggle-button/toggle-button.
 import { ChooseOptionsPartComponent } from './screen-parts/choose-options-part/choose-options-part.component';
 import { WebcamViewerComponent } from './screen-parts/webcam-viewer/webcam-viewer.component';
 import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
+import { LocationDetailsComponent } from './components/location-details/location-details.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -181,6 +182,7 @@ const components = [
     ToggleGroupComponent,
     ToggleButtonComponent,
     LanguageSelectorComponent,
+    LocationDetailsComponent
 ];
 
 const directives = [
