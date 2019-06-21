@@ -5,7 +5,7 @@ import org.jumpmind.pos.core.service.LocationData;
 import org.jumpmind.pos.server.model.Action;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class LocationSelectedGlobalActionHandler {
+public class LocationChangedGlobalActionHandler {
 
     @In(scope = ScopeType.Device)
     IStateManager stateManager;
