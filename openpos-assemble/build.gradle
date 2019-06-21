@@ -1,5 +1,17 @@
+buildscript {
+    repositories {
+        maven { url "http://maven.jumpmind.com/repo" }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.3.1'
+        classpath 'co.riiid:gradle-github-plugin:0.4.2'
+    }
+}
+
 apply from: '../openpos-gradle/src/main/resources/java.gradle'
-//apply from: '../openpos-gradle/src/main/resources/release.gradle'
+apply from: '../openpos-gradle/src/main/resources/release.gradle'
 
 task generateSourceArtifact(type: Copy) {
     doFirst {
@@ -16,7 +28,7 @@ task generateSourceArtifact(type: Copy) {
     from('../') {
         include '**/openpos-version.properties'
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'version': appVersion,
+                    'version': version,
                     'buildTime': new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(new java.util.Date()),
                     'gitBranch' : gitBranch,
                     'gitHash' : gitHash,

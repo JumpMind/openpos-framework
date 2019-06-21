@@ -1,0 +1,115 @@
+apply plugin: "com.moowork.node"
+apply plugin: 'co.riiid.gradle'
+
+def gitCommit = { file ->
+    exec {
+        commandLine 'git', 'add', file
+    }
+    exec {
+        commandLine 'git', 'config', 'user.email', 'build@jumpmind.com'
+    }
+    exec {
+        commandLine 'git', 'config', 'user.name', 'build'
+    }
+    exec {
+        commandLine 'git', 'config', 'remote.origin.url', remoteRepoUrl.replace('${personalAccessToken}', personalAccessToken)
+    }
+
+    exec {
+        commandLine 'git', 'commit', '-m', "releasing ${version}"
+        ignoreExitValue true
+    }
+    exec {
+        commandLine 'git', 'push', 'origin', 'HEAD:' + gitBranch
+        ignoreExitValue true
+    }
+}
+
+
+def updateGradlePropertiesVersion = { newVersion ->
+    def propertyFile = file 'gradle.properties'
+    def props = new Properties()
+    propertyFile.withInputStream { props.load(it) }
+    props['version'] = newVersion
+    propertyFile.withWriter { props.store(it, null) }
+}
+
+
+node {
+    version = '10.5.0'
+    npmVersion = '6.1.0'
+    download = downloadNode.toBoolean()
+    println """
+      **************************************************************************************************
+        Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties 
+        if you want to use downloaded versions of node and npm
+      **************************************************************************************************
+      """
+    workDir = file("${projectDir}/node")
+    nodeModulesDir = file("./")
+}
+
+github {
+    owner = repoOwner
+    repo = repoName
+    token = personalAccessToken
+    tagName = version
+    targetCommitish = gitBranch
+    name = version
+    prerelease = false
+}
+
+task updateVersionAndGradleProperties() {
+    doLast {
+        updateGradlePropertiesVersion(version)
+    }
+}
+
+task setPackageJsonVersion(type: NpmTask) {
+    dependsOn updateVersionAndGradleProperties
+    workingDir = file(packageJsonDir)
+    args = [ 'version', '--allow-same-version', version ]
+}
+
+task prereleaseCommit() {
+    dependsOn setPackageJsonVersion
+    doLast {
+        gitCommit 'gradle.properties'
+        gitCommit packageJsonDir + '/package.json'
+        gitCommit packageJsonDir + '/package-lock.json'
+    }
+}
+
+task prerelease() {
+    if (releaseBuildEnabled.toBoolean()) {
+        dependsOn prereleaseCommit
+        doLast {
+            println "prerelease ${version}"
+        }
+    }
+}
+
+task release() {
+    doFirst {
+        if (!releaseBuildEnabled.toBoolean()) {
+            throw new GradleException('You need to specify -PreleaseBuildEnabled=true when running the release task')
+        }
+    }
+    dependsOn githubRelease
+    doLast {
+        def versionParts = version.split('\\.')
+        def lastPart = versionParts[versionParts.length-1] as int
+        lastPart++
+        version = ''
+        for(int i=0; i < versionParts.length-1; i++) {
+            version = version + versionParts[i] + '.'
+        }
+        version = version + lastPart + '-SNAPSHOT'
+        updateGradlePropertiesVersion(version)
+        gitCommit 'gradle.properties'
+    }
+}
+
+subprojects.each { tasks.getByPath(":${it.name}:processResources").dependsOn prerelease }
+subprojects.each { tasks.githubRelease.dependsOn("${it.name}:deploy") }
+tasks.githubRelease.dependsOn prerelease
