@@ -28,11 +28,8 @@ export class SubscribeToSessionTask implements IStartupTask {
                     if (appId.indexOf('?') > 0) {
                         appId = appId.substring(0, appId.indexOf('?'));
                     }
-                    if (appId.indexOf('#') > 0) {
-                        appId = appId.substring(0, appId.indexOf('#'));
-                    }
                     if (appId.indexOf('/') > 0) {
-                        appId = appId.substring(0, appId.indexOf('/'));
+                        appId = appId.substring(appId.lastIndexOf('/') + 1);
                     }
                     this.session.setAppId(appId);
                 }

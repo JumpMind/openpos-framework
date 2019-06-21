@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { CoreModule, SharedModule } from 'openpos-client-core-lib';
+import { CoreModule, SharedModule, ScreensWithPartsModule } from 'openpos-client-core-lib';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
 @NgModule({
@@ -12,7 +12,8 @@ import { HashLocationStrategy, LocationStrategy } from '@angular/common';
   imports: [
     AppRoutingModule,
     CoreModule,
-    SharedModule
+    SharedModule,
+    ScreensWithPartsModule
   ],
   providers: [ { provide: LocationStrategy, useClass: HashLocationStrategy }],
   bootstrap: [AppComponent]

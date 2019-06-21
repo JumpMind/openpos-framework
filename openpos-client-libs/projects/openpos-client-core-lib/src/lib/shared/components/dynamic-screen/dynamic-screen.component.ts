@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MessageProvider } from '../../../shared/providers/message.provider';
+import { MessageProvider } from '../../providers/message.provider';
 
 @Component({
     selector: 'app-dynamic-screen',

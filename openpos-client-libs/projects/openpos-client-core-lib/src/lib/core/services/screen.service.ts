@@ -3,7 +3,7 @@ import { Injectable, Type, ComponentFactoryResolver, ComponentFactory } from '@a
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SessionService } from './session.service';
-import { IScreen } from '../components/dynamic-screen/screen.interface';
+import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { PersonalizationService } from './personalization.service';
 
 @Injectable({

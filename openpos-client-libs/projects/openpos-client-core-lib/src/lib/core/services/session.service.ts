@@ -15,7 +15,7 @@ import { MatDialog } from '@angular/material';
 import { ActionIntercepter } from '../action-intercepter';
 // Importing the ../components barrel causes a circular reference since dynamic-screen references back to here,
 // so we will import those files directly
-import { LoaderState } from '../components/loader/loader-state';
+import { LoaderState } from '../../shared/components/loader/loader-state';
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { IDeviceResponse } from '../oldplugins/device-response.interface';
 import { InAppBrowserPlugin } from '../oldplugins/in-app-browser.plugin';
