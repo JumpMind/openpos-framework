@@ -372,12 +372,12 @@ public class StateManager implements IStateManager {
         UIMessage lastScreen = screenService.getLastPreInterceptedScreen(applicationState.getAppId(), applicationState.getDeviceId());
         if (lastScreen != null) {
             lastScreen.put("refreshAlways", true);
+            showScreen(lastScreen);
         }
         if (lastDialog != null) {
             lastDialog.put("refreshAlways", true);
+            showScreen(lastDialog);
         }
-        showScreen(lastScreen);
-        showScreen(lastDialog);
     }
 
     // Could come from a UI or a running state..

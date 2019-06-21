@@ -71,6 +71,9 @@ public class ScreenService implements IScreenService, IActionListener {
     @Value("${openpos.screenService.jsonIncludeNulls:true}")
     boolean jsonIncludeNulls = true;
 
+    @Value("${openpos.ui.content.maxage}")
+    String contentMaxAge;
+
     @Autowired
     LogFormatter logFormatter;
 
@@ -122,6 +125,9 @@ public class ScreenService implements IScreenService, IActionListener {
 
             if (contentPath.endsWith(".svg")) {
                 response.setContentType("image/svg+xml");
+                if( StringUtils.isNotEmpty(contentMaxAge)){
+                    response.setHeader("Cache-Control", "max-age=" + contentMaxAge);
+                }
             }
 
             ContentProviderService contentProviderService = applicationContext.getBean(ContentProviderService.class);
