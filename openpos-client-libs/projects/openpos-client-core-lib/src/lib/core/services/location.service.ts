@@ -19,7 +19,7 @@ export class LocationService implements OnDestroy {
         sessionService.getMessages('ConfigChanged').pipe(
             filter( m => m.configType === 'LocationService')
         ).subscribe( message => {
-            if (message.enabled) {
+            if (message.enabled === 'true') {
                 let provider = locationProviders.find( l => l.getProviderName() === message.provider );
                 if (provider === undefined || provider === null) {
                     provider = locationProviders.find(l => l.getProviderName() === 'default');
