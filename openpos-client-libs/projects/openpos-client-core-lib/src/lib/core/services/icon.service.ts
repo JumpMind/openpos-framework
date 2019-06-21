@@ -100,6 +100,7 @@ export class IconService {
         this.icons.set('UnitedStates', ['united-states.svg', this.defaultIconProvider]);
         this.icons.set('Canada', ['canada.svg', this.defaultIconProvider]);
         this.icons.set('France', ['france.svg', this.defaultIconProvider]);
+        this.icons.set('Location', ['location_on.svg', this.defaultIconProvider]);
     }
 
     public addIconMapping(name: string, icon: string, provider?: string) {
