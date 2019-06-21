@@ -108,7 +108,12 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             screen = new SplashScreen();
         }
 
-        await this.dialogService.closeDialog();
+        if ( this.dialogService.isDialogOpen ) {
+            // Close any open dialogs
+            await this.dialogService.closeDialog();
+        }
+
+        // Cancel the loading message
         this.session.cancelLoading();
 
         let trap = false;
@@ -147,6 +152,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             const componentFactory = this.screenService.resolveScreen(screenToCreate, this.currentTheme);
             this.componentRef = this.viewContainerRef.createComponent(componentFactory,
                 this.viewContainerRef.length, this.viewContainerRef.parentInjector);
+            this.updateTheme(this.currentTheme);
 
             // If we accept an inner screen meaning we are a template, install the screen
             if (this.componentRef.instance.installScreen) {
@@ -192,10 +198,12 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
         this.overlayContainer.getContainerElement().classList.remove('default-theme');
         this.overlayContainer.getContainerElement().classList.add(theme);
-        const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
-        this.renderer.removeClass(parent, this.currentTheme);
-        this.renderer.removeClass(parent, 'default-theme');
-        this.renderer.addClass(parent, theme);
+        if ( !!this.componentRef ) {
+            const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
+            this.renderer.removeClass(parent, this.currentTheme);
+            this.renderer.removeClass(parent, 'default-theme');
+            this.renderer.addClass(parent, theme);
+        }
         this.currentTheme = theme;
     }
 
