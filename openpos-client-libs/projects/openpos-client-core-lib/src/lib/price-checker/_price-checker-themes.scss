@@ -1,5 +1,7 @@
 @import './price-checker-item-detail/price-checker-item-detail-theme';
+@import './price-checker-home/price-checker-home-theme';
 
 @mixin price-checker-themes($theme) {
     @include price-checker-item-detail-theme($theme);
+    @include price-checker-home-theme($theme);
 }

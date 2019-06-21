@@ -14,13 +14,13 @@ public interface IScreenService {
 
     public UIMessage getLastDialog(String appId, String nodeId);
 
-    public void addToastInterceptor(IMessageInterceptor<Toast> interceptor);
-
-    public void removeToastInterceptor(IMessageInterceptor<Toast> interceptor);
-    
-    public void addScreenInterceptor(IMessageInterceptor<UIMessage> interceptor);
-
-    public void removeScreenInterceptor(IMessageInterceptor<UIMessage> interceptor);
+//    public void addToastInterceptor(IMessageInterceptor<Toast> interceptor);
+//
+//    public void removeToastInterceptor(IMessageInterceptor<Toast> interceptor);
+//
+//    public void addScreenInterceptor(IMessageInterceptor<UIMessage> interceptor);
+//
+//    public void removeScreenInterceptor(IMessageInterceptor<UIMessage> interceptor);
 
     public UIMessage getLastPreInterceptedScreen(String appId, String deviceId);
 
