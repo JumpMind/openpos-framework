@@ -1,0 +1,16 @@
+<mat-card-title gdAreas="header backbutton" gdColumns="1fr auto" gdAlignColumns="center center">
+    <div gdArea="header">
+        <app-icon   *ngIf="screenData.headerIcon" 
+                    class="screen-icon" 
+                    [iconName]="screenData.headerIcon"></app-icon>
+        <span>{{screenData.headerText}}</span>
+    </div>
+    <app-icon-button 
+        class="back-button" 
+        gdArea="backbutton" 
+        *ngIf="screenData.backButton"
+        (buttonClick)="onMenuItemClick(screenData.backButton)"
+        [actionItem]="screenData.backButton"
+        [iconName]="'close'"
+        ></app-icon-button>
+</mat-card-title>

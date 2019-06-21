@@ -1,0 +1,97 @@
+.page{
+    padding: 32px;
+    height: 100%;
+    box-sizing: border-box;
+}
+
+.container{
+    padding: 32px;
+    border-radius: 4px;
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.not-found-message{
+    font-size: 48px;
+    align-self: center;
+    text-align: center;
+    justify-self: center;
+}
+
+.help-message{
+    font-size: 48px;
+    align-self: center;
+    text-align: center;
+    justify-self: center;
+}
+
+.title{
+    font-size: 48px;
+}
+
+.props{
+    justify-self: start;
+    font-size: 18px;
+}
+
+.unit-price{
+    font-size: 48px;
+}
+
+.unit-price-label{
+    margin-left: 8px; 
+}
+
+.current-price-label{
+    text-align: center;
+    font-size: 32px;
+    align-self: end;
+}
+
+.current-price{
+    text-align: center;
+    font-size: 200px
+}
+
+.assoc-items{
+    text-align: center;
+    align-self: start;
+}
+
+.assoc-items-value{
+    font-size: 48px;
+}
+
+.assoc-items-label{
+    font-size: 24px;
+    margin-left: 8px;
+}
+
+.messages{
+    text-align: center;
+    align-self: end;
+}
+
+.disclaimer{
+    text-align: center;
+    font-style: italic;
+    align-self: end;
+}
+
+.price-checker-logo {
+    max-width: 100%;
+    max-height: 100%;
+    align-self: end;
+    justify-self: end;
+}
+
+.logo-container {
+    display: grid;
+}
+
+.button{
+    align-self: end;
+    justify-self: end;
+    height: 100px;
+    font-size: 18px;
+}

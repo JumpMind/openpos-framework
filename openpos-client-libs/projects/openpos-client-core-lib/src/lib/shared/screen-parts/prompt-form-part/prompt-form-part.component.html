@@ -1,0 +1,56 @@
+<ng-template [ngIf]="this.screenData.type.toLowerCase() !== 'dialog'" [ngIfElse]="dialogForm">
+    <form fxFlexFill fxLayout="column" fxLayoutAlign="center center" [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()"
+    novalidate [markDirtyOnSubmit]="promptFormGroup">
+        <mat-card  ngStyle.xl="width:30%" ngStyle.lg="width:40%" ngStyle.md="width:60%" ngStyle.sm="width:70%" ngStyle.xs="width:80%">
+            <mat-card-content fxLayout="column">
+                <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType" [promptIcon]="screenData.promptIcon"
+                [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
+                [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup" [keyboardPreference]="screenData.keyboardPreference" 
+                [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable"></app-prompt-input>
+                <p *ngIf="instructions"><span class="text-sm">{{instructions}}</span></p>
+                <ng-content select="[optionsScreen]"></ng-content>
+            </mat-card-content>
+            <mat-card-actions *ngIf="screenData.otherActions || screenData.actionButton" align="end">
+                <button *ngFor="let menuItem of screenData.otherActions" mat-raised-button (click)="onAction(menuItem)">
+                    <span>{{menuItem.title}}</span>
+                    <app-icon *ngIf="menuItem.icon" [iconClass]="'material-icons'" [iconName]="menuItem.icon"></app-icon>
+                </button>
+                <button mat-raised-button  color=primary (click)="onFormSubmit()">
+                    <span>{{screenData.actionButton.title}}</span>
+                    <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
+                </button>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+</ng-template>
+
+<ng-template #dialogForm>
+    <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
+        <mat-dialog-content>
+            <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
+            [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
+            [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
+            [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable"></app-prompt-input>
+            <p *ngIf="instructions"><span class="text-sm">{{instructions}}</span></p>
+            <ng-content select="[optionsDialog]"></ng-content>
+        </mat-dialog-content>
+        <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" fxLayoutAlign="space-between">
+            <button type="button" *ngFor="let menuItem of screenData.otherActions" mat-raised-button color=primary-inverse
+                (click)="onAction(menuItem)">
+                <span>{{menuItem.title}}</span>
+                <app-icon *ngIf="menuItem.icon" [iconClass]="'material-icons'" [iconName]="menuItem.icon"></app-icon>
+            </button>
+            <button type="submit" mat-raised-button color="primary">
+                <span>{{screenData.actionButton.title}}</span>
+                <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
+            </button>
+        </mat-dialog-actions>
+        <mat-dialog-actions *ngIf="(!screenData.otherActions || screenData.otherActions && screenData.otherActions.length == 0) && screenData.actionButton" align="end">
+            <button type="submit" mat-raised-button color="primary">
+                <span>{{screenData.actionButton.title}}</span>
+                <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
+            </button>
+        </mat-dialog-actions>
+    </form>
+</ng-template>
+

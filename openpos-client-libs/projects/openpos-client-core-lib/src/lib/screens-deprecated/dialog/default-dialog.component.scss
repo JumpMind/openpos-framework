@@ -1,0 +1,15 @@
+.customer-button {
+    width: 150px; 
+    height: 75px; 
+    font-size: 24px;
+}
+
+.button-container {
+    // Handles case when buttons get stacked on small screens
+    margin-top: -10px
+}
+
+.button-child {
+    // Handles case when buttons get stacked on small screens
+    margin-top: 10px
+}

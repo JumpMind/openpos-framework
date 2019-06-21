@@ -1,0 +1,26 @@
+.grid-table-outer {
+    padding: 0px 16px;
+    overflow: auto;
+    height: 100%;
+    display: grid;
+    gap: 8px;
+}
+
+.grid-table-header {
+    margin-right: -8px;
+    padding-right: 8px;
+    padding-left: 8px;
+    position: sticky;
+    z-index: 10;
+    height: 100%;
+    top: 0px;
+    font-weight: bold;
+    align-self: start;
+    justify-self: stretch;
+}
+
+.grid-table-cell {
+    padding-left: 8px;
+    align-self: start;
+    justify-self: stretch;
+}

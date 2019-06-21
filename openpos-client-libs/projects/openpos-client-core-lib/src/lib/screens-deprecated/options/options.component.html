@@ -1,0 +1,10 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px">
+    <mat-card fxFlex="1 1 auto" class="page-content-card scrollable-content-card serrated-edge" fxLayout="column" fxLayoutAlign="start">
+        <mat-card-content fxFlex="1 1 auto">
+            <div *ngIf="screen && screen.icon" fxLayout="column" fxLayoutAlign="center center">
+                <app-icon iconClass="material-icons mat-180 muted-color" [iconName]="screen.icon"></app-icon>
+                <span style="font-size:18px">{{screen.instructions}}</span>
+            </div>
+        </mat-card-content>
+    </mat-card>
+</div>

@@ -1,0 +1,74 @@
+<div fxFlexFill class="selfcheckout-sell-background">
+
+	<div #scrollList class="selfcheckout-list-background" style="overflow-y: auto; overflow-x: hidden;">
+
+		<app-item-card *ngFor="let i of items" [item]=i [session]=session [isReadOnly]=screen.readOnly></app-item-card>
+
+		<div *ngIf="items.length == 0 && !screen.readOnly" fxFlexFill fxLayout="column" fxLayoutAlign="center center">
+			<div class="prompt text-center" style="padding: 16px;">{{this.screen.prompt}}</div>
+			<div class="text-sm text-center">{{this.screen.instructions}}</div>
+			<div [ngStyle]="screen.backgroundImage | backgroundImageUrl" class="scan-item-icon"></div>
+		</div>
+	</div>
+
+	<mat-card class="page-content-card lighter selfcheckout-total-background scrollable-content-card">
+		<mat-card-content fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="20px"
+			class="selfcheckout-side-content">
+
+			<div fxFlex="0 0 auto" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="20px"
+				class="selfcheckout-total-content">
+				<mat-card fxFlex="0 0 auto" *ngFor="let total of screen.totals"
+					class="page-content-card lighter subtotal">
+					<mat-card-title class="primary">{{total.name}}</mat-card-title>
+					<mat-card-content>
+						<app-currency-text [amountText]="total.amount"></app-currency-text>
+					</mat-card-content>
+				</mat-card>
+				<mat-card fxFlex="0 0 auto" class="page-content-card lighter total">
+					<mat-card-title> {{screen.grandTotalLabel}} </mat-card-title>
+					<mat-card-content>
+						<app-currency-text [amountText]="screen.grandTotal"></app-currency-text>
+					</mat-card-content>
+				</mat-card>
+				<button mat-button *ngIf="screen.promoButton" (click)="doMenuItemAction(screen.promoButton)"
+					class="promo-button text-sm">
+					<span fxFlex="1 1 auto">{{screen.promoButton.title}}</span>
+					<app-icon [iconName]="screen.promoButton.icon" [iconClass]="'primary mat-24'"
+						style="margin-top: -6px;"></app-icon>
+				</button>
+			</div>
+
+			<div fxFlex="2 1 auto"></div>
+
+			<app-webcam-viewer *ngIf="screen.webcamViewerPart" class="selfcheckout-sell-webcam"></app-webcam-viewer>
+
+			<div style="width: 100%;">
+				<button mat-button *ngIf="!screen.readOnly && !screen.customer && screen.loyaltyButton"
+					(click)="doMenuItemAction(screen.loyaltyButton)" class="loyalty-button text-md">
+					<span *ngIf="loyaltyBefore" style="padding-right: 8px;">{{loyaltyBefore}}</span>
+					<app-icon [iconName]="screen.loyaltyButton.icon" [iconClass]="'material-icons'"
+						class="loyalty-button-icon"></app-icon>
+					<span *ngIf="loyaltyAfter" style="padding-left: 8px;">{{loyaltyAfter}}</span>
+				</button>
+				<div *ngIf="screen.customer && screen.loyaltyButton" class="text-sm text-center"
+					style="padding-top: 16px;">
+					<app-icon [iconName]="screen.loyaltyButton.icon" [iconClass]="'material-icons'"
+						class="loyalty-icon"></app-icon>
+					<div class="muted-color" style="padding-top: 8px;">{{screen.customer.name}}</div>
+					<div class="muted-color" style="padding-top: 8px;">{{screen.loyaltyButton.title}}: {{screen.customer.loyaltyId}}</div>
+				</div>
+				<button mat-button *ngIf="!screen.readOnly && screen.checkoutButton"
+					[disabled]="!screen.transaction.active || items.length == 0"
+					(click)="doMenuItemAction(screen.checkoutButton)" color="primary-inverse"
+					class="checkout-button text-lg">{{screen.checkoutButton.title}}</button>
+				<button mat-button *ngIf="!screen.readOnly" (click)="doMenuItemAction(screen.logoutButton)"
+					class="border-button text-lg">
+					<span>
+						<app-icon *ngIf="screen.logoutButton.icon" [iconName]="screen.logoutButton.icon"></app-icon>
+						{{screen.logoutButton.title}}
+					</span>
+				</button>
+			</div>
+		</mat-card-content>
+	</mat-card>
+</div>

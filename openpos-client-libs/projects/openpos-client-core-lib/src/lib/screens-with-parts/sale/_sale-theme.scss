@@ -1,0 +1,13 @@
+@mixin sale-theme($theme){
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground );
+    $background: map-get($theme, background );
+
+    .checkout-button:disabled {
+        background-color: map-get($mat-grey, 200) !important;
+    }
+
+}

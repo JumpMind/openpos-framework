@@ -1,0 +1,64 @@
+
+@mixin openpos-card(){
+
+
+  .mat-card.with-header mat-card-content {
+    padding: 0 $mat-card-default-margin 0 $mat-card-default-margin;
+  }
+
+  .mat-card {
+      margin: $mat-card-default-margin;
+      z-index: 10;
+  }
+
+  .mat-card.with-header {
+    padding: 0;
+  }
+
+  mat-card.scrollable-content-card{
+    display: flex;
+    flex: 1 1 100%;
+    max-height: 100%;
+      .mat-card-content{
+          flex: 1 1 100%;
+          max-height: 100%;
+          margin-bottom:0px;
+          overflow-y:auto;
+      }
+  }
+  
+  mat-card.scrollable-card{
+    margin-bottom:0px;
+    overflow-y:auto
+  }
+
+  mat-card.page-content-card{
+      margin: 2px;
+      padding: 0px;
+
+      mat-card-title{
+          padding:10px;
+          margin: 0px;
+      }
+
+      mat-card-subtitle{
+          padding:10px;
+          margin: 0px;
+      }
+
+      mat-card-content{
+          padding:10px;
+          margin:0px;
+      }
+
+      .mat-card-actions:last-child{
+          padding:10px;
+          margin:0;
+      }
+
+      mat-card-footer{
+          margin:0px;
+          padding:10px;
+      }
+  }
+}

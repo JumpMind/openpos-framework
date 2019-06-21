@@ -1,0 +1,34 @@
+<div fxFlexFill style="padding: 16px;">
+    <mat-card fxFlex="1 1 auto" class="page-content-card lighter scrollable-content-card mat-elevation-z8" fxLayout="column"
+        style="padding: 16px;">
+        <mat-card-content fxFlex="1 1 auto">
+            <mat-selection-list #list exclusiveSelect [(ngModel)]="selectedOptions" (selectionChange)="selectionChange($event)">
+                <mat-list-option *ngFor="let customer of customers" class="customer-list-option" [value]="customer">
+                    <div class="customer-div">
+                        <div class="text-sm customer-name"> {{customer.firstName}} {{customer.lastName}} </div>
+                        <div fxLayout="row">
+                            <div fxFlex="0 0 auto" class="text-xs">
+                                <div class="customer-labels">Email:</div>
+                                <div class="customer-labels">Address:</div>
+                                <div class="customer-labels">Birthday:</div>
+                                <div class="customer-labels">Loyalty ID:</div>
+                            </div>
+                            <div fxFlex="1 0 auto" class="text-xs">
+                                <div class="customer-details">{{customer.email}}</div>
+                                <div class="customer-details">{{customer.fullAddress}}</div>
+                                <div class="customer-details">{{customer.birthday}}</div>
+                                <div class="customer-details">{{customer.loyaltyId}}</div>
+                            </div>
+                        </div>
+                    </div>
+                </mat-list-option>
+            </mat-selection-list>
+        </mat-card-content>
+        <mat-card-actions align="end" fxFlex="0 0 auto">
+            <button mat-raised-button type="submit" color=primary (click)="onSubmitAction()" [disabled]="isSelectedOptionsEmpty()">
+                <span>Next</span>
+                <mat-icon class="material-icons">keyboard_arrow_right</mat-icon>
+            </button>
+        </mat-card-actions>
+    </mat-card>
+</div>

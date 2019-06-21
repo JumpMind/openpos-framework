@@ -1,0 +1,37 @@
+<div class="self-checkout-tender-outer" gdAreas="header | content" gdRows="auto 1fr">
+    <div gdArea="header" gdAreas="menu" gdColumns="1fr">
+        <app-self-checkout-menu gdArea="menu"></app-self-checkout-menu>
+    </div>
+
+    <div class="self-checkout-tender-body" gdArea="content" fxLayout="column" fxLayoutAlign="start stretch"
+        fxLayoutGap="128px">
+
+        <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && amountDue" fxFlex="0 0 auto" fxLayout="column"
+            fxLayoutAlign="center center">
+            <div class="text-md text-center payment-title">{{amountTitle}}</div>
+            <div class="text-md text-center payment-balance-due">{{amountDue|currency:'USD':true:'1.2'}}</div>
+        </div>
+        <div *ngIf="screen.amounts && screen.amounts.length > 1 && amountDue" fxFlex="0 0 auto" fxLayout="column"
+            fxLayoutGap="32px">
+            <div *ngFor="let amount of screen.amounts" fxLayout="row" fxLayoutAlign="start start"
+                class="payment-amounts">
+                <div fxFlex="1 1 100%" class="text-md">{{amount.name}}</div>
+                <div class="text-md">{{amount.amount|currency:'USD':true:'1.2'}}</div>
+            </div>
+            <div fxLayout="row" fxLayoutAlign="start start" class="payment-remaining-balance">
+                <div fxFlex="1 1 100%" class="text-md">{{amountTitle}}</div>
+                <div class="text-md">{{amountDue|currency:'USD':true:'1.2'}}</div>
+            </div>
+        </div>
+
+        <div *ngIf="screen.prompt" fxFlex="0 0 auto" class="text-md text-center payment-instructions">
+            {{screen.prompt}}
+        </div>
+
+        <app-self-checkout-options-part *ngIf="screen.selfCheckoutOptionsPart"></app-self-checkout-options-part>
+
+        <div *ngIf="screen.imageUrl" fxFlex="1 1 auto" fxLayoutAlign="center center">
+            <div [ngStyle]="screen.imageUrl | backgroundImageUrl" class="payment-auth-icon"></div>
+        </div>
+    </div>
+</div>

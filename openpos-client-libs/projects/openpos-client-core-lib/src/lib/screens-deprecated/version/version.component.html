@@ -1,0 +1,21 @@
+<ng-container *ngIf="screen">
+    <div #test class="modal-header">
+        <h4 mat-dialog-title>{{screen.title}}</h4>
+    </div>
+    <div mat-dialog-content>
+        <ng-container *ngIf="versions">
+            <table style="margin-bottom: 20px;">
+                <tbody>
+                    <tr *ngFor="let v of versions"><td>{{v.name}}:</td><td>{{v.version}}</td></tr>
+                </tbody>
+            </table>
+        </ng-container>
+    </div>
+    <div mat-dialog-actions fxLayout="row">
+        <button *ngFor="let m of otherActions; let i = index" [id]="'button-' + i" mat-raised-button (click)="session.onAction(m)"
+            color="primary-inverse" [disabled]="!m.enabled">{{m.title}}</button>
+            <div fxFlex="1 1 auto"></div>
+        <button *ngIf="primaryAction" mat-raised-button (click)="session.onAction(primaryAction)" color="primary" id="primaryAction">{{primaryAction.title}}</button>
+    </div>
+</ng-container>
+      

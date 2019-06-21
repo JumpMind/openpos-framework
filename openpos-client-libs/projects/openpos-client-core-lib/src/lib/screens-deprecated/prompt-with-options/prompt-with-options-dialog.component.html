@@ -1,0 +1,41 @@
+<div fxFlexFill *ngIf="screen.screenType==='PromptWithOptions'" fxLayout="column" fxLayoutAlign="center center">
+    <form fxFlexFill fxLayout="column" [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()">
+        <div *ngIf="screen.backButton" mat-dialog-title fxLayoutAlign="space-between">
+            <span></span>
+            <button type="button" mat-icon-button style="margin:-15px" (click)="this.session.onAction(screen.backButton.action)" [actionItem]="screen.backButton">
+                <mat-icon>close</mat-icon>
+            </button>
+        </div>
+        <mat-dialog-content>
+            <app-prompt-input #promptInput cdkFocusInitial="true" [placeholderText]="screen.placeholderText" [responseType]="screen.responseType"
+                [responseText]="screen.responseText" [promptIcon]="screen.promptIcon" [hintText]="screen.prompt"
+                [maskSpec]="screen.promptMask" [minLength]="screen.minLength" [maxLength]="screen.maxLength"
+                [promptFormGroup]="promptFormGroup" [readOnly]="screen.readOnly">
+            </app-prompt-input>
+            <mat-form-field fxFlexFill *ngIf="screen.showComments">
+                <textarea #box matInput [formControlName]="'comments'" placeholder="Comments"></textarea>
+                <mat-error>
+                    <app-show-errors [control]="box"></app-show-errors>
+                </mat-error>
+            </mat-form-field>
+        </mat-dialog-content>
+
+        <div fxFlex="1 1 100%" style="overflow-x: hidden; overflow-y: auto;">
+            <mat-nav-list>
+                <!-- material doesn't yet support enable/disable of mat-list-item, workaround ... -->
+                <mat-list-item *ngFor="let o of optionItems" (click)="o.enabled && onAction(o.value)" style="border-color: black">
+                    <span [ngClass]="{'muted-color' : !o.enabled}">{{o.displayValue}}</span>
+                    <mat-icon class="material-icons pull-right line-item-caret" [ngClass]="{'muted-color' : !o.enabled}"
+                        style="top: 10px;">keyboard_arrow_right</mat-icon>
+                </mat-list-item>
+            </mat-nav-list>
+        </div>
+
+        <mat-dialog-actions *ngIf="actionButton" align="end">
+            <button mat-raised-button type="submit" color=primary>
+                <span>{{actionButton.title}}</span>
+                <app-icon *ngIf="actionButton.icon" [iconClass]="'material-icons'" [iconName]="actionButton.icon"></app-icon>
+            </button>
+        </mat-dialog-actions>
+    </form>
+</div>

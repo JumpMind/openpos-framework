@@ -1,0 +1,13 @@
+<div mat-dialog-title class="search-bar">
+    <mat-form-field fxFlexFill>
+        <input matInput [(ngModel)]="filterValue" [placeholder]="instructions">
+    </mat-form-field>
+</div>
+<mat-dialog-content>
+    <mat-list class="search-result-list">
+        <mat-list-item class="search-result" *ngFor="let o of items | stringListFilter:filterValue | listLimit:10" (click)="select(o)">
+            <span>{{o}}</span>
+            <span fxFlex="1 1 auto"></span>
+        </mat-list-item>
+    </mat-list>
+</mat-dialog-content>

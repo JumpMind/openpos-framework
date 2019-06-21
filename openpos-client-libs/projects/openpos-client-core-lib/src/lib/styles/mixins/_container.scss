@@ -1,0 +1,20 @@
+@mixin openpos-container{
+  .sale-trans-panel-container {
+    background-color: #eff0ef;
+    padding:14px;
+    box-shadow: 8px 10px 27px #000;
+    z-index: 1;
+  }
+
+  .sale-transaction-container {
+      height: 200px;
+      font-size: 14px;
+      margin: 0px;
+      padding: 0px;
+  }
+
+  .startup-dialog-container {
+    background-color: white;
+  }
+
+}

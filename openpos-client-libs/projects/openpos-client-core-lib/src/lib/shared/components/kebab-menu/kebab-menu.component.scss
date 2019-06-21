@@ -1,0 +1,14 @@
+.menu-item{
+    text-align: left;
+}
+
+app-icon {
+   margin-right: 10px;
+}
+
+.buttons{
+    flex-direction: column;
+    box-sizing: border-box;
+    display: flex;
+    align-items: start;
+}

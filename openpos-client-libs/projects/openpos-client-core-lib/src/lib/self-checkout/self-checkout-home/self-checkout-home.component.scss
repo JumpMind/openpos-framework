@@ -1,0 +1,14 @@
+.home-logo {
+    width: 300px; 
+    height: 200px; 
+    position: inherit;
+    filter: grayscale(1) invert(1) brightness(10);
+    -webkit-filter: grayscale(1) invert(1) brightness(10); 
+}
+
+.home-button {
+    font-weight: bold; 
+    padding: 16px; 
+    padding-left: 32px; 
+    padding-right: 32px;
+}

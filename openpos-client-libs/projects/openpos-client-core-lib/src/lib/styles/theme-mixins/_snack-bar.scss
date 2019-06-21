@@ -1,0 +1,21 @@
+@mixin openpos-snack-bar($theme){
+    .toast-success{
+        color: mat-color(map-get($theme, selected));
+        border-style: solid;
+        border-width: 4px;
+        border-color: mat-color(map-get($theme, selected));
+        background-color: white;
+    }
+
+    .toast-warn{
+        color: mat-color(map-get($theme, warn));
+        border-style: solid;
+        border-width: 4px;
+        border-color: mat-color(map-get($theme, warn));
+        background-color: white;
+    }
+
+    .toast-warn .mat-simple-snackbar-action {
+        color: mat-color(map-get($theme, warn));  
+    }
+}

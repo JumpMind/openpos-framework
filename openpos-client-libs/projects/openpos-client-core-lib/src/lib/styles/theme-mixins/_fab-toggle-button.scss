@@ -1,0 +1,11 @@
+@mixin fab-toggle-button($theme){
+        .mat-fab.mat-accent:not(.selected):not([disabled]){
+            color: mat-color(map-get($theme, primary));
+            border: solid 1px mat-color(map-get($theme, primary));
+            background-color: white;
+        }
+        
+        .mat-fab.mat-accent.selected{
+            border: solid 1px mat-color(map-get($theme, accent));
+        }
+}

@@ -1,0 +1,98 @@
+.float {
+    top:10px;
+    right: 10px;
+    position:absolute;     
+    z-index: 1003;
+}
+
+.devMenuPanel {
+    z-index: 1003;  // Z index of loader dialog + 1
+    position: relative;
+    background-color: white;
+    width:100%;
+}
+
+::ng-deep .mat-menu-content {
+    background-color: white;
+}
+
+.devButton {
+    position: relative;
+    cursor: pointer;
+    margin-right: .5em;
+    height: 34px;
+    width: 200px;
+}
+
+.actions {
+    margin-right: -30px;
+    margin-top: 0px;
+  }
+
+  
+
+.panel {
+    float: left;
+    width: 55vw;
+  }
+
+  .savePoints {
+      width: 600px;
+      overflow: auto;
+  }
+  
+  .stacktrace {
+    position: fixed;
+
+    right: 45px;
+    top: 100px;
+    width: 40vw;
+
+  }
+
+  .stacktrace-content {
+    overflow: scroll;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 10px;
+    line-height: 13px;
+  }
+
+.muted {
+    color: "accent";
+}
+
+.mat-cell {
+    word-wrap: break-word;
+}
+
+/* Structure */
+table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.stateTab {
+    height: 520px;
+    overflow: auto;
+    
+}
+
+.saveForm {
+    padding-left: 10px;
+}
+
+.logs {
+    width: 50vw;
+    overflow: auto;
+}
+
+#logs-table {
+    display: block; 
+    width: 100%;
+    td {
+        padding-top: 5px;
+        padding-left: 5px;
+        padding-right: 5px;
+        white-space: nowrap;
+    }
+}

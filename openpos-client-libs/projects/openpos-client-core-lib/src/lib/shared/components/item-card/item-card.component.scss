@@ -1,0 +1,37 @@
+.item-card {
+    margin: 0px; 
+    margin-bottom: 16px;
+}
+
+.item-card-image {
+    height: 275px;
+}
+
+.item-card-title {
+    padding-bottom: 8px; 
+    font-size: 22px;
+}
+
+.item-card-price {
+    font-weight: bold; 
+    font-size: 24px;
+    text-align: right;
+}
+
+.item-card-discount {
+    font-size: 20px;
+}
+
+.item-card-original {
+    text-decoration: line-through; 
+    font-size: 20px;
+}
+
+.item-card-details {
+    font-size: 20px;
+}
+
+.item-card-button {
+    width: 130px;
+    font-size: 24px;
+}

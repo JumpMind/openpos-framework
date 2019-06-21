@@ -1,0 +1,7 @@
+
+<h1 mat-dialog-title>{{confirmDialog.title}}</h1>
+<mat-dialog-content><div [innerHTML]="confirmDialog.message | markdownFormatter"></div></mat-dialog-content>
+<mat-dialog-actions fxLayoutAlign="space-around">
+  <button mat-raised-button color="primary-inverse" mat-dialog-close (click)="onCancel()">{{confirmDialog.cancelAction.title}}</button>
+  <button color="primary" mat-raised-button [mat-dialog-close]="true" (click)="onConfirm()">{{confirmDialog.confirmAction.title}}</button>
+</mat-dialog-actions>

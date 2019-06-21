@@ -1,0 +1,41 @@
+.line-item-detail-header {
+    background-color: white;
+    padding-left: 25px;
+    padding-right: 25px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    color: #537889;
+}
+
+.line-item-detail-image {
+    padding-right: 30px;
+    zoom: 50%;
+    width: 50%;
+}
+
+
+th {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+td {
+    padding: 10px;
+}
+
+.line-item-detail-actions {
+    text-align: right;
+}
+
+.mat-list-item-content {
+    align-items: start;
+}
+
+.itemContent > div:not(:first-child) {
+    padding-left: 20px;
+}
+
+.header {
+    white-space: nowrap;
+    color: gray;
+}

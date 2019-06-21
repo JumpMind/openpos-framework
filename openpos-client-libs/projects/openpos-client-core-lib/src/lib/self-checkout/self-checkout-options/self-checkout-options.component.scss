@@ -1,0 +1,36 @@
+.self-checkout-options-outer {
+    height: 100%;
+    background-color: inherit;
+    overflow-y: auto;
+}
+
+.self-checkout-options-body {
+    padding: 24px 16px;
+    width: 60%;
+    justify-self: center;
+    align-self: center;
+}
+
+::ng-deep .options-icon {
+    mat-icon {
+        width: 400px !important; 
+        height: 100px !important; 
+        padding-top: 0px !important;
+    }
+}
+
+.options-title {
+    font-size: 36px;
+    font-weight: bold;
+    margin-top: 0px;
+    margin-bottom: 64px;
+    align-self: center;
+}
+
+.options-prompt {
+    font-size: 26px;
+    max-width: 400px;
+    margin-top: 64px;
+    margin-bottom: 64px;
+    align-self: center;
+}

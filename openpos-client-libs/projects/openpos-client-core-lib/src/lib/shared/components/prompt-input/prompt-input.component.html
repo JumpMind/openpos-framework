@@ -1,0 +1,63 @@
+<div [formGroup]="promptFormGroup">
+        <ng-container  *ngIf="!isDateField(); else dateField" [ngSwitch]="true">   
+            <mat-form-field fxFlexFill *ngSwitchDefault ngClass="text-lg">
+                <!-- Was using this:
+                    <mat-icon matPrefix class="material-icons" color="primary">{{promptIcon}}</mat-icon>
+                    but want to be able to use local icons.  TODO: problem with styling however, sizing not working
+                    for SVG icon
+                -->
+                <button *ngIf="isScanAllowed(); else iconBlock" type="button" mat-button matPrefix mat-icon-button (click)="onScan()">
+                    <mat-icon svgIcon="barcode"></mat-icon>
+                </button> 
+                <ng-template #iconBlock>
+                    <app-icon matPrefix iconClass="material-icons mat-48 primary" [iconName]="promptIcon"></app-icon>
+                </ng-template>
+                <input matInput [errorStateMatcher]="errorMatcher" [formControlName]="'promptInputControl'" [formatterName]="responseType" cdkFocusInitial
+                       [attr.minlength]="minLength" [attr.maxlength]="maxLength" [readonly]="readOnly" [attr.type]="isNumericField() ? 'tel' : 'text'"
+                       [keyboardLayout]="keyboardLayout" autoSelectOnFocus>
+                <mat-placeholder>{{placeholderText}}</mat-placeholder>
+                <mat-hint class="text-sm" align="start">{{hintText}}</mat-hint>
+                <mat-error class="text-sm">
+                    <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"></app-show-errors>
+                </mat-error>
+            </mat-form-field>
+
+            <mat-form-field fxFlexFill *ngSwitchCase="responseType==='TextArea'" ngClass="text-sm">
+                <textarea matInput [rows]="5" [cols]="40" [formControlName]="'promptInputControl'" cdkFocusInitial style="font-size:18px"
+                    [attr.minlength]="minLength" [attr.maxlength]="maxLength" [readonly]="readOnly" [attr.type]="isNumericField() ? 'tel' : 'text'" autoSelectOnFocus>
+                    </textarea>
+                    <mat-placeholder *ngIf="placeholderText" >{{placeholderText}}</mat-placeholder>
+                    <mat-placeholder *ngIf="!placeholderText">Comments</mat-placeholder>
+                    <mat-hint class="text-sm" align="start">{{hintText}}</mat-hint>
+                    <mat-error class="text-sm">
+                        <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"></app-show-errors>
+                    </mat-error>
+            </mat-form-field>
+        
+            <mat-slide-toggle *ngSwitchCase="responseType==='ONOFF'" [formControlName]="'promptInputControl'"  (click)="onCheck()" color="primary" ngClass="text-lg">
+                {{placeholderText}} {{responseText}} 
+            </mat-slide-toggle>
+        
+            <mat-form-field fxFlexFill *ngSwitchCase="isPassword()" ngClass="text-lg">
+                <app-icon matPrefix iconClass="material-icons mat-48 primary" [iconName]="promptIcon"></app-icon>
+                <input matInput [formControlName]="'promptInputControl'" cdkFocusInitial autoSelectOnFocus
+                    type="password" [textMask]="_textMask" [attr.minlength]="minLength" [attr.maxlength]="maxLength">
+                <mat-placeholder>{{placeholderText}}</mat-placeholder>
+                <mat-hint class="text-sm" align="start">{{hintText}}</mat-hint>
+                <mat-error class="text-sm">
+                    <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"></app-show-errors>
+                </mat-error>
+            </mat-form-field>
+           
+        </ng-container>
+    
+        <ng-template #dateField>
+            <ng-container>
+                <app-dynamic-date-form-field [controlName]="'promptInputControl'" [hiddenControl]="'promptInputHiddenDateControl'" [form]="promptFormGroup"
+                [type]="responseType" [(value)]="responseText" [placeholder]="placeholderText" [isPrompt]=true [hintText]="hintText"></app-dynamic-date-form-field>
+                <mat-error class="text-sm">
+                    <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"></app-show-errors>
+                </mat-error>
+            </ng-container>
+        </ng-template>
+    </div> 

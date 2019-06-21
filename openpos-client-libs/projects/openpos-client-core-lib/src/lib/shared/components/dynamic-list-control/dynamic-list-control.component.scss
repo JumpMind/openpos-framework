@@ -1,0 +1,64 @@
+.dynamic-list {
+    display: flex;
+    
+    .mat-card  {
+        text-align: left;
+        vertical-align: top;
+    }
+
+    .mat-card-content  {
+        text-align: left;
+        vertical-align: top;
+        margin: 0px 10px;
+        padding: 0px;
+    }
+
+    .label {
+        color: gray;
+        font-size: 14px;
+        margin: 0px;
+        vertical-align: top;
+    }
+    
+    .field {
+        text-align: left;
+        font-size: 18px;
+        width: 100%;
+        margin: 8px 0px 0px 0px;
+        vertical-align: bottom;
+        cursor: text;
+    }
+
+    .value-field  {
+        width: 100%;
+    }
+
+    .list-field  {
+        min-height: 72px;
+        margin: 10px 2px 0px 2px;
+    }
+
+    .list-field-label  {
+        color: gray;
+        font-size: 14px;
+        vertical-align: top;
+        margin: 10px 0px 0px 0px;
+    }
+
+    .list-item  {
+        text-align: left;
+        font-size: 18px;
+        width: 95%;
+        min-height: 12px;
+    }
+ 
+    .mat-error  {
+        text-align: left;
+        vertical-align: top;
+    }
+}
+
+::ng-deep .error {
+    text-align: center;
+    font-size: smaller;
+}

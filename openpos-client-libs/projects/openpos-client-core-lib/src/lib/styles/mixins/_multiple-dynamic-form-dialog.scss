@@ -1,0 +1,9 @@
+@mixin multiple-dynamic-form-dialog(){
+    app-multiple-dynamic-form-dialog{
+        mat-tab-group{
+            .mat-tab-body-content{
+                padding-bottom:0px;
+            }
+        }
+    }
+}

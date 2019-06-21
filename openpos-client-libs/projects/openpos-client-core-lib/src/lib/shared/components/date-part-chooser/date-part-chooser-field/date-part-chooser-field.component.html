@@ -1,0 +1,12 @@
+<div [formGroup]="formGroup">
+    <mat-form-field style="width:100%">
+        <input class="no-user-select" no-keyboard matInput [formControlName]="controlName" [placeholder]="placeholder"
+            [required]="required" (click)="openDatePartChooser()" onfocus="this.blur()" readonly>                
+        
+        <button *ngIf="!hideButtons" type="button" mat-button matSuffix mat-icon-button (click)="openDatePartChooser()" [disabled]="!modifyAllowed"><mat-icon>more_vert</mat-icon></button>
+        <button *ngIf="deleteAllowed && !hideButtons" type="button" mat-button matSuffix mat-icon-button (click)="onDelete()"><mat-icon>{{deleteIcon}}</mat-icon></button>
+        <mat-error>
+            <app-show-errors class="error" [control]="formGroup.controls[controlName]"></app-show-errors>
+        </mat-error>
+    </mat-form-field>
+</div>

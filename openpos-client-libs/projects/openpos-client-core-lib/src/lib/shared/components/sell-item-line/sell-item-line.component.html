@@ -1,0 +1,49 @@
+<div gdAreas="  description description giftReceipt cost kebab |
+                                subtitle labels giftReceipt cost kebab |
+                                prop65Item prop65Item prop65Item prop65Item prop65Item"
+    gdColumns="auto 1fr auto auto auto" gdGap="4px" [ngClass]="item.type">
+    <div gdArea="description" [ngClass]="item.prop65Item ? 'warn' : ''">
+        {{item.description}}
+    </div>
+    <div gdArea="subtitle" class="muted-color">
+        {{item.subtitle}}
+    </div>
+    <div gdArea="labels">
+        <span class="item-label" *ngFor="let label of item.labels">{{label}}</span>
+    </div>
+    <div gdArea="prop65Item" *ngIf="item.prop65Item" class="muted-color">
+        <table>
+            <tr>
+                <td style="text-align: left; vertical-align: top; padding-right: 4px;">
+                    <div class="prop65Image"></div>
+                </td>
+                <td style="text-align: left; vertical-align: middle;">{{item.prop65WarningText}}</td>
+            </tr>
+        </table>
+    </div>
+    <div gdArea="giftReceipt" *ngIf="item.isGiftReceipt" fxAlign="right center">
+        <mat-icon color="muted-color">redeem</mat-icon>&nbsp;&nbsp;
+    </div>
+    <div gdArea="cost" gdGridAlign="center center" class="primary text-md sell-item-line-cost-outer">
+        <span *ngIf="item.sellingPrice && item.showSellingPrice" class="muted-color text-sm sell-item-line-selling-price">
+            <app-currency-text [amountText]="item.sellingPrice"></app-currency-text>
+        </span>
+        <app-currency-text [amountText]="item.amount"></app-currency-text>
+        <div>
+            <p [hidden]="!item.originalAmount" class="muted-color text-xs sell-item-line-original"
+                style="text-align: right; margin: 0px; text-decoration: line-through;">
+                <app-currency-text [amountText]="item.originalAmount"></app-currency-text>
+            </p>
+    
+            <p [hidden]="!item.discountAmount" class="muted-color text-xs sell-item-line-discount"
+                style="text-align: right; margin: 0px;">
+                <app-currency-text [amountText]="item.discountAmount"></app-currency-text>
+            </p>
+        </div>
+    </div>
+    <div gdArea="kebab">
+        <app-kebab-button block-selection *ngIf="showMenu()" fxAlign="right"
+            [menuItems]="item.menuItems" (menuItemClick)="onMenuItemClick($event, [item.index])"></app-kebab-button>
+        <div *ngIf="!showMenu()" class="sell-item-line-hidden-button"></div>
+    </div>
+</div>

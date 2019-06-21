@@ -1,0 +1,15 @@
+<div class="language-selector-wrapper">
+    <app-icon [iconName]="selectedIcon" [iconClass]="'material-icons mat-24'"></app-icon>
+
+    <mat-form-field class="language-selector-form-field">
+        <mat-select [(value)]="selectedLocale" (selectionChange)="onLanguageSelected()"
+            class="language-selector-select">
+            <mat-option *ngFor="let language of languages" [value]="language.locale" class="language-selector-option">
+                <app-icon [iconName]="language.icon" [iconClass]="'material-icons mat-24'"></app-icon>
+                <span>
+                    {{language.displayName}}
+                </span>
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>

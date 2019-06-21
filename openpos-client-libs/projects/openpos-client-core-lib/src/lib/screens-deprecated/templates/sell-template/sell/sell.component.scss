@@ -1,0 +1,28 @@
+.sell-template-menu-button {
+    text-align: left;
+}
+
+.scan-or-search{
+    margin: 16px 24px;
+}
+
+.sale-prompt{
+    font-size: 24px;
+    padding: 16px 24px;
+}
+
+.sale-content{
+    flex-direction: column;
+    box-sizing: border-box;
+    display: flex;
+    max-width: 100%;
+    place-content: stretch flex-start;
+    align-items: stretch;
+    flex: 1 1 100%;
+    min-height: 50%;
+    margin: 0px 24px 8px 24px;
+}
+
+.drawer-content{
+    padding: 8px;
+}

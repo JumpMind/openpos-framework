@@ -1,0 +1,7 @@
+<div fxLayoutGap="10px">
+    <button mat-fab [ngClass]="{'selected':selected, 'mini-fab-button': size === 'mini'}" [disabled]="disabled" (click)="onClick()">
+        {{buttonText}}
+        <app-icon *ngIf="!buttonText && icon" [iconName]="icon"></app-icon>
+    </button>
+    <span *ngIf="!buttonText" class="text-sm"><ng-content></ng-content></span>
+</div>

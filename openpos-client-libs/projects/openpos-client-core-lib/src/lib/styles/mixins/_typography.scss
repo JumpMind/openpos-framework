@@ -1,0 +1,87 @@
+@mixin openpos-typography{
+
+  .super-currency-symbol {
+    vertical-align: super;
+    font-size: 0.5em;
+    padding-right: 2px;
+  }
+
+  ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
+    color:    #c8c8c8;
+    font-weight: lighter;
+  }
+
+  .mat-hint{
+    font-size:60%;
+  }
+
+  .mat-dialog-actions {
+    text-align: center;
+  }
+  .prompt-text {
+    font-size:60%;
+  }
+
+  .text-center{
+    text-align: center;
+  }
+
+  .text-right {
+    text-align: right;
+  }
+
+  .text-left {
+    text-align: left;
+  }
+
+  .no-wrap {
+      white-space: nowrap;
+  }
+  
+  .wrap-text{
+    white-space: normal;
+  }
+
+  .text-xs{
+    font-size:12px !important;
+  }
+
+  .text-sm{
+      font-size:18px !important;
+  }
+
+  .text-md{
+      font-size:24px !important;
+  }
+
+  .text-lg{
+      font-size:32px !important;
+  }
+
+  .text-xl{
+      font-size:48px !important;
+  }
+
+
+  @media( max-width: 600px){
+      .text-xs{
+          font-size:8px !important;
+      }
+
+      .text-sm{
+          font-size:14px !important;
+      }
+
+      .text-md{
+          font-size:18px !important;
+      }
+
+      .text-lg{
+          font-size:24px !important;
+      }
+
+      .text-xl{
+          font-size:36px !important;
+      }
+  }
+}

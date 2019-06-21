@@ -1,0 +1,12 @@
+<div class="grid-table-outer" [ngStyle]="outerStyle">
+    <div class="text-sm grid-table-header" *ngFor="let columnHeader of columnHeaders">
+        {{columnHeader}}
+    </div>
+    <ng-container *ngFor="let row of rows">
+        <div class="grid-table-cell" *ngFor="let cell of row.columns">
+            <div class="grid-table-line" *ngFor="let line of cell">
+                {{line}}
+            </div>
+        </div>
+    </ng-container>
+</div>

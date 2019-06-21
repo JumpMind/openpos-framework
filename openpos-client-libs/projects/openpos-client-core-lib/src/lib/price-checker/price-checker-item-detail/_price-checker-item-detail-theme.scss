@@ -1,0 +1,21 @@
+@mixin price-checker-item-detail-theme($theme){
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground );
+    $background: map-get($theme, background );
+
+    app-price-checker-item-detail{
+        color: mat-color($foreground, text);
+        .page{
+            background-color: mat-color($background, background);
+        }
+        .container{
+            background-color: mat-color($background, card);
+        }
+        .display-property-label{
+            color: mat-color($foreground, text);
+        }
+    }
+}

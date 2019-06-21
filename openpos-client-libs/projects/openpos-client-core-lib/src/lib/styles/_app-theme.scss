@@ -1,0 +1,202 @@
+@import '~@angular/material/theming';
+@import './theme-mixins/component-theme-mixins';
+@import '../shared/layout-components/layout-component-themes';
+@import '../shared/components/component-theme-mixins';
+@import '../shared/screen-parts/screen-part-themes';
+@import '../screens-deprecated/screen-themes';
+@import '../screens-with-parts/screen-with-parts-themes';
+@import '../shared/components/component-theme-mixins';
+@import '../price-checker/price-checker-themes';
+
+@include mat-core();
+
+@function openpos-theme-light($primary, $accent, $warn, $selected, $addons: ()){
+
+    $openpos-mat-theme: mat-light-theme($primary, $accent, $warn);
+
+    $mat-foreground: map-get($openpos-mat-theme, foreground);
+    $openpos-foreground-addons: (
+        inverse-text: whitesmoke
+    );
+    $openpos-addons: (
+        foreground: map-merge($mat-foreground, $openpos-foreground-addons),
+        selected: $selected
+    );
+    @return map-merge(map-merge($openpos-mat-theme, $openpos-addons), $addons);
+}
+
+@mixin app-theme($theme) {
+
+    @include component-theme-mixins($theme);
+    @include layout-component-themes($theme);
+    @include openpos-component-theme-mixins($theme);
+    @include screen-part-themes($theme);
+    @include screen-themes($theme);
+    @include screen-with-parts-themes($theme);
+    @include price-checker-themes($theme);
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+    $app-selected: mat-color(map-get($theme, selected));
+
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $success-color: green;
+
+    // this is a hack to get around a default value in angular material that they removed in future versions
+    // if we ever upgrade we can probably remove this. This allows the field to be sized by flex instead of being
+    // limited to 200px min size
+    .mat-form-field{
+        width: unset;
+    }
+
+    .warn {
+        color: $app-warn;
+    }
+
+    .accent {
+        color: $app-accent;
+    }
+
+    .primary{
+        color:$app-primary;
+    }
+
+    .selected-color {
+        color: $app-selected;
+    }
+
+    .success{
+        color:$success-color;
+    }
+
+    .muted-color {
+        color:mat-color($foreground, disabled);
+    }
+
+    .grey-background {
+        background-color: map-get($mat-grey, 300);
+    }
+
+    .primary-background {
+        background-color: $app-primary;
+    }
+
+    mat-card.dark{
+        background-color: mat-color($foreground, icon);
+        color: white;
+    }
+
+    .lighter{
+        background-color: mat-color($background, app-bar);
+    }
+
+    input.bordered{
+        border-color: mat-color($foreground, divider);
+        border-style: solid;
+        background-color: white;
+    }
+
+    .mat-list.list-seperator{
+        .mat-list-item:not(:first-child){
+            border-top: 1px dashed mat-color($foreground, divider);
+        }
+    }
+
+    // Button Styles
+    .mat-button.mat-primary-inverse{
+        color:white;
+        background-color: $app-primary;
+    }
+    
+    .mat-raised-button.mat-primary-inverse{
+        color:$app-primary;
+        background-color: white;
+    }
+
+    .mat-mini-fab.mat-primary-inverse{
+        color:$app-primary;
+        background-color: white;
+    }
+
+    .mat-button.mat-accent-inverse{
+        color:white;
+        background-color: $app-accent;
+    }
+    
+    .mat-raised-button.mat-accent-inverse{
+        color:$app-accent;
+        background-color: white;
+    }
+
+    .mat-mini-fab.mat-accent-inverse{
+        color:$app-accent;
+        background-color: white;
+    }
+
+    .mat-button.mat-selected-color {
+        color: $app-selected;
+    }
+
+    .mat-icon-button.mat-selected-color {
+        color: $app-selected;
+    }
+
+    .mat-fab .mat-button-wrapper {
+        padding: 0;
+    }
+
+    .mat-progress-bar-buffer{
+        background-color:mat-color($background, app-bar); 
+    }
+
+    .mat-button-toggle:not(.mat-button-toggle-disabled):not(.mat-button-toggle-checked){
+        background-color: white;
+        border: solid mat-color(map-get($theme, primary)) 1px;
+        color: mat-color(map-get($theme, primary));
+    }
+
+    .mat-basic-chip:focus {outline:0;}
+
+    .mat-button-toggle{
+        text-align: center;
+    }
+
+    .mat-button-toggle-checked{
+        background: $app-selected;
+        color: white;
+    }
+    
+    .overflow-menu-panel{
+        background: transparent;
+        box-shadow: unset;
+    } 
+
+    .mat-expansion-indicator::after{
+        color:$app-primary;
+    }
+
+    app-statusbar{
+        .mat-toolbar{
+            background-color: $app-primary;
+            color: whitesmoke;
+        }
+    }
+
+    app-self-checkout-statusbar{
+        .mat-toolbar{
+            background-color: white;
+            color: $app-primary;
+        }
+    }
+
+    .mat-tab-label-active{
+        color: $app-primary;
+    }
+
+    app-prompt-input app-icon {
+        padding: 5px;
+    }
+
+}

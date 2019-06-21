@@ -1,0 +1,10 @@
+<div fxLayout="column">
+    <div fxLayoutAlign="space-between">
+        <h1 *ngIf="title" mat-dialog-title>{{title}}</h1>
+        <button *ngIf="closeButton" mat-icon-button style="margin:-15px" [mat-dialog-close]="true">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <app-date-part-chooser [mode]="mode" [month]="dateParts.month" 
+        [dayOfMonth]="dateParts.dayOfMonth" [year]="dateParts.year" (change)="onDateChange($event)"></app-date-part-chooser>
+</div>

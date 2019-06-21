@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>{{title}}</h2>
+<mat-dialog-content>
+    <span *ngIf="error">{{error}}</span>
+    <mat-expansion-panel class="details-panel">
+        <mat-expansion-panel-header>
+            <mat-panel-title>
+                Details
+            </mat-panel-title>
+            <mat-panel-description></mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <p *ngFor="let m of messages">{{m}}</p>
+    </mat-expansion-panel>
+
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button mat-button mat-dialog-close cdkFocusInitial>Retry</button>
+</mat-dialog-actions>

@@ -1,0 +1,53 @@
+<ng-container *ngIf="isMultipleSelectionMode(); else otherSelectionMode">
+    <!-- Angular outputs  "NullInjectorError: No provider for MatSelectionList!", if I don't wrap the mat-list-option here (instead of in parent component) -->
+    <mat-selection-list [ngModel]="selectedItems" (ngModelChange)="onSelectedOptionsChange($event)">
+        <mat-list-option *ngFor="let item of items" [ngClass]="(itemClass ? itemClass : 'sale-line-item' )" ngClass.xs="sale-line-item-xs"
+            (click)="onItemSelected(item, $event)" [value]="item.index" [selected]="item.selected" [disabled]="!item.enabled">
+            <ng-container *ngTemplateOutlet="productListItemDetail; context:{item: item, selectionMode: selectionMode}"></ng-container>
+        </mat-list-option>
+    </mat-selection-list>
+</ng-container>
+<ng-template #otherSelectionMode>
+    <mat-list-item *ngFor="let item of items" [ngClass]="(itemClass ? itemClass : 'sale-line-item' )" ngClass.xs="sale-line-item-xs"
+        (click)="onItemClick(item, $event)" [class.disabled]="!item.enabled">
+        <ng-container *ngTemplateOutlet="productListItemDetail; context:{item: item, selectionMode: selectionMode}"></ng-container>
+    </mat-list-item>
+</ng-template>
+
+<ng-template #productListItemDetail let-item="item">
+    <div fxLayout="row" fxLayoutAlign="start center" style="width:100%; margin-top:10px">
+        <div fxFlex="1 1 auto">
+            <div mat-line fxLayout="row">
+                <strong>{{item.description}}</strong>
+                <mat-chip-list class="align-right">
+                    <mat-chip *ngFor="let label of item.labels" style="margin-left: 3px">{{label}}</mat-chip>
+                </mat-chip-list>
+            </div>
+            <div mat-line>
+                {{item.subtitle}}
+            </div>
+            <div *ngIf="item.fields">
+                <mat-form-field fxFlex *ngFor="let field of item.fields" [ngSwitch]="field.valueDisplayMode" style="margin-top: 3px; margin-right: 10px">
+                    <input [value]="field.value" [name]="field.id" [placeholder]="field.label" matInput readonly=true>
+                </mat-form-field>
+            </div>
+        </div>
+        <div>
+            <span *ngIf="item.amount" class="text-md primary">
+                <app-currency-text [amountText]="item.amount"></app-currency-text>
+            </span>
+            <mat-icon *ngIf="showItemIcon" class="material-icons line-item-caret" style="position:initial">keyboard_arrow_right</mat-icon>
+            <ng-container *ngIf="showItemMenu">
+                <button mat-icon-button [matMenuTriggerFor]="menu">
+                    <mat-icon>more_vert</mat-icon>
+                </button>
+                <mat-menu #menu="matMenu">
+                    <button mat-menu-item *ngFor="let menuItem of menuItemActions" (click)="onMenuItemClick(item, menuItem, $event)">
+                        <app-icon *ngIf="menuItem.icon" iconName="{{menuItem.icon}}"></app-icon>
+                        <span [ngClass]="{'muted-color': ! menuItem.enabled}">{{menuItem.title}}</span>
+                    </button>
+                </mat-menu>
+            </ng-container>
+        </div>
+    </div>
+</ng-template>

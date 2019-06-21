@@ -1,0 +1,53 @@
+:host{
+    height: 100%;
+}
+
+.waffle{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.waffle-header{
+    width: 100%;
+    display: flex;
+}
+
+.drawer-button{
+    display: flex;
+    align-items: center;
+    margin-right: 16px;
+}
+
+.sidenav-container{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.waffle-header-container{
+    z-index: 100;
+    display: flex;
+}
+
+.waffle-drawer-content {
+    min-width: 200px;
+}
+
+.waffle-drawer-scroller{
+    height: 100%;
+    overflow: auto;
+}
+
+.side-nav-content{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.waffle-body{
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}

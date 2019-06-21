@@ -1,0 +1,45 @@
+<app-waffle [showDrawer]="showDrawer">
+    <app-statusbar waffle-header fxFlex="100%" [data]="statusBar"></app-statusbar>
+
+    <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
+        fxLayoutGap="4px" fxLayoutGap.lg="20px">
+        <button mat-button color="primary" *ngFor="let m of template.localMenuItems" (click)="doMenuItemAction(m)"
+            [disabled]="!isMenuItemEnabled(m)" class="sell-template-menu-button" [actionItem]="m">
+            <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
+            <span [ngClass]="{'muted-color': ! m.enabled}">&nbsp;{{m.title}}</span>
+            <span fxFlex="1 1 auto" style="padding-right: 8px;"></span>
+            <span *ngIf="m.keybind && keybindsEnabled()" class="muted-color">{{m.keybind}}</span>
+        </button>
+        <div fxFlex="1 1 auto"></div>
+        <ng-container *ngIf="!screen.hideCustomer">
+            <app-sell-linked-customer [screenType]="screen.screenType" [customerName]="screen.customerName"
+                [noCustomerText]="screen.noCustomerText" [loyaltyButton]="screen.loyaltyButton"></app-sell-linked-customer>
+        </ng-container>
+        <div *ngIf="screen.screenType === 'Transaction'" fxFlex="0 1 auto" class="sell-screen-logo"></div>
+    </div>
+
+    <app-scan-something waffle-top-content class="scan-or-search mat-elevation-z3" *ngIf="template.scan"
+        [scanSomethingData]="template.scan"></app-scan-something>
+
+    <div waffle-title *ngIf="screen.prompt" class="sale-prompt">
+        <span>{{screen.prompt}}</span>
+    </div>
+
+    <div waffle-body class="sale-content">
+
+        <ng-container *ngIf="screen.subtitle">
+            <mat-card-subtitle *ngIf="screen.subtitle?.length == 1" fxFlex="0 0 auto" class="text-md">{{screen.subtitle}}</mat-card-subtitle>
+            <div *ngIf="screen.subtitle?.length > 1">
+                <div *ngFor="let line of screen.subtitle">
+                    <mat-card-subtitle *ngIf="screen.subtitle?.length > 1" fxFlex="0 0 auto" class="text-md">{{line}}</mat-card-subtitle>
+                </div>
+            </div>
+        </ng-container>
+
+        <div style="flex:1 1 50%; min-height: 50%">
+            <ng-template appScreen></ng-template>
+        </div>
+        <app-sell-status-section fxFlex="0 1 auto" [data]="statusSection"></app-sell-status-section>
+
+    </div>
+</app-waffle>

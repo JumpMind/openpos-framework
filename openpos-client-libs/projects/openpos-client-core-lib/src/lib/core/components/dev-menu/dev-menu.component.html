@@ -1,0 +1,441 @@
+<div *ngIf="showDevMenu" [class]="(getLocalTheme() | async)">
+    <mat-expansion-panel #devMenuPanel class="devMenuPanel">
+        <mat-expansion-panel-header (click)="onDevMenuRefresh()">
+            <mat-panel-description fxLayout="row" fxFlex fxLayoutAlign="start center" fxLayoutGap="10px">
+                <div fxFlex="none" fxLayout="row" fxLayoutAlign="left center">
+                    Developer Tools
+                </div>
+
+                <div fxFlex=""></div>
+
+                <div fxFlex="nogrow" fxLayoutAlign="right center">
+                    <button mat-icon-button color="primary" (click)="onDevMenuClick()">
+                        <mat-icon>close</mat-icon>
+                    </button>
+                </div>
+
+            </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-tab-group dynamicHeight>
+            <mat-tab label="State">
+                <div class="stateTab">
+                    <div [style.width.px]="'30vw'">
+                        <h2>Current State: {{currentState}}
+                            <button mat-icon-button (click)="onDevMenuRefresh()">
+                                <mat-icon aria-label="refresh">refresh</mat-icon>
+                            </button>
+                        </h2>
+                        <h5>Current State Class:
+                            <i>{{currentStateClass}}</i>
+                        </h5>
+                    </div>
+                    <div class="tab">
+                        <div class="panel" layout="row">
+                            <mat-card>
+                                <mat-accordion multi="true">
+                                    <mat-expansion-panel [disabled]="showUpdating">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Connections
+                                            </mat-panel-title>
+                                            <mat-panel-description *ngIf="showUpdating">
+                                                Updating...
+                                            </mat-panel-description>
+                                        </mat-expansion-panel-header>
+                                        <table class="mat-table">
+                                            <thead>
+                                                <tr style="text-align:left" class="mat-header-row">
+                                                    <th class="mat-header-cell"> Action </th>
+                                                    <th class="mat-header-cell"> Destination State </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="mat-row" *ngFor="let action of currentStateActions">
+                                                    <td class="mat-cell"> {{action.Action}} </td>
+                                                    <td class="mat-cell"> {{action.Destination}} </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </mat-expansion-panel>
+
+                                    <mat-expansion-panel [disabled]="showUpdating">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Config Scope
+                                            </mat-panel-title>
+                                            <mat-panel-description *ngIf="showUpdating">
+                                                Updating...
+                                            </mat-panel-description>
+                                        </mat-expansion-panel-header>
+                                        <table class="mat-table">
+                                            <thead>
+                                                <tr style="text-align:left" class="mat-header-row">
+                                                    <th class="mat-header-cell"> ID </th>
+                                                    <th class="mat-header-cell"> Time Created </th>
+                                                    <th class="mat-header-cell" style="text-align:center"> Origin </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="mat-row" *ngFor="let element of ConfElements">
+                                                    <td class="mat-cell"> {{element.ID}} </td>
+                                                    <td class="mat-cell"> {{element.Time}} </td>
+                                                    <td class="mat-cell" style="text-align:center">
+                                                        <button mat-button color="accent"
+                                                            (click)="onStackTrace(element)">View</button>
+                                                    </td>
+                                                    <td class="mat-cell-close">
+                                                        <button mat-icon-button (click)="onConfRemove(element)">
+                                                            <mat-icon aria-label="delete">close</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </mat-expansion-panel>
+
+                                    <mat-expansion-panel [disabled]="showUpdating">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Device Scope
+                                            </mat-panel-title>
+                                            <mat-panel-description *ngIf="showUpdating">
+                                                Updating...
+                                            </mat-panel-description>
+                                        </mat-expansion-panel-header>
+                                        <table class="mat-table">
+                                            <thead>
+                                                <tr style="text-align:left" class="mat-header-row">
+                                                    <th class="mat-header-cell"> ID </th>
+                                                    <th class="mat-header-cell"> Time Created </th>
+                                                    <th class="mat-header-cell" style="text-align:center"> Origin </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="mat-row" *ngFor="let element of DeviceElements">
+                                                    <td class="mat-cell"> {{element.ID}} </td>
+                                                    <td class="mat-cell"> {{element.Time}} </td>
+                                                    <td class="mat-cell" style="text-align:center">
+                                                        <button mat-button color="accent"
+                                                            (click)="onStackTrace(element)">View</button>
+                                                    </td>
+                                                    <td class="mat-cell-close">
+                                                        <button mat-icon-button (click)="onNodeRemove(element)">
+                                                            <mat-icon aria-label="delete">close</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </mat-expansion-panel>
+
+                                    <mat-expansion-panel [disabled]="showUpdating">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Session Scope
+                                            </mat-panel-title>
+                                            <mat-panel-description *ngIf="showUpdating">
+                                                Updating...
+                                            </mat-panel-description>
+                                        </mat-expansion-panel-header>
+                                        <table class="mat-table">
+                                            <thead>
+                                                <tr style="text-align:left" class="mat-header-row">
+                                                    <th class="mat-header-cell"> ID </th>
+                                                    <th class="mat-header-cell"> Time Created </th>
+                                                    <th class="mat-header-cell" style="text-align:center"> Origin </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="mat-row" *ngFor="let element of SessElements">
+                                                    <td class="mat-cell"> {{element.ID}} </td>
+                                                    <td class="mat-cell"> {{element.Time}} </td>
+                                                    <td class="mat-cell" style="text-align:center">
+                                                        <button mat-button color="accent"
+                                                            (click)="onStackTrace(element)">View</button>
+                                                    </td>
+                                                    <td class="mat-cell-close">
+                                                        <button mat-icon-button (click)="onSessRemove(element)">
+                                                            <mat-icon aria-label="delete">close</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </mat-expansion-panel>
+
+                                    <mat-expansion-panel [disabled]="showUpdating">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Conversation Scope
+                                            </mat-panel-title>
+                                            <mat-panel-description *ngIf="showUpdating">
+                                                Updating...
+                                            </mat-panel-description>
+                                        </mat-expansion-panel-header>
+                                        <table class="mat-table">
+                                            <thead>
+                                                <tr style="text-align:left" class="mat-header-row">
+                                                    <th class="mat-header-cell"> ID </th>
+                                                    <th class="mat-header-cell"> Time Created </th>
+                                                    <th class="mat-header-cell" style="text-align:center"> Origin </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="mat-row" *ngFor="let element of ConvElements">
+                                                    <td class="mat-cell"> {{element.ID}} </td>
+                                                    <td class="mat-cell"> {{element.Time}} </td>
+                                                    <td class="mat-cell" style="text-align:center">
+                                                        <button mat-button color="accent"
+                                                            (click)="onStackTrace(element)">View</button>
+                                                    </td>
+                                                    <td class="mat-cell-close">
+                                                        <button mat-icon-button (click)="onConvRemove(element)">
+                                                            <mat-icon aria-label="delete">close</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </mat-expansion-panel>
+
+                                    <mat-expansion-panel [disabled]="showUpdating">
+                                        <mat-expansion-panel-header>
+                                            <mat-panel-title>
+                                                Flow Scope
+                                            </mat-panel-title>
+                                            <mat-panel-description *ngIf="showUpdating">
+                                                Updating...
+                                            </mat-panel-description>
+                                        </mat-expansion-panel-header>
+                                        <table class="mat-table">
+                                            <thead>
+                                                <tr style="text-align:left" class="mat-header-row">
+                                                    <th class="mat-header-cell"> ID </th>
+                                                    <th class="mat-header-cell"> Time Created </th>
+                                                    <th class="mat-header-cell" style="text-align:center"> Origin </th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr class="mat-row" *ngFor="let element of FlowElements">
+                                                    <td class="mat-cell"> {{element.ID}} </td>
+                                                    <td class="mat-cell"> {{element.Time}} </td>
+                                                    <td class="mat-cell" style="text-align:center">
+                                                        <button mat-button color="accent"
+                                                            (click)="onStackTrace(element)">View</button>
+                                                    </td>
+                                                    <td class="mat-cell-close">
+                                                        <button mat-icon-button (click)="onConfRemove(element)">
+                                                            <mat-icon aria-label="delete">close</mat-icon>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </mat-expansion-panel>
+
+                                </mat-accordion>
+                            </mat-card>
+                        </div>
+                        <div *ngIf="displayStackTrace" class="stacktrace">
+                            <mat-card>
+                                <mat-card-title>
+                                    <div fxFlex="none" fxLayout="row" fxLayoutAlign="left center"
+                                        fxLayoutAlign.xs="left">
+                                        Origin of: {{selected}}
+                                    </div>
+                                    <div fxFlex=""></div>
+                                    <div fxFlex="nogrow" fxLayoutAlign="right center">
+                                        <button mat-icon-button (click)="onStackTraceClose()">
+                                            <mat-icon aria-label="delete">close</mat-icon>
+                                        </button>
+                                    </div>
+                                </mat-card-title>
+                                <mat-card-content [style.height.px]="'400'" class="stacktrace-content">
+                                    {{stackTrace}}
+                                </mat-card-content>
+                            </mat-card>
+                        </div>
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab label="Local Storage">
+                <div>
+                    <h1>Local Storage</h1>
+                    <ul [style.height.px]="'250'">
+                        <li>
+                            <button mat-button (click)="onPersonalize()">Personalize</button>
+                        </li>
+                        <li>
+                            <button mat-button (click)="onDevRefreshView()">Refresh View</button>
+                        </li>
+                        <li>
+                            <button mat-button (click)="onDevClearLocalStorage()">Clear Local Storage</button>
+                        </li>
+                    </ul>
+
+                    <div fxFlexFill fxLayout="row" fxLayoutAlign="left start" fxLayoutAlign.xs="left">
+                        <button mat-raised-button color="primary" (click)="onDevRestartNode()">Restart Node</button>
+                    </div>
+                </div>
+            </mat-tab>
+            <mat-tab *ngIf="useSavePoints()" label="Save Points">
+                <h1>Save Points</h1>
+
+                <div *ngIf="displaySavePoints" class="savePoints" [style.height.px]="'300'">
+                    <mat-card>
+                        <mat-card-title></mat-card-title>
+                        <mat-card-content>
+                            <table class="mat-table">
+                                <thead>
+                                    <tr style="text-align:left" class="mat-header-row">
+                                        <th class="mat-header-cell"> Name </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="mat-row" *ngFor="let element of savePoints">
+                                        <td class="mat-cell"> {{element}} </td>
+                                        <td class="mat-cell" style="text-align:center">
+                                            <button mat-button color="accent"
+                                                (click)="onLoadSavePoint(element)">Load</button>
+                                        </td>
+                                        <td class="mat-cell-close">
+                                            <button mat-icon-button (click)="onSavePointRemove(element)">
+                                                <mat-icon aria-label="delete">close</mat-icon>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+                <mat-action-row>
+                    <div fxFlex="none" fxLayout="row" fxLayoutAlign="left center" fxLayoutAlign.xs="left">
+                        <mat-form-field appearance="standard">
+                            <input matInput #newSavePoint
+                                (keyup.enter)="onCreateSavePoint(newSavePoint.value); newSavePoint.value=''"
+                                placeholder="Create a Save Point">
+                            <mat-icon matSuffix>
+                                <button mat-icon-button
+                                    (click)="onCreateSavePoint(newSavePoint.value); newSavePoint.value=''">
+                                    <mat-icon aria-label="save">save</mat-icon>
+                                </button>
+                            </mat-icon>
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex=""></div>
+                    <!-- <div fxFlex="nogrow" fxLayoutAlign="right center">
+                                <button mat-raised-button color="primary" (click)="onDevMenuClick()">
+                                        Close Tools
+                                </button>
+                            </div> -->
+
+
+                </mat-action-row>
+
+            </mat-tab>
+            <mat-tab *ngIf="logFilenames && logFilenames.length > 0" label="Logs">
+                <h1>Logs</h1>
+                <div class="logs">
+                    <div *ngIf="!logsAvailable" [style.height.px]="'300'"></div>
+                    <ng-container *ngIf="logsAvailable" [style.height.px]="'300'">
+                        <mat-divider></mat-divider>
+                        <table id="logs-table">
+                            <tbody>
+                                <tr *ngFor="let m of logFilenames">
+                                    <td>{{m}}</td>
+                                    <td><button mat-icon-button (click)="onLogfileUpload(m)" aria-label="Upload">
+                                            <mat-icon>publish</mat-icon>
+                                        </button></td>
+                                    <td><button mat-icon-button (click)="onLogfileView(m)" aria-label="View">
+                                            <mat-icon>pageview</mat-icon>
+                                        </button></td>
+                                    <td><button mat-icon-button (click)="onLogfileShare(m)" aria-label="Share">
+                                            <mat-icon>share</mat-icon>
+                                        </button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <!--
+                        <ul>
+                            <li *ngFor="let m of logFilenames">
+                                <button mat-button [matMenuTriggerFor]="logsMenu" (click)="onLogfileSelected(m)">{{m}}</button>
+                            </li>
+                        </ul>
+                        -->
+                    </ng-container>
+                </div>
+            </mat-tab>
+            <mat-tab *ngIf="useSimulatedScanner()" label="Scanner">
+                <h1>Simulated Scanner</h1>
+                <div fxFlex="none" fxLayout="row" fxLayoutAlign="left center" fxLayoutAlign.xs="left">
+                    <mat-form-field appearance="standard">
+                        <input matInput #scan (keyup.enter)="onSimulateScan(scan.value)" placeholder="Enter Scan Data">
+                        <mat-icon matSuffix>
+                            <button mat-icon-button (click)="onSimulateScan(scan.value)">
+                                <mat-icon svgIcon="barcode"></mat-icon>
+                            </button>
+                        </mat-icon>
+                    </mat-form-field>
+                </div>
+            </mat-tab>
+            <mat-tab *ngIf="isElectronEnabled()" label="Electron">
+                <div fxFlex="none" fxLayout="row" fxLayoutAlign="left center" fxLayoutAlign.xs="left">
+                    <button mat-raised-button color="primary" (click)="toggleChromiumDevTools()">Toggle Dev
+                        Tools</button>
+                    <button mat-raised-button color="primary" (click)="exitElectronApp()">Exit App</button>
+                </div>
+            </mat-tab>
+            <mat-tab label="About">
+                <h1>About</h1>
+                <mat-card *ngFor="let v of versions()">
+                    <mat-card-title>{{v.componentName}}</mat-card-title>
+                    <mat-card-content>
+                        <div>
+                            <strong>Version: </strong>{{v.version}}
+                        </div>
+                        <div>
+                            <strong>Build Number: </strong>{{v.buildNumber}}
+                        </div>
+                        <div>
+                            <strong>Build Time: </strong>{{v.buildTime}}
+                        </div>
+                        <div>
+                            <strong>Branch: </strong>{{v.gitBranch}}
+                        </div>
+                        <div>
+                            <strong>Git Hash: </strong>{{v.gitHash}}
+                        </div>
+                        <div>
+                            <strong>Build Name: </strong>{{v.buildName}}
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </mat-tab>
+        </mat-tab-group>
+
+    </mat-expansion-panel>
+</div>
+
+<div [matMenuTriggerFor]="devMenu">
+    <mat-menu #devMenu="matMenu" yPosition="below" xPosition="after">
+        <ng-container *ngIf="logsAvailable">
+            <!--<button mat-menu-item [matMenuTriggerFor]="logsMenu">Logs</button>-->
+            <mat-divider></mat-divider>
+        </ng-container>
+        <button mat-menu-item (click)="onPersonalize()">Personalize</button>
+        <button mat-menu-item (click)="onDevRefreshView()">Refresh View</button>
+        <button mat-menu-item (click)="onDevClearLocalStorage()">Clear Local Storage</button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="onDevRestartNode()">Restart Node</button>
+    </mat-menu>
+    <!--
+    <mat-menu #logsMenu="matMenu">
+        <button mat-menu-item (click)="onLogfileShare()">Share</button>
+        <button mat-menu-item (click)="onLogfileUpload()">Upload</button>
+        <button mat-menu-item (click)="onLogfileView()">View</button>
+    </mat-menu>
+    -->
+</div>

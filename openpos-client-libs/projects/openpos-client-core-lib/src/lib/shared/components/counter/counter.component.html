@@ -1,0 +1,21 @@
+<div *ngIf="label" class="label">
+    {{label}}
+</div>
+<div [formGroup]="formGroup" class="counter" fxLayoutGap="10px">
+    <div *ngIf="iconName" class="icon">
+        <app-icon matPrefix [iconName]="iconName" [iconClass]="'material-icons'"></app-icon>
+    </div>
+    <button mat-icon-button type="button" class="primary-background" [disabled]="minusDisabled" (click)="decrementQty()">
+        <mat-icon>remove</mat-icon>
+    </button>
+    <mat-form-field>
+        <input cdkFocusInitial matInput [formControlName]="controlName" [placeholder]="placeholder"
+        [formControl]="formGroup.controls[controlName]"
+        [formatterName]="'numeric'" [required]="required" 
+        [readonly]="readOnly" [keyboardLayout]="keyboardLayout" [attr.type]="attrType"
+        autoSelectOnFocus (change)="onValueChange()">
+    </mat-form-field>
+    <button mat-icon-button type="button" class="primary-background" [disabled]="plusDisabled" (click)="incrementQty()">
+        <mat-icon>add</mat-icon>
+    </button>
+</div>

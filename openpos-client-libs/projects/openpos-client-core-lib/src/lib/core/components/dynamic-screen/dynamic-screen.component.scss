@@ -1,0 +1,31 @@
+.float {
+    top:10px;
+    right: 10px;
+    position:absolute;     
+    z-index: 1000;
+}
+
+.actions {
+    margin-right: -30px;
+    margin-top: 0px;
+  }
+
+  
+
+.panel {
+    float: left;
+    width: 55vw;
+  }
+
+
+.muted {
+    color: "accent";
+}
+
+.mat-cell {
+    word-wrap: break-word;
+}
+
+.saveForm {
+    padding-left: 10px;
+}

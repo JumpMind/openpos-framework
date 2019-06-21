@@ -1,0 +1,19 @@
+<div class="container">
+    <app-icon-button
+            class="back-button"
+            [actionItem]="screenData.backButton"
+            *ngIf="screenData.backButton"
+            iconName="keyboard_arrow_left"
+            iconClass="mat-48"
+            (buttonClick)="onMenuItemClick(screenData.backButton)">
+    </app-icon-button>    
+    <div class="header">
+        <app-icon   *ngIf="!(isMobile$ | async) && screenData.headerIcon" 
+                    class="header-icon" 
+                    [iconName]="screenData.headerIcon"></app-icon>
+        <span class="header-text">{{screenData.headerText}}</span>
+    </div>
+    <div class="operator" *ngIf="!(isMobile$ | async)">
+        {{operatorInfo}}
+    </div>
+</div>

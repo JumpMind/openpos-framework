@@ -1,0 +1,18 @@
+@mixin waffle-theme($theme){
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+    $background: map-get($theme, background );
+    $foreground: map-get($theme, foreground );
+
+    app-waffle{
+        .waffle-header-container{
+            background-color: $app-primary;
+            color: map-get($foreground, inverse-text);
+        }
+        .waffle-drawer-content{
+            background-color: map-get($background, app-bar);
+        }
+
+    }
+}

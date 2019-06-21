@@ -1,0 +1,134 @@
+.checkout-button {
+    width: 100%; 
+    height: 70px;
+    margin-top: 16px;
+}
+
+.border-button {
+    background-color: white;
+    border-style:solid; 
+    border-width: 2px; 
+    border-color:#222222;
+    width: 100%; 
+    height: 70px;
+    margin-top: 16px;
+}
+
+.border-button:disabled {
+    border-color:gray; 
+}
+
+.loyalty-button {
+    background-color: white;
+    border-style:solid; 
+    border-width: 2px; 
+    border-color:#222222;
+    width: 100%; 
+    height: 70px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+::ng-deep .loyalty-icon {
+    mat-icon {
+        height: 50% !important;
+        width: 65% !important;
+    }
+}
+
+::ng-deep .loyalty-button-icon {
+    mat-icon {
+        height: 40px;
+        width: 120px;
+        margin-top: -22px;
+    }
+}
+
+.promo-button {
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: left;
+    padding: 0px;
+}
+
+.subtotal {
+    margin-top: 0px;
+
+    mat-card-title {
+        font-size: 16px;
+        letter-spacing: 0.5px;
+    }
+
+    mat-card-content {
+        font-size: 26px;
+        letter-spacing: 1px;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        overflow: hidden;
+    }
+}
+
+.total {
+    padding-top: 10px;
+    padding-bottom: 0px;
+    margin-top: 0px;
+
+    mat-card-title {
+        border-top-width: 2px;
+        border-top-color: #CCCCCC;
+        border-top-style: solid;
+        padding-top: 30px;
+        padding-bottom: 0px;
+        font-size: 26px;
+    }
+
+    mat-card-content {
+        font-size: 36px;
+        padding-top: 15px;
+        padding-bottom: 30px;
+        border-bottom-width: 2px;
+        border-bottom-color: #222222;
+        border-bottom-style: solid;
+        overflow: hidden;
+    }
+}
+
+.selfcheckout-sell-background {
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 25em;
+}
+
+.selfcheckout-list-background {
+    align-self: stretch;
+    justify-self: stretch;
+    padding-right: 16px;
+}
+
+.selfcheckout-total-background {
+    min-height: 100px;
+    align-self: stretch;
+    justify-self: stretch;
+}
+
+.selfcheckout-side-content {
+    padding-top: 48px; 
+    padding-bottom: 48px; 
+    padding-left: 36px; 
+    padding-right: 36px;
+}
+
+.selfcheckout-total-content {
+    width: 100%;
+}
+
+.prompt {
+    font-size: 36px;
+}
+
+.selfcheckout-sell-webcam {
+    padding-bottom: 45px;
+}

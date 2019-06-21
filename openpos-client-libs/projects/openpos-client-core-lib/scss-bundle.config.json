@@ -1,0 +1,5 @@
+{
+    "entry": "projects/openpos-client-core-lib/src/lib/styles/_core.scss",
+    "dest": "dist/openpos-client-core-lib/_theming.scss",
+    "ignoredImports": ["~@angular\/.*"]
+}

@@ -1,0 +1,15 @@
+<ng-container *ngFor="let section of sections; let i = index">
+    <ng-container *ngIf="i >= currentIndex && i < (currentIndex + pageSize)"> 
+        <ng-template [ngTemplateOutlet]="section"></ng-template>
+    </ng-container>
+</ng-container>
+
+<div fxLayoutAlign="center center" *ngIf="totalPages > 1">
+    <button mat-icon-button color="primary" (click)="decrementPage()">
+        <app-icon [iconName]="'keyboard_arrow_left'"></app-icon>
+    </button>
+    <span>{{currentPage}} of {{totalPages}}</span>
+    <button mat-icon-button color="primary" (click)="incrementPage()">
+            <app-icon [iconName]="'keyboard_arrow_right'"></app-icon>
+    </button>
+</div>

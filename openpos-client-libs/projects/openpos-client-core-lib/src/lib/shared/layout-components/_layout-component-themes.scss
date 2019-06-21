@@ -1,0 +1,8 @@
+
+@import './side-nav/side-nav-theme';
+@import './waffle/waffle-theme';
+
+@mixin layout-component-themes($theme) {
+    @include side-nav-theme($theme);
+    @include waffle-theme($theme);
+}

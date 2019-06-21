@@ -1,0 +1,6 @@
+@mixin openpos-progress-bar(){
+    mat-progress-bar.mat-progress-bar{
+        height: 10px;
+        margin: 10px 0px;
+    }
+}

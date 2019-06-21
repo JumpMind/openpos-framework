@@ -1,0 +1,8 @@
+<div fxFlexFill fxLayout="column" fxLayoutAlign="center center" [ngStyle]="screen.backgroundImage | backgroundImageUrl" class="self-checkout-home">
+    <ng-container *ngIf="!screen.hideMenuItems">
+        <button mat-raised-button fxFlex="0 0 auto" *ngFor="let menuItem of menuItems" color="primary-inverse" class="text-md home-button"
+            (click)="onMenuItemClick(menuItem)">
+            {{menuItem.title | uppercase}}
+        </button>
+    </ng-container>
+</div>

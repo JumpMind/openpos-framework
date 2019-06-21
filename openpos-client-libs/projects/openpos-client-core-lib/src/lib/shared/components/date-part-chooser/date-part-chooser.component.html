@@ -1,0 +1,29 @@
+<ng-container *ngIf="mode === _dateChooserModeType.MonthDate">
+    <div fxLayoutAlign="space-between">
+        <div>
+            <p><span class="text-sm">Month</span></p>
+            <app-fab-toggle-group #monthGroup [(value)]="month" (valueChange)="onDateChange($event)">
+                <div fxLayout="column" fxLayoutGap="2px">
+                    <div fxLayout="row" fxLayoutGap="2px">
+                        <app-fab-toggle-button *ngFor="let i of [1,2,3,4,5,6]" [value]="i" [buttonText]="months[i]" size="mini" [allowUncheck]="false"></app-fab-toggle-button>
+                    </div>
+                    <div fxLayout="row" fxLayoutGap="2px">
+                        <app-fab-toggle-button *ngFor="let i of [7,8,9,10,11,12]" [value]="i" [buttonText]="months[i]" size="mini" [allowUncheck]="false"></app-fab-toggle-button>
+                    </div>
+                </div>
+            </app-fab-toggle-group>
+        </div>
+        <div>
+            <p><span class="text-sm">Day of month</span></p>
+            <app-fab-toggle-group #dayOfMonthGroup [(value)]="dayOfMonth" (valueChange)="onDateChange($event)">
+                <div fxLayout="column" fxLayoutGap="2px">
+                    <div fxLayout="row" fxLayoutGap="2px"><app-fab-toggle-button *ngFor="let i of [1,2,3,4,5,6,7]" [value]="i" [buttonText]="i" size="mini" [allowUncheck]="false"></app-fab-toggle-button></div>
+                    <div fxLayout="row" fxLayoutGap="2px"><app-fab-toggle-button *ngFor="let i of [8,9,10,11,12,13,14]" [value]="i" [buttonText]="i" size="mini" [allowUncheck]="false"></app-fab-toggle-button></div>
+                    <div fxLayout="row" fxLayoutGap="2px"><app-fab-toggle-button *ngFor="let i of [15,16,17,18,19,20,21]" [value]="i" [buttonText]="i" size="mini" [allowUncheck]="false"></app-fab-toggle-button></div>
+                    <div fxLayout="row" fxLayoutGap="2px"><app-fab-toggle-button *ngFor="let i of [22,23,24,25,26,27,28]" [value]="i" [buttonText]="i" size="mini" [allowUncheck]="false"></app-fab-toggle-button></div>
+                    <div fxLayout="row" fxLayoutGap="2px"><app-fab-toggle-button *ngFor="let i of lastWeekMonthDays()" [value]="i" [buttonText]="i" size="mini" [allowUncheck]="false"></app-fab-toggle-button></div>
+                </div>
+            </app-fab-toggle-group>
+        </div>
+    </div>
+</ng-container>

@@ -1,0 +1,27 @@
+@import './pager/pager-theme';
+@import './searchable-pop-tart/searchable-pop-tart-theme';
+@import './icon-button/icon-button-theme';
+@import './icon-fab-button/icon-fab-button-theme';
+@import './kebab-button/kebab-button-theme';
+@import './icon-square-button/icon-square-button-theme';
+@import './display-property/display-property-theme';
+@import './transaction-item-list/transaction-item-list-theme';
+@import './grid-table/grid-table-theme';
+@import './sell-item-line/sell-item-line-theme';
+@import './toggle-button/toggle-button-theme';
+@import './overflow-list/overflow-list-theme';
+
+@mixin openpos-component-theme-mixins($theme) {
+    @include pager-theme($theme);
+    @include searchable-pop-tart-theme($theme);
+    @include icon-button-theme($theme);
+    @include icon-fab-button-theme($theme);
+    @include kebab-button-theme($theme);
+    @include icon-square-button-theme($theme);
+    @include display-property-theme($theme);
+    @include transaction-item-list-theme($theme);
+    @include grid-table-theme($theme);
+    @include sell-item-line-theme($theme);
+    @include toggle-button-theme($theme);
+    @include overflow-list-theme($theme);
+}

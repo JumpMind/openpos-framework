@@ -9,7 +9,7 @@ OpenPOS is a framework that was built from the ground up to build retail-based c
 
 ![eclipse](assets/openpos-server-core-lib.png)
 
-* [Core](core-openpos-core.md)
+* [Flow](core-openpos-core.md)
 * [Server Core](core-openpos-server-core.md)
 * [Service](core-openpos-service.md)
 * [Persist](core-openpos-persist.md)

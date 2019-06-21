@@ -1,0 +1,18 @@
+<mat-label class="primary time-label">{{label}}</mat-label>
+<div fxLayout="row" fxLayoutGap="16px" style="width: 100%;">
+  <mat-form-field fxFlex="1 0 20px" [floatLabel]="'never'" class="time-form-field">
+    <input matInput [formatterName]="'hour'" placeholder="Hours" [(ngModel)]="hours" (change)="onTimeChange()"
+      [required]="required">
+  </mat-form-field>
+  <mat-form-field fxFlex="1 0 20px" [floatLabel]="'never'" class="time-form-field">
+    <input matInput [formatterName]="'minsec'" placeholder="Minutes" [(ngModel)]="minutes" (change)="onTimeChange()"
+      [required]="required">
+  </mat-form-field>
+  <mat-form-field fxFlex="1 0 20px" class="time-form-field">
+    <mat-select [(value)]="amPm" (selectionChange)="onTimeChange()" [required]="required">
+      <mat-option *ngFor="let ap of ['am', 'pm']" [value]="ap">
+        {{ap}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</div>

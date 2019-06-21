@@ -1,0 +1,25 @@
+<ng-container *ngIf="screen">
+  <div #test class="modal-header">
+    <h4 mat-dialog-title [ngClass]="{'warn text-lg text-center': isCustomerFacing()}">{{screen.title}}</h4>
+  </div>
+  <div mat-dialog-content>
+    <ng-container *ngIf="messages && messages.length > 0">
+      <div *ngFor="let m of messages" [innerHTML]="m | markdownFormatter" [ngClass]="{'text-md': isCustomerFacing()}" class="default-dialog-line">
+      </div>
+    </ng-container>
+    <ng-container *ngIf="lines && lines.length > 0">
+      <div *ngFor="let l of lines" [ngClass]="{'text-md': isCustomerFacing()}">
+          <p [class]="l.cssClass">{{l.message}}</p>
+      </div>
+    </ng-container>
+    <mat-progress-bar *ngIf="screen.subType === 'Progress'" mode="indeterminate"></mat-progress-bar>
+  </div>
+  <div mat-dialog-actions fxLayout="row wrap-reverse" fxLayoutAlign="end" class="button-container">
+    <button *ngFor="let m of otherButtons; let i = index" [id]="'button-' + i" mat-raised-button (click)="session.onAction(m)"
+      color="primary-inverse" [disabled]="!m.enabled" [ngClass]="{'customer-button': isCustomerFacing()}" [actionItem]="m" class="button-child">{{m.title}}
+      <span *ngIf="m.keybind && m.keybind !== 'Escape' && m.keybind !== 'Enter'" class="muted-color">({{m.keybind}})</span></button>
+    <button *ngIf="primaryButton" mat-raised-button (click)="session.onAction(primaryButton)" color="primary" id="primaryButton"
+      cdkFocusInitial [ngClass]="{'customer-button': isCustomerFacing()}" [actionItem]="primaryButton" class="button-child">{{primaryButton.title}}
+    </button>
+  </div>
+</ng-container>

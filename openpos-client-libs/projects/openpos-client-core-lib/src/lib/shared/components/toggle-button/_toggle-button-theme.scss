@@ -1,0 +1,8 @@
+@mixin toggle-button-theme($theme) {
+    $foreground: map-get($theme, foreground);
+
+    .toggle-button-container .selected {
+        color: map-get($foreground, inverse-text);
+        background-color: mat-color(map-get($theme, selected));
+    }
+} 

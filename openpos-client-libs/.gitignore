@@ -1,0 +1,8 @@
+/node_modules/
+/dist/
+/node/
+/.gradle/
+/.vscode/
+/.settings/
+/.project/
+/projects/openpos-client-core-lib/src/lib/version.ts

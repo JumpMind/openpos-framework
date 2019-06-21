@@ -1,0 +1,25 @@
+<div fxFlexFill fxLayout="column">
+    <app-dialog-header fxFlex="100%"></app-dialog-header>
+    <mat-dialog-content>
+        <ng-container *ngIf="messages && messages.length > 0">
+            <div *ngFor="let m of messages" [innerHTML]="m | markdownFormatter" class="generic-dialog-line">
+            </div>
+        </ng-container>
+        <ng-container *ngIf="lines && lines.length > 0">
+            <div *ngFor="let l of lines">
+                <p [class]="l.cssClass">{{l.message}}</p>
+            </div>
+        </ng-container>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayoutAlign="end">
+        <button *ngFor="let m of otherButtons; let i = index" [id]="'button-' + i" mat-raised-button (click)="session.onAction(m)"
+            color="primary-inverse" [disabled]="!m.enabled" [actionItem]="m">
+            {{m.title}}
+            <span *ngIf="m.keybind && m.keybind !== 'Escape' && m.keybind !== 'Enter'" class="muted-color">({{m.keybind}})</span>
+        </button>
+        <button *ngIf="primaryButton" mat-raised-button (click)="session.onAction(primaryButton)" color="primary" id="primaryButton"
+            cdkFocusInitial [actionItem]="primaryButton">
+            {{primaryButton.title}}
+        </button>
+    </mat-dialog-actions>
+</div>

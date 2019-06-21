@@ -1,0 +1,35 @@
+:host {
+    display: flex;
+    width: 100%;
+}
+
+.container{
+    display: flex;
+    padding: 16px;
+    width: 100%;
+    align-items: center;
+    font-size: 20px;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+}
+
+.back-button{
+    margin-left:-20px; 
+    margin-right:10px;
+    margin-top: -12px;
+    margin-bottom: -18px;
+    z-index:10;
+}
+
+.operator{
+    width: 100%;
+    text-align: right;
+}
+
+.header-text{
+    margin-left: 10px;
+}

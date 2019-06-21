@@ -1,0 +1,31 @@
+<div class="transaction-prompt" fxLayoutAlign="start center">
+    <div fxLayoutAlign="start center" *ngIf="selectedItems && selectedItems.length > 0; else transactionMenuElse" class="page-content-card">
+        <mat-label class="selected-color">{{selectedItems.length}} Item{{selectedItems.length === 1 ? '' : 's'}}  Selected</mat-label>
+         <app-kebab-button [keyBinding]="transactionMenu.keybind" *ngIf="!readOnly && selectedItems.length > 0" [menuItems]="multiSelectedMenuItems" [color]="'selected-color'"
+            (menuItemClick)="onItemActionsMultiMenulick($event, selectedItemIndexes, selectedItems)"></app-kebab-button> 
+        <span *ngIf="keybindsEnabled() && transactionMenu.keybind && !readOnly && selectedItems.length > 0 && multiSelectedMenuItems && multiSelectedMenuItems.length > 0" class="muted-color text-sm">{{transactionMenu.keybind}}</span>
+    </div>
+    <ng-template #transactionMenuElse>
+        <span>{{prompt}}</span>
+        <app-kebab-button *ngIf="transactionMenu?.actionItems?.length > 0" [keyBinding]="transactionMenu.keybind" [menuItems]="transactionMenu.actionItems" (menuItemClick)="onMenuItemClick($event)"></app-kebab-button>
+        <span *ngIf="keybindsEnabled() && transactionMenu?.actionItems?.length > 0 && transactionMenu.keybind" class="muted-color text-sm">{{transactionMenu.keybind}}</span>
+    </ng-template>
+</div>
+
+<mat-card class="page-content-card scrollable-content-card serrated-edge">
+    <mat-card-content #scrollList ngClass.xs="xs">
+        <app-selectable-item-list [configuration]="listConfig" [selectedItemList]="selectedItems"
+            (selectedItemListChange)="onItemListChange($event)">
+            <ng-template let-item>
+                <app-sell-item-line [item]="item" [readOnly]="readOnly" [hideButton]="selectedItems.length >= 1"></app-sell-item-line>
+            </ng-template>
+        </app-selectable-item-list>
+
+        <div *ngIf="!listConfig.items || listConfig.items.length == 0" fxLayout="column" fxLayoutAlign="center center"
+            class="muted-color" style="height: 100%;">
+            <app-icon iconClass="material-icons mat-128" iconName="barcode"></app-icon>
+            <span class="text-md">Scan/Key something to get started</span>
+        </div>
+
+    </mat-card-content>
+</mat-card>

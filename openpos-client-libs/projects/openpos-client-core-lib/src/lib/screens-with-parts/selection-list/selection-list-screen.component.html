@@ -1,0 +1,63 @@
+<app-waffle [showDrawer]="screen.sausageLinks && screen.sausageLinks.length > 0">
+    <app-bacon-strip waffle-header fxFlex="100%"></app-bacon-strip>
+    <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
+        fxLayoutGap="4px" fxLayoutGap.lg="20px">
+        <app-sausage-links waffle-drawer-content></app-sausage-links>
+    </div>
+    <app-scan-or-search *ngIf="screen.showScan" waffle-top-content class="scan-or-search mat-elevation-z3"></app-scan-or-search>
+    <div waffle-body fxFlexFill>
+        <div fxLayout="column" class="outer">
+            <mat-card fxLayout="column" class="lighter scrollable-content-card selection-list-card">
+                <mat-card-title *ngIf="screen.instructions" class="text-sm">{{screen.instructions}}</mat-card-title>
+                <mat-card-content fxFlex="1 1 100%">
+                    <app-selectable-item-list *ngIf="screen.selectionList && screen.selectionList.length > 0" 
+                        [configuration]="listConfig" (selectedItemChange)="onItemChange($event)"
+                        (selectedItemListChange)="onItemListChange($event)" [defaultSelect]="screen.defaultSelect">
+                        <ng-template let-item>
+                            <div #items gdAreas="img info" gdColumns="auto 4fr"
+                                [ngClass]="{'muted-color' : !item.enabled}">
+                                <div gdArea="img">
+                                    <img *ngIf="item.itemImageUrl" src="{{item.itemImageUrl}}" alt="{{item.title}}"
+                                        class="item-card-image">
+                                </div>
+                                <div gdArea="info">
+                                    <span *ngIf="item.title" class="text-sm item-title">{{item.title}}</span>
+                                    <div *ngIf="item.properties" fxLayout="row wrap" fxLayoutAlign="space-between">
+                                        <div *ngFor="let property of item.properties">
+                                            <div *ngIf="property.label" class="item-property-label">{{property.label}}
+                                            </div>
+                                            <p class="item-property-line" *ngFor="let line of property.lines">{{line}}
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ng-template>
+                    </app-selectable-item-list>
+                    <div *ngIf="!screen.selectionList || screen.selectionList.length == 0" fxLayout="column" fxLayoutAlign="center center" 
+                    class="muted-color">
+                        <app-icon *ngIf="screen.noListItemsPlaceholderIcon" iconClass="material-icons mat-180 muted-color"
+                             [iconName]="screen.noListItemsPlaceholderIcon"></app-icon>
+                        <span *ngIf="screen.noListItemsPlaceholderText" class="text-md">{{screen.noListItemsPlaceholderText}}</span>
+                    </div>
+                </mat-card-content>
+                <mat-card-actions fxLayoutAlign="end">
+                    <button *ngFor="let m of screen.nonSelectionButtons" mat-raised-button color="primary-inverse"
+                        [actionItem]="m" (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)"
+                        [disabled]="index >= 0">
+                        <span>{{m.title}}</span>&nbsp;
+                        <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>
+                    </button>
+                    <button *ngFor="let m of screen.selectionButtons;  let i = index"
+                        mat-raised-button
+                        [color]="screen.selectionButtons.length-1 == i ? 'primary' : 'primary-inverse'"
+                        [disabled]="index<0" [actionItem]="m" (actionClick)="doMenuItemAction(m)"
+                        (click)="doMenuItemAction(m)">
+                        <span>{{m.title}}</span>&nbsp;
+                        <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>
+                    </button>
+                </mat-card-actions>
+            </mat-card>
+        </div>
+    </div>
+</app-waffle>

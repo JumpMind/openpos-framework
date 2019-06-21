@@ -1,0 +1,69 @@
+name: $(BuildID)
+
+trigger:
+- master
+
+variables:
+  BUILD_NUMBER: $(Build.BuildNumber)
+  BUILD_NAME: $(Build.DefinitionName)
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '8.x'
+  displayName: 'Install Node.js'
+  
+- script: |
+    npm install -g @angular/cli@7.3.9
+    npm install scss-bundle -g
+    npm install -g @compodoc/compodoc
+    npm install        
+  displayName: 'Install'
+  continueOnError: false
+  failOnStderr: false
+
+- script: |    
+    ng build openpos-client-core-lib
+    scss-bundle -c projects/openpos-client-core-lib/scss-bundle.config.json
+  displayName: 'Build'
+  continueOnError: false
+  failOnStderr: false
+  
+- script: ng build
+  displayName: 'Demo App Build'
+  continueOnError: false
+  failOnStderr: false
+
+- script: |
+    cd projects/openpos-client-core-lib
+    compodoc -c .compodocrc.json
+  displayName: 'Build Docs'
+  continueOnError: false
+  failOnStderr: false
+
+- task: CopyFilesOverSSH@0
+  displayName: 'Upload docs to maven.jumpmind.com'  
+  inputs:
+    sshEndpoint: maven.jumpmind.com
+    sourceFolder: 'dist/documentation/' # Optional
+    contents: '**' 
+    targetFolder: 'www/docs/openpos-client-core-lib' # Optional
+    cleanTargetFolder: true # Optional
+    overwrite: true # Optional
+    failOnEmptySource: true # Optional
+    #publishRunAttachments: true # Optional   
+
+- task: CopyFilesOverSSH@0
+  displayName: 'Upload demo app to maven.jumpmind.com'  
+  inputs:
+    sshEndpoint: maven.jumpmind.com
+    sourceFolder: 'dist/openpos-client-demo/' # Optional
+    contents: '**' 
+    targetFolder: 'www/openpos-client-demo/' # Optional
+    cleanTargetFolder: true # Optional
+    overwrite: true # Optional
+    failOnEmptySource: true # Optional
+    #publishRunAttachments: true # Optional   

@@ -1,0 +1,34 @@
+<mat-card class="item-card">
+    <mat-card-content>
+        <img *ngIf="item.imageUrl" src="{{item.imageUrl}}" alt="{{item.description}}" class="item-card-image">
+        <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="16px" style="padding-left: 16px">
+            <div fxFlex="1 1 auto" fxLayout="column">
+                <div fxFlex="1 1 auto">
+                    <div *ngIf="item.productDescription" class="item-card-title">{{item.productDescription}}</div>
+                    <div *ngIf="!item.productDescription" class="item-card-title">{{item.description}}</div>
+                    <app-currency-text *ngIf="item.amount !== item.sellingPrice" class="item-card-discount"
+                        [amountText]="item.amount"></app-currency-text>
+                    <app-currency-text *ngIf="item.amount !== item.sellingPrice" class="muted-color item-card-original"
+                        [amountText]="item.sellingPrice"></app-currency-text>
+                </div>
+                <div class="item-card-details" *ngIf="item.additionalLabels">
+                    <div *ngFor="let additionalLabel of item.additionalLabels" class="muted-color"
+                        style="margin-top: 4px">{{additionalLabel.label}}: {{additionalLabel.value}}</div>
+                </div>
+            </div>
+            <div fxFlex="0 0 auto" fxLayout="column">
+                <app-currency-text fxFlex="1 1 auto" class="item-card-price" [amountText]="item.amount">
+                </app-currency-text>
+                <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'">
+                </app-icon>
+                <div *ngIf="!isReadOnly">
+                    <button mat-button color="warn" *ngFor="let m of item.menuItems" class="item-card-button"
+                        (click)="doMenuItemAction(m, item.index)" [disabled]="!isMenuItemEnabled(m)">
+                        <span [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
+                        <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

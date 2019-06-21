@@ -1,0 +1,53 @@
+@mixin openpos-list{
+  .product-list-description {
+    font-size: 12px;
+  }
+
+  .item-list-condensed {
+      padding-top: 0px;
+      padding-bottom: 0px;
+  }
+
+  .line-item-caret {
+    // Not sure why this color was grey, default looks better
+    // color: #c8c8c8;
+    // position: relative;
+    top: 12px;
+    position:absolute;
+    right:10px;
+  }
+
+  .sale-line-item {
+    border-bottom: dashed 1px;
+    border-color: #eff0ef;
+    padding: 18px;
+  }
+
+  .sale-line-item-xs{
+      padding: 0px;
+  }
+  .mat-list.xs{
+    padding:4px;
+    .mat-list-item{
+        .mat-list-item-content{
+            padding:4px;
+        }
+    }
+    .mat-list-item.mat-2-line{
+        .mat-list-item-content{
+            height:unset;
+        }
+    }
+  }
+
+  .mat-list.field-list{
+    .mat-list-item{
+        .mat-line:first-child{
+            @extend .text-sm;
+        }
+        .mat-line:nth-child(n+2){
+          @extend .text-md;
+        }
+    }
+  }
+}

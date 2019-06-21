@@ -1,0 +1,18 @@
+@mixin sell-item-line-theme($theme){
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground );
+    $background: map-get($theme, background );
+
+    .donation {
+        color: $app-accent;
+    }
+
+    .item-label{
+        background-origin: solid 1px map-get($mat-grey, 200);
+        background-color: map-get($mat-grey, 200);
+    }
+
+}

@@ -1,0 +1,130 @@
+<div [formGroup]="formGroup">
+
+    <mat-button-toggle-group *ngIf="formField.inputType==='ToggleButton'" [formControlName]="formField.id" (change)="onFormElementChanged(formField)">
+        <mat-button-toggle *ngFor="let value of values" [value]="value">
+            {{value}}
+        </mat-button-toggle>
+    </mat-button-toggle-group>
+
+    <ng-container *ngIf="formField.elementType==='Input' && ! isSpecialCaseInput()">
+        <mat-form-field style="width:100%" [ngSwitch]="formField.inputType">
+            <app-icon *ngIf="formField.iconName" matPrefix iconName="{{formField.iconName}}" iconClass="material-icons"></app-icon>
+            <mat-hint *ngIf="formField.hintText">{{formField.hintText}}</mat-hint>
+            <input *ngSwitchDefault matInput cdkFocusInitial id="{{formField.id}}" [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
+                [formatterName]="formField.inputType" [required]="formField.required" (change)="onFormElementChanged(formField)"
+                [attr.minlength]="formField.minLength" [attr.maxlength]="formField.maxLength" [readonly]="formField.disabled" [attr.tabindex]="formField.tabindex"
+                [keyboardLayout]="keyboardLayout" [attr.type]="isNumericField() ? 'tel' : 'text'"
+                autoSelectOnFocus>
+            <button *ngIf="isScanAllowed()" type="button" mat-button matSuffix mat-icon-button (click)="onScan(formField)">
+                <mat-icon svgIcon="barcode"></mat-icon>
+            </button>
+                 
+            <input class="poptart" *ngSwitchCase="'PopTart'" matInput [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
+                 [required]="formField.required" (click)="openPopTart()" 
+                 onfocus="this.blur()" readonly id="{{formField.id}}">
+
+            <button *ngIf="formField.inputType==='PopTart'" type="button" mat-button matSuffix mat-icon-button (click)="openPopTart()">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+                        
+            <input class="poptart" *ngSwitchCase="'SearchablePopTart'" matInput [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
+                 [required]="formField.required" (click)="openSearchablePopTart()" 
+                 onfocus="this.blur()" readonly id="{{formField.id}}">
+
+            <button *ngIf="formField.inputType==='SearchablePopTart'" type="button" mat-button matSuffix mat-icon-button (click)="openSearchablePopTart()">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+
+            <input *ngSwitchCase="'AlphanumericPassword'" matInput [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)"
+                type="password" [required]="formField.required" id="{{formField.id}}">
+
+            <mat-select *ngSwitchCase="'ComboBox'" [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)" (selectionChange)="onFormElementChanged(formField)"
+                [required]="formField.required" id="{{formField.id}}">
+                <mat-option *ngFor="let value of values" [value]="value">{{value}}</mat-option>
+            </mat-select>
+
+            <textarea *ngSwitchCase="'TextArea'" [value]="formField.value" [formControlName]="formField.id" [readonly]="formField.disabled" [name]="formField.id" [placeholder]="getPlaceholderText(formField)"
+                matInput matTextareaAutosize matAutosizeMinRows="2" [required]="formField.required" (change)="onFormElementChanged(formField)" id="{{formField.id}}"></textarea>       
+
+            <mat-error>
+                <app-show-errors [control]="formGroup.controls[formField.id]" [additionalValidationMessages]="formField.validationMessages"></app-show-errors>
+            </mat-error>
+        </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="isDateInput() && formField.elementType!='Display'">
+        <app-dynamic-date-form-field *ngIf="formField.hideCalendar" [type]="formField.inputType" [(value)]="formField.value" [placeholder]="getPlaceholderText(formField)" 
+        [hideCalendar]="formField.hideCalendar" [controlName]="formField.id" [hiddenControl]="formField.id+'Hidden'" [keyboardLayout]="keyboardLayout" [form]="formGroup" 
+        [minDate]="formField.minDate" [maxDate]="formField.maxDate"
+        (valueChange)="onFormElementChanged(formField)"></app-dynamic-date-form-field>
+        <app-dynamic-date-form-field *ngIf="!formField.hideCalendar" [type]="formField.inputType" [(value)]="formField.value" [placeholder]="getPlaceholderText(formField)" 
+        [controlName]="formField.id" [hiddenControl]="formField.id+'Hidden'" [keyboardLayout]="keyboardLayout" [form]="formGroup"
+        [minDate]="formField.minDate" [maxDate]="formField.maxDate"
+        (valueChange)="onFormElementChanged(formField)"></app-dynamic-date-form-field>
+        <mat-error>
+            <app-show-errors [control]="formGroup.controls[formField.id]" [additionalValidationMessages]="formField.validationMessages"></app-show-errors>
+        </mat-error>
+    </ng-container>
+
+    <ng-container *ngIf="formField.inputType==='Checkbox'">
+        <mat-checkbox [formControlName]="formField.id" [required]="formField.required" [value]="formField.value" [labelPosition]="formField.labelPosition"
+            (change)="onFormElementChanged(formField)" id="{{formField.id}}">{{formField.label}}</mat-checkbox>
+    </ng-container>
+
+    <ng-container *ngIf="formField.inputType==='Counter'">
+        <app-counter [formGroup]="formGroup" [controlName]="formField.id" [label]="formField.label" 
+        [(value)]="formField.value" [minVal]="formField.minValue" [maxVal]="formField.maxValue" 
+        [required]="formField.required" [readOnly]="formField.disabled" [keyboardLayout]="keyboardLayout" 
+        [iconName]="formField.iconName" 
+        [attrType]="isNumericField() ? 'tel' : 'text'" (valueChange)="onFormElementChanged(formField)"></app-counter>
+        <mat-error>
+            <app-show-errors class="error" [control]="formGroup.controls[controlName]" [additionalValidationMessages]="formField.validationMessages"></app-show-errors>
+        </mat-error>
+    </ng-container>
+
+    <ng-container *ngIf="formField.inputType==='DatePartChooser'">
+        <app-date-part-chooser-field [formGroup]="formGroup" [controlName]="formField.id"
+            [placeholder]="getPlaceholderText(formField)" 
+            [(model)]="formField" [required]="formField.required" [iconName]="formField.iconName" 
+            [formatterName]="formField.formatter || formField.mode || formField.inputType"
+            [modifyAllowed]="!formField.disabled" [deleteAllowed]="!formField.disabled"
+            [hideButtons]="formField.hideButtons" (change)="onFormElementChanged(formField)">
+        </app-date-part-chooser-field>
+    </ng-container>
+
+    <ng-container *ngIf="formField.inputType==='Time'">
+        <app-time-chooser [value]="formField.value" [formGroup]="formGroup" [controlName]="formField.id" [label]="formField.label"
+            [required]="formField.required" [keyboardLayout]="keyboardLayout" [iconName]="formField.iconName" (change)="onFormElementChanged(formField)"></app-time-chooser>
+    </ng-container>
+
+    <ng-container *ngIf="formField.inputType==='Radio'">
+        <mat-radio-group class="form-radio-group" [formControlName]="formField.id"
+            (change)="onRadioElementChanged($event, formField)" id="{{formField.id}}">
+            <mat-label *ngIf="formField.label">{{formField.label}}</mat-label>
+            <mat-radio-button *ngFor="let value of formField.values; let r = index" [value]="value"
+                [checked]="r === formField.selectedIndex">
+                <div *ngFor="let line of value; let i = index" [ngClass]="{'muted-color' : i !== 0}">{{line}}</div>
+            </mat-radio-button>
+        </mat-radio-group>
+    </ng-container>
+
+    <ng-container *ngIf="formField.inputType==='SliderToggle'">
+        <mat-slide-toggle class="form-slider-toggle" [formControlName]="formField.id" [checked]="formField.value"
+            [labelPosition]="formField.labelPosition" color="primary" (change)="onFormElementChanged(formField)" id="{{formField.id}}">
+            {{formField.label}}</mat-slide-toggle>
+    </ng-container>
+
+    <ng-container *ngIf="formField.elementType==='Display'">
+        <mat-form-field style="width:100%" [ngSwitch]="formField.valueDisplayMode">
+            <input *ngSwitchDefault [value]="formField.value" [name]="formField.id" [placeholder]="formField.label" matInput readonly=true>
+            <textarea #displayMTA *ngSwitchCase="'Multiple'" [name]="formField.id" [placeholder]="formField.label" 
+                [attr.tabindex]="formField.tabindex || displayMTA.getAttribute('tabindex')" 
+                matTextareaAutosize matInput readonly=true>{{formField.values.join('\n')}}</textarea>
+        </mat-form-field>
+    </ng-container>
+
+    <ng-container *ngIf="formField.elementType==='Separator'">
+        <mat-divider></mat-divider>
+    </ng-container>
+
+</div>

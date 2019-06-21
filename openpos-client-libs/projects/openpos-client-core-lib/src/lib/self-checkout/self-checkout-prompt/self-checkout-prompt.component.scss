@@ -1,0 +1,37 @@
+.self-checkout-prompt-outer {
+    height: 100%;
+    background-color: inherit;
+}
+
+.self-checkout-prompt-body {
+    padding: 24px 16px;
+    width: 60%;
+    justify-self: center;
+    align-self: center;
+}
+
+.self-checkout-prompt-image {
+    padding: 24px 0px;
+    justify-self: center;
+}
+
+::ng-deep .self-checkout-prompt-body {
+    .mat-form-field {
+        font-size: 36px !important;
+
+        .mat-hint {
+            font-size: 24px !important;
+        }
+    }
+
+    .mat-raised-button {
+        font-size: 24px;
+        line-height: 48px;
+
+        .mat-icon {
+            font-size: 28px;
+            height: 28px;
+            width: 28px;
+        }
+    }
+}

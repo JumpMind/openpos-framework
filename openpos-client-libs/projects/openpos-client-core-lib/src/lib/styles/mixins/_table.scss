@@ -1,0 +1,17 @@
+@mixin openpos-table{
+
+  button.static-table-button.mat-raised-button {
+    margin: 5px;
+  }
+  // controls sizing of radio button column on static-table template
+  mat-cell.mat-cell.mat-column-_selection {
+    width: 30px;
+    flex: 0 0 30px;
+  }
+
+  // controls sizing of radio button column header on static-table template
+  mat-header-cell.mat-header-cell.mat-column-_selection {
+    width: 30px;
+    flex: 0 0 30px;
+  }
+}

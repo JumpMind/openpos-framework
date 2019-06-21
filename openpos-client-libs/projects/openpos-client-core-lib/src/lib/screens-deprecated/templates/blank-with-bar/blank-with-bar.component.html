@@ -1,0 +1,10 @@
+<div fxFlexFill fxLayout="column">
+    <app-statusbar fxFlex="0 0 auto" [data]="statusBar"></app-statusbar>
+    <div fxFlex="1 1 100%" style="overflow-y:auto" fxLayout="column">
+        <app-scan-something fxFlex="0 0 auto" class="mat-elevation-z3" *ngIf="template.template.scan" 
+            [scanSomethingData]="template.template.scan"></app-scan-something>
+        <div fxFlex="1 1 100%">
+            <ng-template appScreen></ng-template>
+        </div>
+    </div>
+</div>

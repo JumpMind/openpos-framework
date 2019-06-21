@@ -1,0 +1,15 @@
+@mixin overflow-list-theme($theme){
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+
+    app-overflow-list {
+        .total {
+            color: map-get($foreground, text);
+            font-weight: bold;
+        }
+    }
+}

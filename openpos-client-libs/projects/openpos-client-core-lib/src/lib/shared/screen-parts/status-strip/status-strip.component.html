@@ -1,0 +1,15 @@
+<div fxLayoutAlign="space-between" class="muted-color text-sm">
+    <div>
+        {{date|localizeddatetime}}
+    </div>
+    <div>
+        <span *ngIf="showRegisterStatus()" 
+        [ngClass]="{'success':screenData.systemStatus.overallSystemStatus === 'Online', 'warn':screenData.systemStatus.overallSystemStatus === 'Offline'}"
+        (click)="onRegisterStatusClick()">
+            {{screenData.systemStatus.overallSystemStatus}}
+        </span>
+        <span *ngIf="screenData.timestampBegin">
+            {{timer|hourminsec}}
+        </span>
+    </div>
+</div>

@@ -1,0 +1,15 @@
+<div fxFlexFill fxLayout="row">
+	<div fxLayout="row" style="padding: 16px;">
+		<div fxLayout="column" fxLayoutGap="16px" class="image-list">
+			<img *ngFor="let imageUrl of screen.imageUrls" src="{{imageUrl}}" (click)="selectImage(imageUrl)" class="side-image">
+		</div>
+		<img src="{{selectedImage}}" class="selected-image">
+	</div>
+	<div fxFlex="1 1 auto" style="padding: 16px;">
+		<div *ngIf="screen.form.name" class="text-md">{{screen.form.name}}</div>
+		<app-dynamic-form-control fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding-top: 6px; padding-bottom: 6px;"
+		 [screenForm]="screen.form" [submitButton]="screen.submitButton"
+		 [alternateSubmitActions]="screen.alternateSubmitActions">
+		</app-dynamic-form-control>
+	</div>
+</div>
