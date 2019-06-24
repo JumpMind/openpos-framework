@@ -103,10 +103,18 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         }
     }
 
-    protected updateTemplateAndScreen(screen?: any): void {
+    protected async updateTemplateAndScreen(screen?: any) {
         if (!screen) {
             screen = new SplashScreen();
         }
+
+        if ( this.dialogService.isDialogOpen ) {
+            // Close any open dialogs
+            await this.dialogService.closeDialog();
+        }
+
+        // Cancel the loading message
+        this.session.cancelLoading();
 
         let trap = false;
         const original = document.activeElement as HTMLElement;
@@ -144,6 +152,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             const componentFactory = this.screenService.resolveScreen(screenToCreate, this.currentTheme);
             this.componentRef = this.viewContainerRef.createComponent(componentFactory,
                 this.viewContainerRef.length, this.viewContainerRef.parentInjector);
+            this.updateTheme(this.currentTheme);
 
             // If we accept an inner screen meaning we are a template, install the screen
             if (this.componentRef.instance.installScreen) {
@@ -178,7 +187,6 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         }
 
         this.updateClasses(screen);
-        this.dialogService.closeDialog(true);
 
         // Output the componentRef and screen to the training-wrapper
         this.componentEmitter.emit({ componentRef: this.componentRef, screen });
@@ -190,10 +198,12 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
         this.overlayContainer.getContainerElement().classList.remove('default-theme');
         this.overlayContainer.getContainerElement().classList.add(theme);
-        const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
-        this.renderer.removeClass(parent, this.currentTheme);
-        this.renderer.removeClass(parent, 'default-theme');
-        this.renderer.addClass(parent, theme);
+        if ( !!this.componentRef ) {
+            const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
+            this.renderer.removeClass(parent, this.currentTheme);
+            this.renderer.removeClass(parent, 'default-theme');
+            this.renderer.addClass(parent, theme);
+        }
         this.currentTheme = theme;
     }
 

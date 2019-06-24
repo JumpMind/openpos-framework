@@ -85,39 +85,18 @@ export class DialogService {
         }
     }
 
-    private isDialogRefOpen(): boolean {
-        const dialogs = this.dialog.openDialogs;
-        for (let index = 0; index < dialogs.length; index++) {
-            if (dialogs[index] === this.dialogRef) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     // Make this async so we can await it
-    public async closeDialog(cancelLoading: boolean) {
+    public async closeDialog() {
         if (this.dialogRef) {
             this.log.info('[DialogService] closing dialog ref');
-            if (cancelLoading) {
-                if (this.isDialogRefOpen()) {
-                    this.dialogRef.afterClosed().subscribe(result => {
-                        this.session.cancelLoading();
-                    });
-                } else {
-                    this.log.info('dialogRef was not null, but the dialog also was not open');
-                    this.session.cancelLoading();
-                }
-            }
+
             const loacalDialogRef = this.dialogRef;
             this.dialogRef = null;
             loacalDialogRef.close();
-            // Wait for the dialog to fully close before moving on
-            await loacalDialogRef.afterClosed().toPromise();
 
             this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogClosing));
-        } else if (cancelLoading) {
-            this.session.cancelLoading();
+            // Wait for the dialog to fully close before moving on
+            await loacalDialogRef.afterClosed().toPromise();
         }
     }
 
@@ -173,7 +152,7 @@ export class DialogService {
 
                 // We need to make sure to block here before creating the new dialog to make sure the old one
                 // is fully closed.
-                await this.closeDialog(false);
+                await this.closeDialog();
 
                 if (!this.dialogRef || !this.dialogRef.componentInstance) {
                     this.log.info('[DialogService] Dialog \'' + dialog.screenType + '\' opening...');
