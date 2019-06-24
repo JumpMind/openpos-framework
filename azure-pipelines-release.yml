@@ -1,0 +1,40 @@
+# Gradle
+# Build your Java project and run tests with Gradle using a Gradle wrapper script.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/java
+
+name: $(BuildID)
+  
+trigger:
+  batch: true
+  branches:
+    include:
+    - feature/releaseprocess
+
+pool:
+  vmImage: 'Ubuntu-16.04'
+
+variables:
+  - group: maven
+  - name: BUILD_NUMBER 
+    value: '$(Build.BuildNumber)'
+  - name: BUILD_NAME 
+    value: '$(Build.DefinitionName)'
+
+steps:
+- checkout: self
+  persistCredentials: true
+- script: mkdir ~/.ssh
+- script: ssh-keyscan -p $(deployPort) -H $(deployServer) >> ~/.ssh/known_hosts
+- task: Gradle@2
+  inputs:
+    workingDirectory: 'openpos-assemble'
+    options: '-PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranch) -PdeployUser=$(deployUser) -PdeployPassword=$(deployPassword) -PdeployUploadUrl=$(deployUploadUrl) -PpersonalAccessToken=$(personalAccessToken) -PreleaseBuildEnabled=true'
+    gradleWrapperFile: 'openpos-assemble/gradlew'
+    gradleOptions: '-Xmx3072m'
+    javaHomeOption: 'JDKVersion'
+    jdkVersionOption: '1.11'
+    jdkArchitectureOption: 'x64'
+    publishJUnitResults: true
+    testResultsFiles: '**/TEST-*.xml'
+    tasks: 'release'
