@@ -149,10 +149,12 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
             Class<?> clazz,
             T message,
             Map<String, Object> messageContext) {
-        for (IMessagePropertyStrategy<T> s : this.getMessagePropertyStrategies()) {
-            property = s.doStrategy(appId, deviceId, property, clazz, message, messageContext);
+        List<IMessagePropertyStrategy<T>> strategies = this.getMessagePropertyStrategies();
+        if (strategies != null) {
+            for (IMessagePropertyStrategy<T> s : strategies) {
+                property = s.doStrategy(appId, deviceId, property, clazz, message, messageContext);
+            }
         }
-
         return property;
     }
 
