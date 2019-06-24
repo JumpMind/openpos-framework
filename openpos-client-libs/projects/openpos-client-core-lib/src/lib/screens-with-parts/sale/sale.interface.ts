@@ -9,8 +9,7 @@ export interface SaleInterface extends IAbstractScreen {
     customerName: string;
     noCustomerText: string;
     loyaltyButton: IActionItem;
-    postalCode: string;
     locationEnabled: boolean;
-    locationButton: IActionItem;
+    locationOverridePrompt: string;
     checkoutButton: IActionItem;
 }

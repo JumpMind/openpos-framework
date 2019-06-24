@@ -28,9 +28,8 @@ public class SaleUIMessage extends UIMessage {
     private String customerName;
     private String noCustomerText;
     private ActionItem loyaltyButton;
-    private String postalCode;
     private boolean locationEnabled;
-    private ActionItem locationButton;
+    private String locationOverridePrompt;
     private ActionItem promoButton;
     private ActionItem checkoutButton;
 
@@ -94,14 +93,6 @@ public class SaleUIMessage extends UIMessage {
         this.loyaltyButton = loyaltyButton;
     }
 
-    public String getPostalCode() {
-        return postalCode;
-    }
-
-    public void setPostalCode(String postalCode) {
-        this.postalCode = postalCode;
-    }
-
     public boolean isLocationEnabled() {
         return locationEnabled;
     }
@@ -110,12 +101,12 @@ public class SaleUIMessage extends UIMessage {
         this.locationEnabled = locationEnabled;
     }
 
-    public ActionItem getLocationButton() {
-        return locationButton;
+    public String getLocationOverridePrompt() {
+        return locationOverridePrompt;
     }
 
-    public void setLocationButton(ActionItem locationButton) {
-        this.locationButton = locationButton;
+    public void setLocationOverridePrompt(String locationOverridePrompt) {
+        this.locationOverridePrompt = locationOverridePrompt;
     }
 
     public ActionItem getPromoButton() {
