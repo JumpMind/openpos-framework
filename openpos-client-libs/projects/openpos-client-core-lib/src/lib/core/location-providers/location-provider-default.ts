@@ -41,16 +41,16 @@ export class LocationProviderDefault implements ILocationProvider {
                     this.reverseGeocode(Configuration.googleApiKey, latlong)
                         .then((response) => {
                             const address = response.results[0].address_components;
-                            zipCode = address[address.length - 1].long_name;
-                            countryName = address[address.length - 2].long_name;
-                            this.$locationData.next({
-                                type: 'default',
-                                postalCode: zipCode,
-                                country: countryName
-                            } as ILocationData);
+                            zipCode = address[7].long_name;
+                            countryName = address[6].long_name;
                         })
                         .catch((error) => console.log(error));
                 }
+                this.$locationData.next({
+                    type: 'default',
+                    postalCode: zipCode,
+                    country: countryName
+                } as ILocationData);
             });
         }
         return this.$locationData;
