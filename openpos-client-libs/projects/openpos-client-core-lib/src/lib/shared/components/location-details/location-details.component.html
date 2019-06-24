@@ -1,5 +1,5 @@
 <button mat-button color="accent" style="text-align: left" (click)="onClick()"
-    disableRipple="!locationButton" [ngClass]="{'customer-read-only': !locationButton}" >
+    disableRipple="!hasOverridePrompt()" [ngClass]="{'customer-read-only': !hasOverridePrompt()}">
     <ng-container *ngIf="postalCode">
         <mat-icon>location_on</mat-icon>&nbsp;
         <span class="text-sm">{{postalCode}}</span>
