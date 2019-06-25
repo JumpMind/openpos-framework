@@ -22,6 +22,7 @@ task generateSourceArtifact(type: Copy) {
     from('../') {
         exclude '**/target', '**/build', '**/bin', '**/src/test/java', 'openpos.code-workspace',
                 'openpos-client-seed','openpos-cordova', 'openpos-test-module', 'openpos-cordova-log-plugin',
+                'openpos-client-libs',
                 'node', 'azure-pipelines*.yml', '**/*.iml', '**/.project', '**/.classpath', '**/.gitignore', 
                 '**/.idea', '**/.settings', '**/.gradle'
     }
