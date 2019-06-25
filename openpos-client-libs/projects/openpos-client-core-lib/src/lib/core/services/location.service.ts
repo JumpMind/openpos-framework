@@ -41,7 +41,7 @@ export class LocationService implements OnDestroy {
                         this.$data.next(locationData);
                         this.previousLocationData = locationData;
                         if (locationData && locationData.postalCode && locationData.country) {
-                            sessionService.onAction('LocationChanged', locationData);
+                            sessionService.onValueChange('LocationChanged', locationData);
                         }
                     }
                 });

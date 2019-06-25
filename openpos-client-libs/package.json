@@ -9,7 +9,7 @@
     "test-dev": "ng test --karmaConfig=projects/openpos-client-core-lib/karma.conf.dev.js openpos-client-core-lib",
     "lint": "ng lint",
     "e2e": "ng e2e",
-    "bundle-scss": "scss-bundle -c projects/openpos-client-core-lib/scss-bundle.config.json",
+    "scss-bundle": "scss-bundle -c projects/openpos-client-core-lib/scss-bundle.config.json",
     "build-openpos-lib": "ng build openpos-client-core-lib && npm run bundle-lib-scss",
     "watch-openpos-lib": "ng build --watch openpos-client-core-lib",
     "watch-scss": "scss-bundle -c projects/openpos-client-core-lib/scss-bundle.config.json --watch projects/openpos-client-core-lib/src",

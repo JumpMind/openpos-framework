@@ -17,7 +17,6 @@ public class LocationChangedGlobalActionHandler {
     public void handleAction(Action action) {
         LocationData locationData = Action.convertActionData(action.getData(), LocationData.class);
         clientLocationService.setLocationData(locationData);
-        stateManager.refreshScreen();
     }
 
 }
