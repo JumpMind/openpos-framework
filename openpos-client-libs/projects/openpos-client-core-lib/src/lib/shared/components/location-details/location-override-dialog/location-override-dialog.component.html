@@ -1,0 +1,37 @@
+<div fxFlexFill fxLayout="column">
+    <mat-card-title gdAreas="header backbutton" gdColumns="1fr auto" gdAlignColumns="center center">
+        <div gdArea="header">
+            <span>{{overridePrompt}}</span>
+        </div>
+        <app-icon-button 
+            class="back-button" 
+            gdArea="backbutton" 
+            (buttonClick)="onClose()"
+            [iconName]="'close'">
+        </app-icon-button>
+    </mat-card-title>
+    <mat-dialog-content fxLayout="column" fxFlex="100%" [formGroup]="overrideForm">
+        <mat-slide-toggle [checked]="enableOverride" (change)="updateOverride()">
+            Enable Location Override
+        </mat-slide-toggle>
+        <mat-form-field *ngIf="enableOverride">
+            <input matInput cdkFocusInitial [formatterName]="'postalcode'"
+                [formControlName]="'postalCode'"
+                [readonly]="false" [attr.type]="'tel'"
+                autoSelectOnFocus>
+            <mat-placeholder>Postal Code</mat-placeholder>
+        </mat-form-field>
+        <mat-form-field *ngIf="enableOverride">
+            <mat-select formControlName="country" placeholder="Select Country">
+                <mat-option *ngFor="let country of availableCountries" [value]="country">
+                    {{country}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </mat-dialog-content>
+    <mat-dialog-actions fxLayoutAlign="end">
+        <button mat-raised-button (click)="onEnter()" [disabled]="enableOverride && !areFieldsSet()" color="primary" cdkFocusInitial>
+            Continue
+        </button>
+    </mat-dialog-actions>
+</div>

@@ -106,6 +106,7 @@ export * from './lib/core/services/startup.service';
 export * from './lib/core/services/toast.service';
 export * from './lib/core/services/training-overlay.service';
 export * from './lib/core/services/validators.service';
+export * from './lib/core/services/location.service';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';

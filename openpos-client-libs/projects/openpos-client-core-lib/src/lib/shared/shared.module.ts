@@ -116,6 +116,8 @@ import { LoaderComponent } from './components/loader/loader.component';
 import { DevMenuComponent } from './components/dev-menu/dev-menu.component';
 import { RouterModule } from '@angular/router';
 import { DynamicScreenComponent } from './components/dynamic-screen/dynamic-screen.component';
+import { LocationDetailsComponent } from './components/location-details/location-details.component';
+import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -190,6 +192,8 @@ const components = [
     ToggleGroupComponent,
     ToggleButtonComponent,
     LanguageSelectorComponent,
+    LocationDetailsComponent,
+    LocationOverrideDialogComponent
 ];
 
 const directives = [
@@ -244,7 +248,8 @@ const pipes = [
         ScanSomethingComponent,
         PopTartComponent,
         SearchablePopTartComponent,
-        DatePartChooserDialogComponent
+        DatePartChooserDialogComponent,
+        LocationOverrideDialogComponent
     ],
     imports: [
         FormsModule,

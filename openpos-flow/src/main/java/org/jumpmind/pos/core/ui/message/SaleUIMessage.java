@@ -28,6 +28,8 @@ public class SaleUIMessage extends UIMessage {
     private String customerName;
     private String noCustomerText;
     private ActionItem loyaltyButton;
+    private boolean locationEnabled;
+    private String locationOverridePrompt;
     private ActionItem promoButton;
     private ActionItem checkoutButton;
 
@@ -89,6 +91,22 @@ public class SaleUIMessage extends UIMessage {
 
     public void setLoyaltyButton(ActionItem loyaltyButton) {
         this.loyaltyButton = loyaltyButton;
+    }
+
+    public boolean isLocationEnabled() {
+        return locationEnabled;
+    }
+
+    public void setLocationEnabled(boolean locationEnabled) {
+        this.locationEnabled = locationEnabled;
+    }
+
+    public String getLocationOverridePrompt() {
+        return locationOverridePrompt;
+    }
+
+    public void setLocationOverridePrompt(String locationOverridePrompt) {
+        this.locationOverridePrompt = locationOverridePrompt;
     }
 
     public ActionItem getPromoButton() {

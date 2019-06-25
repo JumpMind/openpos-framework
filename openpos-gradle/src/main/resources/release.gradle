@@ -89,13 +89,21 @@ task prerelease() {
     }
 }
 
+task npm_publish(type: NpmTask) {
+    dependsOn githubRelease
+    args = [
+            'publish',
+            packageJsonDir
+    ]
+}
+
 task release() {
     doFirst {
         if (!releaseBuildEnabled.toBoolean()) {
             throw new GradleException('You need to specify -PreleaseBuildEnabled=true when running the release task')
         }
     }
-    dependsOn githubRelease
+    dependsOn npm_publish
     doLast {
         def versionParts = version.split('\\.')
         def lastPart = versionParts[versionParts.length-1] as int

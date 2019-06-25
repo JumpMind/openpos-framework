@@ -1,0 +1,89 @@
+
+plugins {
+    id 'org.hidetake.ssh' version '2.10.1'
+}
+
+apply plugin: "com.moowork.node"
+
+remotes {
+    maven {
+        host = 'maven.jumpmind.com'
+        port = 2222
+        user = deployUser
+        password = deployPassword
+    }
+}
+
+node {
+    version = '10.5.0'
+    npmVersion = '6.1.0'
+    download = downloadNode.toBoolean()
+    println """
+      **************************************************************************************************
+        Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties 
+        if you want to use downloaded versions of node and npm
+      **************************************************************************************************
+      """
+    workDir = file("${projectDir}/node")
+    nodeModulesDir = file("./")
+}
+
+task npm_install(type: NpmTask){
+    args = [
+            'install'
+    ]
+}
+
+task ng_test(type: NpmTask){
+    dependsOn npm_install
+    args = [
+            'run', 'ng', 'test', 'openpos-client-core-lib'
+    ]
+}
+
+task ng_build_angular(type: NpmTask){
+    dependsOn npm_install
+    args = [
+            'run',
+            'ng', 'build', 'openpos-client-core-lib'
+    ]
+}
+
+task bundle_sass(type: NpmTask){
+    args = [
+            'run',
+            'scss-bundle', '-c', 'projects/openpos-client-core-lib/scss-bundle.config.json'
+    ]
+}
+
+task npm_pack(type: NpmTask){
+    args = [
+            'pack',
+            '@jumpmind/openpos-client-core-lib'
+    ]
+}
+
+task processResources {}
+
+task test {
+    dependsOn ng_test
+}
+
+task build {
+    dependsOn ng_build_angular
+    dependsOn bundle_sass
+}
+
+task deploy {
+    dependsOn npm_pack
+    doLast {
+        ssh.run{
+            session(remotes.maven) {
+                put from: file('jumpmind-openpos-client-core-lib-*.tgz'), into: 'www/npm/test/'
+                put from: 'jumpmind-openpos-client-core-lib-*.tgz', into: 'www/npm/test/jumpmind-openpos-client-core-lib-snapshot.tgz'
+            }
+
+        }
+
+    }
+}
