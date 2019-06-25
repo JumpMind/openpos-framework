@@ -1,5 +1,8 @@
 package org.jumpmind.pos.core.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.jumpmind.pos.util.DefaultObjectMapper;
+
 public class LocationData {
     private String type;
     private String postalCode;
@@ -27,5 +30,14 @@ public class LocationData {
 
     public void setCountry(String country) {
         this.country = country;
+    }
+
+    @Override
+    public String toString() {
+        try {
+            return DefaultObjectMapper.defaultObjectMapper().writeValueAsString(this);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
