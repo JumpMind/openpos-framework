@@ -59,12 +59,6 @@ export class LocationProviderDefault implements ILocationProvider {
                             } as ILocationData);
                         })
                         .catch((error) => console.log(error));
-                } else {
-                    this.$locationData.next({
-                        type: 'default',
-                        postalCode: zipCode,
-                        country: countryName
-                    } as ILocationData);
                 }
             });
         }
