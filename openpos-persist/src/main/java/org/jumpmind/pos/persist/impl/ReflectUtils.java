@@ -7,11 +7,9 @@ import org.jumpmind.pos.persist.PersistException;
 
 public class ReflectUtils {
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
-    public static void setProperty(Object target, String propertyName, Object value) {
-        value = messageNulls(target, propertyName, value);
+    public static void setProperty(Field field, Object target, Object value) {
+        value = messageNulls(field, value);
         try {
-            Field field = getAccessibleField(target, propertyName);
             if (field.getType().isEnum() && value != null) {
                 field.set(target, Enum.valueOf((Class<Enum>) field.getType(), value.toString()));
             } else {
@@ -20,7 +18,7 @@ public class ReflectUtils {
                     return;
                 } catch (Exception ex) {
                     try {
-                        BeanUtils.copyProperty(target, propertyName, value);
+                        BeanUtils.copyProperty(target, field.getName(), value);
                         return;
                     } catch (Exception ex2) {
                         throw ex;
@@ -28,16 +26,21 @@ public class ReflectUtils {
                 }
             }
         } catch (Exception ex) {
-            throw new PersistException(String.format("Failed to set field '%s' on target '%s' to value '%s'", propertyName, target, value),
+            throw new PersistException(String.format("Failed to set field '%s' on target '%s' to value '%s'", field.getName(), target, value),
                     ex);
         }
     }
 
-    private static Object messageNulls(Object target, String propertyName, Object value) {
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static void setProperty(Object target, String propertyName, Object value) {
+        Field field = getAccessibleField(target, propertyName);
+        setProperty(field, target, value);
+    }
+
+    private static Object messageNulls(Field field, Object value) {
         if (value != null) {
             return value;
         }
-        Field field = getAccessibleField(target, propertyName);
         if (field != null && field.getType().isPrimitive()) {
             return 0;
         }

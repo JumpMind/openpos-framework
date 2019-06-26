@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import { IScreen } from '../../core/components/dynamic-screen/screen.interface';
 import { AbstractTemplate } from '../../core/components/abstract-template';
 import { Logger } from '../../core/services/logger.service';
 import { ScreenService } from '../../core/services/screen.service';
@@ -24,6 +23,7 @@ import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
+import { IScreen } from '../components/dynamic-screen/screen.interface';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })

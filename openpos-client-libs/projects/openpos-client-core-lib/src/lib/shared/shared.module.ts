@@ -111,6 +111,11 @@ import { ToggleButtonComponent } from './components/toggle-button/toggle-button.
 import { ChooseOptionsPartComponent } from './screen-parts/choose-options-part/choose-options-part.component';
 import { WebcamViewerComponent } from './screen-parts/webcam-viewer/webcam-viewer.component';
 import { LanguageSelectorComponent } from './components/language-selector/language-selector.component';
+import { OpenposAppComponent } from './components/openpos-app/openpos-app.component';
+import { LoaderComponent } from './components/loader/loader.component';
+import { DevMenuComponent } from './components/dev-menu/dev-menu.component';
+import { RouterModule } from '@angular/router';
+import { DynamicScreenComponent } from './components/dynamic-screen/dynamic-screen.component';
 import { LocationDetailsComponent } from './components/location-details/location-details.component';
 import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
 
@@ -131,6 +136,10 @@ const screenParts = [
 ];
 
 const components = [
+    DynamicScreenComponent,
+    OpenposAppComponent,
+    LoaderComponent,
+    DevMenuComponent,
     PromptInputComponent,
     IconComponent,
     ShowErrorsComponent,
@@ -245,6 +254,7 @@ const pipes = [
     imports: [
         FormsModule,
         ReactiveFormsModule,
+        RouterModule,
         HttpModule,
         HttpClientModule,
         FlexLayoutModule,

@@ -1,4 +1,4 @@
-import { IScreen } from './dynamic-screen/screen.interface';
+import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { AppInjector } from '../app-injector';
 import { ViewChild, ComponentRef, ComponentFactory } from '@angular/core';
 import { ScreenDirective } from '../../shared/directives/screen.directive';

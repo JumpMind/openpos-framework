@@ -6,7 +6,7 @@ plugins {
 apply plugin: "com.moowork.node"
 
 remotes {
-    maven {
+    mavenServer {
         host = 'maven.jumpmind.com'
         port = 2222
         user = deployUser
@@ -50,7 +50,7 @@ task ng_build_angular(type: NpmTask){
 }
 
 task bundle_sass(type: NpmTask){
-    dependsOn npm_install
+    dependsOn ng_build_angular
     args = [
             'run',
             'scss-bundle'
@@ -66,27 +66,36 @@ task test {
 }
 
 task build {
-    dependsOn ng_build_angular
     dependsOn bundle_sass
 }
 
 task npm_pack(type: NpmTask){
     dependsOn build
+    workingDir =  file('dist/openpos-client-core-lib')
     args = [
-            'pack',
-            '@jumpmind/openpos-client-core-lib'
+            'pack'
     ]
 }
 
 task deploy {
     dependsOn npm_pack
     doLast {
-        ssh.run{
-            session(remotes.maven) {
-                put from: './', into: 'www/npm', filter: { it.name =~ /\.tgz$/ }
+        copy {
+            from ('.') {
+                include '**/jumpmind-openpos-client-core-lib-*.tgz'
             }
-
+            into ('.')
+            rename { String fileName ->
+                'jumpmind-openpos-client-core-lib-snapshot.tgz'
+            }
         }
-
+        ssh.settings {
+            fileTransfer = 'scp'
+        }
+        ssh.run {
+            session(remotes.mavenServer) {
+                put from:fileTree('.').include('**/jumpmind-openpos-client-core-lib-*.tgz').files, into:'www/npm'
+            }
+        }
     }
 }

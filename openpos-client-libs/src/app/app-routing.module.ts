@@ -5,7 +5,11 @@ const routes: Routes = [
     {
         path: 'componentdemo',
         loadChildren: './component-demo/component-demo.module#ComponentDemoModule'
-      },
+    },
+    {
+        path: 'tests',
+        loadChildren: './tests/tests.module#TestModule'
+    }
 ];
 
 @NgModule({

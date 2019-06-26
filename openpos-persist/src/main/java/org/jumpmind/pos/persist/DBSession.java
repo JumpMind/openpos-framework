@@ -31,13 +31,7 @@ import org.jumpmind.db.platform.IDatabasePlatform;
 import org.jumpmind.db.sql.DmlStatement;
 import org.jumpmind.db.sql.DmlStatement.DmlType;
 import org.jumpmind.db.sql.Row;
-import org.jumpmind.pos.persist.impl.DatabaseSchema;
-import org.jumpmind.pos.persist.impl.DefaultMapper;
-import org.jumpmind.pos.persist.impl.DmlTemplate;
-import org.jumpmind.pos.persist.impl.ModelClassMetaData;
-import org.jumpmind.pos.persist.impl.ModelWrapper;
-import org.jumpmind.pos.persist.impl.QueryTemplate;
-import org.jumpmind.pos.persist.impl.ReflectUtils;
+import org.jumpmind.pos.persist.impl.*;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 import org.jumpmind.pos.persist.model.SearchCriteria;
 import org.jumpmind.pos.persist.model.TagHelper;
@@ -427,7 +421,7 @@ public class DBSession {
 
     @SuppressWarnings("unchecked")
     protected <T> T mapModel(Class<T> resultClass, Row row) throws Exception {
-        List<ModelClassMetaData> modelMetaData = databaseSchema.getModelMetaData(resultClass);
+        ModelMetaData modelMetaData = databaseSchema.getModelMetaData(resultClass);
 
         T object = resultClass.newInstance();
         ModelWrapper model = new ModelWrapper((AbstractModel) object, modelMetaData);

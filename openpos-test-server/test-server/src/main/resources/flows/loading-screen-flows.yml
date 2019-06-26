@@ -1,0 +1,4 @@
+---
+LoadingScreenFlow:
+  - HomeState:
+      Next: HomeState

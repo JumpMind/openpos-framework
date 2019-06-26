@@ -114,7 +114,11 @@ task release() {
         }
         version = version + lastPart + '-SNAPSHOT'
         updateGradlePropertiesVersion(version)
+        tasks.setPackageJsonVersion.args[2] = version
+        tasks.setPackageJsonVersion.execute()
         gitCommit 'gradle.properties'
+        gitCommit packageJsonDir + '/package.json'
+        gitCommit packageJsonDir + '/package-lock.json'
     }
 }
 

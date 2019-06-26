@@ -1,0 +1,16 @@
+include 'openpos-server-core'
+include 'openpos-flow'
+include 'openpos-wrapper'
+include 'openpos-util'
+
+rootProject.children.each { project ->
+    project.projectDir = new File("../../", project.projectDir.getName())
+}
+
+includeFlat 'test-server'
+
+rootProject.children.each { project ->
+    if (!project.projectDir.exists()) {
+        throw new GradleException("Could not find the project ** ${project.projectDir.getName()} **.  Are you sure you have all the projects checked out and have openposDir set properly? (openposDir=${openposDir}), Checked in ${project.projectDir}");
+    }
+}

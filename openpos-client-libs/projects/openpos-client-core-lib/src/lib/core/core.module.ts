@@ -1,4 +1,3 @@
-import { DevMenuComponent } from './components/dev-menu/dev-menu.component';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './components/startup/personalization-startup-task';
 import { STARTUP_TASKS, STARTUP_COMPONENT, STARTUP_FAILED_COMPONENT } from './services/startup.service';
@@ -20,7 +19,7 @@ import { DialogService } from './services/dialog.service';
 import { ErrorHandlerService } from './services/errorhandler.service';
 import { StompRService } from '@stomp/ng2-stompjs';
 import { SubscribeToSessionTask } from './components/startup/subscribe-to-session-task';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Logger } from './services/logger.service';
 import { StartupFailedComponent } from './components/startup/startup-failed.component';
 import { MatDialog } from '@angular/material';
@@ -32,9 +31,6 @@ import { KeyPressProvider } from '../shared/providers/keypress.provider';
 import { fromEvent, Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { PersonalizationComponent } from './components/personalization/personalization.component';
-import { OpenposAppComponent } from './components/openpos-app/openpos-app.component';
-import { DynamicScreenComponent } from './components/dynamic-screen/dynamic-screen.component';
-import { LoaderComponent } from './components/loader/loader.component';
 import { StatusBarStatusControlComponent } from '../shared/components/status-bar-status-control/status-bar-status-control.component';
 import { STATUS_BAR_STATUS_CONTROL_COMPONENT } from '../shared/components/status-bar/status-bar.component';
 import { ToastService } from './services/toast.service';
@@ -71,11 +67,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         SplashScreenComponent
     ],
     declarations: [
-        OpenposAppComponent,
-        DynamicScreenComponent,
-        DevMenuComponent,
         DialogContentComponent,
-        LoaderComponent,
         ConfirmationDialogComponent,
         PersonalizationComponent,
         StartupComponent,
@@ -85,14 +77,11 @@ registerLocaleData(locale_frCA, 'fr-CA');
     ],
     imports: [
         SharedModule,
-        RouterModule,
         BrowserModule,
         BrowserAnimationsModule,
         NgxElectronModule
     ],
     exports: [
-        LoaderComponent,
-        OpenposAppComponent,
         BrowserModule,
         BrowserAnimationsModule
     ],

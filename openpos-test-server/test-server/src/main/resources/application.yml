@@ -1,0 +1,39 @@
+---
+server:
+  port: 6140
+openpos:
+  ui:
+    personalization:
+      devicePattern: '\d{5}-\d{3}'
+      parameters:
+        -
+          property: 'brandId'
+          label: 'Brand ID'
+          defaultValue: 'default'
+        -
+          property: 'deviceType'
+          label: 'Device Type'
+          defaultValue: 'desktop'
+
+    content:
+      providers: fileSystemContentProvider, classPathContentProvider
+      file:
+        providerProperties: brandId
+        supportedFileTypes: .svg, .png, .jpg, .jpeg, .gif
+        contentVersion: 0.0.1
+      file-system:
+        providerProperties: brandId
+        baseContentPath: 'content/'
+
+  clientConfiguration:
+    propertiesForTags:
+      - brandId
+      - deviceType
+    clientConfigSets:
+      -
+        tags: default
+        configsForTags:
+          uiConfig:
+            enableKeybinds: true
+
+spring.main.allow-bean-definition-overriding: true

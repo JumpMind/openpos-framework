@@ -2,7 +2,7 @@ import { Logger } from './../../services/logger.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { IScreen } from '../dynamic-screen/screen.interface';
+import { IScreen } from '../../../shared/components/dynamic-screen/screen.interface';
 import { PersonalizationService } from '../../services/personalization.service';
 import { PersonalizationResponse } from '../../interfaces/personalization-response.interface';
 import { OverlayContainer } from '@angular/cdk/overlay';

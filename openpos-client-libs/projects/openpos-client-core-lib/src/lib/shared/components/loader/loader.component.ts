@@ -1,10 +1,10 @@
 import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { LoaderState } from './loader-state';
-import { SessionService } from '../../services/session.service';
-import { ILoading } from '../../interfaces/loading.interface';
-import { Logger } from './../../services/logger.service';
-import { IMessageHandler } from './../../interfaces/message-handler.interface';
-import { ConfigurationService } from '../../services/configuration.service';
+import { SessionService } from '../../../core/services/session.service';
+import { ILoading } from '../../../core/interfaces/loading.interface';
+import { Logger } from '../../../core/services/logger.service';
+import { IMessageHandler } from '../../../core/interfaces/message-handler.interface';
+import { ConfigurationService } from '../../../core/services/configuration.service';
 import { Observable } from 'rxjs';
 
 @Component({
