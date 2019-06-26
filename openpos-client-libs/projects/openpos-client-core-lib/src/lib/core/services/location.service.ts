@@ -38,20 +38,18 @@ export class LocationService implements OnDestroy {
                 this.subscription = provider.getCurrentLocation(message.coordinateBuffer ? message.coordinateBuffer : 0)
                 .subscribe((locationData: ILocationData) => {
                     if (!this.manualOverride) {
-                        if (!this.previousLocationData || this.isPreviousLocationDataDifferent(locationData)) {
-                            sessionService.onValueChange('LocationChanged', locationData);
-                        }
+                        // if (!this.previousLocationData || (this.previousLocationData && locationData
+                        //     && (this.previousLocationData.postalCode !== locationData.postalCode
+                        //     || this.previousLocationData.country !== locationData.country))) {
+                        //     sessionService.onValueChange('LocationChanged', locationData);
+                        // }
+                        sessionService.onValueChange('LocationChanged', locationData);
                         this.$data.next(locationData);
                         this.previousLocationData = locationData;
                     }
                 });
             }
         });
-    }
-
-    isPreviousLocationDataDifferent(locationData: ILocationData): boolean {
-        return this.previousLocationData && locationData && (this.previousLocationData.postalCode !== locationData.postalCode
-                || this.previousLocationData.country !== locationData.country);
     }
 
     hasManualOverride(): boolean {
