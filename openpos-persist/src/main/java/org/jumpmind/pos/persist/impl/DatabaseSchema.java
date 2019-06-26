@@ -368,7 +368,7 @@ public class DatabaseSchema {
     public Map<String, String> getEntityIdColumnsToFields(Class<?> entityClass) {
         @SuppressWarnings({ "rawtypes", "unchecked" })
         Map<String, String> entityIdColumnsToFields = new CaseInsensitiveMap();
-        List<Field> fields = gettEntityIdFields(entityClass);
+        List<Field> fields = getEntityIdFields(entityClass);
         for (Field field : fields) {
             ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
             if (colAnnotation != null) {
@@ -424,7 +424,7 @@ public class DatabaseSchema {
         return entityFieldsToColumns;
     }
 
-    protected List<Field> gettEntityIdFields(Class<?> entityClass) {
+    protected List<Field> getEntityIdFields(Class<?> entityClass) {
         ModelMetaData modelMetaData = classToModelMetaData.get(entityClass);
         ModelClassMetaData meta = modelMetaData != null ? modelMetaData.getModelClassMetaData().get(0) : null;
         return meta != null ? new ArrayList(meta.getEntityIdFields().values()) : Collections.emptyList();
