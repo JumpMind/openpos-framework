@@ -72,7 +72,7 @@ export class LocationService implements OnDestroy {
             this.manualOverride = true;
             this.$data.next(locationData);
             this.previousLocationData = locationData;
-            this.sessionService.onAction('LocationChanged', locationData);
+            this.sessionService.onValueChange('LocationChanged', locationData);
         } else {
             this.manualOverride = false;
         }
