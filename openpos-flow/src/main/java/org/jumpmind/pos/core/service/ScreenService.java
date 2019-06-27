@@ -34,6 +34,7 @@ import org.jumpmind.pos.core.model.IDynamicListField;
 import org.jumpmind.pos.core.model.IFormElement;
 import org.jumpmind.pos.core.screen.IHasForm;
 import org.jumpmind.pos.core.screen.Toast;
+import org.jumpmind.pos.core.ui.CloseDialogMessage;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.util.LogFormatter;
 import org.jumpmind.pos.server.model.Action;
@@ -196,10 +197,7 @@ public class ScreenService implements IScreenService, IActionListener {
                 if (SessionTimer.ACTION_KEEP_ALIVE.equals(action.getName())) {
                     stateManager.keepAlive();
                 } else if ("Refresh".equals(action.getName())) {
-                    UIMessage lastDialog = getLastDialog(appId, deviceId);
-                    logger.info("Received Refresh action from {}", deviceId);
-                    showScreen(appId, deviceId, getLastScreen(appId, deviceId));
-                    showScreen(appId, deviceId, lastDialog);
+                    stateManager.refreshScreen();
                 } else {
 
                     deserializeForm(stateManager.getApplicationState(), action);
@@ -284,7 +282,7 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public void showScreen(String appId, String deviceId, UIMessage screen) {
+    public void showScreen(String appId, String deviceId, UIMessage screen, boolean isRefresh) {
         IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
         if (screen != null && stateManager != null) {
             ApplicationState applicationState = stateManager.getApplicationState();
@@ -312,14 +310,19 @@ public class ScreenService implements IScreenService, IActionListener {
             } else {
                 messageService.sendMessage(appId, deviceId, screen);
             }
-            if (screen.isDialog()) {
+
+            // If we are just refreshing the screens we don't need to update the last state
+            if (screen.isDialog() && !isRefresh) {
                 applicationState.setLastDialog(screen);
                 applicationState.setLastPreInterceptedDialog(preInterceptedScreen);
-            } else if (!screen.getScreenType().equals("NoOp")) {
+            } else if (!screen.getScreenType().equals("NoOp") && !isRefresh) {
                 applicationState.setLastScreen(screen);
                 applicationState.setLastPreInterceptedScreen(preInterceptedScreen);
                 applicationState.setLastDialog(null);
                 applicationState.setLastPreInterceptedDialog(null);
+
+                // If we are not refreshing and we are sending a screen we should close any dialogs
+                messageService.sendMessage( appId, deviceId, new CloseDialogMessage() );
             }
         }
     }

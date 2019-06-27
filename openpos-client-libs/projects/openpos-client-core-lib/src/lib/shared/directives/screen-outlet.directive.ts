@@ -108,11 +108,6 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             screen = new SplashScreen();
         }
 
-        if ( this.dialogService.isDialogOpen ) {
-            // Close any open dialogs
-            await this.dialogService.closeDialog();
-        }
-
         // Cancel the loading message
         this.session.cancelLoading();
 

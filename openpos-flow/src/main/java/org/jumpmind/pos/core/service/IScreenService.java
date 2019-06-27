@@ -6,7 +6,7 @@ import org.jumpmind.pos.core.ui.UIMessage;
 
 public interface IScreenService {
 
-    public void showScreen(String appId, String nodeId, UIMessage screen);
+    public void showScreen(String appId, String nodeId, UIMessage screen, boolean isRefresh);
 
     public void showToast(String appId, String nodeId, Toast toast);
 

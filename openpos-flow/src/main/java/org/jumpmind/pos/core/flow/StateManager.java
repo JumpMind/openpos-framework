@@ -43,6 +43,7 @@ import org.jumpmind.pos.core.flow.config.SubTransition;
 import org.jumpmind.pos.core.screen.Toast;
 import org.jumpmind.pos.core.service.IScreenService;
 import org.jumpmind.pos.core.service.spring.DeviceScope;
+import org.jumpmind.pos.core.ui.CloseDialogMessage;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
@@ -372,11 +373,14 @@ public class StateManager implements IStateManager {
         UIMessage lastScreen = screenService.getLastPreInterceptedScreen(applicationState.getAppId(), applicationState.getDeviceId());
         if (lastScreen != null) {
             lastScreen.put("refreshAlways", true);
-            showScreen(lastScreen);
+            showScreen(lastScreen, true);
         }
         if (lastDialog != null) {
             lastDialog.put("refreshAlways", true);
-            showScreen(lastDialog);
+            showScreen(lastDialog, true);
+        } else {
+            // If we don't have a dialog send a close just to make sure the client state is correct
+            messageService.sendMessage( applicationState.getAppId(), applicationState.getDeviceId(), new CloseDialogMessage());
         }
     }
 
@@ -697,6 +701,10 @@ public class StateManager implements IStateManager {
     @SuppressWarnings("unchecked")
     @Override
     public void showScreen(UIMessage screen) {
+        showScreen(screen, false);
+    }
+
+    private void showScreen(UIMessage screen, boolean isRefresh) {
         keepAlive();
 
         if (applicationState.getCurrentContext() == null) {
@@ -717,8 +725,7 @@ public class StateManager implements IStateManager {
             sessionTimeoutAction = null;
         }
 
-        screenService.showScreen(applicationState.getAppId(), applicationState.getDeviceId(), screen);
-
+        screenService.showScreen(applicationState.getAppId(), applicationState.getDeviceId(), screen, isRefresh);
     }
 
     @Override
