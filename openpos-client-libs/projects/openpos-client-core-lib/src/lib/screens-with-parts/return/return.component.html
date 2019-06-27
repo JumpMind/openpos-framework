@@ -10,6 +10,7 @@
 				[noCustomerText]="screen.noCustomerText" [loyaltyButton]="screen.loyaltyButton">
 			</app-sell-linked-customer>
 		</ng-container>
+		<app-location-details *ngIf="screen.locationEnabled" [locationOverridePrompt]="screen.locationOverridePrompt"></app-location-details>
 		<div fxFlex="0 1 auto" class="sell-screen-logo"></div>
 	</div>
 

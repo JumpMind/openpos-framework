@@ -31,6 +31,8 @@ public class ReturnUIMessage extends UIMessage {
     private DisplayProperty grandTotal;
     private String customerName;
     private String noCustomerText;
+    private boolean locationEnabled;
+    private String locationOverridePrompt;
     private ActionItem checkoutButton;
     private String itemCount;
 
@@ -167,6 +169,22 @@ public class ReturnUIMessage extends UIMessage {
 
     public void setNoCustomerText(String noCustomerText) {
         this.noCustomerText = noCustomerText;
+    }
+
+    public boolean isLocationEnabled() {
+        return locationEnabled;
+    }
+
+    public void setLocationEnabled(boolean locationEnabled) {
+        this.locationEnabled = locationEnabled;
+    }
+
+    public String getLocationOverridePrompt() {
+        return locationOverridePrompt;
+    }
+
+    public void setLocationOverridePrompt(String locationOverridePrompt) {
+        this.locationOverridePrompt = locationOverridePrompt;
     }
 
     public ActionItem getCheckoutButton() {
