@@ -71,9 +71,9 @@ task build {
 
 task npm_pack(type: NpmTask){
     dependsOn build
+    workingDir =  file('dist/openpos-client-core-lib')
     args = [
-            'pack',
-            'dist/openpos-client-core-lib'
+            'pack'
     ]
 }
 
@@ -82,7 +82,7 @@ task deploy {
     doLast {
         copy {
             from ('.') {
-                include 'jumpmind-openpos-client-core-lib-*.tgz'
+                include '**/jumpmind-openpos-client-core-lib-*.tgz'
             }
             into ('.')
             rename { String fileName ->

@@ -30,11 +30,10 @@ import org.jumpmind.pos.util.model.ITypeCode;
 
 public class ModelWrapper {
     private static Logger log = Logger.getLogger(ModelWrapper.class);
-    private static final boolean FORCE_ACCESS = true;
-    
+
     public static final String ENTITY_RETRIEVAL_TIME = "entity.retrieval.time";
     
-    private List<ModelClassMetaData> modelMetaData;
+    private ModelMetaData modelMetaData;
     private AbstractModel model;
     
     private Map<String, Object> systemData;
@@ -44,11 +43,11 @@ public class ModelWrapper {
     private List<Column> primaryKeyColumns;
     
     @SuppressWarnings("unchecked")
-    public ModelWrapper(AbstractModel model, List<ModelClassMetaData> modelMetaData) {
+    public ModelWrapper(AbstractModel model, ModelMetaData modelMetaData) {
         this.model = model;
         this.modelMetaData = modelMetaData;
         
-        Field field = FieldUtils.getField(model.getClass(), "systemInfo", FORCE_ACCESS);
+        Field field = modelMetaData.getSystemInfoField();
         try {
             if (field != null) {
                 systemData = (Map<String, Object>) field.get(model);
@@ -136,7 +135,7 @@ public class ModelWrapper {
         LinkedHashMap<String, Column> fieldsToColumns = new LinkedHashMap<String, Column>();
         PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(resultClass);
         
-        for (ModelClassMetaData classMetaData : modelMetaData) {   
+        for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
             Table table = classMetaData.getTable();
             for (int i = 0; i < propertyDescriptors.length; i++) {
                 String propName = propertyDescriptors[i].getName();
@@ -241,7 +240,8 @@ public class ModelWrapper {
             } else if (ITypeCode.class.isAssignableFrom(field.getType())) {
                 value = ITypeCode.make((Class<ITypeCode>)field.getType(), value != null ? value.toString() : null);
             }
-            ReflectUtils.setProperty(model, fieldName, value);
+
+            ReflectUtils.setProperty(field, model, value);
         } catch (Exception ex) {
             if (ex instanceof PersistException) {
                 throw (PersistException)ex;
@@ -309,7 +309,7 @@ public class ModelWrapper {
     
     public Field getField(String fieldName) {
         Field field = null;
-        for (ModelClassMetaData classMetaData : modelMetaData) {
+        for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
             field = classMetaData.getField(fieldName);
             if (field != null) {
                 break;
@@ -348,18 +348,6 @@ public class ModelWrapper {
                 || name.equals("CREATE_TIME")
                 || name.equals("UPDATE_BY")
                 || name.equals("UPDATE_TIME");
-    }
-
-//    public Table getTable() {
-//        return table;
-//    }
-
-//    public void setTable(Table table) {
-//        this.table = table;
-//    }
-    
-    public List<ModelClassMetaData> getModelMetaData() {
-        return modelMetaData;
     }
 
     public AbstractModel getModel() {

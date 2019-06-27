@@ -2,7 +2,9 @@ package org.jumpmind.pos.persist.impl;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jumpmind.db.model.Table;
 
@@ -10,8 +12,8 @@ public class ModelClassMetaData {
 
     private Table table;
     private Class<?> clazz;
-    private List<Field> entityIdFields = new ArrayList<Field>();
-    private List<Field> entityFields = new ArrayList<Field>();
+    private Map<String, Field> entityIdFields = new HashMap<>();
+    private Map<String, Field> entityFields = new HashMap<>();
     
     public ModelClassMetaData() {
     }
@@ -24,29 +26,15 @@ public class ModelClassMetaData {
         this.table = table;
     }
 
-    public List<Field> getEntityIdFields() {
+    public Map<String, Field> getEntityIdFields() {
         return entityIdFields;
     }
     
     public Field getField(String name) {
-        for (Field field : entityFields) {
-            if (field.getName().equals(name)) {
-                return field;
-            }
-        }
-        
-        return null;
+        return entityFields.get(name);
     }
 
-    public void setEntityIdFields(List<Field> entityIdFields) {
-        this.entityIdFields = entityIdFields;
-    }
-    
-    public void setEntityFields(List<Field> entityFields) {
-        this.entityFields = entityFields;
-    }
-    
-    public List<Field> getEntityFields() {
+    public Map<String, Field> getEntityFields() {
         return entityFields;
     }
     
@@ -58,4 +46,11 @@ public class ModelClassMetaData {
         this.clazz = clazz;
     }
 
+    public void addEntityIdField(String name, Field field) {
+        entityIdFields.put(name, field);
+    }
+
+    public void addEntityField(String name, Field field) {
+        entityFields.put(name, field);
+    }
 }

@@ -37,7 +37,9 @@ export class ReturnTransDetailsDialogComponent extends PosScreen<ReturnTransDeta
     }
 
     public doMenuItemAction(menuItem: IActionItem) {
-        this.session.onAction(menuItem, this.index);
+        if (this.index > -1) {
+            this.session.onAction(menuItem, this.index);
+        }
     }
 
     public keybindsEnabled(menuItem: IActionItem): boolean {
