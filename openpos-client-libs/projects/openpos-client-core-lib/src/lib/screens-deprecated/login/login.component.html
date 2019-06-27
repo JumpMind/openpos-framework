@@ -27,7 +27,7 @@
         </mat-card-actions>
         <ng-template #actionsElseBlock>
             <mat-card-actions>
-                <button mat-raised-button (click)="session.onAction(cancelButton.buttonAction, form)">{{cancelButton.label}}</button>
+                <button mat-raised-button (click)="session.onAction(cancelButton.action, form)">{{cancelButton.label}}</button>
                 <button mat-raised-button [color]="'primary'" (click)="onOkButton()" (keyup.enter)="onOkButton()">{{okButton.label}}</button>
             </mat-card-actions>
         </ng-template>

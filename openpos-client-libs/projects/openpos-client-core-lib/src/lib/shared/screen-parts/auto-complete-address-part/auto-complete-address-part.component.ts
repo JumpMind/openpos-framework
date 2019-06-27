@@ -187,6 +187,6 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
     }
 
     onButtonClick(formElement: IFormElement) {
-        this.sessionService.onAction(formElement.buttonAction, null, formElement.confirmationDialog);
+        this.sessionService.onAction(formElement.action, null, formElement.confirmationDialog);
     }
 }
