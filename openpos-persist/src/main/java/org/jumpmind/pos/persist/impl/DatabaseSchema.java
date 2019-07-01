@@ -254,6 +254,7 @@ public class DatabaseSchema {
                 while (currentClass != null && currentClass != Object.class) {
                     Field[] fields = currentClass.getDeclaredFields();
                     for (Field field : fields) {
+                        field.setAccessible(true);
                         Column column = createColumn(field);
                         createIndex(field, column, indices);
                         if (column != null && (includeAllFields || column.isPrimaryKey())) {

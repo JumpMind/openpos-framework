@@ -1,5 +1,13 @@
 package org.jumpmind.pos.core.model;
 
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+
+
 public enum OpenposBarcodeType {
     AZTEK,
     CCA,
@@ -10,8 +18,8 @@ public enum OpenposBarcodeType {
     CODABAR_CX,
     CODE11,
     CODE128,
-    CODE25_I2OF5,
-    CODE25_NI2OF5,
+    CODE25_I2OF5("CODE25_I20F5"),
+    CODE25_NI2OF5("CODE25_NI20F5"),
     CODE39,
     CODE39_FULL,
     CODE93,
@@ -34,7 +42,7 @@ public enum OpenposBarcodeType {
     ITF14,            
     KOREAN_POSTAL,    
     LATENT_IMAGE,     
-    MATRIX_2OF5,
+    MATRIX_2OF5("MATRIX_20F5"),
     MAXICODE,
     MICROPDF417,
     MSI_PLESSEY,
@@ -52,5 +60,35 @@ public enum OpenposBarcodeType {
     UPCA_5,
     UPCE,
     UPCE_2,
-    UPCE_5
+    UPCE_5;
+    
+    private List<String> variants = null;
+    
+    private static Map<String, OpenposBarcodeType> variantMap = new HashMap<String, OpenposBarcodeType>();
+    static {
+        for (OpenposBarcodeType barcode : values()) {
+            if (barcode.variants != null) {
+                barcode.variants.forEach(variant -> variantMap.put(variant, barcode));
+            }
+        }
+    }
+    
+    private OpenposBarcodeType() {
+    }
+    
+    private OpenposBarcodeType(String...variants) {
+        if (variants != null) {
+            this.variants = Arrays.asList(variants);
+        }
+    }
+
+    @JsonCreator
+    public static OpenposBarcodeType fromString(String barcodeTypeStr) {
+        if (barcodeTypeStr != null && variantMap.containsKey(barcodeTypeStr)) {
+            return variantMap.get(barcodeTypeStr);
+        } else {
+            return valueOf(barcodeTypeStr);
+        }
+    }
+    
 }

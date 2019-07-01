@@ -23,6 +23,7 @@ public class PromptConfig {
     private DialogProperties dialogProperties;
     private ActionItem actionMenuItem = new ActionItem("Next", "Next", true);
     private List<ActionItem> otherActions = new ArrayList<>();
+    private String id;
 
     public PromptConfig named(String name) {
         this.name = name;
@@ -179,6 +180,14 @@ public class PromptConfig {
 
     public List<ActionItem> getOtherActions() {
         return otherActions;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
 }

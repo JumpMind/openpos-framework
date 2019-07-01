@@ -22,14 +22,14 @@ task generateSourceArtifact(type: Copy) {
     from('../') {
         exclude '**/target', '**/build', '**/bin', '**/src/test/java', 'openpos.code-workspace',
                 'openpos-client-seed','openpos-cordova', 'openpos-test-module', 'openpos-cordova-log-plugin',
-                'openpos-client-libs', 'openpos-translate', 'openpos-test-server', 'openpos-assemble',
+                'openpos-client-libs', 'openpos-test-server', 'openpos-assemble',
                 'node', 'azure-pipelines*.yml', '**/*.iml', '**/.project', '**/.classpath', '**/.gitignore', 
                 '**/.idea', '**/.settings', '**/.gradle'
     }
     from('../') {
         exclude '**/target', '**/build', '**/bin', '**/src/test/java', 'openpos.code-workspace',
                 'openpos-client-seed','openpos-cordova', 'openpos-test-module', 'openpos-cordova-log-plugin',
-                'openpos-client-libs', 'openpos-translate', 'openpos-test-server', 'openpos-assemble',
+                'openpos-client-libs', 'openpos-test-server', 'openpos-assemble',
                 'node', 'azure-pipelines*.yml', '**/*.iml', '**/.project', '**/.classpath', '**/.gitignore',
                 '**/.idea', '**/.settings', '**/.gradle'
         include '**/openpos-version.properties'
