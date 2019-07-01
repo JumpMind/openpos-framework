@@ -1,11 +1,11 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { WedgeScannerPlugin } from './wedge-scanner.plugin';
-import { SessionService } from '../services/session.service';
+import { SessionService } from '../../../services/session.service';
 import { cold, getTestScheduler } from 'jasmine-marbles';
-import { IScanData } from './scan.interface';
-import { DomEventManager } from '../services/dom-event-manager.service';
+import { IScanData } from '../scan.interface';
+import { DomEventManager } from '../../../services/dom-event-manager.service';
 import { Subscription, of, Subject } from 'rxjs';
-import { Logger } from '../services/logger.service';
+import { Logger } from '../../../services/logger.service';
 import { ElectronService } from 'ngx-electron';
 
 describe('WedgeScanner', () => {

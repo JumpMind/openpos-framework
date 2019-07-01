@@ -1,5 +1,5 @@
 import { Observable } from 'rxjs';
-import { StartupTaskData } from '../components/startup/startup-task-data';
+import { StartupTaskData } from './startup-task-data';
 
 export interface IStartupTask {
     name: string;

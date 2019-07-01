@@ -1,13 +1,13 @@
-import { IScanner } from './scanner.interface';
+import { IScanner } from '../scanner.interface';
 import { Injectable } from '@angular/core';
 import { Observable, of} from 'rxjs';
 import { map, filter, bufferToggle, timeout, catchError, windowToggle, tap, mergeAll} from 'rxjs/operators';
-import { IScanData } from './scan.interface';
-import { SessionService } from '../services/session.service';
+import { IScanData } from '../scan.interface';
+import { SessionService } from '../../../services/session.service';
 import { WEDGE_SCANNER_ACCEPTED_KEYS } from './wedge-scanner-accepted-keys';
-import { DomEventManager } from '../services/dom-event-manager.service';
-import { Logger } from '../services/logger.service';
-import { OpenposBarcodeType } from './openpos-barcode-type.enum';
+import { DomEventManager } from '../../../services/dom-event-manager.service';
+import { Logger } from '../../../services/logger.service';
+import { OpenposBarcodeType } from '../openpos-barcode-type.enum';
 
 interface ControlSequence { modifiers: string[]; key: string; }
 

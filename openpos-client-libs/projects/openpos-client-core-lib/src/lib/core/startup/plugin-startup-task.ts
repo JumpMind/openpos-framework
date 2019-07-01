@@ -1,10 +1,10 @@
 import { Observable, merge, concat, of, Subject, iif } from 'rxjs';
-import { IStartupTask } from '../../interfaces/startup-task.interface';
+import { IStartupTask } from './startup-task.interface';
 import { StartupTaskNames } from './startup-task-names';
 import { InjectionToken, Optional, Inject } from '@angular/core';
-import { IPlatformPlugin } from '../../plugins/platform-plugin.interface';
-import { SCANNERS } from '../../services/scanner.service';
-import { IScanner } from '../../plugins/scanner.interface';
+import { IPlatformPlugin } from '../platform-plugins/platform-plugin.interface';
+import { SCANNERS } from '../services/scanner.service';
+import { IScanner } from '../platform-plugins/scanners/scanner.interface';
 
 export const PLUGINS = new InjectionToken<IPlatformPlugin[]>('Plugins');
 

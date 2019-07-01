@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { StartupService } from '../../services/startup.service';
+import { StartupService } from '../services/startup.service';
 
 @Component({
     templateUrl: './startup.component.html',

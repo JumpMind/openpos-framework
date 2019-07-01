@@ -1,8 +1,0 @@
-{
-     "tsconfig": "tsconfig.lib.json",
-     "output": "../../dist/documentation",
-     "hideGenerator": true,
-     "disablePrivate": true,
-     "disableProtected": true,
-     "theme": "Stripe"
-}

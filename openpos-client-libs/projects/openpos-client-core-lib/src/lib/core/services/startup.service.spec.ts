@@ -2,13 +2,13 @@ import { Logger } from './logger.service';
 import { TestBed } from '@angular/core/testing';
 import { StartupService, STARTUP_TASKS, STARTUP_COMPONENT, STARTUP_FAILED_COMPONENT, STARTUP_FAILED_TASK } from './startup.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { IStartupTask } from '../interfaces/startup-task.interface';
+import { IStartupTask } from '../startup/startup-task.interface';
 import { scan } from 'rxjs/operators';
-import { StartupComponent } from '../components/startup/startup.component';
-import { StartupFailedComponent } from '../components/startup/startup-failed.component';
 import { cold, getTestScheduler } from 'jasmine-marbles';
 import { AppInjector } from '../app-injector';
 import { Injector } from '@angular/core';
+import { StartupComponent } from '../startup/startup.component';
+import { StartupFailedComponent } from '../startup/startup-failed.component';
 
 describe('StartupService', () => {
 

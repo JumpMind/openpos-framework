@@ -1,5 +1,5 @@
 import { SessionService } from './services/session.service';
-import { PersonalizationStartupTask } from './components/startup/personalization-startup-task';
+import { PersonalizationStartupTask } from './startup/personalization-startup-task';
 import { STARTUP_TASKS, STARTUP_COMPONENT, STARTUP_FAILED_COMPONENT } from './services/startup.service';
 
 // Angular Includes
@@ -12,20 +12,20 @@ import { SharedModule } from '../shared/shared.module';
 import { AppInjector } from './app-injector';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
-import { StartupComponent } from './components/startup/startup.component';
+import { StartupComponent } from './startup/startup.component';
 import { PersonalizationService } from './services/personalization.service';
 import { ConfigurationService } from './services/configuration.service';
 import { DialogService } from './services/dialog.service';
 import { ErrorHandlerService } from './services/errorhandler.service';
 import { StompRService } from '@stomp/ng2-stompjs';
-import { SubscribeToSessionTask } from './components/startup/subscribe-to-session-task';
+import { SubscribeToSessionTask } from './startup/subscribe-to-session-task';
 import { Router } from '@angular/router';
 import { Logger } from './services/logger.service';
-import { StartupFailedComponent } from './components/startup/startup-failed.component';
+import { StartupFailedComponent } from './startup/startup-failed.component';
 import { MatDialog } from '@angular/material';
-import { FinalStartupTask } from './components/startup/final-startup-task';
+import { FinalStartupTask } from './startup/final-startup-task';
 import { DialogContentComponent } from './components/dialog-content/dialog-content.component';
-import { DialogServiceStartupTask } from './components/startup/dialog-service-startup-task';
+import { DialogServiceStartupTask } from './startup/dialog-service-startup-task';
 import { TrainingOverlayService } from './services/training-overlay.service';
 import { KeyPressProvider } from '../shared/providers/keypress.provider';
 import { fromEvent, Observable } from 'rxjs';
@@ -37,13 +37,13 @@ import { ToastService } from './services/toast.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxElectronModule } from 'ngx-electron';
-import { PluginStartupTask, PLUGINS } from './components/startup/plugin-startup-task';
-import { AilaScannerCordovaPlugin } from './plugins/aila-scanner-cordova.plugin';
+import { PluginStartupTask, PLUGINS } from './startup/plugin-startup-task';
+import { AilaScannerCordovaPlugin } from './platform-plugins/scanners/aila-scanner-cordova/aila-scanner-cordova.plugin';
 import { SCANNERS, ScannerService } from './services/scanner.service';
-import { PlatformReadyStartupTask, PLATFORMS } from './components/startup/platform-ready-startup-task';
-import { WedgeScannerPlugin } from './plugins/wedge-scanner.plugin';
+import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-startup-task';
+import { WedgeScannerPlugin } from './platform-plugins/scanners/wedge-scanner/wedge-scanner.plugin';
 import { CordovaPlatform } from './platforms/cordova.platform';
-import { InfineaScannerCordovaPlugin } from './plugins/infinea-scanner-cordova.plugin';
+import { InfineaScannerCordovaPlugin } from './platform-plugins/scanners/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
 
 // Add supported locales

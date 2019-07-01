@@ -1,5 +1,5 @@
 import { AilaBarcodeType } from './aila-barcode-type.enum';
-import { OpenposBarcodeType } from './openpos-barcode-type.enum';
+import { OpenposBarcodeType } from '../openpos-barcode-type.enum';
 
 export class AilaBarcodeUtils {
 

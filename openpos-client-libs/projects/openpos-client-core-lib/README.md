@@ -1,6 +1,6 @@
 # OpenposClientCoreLib
 
-This library works in conjunction with OpenposServerCore to provide core client functionality for OpenPOS.
+This library provides core client functionality for OpenPOS.
 
 ## Code Scaffolding
 

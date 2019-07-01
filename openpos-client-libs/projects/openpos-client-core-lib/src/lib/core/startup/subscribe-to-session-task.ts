@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IStartupTask } from '../../interfaces/startup-task.interface';
+import { IStartupTask } from './startup-task.interface';
 import { Observable, Subject } from 'rxjs';
-import { SessionService } from '../../services/session.service';
+import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
-import { Logger } from '../../services/logger.service';
+import { Logger } from '../services/logger.service';
 import { StartupTaskData } from './startup-task-data';
 import { StartupTaskNames } from './startup-task-names';
 

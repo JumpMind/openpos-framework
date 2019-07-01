@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
-import { IStartupTask } from '../../interfaces/startup-task.interface';
-import { SessionService } from '../../services/session.service';
+import { IStartupTask } from './startup-task.interface';
+import { SessionService } from '../services/session.service';
 
 export class FinalStartupTask implements IStartupTask {
     name = 'FinalStartup';

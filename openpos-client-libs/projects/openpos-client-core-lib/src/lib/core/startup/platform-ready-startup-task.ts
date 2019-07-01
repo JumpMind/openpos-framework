@@ -1,8 +1,8 @@
-import { IStartupTask } from '../../interfaces/startup-task.interface';
+import { IStartupTask } from './startup-task.interface';
 import { InjectionToken, Optional, Inject } from '@angular/core';
 import { StartupTaskData } from './startup-task-data';
 import { Observable, merge, of, concat, Subject } from 'rxjs';
-import { IPlatformInterface } from '../../platforms/platform.interface';
+import { IPlatformInterface } from '../platforms/platform.interface';
 import { StartupTaskNames } from './startup-task-names';
 
 export const PLATFORMS = new InjectionToken<IPlatformInterface[]>('Platforms');

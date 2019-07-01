@@ -1,4 +1,4 @@
-import { OpenposBarcodeType } from './openpos-barcode-type.enum';
+import { OpenposBarcodeType } from '../openpos-barcode-type.enum';
 import { InfineaBarcodeType } from './infinea-barcode-type.enum';
 
 export class InfineaBarcodeUtils {

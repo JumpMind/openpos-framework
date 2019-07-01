@@ -1,8 +1,8 @@
-import { IPlatformPlugin } from './platform-plugin.interface';
-import { IScanner } from './scanner.interface';
+import { IPlatformPlugin } from '../../platform-plugin.interface';
+import { IScanner } from '../scanner.interface';
 import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { IScanData } from './scan.interface';
+import { IScanData } from '../scan.interface';
 import { AilaBarcodeUtils } from './aila-to-openpos-barcode-type';
 
 @Injectable()

@@ -1,8 +1,8 @@
 import { Observable, Subject } from 'rxjs';
 import { StartupTaskNames } from './startup-task-names';
 import { Injectable } from '@angular/core';
-import { DialogService } from '../../services/dialog.service';
-import { IStartupTask } from '../../interfaces/startup-task.interface';
+import { IStartupTask } from './startup-task.interface';
+import { DialogService } from '../services/dialog.service';
 
 @Injectable({
     providedIn: 'root',

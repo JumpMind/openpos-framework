@@ -1,9 +1,9 @@
-import { IPlatformPlugin } from '../../plugins/platform-plugin.interface';
+import { IPlatformPlugin } from '../platform-plugins/platform-plugin.interface';
 import { TestBed } from '@angular/core/testing';
 import { PLUGINS, PluginStartupTask } from './plugin-startup-task';
 import { of, Observable } from 'rxjs';
 import { Type } from '@angular/core';
-import { IStartupTask } from '../../interfaces/startup-task.interface';
+import { IStartupTask } from './startup-task.interface';
 import { getTestScheduler } from 'jasmine-marbles';
 
 describe('PluginStartupTask', () => {

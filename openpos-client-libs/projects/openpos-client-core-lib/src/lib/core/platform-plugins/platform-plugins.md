@@ -1,3 +1,8 @@
+---
+id: platform-plugins
+title: OpenPOS Client Platform Plugins
+---
+
 # Platform Plugins
 
 Platform plugins are OpenPOS representations of plugins or features that are in the platform OpenPOS runs on. Examples couple be a plugin for a scanner or payment device.
