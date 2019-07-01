@@ -57,7 +57,7 @@ import { IActionItem } from '../../core/interfaces/action-item.interface';
     }
 
     onOkButton(): void {
-        this.session.onAction(this.okButton.buttonAction, this.form);
+        this.session.onAction(this.okButton.action, this.form);
     }
 
     onChangePasswordAction(): void {

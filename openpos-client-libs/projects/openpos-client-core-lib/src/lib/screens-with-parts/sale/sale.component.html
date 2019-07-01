@@ -6,6 +6,7 @@
         <div fxFlex="1 1 auto"></div>
         <app-sell-linked-customer [screenType]="screen.screenType" [customerName]="screen.customerName"
             [noCustomerText]="screen.noCustomerText" [loyaltyButton]="screen.loyaltyButton"></app-sell-linked-customer>
+        <app-location-details *ngIf="screen.locationEnabled" [locationOverridePrompt]="screen.locationOverridePrompt"></app-location-details>
         <div fxFlex="0 1 auto" class="sell-screen-logo"></div>
     </div>
 

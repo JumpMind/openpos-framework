@@ -1,5 +1,5 @@
 import { ScreenDirective } from './../../../shared/directives/screen.directive';
-import { IScreen } from './../dynamic-screen/screen.interface';
+import { IScreen } from '../../../shared/components/dynamic-screen/screen.interface';
 import { Component, OnDestroy, ViewChild, ComponentRef, ComponentFactory } from '@angular/core';
 import { MessageProvider } from '../../../shared/providers/message.provider';
 

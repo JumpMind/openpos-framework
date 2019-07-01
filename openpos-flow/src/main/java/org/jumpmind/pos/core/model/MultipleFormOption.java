@@ -5,7 +5,7 @@ import java.io.Serializable;
 import org.jumpmind.pos.core.screen.ActionItem;
 
 @Deprecated
-public class MultipleFormOption implements Serializable{
+public class MultipleFormOption implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	private Form form = new Form();

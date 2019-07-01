@@ -1,0 +1,26 @@
+buildscript {
+     repositories { maven { url "http://maven.jumpmind.com/repo" } }
+     dependencies { classpath "org.jumpmind.pos:openpos-gradle:1.0.0-SNAPSHOT" }
+ }
+
+ plugins {
+     id "idea"
+     id "org.springframework.boot" version "2.0.1.RELEASE"
+ }
+
+apply from: project.buildscript.classLoader.getResource('java.gradle').toURI()
+apply from: project.buildscript.classLoader.getResource('spring.gradle').toURI()
+apply from: project.buildscript.classLoader.getResource('openpos.gradle').toURI()
+
+repositories {
+	maven { url "http://maven.cns.com/artifactory/libs-releases" }
+}
+
+dependencies {
+     compile project(":openpos-wrapper")
+     compile project(":openpos-flow")
+ }
+
+springBoot {
+    mainClassName = 'org.jumpmind.test.app.TestApp'
+}

@@ -1,6 +1,6 @@
 import { ScreenComponent } from '../../../shared/decorators/screen-component.decorator';
 import { Component } from '@angular/core';
-import { IScreen } from '../dynamic-screen/screen.interface';
+import { IScreen } from '../../../shared/components/dynamic-screen/screen.interface';
 
 @ScreenComponent({
     name: 'SplashScreen'

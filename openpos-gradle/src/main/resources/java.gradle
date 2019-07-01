@@ -1,10 +1,16 @@
 group = 'org.jumpmind.pos'
-version = appVersion.endsWith("SNAPSHOT") ? appVersion : "${appVersion}.${buildNumber}"
 
 apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
+
+def removeSnapshot = { v ->
+    if (v.endsWith('-SNAPSHOT')) {
+        v = v.substring(0, v.length() - '-SNAPSHOT'.length())
+    }
+    return v;
+}
 
 sourceCompatibility=1.8
 targetCompatibility=1.8
@@ -24,10 +30,13 @@ ext {
 
 // update jar files with version information
 processResources {
+    if (project.hasProperty('releaseBuildEnabled') && project.getProperty('releaseBuildEnabled').toBoolean()) {
+        version = removeSnapshot(version)
+    }
     eachFile { details ->
         if (details.name.endsWith('version.properties')) {
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'version': appVersion,
+                    'version': version,
                     'buildTime': new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(new java.util.Date()),
                     'gitBranch' : gitBranch,
                     'gitHash' : gitHash,
@@ -50,8 +59,9 @@ repositories {
 idea {
 
     module {
+        testResourceDirs = []
+        testSourceDirs = [ file('src/test/java')]
         resourceDirs += file('src/test/resources')
-
         downloadJavadoc = true
         downloadSources = true
     }
@@ -96,7 +106,7 @@ test {
 
     //Dynamic exclude through property defined in the build.gradle file
     if (project.hasProperty('excludeTests')) {
-        println('Excluding tests: ' + project.property('excludeTests'));
+        println('Excluding tests: ' + project.property('excludeTests'))
         exclude project.property('excludeTests')
     }
 }
@@ -142,3 +152,4 @@ task deploy {
     dependsOn tasks.uploadArchives
 }
 
+tasks.uploadArchives.dependsOn build

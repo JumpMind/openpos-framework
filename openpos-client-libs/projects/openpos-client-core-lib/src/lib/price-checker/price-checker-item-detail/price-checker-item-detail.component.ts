@@ -18,11 +18,15 @@ export class PriceCheckerItemDetailComponent extends PosScreen<PriceCheckerItemD
     }
 
     buildScreen() {
-        this.scannerService.startScanning().subscribe( m => this.session.onAction('Scan', m));
+        this.scannerService.startScanning().subscribe( m => this.session.onAction(this.screen.scanAction, m));
     }
 
     ngOnDestroy(): void {
         this.scannerService.stopScanning();
+    }
+
+    onPrint() {
+        this.session.onAction(this.screen.printButton);
     }
 
 }

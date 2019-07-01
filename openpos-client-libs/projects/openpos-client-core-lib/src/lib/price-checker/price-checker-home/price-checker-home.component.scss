@@ -1,3 +1,17 @@
-.background{
+:host{
     height: 100%;
+    display: flex;
+    flex-direction: column;
 }
+
+.background{
+    flex: 1 1 100%;
+    margin: 16px;
+}
+
+.message{
+    margin: 16px;
+    text-align: center;
+    font-size: 48px;
+}
+

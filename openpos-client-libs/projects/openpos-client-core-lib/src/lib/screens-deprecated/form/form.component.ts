@@ -33,7 +33,7 @@ export class FormComponent extends PosScreen<any> {
       elem => elem.elementType === 'Button' && elem.submitButton);
 
     if (submitButtons.length > 0) {
-      this.session.onAction(submitButtons[0].buttonAction, this.form);
+      this.session.onAction(submitButtons[0].action, this.form);
     }
   }
 

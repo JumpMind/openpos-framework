@@ -21,7 +21,7 @@ export class SaleComponent extends PosScreen<SaleInterface> {
   trainingDrawerOpen = false;
   totals: ITotal[];
 
-  constructor(private mediaService: OpenposMediaService, protected dialog: MatDialog) {
+  constructor(protected mediaService: OpenposMediaService, protected dialog: MatDialog) {
     super();
     this.overFlowListSize = this.mediaService.mediaObservableFromMap(new Map([
         ['xs', 3],

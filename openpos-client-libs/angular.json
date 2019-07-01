@@ -67,7 +67,12 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "openpos-client-demo:build"
+            "browserTarget": "openpos-client-demo:build",
+            "sourceMap": {
+                "scripts": true,
+                "styles": true,
+                "vendor": true
+              }
           },
           "configurations": {
             "production": {

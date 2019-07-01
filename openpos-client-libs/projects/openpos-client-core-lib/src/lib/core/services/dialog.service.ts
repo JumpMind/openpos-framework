@@ -2,7 +2,7 @@ import { Logger } from './logger.service';
 
 import { Injectable, Type, ComponentFactoryResolver, ComponentFactory } from '@angular/core';
 import { SessionService } from './session.service';
-import { IScreen } from '../components/dynamic-screen/screen.interface';
+import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { DialogContentComponent } from '../components/dialog-content/dialog-content.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { OpenPOSDialogConfig } from '../interfaces/open-pos-dialog-config.interface';

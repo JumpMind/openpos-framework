@@ -14,13 +14,13 @@ export * from './lib/core/module-import-guard';
 
 export * from './lib/core/components/abstract-template';
 export * from './lib/core/components/confirmation-dialog/confirmation-dialog.component';
-export * from './lib/core/components/dev-menu/dev-menu.component';
+export * from './lib/shared/components/dev-menu/dev-menu.component';
 export * from './lib/core/components/dialog-content/dialog-content.component';
-export * from './lib/core/components/dynamic-screen/dynamic-screen.component';
-export * from './lib/core/components/dynamic-screen/screen.interface';
-export * from './lib/core/components/loader/loader-state';
-export * from './lib/core/components/loader/loader.component';
-export * from './lib/core/components/openpos-app/openpos-app.component';
+export * from './lib/shared/components/dynamic-screen/dynamic-screen.component';
+export * from './lib/shared/components/dynamic-screen/screen.interface';
+export * from './lib/shared/components/loader/loader-state';
+export * from './lib/shared/components/loader/loader.component';
+export * from './lib/shared/components/openpos-app/openpos-app.component';
 export * from './lib/core/components/personalization/personalization.component';
 export * from './lib/core/components/startup/dialog-service-startup-task';
 export * from './lib/core/components/startup/final-startup-task';
@@ -106,6 +106,7 @@ export * from './lib/core/services/startup.service';
 export * from './lib/core/services/toast.service';
 export * from './lib/core/services/training-overlay.service';
 export * from './lib/core/services/validators.service';
+export * from './lib/core/services/location.service';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';

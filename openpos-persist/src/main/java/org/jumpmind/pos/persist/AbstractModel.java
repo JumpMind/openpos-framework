@@ -1,5 +1,6 @@
 package org.jumpmind.pos.persist;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +9,9 @@ import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.jumpmind.pos.persist.model.IAuditableModel;
 
 
-public abstract class AbstractModel implements IAuditableModel {
+public abstract class AbstractModel implements IAuditableModel, Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @ColumnDef(required=true,
             description="Timestamp when this entry was created.")

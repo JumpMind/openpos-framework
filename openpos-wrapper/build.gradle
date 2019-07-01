@@ -5,6 +5,8 @@ dependencies {
     compile "net.java.dev.jna:jna-platform:$jnaVersion"
 }
 
+jar.baseName = 'openpos-wrapper'
+
 int i = 0;
 String classpathVar = configurations.compile.collect { (i++==0?String.format("%0\$-50s", it.getName()):String.format("%0\$-62s", it.getName()))   }.join(" ");
 jar {

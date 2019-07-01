@@ -1,3 +1,17 @@
+buildscript {
+    repositories {
+        maven { url "http://maven.jumpmind.com/repo" }
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.moowork.gradle:gradle-node-plugin:1.3.1'
+        classpath 'co.riiid:gradle-github-plugin:0.4.2'
+    }
+}
+
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
+apply from: '../openpos-gradle/src/main/resources/release.gradle'
 
 task generateSourceArtifact(type: Copy) {
     doFirst {
@@ -8,13 +22,19 @@ task generateSourceArtifact(type: Copy) {
     from('../') {
         exclude '**/target', '**/build', '**/bin', '**/src/test/java', 'openpos.code-workspace',
                 'openpos-client-seed','openpos-cordova', 'openpos-test-module', 'openpos-cordova-log-plugin',
+                'openpos-client-libs', 'openpos-test-server', 'openpos-assemble',
                 'node', 'azure-pipelines*.yml', '**/*.iml', '**/.project', '**/.classpath', '**/.gitignore', 
                 '**/.idea', '**/.settings', '**/.gradle'
     }
     from('../') {
+        exclude '**/target', '**/build', '**/bin', '**/src/test/java', 'openpos.code-workspace',
+                'openpos-client-seed','openpos-cordova', 'openpos-test-module', 'openpos-cordova-log-plugin',
+                'openpos-client-libs', 'openpos-test-server', 'openpos-assemble',
+                'node', 'azure-pipelines*.yml', '**/*.iml', '**/.project', '**/.classpath', '**/.gitignore',
+                '**/.idea', '**/.settings', '**/.gradle'
         include '**/openpos-version.properties'
                 filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [
-                    'version': appVersion,
+                    'version': version,
                     'buildTime': new java.text.SimpleDateFormat('yyyy-MM-dd HH:mm:ss').format(new java.util.Date()),
                     'gitBranch' : gitBranch,
                     'gitHash' : gitHash,

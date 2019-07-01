@@ -19,10 +19,10 @@
 		</mat-card-content>
 		<mat-card-actions fxLayoutAlign="end">
 			<button *ngFor="let m of screen.nonSelectionButtons" mat-raised-button color="primary"
-				(click)="doMenuItemAction(m)">
+				(click)="doMenuItemAction(m)" [actionItem]="m">
 				{{m.title}} </button>
 			<button *ngFor="let m of screen.buttons" mat-raised-button color="primary" [disabled]="index<0"
-				(click)="doMenuItemAction(m)">{{m.title}}</button>
+				(click)="doMenuItemAction(m)" [actionItem]="m">{{m.title}}</button>
 		</mat-card-actions>
 	</mat-card>
 </div>

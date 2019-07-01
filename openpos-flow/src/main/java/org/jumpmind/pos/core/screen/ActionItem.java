@@ -29,18 +29,18 @@ public class ActionItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
     
-    private String action;
-    private String title;
-    private String icon;
-    private boolean enabled = true;
-    private ConfirmationDialog confirmationDialog;
-    private List<ActionItem> children;
-    private boolean sensitive;
-    private String buttonSize;
-    private String fontSize;
-    private String keybind;    
+    protected String action;
+    protected String title;
+    protected String icon;
+    protected boolean enabled = true;
+    protected ConfirmationDialog confirmationDialog;
+    protected List<ActionItem> children;
+    protected boolean sensitive;
+    protected String buttonSize;
+    protected String fontSize;
+    protected String keybind;
     @JsonIgnore
-    private transient boolean autoAssignEnabled = true;
+    protected transient boolean autoAssignEnabled = true;
 
     public final static String FONT_SIZE_XS = "text-xs";
     public final static String FONT_SIZE_SM = "text-sm";

@@ -20,6 +20,7 @@ public class PriceCheckerItemDetailsUIMessage extends UIMessage {
     private String disclaimer;
     private String itemNotFoundMessage;
     private String helpMessage;
+    private String scanActionName;
 
     public PriceCheckerItemDetailsUIMessage() {
         setScreenType(UIMessageType.PRICE_CHECKER_ITEM_DETAIL);
@@ -132,5 +133,13 @@ public class PriceCheckerItemDetailsUIMessage extends UIMessage {
 
     public void setDisclaimer(String disclaimer) {
         this.disclaimer = disclaimer;
+    }
+
+    public String getScanActionName() {
+        return scanActionName;
+    }
+
+    public void setScanActionName(String scanActionName) {
+        this.scanActionName = scanActionName;
     }
 }

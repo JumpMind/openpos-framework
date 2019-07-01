@@ -1,5 +1,5 @@
 import { Component, ViewChild, AfterViewChecked, ElementRef, OnInit } from '@angular/core';
-import { IScreen } from '../../core/components/dynamic-screen/screen.interface';
+import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { SessionService } from '../../core/services/session.service';
 import { IActionItem } from '../../core/interfaces/action-item.interface';

@@ -1,0 +1,101 @@
+
+plugins {
+    id 'org.hidetake.ssh' version '2.10.1'
+}
+
+apply plugin: "com.moowork.node"
+
+remotes {
+    mavenServer {
+        host = 'maven.jumpmind.com'
+        port = 2222
+        user = deployUser
+        password = deployPassword
+    }
+}
+
+node {
+    version = '10.5.0'
+    npmVersion = '6.1.0'
+    download = downloadNode.toBoolean()
+    println """
+      **************************************************************************************************
+        Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties 
+        if you want to use downloaded versions of node and npm
+      **************************************************************************************************
+      """
+    workDir = file("${projectDir}/node")
+    nodeModulesDir = file("./")
+}
+
+task npm_install(type: NpmTask){
+    args = [
+            'install'
+    ]
+}
+
+task ng_test(type: NpmTask){
+    dependsOn npm_install
+    args = [
+            'run', 'ng', 'test', 'openpos-client-core-lib'
+    ]
+}
+
+task ng_build_angular(type: NpmTask){
+    dependsOn npm_install
+    args = [
+            'run',
+            'ng', 'build', 'openpos-client-core-lib'
+    ]
+}
+
+task bundle_sass(type: NpmTask){
+    dependsOn ng_build_angular
+    args = [
+            'run',
+            'scss-bundle'
+    ]
+}
+
+
+
+task processResources {}
+
+task test {
+    dependsOn ng_test
+}
+
+task build {
+    dependsOn bundle_sass
+}
+
+task npm_pack(type: NpmTask){
+    dependsOn build
+    workingDir =  file('dist/openpos-client-core-lib')
+    args = [
+            'pack'
+    ]
+}
+
+task deploy {
+    dependsOn npm_pack
+    doLast {
+        copy {
+            from ('.') {
+                include '**/jumpmind-openpos-client-core-lib-*.tgz'
+            }
+            into ('.')
+            rename { String fileName ->
+                'jumpmind-openpos-client-core-lib-snapshot.tgz'
+            }
+        }
+        ssh.settings {
+            fileTransfer = 'scp'
+        }
+        ssh.run {
+            session(remotes.mavenServer) {
+                put from:fileTree('.').include('**/jumpmind-openpos-client-core-lib-*.tgz').files, into:'www/npm'
+            }
+        }
+    }
+}

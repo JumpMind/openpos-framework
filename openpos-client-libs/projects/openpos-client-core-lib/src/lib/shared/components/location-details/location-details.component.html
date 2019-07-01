@@ -1,0 +1,11 @@
+<button mat-button color="accent" style="text-align: left" (click)="onClick()"
+    disableRipple="!hasOverridePrompt()" [ngClass]="{'customer-read-only': !hasOverridePrompt()}">
+    <ng-container *ngIf="postalCode">
+        <mat-icon>location_on</mat-icon>&nbsp;
+        <span class="text-sm">{{postalCode}}</span>
+    </ng-container>
+    <ng-container *ngIf="!postalCode">
+        <mat-icon class="muted-color">location_off</mat-icon>&nbsp;
+        <span class="muted-color">Location Currently Unavailable</span>
+    </ng-container>
+</button>

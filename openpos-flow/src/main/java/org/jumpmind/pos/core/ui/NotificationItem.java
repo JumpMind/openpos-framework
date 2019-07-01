@@ -1,6 +1,10 @@
 package org.jumpmind.pos.core.ui;
 
-public class NotificationItem {
+import java.io.Serializable;
+
+public class NotificationItem implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private String id;
     private String value;
     private NotificationType type;

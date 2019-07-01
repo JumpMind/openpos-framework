@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import { IScreen } from '../../core/components/dynamic-screen/screen.interface';
 import { AbstractTemplate } from '../../core/components/abstract-template';
 import { Logger } from '../../core/services/logger.service';
 import { ScreenService } from '../../core/services/screen.service';
@@ -24,6 +23,7 @@ import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
+import { IScreen } from '../components/dynamic-screen/screen.interface';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -108,8 +108,8 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             screen = new SplashScreen();
         }
 
-        // Close any open dialogs
-        if (this.dialogService.isDialogOpenOrOpening()) {
+        if ( this.dialogService.isDialogOpen ) {
+            // Close any open dialogs
             await this.dialogService.closeDialog();
         }
 
@@ -152,6 +152,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             const componentFactory = this.screenService.resolveScreen(screenToCreate, this.currentTheme);
             this.componentRef = this.viewContainerRef.createComponent(componentFactory,
                 this.viewContainerRef.length, this.viewContainerRef.parentInjector);
+            this.updateTheme(this.currentTheme);
 
             // If we accept an inner screen meaning we are a template, install the screen
             if (this.componentRef.instance.installScreen) {
@@ -197,10 +198,12 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
         this.overlayContainer.getContainerElement().classList.remove('default-theme');
         this.overlayContainer.getContainerElement().classList.add(theme);
-        const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
-        this.renderer.removeClass(parent, this.currentTheme);
-        this.renderer.removeClass(parent, 'default-theme');
-        this.renderer.addClass(parent, theme);
+        if ( !!this.componentRef ) {
+            const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
+            this.renderer.removeClass(parent, this.currentTheme);
+            this.renderer.removeClass(parent, 'default-theme');
+            this.renderer.addClass(parent, theme);
+        }
         this.currentTheme = theme;
     }
 

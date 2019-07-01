@@ -1,16 +1,19 @@
 import { AppPage } from './app.po';
-import { browser, logging } from 'protractor';
+import { browser, logging, Key, by, element } from 'protractor';
 
 describe('workspace-project App', () => {
   let page: AppPage;
 
-  beforeEach(() => {
+  beforeEach( () => {
     page = new AppPage();
+    page.navigateToTest('loadingscreen');
+    page.personalize();
   });
 
-  it('should display welcome message', () => {
-    page.navigateTo();
-    expect(page.getTitleText()).toEqual('Welcome to openpos-client-core-lib!');
+  it( 'should show loading screen', async () => {
+      page.sendKey(Key.F1);
+
+      expect(element(by.tagName('body')).getTagName()).toBeTruthy();
   });
 
   afterEach(async () => {

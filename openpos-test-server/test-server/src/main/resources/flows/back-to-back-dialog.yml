@@ -1,0 +1,7 @@
+---
+BackToBackDialogFlow:
+  - HomeState:
+      Next: DialogState
+  - DialogState:
+      Next: DialogState
+      Close: HomeState

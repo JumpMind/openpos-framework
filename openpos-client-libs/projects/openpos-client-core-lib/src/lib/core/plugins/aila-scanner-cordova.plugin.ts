@@ -3,6 +3,7 @@ import { IScanner } from './scanner.interface';
 import { Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { IScanData } from './scan.interface';
+import { AilaBarcodeUtils } from './aila-to-openpos-barcode-type';
 
 @Injectable()
 export class AilaScannerCordovaPlugin implements IPlatformPlugin, IScanner {
@@ -74,8 +75,13 @@ export class AilaScannerCordovaPlugin implements IPlatformPlugin, IScanner {
     }
 
     private seqScanStep() {
-        this.AilaCordovaPlugin.getNextScan((result) => {
-            this.scanData$.next(result);
+        this.AilaCordovaPlugin.getNextScan(result => {
+            const type = result[0];
+            // prune off the ()
+            const data = (result[1] as string).substr(1, result[1].length - 2);
+            console.log( `Aila Scan Type: ${type}`);
+            console.log( `Aila Scan Data: ${data}`);
+            this.scanData$.next({type: AilaBarcodeUtils.convertToOpenposType(type, data.length), data});
             this.seqScanStep();
         }, (error) => {
             alert('Error: ' + error);

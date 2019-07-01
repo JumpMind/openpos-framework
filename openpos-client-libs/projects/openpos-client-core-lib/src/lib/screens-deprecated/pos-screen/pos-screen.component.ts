@@ -1,7 +1,7 @@
 import { Logger } from './../../core/services/logger.service';
 import { AppInjector } from '../../core/app-injector';
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
-import { IScreen } from '../../core/components/dynamic-screen/screen.interface';
+import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { SessionService } from '../../core/services/session.service';
 import { deepAssign } from '../../utilites/deep-assign';
 import { IActionItem } from '../../core/interfaces/action-item.interface';

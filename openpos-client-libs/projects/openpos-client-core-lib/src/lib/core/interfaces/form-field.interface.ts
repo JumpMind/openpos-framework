@@ -9,7 +9,7 @@ export interface IFormElement {
     value: string;
     values: string[];
     placeholder: string;
-    buttonAction: string;
+    action: string;
     submitButton: boolean;
     required: boolean;
     selectedIndex: number;
