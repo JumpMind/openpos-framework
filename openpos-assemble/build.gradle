@@ -3,10 +3,12 @@ buildscript {
         maven { url "http://maven.jumpmind.com/repo" }
         jcenter()
         mavenCentral()
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
         classpath 'com.moowork.gradle:gradle-node-plugin:1.3.1'
         classpath 'co.riiid:gradle-github-plugin:0.4.2'
+        classpath 'gradle.plugin.se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.63'
     }
 }
 

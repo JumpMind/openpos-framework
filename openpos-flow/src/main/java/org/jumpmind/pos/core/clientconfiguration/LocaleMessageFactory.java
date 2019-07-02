@@ -15,8 +15,8 @@ public class LocaleMessageFactory {
     @Autowired(required = false)
     ILocaleProvider localeProvider;
 
-    public LocaleChangedMessage getMessage(Locale locale) {
-        LocaleChangedMessage message = new LocaleChangedMessage(locale);
+    public LocaleChangedMessage getMessage(Locale locale, Locale displayLocale) {
+        LocaleChangedMessage message = new LocaleChangedMessage(locale, displayLocale);
         message.setSupportedLocales(supportedLocales);
         return message;
     }
@@ -24,7 +24,7 @@ public class LocaleMessageFactory {
     public LocaleChangedMessage getMessage() {
         LocaleChangedMessage message = null;
         if (localeProvider != null) {
-            message = new LocaleChangedMessage(localeProvider.getLocale());
+            message = new LocaleChangedMessage(localeProvider.getLocale(), localeProvider.getLocale());
         } else {
             message = new LocaleChangedMessage();
         }
