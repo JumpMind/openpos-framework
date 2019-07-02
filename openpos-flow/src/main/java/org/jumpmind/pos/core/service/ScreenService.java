@@ -312,17 +312,19 @@ public class ScreenService implements IScreenService, IActionListener {
             }
 
             // If we are just refreshing the screens we don't need to update the last state
-            if (screen.isDialog() && !isRefresh) {
+            if (screen.isDialog()) {
                 applicationState.setLastDialog(screen);
                 applicationState.setLastPreInterceptedDialog(preInterceptedScreen);
-            } else if (!screen.getScreenType().equals("NoOp") && !isRefresh) {
+            } else if (!screen.getScreenType().equals("NoOp")) {
                 applicationState.setLastScreen(screen);
                 applicationState.setLastPreInterceptedScreen(preInterceptedScreen);
                 applicationState.setLastDialog(null);
                 applicationState.setLastPreInterceptedDialog(null);
 
-                // If we are not refreshing and we are sending a screen we should close any dialogs
-                messageService.sendMessage( appId, deviceId, new CloseDialogMessage() );
+                if (!isRefresh) {
+                    // If we are not refreshing and we are sending a screen we should close any dialogs
+                    messageService.sendMessage( appId, deviceId, new CloseDialogMessage() );
+                }
             }
         }
     }

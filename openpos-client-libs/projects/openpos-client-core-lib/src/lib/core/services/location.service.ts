@@ -37,22 +37,14 @@ export class LocationService implements OnDestroy {
                 }
                 this.subscription = provider.getCurrentLocation(message.coordinateBuffer ? message.coordinateBuffer : 0)
                 .subscribe((locationData: ILocationData) => {
-                    if (!this.manualOverride && this.isPreviousLocationDataDifferent(locationData)) {
+                    if (!this.manualOverride) {
+                        sessionService.onValueChange('LocationChanged', locationData);
                         this.$data.next(locationData);
                         this.previousLocationData = locationData;
-                        if (locationData && locationData.postalCode && locationData.country) {
-                            sessionService.onValueChange('LocationChanged', locationData);
-                        }
                     }
                 });
             }
         });
-    }
-
-    isPreviousLocationDataDifferent(locationData: ILocationData): boolean {
-        return !this.previousLocationData
-            || (this.previousLocationData && locationData && (this.previousLocationData.postalCode !== locationData.postalCode
-                || this.previousLocationData.country !== locationData.country));
     }
 
     hasManualOverride(): boolean {
@@ -72,7 +64,7 @@ export class LocationService implements OnDestroy {
             this.manualOverride = true;
             this.$data.next(locationData);
             this.previousLocationData = locationData;
-            this.sessionService.onAction('LocationChanged', locationData);
+            this.sessionService.onValueChange('LocationChanged', locationData);
         } else {
             this.manualOverride = false;
         }

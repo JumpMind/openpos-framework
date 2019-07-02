@@ -49,8 +49,8 @@ export class CurrencyTextComponent implements DoCheck {
 
             if (existingSymbolIdx >= 0) {
                 this.textBeforeSymbol = localAmtText.substring(0, existingSymbolIdx);
-                this.textAfterSymbol = localAmtText.substring(existingSymbolIdx + 1, localAmtText.length);
-                this.symbolText = localAmtText.charAt(existingSymbolIdx);
+                this.textAfterSymbol = localAmtText.substring(existingSymbolIdx + targetSymbol.length, localAmtText.length);
+                this.symbolText = localAmtText.substring(existingSymbolIdx, existingSymbolIdx + targetSymbol.length);
             } else {
                 // expected currency symbol not there
                 this.symbolText = '';
@@ -70,7 +70,7 @@ export class CurrencyTextComponent implements DoCheck {
             this.textBeforeSymbol = '';
         }
     }
-    
+
     protected removeCommas(text: string): string {
         return text.replace(/,/g, '');
     }
