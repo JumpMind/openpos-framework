@@ -1,10 +1,27 @@
-apply plugin: "com.moowork.node"
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+
+    dependencies {
+        classpath "se.bjurr.gitchangelog:git-changelog-gradle-plugin:1.63"
+    }
+}
+
+apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
+apply plugin: 'com.moowork.node'
 apply plugin: 'co.riiid.gradle'
 
-def gitCommit = { file ->
-    exec {
-        commandLine 'git', 'add', file
+def gitCommit = { files ->
+
+    files.each {
+        exec {
+            commandLine 'git', 'add', file
+        }
+
     }
+
     exec {
         commandLine 'git', 'config', 'user.email', 'build@jumpmind.com'
     }
@@ -74,9 +91,7 @@ task setPackageJsonVersion(type: NpmTask) {
 task prereleaseCommit() {
     dependsOn setPackageJsonVersion
     doLast {
-        gitCommit 'gradle.properties'
-        gitCommit packageJsonDir + '/package.json'
-        gitCommit packageJsonDir + '/package-lock.json'
+        gitCommit [ 'gradle.properties', packageJsonDir + '/package.json', packageJsonDir + '/package-lock.json' ]
     }
 }
 
@@ -97,13 +112,49 @@ task npm_publish(type: NpmTask) {
     ]
 }
 
+// had to declare this a second time because tasks can only execute once
+// calling this manually from the release task
+task setPackageJsonVersionToSnapshot(type: NpmTask) {
+    dependsOn updateVersionAndGradleProperties
+    workingDir = file(packageJsonDir)
+    args = [ 'version', '--allow-same-version', version ]
+}
+
+task gitChangelogTask(type: Class.forName('se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask')) {
+    dependsOn npm_publish
+    gitHubApi = gitHubApi
+    gitHubToken = personalAccessToken
+    file = new File("../CHANGELOG.md");
+    fromRef = '0.3.4'
+    toRef = version
+    templateContent = """
+# Release Notes
+{{#tags}}
+
+## Release {{name}} 
+Release time: {{tagTime}}
+ {{#issues}}
+  {{#hasLink}}
+#### [{{issue}}]({{link}}) {{title}}
+  {{#hasLabels}}
+{{labels}}
+  {{/hasLabels}}
+  {{#commits}}
+by {{authorName}} 
+  {{/commits}}
+  {{/hasLink}}
+ {{/issues}}
+{{/tags}}
+""";
+}
+
 task release() {
+    dependsOn gitChangelogTask
     doFirst {
         if (!releaseBuildEnabled.toBoolean()) {
             throw new GradleException('You need to specify -PreleaseBuildEnabled=true when running the release task')
         }
     }
-    dependsOn npm_publish
     doLast {
         def versionParts = version.split('\\.')
         def lastPart = versionParts[versionParts.length-1] as int
@@ -114,14 +165,13 @@ task release() {
         }
         version = version + lastPart + '-SNAPSHOT'
         updateGradlePropertiesVersion(version)
-        tasks.setPackageJsonVersion.args[2] = version
-        tasks.setPackageJsonVersion.execute()
-        gitCommit 'gradle.properties'
-        gitCommit packageJsonDir + '/package.json'
-        gitCommit packageJsonDir + '/package-lock.json'
+        tasks.setPackageJsonVersionToSnapshot.args[2] = version
+        tasks.setPackageJsonVersionToSnapshot.execute()
+        gitCommit ['gradle.properties', packageJsonDir + '/package.json', packageJsonDir + '/package-lock.json', '../CHANGELOG.md']
     }
 }
 
 subprojects.each { tasks.getByPath(":${it.name}:processResources").dependsOn prerelease }
 subprojects.each { tasks.githubRelease.dependsOn("${it.name}:deploy") }
+tasks.gitChangelogTask.dependsOn githubRelease
 tasks.githubRelease.dependsOn prerelease
