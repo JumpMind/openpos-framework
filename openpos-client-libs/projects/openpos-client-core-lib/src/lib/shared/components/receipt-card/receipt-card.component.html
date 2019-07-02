@@ -1,11 +1,19 @@
 <div class="serrated-edge receipt-div" [ngClass]="{'mat-elevation-z4':hover, 'mat-elevation-z1':!hover}">
+
+    <div *ngIf="receipt.webOrderId" class="muted-color web-order" fxLayout="row" fxLayoutGap="5px">
+        <mat-icon class="material-icons">computer</mat-icon>
+        <span>Web Order</span>
+    </div>
+
     <div fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="4px">
         <div fxFlex>
             <div class="transaction-header">Transaction:</div>
+            <div *ngIf="receipt.webOrderId">Order #:</div>
             <div>Date:</div>
         </div>
         <div fxFlex style="text-align: end;">
             <div *ngIf="receipt" class="transaction-header">#{{receipt.transactionNumber}}</div>
+            <div *ngIf="receipt && receipt.webOrderId"> {{receipt.webOrderId}}</div>
             <div *ngIf="receipt">{{receipt.businessDate}}</div>
         </div>
     </div>

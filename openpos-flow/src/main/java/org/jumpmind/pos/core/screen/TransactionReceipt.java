@@ -15,6 +15,8 @@ public class TransactionReceipt implements Serializable {
 
     private BigDecimal total;
 
+    private String webOrderId;
+
     public long getTransactionNumber() {
         return transactionNumber;
     }
@@ -45,6 +47,14 @@ public class TransactionReceipt implements Serializable {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public String getWebOrderId() {
+        return webOrderId;
+    }
+
+    public void setWebOrderId(String webOrderId) {
+        this.webOrderId = webOrderId;
     }
 
 }
