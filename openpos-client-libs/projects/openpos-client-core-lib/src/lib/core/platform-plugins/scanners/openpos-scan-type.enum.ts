@@ -1,4 +1,4 @@
-export enum OpenposBarcodeType {
+export enum OpenposScanType {
     UPCA = 'UPCA',
     CODABAR = 'CODABAR',
     CODE25_NI2OF5 = 'CODE25_NI2OF5',

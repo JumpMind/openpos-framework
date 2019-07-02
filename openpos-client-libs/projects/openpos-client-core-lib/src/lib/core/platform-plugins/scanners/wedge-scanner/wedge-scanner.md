@@ -1,9 +1,7 @@
 ---
 id: wedge-scanner-plugin
-title: OpenPOS Client Wedge Scanner Plugin
+title: Wedge Scanner Plugin
 ---
-
-# Wedge Scanner Plugin
 
 The wedge scanner acts like a keyboard and dispatches keydown events for each character in a barcode. The Wedge Scanner plugin monitors those events and when the start sequence is seen starts buffering up the events until either the stop sequence is seen or there is a 100 (ms) delay between events.
 

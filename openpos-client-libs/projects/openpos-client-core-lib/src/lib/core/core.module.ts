@@ -39,7 +39,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxElectronModule } from 'ngx-electron';
 import { PluginStartupTask, PLUGINS } from './startup/plugin-startup-task';
 import { AilaScannerCordovaPlugin } from './platform-plugins/scanners/aila-scanner-cordova/aila-scanner-cordova.plugin';
-import { SCANNERS, ScannerService } from './services/scanner.service';
+import { SCANNERS, ScannerService } from './platform-plugins/scanners/scanner.service';
 import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-startup-task';
 import { WedgeScannerPlugin } from './platform-plugins/scanners/wedge-scanner/wedge-scanner.plugin';
 import { CordovaPlatform } from './platforms/cordova.platform';

@@ -1,7 +1,7 @@
 import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
-import { IScanner } from '../plugins/scanners/scanner.interface';
+import { IScanner } from './scanner.interface';
 import { Observable, merge } from 'rxjs';
-import { IScanData } from '../plugins/scanners/scan.interface';
+import { IScanData } from './scan.interface';
 
 export const SCANNERS = new InjectionToken<IScanner[]>('Scanners');
 

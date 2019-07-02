@@ -7,7 +7,7 @@ import { SessionService } from '../../../services/session.service';
 import { WEDGE_SCANNER_ACCEPTED_KEYS } from './wedge-scanner-accepted-keys';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
 import { Logger } from '../../../services/logger.service';
-import { OpenposBarcodeType } from '../openpos-barcode-type.enum';
+import { OpenposScanType } from '../openpos-scan-type.enum';
 
 interface ControlSequence { modifiers: string[]; key: string; }
 
@@ -20,7 +20,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
     private endSequence = 'Enter';
     private codeTypeLength = 0;
     private timeout = 100;
-    private typeMap: Map<string, OpenposBarcodeType>;
+    private typeMap: Map<string, OpenposScanType>;
     private scannerActive: boolean;
     private startSequenceObj = this.getControlStrings(this.startSequence);
     private endSequenceObj = this.getControlStrings(this.endSequence);
@@ -54,7 +54,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
         sessionService.getMessages('ConfigChanged').pipe(
             filter( m => m.configType === 'WedgeScannerTypes')
         ).subscribe( m => {
-            this.typeMap = new Map<string, OpenposBarcodeType>();
+            this.typeMap = new Map<string, OpenposScanType>();
             Object.getOwnPropertyNames(m).forEach(element => {
                 this.typeMap.set( element, m[element]);
             });

@@ -81,6 +81,8 @@ export * from './lib/core/oldplugins/logfile-download.plugin';
 export * from './lib/core/oldplugins/oldplugin.interface';
 export * from './lib/core/oldplugins/scan';
 
+export * from './lib/core/platform-plugins/scanners/scanner.service';
+
 export * from './lib/core/services/app-version';
 export * from './lib/core/services/configuration.service';
 export * from './lib/core/services/cordova.service';

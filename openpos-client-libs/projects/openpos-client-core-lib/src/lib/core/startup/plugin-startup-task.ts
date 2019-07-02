@@ -3,7 +3,7 @@ import { IStartupTask } from './startup-task.interface';
 import { StartupTaskNames } from './startup-task-names';
 import { InjectionToken, Optional, Inject } from '@angular/core';
 import { IPlatformPlugin } from '../platform-plugins/platform-plugin.interface';
-import { SCANNERS } from '../services/scanner.service';
+import { SCANNERS } from '../platform-plugins/scanners/scanner.service';
 import { IScanner } from '../platform-plugins/scanners/scanner.interface';
 
 export const PLUGINS = new InjectionToken<IPlatformPlugin[]>('Plugins');

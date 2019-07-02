@@ -3,7 +3,7 @@ import { PriceCheckerHomeInterface } from './price-checker-home.interface';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { ImageService } from '../../core/services/image.service';
-import { ScannerService } from '../../core/services/scanner.service';
+import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
 
 @ScreenComponent({
     name: 'PriceCheckerHome'

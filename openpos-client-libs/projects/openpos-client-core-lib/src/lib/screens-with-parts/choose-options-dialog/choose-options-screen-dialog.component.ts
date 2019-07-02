@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
 import { ChooseOptionsScreenDialogInterface } from './choose-options-screen-dialog.interface';
-import { ScannerService } from './../../core/services/scanner.service';
+import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
 import { Subscription } from 'rxjs';
 
 @DialogComponent({

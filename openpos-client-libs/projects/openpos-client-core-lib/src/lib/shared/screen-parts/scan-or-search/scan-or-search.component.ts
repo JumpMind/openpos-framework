@@ -7,7 +7,7 @@ import { MessageProvider } from '../../providers/message.provider';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { OpenposMediaService } from '../../../core/services/openpos-media.service';
 import { Observable, Subscription } from 'rxjs';
-import { ScannerService } from '../../../core/services/scanner.service';
+import { ScannerService } from '../../../core/platform-plugins/scanners/scanner.service';
 import { DialogService } from '../../../core/services/dialog.service';
 import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';

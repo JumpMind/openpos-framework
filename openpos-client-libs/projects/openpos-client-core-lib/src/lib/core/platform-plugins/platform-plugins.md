@@ -1,13 +1,11 @@
 ---
 id: platform-plugins
-title: OpenPOS Client Platform Plugins
+title: Platform Plugins
 ---
-
-# Platform Plugins
 
 Platform plugins are OpenPOS representations of plugins or features that are in the platform OpenPOS runs on. Examples couple be a plugin for a scanner or payment device.
 
-All platform plugins should implement `IPlatformPlugin` and be made `@Injectable`.
+All platform plugins should implement [IPlatformPlugin](platform-plugin.interface.ts) and be made `@Injectable`.
 
 ## Initialization
 
@@ -15,7 +13,7 @@ Platform plugins get picked up the Startup process when it is provided to the `P
 
 ```typescript
 providers: [
-    { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
+    { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true },
     ]
 ```
 

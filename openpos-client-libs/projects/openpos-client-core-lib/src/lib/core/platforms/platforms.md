@@ -1,4 +1,7 @@
-# Platforms
+---
+id: platform-overview
+title: Platform Overview
+---
 
 Platforms represent the container in which the Openpos app runs. Examples would be Cordova, Electron, ReactNative.
 
@@ -10,7 +13,7 @@ Platforms get picked up by the Startup process when a platforms is provided to t
 
 ```typescript
 providers: [
-    { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true}
+    { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true }
     ]
 ```
 
