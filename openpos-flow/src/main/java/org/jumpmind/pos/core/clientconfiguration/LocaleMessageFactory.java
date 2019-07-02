@@ -16,14 +16,6 @@ public class LocaleMessageFactory {
     ILocaleProvider localeProvider;
 
     public LocaleChangedMessage getMessage(Locale locale, Locale displayLocale) {
-        if (localeProvider != null) {
-            if (locale == null) {
-                locale = localeProvider.getLocale();
-            }
-            if (displayLocale == null) {
-                displayLocale = localeProvider.getLocale();
-            }
-        }
         LocaleChangedMessage message = new LocaleChangedMessage(locale, displayLocale);
         message.setSupportedLocales(supportedLocales);
         return message;
