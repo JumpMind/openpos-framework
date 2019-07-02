@@ -27,13 +27,28 @@ public class ClientLocaleService {
 
     private Locale locale;
 
+    private Locale displayLocale;
+
     public Locale getLocale() {
         return locale;
     }
 
     public void setLocale(Locale locale) {
         this.locale = locale;
-        LocaleChangedMessage message = localeMessageFactory.getMessage(locale);
+        sendMessage();
+    }
+
+    public Locale getDisplayLocale() {
+        return displayLocale;
+    }
+
+    public void setDisplayLocale(Locale displayLocale) {
+        this.displayLocale = displayLocale;
+        sendMessage();
+    }
+
+    private void sendMessage() {
+        LocaleChangedMessage message = localeMessageFactory.getMessage(locale, displayLocale);
         messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
     }
 

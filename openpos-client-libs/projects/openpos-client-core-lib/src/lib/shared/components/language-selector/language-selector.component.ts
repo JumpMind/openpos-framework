@@ -17,7 +17,7 @@ export class LanguageSelectorComponent {
     languages = [];
 
     constructor(public sessionService: SessionService, public localeService: LocaleService) {
-        this.selectedLocale = localeService.getLocale();
+        this.selectedLocale = localeService.getDisplayLocale();
         this.selectedIcon = this.getIcon(this.selectedLocale);
 
         this.locales = localeService.getSupportedLocales();

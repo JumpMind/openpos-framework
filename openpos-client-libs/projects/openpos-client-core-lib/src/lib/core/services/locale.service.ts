@@ -9,6 +9,7 @@ export const DEFAULT_LOCALE = 'en-US';
 })
 export class LocaleService {
     private locale = DEFAULT_LOCALE;
+    private displayLocale = DEFAULT_LOCALE;
     private supportedLocales = ['en-US'];
 
     constructor(public sessionService: SessionService) {
@@ -19,6 +20,9 @@ export class LocaleService {
         if (message.locale) {
             this.locale = this.formatLocaleForBrowser(message.locale);
         }
+        if (message.displayLocale) {
+            this.displayLocale = this.formatLocaleForBrowser(message.displayLocale);
+        }
         if (message.supportedLocales) {
             this.supportedLocales = message.supportedLocales.map(locale => this.formatLocaleForBrowser(locale));
         }
@@ -26,6 +30,10 @@ export class LocaleService {
 
     getLocale(): string {
         return this.locale;
+    }
+
+    getDisplayLocale(): string {
+        return this.displayLocale;
     }
 
     getSupportedLocales(): string[] {

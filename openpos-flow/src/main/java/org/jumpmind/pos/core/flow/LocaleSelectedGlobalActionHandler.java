@@ -18,7 +18,7 @@ public class LocaleSelectedGlobalActionHandler {
     @OnGlobalAction
     public void handleAction(Action action) {
         Locale locale = LocaleUtils.toLocale(action.getData());
-        clientLocaleService.setLocale(locale);
+        clientLocaleService.setDisplayLocale(locale);
 
         stateManager.refreshScreen();
     }
