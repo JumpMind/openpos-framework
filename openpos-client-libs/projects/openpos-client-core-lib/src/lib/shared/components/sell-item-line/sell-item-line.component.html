@@ -1,4 +1,4 @@
-<div gdAreas="  description description giftReceipt cost kebab |
+<div gdAreas="  description description specialTags cost kebab |
                                 subtitle labels giftReceipt cost kebab |
                                 prop65Item prop65Item prop65Item prop65Item prop65Item"
     gdColumns="auto 1fr auto auto auto" gdGap="4px" [ngClass]="item.type">
@@ -21,8 +21,9 @@
             </tr>
         </table>
     </div>
-    <div gdArea="giftReceipt" *ngIf="item.isGiftReceipt" fxAlign="right center">
-        <mat-icon color="muted-color">redeem</mat-icon>&nbsp;&nbsp;
+    <div gdArea="specialTags" *ngIf="item.isGiftReceipt || item.isOrderItem" fxAlign="right center">
+        <mat-icon *ngIf="item.isGiftReceipt" color="muted-color">redeem</mat-icon>&nbsp;&nbsp;
+        <mat-icon *ngIf="item.isOrderItem" color="muted-color">computer</mat-icon>&nbsp;&nbsp;
     </div>
     <div gdArea="cost" gdGridAlign="center center" class="primary text-md sell-item-line-cost-outer">
         <span *ngIf="item.sellingPrice && item.showSellingPrice" class="muted-color text-sm sell-item-line-selling-price">

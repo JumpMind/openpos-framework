@@ -27,7 +27,8 @@ public class SellItem extends DefaultItem {
     private List<ActionItem> menuItems = new ArrayList<>();
     private boolean isGiftReceipt = false;
     private boolean isQuantityChangeable;
-    
+    private boolean isOrderItem = false;
+
     /**
      * Put properties in this map if they are optional. When not set, they don't
      * show up in the json which means less overhead.
@@ -183,5 +184,13 @@ public class SellItem extends DefaultItem {
     	}
     	
     	return hasReturnQuantity;
+    }
+
+    public boolean getIsOrderItem() {
+        return isOrderItem;
+    }
+
+    public void setIsOrderItem(boolean isOrderItem) {
+        this.isOrderItem = isOrderItem;
     }
 }
