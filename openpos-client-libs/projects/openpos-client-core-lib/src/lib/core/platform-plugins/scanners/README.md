@@ -1,7 +1,4 @@
----
-id: scanners-overview
-title: Scanner Framework Overview
----
+# Scanner Framework Overview
 
 The scanner framework provides a generic mechanism for interacting with different types of scanners.
 

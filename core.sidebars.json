@@ -1,0 +1,24 @@
+{
+    "Overview": [
+        "core-overview"
+    ],    
+    "Server Core Lib": [
+        "openpos-core",
+        "openpos-server-core",
+        "openpos-service",
+        "openpos-persist",
+        "openpos-devices",
+        "openpos-util"
+    ],
+    "Scanner Framework": [
+        "scanners",
+        "wedge-scanner"
+    ],
+    "Client Platforms": [
+        "platforms",
+        "platform-plugins"
+    ],
+    "Client Startup": [
+        "startup"
+    ]       
+}
