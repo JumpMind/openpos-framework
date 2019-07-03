@@ -1,17 +1,15 @@
-
-plugins {
-    id 'org.hidetake.ssh' version '2.10.1'
-}
-
 apply plugin: "com.moowork.node"
 
-remotes {
-    mavenServer {
-        host = 'maven.jumpmind.com'
-        port = 2222
-        user = deployUser
-        password = deployPassword
-    }
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    sshAntTask
+}
+dependencies {
+    sshAntTask 'org.apache.ant:ant-jsch:1.10.5'
+    sshAntTask 'com.jcraft:jsch:0.1.55'
 }
 
 node {
@@ -57,8 +55,6 @@ task bundle_sass(type: NpmTask){
     ]
 }
 
-
-
 task processResources {}
 
 task test {
@@ -80,21 +76,15 @@ task npm_pack(type: NpmTask){
 task deploy {
     dependsOn npm_pack
     doLast {
-        copy {
-            from ('.') {
-                include '**/jumpmind-openpos-client-core-lib-*.tgz'
-            }
-            into ('.')
-            rename { String fileName ->
-                'jumpmind-openpos-client-core-lib-snapshot.tgz'
-            }
-        }
-        ssh.settings {
-            fileTransfer = 'scp'
-        }
-        ssh.run {
-            session(remotes.mavenServer) {
-                put from:fileTree('.').include('**/jumpmind-openpos-client-core-lib-*.tgz').files, into:'www/npm'
+        ant.taskdef(name: 'scp', classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp', classpath: configurations.sshAntTask.asPath)
+        def toDir = "$deployUser:$deployPassword@maven.jumpmind.com:~/www/npm"
+
+        fileTree('dist/openpos-client-core-lib').visit { FileVisitDetails details -> 
+            if (details.file.path.endsWith('tgz')) {
+                ant.scp(todir: toDir, port: 2222, trust: 'true', verbose: 'true', localFile: details.file.path)          
+                def snapshotFile = 'dist/openpos-client-core-lib/jumpmind-openpos-client-core-lib-snapshot.tgz'
+                ant.copy(file: details.file.path, tofile: snapshotFile)
+                ant.scp(todir: toDir, port: 2222, trust: 'true', verbose: 'true', localFile: snapshotFile)
             }
         }
     }

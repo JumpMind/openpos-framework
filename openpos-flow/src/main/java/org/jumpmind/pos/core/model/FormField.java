@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.jumpmind.pos.core.ui.validator.IValidatorSpec;
+
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 
@@ -273,17 +275,17 @@ public class FormField implements IFormElement, IField, Serializable {
         this.put("scanEnabled", scanEnabled);
     }
 
-    public void setValidators(Set<Validator> validators) {
+    public void setValidators(Set<IValidatorSpec> validators) {
         this.put("validators", validators);
     }
     
-    public FormField addValidators(Validator ...validators) {
+    public FormField addValidators(IValidatorSpec ...validators) {
         if (validators != null && validators.length > 0) {
             if (! this.optionalProperties.containsKey("validators")) {
-                this.put("validators", new HashSet<Validator>());
+                this.put("validators", new HashSet<IValidatorSpec>());
             }
             @SuppressWarnings("unchecked")
-            Set<Validator> theValidators = (Set<Validator>) this.optionalProperties.get("validators");
+            Set<IValidatorSpec> theValidators = (Set<IValidatorSpec>) this.optionalProperties.get("validators");
             theValidators.addAll(Arrays.asList(validators));
         }
         return this;

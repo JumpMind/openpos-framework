@@ -6,6 +6,7 @@ import { IForm } from '../interfaces/form.interface';
 // cannot import the ../../shared barrel here because of a circular reference
 import { ValidatorsService } from './validators.service';
 import { OpenPosValidators } from '../../shared/validators/openpos-validators';
+import { RequireAtLeastOneValidator, RequireAtLeastOneValidatorFn } from '../../shared/validators/require-at-least-one-validator';
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +46,8 @@ export class FormBuilder {
                     if (formGroup.value[element.id]) {
                         element.checked = (formGroup.value[element.id] === true || formGroup.value[element.id] === 'checked');
                     } else if (formGroup.controls[element.id]) {
-                        element.checked = formGroup.controls[element.id].value === true || formGroup.controls[element.id].value === 'checked';
+                        element.checked = formGroup.controls[element.id].value === true ||
+                            formGroup.controls[element.id].value === 'checked';
                     }
                 } else if (element.elementType === 'Input' && element.inputType !== 'Radio') {
                     element.value = formGroup.value[element.id];
@@ -59,15 +61,15 @@ export class FormBuilder {
     }
 
     /**
- * Since an individual validator cannot be added after construction, this method
- * provides a way to add extra validators onto those already normally assigned to the
- * IFormElement.
- * A list of validators is returned which include the provided list of extraValidators.
- * The returned list of validators can then be set on the form. See the setValidators method
- * on the FormComponent class.
- *
- * @param extraValidators Optional additional validators to be added to the form.
- */
+     * Since an individual validator cannot be added after construction, this method
+     * provides a way to add extra validators onto those already normally assigned to the
+     * IFormElement.
+     * A list of validators is returned which include the provided list of extraValidators.
+     * The returned list of validators can then be set on the form. See the setValidators method
+     * on the FormComponent class.
+     *
+     * @param extraValidators Optional additional validators to be added to the form.
+     */
     private createControlValidators(element: IFormElement, extraValidators: ValidatorFn[] = []): ValidatorFn[] {
         let validators: ValidatorFn[] = [];
         if (element.required) {
@@ -119,7 +121,7 @@ export class FormBuilder {
     private createFormLevelValidators(form: IForm, extraValidators: ValidatorFn[] = []): ValidatorFn[] {
         let validators: ValidatorFn[] = [];
         if (form.requiresAtLeastOneValue) {
-            validators.push(OpenPosValidators.RequireAtleastOne);
+            validators.push(RequireAtLeastOneValidatorFn);
         }
 
         validators = validators.concat(extraValidators);

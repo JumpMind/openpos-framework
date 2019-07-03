@@ -25,13 +25,18 @@ steps:
 - checkout: self
   persistCredentials: true
 - script: mkdir ~/.ssh
+  displayName: make .ssh dir
 - script: ssh-keyscan -p $(deployPort) -H $(deployServer) >> ~/.ssh/known_hosts
+  displayName: add to known_hosts
 - task: npmAuthenticate@0
+  displayName: npm authenticate
   inputs:
     workingFile: '.npmrc'
     customEndpoint: 'npm'
 - script: cp .npmrc ~/.npmrc
+  displayName: move .npmrc for publish
 - task: Gradle@2
+  displayName: gradle release
   inputs:
     workingDirectory: 'openpos-assemble'
     options: '-PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranch) -PdeployUser=$(deployUser) -PdeployPassword=$(deployPassword) -PdeployUploadUrl=$(deployUploadUrl) -PpersonalAccessToken=$(personalAccessToken) -PreleaseBuildEnabled=true'

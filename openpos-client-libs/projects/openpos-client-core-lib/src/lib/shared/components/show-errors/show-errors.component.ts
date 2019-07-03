@@ -26,7 +26,9 @@ export class ShowErrorsComponent {
         dateddmmyy: () => 'Date is invalid',
         dateddmmyyyy: () => 'Date is invalid',
         noyeardate: () => 'Date is invalid',
-        gt_0: () => 'Value must be greater than 0'
+        gt_0: () => 'Value must be greater than 0',
+        minvalue: () => 'Value is less than minimum permitted',
+        maxvalue: () => 'Value is greather than maximum permitted',
     };
 
     @Input()

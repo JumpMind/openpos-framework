@@ -53,7 +53,7 @@ export class FormattersService {
         NOLOCALEFormatters.set('numerictext', numericFormatter);
         NOLOCALEFormatters.set('giftcode', new GiftCodeFormatter());
         // Use USD formatter as default
-        NOLOCALEFormatters.set('money', new MoneyFormatter());
+        NOLOCALEFormatters.set('money', new MoneyFormatter(localeService));
         NOLOCALEFormatters.set('phone', defaultPhoneFormatter);
         NOLOCALEFormatters.set('percent', new PercentageFormatter());
         NOLOCALEFormatters.set('percentint', new PercentageFormatter(PercentageFormatter.INTEGER_MODE));

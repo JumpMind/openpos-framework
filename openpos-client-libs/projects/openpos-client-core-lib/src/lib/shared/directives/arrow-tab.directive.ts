@@ -19,8 +19,12 @@ export class ArrowTabDirective implements OnDestroy {
                 return;
             }
             const index = this.buttons.toArray().map(v => v.nativeElement).indexOf(document.activeElement);
-            if ( index > 0) {
-                this.buttons.toArray()[index - 1].nativeElement.focus();
+            let newIndex = index - 1;
+            while (newIndex > 0 && this.buttons.toArray()[newIndex].nativeElement.disabled) {
+                newIndex--;
+            }
+            if ( newIndex >= 0) {
+                this.buttons.toArray()[newIndex].nativeElement.focus();
             }
         });
 
@@ -29,8 +33,12 @@ export class ArrowTabDirective implements OnDestroy {
                 return;
             }
             const index = this.buttons.toArray().map(v => v.nativeElement).indexOf(document.activeElement);
-            if ( index + 1 < this.buttons.length) {
-                this.buttons.toArray()[index + 1].nativeElement.focus();
+            let newIndex = index + 1;
+            while (newIndex < this.buttons.length - 1 && this.buttons.toArray()[newIndex].nativeElement.disabled) {
+                newIndex++;
+            }
+            if ( newIndex < this.buttons.length) {
+                this.buttons.toArray()[newIndex].nativeElement.focus();
             }
         }));
     }

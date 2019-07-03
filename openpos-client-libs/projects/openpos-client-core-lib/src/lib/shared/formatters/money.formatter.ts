@@ -1,4 +1,6 @@
 import { IFormatter } from './formatter.interface';
+import { LocaleService } from '../../core/services/locale.service';
+import { CurrencyPipe } from '@angular/common';
 
 export class MoneyFormatter implements IFormatter {
 
@@ -6,28 +8,42 @@ export class MoneyFormatter implements IFormatter {
 
     private keyFilter = /[0-9\ | \.]/;
 
+    constructor(public localeService: LocaleService) {}
+
     formatValue(value: string): string {
+
         if (!value && value != '0') {
             return '';
         }
 
+        let amount = '0';
         const i = value.toString().indexOf('.');
         if ( i > 0 ) {
             const d = value.toString().slice(i + 1);
             switch ( d.length) {
                 case 0:
-                    return `$${value}00`;
+                    amount = `${value}00`;
+                    break;
                 case 1:
-                    return `$${value}0`;
+                    amount = `${value}0`;
+                    break;
                 case 2:
-                    return `$${value}`;
+                    amount = `${value}`;
+                    break;
                 default:
-                    return `$${value.toString().slice(0, i + 3)}`;
+                    amount = `${value.toString().slice(0, i + 3)}`;
             }
 
         } else {
-            return `$${value}.00`;
+            amount = `${value}.00`;
         }
+
+        const locale = this.localeService.getLocale();
+        const currencyCode = this.localeService.getConstant('currencyCode');
+        const currencyPipe = new CurrencyPipe(locale);
+        amount = currencyPipe.transform(amount, currencyCode, 'symbol-narrow', '1.2', locale);
+
+        return amount;
     }
 
     unFormatValue(value: string): string {

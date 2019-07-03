@@ -11,21 +11,19 @@ public class LocaleChangedMessage extends Message {
 
     private String locale;
 
+    private String displayLocale;
+
     String[] supportedLocales;
 
     public LocaleChangedMessage() {
         super(MessageType.LocaleChanged);
     }
 
-    public LocaleChangedMessage(String locale) {
-        this();
-        this.locale = locale;
-    }
-
-    public LocaleChangedMessage(Locale locale) {
+    public LocaleChangedMessage(Locale locale, Locale displayLocale) {
         this();
         setLocale(locale);
-    }
+        setDisplayLocale(displayLocale);
+}
 
     public String getLocale() {
         return locale;
@@ -38,6 +36,20 @@ public class LocaleChangedMessage extends Message {
     public void setLocale(Locale locale) {
         if (locale != null) {
             this.locale = locale.toString();
+        }
+    }
+
+    public String getDisplayLocale() {
+        return displayLocale;
+    }
+
+    public void setDisplayLocale(String displayLocale) {
+        this.displayLocale = displayLocale;
+    }
+
+    public void setDisplayLocale(Locale displayLocale) {
+        if (displayLocale != null) {
+            this.displayLocale = displayLocale.toString();
         }
     }
 
