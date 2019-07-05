@@ -36,7 +36,7 @@
         </div>
         <div gdArea="unitPrice" gdGridAlign="end center">
             <span class="unit-price" *ngIf="screen.pricePerUnit">{{screen.pricePerUnit.value | valueFormatter:screen.pricePerUnit.valueFormatter}}</span>
-            <span class="unit-price-label" *ngIf="screen.pricePerUnit">{{screen.pricePerUnit.label}}</span>
+            <span class="unit-price-label" *ngIf="screen.pricePerUnit">Per {{screen.pricePerUnit.label}}</span>
         </div>
         <div gdArea="pricelabel" class="current-price-label">
             {{screen.currentPrice.label}}
