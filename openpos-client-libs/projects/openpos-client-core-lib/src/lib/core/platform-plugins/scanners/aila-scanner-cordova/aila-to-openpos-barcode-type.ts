@@ -10,10 +10,12 @@ export class AilaBarcodeUtils {
                 switch (length) {
                     case 8:
                         return OpenposScanType.UPCE;
-                    case 13:
+                    case 12:
                         return OpenposScanType.UPCA;
+                    case 13:
+                        return OpenposScanType.EAN13;
                     default:
-                        return null;
+                        return OpenposScanType.UPC_UNKNOWN;
                 }
             case AilaBarcodeType.QR:
                 return OpenposScanType.QRCODE;

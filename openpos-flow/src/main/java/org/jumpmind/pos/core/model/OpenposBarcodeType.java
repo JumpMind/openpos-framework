@@ -60,7 +60,8 @@ public enum OpenposBarcodeType {
     UPCA_5,
     UPCE,
     UPCE_2,
-    UPCE_5;
+    UPCE_5,
+    UPC_UNKNOWN;
     
     private List<String> variants = null;
     

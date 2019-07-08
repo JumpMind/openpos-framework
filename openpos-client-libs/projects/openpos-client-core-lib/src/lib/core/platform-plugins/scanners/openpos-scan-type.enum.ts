@@ -37,6 +37,7 @@ export enum OpenposScanType {
     UPCE = 'UPCE',
     UPCE_2 = 'UPCE_2',
     UPCE_5 = 'UPCE_5',
+    UPC_UNKNOWN = 'UPC_UNKNOWN',
     EAN13_2 = 'EAN13_2',
     EAN13_5 = 'EAN13_5',
     EAN8_2 = 'EAN8_2',
