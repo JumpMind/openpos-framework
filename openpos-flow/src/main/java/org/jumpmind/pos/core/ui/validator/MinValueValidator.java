@@ -1,5 +1,7 @@
 package org.jumpmind.pos.core.ui.validator;
 
+
+
 /**
  * A client side validator specification used to specify that a client
  * side field should not have a value under a specified minimum value.
@@ -11,6 +13,9 @@ public class MinValueValidator implements IValidatorSpec {
     private String minimumValue;
     private String name;
     
+    MinValueValidator() {
+    }
+    
     public MinValueValidator(String minimumValue) {
         this.minimumValue = minimumValue;
     }
@@ -20,7 +25,7 @@ public class MinValueValidator implements IValidatorSpec {
     }
 
     public MinValueValidator(int minimumValue) {
-        this.minimumValue = this.minimumValue + "";
+        this.minimumValue = minimumValue + "";
     }
     public MinValueValidator(String name, int minimumValue) {
         this(minimumValue);
@@ -28,7 +33,7 @@ public class MinValueValidator implements IValidatorSpec {
     }
     
     public MinValueValidator(float minimumValue) {
-        this.minimumValue = this.minimumValue + "";
+        this.minimumValue = minimumValue + "";
     }
     public MinValueValidator(String name, float minimumValue) {
         this(minimumValue);
@@ -36,7 +41,7 @@ public class MinValueValidator implements IValidatorSpec {
     }
     
     public MinValueValidator(double minimumValue) {
-        this.minimumValue = this.minimumValue + "";
+        this.minimumValue = minimumValue + "";
         
     }
     public MinValueValidator(String name, double minimumValue) {

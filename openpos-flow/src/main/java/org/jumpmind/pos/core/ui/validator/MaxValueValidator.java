@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.ui.validator;
 
+
 /**
  * A client side validator specification used to specify a maximum
  * value that should not be exceeded for a field on the client side.
@@ -15,15 +16,15 @@ public class MaxValueValidator implements IValidatorSpec {
     }
 
     public MaxValueValidator(int maximumValue) {
-        this.maximumValue = this.maximumValue + "";
+        this.maximumValue = maximumValue + "";
     }
     
     public MaxValueValidator(float maximumValue) {
-        this.maximumValue = this.maximumValue + "";
+        this.maximumValue = maximumValue + "";
     }
     
     public MaxValueValidator(double maximumValue) {
-        this.maximumValue = this.maximumValue + "";
+        this.maximumValue = maximumValue + "";
         
     }
     

@@ -1,16 +1,17 @@
 package org.jumpmind.pos.core.model;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.jumpmind.pos.core.ui.validator.IValidatorSpec;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import com.fasterxml.jackson.annotation.JsonSetter;
 
 public class FormField implements IFormElement, IField, Serializable {
     private static final long serialVersionUID = 1L;
@@ -275,18 +276,37 @@ public class FormField implements IFormElement, IField, Serializable {
         this.put("scanEnabled", scanEnabled);
     }
 
+    /**
+     * Use {@link #setValidators(List)} instead
+     * @deprecated
+     * @param validators
+     */
+    @Deprecated
     public void setValidators(Set<IValidatorSpec> validators) {
+        this.setValidators(validators != null ? validators.toArray(new IValidatorSpec[]{}) : null);
+    }
+
+    public void setValidators(List<IValidatorSpec> validators) {
+        this.setValidators(validators != null ? validators.toArray(new IValidatorSpec[]{}) : null);
+    }
+    
+    @JsonSetter
+    public void setValidators(IValidatorSpec[] validators) {
+        // Jackson won't properly serialize the IValidatorSpecs unless they
+        // are an array.  Appears to be due to a bug with having a list of 
+        // child objects annotated with @JsonTypeInfo who belong to a
+        // parent that is also annotated with @JsonTypeInfo
         this.put("validators", validators);
     }
+    
     
     public FormField addValidators(IValidatorSpec ...validators) {
         if (validators != null && validators.length > 0) {
             if (! this.optionalProperties.containsKey("validators")) {
-                this.put("validators", new HashSet<IValidatorSpec>());
+                this.put("validators", new IValidatorSpec[]{});
             }
-            @SuppressWarnings("unchecked")
-            Set<IValidatorSpec> theValidators = (Set<IValidatorSpec>) this.optionalProperties.get("validators");
-            theValidators.addAll(Arrays.asList(validators));
+            IValidatorSpec[] currentValidators = (IValidatorSpec[]) this.optionalProperties.get("validators");
+            this.put("validators", ArrayUtils.addAll(currentValidators, validators));
         }
         return this;
     }

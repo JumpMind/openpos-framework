@@ -3,6 +3,7 @@ package org.jumpmind.pos.core.ui.validator;
 import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 
 /**
  * Provides a mechanism to specify validators on the server
@@ -12,6 +13,7 @@ import com.fasterxml.jackson.annotation.JsonGetter;
  * client application.  Your implementation could also specify custom fields
  * that are set on the server side and passed over to the client.
  */
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY)
 public interface IValidatorSpec extends Serializable {
 
     @JsonGetter
