@@ -62,13 +62,14 @@ public class DBSession {
         this.databasePlatform = databasePlatform;
         this.sessionContext = sessionContext;
         this.jdbcTemplate = new JdbcTemplate(databasePlatform.getDataSource());
+        this.jdbcTemplate.setFetchSize(1000);
         this.queryTemplates = queryTemplates;
         this.tagHelper = tagHelper;
     }
 
-    public <T extends AbstractModel> List<T> findAll(Class<T> clazz) {
+    public <T extends AbstractModel> List<T> findAll(Class<T> clazz, int maxResults) {
         Query<T> query = new Query<T>().result(clazz);
-        return query(query, new HashMap<>());
+        return query(query, new HashMap<>(), maxResults);
     }
 
     public <T extends AbstractModel> T findByNaturalId(Class<T> entityClass, String id) {
@@ -105,7 +106,7 @@ public class DBSession {
         QueryTemplate queryTemplate = new QueryTemplate();
         queryTemplate.setSelect(getSelectSql(entityClass, id.getIdFields()));
         Query<T> query = new Query<T>().result(entityClass);
-        List<T> results = query(query, queryTemplate, id.getIdFields());
+        List<T> results = query(query, queryTemplate, id.getIdFields(), 1);
 
         if (results != null) {
             if (results.size() == 1) {
@@ -124,9 +125,9 @@ public class DBSession {
      * null out any fields that might be set by default.
      */
     @SuppressWarnings("unchecked")
-    public <T extends AbstractModel> List<T> findByObjectDef(T entity) {
+    public <T extends AbstractModel> List<T> findByObjectDef(T entity, int maxResults) {
         Map<String, Object> fieldValues = toParamMap(entity, false);
-        List<T> list = (List<T>) findByFields(entity.getClass(), fieldValues);
+        List<T> list = (List<T>) findByFields(entity.getClass(), fieldValues, maxResults);
         return list;
     }
 
@@ -135,7 +136,7 @@ public class DBSession {
         if(searchCriteria.getEntityClass() == null) {
             throw new PersistException();
         }
-        return (List<T>) findByFields(searchCriteria.getEntityClass(), searchCriteria.getCriteria());
+        return (List<T>) findByFields(searchCriteria.getEntityClass(), searchCriteria.getCriteria(), searchCriteria.getMaxResults());
     }
 
     public Map<String, Object> toParamMap(AbstractModel entity, boolean includeNullValues) {
@@ -165,11 +166,11 @@ public class DBSession {
         return params;
     }
 
-    public <T extends AbstractModel> List<T> findByFields(Class<T> entityClass, Map<String, Object> fieldValues) {
+    public <T extends AbstractModel> List<T> findByFields(Class<T> entityClass, Map<String, Object> fieldValues, int maxResults) {
         QueryTemplate queryTemplate = new QueryTemplate();
         queryTemplate.setSelect(getSelectSql(entityClass, fieldValues));
         Query<T> query = new Query<T>().result(entityClass);
-        return query(query, queryTemplate, fieldValues);
+        return query(query, queryTemplate, fieldValues, maxResults);
     }
 
     public void executeScript(File file) {
@@ -205,30 +206,34 @@ public class DBSession {
     }
 
     public <T> List<T> query(Query<T> query) {
-        return query(query, (Map<String, Object>) null);
+        return query(query, (Map<String, Object>) null, 100);
+    }
+
+    public <T> List<T> query(Query<T> query, int maxResults) {
+        return query(query, (Map<String, Object>) null, maxResults);
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> query(Query<T> query, String singleParam) {
+    public <T> List<T> query(Query<T> query, String singleParam, int maxResults) {
         QueryTemplate queryTemplate = getQueryTemplate(query);
         try {
             SqlStatement sqlStatement = queryTemplate.generateSQL(query, singleParam);
-            return (List<T>) queryInternal(query.getResultClass(), sqlStatement);
+            return (List<T>) queryInternal(query.getResultClass(), sqlStatement, maxResults);
         } catch (Exception ex) {
             throw new PersistException("Failed to query target class " + query.getResultClass(), ex);
         }
     }
 
-    public <T> List<T> query(Query<T> query, Map<String, Object> params) {
+    public <T> List<T> query(Query<T> query, Map<String, Object> params, int maxResults) {
         QueryTemplate queryTemplate = getQueryTemplate(query);
-        return query(query, queryTemplate, params);
+        return query(query, queryTemplate, params, maxResults);
     }
     
     @SuppressWarnings("unchecked")
-    public <T> List<T> query(Query<T> query, QueryTemplate queryTemplate, Map<String, Object> params) {
+    public <T> List<T> query(Query<T> query, QueryTemplate queryTemplate, Map<String, Object> params, int maxResults) {
         try {
             SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
-            return (List<T>) queryInternal(query.getResultClass(), sqlStatement);
+            return (List<T>) queryInternal(query.getResultClass(), sqlStatement, maxResults);
         } catch (Exception ex) {
             throw new PersistException("Failed to query result class " + query.getResultClass(), ex);
         }
@@ -394,11 +399,11 @@ public class DBSession {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> List<T> queryInternal(Class<T> resultClass, SqlStatement statement) throws Exception {
+    protected <T> List<T> queryInternal(Class<T> resultClass, SqlStatement statement, int maxResutls) throws Exception {
         List<T> objects = new ArrayList<T>();
         List<Row> rows = jdbcTemplate.query(statement.getSql(), new DefaultMapper(), statement.getValues().toArray());
 
-        for (int j = 0; j < rows.size(); j++) {
+        for (int j = 0; j < rows.size() && j < maxResutls; j++) {
             Row row = rows.get(j);
             T object = null;
 

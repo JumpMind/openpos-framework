@@ -400,7 +400,7 @@ public class DBSessionTest {
         
         {
             DBSession db = sessionFactory.createDbSession();
-            List<CarModel> cars = db.findByFields(CarModel.class, fieldValues);
+            List<CarModel> cars = db.findByFields(CarModel.class, fieldValues, 100);
             assertNotNull(cars);
             assertEquals(1, cars.size());
             assertEquals(VIN1, cars.get(0).getVin());

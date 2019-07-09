@@ -17,7 +17,6 @@ public class Query<T> {
 
     private String name;
     private Class<? extends T> resultClass;
-//    private QueryTemplate queryTemplate = new QueryTemplate();
     private boolean useAnd = true;
 
     public Query<T> result(Class<? extends T> resultClass) {
@@ -52,12 +51,5 @@ public class Query<T> {
         return name;
     }
 
-//    public QueryTemplate getQueryTemplate() {
-//        return queryTemplate;
-//    }
-//
-//    public void setQueryTemplate(QueryTemplate queryTemplate) {
-//        this.queryTemplate = queryTemplate;
-//    }
 
 }

@@ -9,6 +9,7 @@ import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
@@ -27,10 +28,10 @@ public class DevicesRepository {
 
     Query<DeviceConfigPropModel> devicePropsQuery = new Query<DeviceConfigPropModel>().named("devicePropsLookupByProfile").result(DeviceConfigPropModel.class);
 
-    public Map<String, DeviceConfigModel> getDevices() {
+    public Map<String, DeviceConfigModel> getDevices(int maxResults) {
         Map<String, DeviceConfigModel> byLogicalName = new HashMap<>();
-        List<DeviceConfigModel> devices = dbSession.findAll(DeviceConfigModel.class);
-        List<DeviceConfigPropModel> properties = dbSession.findAll(DeviceConfigPropModel.class);
+        List<DeviceConfigModel> devices = dbSession.findAll(DeviceConfigModel.class, maxResults);
+        List<DeviceConfigPropModel> properties = dbSession.findAll(DeviceConfigPropModel.class, maxResults);
         for (DeviceConfigModel deviceModel : devices) {
             byLogicalName.put(DevicesUtils.getLogicalName(deviceModel), deviceModel);
         }

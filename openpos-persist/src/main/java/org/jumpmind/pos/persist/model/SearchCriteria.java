@@ -13,6 +13,8 @@ public class SearchCriteria {
 
     boolean useAnd = true;
 
+    int maxResults = 1000;
+
     public SearchCriteria() {
 
     }
@@ -58,7 +60,15 @@ public class SearchCriteria {
     public boolean isUseAnd() {
         return useAnd;
     }
-    
+
+    public int getMaxResults() {
+        return maxResults;
+    }
+
+    public void setMaxResults(int maxResults) {
+        this.maxResults = maxResults;
+    }
+
     public boolean contains(String name) {
         return criteria.containsKey(name);
     }
