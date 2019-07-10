@@ -18,4 +18,7 @@
             color: mat-color($foreground, text);
         }
     }
+	.messages {
+		color: $openpos-app-primary;
+	}
 }
