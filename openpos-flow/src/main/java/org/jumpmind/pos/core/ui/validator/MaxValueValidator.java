@@ -11,6 +11,9 @@ public class MaxValueValidator implements IValidatorSpec {
 
     private String maximumValue;
     
+    MaxValueValidator() {
+    }
+    
     public MaxValueValidator(String maximumValue) {
         this.maximumValue = maximumValue;
     }
