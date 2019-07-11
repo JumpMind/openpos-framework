@@ -363,4 +363,4 @@ export * from './lib/shared/utils/date.utils';
 export * from './lib/shared/validators/openpos-validators';
 export * from './lib/utilites/deep-assign';
 
-
+export * from './lib/styles/theme-test.module';
