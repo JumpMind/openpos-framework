@@ -1,7 +1,7 @@
 import { MatDialog } from '@angular/material';
 import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SelectableItemListComponentConfiguration } from '../../shared/components/selectable-item-list/selectable-item-list.component';
 import { NavListComponent } from '../../shared/components/nav-list/nav-list.component';
@@ -41,8 +41,11 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
   public amountTotals: ITotal[];
   public itemTotal: number;
 
+  private screenData$ = new BehaviorSubject<ISelectableListData<ISellItem>>(null);
+
   constructor(devices: DeviceService, private observableMedia: ObservableMedia, protected dialog: MatDialog) {
     super();
+    this.listData = this.screenData$;
   }
 
   buildScreen() {
@@ -53,18 +56,17 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
     const allItems = new Map<number, ISellItem>();
     const allDisabledItems = new Map<number, ISellItem>();
     for (let i = 0; i < this.screen.items.length; i++) {
-        const item = this.screen.items[i];
-        allItems.set(i, item);
-        if (!item.enabled) {
-            allDisabledItems.set(i, item);
-        }
+      const item = this.screen.items[i];
+      allItems.set(i, item);
+      if (!item.enabled) {
+        allDisabledItems.set(i, item);
+      }
     }
-    this.listData = new Observable<ISelectableListData<ISellItem>>((observer) => {
-        observer.next({
-            items: allItems,
-            disabledItems: allDisabledItems,
-        } as ISelectableListData<ISellItem>);
-    });
+    this.screenData$.next({
+      items: allItems,
+      disabledItems: allDisabledItems,
+    } as ISelectableListData<ISellItem>
+    );
 
     this.listConfig = new SelectableItemListComponentConfiguration();
     this.listConfig.selectionMode = SelectionMode.Multiple;
@@ -74,7 +76,7 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
     this.items = this.screen.items;
     this.amountTotals = this.screen.totals ? (<ITotal[]>this.screen.totals).filter(t => t.type === TotalType.Amount) : null;
     const screenItemTotal = this.screen.totals ?
-    (<ITotal[]>this.screen.totals).find(t => t.type === TotalType.Quantity && t.name === 'itemTotal') : null;
+      (<ITotal[]>this.screen.totals).find(t => t.type === TotalType.Quantity && t.name === 'itemTotal') : null;
     this.itemTotal = screenItemTotal ? Number(screenItemTotal.amount) : this.items.length;
     if (this.screen.template) {
       this.transactionMenuPrompt = this.screen.template.transactionMenuPrompt;
