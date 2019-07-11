@@ -76,16 +76,20 @@ task npm_pack(type: NpmTask){
 task deploy {
     dependsOn npm_pack
     doLast {
-        ant.taskdef(name: 'scp', classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp', classpath: configurations.sshAntTask.asPath)
-        def toDir = "$deployUser:$deployPassword@maven.jumpmind.com:~/www/npm"
+        if (!gitBranch.equals('merge')) {
+            ant.taskdef(name: 'scp', classname: 'org.apache.tools.ant.taskdefs.optional.ssh.Scp', classpath: configurations.sshAntTask.asPath)
+            def toDir = "$deployUser:$deployPassword@maven.jumpmind.com:~/www/npm"
 
-        fileTree('dist/openpos-client-core-lib').visit { FileVisitDetails details -> 
-            if (details.file.path.endsWith('tgz')) {
-                ant.scp(todir: toDir, port: 2222, trust: 'true', verbose: 'true', localFile: details.file.path)          
-                def snapshotFile = 'dist/openpos-client-core-lib/jumpmind-openpos-client-core-lib-snapshot.tgz'
-                ant.copy(file: details.file.path, tofile: snapshotFile)
-                ant.scp(todir: toDir, port: 2222, trust: 'true', verbose: 'true', localFile: snapshotFile)
+            fileTree('dist/openpos-client-core-lib').visit { FileVisitDetails details -> 
+                if (details.file.path.endsWith('tgz')) {
+                    ant.scp(todir: toDir, port: 2222, trust: 'true', verbose: 'true', localFile: details.file.path)          
+                    def snapshotFile = 'dist/openpos-client-core-lib/jumpmind-openpos-client-core-lib-snapshot.tgz'
+                    ant.copy(file: details.file.path, tofile: snapshotFile)
+                    ant.scp(todir: toDir, port: 2222, trust: 'true', verbose: 'true', localFile: snapshotFile)
+                }
             }
+        } else {
+            println('Not going to deploy this build because the gitBranch indicates that this is a pull request')
         }
     }
 }
