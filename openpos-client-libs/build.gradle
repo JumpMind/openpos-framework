@@ -30,6 +30,8 @@ task npm_install(type: NpmTask){
     args = [
             'install'
     ]
+    inputs.files fileTree('package.json')
+    outputs.dir file('node_modules')
 }
 
 task ng_test(type: NpmTask){
@@ -38,6 +40,7 @@ task ng_test(type: NpmTask){
             'run', 
             'test'
     ]
+    inputs.files fileTree('projects/openpos-client-core-lib')
 }
 
 task ng_build(type: NpmTask){
@@ -46,6 +49,8 @@ task ng_build(type: NpmTask){
             'run',
             'build'
     ]
+    inputs.files fileTree('projects/openpos-client-core-lib/**/*')
+    outputs.dir file('dist/openpos-client-core-lib')
 }
 
 task processResources {}
@@ -56,6 +61,11 @@ task test {
 
 task build {
     dependsOn ng_build
+}
+
+task clean {
+    delete ng_build.outputs
+    delete npm_install.outputs
 }
 
 task npm_pack(type: NpmTask){
