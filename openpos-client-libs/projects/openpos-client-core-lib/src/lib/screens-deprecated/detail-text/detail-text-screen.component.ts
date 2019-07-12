@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { IDetailTextScreen } from './detail-text-screen.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 

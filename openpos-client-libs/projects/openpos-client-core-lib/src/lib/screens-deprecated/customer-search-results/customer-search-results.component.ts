@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ICustomer } from './customer.interface';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { MatSelectionListChange } from '@angular/material/list';
 
 /**

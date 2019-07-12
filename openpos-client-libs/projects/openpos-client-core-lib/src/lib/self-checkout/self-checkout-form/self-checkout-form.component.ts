@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { SelfCheckoutFormInterface } from './self-checkout-form.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 
 @ScreenComponent({
   name: 'SelfCheckoutForm'

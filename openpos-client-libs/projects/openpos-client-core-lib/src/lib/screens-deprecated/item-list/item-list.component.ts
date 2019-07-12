@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { IItem } from '../../core/interfaces/item.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';

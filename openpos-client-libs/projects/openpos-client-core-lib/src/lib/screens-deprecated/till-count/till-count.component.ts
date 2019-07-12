@@ -1,6 +1,6 @@
 import { DynamicFormControlComponent } from './../../shared/components/dynamic-form-control/dynamic-form-control.component';
 import { Component, ViewChild } from '@angular/core';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { IForm } from '../../core/interfaces/form.interface';
 import { IFormElement } from '../../core/interfaces/form-field.interface';

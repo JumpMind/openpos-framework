@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ObservableMedia} from '@angular/flex-layout';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { Configuration } from '../../configuration/configuration';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';

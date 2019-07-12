@@ -1,6 +1,6 @@
 
 import { Component } from '@angular/core';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 
 /**

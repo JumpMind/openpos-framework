@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import {  MatPaginator, PageEvent } from '@angular/material';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { IItemQuantityFormElement } from './iitem-quantity-form-field.interface';
 import { FormGroup, FormBuilder } from '@angular/forms';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';

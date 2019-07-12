@@ -1,6 +1,6 @@
 
 import { IActionItem } from '../../core/interfaces/action-item.interface';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../pos-screen.component';
 import { ILine } from '../../screens-deprecated/dialog/line.interface';
 import { Component } from '@angular/core';
 import { SessionService } from '../../core/services/session.service';

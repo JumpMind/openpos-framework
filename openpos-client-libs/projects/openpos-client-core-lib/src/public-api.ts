@@ -174,7 +174,7 @@ export * from './lib/screens-deprecated/multiple-dynamic-form/multiple-dynamic-f
 export * from './lib/screens-deprecated/multiselect-item-list/multiselect-item-list.component';
 export * from './lib/screens-deprecated/options/options.component';
 export * from './lib/screens-deprecated/payment-status/payment-status.component';
-export * from './lib/screens-deprecated/pos-screen/pos-screen.component';
+export * from './lib/screens-with-parts/pos-screen.component';
 export * from './lib/screens-deprecated/print-preview/print-preview.component';
 export * from './lib/screens-deprecated/prompt/prompt-dialog.component';
 export * from './lib/screens-deprecated/prompt/prompt.component';

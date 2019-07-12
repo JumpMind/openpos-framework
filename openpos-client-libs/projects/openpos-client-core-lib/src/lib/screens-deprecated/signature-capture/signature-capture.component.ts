@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, HostListener } from '@angular/core';
 import 'signature_pad';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { MatSnackBar } from '@angular/material';
 import { Configuration } from '../../configuration/configuration';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';

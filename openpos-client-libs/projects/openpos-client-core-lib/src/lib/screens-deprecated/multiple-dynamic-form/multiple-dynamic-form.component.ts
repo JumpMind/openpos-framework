@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { IMultipleDynamicFormScreen } from './multiple-dynamic-form-screen.interface';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 
 
 @Component({

@@ -14,6 +14,7 @@ import { ReturnComponent } from './return/return.component';
 import { ReturnTransDetailsDialogComponent } from './return/return-trans-details/return-trans-details-dialog.component';
 import { ChooseOptionsScreenDialogComponent } from './choose-options-dialog/choose-options-screen-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -30,7 +31,8 @@ const dialogs = [
     PromptWithOptionsScreenDialogComponent,
     ChooseOptionsScreenDialogComponent,
     ReturnTransDetailsDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    LoadingDialogComponent
 ];
 
 @NgModule({

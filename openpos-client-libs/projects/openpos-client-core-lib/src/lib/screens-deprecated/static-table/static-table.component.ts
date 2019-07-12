@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { SelectionMode } from '../choose-options/choose-options-screen.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 

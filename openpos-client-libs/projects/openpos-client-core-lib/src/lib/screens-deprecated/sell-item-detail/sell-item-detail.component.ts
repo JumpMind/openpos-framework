@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import { IPromoItem } from './promo-item.interface';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 

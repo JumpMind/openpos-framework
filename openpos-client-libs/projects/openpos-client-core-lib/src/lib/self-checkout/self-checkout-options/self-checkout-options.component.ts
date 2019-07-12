@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { SessionService } from '../../core/services/session.service';
 import { SelfCheckoutOptionsInterface } from './self-checkout-options.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';

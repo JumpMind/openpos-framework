@@ -11,7 +11,6 @@ import { SellComponent } from './templates/sell-template/sell/sell.component';
 import { TenderingComponent } from './tendering/tendering.component';
 import { ItemSearchResultsComponent } from './item-search-results/item-search-results.component';
 import { DynamicFormDialogComponent } from './dynamic-form/dynamic-form-dialog.component';
-import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 import { SignatureCaptureComponent } from './signature-capture/signature-capture.component';
 import { MultipleDynamicFormDialogComponent } from './multiple-dynamic-form/multiple-dynamic-form-dialog.component';
 import { BasicItemSearchComponent } from './basic-item-search/basic-item-search.component';
@@ -55,7 +54,6 @@ const screens = [
 
 const dialogs = [
         DynamicFormDialogComponent,
-        LoadingDialogComponent,
         MultipleDynamicFormDialogComponent,
         VersionComponent
     ];

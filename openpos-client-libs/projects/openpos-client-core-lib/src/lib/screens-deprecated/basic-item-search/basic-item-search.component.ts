@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
 import { MatInput } from '@angular/material';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { IForm } from '../../core/interfaces/form.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 

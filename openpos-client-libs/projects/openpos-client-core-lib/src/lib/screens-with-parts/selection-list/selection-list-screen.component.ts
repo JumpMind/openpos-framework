@@ -2,7 +2,7 @@ import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit } from '@
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
 import { SelectableItemListComponentConfiguration } from '../../shared/components/selectable-item-list/selectable-item-list.component';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../pos-screen.component';
 import { SelectionListInterface } from './selection-list.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { Configuration } from '../../configuration/configuration';

@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SelfCheckoutTenderInterface } from './self-checkout-tender.interface';
 import { IOptionItem } from '../../screens-deprecated/choose-options/option-item.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 
 @ScreenComponent({
     name: 'SelfCheckoutTender'

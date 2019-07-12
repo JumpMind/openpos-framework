@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PriceCheckerItemDetailInterface } from './price-checker-item-detail.interface';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';

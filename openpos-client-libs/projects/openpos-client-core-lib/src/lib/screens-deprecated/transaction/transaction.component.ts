@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { SelectableItemListComponentConfiguration } from '../../shared/components/selectable-item-list/selectable-item-list.component';
 import { NavListComponent } from '../../shared/components/nav-list/nav-list.component';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { ITotal } from '../../core/interfaces/total.interface';
 import { TotalType } from '../../core/interfaces/total-type.enum';
 import { IActionItemGroup } from '../../core/interfaces/action-item-group.interface';

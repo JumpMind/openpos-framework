@@ -3,7 +3,7 @@ import { Component, ViewChild } from '@angular/core';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { IOptionItem } from '../../screens-deprecated/choose-options/option-item.interface';
 import { SelfCheckoutPromptInterface } from './self-checkout-prompt.interface';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { PromptFormPartComponent } from '../../shared/screen-parts/prompt-form-part/prompt-form-part.component';
 
 

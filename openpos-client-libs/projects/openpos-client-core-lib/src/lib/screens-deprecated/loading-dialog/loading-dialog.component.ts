@@ -1,7 +1,7 @@
 import { SessionService } from './../../core/services/session.service';
 import { Component } from '@angular/core';
 import { ILoadingDialogScreen } from './loading-dialog-screen.interface';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 
 /**

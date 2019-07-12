@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
 import { DialogComponent } from '../../../shared/decorators/dialog-component.decorator';
 import { SelectableItemListComponentConfiguration } from '../../../shared/components/selectable-item-list/selectable-item-list.component';
 import { ReturnTransDetailsInterface } from './return-trans-detals.interface';
-import { PosScreen } from '../../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../pos-screen.component';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { ISelectableListData } from '../../../shared/components/selectable-item-list/selectable-list-data.interface';
 

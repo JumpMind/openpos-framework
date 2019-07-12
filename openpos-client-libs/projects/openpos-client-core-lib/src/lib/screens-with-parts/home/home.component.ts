@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HomeInterface } from './home.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../pos-screen.component';
 import { OpenposMediaService } from '../../core/services/openpos-media.service';
 import { Configuration } from '../../configuration/configuration';
 import { Observable, from, timer } from 'rxjs';

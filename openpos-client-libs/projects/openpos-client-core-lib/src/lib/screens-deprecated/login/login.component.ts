@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { IForm } from '../../core/interfaces/form.interface';
 import { IFormElement } from '../../core/interfaces/form-field.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';

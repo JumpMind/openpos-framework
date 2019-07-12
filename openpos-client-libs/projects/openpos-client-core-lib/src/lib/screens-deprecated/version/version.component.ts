@@ -1,6 +1,6 @@
 import { SessionService } from './../../core/services/session.service';
 import { Component, OnInit } from '@angular/core';
-import { PosScreen } from '../pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { OldPluginService } from '../../core/services/old-plugin.service';
 import { AppVersion } from '../../core/services/app-version';
