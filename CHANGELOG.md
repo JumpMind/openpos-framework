@@ -13,8 +13,10 @@ Released on:
   | [#116](https://github.com/JumpMind/openpos-framework/pull/116) | added maxResults to the persist api | [enhancement, server] |Chris Henson|
   | [#119](https://github.com/JumpMind/openpos-framework/pull/119) | IValidatorSpec implementations fail deserialization with jackson  | [bug, server] |Jason Mihalick|
   | [#120](https://github.com/JumpMind/openpos-framework/pull/120) | 120: Ensure MaxValueValidator can be serialized, fix typo in error msg |  |Jason Mihalick|
+  | [#122](https://github.com/JumpMind/openpos-framework/pull/122) | bugfix/PromoColor to BL orange |  |jliao300|
   | [#123](https://github.com/JumpMind/openpos-framework/pull/123) | Add test module to make sure we catch and sass errors in themes |  |Dan Kaste|
   | [#124](https://github.com/JumpMind/openpos-framework/pull/124) | Don&#39;t deploy if the branch name is merge | [bug, build] |Chris Henson|
+  | [#126](https://github.com/JumpMind/openpos-framework/pull/126) | Cleanup of client build and documentation update | [build, client] |Dan Kaste|
   | [#87](https://github.com/JumpMind/openpos-framework/pull/87) | Feature/selection list paging | [client, enhancement, server] |Klementina Stojanovska Chirico|
 
 ## 0.3.6 
