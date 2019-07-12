@@ -7,7 +7,25 @@ This project was generated with [Angular CLI](https://github.com/angular/angular
 
 ## Development
 
-High level development process is to run `npm start` from `openpos-client-libs` This will concurrently run the angular build task and scss bundle task in watch mode. Then if you haven't done it yet `cd dist\openpos-client-core-lib` and run `npm link` to create a npm link from your `dist/openpos-client-core-lib` directory. Then if you clients gradle develop does the link you can just run that and it'll link up to your node_modules. If your gradle develop doesn't do that for you run `npm link @jumpmind\openpos-client-core-lib` from your client project root. From there just run `ng serve` from your client and you should see that any file change you make from the core will trigger the core build and a build of you client. You may see it trigger a few builds due to the multistep build process on the core to support various polyfills. If you want to be able to step through core typescript files in the browser use `ng serve --vendorSourceMap` to serve up the type definitions.
+High level development process:
+
+* Run `npm install` from `openpos-client-libs`
+* Run `npm run develop` from `openpos-client-libs`. This will concurrently run the angular build task and scss bundle task in watch mode and create a symbolic link from your build output to your local npm registry. If you want unit tests to also run use `npm run develop:test` instead.
+* Next you'll need to link the core build output into your projects `node_modules`. This is done by running the `npm link @jumpmind/openpos-client-core-lib` command from your client project root. Some gradle develop scripts will detect the presence of openpos-client-core-libs link and do this step for you.
+* From there just run `npm start` from your client and you should see that any file change you make from the core will trigger the core build and a build of you client.
+
+For debugging you will want to expose vendor source maps by adding this build option do `angular.json`
+
+```json
+    "sourceMap": {
+        "hidden": true,
+        "scripts": true,
+        "styles": true,
+        "vendor": true
+        }
+```
+
+_**Note** You may see it trigger a few builds due to the multistep build process on the core to support various bundle types._
 
 ### Core Module
 
