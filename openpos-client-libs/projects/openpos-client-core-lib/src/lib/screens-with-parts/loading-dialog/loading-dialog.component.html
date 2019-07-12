@@ -1,0 +1,7 @@
+<div fxFlexFill fxLayout="column">
+    <app-dialog-header fxFlex="100%"></app-dialog-header>
+    <mat-dialog-content>
+        <div [innerHTML]="screen.message | markdownFormatter"></div>
+        <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
+    </mat-dialog-content>
+</div>
