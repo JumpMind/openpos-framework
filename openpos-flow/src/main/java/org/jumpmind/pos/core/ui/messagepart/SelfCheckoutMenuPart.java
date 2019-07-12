@@ -17,7 +17,7 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
     private boolean showScan;
     private boolean showAdmin;
     private boolean showSkip;
-    private boolean showLanguageSelector = true;
+    private boolean showLanguageSelector = false;
 
     public String getDeviceId() {
         return deviceId;

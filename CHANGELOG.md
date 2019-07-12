@@ -12,7 +12,10 @@ Released on:
   | [#115](https://github.com/JumpMind/openpos-framework/pull/115) | 114: Correctly map UPCA barcode types for Aila Scanner | [bug, client] |Dan Kaste|
   | [#116](https://github.com/JumpMind/openpos-framework/pull/116) | added maxResults to the persist api | [enhancement, server] |Chris Henson|
   | [#119](https://github.com/JumpMind/openpos-framework/pull/119) | IValidatorSpec implementations fail deserialization with jackson  | [bug, server] |Jason Mihalick|
-  | [#87](https://github.com/JumpMind/openpos-framework/pull/87) | Feature/selection list paging |  |Klementina Stojanovska Chirico|
+  | [#120](https://github.com/JumpMind/openpos-framework/pull/120) | 120: Ensure MaxValueValidator can be serialized, fix typo in error msg |  |Jason Mihalick|
+  | [#123](https://github.com/JumpMind/openpos-framework/pull/123) | Add test module to make sure we catch and sass errors in themes |  |Dan Kaste|
+  | [#124](https://github.com/JumpMind/openpos-framework/pull/124) | Don&#39;t deploy if the branch name is merge | [bug, build] |Chris Henson|
+  | [#87](https://github.com/JumpMind/openpos-framework/pull/87) | Feature/selection list paging | [client, enhancement, server] |Klementina Stojanovska Chirico|
 
 ## 0.3.6 
 Released on: 2019-07-03 17:05:14
