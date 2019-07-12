@@ -21,6 +21,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen {
     }
 
     show(screen: any) {
+        // Check for old screen message versions
         if ( screen.hasOwnProperty('template')) {
             this.log.warn(`Received a message for deprecated version of screen \'${screen.screenType}\'`);
         }
