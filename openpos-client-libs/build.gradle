@@ -35,23 +35,16 @@ task npm_install(type: NpmTask){
 task ng_test(type: NpmTask){
     dependsOn npm_install
     args = [
-            'run', 'ng', 'test', 'openpos-client-core-lib'
+            'run', 
+            'test'
     ]
 }
 
-task ng_build_angular(type: NpmTask){
+task ng_build(type: NpmTask){
     dependsOn npm_install
     args = [
             'run',
-            'ng', 'build', 'openpos-client-core-lib'
-    ]
-}
-
-task bundle_sass(type: NpmTask){
-    dependsOn ng_build_angular
-    args = [
-            'run',
-            'scss-bundle'
+            'build'
     ]
 }
 
@@ -62,7 +55,7 @@ task test {
 }
 
 task build {
-    dependsOn bundle_sass
+    dependsOn ng_build
 }
 
 task npm_pack(type: NpmTask){
