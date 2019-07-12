@@ -38,7 +38,6 @@ import { PromptWithOptionsDialogComponent } from './prompt-with-options/prompt-w
 import { ChooseOptionsDialogComponent } from './choose-options/choose-options-dialog.component';
 import { PromptComponent } from './prompt/prompt.component';
 import { HomeComponent } from './home/home.component';
-import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 
 const screens = [
     FormComponent,
@@ -71,7 +70,6 @@ const dialogs = [
     PromptDialogComponent,
     PromptWithOptionsDialogComponent,
     ChooseOptionsDialogComponent,
-    LoadingDialogComponent
 ];
 
 const templates = [

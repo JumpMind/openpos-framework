@@ -164,8 +164,6 @@ export * from './lib/screens-deprecated/home/home.component';
 export * from './lib/screens-deprecated/item-list/item-list.component';
 export * from './lib/screens-deprecated/item-options/item-options.component';
 export * from './lib/screens-deprecated/item-search-results/item-search-results.component';
-export * from './lib/screens-deprecated/loading-dialog/loading-dialog-screen.interface';
-export * from './lib/screens-deprecated/loading-dialog/loading-dialog.component';
 export * from './lib/screens-deprecated/login/login-dialog.component';
 export * from './lib/screens-deprecated/login/login.component';
 export * from './lib/screens-deprecated/multiple-dynamic-form/multiple-dynamic-form-dialog.component';

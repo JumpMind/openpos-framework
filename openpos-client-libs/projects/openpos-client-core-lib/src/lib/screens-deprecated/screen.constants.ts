@@ -36,7 +36,6 @@ import { ChooseOptionsDialogComponent } from './choose-options/choose-options-di
 import { DynamicFormDialogComponent } from './dynamic-form/dynamic-form-dialog.component';
 import { MultipleDynamicFormDialogComponent } from './multiple-dynamic-form/multiple-dynamic-form-dialog.component';
 import { DynamicListDialogComponent } from './dynamic-list/dynamic-list-dialog.component';
-import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 import { LoginDialogComponent } from './login/login-dialog.component';
 import { VersionComponent } from './version/version.component';
 import { SaleRetrievalComponent } from './sale-retrieval/sale-retrieval.component';
@@ -109,7 +108,6 @@ export const ScreenConstants = {
         { name: 'DynamicList', component: DynamicListDialogComponent },
         { name: 'MultipleDynamicForm', component: MultipleDynamicFormDialogComponent },
         { name: 'Dialog', component: DefaultDialogComponent },
-        { name: 'LoadingDialog', component: LoadingDialogComponent },
         { name: 'Prompt', component: PromptDialogComponent },
 
         // Copied from the screen service. may eventually want to make dialog specific versions of these
