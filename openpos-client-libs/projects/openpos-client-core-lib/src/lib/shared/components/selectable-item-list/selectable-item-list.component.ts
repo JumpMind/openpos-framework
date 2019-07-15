@@ -397,9 +397,12 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
                         index = index + direction;
                         originalItemIndex = index + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
                     }
-                    this.selectedItemList = [this.itemsToShow[index]];
-                    this.scrollToItem(index);
-                    this.selectedItemListChange.emit([index]);
+                    if (this.itemsToShow.length > index && index > -1) {
+                        this.selectedItemList = [this.itemsToShow[index]];
+                        this.scrollToItem(index);
+                        this.selectedItemListChange.emit([index]);
+                    }
+
                 }
                 break;
         }
