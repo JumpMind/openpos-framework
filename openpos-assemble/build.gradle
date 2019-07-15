@@ -50,20 +50,22 @@ task generateSourceArtifact(type: Copy) {
 task generateChangeLog(type: Class.forName('se.bjurr.gitchangelog.plugin.gradle.GitChangelogTask')) {
     gitHubApi = gitHubApi
     gitHubToken = personalAccessToken
+    fromRef = '0.3.6'
     file = new File("../CHANGELOG.md");
-    fromRef = '0.2.27'
     fromRepo = "$projectDir/.."
     templateContent = """# Change Log
 {{#tags}}
 
 ## {{name}} 
+{{#hasTagTime}}
 Released on: {{tagTime}}
+{{/hasTagTime}}
 
-|       | Name   | Labels | Author |
-|-------|--------|--------|--------|
+|       | Name   | Labels | Author | Time |
+|-------|--------|--------|--------|------|
  {{#issues}}
   {{#hasLink}}  
-| [{{issue}}]({{link}}) | {{title}} | {{#hasLabels}}{{labels}}{{/hasLabels}} |{{#commits}}{{authorName}}{{/commits}}|
+| [{{issue}}]({{link}}) | {{title}} | {{#hasLabels}}{{labels}}{{/hasLabels}} |{{#commits}}{{authorName}}|{{commitTime}}{{/commits}}|
   {{/hasLink}}
  {{/issues}}
 {{/tags}}
