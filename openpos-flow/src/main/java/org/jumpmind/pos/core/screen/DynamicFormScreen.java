@@ -8,6 +8,7 @@ import java.util.List;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.template.SellTemplate;
 
+@Deprecated
 public class DynamicFormScreen extends Screen implements IHasForm {
 
     private static final long serialVersionUID = 1L;
