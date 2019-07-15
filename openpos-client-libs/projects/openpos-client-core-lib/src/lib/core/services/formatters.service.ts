@@ -44,6 +44,11 @@ export class FormattersService {
         this.formatters.set('ca', CAFormatters);
         this.formatters.set('en-ca', CAFormatters);
 
+        const UKFormatters = new Map<string, IFormatter>();
+        UKFormatters.set('datetime', new DateTimeCAFormatter());
+        this.formatters.set('gb', UKFormatters);
+        this.formatters.set('en-gb', UKFormatters);
+
         // If there isn't a specific formatter for a given locale, we fall back these
         const NOLOCALEFormatters = new Map<string, IFormatter>();
         this.formatters.set('NO-LOCALE', NOLOCALEFormatters);
