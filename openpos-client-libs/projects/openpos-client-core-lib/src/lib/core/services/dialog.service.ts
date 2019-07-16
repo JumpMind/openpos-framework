@@ -38,7 +38,6 @@ export class DialogService {
         // but client is starting up. If we wait to subscribe until start() method, we can
         // miss the dialog.
         this.session.getMessages('Dialog').subscribe(s => { if (s) { this.$dialogMessages.next(s); } });
-        this.session.getMessages('CloseDialog').subscribe( s => this.closeDialog() );
     }
 
     public start() {

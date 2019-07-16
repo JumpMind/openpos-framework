@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from '../../core/services/session.service';
-import { Observable, ConnectableObservable } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Message } from '../../core/messages/message';
-import { map, publishReplay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
@@ -18,8 +18,7 @@ export class MessageProvider {
     }
 
     setMessageType( messageType: string ) {
-        this.messages$ = this.sessionService.getMessages( messageType ).pipe(publishReplay(1));
-        (this.messages$ as ConnectableObservable<any>).connect();
+        this.messages$ = this.sessionService.getMessages( messageType );
         this.messageType = messageType;
     }
 
