@@ -1,8 +1,7 @@
-import { OnDestroy, OnInit } from '@angular/core';
+import { OnDestroy, OnInit, Injector } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { MessageProvider } from '../providers/message.provider';
-import { AppInjector } from '../../core/app-injector';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
 import { Logger } from '../../core/services/logger.service';
@@ -13,6 +12,7 @@ import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
 import { MessageTypes } from '../../core/messages/message-types';
+import { ActionService } from '../../core/services/action.service';
 
 export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
 
@@ -22,16 +22,17 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     screenData: T;
     messageProvider: MessageProvider;
     mediaService: OpenposMediaService;
+    actionService: ActionService;
     isMobile$: Observable<boolean>;
     initialScreenType = '';
     public subscriptions = new Subscription();
 
-    constructor(messageProvider: MessageProvider) {
-        this.sessionService = AppInjector.Instance.get(SessionService);
-        this.log = AppInjector.Instance.get(Logger);
-        this.mediaService = AppInjector.Instance.get(OpenposMediaService);
-
-        this.messageProvider = messageProvider;
+    constructor(injector: Injector) {
+        this.sessionService = injector.get(SessionService);
+        this.log = injector.get(Logger);
+        this.mediaService = injector.get(OpenposMediaService);
+        this.messageProvider = injector.get(MessageProvider);
+        this.actionService = injector.get(ActionService);
         const sizeMap = new Map([
             ['xs', true],
             ['sm', false],
@@ -68,9 +69,11 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
         this.subscriptions.unsubscribe();
     }
 
-    onMenuItemClick(menuItem: IActionItem, payload?: any) {
-        if (menuItem.enabled) {
-            this.sessionService.onAction(menuItem, payload);
+    doAction( action: IActionItem | string, payload?: any) {
+        if ( typeof(action) === 'string' ) {
+            this.actionService.doAction( {action}, payload);
+        } else {
+            this.actionService.doAction(action, payload);
         }
     }
 

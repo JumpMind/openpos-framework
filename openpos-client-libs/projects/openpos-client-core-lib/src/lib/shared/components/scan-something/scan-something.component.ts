@@ -2,11 +2,15 @@ import { Component, Input, Optional, Inject, ViewChild, AfterViewInit, OnDestroy
 import { MatDialogRef, MAT_DIALOG_DATA, MatInput } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { IMessageHandler } from '../../../core/interfaces/message-handler.interface';
-import { IScan } from '../../../screens-deprecated/templates/sell-template/sell/scan.interface';
+import { IScan } from './scan.interface';
 import { Logger } from '../../../core/services/logger.service';
 import { SessionService } from '../../../core/services/session.service';
 import { DeviceService } from '../../../core/services/device.service';
+import { ActionService } from '../../../core/services/action.service';
 
+/**
+ * Deprecated
+ */
 @Component({
   selector: 'app-scan-something',
   templateUrl: './scan-something.component.html',
@@ -24,9 +28,10 @@ export class ScanSomethingComponent implements AfterViewInit, IMessageHandler<an
 
   private subscription: Subscription;
 
-  constructor(private log: Logger, private session: SessionService, public devices: DeviceService,
-    @Optional() public dialogRef: MatDialogRef<ScanSomethingComponent>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: IScan) {
+  constructor(  private log: Logger, private session: SessionService, public devices: DeviceService,
+                private actionService: ActionService,
+                @Optional() public dialogRef: MatDialogRef<ScanSomethingComponent>,
+                @Optional() @Inject(MAT_DIALOG_DATA) public data: IScan) {
 
     this.subscription = this.session.registerMessageHandler(this, 'Screen');
 
@@ -48,7 +53,7 @@ export class ScanSomethingComponent implements AfterViewInit, IMessageHandler<an
 
   public onEnter(): void {
     if (this.barcode && this.barcode.trim().length >= this.scanSomethingData.scanMinLength) {
-      this.session.onAction('Next', this.barcode);
+      this.actionService.doAction({action: 'Next'}, this.barcode);
       this.barcode = '';
       if (this.dialogRef) {
         this.dialogRef.close();

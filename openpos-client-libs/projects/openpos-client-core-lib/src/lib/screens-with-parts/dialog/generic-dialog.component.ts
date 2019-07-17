@@ -1,11 +1,8 @@
 
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
-import { ILine } from '../../screens-deprecated/dialog/line.interface';
 import { Component } from '@angular/core';
-import { SessionService } from '../../core/services/session.service';
-import { MatDialogRef } from '@angular/material';
-import { DialogInterface } from './dialog.interface';
+import { DialogInterface, ILine } from './dialog.interface';
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 
 @DialogComponent({
@@ -22,10 +19,6 @@ export class GenericDialogComponent extends PosScreen<DialogInterface> {
   otherButtons: IActionItem[];
   messages: string[];
   lines: ILine[];
-
-  constructor(public session: SessionService, public dialogRef: MatDialogRef<GenericDialogComponent> ) {
-      super();
-  }
 
   buildScreen(): void {
     if (this.screen.message && this.screen.message.length === 1) {

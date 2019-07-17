@@ -1,11 +1,12 @@
 
-import { Component, OnDestroy, HostListener } from '@angular/core';
+import { Component, OnDestroy, HostListener, Injector } from '@angular/core';
 import { IOptionItem } from './option-item.interface';
 import { IChooseOptionsScreen } from './choose-options-screen.interface';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { Configuration } from '../../configuration/configuration';
 import { ActionIntercepter, ActionIntercepterBehaviorType } from '../../core/action-intercepter';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
+import { SessionService } from '../../core/services/session.service';
 
 /**
  * @ignore
@@ -25,6 +26,10 @@ export class ChooseOptionsComponent extends PosScreen<IChooseOptionsScreen> impl
   public optionItems: IOptionItem[];
   public promptText: string;
 
+  constructor( private session: SessionService, injector: Injector ) {
+    super(injector);
+  }
+
   buildScreen() {
     this.optionItems = this.screen.options;
     this.currentView = this.screen.displayStyle;
@@ -42,7 +47,7 @@ export class ChooseOptionsComponent extends PosScreen<IChooseOptionsScreen> impl
       this.session.registerActionIntercepter(ChooseOptionsComponent.UNDO,
         new ActionIntercepter(this.log, (payload) => { this.onBackButtonPressed(); }, ActionIntercepterBehaviorType.block));
     } else {
-      this.session.onAction( option.value );
+      this.doAction( option.value );
     }
   }
 

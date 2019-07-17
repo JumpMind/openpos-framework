@@ -5,9 +5,6 @@ import { SharedModule } from '../shared/shared.module';
 import { ItemListComponent } from './item-list/item-list.component';
 import { SaleRetrievalComponent } from './sale-retrieval/sale-retrieval.component';
 import { SellItemDetailComponent } from './sell-item-detail/sell-item-detail.component';
-import { BlankComponent } from './templates/blank/blank.component';
-import { BlankWithBarComponent } from './templates/blank-with-bar/blank-with-bar.component';
-import { SellComponent } from './templates/sell-template/sell/sell.component';
 import { TenderingComponent } from './tendering/tendering.component';
 import { ItemSearchResultsComponent } from './item-search-results/item-search-results.component';
 import { DynamicFormDialogComponent } from './dynamic-form/dynamic-form-dialog.component';
@@ -32,9 +29,6 @@ const screens = [
         ItemListComponent,
         SaleRetrievalComponent,
         SellItemDetailComponent,
-        BlankComponent,
-        BlankWithBarComponent,
-        SellComponent,
         TenderingComponent,
         SaleComponent,
         ItemSearchResultsComponent,

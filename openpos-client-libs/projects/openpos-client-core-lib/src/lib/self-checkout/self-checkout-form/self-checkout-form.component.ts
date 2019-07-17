@@ -12,10 +12,5 @@ import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.compon
   styleUrls: ['./self-checkout-form.component.scss']
 })
 export class SelfCheckoutFormComponent extends PosScreen<SelfCheckoutFormInterface> {
-
-  constructor() {
-    super();
-  }
-
   buildScreen() { }
 }

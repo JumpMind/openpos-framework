@@ -2,22 +2,20 @@ import { Logger } from './../../core/services/logger.service';
 import { AppInjector } from '../../core/app-injector';
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
-import { SessionService } from '../../core/services/session.service';
 import { deepAssign } from '../../utilites/deep-assign';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { Injector } from '@angular/core';
+import { ActionService } from '../../core/services/action.service';
 
-/**
- * @ignore
- */
 export abstract class PosScreen<T extends IAbstractScreen> implements IScreen {
 
     screen: T;
-    session: SessionService;
     log: Logger;
+    actionService: ActionService;
 
-    constructor() {
-        this.session = AppInjector.Instance.get(SessionService);
-        this.log = AppInjector.Instance.get(Logger);
+    constructor( injector: Injector) {
+        this.log = injector.get(Logger);
+        this.actionService = injector.get(this.actionService);
     }
 
     show(screen: any) {
@@ -25,9 +23,12 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen {
         this.buildScreen();
     }
 
-    onMenuItemClick( menuItem: IActionItem, payload?: any) {
-        if (menuItem.enabled) {
-            this.session.onAction( menuItem, payload );
+    doAction( action: IActionItem | string, payload?: any) {
+
+        if ( typeof(action) === 'string' ) {
+            this.actionService.doAction( {action}, payload);
+        } else {
+            this.actionService.doAction(action, payload);
         }
     }
 

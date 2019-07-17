@@ -1,9 +1,10 @@
 import { FormGroup, FormControl, ValidatorFn, Validators } from '@angular/forms';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { ChooseOptionsComponent } from '../choose-options/choose-options.component';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ValidatorsService } from '../../core/services/validators.service';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
+import { SessionService } from '../../core/services/session.service';
 
 /**
  * @ignore
@@ -21,8 +22,8 @@ export class PromptWithOptionsComponent extends ChooseOptionsComponent implement
   actionButton: IActionItem;
   promptFormGroup: FormGroup;
 
-  constructor( private validatorsService: ValidatorsService) {
-    super();
+  constructor( private validatorsService: ValidatorsService, injector: Injector, session: SessionService) {
+    super(session, injector);
   }
 
   public ngOnInit(): void {
@@ -61,13 +62,13 @@ export class PromptWithOptionsComponent extends ChooseOptionsComponent implement
   onAction(action: string): void {
     if (this.promptFormGroup.valid) {
       if (this.screen.showComments) {
-        this.session.onAction(action,
+        this.doAction(action,
           {
             response: this.promptFormGroup.value['promptInputControl'],
             comment: this.promptFormGroup.value['comments']
           });
       } else {
-        this.session.onAction(action, this.promptFormGroup.value['promptInputControl']);
+        this.doAction(action, this.promptFormGroup.value['promptInputControl']);
       }
     }
   }

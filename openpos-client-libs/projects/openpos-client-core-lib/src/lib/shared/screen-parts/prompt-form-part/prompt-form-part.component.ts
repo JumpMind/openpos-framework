@@ -1,9 +1,7 @@
 import { ScreenPartComponent } from '../screen-part';
-import { AfterViewInit, Component, OnInit, ViewChild, Input } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, Input, Injector } from '@angular/core';
 import { Validators, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { ValidatorsService } from '../../../core/services/validators.service';
-import { MessageProvider } from '../../providers/message.provider';
-import { PromptInterface } from '../../../screens-with-parts/prompt/prompt.interface';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
 import { PromptFormPartInterface } from './prompt-form-part.interface';
 
@@ -19,8 +17,8 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
     inputControlName = 'promptInputControl';
     hiddenInputControlName = 'promptInputHiddenDateControl';
 
-    constructor(private validatorsService: ValidatorsService, messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(private validatorsService: ValidatorsService, injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() {
@@ -74,14 +72,14 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
     }
 
     onAction(menuItm: IActionItem) {
-        this.sessionService.onAction(menuItm);
+        this.doAction(menuItm);
     }
 
     onFormSubmit(): void {
         if (this.promptFormGroup.valid) {
             const payload = this.promptFormGroup.value[this.inputControlName];
             if (this.screenData.actionButton) {
-                this.sessionService.onAction(this.screenData.actionButton.action, payload);
+                this.doAction({action: this.screenData.actionButton.action}, payload);
             }
         }
     }

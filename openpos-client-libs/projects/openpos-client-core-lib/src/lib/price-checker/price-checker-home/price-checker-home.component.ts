@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, Injector } from '@angular/core';
 import { PriceCheckerHomeInterface } from './price-checker-home.interface';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
@@ -17,8 +17,8 @@ export class PriceCheckerHomeComponent extends PosScreen<PriceCheckerHomeInterfa
 
     backgroundStyle = {};
 
-    constructor( private imageService: ImageService, private scannerService: ScannerService) {
-        super();
+    constructor( private imageService: ImageService, private scannerService: ScannerService, injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {
@@ -30,7 +30,7 @@ export class PriceCheckerHomeComponent extends PosScreen<PriceCheckerHomeInterfa
             'background-position': 'center'
         };
 
-        this.scannerService.startScanning().subscribe( m => this.onMenuItemClick(this.screen.scanAction, m));
+        this.scannerService.startScanning().subscribe( m => this.doAction(this.screen.scanAction, m));
     }
 
     ngOnDestroy(): void {

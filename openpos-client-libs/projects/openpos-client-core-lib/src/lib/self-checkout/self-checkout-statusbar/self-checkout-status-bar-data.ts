@@ -1,5 +1,5 @@
 import { IActionItem } from '../../core/interfaces/action-item.interface';
-import { IScan } from '../../screens-deprecated/templates/sell-template/sell/scan.interface';
+import { IScan } from '../../shared/components/scan-something/scan.interface';
 
 
 export class SelfCheckoutStatusBarData {

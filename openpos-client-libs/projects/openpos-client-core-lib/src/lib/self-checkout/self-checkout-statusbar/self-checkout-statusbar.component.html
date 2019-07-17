@@ -22,7 +22,7 @@
 			<app-language-selector *ngIf="data.showLanguageSelector"></app-language-selector>
 
 			<div fxLayout="row" fxLayoutAlign="center center">
-				<button *ngIf="data.showSkip" class="skip-icon" mat-button (click)="this.session.onAction('Skip')">
+				<button *ngIf="data.showSkip" class="skip-icon" mat-button (click)="actionService.doAction({action:'Skip'})">
 					<h2>SKIP</h2>
 				</button>
 			</div>

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { SaleInterface } from './sale.interface';
 import { Observable } from 'rxjs/internal/Observable';
 import { MatDialog } from '@angular/material';
@@ -21,8 +21,8 @@ export class SaleComponent extends PosScreen<SaleInterface> {
   trainingDrawerOpen = false;
   totals: ITotal[];
 
-  constructor(protected mediaService: OpenposMediaService, protected dialog: MatDialog) {
-    super();
+  constructor(protected mediaService: OpenposMediaService, protected dialog: MatDialog, injector: Injector) {
+    super(injector);
     this.overFlowListSize = this.mediaService.mediaObservableFromMap(new Map([
         ['xs', 3],
         ['sm', 3],
@@ -42,6 +42,6 @@ export class SaleComponent extends PosScreen<SaleInterface> {
   }
 
   onEnter(value: string) {
-    this.session.onAction('Next', value);
+    this.doAction('Next', value);
   }
 }

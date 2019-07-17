@@ -1,7 +1,8 @@
 import { ScreenDirective } from './../../../shared/directives/screen.directive';
 import { IScreen } from '../../../shared/components/dynamic-screen/screen.interface';
-import { Component, OnDestroy, ViewChild, ComponentRef, ComponentFactory } from '@angular/core';
+import { Component, OnDestroy, ViewChild, ComponentRef, ComponentFactory, Injector } from '@angular/core';
 import { MessageProvider } from '../../../shared/providers/message.provider';
+import { ScreenCreatorService } from '../../services/screen-creator.service';
 
 @Component({
   selector: 'app-dialog-content',
@@ -11,13 +12,14 @@ import { MessageProvider } from '../../../shared/providers/message.provider';
 })
 export class DialogContentComponent implements OnDestroy, IScreen {
 
+
     @ViewChild(ScreenDirective) host: ScreenDirective;
 
     private currentScreenRef: ComponentRef<IScreen>;
 
     private content: IScreen;
 
-    constructor( messageProvider: MessageProvider ) {
+    constructor( messageProvider: MessageProvider, private screenCreator: ScreenCreatorService ) {
         messageProvider.setMessageType('Dialog');
     }
 
@@ -27,8 +29,11 @@ export class DialogContentComponent implements OnDestroy, IScreen {
         if (this.currentScreenRef) {
             this.currentScreenRef.destroy();
         }
-        this.currentScreenRef = viewContainerRef.createComponent(screenComponentFactory);
+        this.currentScreenRef = this.screenCreator.createScreenComponent(screenComponentFactory, viewContainerRef);
         this.content = this.currentScreenRef.instance;
+    }
+
+    initialize(injector: Injector) {
     }
 
     show(screen: any): void {

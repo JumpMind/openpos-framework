@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, AfterViewInit, ViewChildren, QueryList, Injector } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
 import { MessageProvider } from '../../providers/message.provider';
@@ -25,8 +25,8 @@ export class ChooseOptionsPartComponent extends ScreenPartComponent<IFormOptionI
     public showOptions = true;
     public selectedOption: IFormOptionItem;
     public selectedForm: FormGroup;
-    constructor(message: MessageProvider, private formBuilder: FormBuilder) {
-        super(message);
+    constructor(injector: Injector, private formBuilder: FormBuilder ) {
+        super(injector);
      }
 
     screenDataUpdated() {
@@ -54,7 +54,7 @@ export class ChooseOptionsPartComponent extends ScreenPartComponent<IFormOptionI
             this.selectedForm = formGroup;
             this.showOptions = false;
         } else {
-            this.sessionService.onAction(formOption.optionAction);
+            this.doAction(formOption.optionAction);
         }
     }
 
@@ -65,11 +65,11 @@ export class ChooseOptionsPartComponent extends ScreenPartComponent<IFormOptionI
     onFieldChanged(formElement: IFormElement, option: IFormOptionItem, group: FormGroup) {
         if (formElement.valueChangedAction) {
             this.formBuilder.buildFormPayload(group, option.form);
-            this.sessionService.onAction(formElement.valueChangedAction, this.screenData);
+            this.doAction({action: formElement.valueChangedAction, doNotBlockForResponse: true}, this.screenData);
         }
     }
 
     onSubmitForm( option: IFormOptionItem, group: FormGroup): void {
-        this.sessionService.onAction(option.optionAction, this.formBuilder.buildFormPayload(group, option.form));
+        this.doAction(option.optionAction, this.formBuilder.buildFormPayload(group, option.form));
     }
 }

@@ -11,12 +11,6 @@ import { SafePipe } from './pipes/safe.pipe';
 import { DynamicListControlComponent } from './components/dynamic-list-control/dynamic-list-control.component';
 import { KeyPressSourceDirective } from './directives/keypress-source.directive';
 import { SystemStatusDialogComponent } from './components/system-status/system-status-dialog.component';
-// tslint:disable-next-line:import-spacing
-import { SellLinkedCustomerComponent }
-    from '../screens-deprecated/templates/sell-template/sell-linked-customer/sell-linked-customer.component';
-// tslint:disable-next-line:import-spacing
-import { SellStatusSectionComponent }
-    from '../screens-deprecated/templates/sell-template/sell-status-section/sell-status-section.component';
 import { SaleFooterComponent } from '../screens-with-parts/sale/sale-footer/sale-footer.component';
 import { SaleItemListComponent } from '../screens-with-parts/sale/sale-item-list/sale-item-list.component';
 import { KebabMenuComponent } from './components/kebab-menu/kebab-menu.component';
@@ -62,14 +56,12 @@ import { ProductListComponent } from './components/product-list/product-list.com
 import { SelectableItemListComponent } from './components/selectable-item-list/selectable-item-list.component';
 import { OverFlowListComponent } from './components/overflow-list/overflow-list.component';
 import { ScanSomethingComponent } from './components/scan-something/scan-something.component';
-import { ItemCardComponent } from './components/item-card/item-card.component';
 import { FabToggleButtonComponent } from './components/fab-toggle-button/fab-toggle-button.component';
 import { FabToggleGroupComponent } from './components/fab-toggle-group/fab-toggle-group.component';
 import { PopTartComponent } from './components/pop-tart/pop-tart.component';
 import { SearchablePopTartComponent } from './components/searchable-pop-tart/searchable-pop-tart.component';
 import { NavListComponent } from './components/nav-list/nav-list.component';
 import { FileViewerComponent } from './components/file-viewer/file-viewer.component';
-import { StatusBarComponent } from './components/status-bar/status-bar.component';
 import { CounterComponent } from './components/counter/counter.component';
 import { DatePartChooserComponent } from './components/date-part-chooser/date-part-chooser.component';
 import { DatePartChooserFieldComponent } from './components/date-part-chooser/date-part-chooser-field/date-part-chooser-field.component';
@@ -118,6 +110,8 @@ import { RouterModule } from '@angular/router';
 import { DynamicScreenComponent } from './components/dynamic-screen/dynamic-screen.component';
 import { LocationDetailsComponent } from './components/location-details/location-details.component';
 import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
+import { SellLinkedCustomerComponent } from './components/sell-linked-customer/sell-linked-customer.component';
+import { ItemCardComponent } from './components/item-card/item-card.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -151,14 +145,12 @@ const components = [
     SelectableItemListComponent,
     OverFlowListComponent,
     ScanSomethingComponent,
-    ItemCardComponent,
     FabToggleButtonComponent,
     FabToggleGroupComponent,
     PopTartComponent,
     SearchablePopTartComponent,
     NavListComponent,
     FileViewerComponent,
-    StatusBarComponent,
     CounterComponent,
     DatePartChooserComponent,
     DatePartChooserFieldComponent,
@@ -186,14 +178,14 @@ const components = [
     SellItemLineComponent,
     GridTableComponent,
     SystemStatusDialogComponent,
-    SellLinkedCustomerComponent,
-    SellStatusSectionComponent,
     FormComponent,
     ToggleGroupComponent,
     ToggleButtonComponent,
     LanguageSelectorComponent,
     LocationDetailsComponent,
-    LocationOverrideDialogComponent
+    LocationOverrideDialogComponent,
+    SellLinkedCustomerComponent,
+    ItemCardComponent
 ];
 
 const directives = [

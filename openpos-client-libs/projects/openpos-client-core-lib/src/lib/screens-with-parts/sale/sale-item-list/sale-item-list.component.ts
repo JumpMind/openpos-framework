@@ -1,8 +1,7 @@
 import { SaleItemListInterface } from './sale-item-list.interface';
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ScreenPartComponent } from '../../../shared/screen-parts/screen-part';
 import { SelectableItemListComponentConfiguration } from '../../../shared/components/selectable-item-list/selectable-item-list.component';
-import { MessageProvider } from '../../../shared/providers/message.provider';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 import { SelectionMode } from '../../../core/interfaces/selection-mode.enum';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -20,8 +19,8 @@ export class SaleItemListComponent extends ScreenPartComponent<SaleItemListInter
     listData = new Observable<ISelectableListData<ISellItem>>();
 
     private screenData$ = new BehaviorSubject<ISelectableListData<ISellItem>>(null);
-    constructor( messageProivder: MessageProvider) {
-        super(messageProivder);
+    constructor( injector: Injector) {
+        super(injector);
         this.listData = this.screenData$;
     }
 
@@ -55,14 +54,14 @@ export class SaleItemListComponent extends ScreenPartComponent<SaleItemListInter
 
     public onItemListChange(event: any[]): void {
         this.screenData.selectedItemIndexes = event;
-        this.sessionService.onValueChange('SelectedItemsChanged', this.screenData.selectedItemIndexes);
+        this.actionService.doAction({action: 'SelectedItemsChanged'}, this.screenData.selectedItemIndexes);
     }
 
     public onMenuAction(event: any) {
         if (event.menuItem && event.payload) {
-            this.onMenuItemClick(event.menuItem, event.payload);
+            this.doAction(event.menuItem, event.payload);
         } else {
-            this.onMenuItemClick(event);
+            this.doAction(event);
         }
     }
 }

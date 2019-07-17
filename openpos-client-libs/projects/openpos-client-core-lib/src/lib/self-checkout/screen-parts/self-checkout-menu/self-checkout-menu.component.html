@@ -22,7 +22,7 @@
 
             <div fxLayout="row" fxLayoutAlign="center center">
                 <button *ngIf="screenData.showSkip" class="skip-icon" mat-button
-                    (click)="sessionService.onAction('Skip')">
+                    (click)="doAction('Skip')">
                     <h2>SKIP</h2>
                 </button>
             </div>

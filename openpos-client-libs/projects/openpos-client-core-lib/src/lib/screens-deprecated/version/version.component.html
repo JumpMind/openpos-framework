@@ -12,10 +12,10 @@
         </ng-container>
     </div>
     <div mat-dialog-actions fxLayout="row">
-        <button *ngFor="let m of otherActions; let i = index" [id]="'button-' + i" mat-raised-button (click)="session.onAction(m)"
+        <button *ngFor="let m of otherActions; let i = index" [id]="'button-' + i" mat-raised-button (click)="doAction(m)"
             color="primary-inverse" [disabled]="!m.enabled">{{m.title}}</button>
             <div fxFlex="1 1 auto"></div>
-        <button *ngIf="primaryAction" mat-raised-button (click)="session.onAction(primaryAction)" color="primary" id="primaryAction">{{primaryAction.title}}</button>
+        <button *ngIf="primaryAction" mat-raised-button (click)="doAction(primaryAction)" color="primary" id="primaryAction">{{primaryAction.title}}</button>
     </div>
 </ng-container>
       

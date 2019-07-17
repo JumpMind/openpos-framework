@@ -1,7 +1,6 @@
 import { ScreenPartComponent } from '../screen-part';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
-import { Component } from '@angular/core';
-import { MessageProvider } from '../../providers/message.provider';
+import { Component, Injector } from '@angular/core';
 import { Configuration } from '../../../configuration/configuration';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ISausageLinksInterface } from './sausage-links.interface';
@@ -18,8 +17,8 @@ import { INotificationItem } from '../../../core/interfaces/notification-item.in
 export class SausageLinksComponent extends ScreenPartComponent<IActionItem[] | ISausageLinksInterface> {
     sausageLinks: ISausageLinksInterface;
 
-    constructor( messageProvider: MessageProvider ) {
-        super(messageProvider);
+    constructor( injector: Injector ) {
+        super(injector);
     }
 
     screenDataUpdated() {

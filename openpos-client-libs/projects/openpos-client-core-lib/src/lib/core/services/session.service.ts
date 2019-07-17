@@ -16,12 +16,10 @@ import { ActionIntercepter } from '../action-intercepter';
 // Importing the ../components barrel causes a circular reference since dynamic-screen references back to here,
 // so we will import those files directly
 import { LoaderState } from '../../shared/components/loader/loader-state';
-import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { IDeviceResponse } from '../oldplugins/device-response.interface';
 import { InAppBrowserPlugin } from '../oldplugins/in-app-browser.plugin';
 import { IActionItem } from '../interfaces/action-item.interface';
 import { IUrlMenuItem } from '../interfaces/url-menu-item.interface';
-import { IConfirmationDialog } from '../interfaces/confirmation-dialog.interface';
 import { OldPluginService } from './old-plugin.service';
 import { AppInjector } from '../app-injector';
 import { HttpClient } from '@angular/common/http';
@@ -29,6 +27,9 @@ import { PingParams } from '../interfaces/ping-params.interface';
 import { PingResult } from '../interfaces/ping-result.interface';
 import { PersonalizationResponse } from '../interfaces/personalization-response.interface';
 import { ElectronService } from 'ngx-electron';
+import { OpenposMessage } from '../messages/message';
+import { MessageTypes } from '../messages/message-types';
+import { ActionMessage } from '../messages/action-message';
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
@@ -118,7 +119,11 @@ export class SessionService implements IMessageHandler<any> {
         this.registerMessageHandler(this);
     }
 
-    public sendMessage(message: any) {
+    public sendMessage<T extends OpenposMessage>(message: T) {
+        if ( message.type === MessageTypes.ACTION && message instanceof ActionMessage ) {
+            const actionMessage = message as ActionMessage;
+            this.doAction(actionMessage.actionName, actionMessage.payload);
+        }
         this.sessionMessages$.next(message);
     }
 
@@ -424,19 +429,14 @@ export class SessionService implements IMessageHandler<any> {
         }
     }
 
-    public async onValueChange(action: string, payload?: any) {
-        this.onAction(action, payload, null, true);
-    }
-
-    public async onAction(action: string | IActionItem,
-                          payload?: any, confirm?: string | IConfirmationDialog, isValueChangedAction?: boolean) {
+    private doAction(   action: string | IActionItem,
+                        payload?: any, isValueChangedAction?: boolean) {
         if (action) {
             let response: any = null;
             let actionString = '';
             // we need to figure out if we are a menuItem or just a string
             if (action.hasOwnProperty('action')) {
                 const menuItem = action as IActionItem;
-                confirm = menuItem.confirmationDialog;
                 actionString = menuItem.action;
                 // check to see if we are an IURLMenuItem
                 if (menuItem.hasOwnProperty('url')) {
@@ -461,28 +461,6 @@ export class SessionService implements IMessageHandler<any> {
             }
 
             this.log.info(`action is: ${actionString}`);
-
-            if (confirm) {
-                this.log.info('Confirming action');
-                let confirmD: IConfirmationDialog;
-                if (confirm.hasOwnProperty('message')) {
-                    confirmD = confirm as IConfirmationDialog;
-                } else {
-                    confirmD = {
-                        title: '', message: confirm as string, cancelButtonName: 'No',
-                        confirmButtonName: 'Yes', cancelAction: null, confirmAction: null
-                    };
-                }
-                const dialogRef = this.dialogService.open(ConfirmationDialogComponent, { disableClose: true });
-                dialogRef.componentInstance.confirmDialog = confirmD;
-                const result = await dialogRef.afterClosed().toPromise();
-
-                // if we didn't confirm return and don't send the action to the server
-                if (!result) {
-                    this.log.info('Canceling action');
-                    return;
-                }
-            }
 
             let processAction = true;
 

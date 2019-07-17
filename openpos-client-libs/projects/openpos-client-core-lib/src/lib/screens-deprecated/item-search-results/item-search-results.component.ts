@@ -26,10 +26,6 @@ export class ItemSearchResultsComponent extends PosScreen<any> {
   listData: Observable<ISelectableListData<any>>;
   index = -1;
 
-  constructor() {
-    super();
-  }
-
   buildScreen() {
     const allItems = new Map<number, any>();
     const allDisabledItems = new Map<number, any>();
@@ -65,7 +61,7 @@ export class ItemSearchResultsComponent extends PosScreen<any> {
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem, this.index);
+    this.doAction(menuItem, this.index);
   }
 
   scrollToTop(): void {

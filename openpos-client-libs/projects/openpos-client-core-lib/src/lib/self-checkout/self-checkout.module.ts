@@ -2,7 +2,6 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import { ScreenConstants } from './screen.constants';
-import { SelfCheckoutWithBarComponent } from './self-checkout-with-bar/self-checkout-with-bar.component';
 import { SelfCheckoutTransactionComponent } from './self-checkout-transaction/self-checkout-transaction.component';
 import { SelfCheckoutStatusBarComponent } from './self-checkout-statusbar/self-checkout-statusbar.component';
 import { SelfCheckoutHomeComponent } from './self-checkout-home/self-checkout-home.component';
@@ -28,10 +27,6 @@ const screens = [
 const dialogs = [
 ];
 
-const templates = [
-    SelfCheckoutWithBarComponent
-];
-
 const components = [
     SelfCheckoutStatusBarComponent
 ];
@@ -45,12 +40,10 @@ const screenParts = [
     entryComponents: [
         ...screens,
         ...dialogs,
-        ...templates,
     ],
     declarations: [
         ...screens,
         ...dialogs,
-        ...templates,
         ...components,
         ...screenParts,
     ],
@@ -59,7 +52,6 @@ const screenParts = [
     ],
     exports: [
         SelfCheckoutTransactionComponent,
-        ...templates,
         ...components,
         ...screenParts,
     ],
@@ -74,10 +66,6 @@ export class SelfCheckoutModule {
 
         ScreenConstants.dialogs.forEach((dialog) => {
             dialogService.addDialog(dialog.name, dialog.component);
-        });
-
-        ScreenConstants.templates.forEach((template) => {
-            screenService.addScreen(template.name, template.component);
         });
     }
 

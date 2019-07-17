@@ -27,7 +27,7 @@
                     <br />
                 </mat-card-content>
                 <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
-                    <button *ngIf="screen.backButton" mat-raised-button type="submit" color="primary-inverse" (click)="session.onAction(screen.backButton.action)" [actionItem]="screen.backButton">
+                    <button *ngIf="screen.backButton" mat-raised-button type="submit" color="primary-inverse" (click)="doAction(screen.backButton.action)" [actionItem]="screen.backButton">
                         <span>{{screen.backButton.title ? screen.backButton.title : 'Back'}}</span>
                         <app-icon *ngIf="screen.backButton.icon" [iconClass]="'material-icons'" [iconName]="screen.backButton.icon"></app-icon>
                     </button>

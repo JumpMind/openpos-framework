@@ -5,6 +5,7 @@ import { ILocationProvider } from '../location-providers/location-provider.inter
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ILocationData } from '../location-providers/location-data.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ActionService } from './action.service';
 
 export const PROVIDERS = new InjectionToken<ILocationProvider[]>('LocationProviders');
 @Injectable({
@@ -19,6 +20,7 @@ export class LocationService implements OnDestroy {
     availableCountries: string[];
 
     constructor(public sessionService: SessionService,
+                public actionService: ActionService,
                 @Optional() @Inject(PROVIDERS) private locationProviders: Array<ILocationProvider>) {
 
         sessionService.getMessages('ConfigChanged').pipe(
@@ -38,7 +40,7 @@ export class LocationService implements OnDestroy {
                 this.subscription = provider.getCurrentLocation(message.coordinateBuffer ? message.coordinateBuffer : 0)
                 .subscribe((locationData: ILocationData) => {
                     if (!this.manualOverride) {
-                        sessionService.onValueChange('LocationChanged', locationData);
+                        actionService.doAction({action: 'LocationChanged', doNotBlockForResponse: true}, locationData);
                         this.$data.next(locationData);
                         this.previousLocationData = locationData;
                     }
@@ -64,7 +66,7 @@ export class LocationService implements OnDestroy {
             this.manualOverride = true;
             this.$data.next(locationData);
             this.previousLocationData = locationData;
-            this.sessionService.onValueChange('LocationChanged', locationData);
+            this.actionService.doAction({action: 'LocationChanged', doNotBlockForResponse: true}, locationData);
         } else {
             this.manualOverride = false;
         }

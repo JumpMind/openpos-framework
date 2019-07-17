@@ -3,7 +3,7 @@
     <div fxFlex="0 0 auto" fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="32px"
         *ngIf="screenData && screenData.additionalButtons" class="options-buttons">
         <button mat-raised-button color="primary" *ngFor="let button of screenData.additionalButtons"
-            (click)="sessionService.onAction(button.action)">
+            (click)="doAction(button.action)">
             <span class="text-md">{{button.title}}</span>
             <app-icon *ngIf="button.icon" [iconName]="button.icon" [iconClass]="'material-icons'"></app-icon>
         </button>
@@ -11,7 +11,7 @@
 
     <mat-nav-list fxFlex="0 0 auto" *ngIf="screenData && screenData.options && screenData.options.length > 0">
         <mat-list-item fxLayoutAlign="center center" class="options-list-item" *ngFor="let o of screenData.options"
-            (click)="sessionService.onAction(o.action)">
+            (click)="doAction(o.action)">
             <app-icon matLine [iconName]="o.icon" [iconClass]="'material-icons mat-64'" class="self-checkout-options-list-icon"></app-icon>
             <span matLine [ngClass]="{'muted-color' : !o.enabled}">{{o.title}}</span>
         </mat-list-item>
@@ -20,7 +20,7 @@
     <div fxFlex="0 0 auto" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="32px"
         *ngIf="screenData && screenData.linkButtons" class="options-link-buttons">
         <button mat-button color="primary" *ngFor="let button of screenData.linkButtons"
-            (click)="sessionService.onAction(button.action)">
+            (click)="doAction(button.action)">
             <span class="text-md">{{button.title}}</span>
         </button>
     </div>

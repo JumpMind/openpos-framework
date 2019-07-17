@@ -1,4 +1,4 @@
-import {Component } from '@angular/core';
+import {Component, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
@@ -18,16 +18,12 @@ export class PaymentStatusComponent extends PosScreen<any> {
   screen: any;
   pinPadStatus = '0';
 
-  constructor() {
-      super();
-  }
-
   buildScreen() {
     this.pinPadStatus = this.screen.pinPadStatus;
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem);
+    this.doAction(menuItem);
   }
 
 }

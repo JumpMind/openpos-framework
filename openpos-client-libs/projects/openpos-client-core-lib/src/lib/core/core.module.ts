@@ -31,8 +31,6 @@ import { KeyPressProvider } from '../shared/providers/keypress.provider';
 import { fromEvent, Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
 import { PersonalizationComponent } from './components/personalization/personalization.component';
-import { StatusBarStatusControlComponent } from '../shared/components/status-bar-status-control/status-bar-status-control.component';
-import { STATUS_BAR_STATUS_CONTROL_COMPONENT } from '../shared/components/status-bar/status-bar.component';
 import { ToastService } from './services/toast.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -63,7 +61,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StartupComponent,
         StartupFailedComponent,
         DialogContentComponent,
-        StatusBarStatusControlComponent,
         SplashScreenComponent
     ],
     declarations: [
@@ -72,7 +69,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         PersonalizationComponent,
         StartupComponent,
         StartupFailedComponent,
-        StatusBarStatusControlComponent,
         SplashScreenComponent
     ],
     imports: [
@@ -114,8 +110,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
         TrainingOverlayService,
         ConfigurationService,
-        KeyPressProvider,
-        { provide: STATUS_BAR_STATUS_CONTROL_COMPONENT, useValue: StatusBarStatusControlComponent }
+        KeyPressProvider
     ]
 })
 export class CoreModule {

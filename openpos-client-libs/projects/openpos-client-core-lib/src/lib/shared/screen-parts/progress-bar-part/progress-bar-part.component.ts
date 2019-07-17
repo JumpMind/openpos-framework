@@ -15,10 +15,6 @@ import { MessageProvider } from '../../providers/message.provider';
 })
 export class ProgressBarPartComponent extends ScreenPartComponent<ProgressBarPartInterface> {
 
-    constructor(messageProvider: MessageProvider) {
-        super(messageProvider);
-    }
-
     buildScreen() { }
 
     screenDataUpdated() { }

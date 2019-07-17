@@ -22,17 +22,13 @@ export class SellItemDetailComponent extends PosScreen<any> {
 
   promosDataSource: MatTableDataSource<IPromoItem>;
 
-  constructor() {
-      super();
-  }
-
   buildScreen() {
     this.item = this.screen.item;
     this.promosDataSource = new MatTableDataSource(this.screen.promos);
   }
 
   onIdClick(id: any) {
-    this.session.onAction('LinkClicked', id);
+    this.doAction('LinkClicked', id);
   }
 
 }

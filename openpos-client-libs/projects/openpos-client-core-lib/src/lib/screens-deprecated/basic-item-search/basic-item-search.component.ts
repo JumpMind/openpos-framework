@@ -1,8 +1,9 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, Injector } from '@angular/core';
 import { MatInput } from '@angular/material';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IForm } from '../../core/interfaces/form.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
+import { SessionService } from '../../core/services/session.service';
 
 /**
  * @ignore
@@ -25,8 +26,8 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
   searchCategoriesText: string;
   public displayCategoryIndex = 0;
 
-  constructor() {
-      super();
+  constructor(private session: SessionService, injector: Injector) {
+      super(injector);
   }
 
   buildScreen() {
@@ -55,7 +56,7 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
 
   onValueSelected(value: ISearchCategoryValue, categoryName: string): void {
     value.selected = true;
-    this.session.onAction(`on${categoryName}Selected`, {
+    this.doAction(`on${categoryName}Selected`, {
         'selectedCategoryValue': value,
         'searchFieldForm': this.searchFieldForm
       });
@@ -72,7 +73,7 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
 
   onSubmitAction(submitAction: string): void {
     // Collect the field values
-    this.session.onAction(submitAction, this.getSearchPayload());
+    this.doAction(submitAction, this.getSearchPayload());
   }
 
   protected refreshContent(): void {

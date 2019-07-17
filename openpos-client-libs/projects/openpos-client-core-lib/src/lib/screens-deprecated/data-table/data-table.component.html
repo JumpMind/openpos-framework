@@ -14,7 +14,7 @@
             </mat-card-content>
 
             <mat-card-actions *ngIf="screen.actionButton" align="end">
-                <button mat-button color="primary-inverse" (click)="onMenuItemClick(screen.actionButton)">
+                <button mat-button color="primary-inverse" (click)="doAction(screen.actionButton)">
                     <span *ngIf="screen.actionButton.title">{{screen.actionButton.title}}</span>
                     <app-icon *ngIf="screen.actionButton.icon" [iconName]="screen.actionButton.icon"
                         [iconClass]="'material-icons'"></app-icon>

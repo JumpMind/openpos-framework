@@ -4,8 +4,7 @@ import { MatDialog } from '@angular/material';
 import { timer } from 'rxjs';
 import { Configuration } from '../../../configuration/configuration';
 import { SystemStatusType } from '../../../core/interfaces/system-status-type.enum';
-import { Component } from '@angular/core';
-import { MessageProvider } from '../../providers/message.provider';
+import { Component, Injector } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { SystemStatusDialogComponent } from '../../components/system-status/system-status-dialog.component';
 @ScreenPart({
@@ -21,8 +20,8 @@ export class StatusStripComponent extends ScreenPartComponent<StatusStripInterfa
     date = Date.now();
     timer: number;
 
-    constructor(protected dialog: MatDialog, messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(protected dialog: MatDialog, injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() {

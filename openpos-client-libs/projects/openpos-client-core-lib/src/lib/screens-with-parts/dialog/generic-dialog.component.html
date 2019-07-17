@@ -12,12 +12,12 @@
         </ng-container>
     </mat-dialog-content>
     <mat-dialog-actions fxLayoutAlign="end">
-        <button *ngFor="let m of otherButtons; let i = index" [id]="'button-' + i" mat-raised-button (click)="session.onAction(m)"
+        <button *ngFor="let m of otherButtons; let i = index" [id]="'button-' + i" mat-raised-button (click)="doAction(m)"
             color="primary-inverse" [disabled]="!m.enabled" [actionItem]="m">
             {{m.title}}
             <span *ngIf="m.keybind && m.keybind !== 'Escape' && m.keybind !== 'Enter'" class="muted-color">({{m.keybind}})</span>
         </button>
-        <button *ngIf="primaryButton" mat-raised-button (click)="session.onAction(primaryButton)" color="primary" id="primaryButton"
+        <button *ngIf="primaryButton" mat-raised-button (click)="doAction(primaryButton)" color="primary" id="primaryButton"
             cdkFocusInitial [actionItem]="primaryButton">
             {{primaryButton.title}}
         </button>

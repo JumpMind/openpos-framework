@@ -7,6 +7,8 @@ import { SessionService } from '../../core/services/session.service';
 import { DialogService } from '../../core/services/dialog.service';
 import { OldPluginService } from '../../core/services/old-plugin.service';
 import { Scan } from '../../core/oldplugins/scan';
+import { ActionMessage } from '../../core/messages/action-message';
+import { MessageProvider } from '../providers/message.provider';
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -19,7 +21,7 @@ export class BarcodeScanPublisherDirective implements OnInit, OnDestroy {
     constructor(el: ElementRef,
         private log: Logger,
         private cordovaService: CordovaService,
-        private sessionService: SessionService,
+        private messageProvider: MessageProvider,
         private dialogService: DialogService,
         private pluginService: OldPluginService) {
     }
@@ -56,7 +58,7 @@ export class BarcodeScanPublisherDirective implements OnInit, OnDestroy {
         if (! this.dialogService.isDialogOpen()) {
             // Publish barcode to the server
             this.log.info(`Got barcode scan, publishing '${scan.value}'...`);
-            this.sessionService.onAction('Scan', scan);
+            this.messageProvider.sendMessage(new ActionMessage('Scan', scan));
         } else {
             this.log.warn(`Not publishing barcode '${scan.value}' because a dialog is showing`);
         }

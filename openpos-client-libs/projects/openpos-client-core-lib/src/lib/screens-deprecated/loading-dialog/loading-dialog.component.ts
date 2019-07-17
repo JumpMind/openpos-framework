@@ -18,10 +18,6 @@ export class LoadingDialogComponent extends PosScreen<ILoadingDialogScreen> {
 
     screen: ILoadingDialogScreen;
 
-    constructor(public session: SessionService) {
-        super();
-    }
-
     buildScreen(): void {
     }
 }

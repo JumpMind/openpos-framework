@@ -1,4 +1,5 @@
 import { AbstractTemplate } from '../../../core/components/abstract-template';
+import { Injector } from '@angular/core';
 
 
 export interface IScreen {

@@ -24,7 +24,7 @@
     <app-product-list #productList [showItemIcon]="! isItemClickDisabled() && selectionMode ==='Single'" [items]="items" 
         (itemClick)="isItemClickDisabled() || onItemClick($event)"
         (itemSelected)="isItemSelectedDisabled() || onItemSelected($event)"
-        [showItemMenu]="itemActions.length > 0" [menuItemActions]="itemActions" (menuItemClick)="onMenuItemClick($event.menuItem, $event.item)"
+        [showItemMenu]="itemActions.length > 0" [menuItemActions]="itemActions" (menuItemClick)="doAction($event.menuItem, $event.item)"
         [itemClass]="condensedListDisplay ? 'item-list-condensed' : ''" [selectionMode]='getSelectionModeAsEnum()'>
     </app-product-list>
 </ng-template>

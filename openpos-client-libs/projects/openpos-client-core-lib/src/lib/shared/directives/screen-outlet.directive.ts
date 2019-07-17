@@ -8,7 +8,7 @@ import {
     EventEmitter,
     Input,
     Renderer2,
-    ElementRef
+    Injector
 } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
@@ -17,13 +17,14 @@ import { Logger } from '../../core/services/logger.service';
 import { ScreenService } from '../../core/services/screen.service';
 import { SessionService } from '../../core/services/session.service';
 import { ConfigurationService } from '../../core/services/configuration.service';
-import { DialogService } from '../../core/services/dialog.service';
 import { FocusTrapFactory, FocusTrap } from '@angular/cdk/a11y';
 import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
 import { IScreen } from '../components/dynamic-screen/screen.interface';
+import { ActionService } from '../../core/services/action.service';
+import { ScreenCreatorService } from '../../core/services/screen-creator.service';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -53,9 +54,9 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         public session: SessionService,
         public configurationService: ConfigurationService,
         public overlayContainer: OverlayContainer,
-        private dialogService: DialogService,
         private focusTrapFactory: FocusTrapFactory,
-        public renderer: Renderer2) {
+        public renderer: Renderer2,
+        private screenCreator: ScreenCreatorService ) {
     }
 
     ngOnInit(): void {
@@ -145,8 +146,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
             // Create our screen component
             const componentFactory = this.screenService.resolveScreen(screenToCreate, this.currentTheme);
-            this.componentRef = this.viewContainerRef.createComponent(componentFactory,
-                this.viewContainerRef.length, this.viewContainerRef.parentInjector);
+            this.componentRef = this.screenCreator.createScreenComponent(componentFactory, this.viewContainerRef );
             this.updateTheme(this.currentTheme);
 
             // If we accept an inner screen meaning we are a template, install the screen
@@ -157,6 +157,10 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             }
 
             trap = true;
+        }
+
+        if ( this.componentRef.instance.initialize ) {
+            this.componentRef.instance.initialize( this.componentRef.injector );
         }
 
         if (this.componentRef.instance.show) {

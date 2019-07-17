@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { IMultipleFormOption } from './multiple-dynamic-form-screen.interface';
 import { MultipleDynamicFormComponent } from './multiple-dynamic-form.component';
@@ -20,8 +20,8 @@ export class MultipleDynamicFormDialogComponent extends MultipleDynamicFormCompo
     public showOptions = true;
     public selectedOption: IMultipleFormOption;
 
-    constructor( private mediaService: OpenposMediaService ) {
-        super();
+    constructor( private mediaService: OpenposMediaService, injector: Injector ) {
+        super(injector);
         const sizeMap = new Map([
             ['xs', true],
             ['sm', false],

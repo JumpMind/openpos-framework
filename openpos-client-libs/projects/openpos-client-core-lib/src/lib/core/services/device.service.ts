@@ -13,6 +13,7 @@ import { Scan } from '../oldplugins/scan';
 import { IDeviceRequest } from '../oldplugins/device-request.interface';
 import { IDevicePlugin } from '../oldplugins/device-plugin.interface';
 import { DEVICE_RESPONSE_TYPE, DEVICE_ERROR_RESPONSE_TYPE, DEVICE_DNE_RESPONSE_TYPE } from '../oldplugins/device-response.interface';
+import { ActionMessage } from '../messages/action-message';
 
 @Injectable({
     providedIn: 'root',
@@ -161,7 +162,7 @@ export class DeviceService implements IMessageHandler<any> {
                             if (response instanceof Scan && source && !response.source) {
                                 response.source = source;
                             }
-                            this.session.onAction('Scan', response);
+                            this.session.sendMessage( new ActionMessage('Scan', response));
                         }
                         this.cameraScanInProgress = false;
                     },

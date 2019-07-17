@@ -2,8 +2,8 @@ import { Directive, Input, Renderer2, ElementRef, OnDestroy, EventEmitter, Outpu
 import { KeyPressProvider } from '../providers/keypress.provider';
 import { Subscription } from 'rxjs';
 import { Configuration } from '../../configuration/configuration';
-import { SessionService } from '../../core/services/session.service';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { ActionService } from '../../core/services/action.service';
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -28,7 +28,7 @@ export class ActionItemKeyMappingDirective implements OnDestroy {
                 if (this.actionClick.observers !== null && this.actionClick.observers.length > 0) {
                     this.actionClick.emit();
                 } else {
-                    this.session.onAction(item);
+                    this.actionService.doAction(item);
                 }
                 event.preventDefault();
             } else if ( event.type === 'keyup') {
@@ -42,8 +42,8 @@ export class ActionItemKeyMappingDirective implements OnDestroy {
     constructor(
         private renderer: Renderer2,
         private el: ElementRef,
-        private session: SessionService,
-        private keyPresses: KeyPressProvider) {
+        private keyPresses: KeyPressProvider,
+        private actionService: ActionService ) {
 
     }
 

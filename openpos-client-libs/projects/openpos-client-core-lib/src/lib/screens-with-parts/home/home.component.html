@@ -15,7 +15,7 @@
             [@bounce]="getNotificationForButton(menuItem)? (bounceInterval | async) : 'down'">
             <button class="menu-button" mat-raised-button
                     gdAuto="column" color=primary [disabled]="!menuItem.enabled"
-                (click)="onMenuItemClick(menuItem)" [actionItem]="menuItem">
+                (click)="doAction(menuItem)" [actionItem]="menuItem">
                 <div class="menu-button-content">
                     <app-icon iconName="{{menuItem.icon}}" iconClass="material-icons mat-64"></app-icon>
                     <div class="menu-button-title">{{menuItem.title}}</div>
@@ -26,7 +26,7 @@
     </div>
     <mat-card *ngIf="(isMobile | async) && screen.menuItems.length > 0">
         <mat-nav-list>
-            <mat-list-item *ngFor="let menuItem of screen.menuItems" (click)="onMenuItemClick(menuItem)">
+            <mat-list-item *ngFor="let menuItem of screen.menuItems" (click)="doAction(menuItem)">
                 <app-icon class="primary text-lg" iconName="{{menuItem.icon}}" iconClass="material-icons"></app-icon>
                 <span class="primary text-lg">&nbsp;{{menuItem.title}}</span>
                 <span *ngIf="getNotificationForButton(menuItem)" 

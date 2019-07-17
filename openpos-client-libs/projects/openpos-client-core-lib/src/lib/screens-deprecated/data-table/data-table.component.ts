@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 
 /**
- * @ignore
+ * TODO: This could proably be moved to screens with parts
  */
 @Component({
     selector: 'app-data-table',
@@ -13,10 +13,6 @@ export class DataTableComponent extends PosScreen<any> {
 
     rows = [];
     columnHeaders = [];
-
-    constructor() {
-        super();
-    }
 
     buildScreen() {
         if (this.screen.rows) {

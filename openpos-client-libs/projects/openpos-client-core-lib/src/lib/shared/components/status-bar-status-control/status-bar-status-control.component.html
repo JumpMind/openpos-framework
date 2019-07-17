@@ -1,4 +1,0 @@
-<button mat-icon-button *ngIf="data && data.logoutButton && data.screenType != 'Home'"
-    (click)="doMenuItemAction(data.logoutButton)" [disabled]="!isMenuItemEnabled(data.logoutButton)">
-    <app-icon *ngIf="data.logoutButton.icon" [iconName]="data.logoutButton.icon"></app-icon>
-</button>

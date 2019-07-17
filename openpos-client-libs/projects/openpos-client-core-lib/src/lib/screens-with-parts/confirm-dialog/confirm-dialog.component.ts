@@ -3,6 +3,7 @@ import { SessionService } from '../../core/services/session.service';
 import { IConfirmationDialog } from '../../core/interfaces/confirmation-dialog.interface';
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
+import { ActionService } from '../../core/services/action.service';
 
 /**
  * @ignore
@@ -18,7 +19,7 @@ import { IScreen } from '../../shared/components/dynamic-screen/screen.interface
 export class ConfirmDialogComponent implements OnInit, IScreen {
     confirmDialog: IConfirmationDialog;
 
-    constructor(public session: SessionService) {
+    constructor(public actionService: ActionService) {
     }
 
     ngOnInit() {
@@ -29,10 +30,10 @@ export class ConfirmDialogComponent implements OnInit, IScreen {
     }
 
     onCancel() {
-        this.session.onAction(this.confirmDialog.cancelAction);
+        this.actionService.doAction(this.confirmDialog.cancelAction);
     }
 
     onConfirm() {
-        this.session.onAction(this.confirmDialog.confirmAction);
+        this.actionService.doAction(this.confirmDialog.confirmAction);
     }
 }

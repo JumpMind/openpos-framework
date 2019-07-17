@@ -34,7 +34,7 @@
     </div>
 
     <div *ngIf="receipt && removeReceiptAction" fxLayoutAlign="end">
-        <button fxFlex mat-icon-button (click)="session.onAction(removeReceiptAction, receipt.transactionNumber);$event.stopPropagation()" color="primary">
+        <button fxFlex mat-icon-button (click)="actionService.doAction(removeReceiptAction, receipt.transactionNumber);$event.stopPropagation()" color="primary">
             <app-icon [iconClass]="'material-icons'" [iconName]="removeReceiptAction.icon"></app-icon>
             <span>{{removeReceiptAction.title}}</span>
         </button>

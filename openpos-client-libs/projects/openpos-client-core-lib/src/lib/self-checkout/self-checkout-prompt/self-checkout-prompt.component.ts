@@ -26,7 +26,7 @@ export class SelfCheckoutPromptComponent extends PosScreen<SelfCheckoutPromptInt
 
     onOptionSelected(action: string) {
         if (this.promptForm.promptFormGroup.valid) {
-            this.session.onAction(action, this.promptForm.promptFormGroup.value[this.promptForm.inputControlName]);
+            this.doAction(action, this.promptForm.promptFormGroup.value[this.promptForm.inputControlName]);
         }
     }
 }

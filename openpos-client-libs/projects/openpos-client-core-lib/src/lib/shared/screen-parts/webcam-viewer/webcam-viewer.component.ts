@@ -17,10 +17,6 @@ export class WebcamViewerComponent extends ScreenPartComponent<WebcamViewerInter
     @ViewChild('videoElement') video: ElementRef;
     private mediaStream: MediaStream;
 
-    constructor(messageProvider: MessageProvider) {
-        super(messageProvider);
-    }
-
     screenDataUpdated() {
     }
 

@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
-import { SessionService } from '../../core/services/session.service';
 import { SelfCheckoutOptionsInterface } from './self-checkout-options.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 
@@ -14,10 +13,6 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
     styleUrls: ['./self-checkout-options.component.scss']
 })
 export class SelfCheckoutOptionsComponent extends PosScreen<SelfCheckoutOptionsInterface> {
-
-    constructor(public session: SessionService) {
-        super();
-    }
 
     buildScreen() {
     }

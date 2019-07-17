@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 
 /**
- * @ignore
+ * TODO: Can probably move this to screens with parts
  */
 @Component({
   selector: 'app-auto-complete-address',
@@ -10,10 +10,6 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
   styleUrls: ['./auto-complete-address.component.scss']
 })
 export class AutoCompleteAddressComponent extends PosScreen<any> {
-
-  constructor() {
-    super();
-  }
 
   buildScreen() { }
 

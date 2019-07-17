@@ -16,10 +16,6 @@ import { MessageProvider } from '../../../shared/providers/message.provider';
 })
 export class SelfCheckoutOptionsPartComponent extends ScreenPartComponent<SelfCheckoutOptionsPartInterface> {
 
-    constructor(messageProvider: MessageProvider) {
-        super(messageProvider);
-    }
-
     screenDataUpdated() { }
 
     buildScreen() { }

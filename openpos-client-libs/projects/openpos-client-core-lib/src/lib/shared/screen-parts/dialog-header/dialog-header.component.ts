@@ -1,5 +1,5 @@
 import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { DialogHeaderInterface } from './dialog-header.interface';
 import { MessageProvider } from '../../providers/message.provider';
 import { ScreenPartComponent } from '../screen-part';
@@ -13,8 +13,8 @@ import { ScreenPartComponent } from '../screen-part';
 })
 export class DialogHeaderComponent extends ScreenPartComponent<DialogHeaderInterface> {
 
-    constructor( messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor( injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() {

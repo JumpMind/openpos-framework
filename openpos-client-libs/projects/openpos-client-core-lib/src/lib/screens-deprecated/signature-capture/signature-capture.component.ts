@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, HostListener } from '@angular/core';
+import { Component, AfterViewInit, HostListener, Injector } from '@angular/core';
 import 'signature_pad';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { MatSnackBar } from '@angular/material';
@@ -26,8 +26,8 @@ export class SignatureCaptureComponent extends PosScreen<any> implements AfterVi
   protected canvas: HTMLCanvasElement = null;
   protected wrapper: HTMLElement;
 
-  constructor(public snackBar: MatSnackBar) {
-      super();
+  constructor(public snackBar: MatSnackBar, injector: Injector) {
+      super(injector);
   }
 
   buildScreen() {}
@@ -98,7 +98,7 @@ export class SignatureCaptureComponent extends PosScreen<any> implements AfterVi
         return;
     }
 
-    this.session.onAction(this.screen.saveAction.action, signatureData);
+    this.doAction(this.screen.saveAction.action, signatureData);
   }
 
   protected isSignatureSizeValid(sigData: ISignature) {

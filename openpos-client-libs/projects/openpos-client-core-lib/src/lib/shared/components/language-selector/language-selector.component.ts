@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { LocaleService } from '../../../core/services/locale.service';
 import { SessionService } from '../../../core/services/session.service';
+import { ActionService } from '../../../core/services/action.service';
 
 
 @Component({
@@ -16,7 +17,7 @@ export class LanguageSelectorComponent {
     locales: string[];
     languages = [];
 
-    constructor(public sessionService: SessionService, public localeService: LocaleService) {
+    constructor(public sessionService: SessionService, public localeService: LocaleService, public actionService: ActionService) {
         this.selectedLocale = localeService.getDisplayLocale();
         this.selectedIcon = this.getIcon(this.selectedLocale);
 
@@ -31,7 +32,7 @@ export class LanguageSelectorComponent {
 
     public onLanguageSelected() {
         this.selectedIcon = this.getIcon(this.selectedLocale);
-        this.sessionService.onAction('LocaleSelected', this.localeService.formatLocaleForJava(this.selectedLocale));
+        this.actionService.doAction({action: 'LocaleSelected'}, this.localeService.formatLocaleForJava(this.selectedLocale));
     }
 
     public getDisplayName(locale: string): string {

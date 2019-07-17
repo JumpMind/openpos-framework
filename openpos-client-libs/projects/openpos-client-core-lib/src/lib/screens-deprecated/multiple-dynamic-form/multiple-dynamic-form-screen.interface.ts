@@ -1,9 +1,10 @@
-import { ISellScreen } from '../templates/sell-template/sell/sell-screen.interface';
 import { IForm } from '../../core/interfaces/form.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 
 
-export interface IMultipleDynamicFormScreen extends ISellScreen {
+export interface IMultipleDynamicFormScreen extends IAbstractScreen {
+    backButton: IActionItem;
     forms: IMultipleFormOption[];
     submittedForm: IForm;
 }

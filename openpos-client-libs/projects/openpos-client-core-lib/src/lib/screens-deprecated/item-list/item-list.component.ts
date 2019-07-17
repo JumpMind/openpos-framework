@@ -1,11 +1,11 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { IItem } from '../../core/interfaces/item.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ProductListComponent, ItemClickAction } from '../../shared/components/product-list/product-list.component';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
-
+import { SessionService } from '../../core/services/session.service';
 /**
  * @ignore
  */
@@ -27,8 +27,8 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     localMenuItems: IActionItem[];
     @ViewChild('productList') productList: ProductListComponent;
 
-    constructor() {
-        super();
+    constructor( private session: SessionService, injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {
@@ -62,7 +62,7 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     }
 
     onItemClick(itemInfo: ItemClickAction): void {
-        this.session.onAction(this.itemActionName, itemInfo.item);
+        this.doAction(this.itemActionName, itemInfo.item);
     }
 
     onItemSelected(itemInfo: ItemClickAction): void {
@@ -80,7 +80,7 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     }
 
     onActionButtonClick(): void {
-        this.session.onAction(this.screen.actionButton.action, this.productList.selectedItems);
+        this.doAction(this.screen.actionButton.action, this.productList.selectedItems);
     }
 
     isItemSelectedDisabled(): boolean {

@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { FormGroup, ValidatorFn, FormControl } from '@angular/forms';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
@@ -7,6 +7,7 @@ import { IFormElement } from '../../core/interfaces/form-field.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ValidatorsService } from '../../core/services/validators.service';
 import { ActionIntercepter, ActionIntercepterBehavior, ActionIntercepterBehaviorType } from '../../core/action-intercepter';
+import { SessionService } from '../../core/services/session.service';
 
 /**
  * @ignore
@@ -31,8 +32,8 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
 
     tenderFormGroup: FormGroup;
 
-    constructor(private validatorsService: ValidatorsService) {
-        super();
+    constructor(private validatorsService: ValidatorsService, public session: SessionService, injector: Injector) {
+        super(injector);
     }
 
     ngOnDestroy(): void {
@@ -108,7 +109,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
     onAction(): void {
         if (this.isTenderValid()) {
             this.tenderAmount.value = this.tenderFormGroup.get('tenderAmtFld').value;
-            this.session.onAction(this.actionButton.action, this.tenderAmount.value);
+            this.doAction(this.actionButton.action, this.tenderAmount.value);
         }
     }
 

@@ -1,4 +1,4 @@
-import { ViewChildren, AfterViewInit, Input, QueryList, ViewChild, Component } from '@angular/core';
+import { ViewChildren, AfterViewInit, Input, QueryList, ViewChild, Component, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ScreenPartComponent } from '../screen-part';
 import { MessageProvider } from '../../providers/message.provider';
@@ -30,8 +30,8 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
 
     @Input() submitButton: IActionItem;
 
-    constructor(private formBuilder: FormBuilder, messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(private formBuilder: FormBuilder, injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() {
@@ -77,13 +77,13 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
 
     submitForm() {
         this.formBuilder.buildFormPayload(this.form, this.screenData);
-        this.sessionService.onAction(this.submitButton, this.screenData);
+        this.doAction(this.submitButton, this.screenData);
     }
 
     onFieldChanged(formElement: IFormElement) {
         if (formElement.valueChangedAction) {
             this.formBuilder.buildFormPayload(this.form, this.screenData);
-            this.sessionService.onAction(formElement.valueChangedAction, this.screenData);
+            this.doAction(formElement.valueChangedAction, this.screenData);
         }
     }
 }
