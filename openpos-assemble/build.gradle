@@ -16,6 +16,20 @@ apply plugin: 'se.bjurr.gitchangelog.git-changelog-gradle-plugin'
 apply from: '../openpos-gradle/src/main/resources/java.gradle'
 apply from: '../openpos-gradle/src/main/resources/release.gradle'
 
+idea {
+    project {
+        ipr {
+            //you can tinker with the output *.ipr file before it's written out
+            withXml {
+                // turn on annotation processing
+                def node = it.asNode().children()[0].get('annotationProcessing')[0];
+                node.attributes().clear();
+                node.appendNode('profile',['default':'true', 'name':'Default', 'enabled':'true'])
+            }
+        }
+    }
+}
+
 task generateSourceArtifact(type: Copy) {
     doFirst {
         println "Rebuilding build/openpos-server-core-lib"
