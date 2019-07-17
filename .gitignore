@@ -16,7 +16,6 @@
 *.zip
 *.tar.gz
 *.rar
-*.iml
 *.ipr
 
 **/bin/*
@@ -60,3 +59,17 @@ openpos-client-core-lib/\.project
 openpos-assemble/.classpath
 openpos-assemble/.project
 openpos-assemble/openpos-assemble.iws
+openpos-assemble/openpos-assemble.iml
+openpos-boot/openpos-boot.iml
+openpos-core/openpos-core.iml
+openpos-devices-client/openpos-devices-client.iml
+openpos-devices/openpos-devices.iml
+openpos-flow/openpos-flow.iml
+openpos-gradle/openpos-gradle.iml
+openpos-persist/openpos-persist.iml
+openpos-server-core/openpos-server-core.iml
+openpos-service/openpos-service.iml
+openpos-test-module/openpos-test-module.iml
+openpos-translate/openpos-translate.iml
+openpos-util/openpos-util.iml
+openpos-wrapper/openpos-wrapper.iml
