@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, Renderer2, ElementRef } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { KeyPressProvider } from '../../providers/keypress.provider';
