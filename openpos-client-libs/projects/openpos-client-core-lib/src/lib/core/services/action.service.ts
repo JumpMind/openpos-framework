@@ -3,12 +3,37 @@ import { IActionItem } from '../interfaces/action-item.interface';
 import { Logger } from './logger.service';
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material';
+import { QueueLoadingMessage } from './session.service';
+import { ActionMessage } from '../messages/action-message';
+import { LoaderState } from '../../shared/components/loader/loader-state';
+import { MessageProvider } from '../../shared/providers/message.provider';
 
 @Injectable()
 export class ActionService {
-    constructor( private dialogService: MatDialog, private logger: Logger) {}
 
-    async canPerformAction( action: IActionItem): Promise<boolean> {
+    private blockActions: boolean;
+
+    constructor( private dialogService: MatDialog, private logger: Logger, private messageProvider: MessageProvider) {
+        messageProvider.getScopedMessages$().subscribe( message => {
+            this.blockActions = false;
+        });
+    }
+
+    async doAction( action: IActionItem, payload?: any ) {
+        const sendAction = await this.canPerformAction(action);
+
+        if ( sendAction ) {
+            this.messageProvider.sendMessage( new ActionMessage(action.action, payload));
+            this.queueLoading();
+        }
+    }
+
+    private queueLoading() {
+        this.blockActions = true;
+        this.messageProvider.sendMessage(new QueueLoadingMessage(LoaderState.LOADING_TITLE));
+    }
+
+    private async  canPerformAction( action: IActionItem): Promise<boolean> {
         if ( !action.enabled ) {
             this.logger.info('Not sending action because it was disabled');
             return false;
@@ -28,9 +53,5 @@ export class ActionService {
         }
 
         return true;
-    }
-
-    doAction( action: IActionItem, payload?: any ) {
-
     }
 }

@@ -52,11 +52,4 @@ describe('SessionService', () => {
         sessionService = TestBed.get(SessionService);
     });
 
-    describe('onAction', () => {
-        it('should call StompService.publish when called', () => {
-            sessionService.doAction('foo', 'bar');
-            expect(stompServiceSpy.publish.calls.count).toBeTruthy();
-        });
-    });
-
 });

@@ -552,10 +552,7 @@ export class SessionService implements IMessageHandler<any> {
         }
     }
 
-    private queueLoading() {
-        this.waitingForResponse = true;
-        this.sendMessage(new QueueLoadingMessage(LoaderState.LOADING_TITLE));
-    }
+
 
     public cancelLoading() {
         this.waitingForResponse = false;
