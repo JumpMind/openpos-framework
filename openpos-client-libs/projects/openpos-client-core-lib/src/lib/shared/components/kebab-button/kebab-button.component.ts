@@ -5,7 +5,7 @@ import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
 import { KebabMenuComponent } from '../kebab-menu/kebab-menu.component';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
-import { FocusService } from '../../../core/services/focus.service';
+import { FocusService } from '../../../core/focus/focus.service';
 
 @Component({
     selector: 'app-kebab-button',
@@ -71,7 +71,7 @@ export class KebabButtonComponent implements OnDestroy {
             if (result) {
                 this.menuItemClick.emit(result);
             }
-            this.focusService.restoreInitalFocus();
+            this.focusService.restoreInitialFocus();
         });
     }
 }

@@ -1,7 +1,6 @@
 import { FocusService } from './focus.service';
 import { FocusTrapFactory, FocusTrap } from '@angular/cdk/a11y';
 import { TestBed, fakeAsync } from '@angular/core/testing';
-import { tick } from '@angular/core/src/render3';
 
 describe('FocusService', () => {
 
@@ -14,7 +13,7 @@ describe('FocusService', () => {
         focusTrapFactory = jasmine.createSpyObj('FocusTrapFactory', ['create']);
         focusTrap = jasmine.createSpyObj('FocusTrap', ['focusInitialElementWhenReady', 'destroy', 'focusInitialElement']);
         htmlElement = jasmine.createSpyObj('HTMLElement', ['focus']);
-        
+
         TestBed.configureTestingModule({
             providers: [
                 { provide: FocusTrapFactory, useValue: focusTrapFactory },
@@ -39,7 +38,7 @@ describe('FocusService', () => {
             focusService.destroy();
             expect(focusTrap.destroy).not.toHaveBeenCalled();
         });
-    
+
         it('will destory focusTrap, after it has been initialized', () => {
             focusService.createInitialFocus(htmlElement);
             focusService.destroy();
@@ -47,15 +46,15 @@ describe('FocusService', () => {
         });
     });
 
-    describe('restoreInitalFocus', () => {
-        it('will not restore inital focus if it has not been initialized', () => {
-            focusService.restoreInitalFocus();
+    describe('restoreInitialFocus', () => {
+        it('will not restore initial focus if it has not been initialized', () => {
+            focusService.restoreInitialFocus();
             expect(focusTrap.focusInitialElement).not.toHaveBeenCalled();
         });
-    
-        it('will restore intial focus if it has been initialized', () => {
+
+        it('will restore intiial focus if it has been initialized', () => {
             focusService.createInitialFocus(htmlElement);
-            focusService.restoreInitalFocus();
+            focusService.restoreInitialFocus();
             expect(focusTrap.focusInitialElement).toHaveBeenCalled();
         });
 
@@ -68,7 +67,7 @@ describe('FocusService', () => {
             expect(htmlElement.focus).not.toHaveBeenCalled();
         }));
 
-        it('will restore exsting focus to element', fakeAsync(() => {
+        it('will restore existing focus to element', fakeAsync(() => {
             focusService.restoreFocus(htmlElement);
             jasmine.clock().tick(100);
             expect(htmlElement.focus).toHaveBeenCalled();

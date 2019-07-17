@@ -20,5 +20,8 @@
     ],
     "Client Startup": [
         "startup"
-    ]       
+    ],
+    "Client Services": [
+        "focus"
+    ]
 }

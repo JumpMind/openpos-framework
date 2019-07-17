@@ -22,7 +22,7 @@ export class FocusService {
         return this.focusTrap.focusInitialElementWhenReady();
     }
 
-    restoreInitalFocus() {
+    restoreInitialFocus() {
         if (!!this.focusTrap) {
             this.focusTrap.focusInitialElement();
         }

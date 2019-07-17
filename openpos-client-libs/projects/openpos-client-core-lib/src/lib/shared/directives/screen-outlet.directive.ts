@@ -23,7 +23,7 @@ import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
 import { IScreen } from '../components/dynamic-screen/screen.interface';
-import { FocusService } from '../../core/services/focus.service';
+import { FocusService } from '../../core/focus/focus.service';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -110,6 +110,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         if ( this.dialogService.isDialogOpen ) {
             // Close any open dialogs
             await this.dialogService.closeDialog();
+            this.focusService.restoreInitialFocus();
         }
 
         // Cancel the loading message
