@@ -4,6 +4,7 @@ import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.compon
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { ImageService } from '../../core/services/image.service';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
+import { Subscription } from 'rxjs';
 
 @ScreenComponent({
     name: 'PriceCheckerHome'
@@ -17,8 +18,11 @@ export class PriceCheckerHomeComponent extends PosScreen<PriceCheckerHomeInterfa
 
     backgroundStyle = {};
 
+    scannerSubscription: Subscription;
+
     constructor( private imageService: ImageService, private scannerService: ScannerService) {
         super();
+        this.scannerSubscription = this.scannerService.startScanning().subscribe( m => this.onMenuItemClick(this.screen.scanAction, m));
     }
 
     buildScreen() {
@@ -30,10 +34,11 @@ export class PriceCheckerHomeComponent extends PosScreen<PriceCheckerHomeInterfa
             'background-position': 'center'
         };
 
-        this.scannerService.startScanning().subscribe( m => this.onMenuItemClick(this.screen.scanAction, m));
+        
     }
 
     ngOnDestroy(): void {
+        this.scannerSubscription.unsubscribe();
         this.scannerService.stopScanning();
     }
 }
