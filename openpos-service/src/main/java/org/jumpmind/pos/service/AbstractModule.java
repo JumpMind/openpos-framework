@@ -24,6 +24,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -48,12 +50,14 @@ import org.jumpmind.pos.persist.TableDef;
 import org.jumpmind.pos.persist.driver.Driver;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.service.model.ModuleModel;
+import org.jumpmind.pos.util.Versions;
 import org.jumpmind.properties.TypedProperties;
 import org.jumpmind.security.ISecurityService;
 import org.jumpmind.security.SecurityServiceFactory;
 import org.jumpmind.symmetric.io.data.DbExport;
 import org.jumpmind.symmetric.io.data.DbExport.Compatible;
 import org.jumpmind.symmetric.io.data.DbExport.Format;
+import org.jumpmind.util.AbstractVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -64,6 +68,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.util.FileSystemUtils;
 
 @EnableTransactionManagement
 @DependsOn({"tagConfig"})
@@ -76,13 +81,13 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
 
     @Value("${openpos.installationId:undefined}")
     protected String installationId;
-    
+
     @Value("${openpos.businessunitId:undefined}")
     protected String businessUnitId;
 
     @Autowired
     protected TagHelper tagHelper;
-    
+
     @Autowired
     protected ApplicationContext applicationContext;
 
@@ -101,8 +106,35 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
     protected PlatformTransactionManager txManager;
 
     protected DBSessionFactory sessionFactory;
-    
+
     static Server h2Server;
+
+    @Override
+    public final String getVersion() {
+        String version = new AbstractVersion() {
+            @Override
+            protected String getArtifactName() {
+                return AbstractModule.this.getArtifactName();
+            }
+        }.version();
+        if (version.equals("development")) {
+            version = findDevelopmentVersion();
+        }
+        return version;
+    }
+
+    private String findDevelopmentVersion() {
+        try {
+            return Files.walk(Paths.get("../"))
+                    .filter((f) -> f.getFileName().endsWith("gradle.properties")).map((f) ->
+                            new TypedProperties(f.toFile()).get("version")).findFirst().orElse(null);
+        } catch (IOException e) {
+            log.warn("", e);
+            return "0.0.0";
+        }
+    }
+
+    abstract protected String getArtifactName();
 
     protected void setupH2Server() {
         if ("true".equals(env.getProperty("db.h2.startServer"))) {
@@ -110,7 +142,7 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
             if (h2Server == null && configDbUrl.contains("h2:tcp")) {
                 try {
                     h2Server = Server.createTcpServer("-tcpPort", env.getProperty("db.h2.port", "1973"));
-                    ((Server)h2Server).start();
+                    ((Server) h2Server).start();
                 } catch (SQLException e) {
                     throw new SqlException(e);
                 }
@@ -223,7 +255,7 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
     public void exportData(String format, String dir, boolean includeModuleTables) {
         try (OutputStream os = new BufferedOutputStream(
                 new FileOutputStream(new File(dir, String.format("%s_post_01_%s.sql", getVersion(), getName().toLowerCase()))))) {
-            List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[] { ModuleModel.class });
+            List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[]{ModuleModel.class});
             DbExport dbExport = new DbExport(this.databasePlatform);
             dbExport.setCompatible(Compatible.H2);
             dbExport.setUseQuotedIdentifiers(false);
