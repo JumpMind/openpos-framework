@@ -19,6 +19,8 @@ export class DialogService {
 
     public dialogRef: MatDialogRef<DialogContentComponent>;
 
+    private closingDialogRef: MatDialogRef<DialogContentComponent>;
+
     private dialogOpening: boolean;
 
     private lastDialogType: string;
@@ -89,13 +91,18 @@ export class DialogService {
     public async closeDialog() {
         if (this.dialogRef) {
             this.log.info('[DialogService] closing dialog ref');
-            const loacalDialogRef = this.dialogRef;
+            this.closingDialogRef = this.dialogRef;
             this.dialogRef = null;
-            loacalDialogRef.close();
+            this.closingDialogRef.close();
 
             this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogClosing));
+
             // Wait for the dialog to fully close before moving on
-            await loacalDialogRef.afterClosed().toPromise();
+            await this.closingDialogRef.afterClosed().toPromise();
+
+            this.closingDialogRef = null;
+        } else if (this.closingDialogRef != null) {
+            await this.closingDialogRef.afterClosed().toPromise();
         }
     }
 
