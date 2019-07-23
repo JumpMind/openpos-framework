@@ -34,5 +34,18 @@ describe('object-utils', () => {
         it('returns null when object has null for value', () => {
             expect(getValue({foo: {bar: null}}, 'foo.bar')).toBeNull();
         });
+
+        it('returns undefined when value starts with a .', () => {
+            expect(getValue({foo: 'bar'}, '.foo')).toBeUndefined();
+        });
+
+        it('returns undefined when value ends with a .', () => {
+            expect(getValue({foo: 'bar'}, 'foo.')).toBeUndefined();
+        });
+
+        it('return undefined when object attribute is a primitive', () => {
+            expect(getValue({foo: 'bar'}, 'foo.bar')).toBeUndefined();
+        });
+
     });
 });

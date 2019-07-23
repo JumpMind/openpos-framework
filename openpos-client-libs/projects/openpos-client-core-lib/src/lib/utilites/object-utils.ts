@@ -9,7 +9,7 @@ export function getValue(obj: any, value: string): any {
             if (isJsObject(newObject)) {
                 return getValue(newObject, remainingValue);
             }
-            return newObject;
+            return undefined;
         }
         else {
             return obj[value];
