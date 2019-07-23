@@ -24,18 +24,25 @@ export class ActionService {
 
         if ( sendAction ) {
             this.messageProvider.sendMessage( new ActionMessage(action.action, payload));
-            this.queueLoading();
+            if ( !action.doNotBlockForResponse ) {
+                this.blockActions = true;
+                this.queueLoading();
+            }
         }
     }
 
     private queueLoading() {
-        this.blockActions = true;
         this.messageProvider.sendMessage(new QueueLoadingMessage(LoaderState.LOADING_TITLE));
     }
 
     private async  canPerformAction( action: IActionItem): Promise<boolean> {
         if ( !action.enabled ) {
             this.logger.info('Not sending action because it was disabled');
+            return false;
+        }
+
+        if ( this.blockActions ) {
+            this.logger.info('Not sending action because previous action required a response that we are still waiting for');
             return false;
         }
 

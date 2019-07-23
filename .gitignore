@@ -54,6 +54,7 @@ openpos-client-core-lib/\.project
 
 **/dist/
 **/node_modules/
+**/coverage/
 
 **/version.ts
 openpos-assemble/.classpath

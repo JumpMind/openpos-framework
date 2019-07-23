@@ -1,11 +1,10 @@
-import { SessionService } from './session.service';
 import { Logger } from './logger.service';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { IActionItem } from '../interfaces/action-item.interface';
 import { IConfirmationDialog } from '../interfaces/confirmation-dialog.interface';
 import { ActionService } from './action.service';
-import { of } from 'rxjs';
+import { of, BehaviorSubject } from 'rxjs';
 import { MessageProvider } from '../../shared/providers/message.provider';
 import { cold } from 'jasmine-marbles';
 
@@ -17,7 +16,8 @@ const confirmationDialog: IConfirmationDialog = {
     cancelAction: {action: 'no'}
 };
 
-let testScreen = {};
+const testScreen = {};
+const scopedMessages$ = new BehaviorSubject(testScreen);
 
 
 describe('ActionService', () => {
@@ -28,7 +28,7 @@ describe('ActionService', () => {
     let matDialogRef: jasmine.SpyObj<MatDialogRef<any>>;
     let matDialog: jasmine.SpyObj<MatDialog>;
 
-    function setup(){
+    function setup() {
 
         const messageProviderSpy = jasmine.createSpyObj('MessageProvider', ['sendMessage', 'getScopedMessages$']);
         const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
@@ -45,7 +45,7 @@ describe('ActionService', () => {
             ]
         });
 
-        messageProviderSpy.getScopedMessages$.and.returnValue(cold('---x|', {x: testScreen}));
+        messageProviderSpy.getScopedMessages$.and.returnValue(scopedMessages$);
         loggerService = TestBed.get(Logger);
         messageProvider = TestBed.get(MessageProvider);
         actionService = TestBed.get(ActionService);
@@ -128,17 +128,70 @@ describe('ActionService', () => {
             expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({type: 'Loading'}));
         }));
 
-        it('Should block subsequent actions until response is received', () => {
+        it('Should block subsequent actions until response is received', fakeAsync(() => {
+            const action1: IActionItem = { action: 'Test1', enabled: true};
+            const action2: IActionItem = { action: 'Test2', enabled: true};
 
-        });
+            setup();
+            actionService.doAction(action1);
 
-        it('Should not block subsequent actions if doNotBlockForResponse is true', () => {
+            tick();
+            actionService.doAction(action2);
 
-        });
+            tick();
 
-        it('Should not show loading if doNotBlockForResponse is true', () => {
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test1'}));
+            expect(messageProvider.sendMessage).not.toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
+        }));
 
-        });
+        it('Should unblock actions when a response is recieved', fakeAsync(() => {
+            const action1: IActionItem = { action: 'Test1', enabled: true};
+            const action2: IActionItem = { action: 'Test2', enabled: true};
+
+            setup();
+            actionService.doAction(action1);
+
+            tick();
+
+            scopedMessages$.next({});
+
+            tick();
+
+            actionService.doAction(action2);
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test1'}));
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
+        }));
+
+        it('Should not block subsequent actions if doNotBlockForResponse is true', fakeAsync(() => {
+            const action1: IActionItem = { action: 'Test1', enabled: true, doNotBlockForResponse: true};
+            const action2: IActionItem = { action: 'Test2', enabled: true};
+
+            setup();
+            actionService.doAction(action1);
+
+            tick();
+
+            actionService.doAction(action2);
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test1'}));
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
+        }));
+
+        it('Should not show loading if doNotBlockForResponse is true', fakeAsync(() => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+            actionService.doAction(action);
+
+            tick();
+
+            expect(messageProvider.sendMessage).not.toHaveBeenCalledWith(jasmine.objectContaining({type: 'Loading'}));
+        }));
     });
 
 });

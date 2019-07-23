@@ -21,7 +21,8 @@
           "options": {
             "main": "projects/openpos-client-core-lib/src/test.ts",
             "tsConfig": "projects/openpos-client-core-lib/tsconfig.spec.json",
-            "karmaConfig": "projects/openpos-client-core-lib/karma.conf.js"
+            "karmaConfig": "projects/openpos-client-core-lib/karma.conf.js",
+            "codeCoverage": true
           }
         },
         "lint": {
