@@ -3,10 +3,10 @@
 
     <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
         fxLayoutGap="4px" fxLayoutGap.lg="20px">
-        <button mat-button color="primary" *ngFor="let m of template.localMenuItems" (click)="doMenuItemAction(m)"
-            [disabled]="!isMenuItemEnabled(m)" class="sell-template-menu-button" [actionItem]="m">
+        <button mat-raised-button color="primary-inverse" *ngFor="let m of template.localMenuItems" (click)="doMenuItemAction(m)"
+            [disabled]="!isMenuItemEnabled(m)" class="sell-template-menu-button sausage-link" [actionItem]="m">
             <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
-            <span [ngClass]="{'muted-color': ! m.enabled}">&nbsp;{{m.title}}</span>
+            <span [ngClass]="{'muted-color': ! m.enabled}" class="sausage-link-button-title">&nbsp;{{m.title}}</span>
             <span fxFlex="1 1 auto" style="padding-right: 8px;"></span>
             <span *ngIf="m.keybind && keybindsEnabled()" class="muted-color">{{m.keybind}}</span>
         </button>

@@ -1,12 +1,13 @@
 <ng-container *ngIf="sausageLinks?.links">
-    <button mat-button 
+    <button mat-raised-button 
         class="sausage-link"
-        color="primary"
+        color="primary-inverse"
         *ngFor="let m of sausageLinks.links" (click)="onMenuItemClick(m)"
         [actionItem]="m"
         [disabled]="!m.enabled">
+
         <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
-        <span [ngClass]="{'muted-color': ! m.enabled}">&nbsp;{{m.title}}</span>
+        <span [ngClass]="{'muted-color': ! m.enabled}" class="sausage-link-button-title">&nbsp;{{m.title}}</span>
         <span *ngIf="getNotificationForLink(m)" [matBadge]="getNotificationForLink(m).value" 
         matBadgePosition="above after"
         matBadgeSize="medium"
@@ -14,5 +15,6 @@
         style="padding-left: 15px;"></span>
         <span *ngIf="m.keybind && keybindsEnabled()" fxFlex="1 1 auto" style="padding-right: 8px;"></span>
         <span *ngIf="m.keybind && keybindsEnabled()" class="muted-color">{{m.keybind}}</span>
+
     </button>
 </ng-container>
