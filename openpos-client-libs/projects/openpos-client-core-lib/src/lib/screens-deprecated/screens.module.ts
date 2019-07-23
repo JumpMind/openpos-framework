@@ -18,8 +18,6 @@ import { ScreenService } from '../core/services/screen.service';
 import { DialogService } from '../core/services/dialog.service';
 import { IconService } from '../core/services/icon.service';
 import { PromptDialogComponent } from './prompt/prompt-dialog.component';
-import { PromptWithOptionsDialogComponent } from './prompt-with-options/prompt-with-options-dialog.component';
-import { ChooseOptionsDialogComponent } from './choose-options/choose-options-dialog.component';
 import { PromptComponent } from './prompt/prompt.component';
 
 const screens = [
@@ -35,9 +33,7 @@ const screens = [
 
 const dialogs = [
     DynamicListDialogComponent,
-    PromptDialogComponent,
-    PromptWithOptionsDialogComponent,
-    ChooseOptionsDialogComponent
+    PromptDialogComponent
 ];
 /**
  * @ignore

@@ -6,8 +6,8 @@ import { IItem } from '../../core/interfaces/item.interface';
 import { IFormElement } from '../../core/interfaces/form-field.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ValidatorsService } from '../../core/services/validators.service';
-import { ActionIntercepter, ActionIntercepterBehavior, ActionIntercepterBehaviorType } from '../../core/action-intercepter';
 import { SessionService } from '../../core/services/session.service';
+import { BehaviorSubject } from 'rxjs';
 
 /**
  * @ignore
@@ -29,6 +29,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
     totalAmount: IFormElement;
     itemActions: IActionItem[] = [];
     actionButton: IActionItem;
+    formValid$ = new BehaviorSubject<boolean>(false);
 
     tenderFormGroup: FormGroup;
 
@@ -40,7 +41,6 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
         if (this.screen.template.localMenuItems) {
             this.screen.template.localMenuItems.forEach(element => {
                 this.actionService.unregisterActionPayload(element.action);
-                this.session.unregisterActionIntercepter(element.action);
             });
         }
     }
@@ -79,27 +79,18 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
         if (this.screen.template.localMenuItems) {
             this.screen.template.localMenuItems.forEach(element => {
                 this.actionService.registerActionPayload(element.action, () => this.tenderFormGroup.get('tenderAmtFld').value);
-                this.session.registerActionIntercepter(element.action,
-                    new ActionIntercepter(this.log, (payload) => {
-                        const value = this.tenderFormGroup.get('tenderAmtFld').value;
-                        this.log.info(`Returning value of ${value}.  Payload: ${JSON.stringify(payload)}`);
-                        return value;
-                    },
-                        // Will only block if the formGroup is inValid
-                        new ActionIntercepterBehavior(ActionIntercepterBehaviorType.block,
-                            tenderAmtValue => this.isTenderValid()
-                        )
-                    )
-                );
+                this.session.registerActionDisabler(element.action, this.formValid$);
             });
-            //                this.session.registerActionPayload( element.action, () => this.tenderFormGroup.get('tenderAmtFld').value );
-            //            });
         }
-
+        this.formValid$.next(this.isTenderValid());
     }
 
     onFormSubmit(): void {
         this.onAction();
+    }
+
+    onTenderValueChange() {
+        this.formValid$.next(this.isTenderValid());
     }
 
     isTenderValid(): boolean {

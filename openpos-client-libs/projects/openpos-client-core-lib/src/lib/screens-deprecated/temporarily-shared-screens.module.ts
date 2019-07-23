@@ -12,7 +12,6 @@ import { LoadingDialogComponent } from './loading-dialog/loading-dialog.componen
 import { SignatureCaptureComponent } from './signature-capture/signature-capture.component';
 import { MultipleDynamicFormDialogComponent } from './multiple-dynamic-form/multiple-dynamic-form-dialog.component';
 import { BasicItemSearchComponent } from './basic-item-search/basic-item-search.component';
-import { ChooseOptionsComponent } from './choose-options/choose-options.component';
 import { DetailTextScreenComponent } from './detail-text/detail-text-screen.component';
 import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
 import { DynamicListComponent } from './dynamic-list/dynamic-list.component';
@@ -20,8 +19,6 @@ import { EmbeddedWebPageComponent } from './embedded-web-page/embedded-web-page.
 import { MultiselectItemListComponent } from './multiselect-item-list/multiselect-item-list.component';
 import { PaymentStatusComponent } from './payment-status/payment-status.component';
 import { PromptWithInfoComponent } from './prompt-with-info/prompt-with-info.component';
-import { PromptWithOptionsComponent } from './prompt-with-options/prompt-with-options.component';
-import { StaticTableComponent } from './static-table/static-table.component';
 import { VersionComponent } from './version/version.component';
 import { OptionsComponent } from './options/options.component';
 
@@ -34,7 +31,6 @@ const screens = [
         ItemSearchResultsComponent,
         SignatureCaptureComponent,
         BasicItemSearchComponent,
-        ChooseOptionsComponent,
         DetailTextScreenComponent,
         DynamicFormComponent,
         DynamicListComponent,
@@ -42,8 +38,6 @@ const screens = [
         MultiselectItemListComponent,
         PaymentStatusComponent,
         PromptWithInfoComponent,
-        PromptWithOptionsComponent,
-        StaticTableComponent,
         OptionsComponent
     ];
 

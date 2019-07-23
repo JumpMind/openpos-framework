@@ -12,7 +12,6 @@ import { Message } from '@stomp/stompjs';
 import { Injectable, NgZone, } from '@angular/core';
 import { StompState, StompRService } from '@stomp/ng2-stompjs';
 import { MatDialog } from '@angular/material';
-import { ActionIntercepter } from '../action-intercepter';
 // Importing the ../components barrel causes a circular reference since dynamic-screen references back to here,
 // so we will import those files directly
 import { LoaderState } from '../../shared/components/loader/loader-state';
@@ -79,10 +78,6 @@ export class SessionService implements IMessageHandler<any> {
 
     private stompDebug = false;
 
-
-    private actionIntercepters: Map<string, ActionIntercepter> = new Map();
-
-    private waitingForResponse = false;
     private actionDisablers = new Map<string, BehaviorSubject<boolean>>();
 
     public inBackground = false;
@@ -419,13 +414,7 @@ export class SessionService implements IMessageHandler<any> {
                 JSON.stringify(deviceResponse));
         };
 
-        // see if we have any intercepters registered for the type of this deviceResponse
-        // otherwise just send the response
-        if (this.actionIntercepters.has(deviceResponse.type)) {
-            this.actionIntercepters.get(deviceResponse.type).intercept(deviceResponse, sendResponseBackToServer);
-        } else {
-            sendResponseBackToServer();
-        }
+        sendResponseBackToServer();
     }
 
     private doAction(   action: string | IActionItem,
@@ -466,19 +455,7 @@ export class SessionService implements IMessageHandler<any> {
                     this.publish(actionString, 'Screen', payload);
                 };
 
-                // see if we have any intercepters registered
-                // otherwise just send the action
-            if (this.actionIntercepters.has(actionString)) {
-                    const interceptor = this.actionIntercepters.get(actionString);
-                  //  interceptor.intercept(response, sendToServer);
-                    if (interceptor.options && interceptor.options.showLoadingAfterIntercept) {
-                        if (!isValueChangedAction) {
-                           // this.queueLoading();
-                        }
-                    }
-                } else {
-                    sendToServer();
-                }
+            sendToServer();
         } else {
             this.log.info(`received an invalid action: ${action}`);
         }
@@ -523,25 +500,9 @@ export class SessionService implements IMessageHandler<any> {
         }
     }
 
-
-
     public cancelLoading() {
-        this.waitingForResponse = false;
         this.sendMessage(new CancelLoadingMessage());
     }
-
-    public registerActionIntercepter(actionName: string, actionIntercepter: ActionIntercepter) {
-        this.actionIntercepters.set(actionName, actionIntercepter);
-    }
-
-    public unregisterActionIntercepters() {
-        this.actionIntercepters.clear();
-    }
-
-    public unregisterActionIntercepter(actionName: string) {
-        this.actionIntercepters.delete(actionName);
-    }
-
 
     public registerActionDisabler(action: string, disabler: Observable<boolean>): Subscription {
         if (!this.actionDisablers.has(action)) {

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { SelfCheckoutTenderInterface } from './self-checkout-tender.interface';
-import { IOptionItem } from '../../screens-deprecated/choose-options/option-item.interface';
+import { IOptionItem } from '../../core/interfaces/option-item.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
 

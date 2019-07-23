@@ -1,4 +1,4 @@
-import { IForm } from '../../core/interfaces/form.interface';
+import { IForm } from './form.interface';
 
 /**
  * @ignore

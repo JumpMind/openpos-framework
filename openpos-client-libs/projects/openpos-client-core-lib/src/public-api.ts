@@ -8,7 +8,6 @@ export * from './lib/cordova/cordova-monkey-patch-fix';
 
 // Core
 export * from './lib/core/core.module';
-export * from './lib/core/action-intercepter';
 export * from './lib/core/app-injector';
 export * from './lib/core/module-import-guard';
 
@@ -139,9 +138,7 @@ export * from './lib/screens-deprecated/temporarily-shared-screens.module';
 export * from './lib/screens-deprecated/auto-complete-address/auto-complete-address.component';
 export * from './lib/screens-deprecated/basic-item-search/basic-item-search.component';
 export * from './lib/screens-deprecated/change/change.component';
-export * from './lib/screens-deprecated/choose-options/choose-options-dialog.component';
-export * from './lib/screens-deprecated/choose-options/choose-options.component';
-export * from './lib/screens-deprecated/choose-options/option-item.interface';
+export * from './lib/core/interfaces/option-item.interface';
 export * from './lib/screens-deprecated/data-table/data-table.component';
 export * from './lib/screens-deprecated/detail-text/detail-text-screen.component';
 export * from './lib/screens-deprecated/detail-text/detail-text-screen.interface';
@@ -166,13 +163,10 @@ export * from './lib/screens-deprecated/print-preview/print-preview.component';
 export * from './lib/screens-deprecated/prompt/prompt-dialog.component';
 export * from './lib/screens-deprecated/prompt/prompt.component';
 export * from './lib/screens-deprecated/prompt-with-info/prompt-with-info.component';
-export * from './lib/screens-deprecated/prompt-with-options/prompt-with-options-dialog.component';
-export * from './lib/screens-deprecated/prompt-with-options/prompt-with-options.component';
 export * from './lib/screens-deprecated/sale-retrieval/sale-retrieval.component';
 export * from './lib/screens-deprecated/sell-item-detail/promo-item.interface';
 export * from './lib/screens-deprecated/sell-item-detail/sell-item-detail.component';
 export * from './lib/screens-deprecated/signature-capture/signature-capture.component';
-export * from './lib/screens-deprecated/static-table/static-table.component';
 export * from './lib/shared/components/scan-something/scan.interface';
 export * from './lib/screens-deprecated/tendering/tendering.component';
 export * from './lib/screens-deprecated/version/version.component';

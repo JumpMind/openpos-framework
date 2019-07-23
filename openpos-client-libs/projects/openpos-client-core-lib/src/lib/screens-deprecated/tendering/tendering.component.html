@@ -42,6 +42,7 @@
                             cdkFocusInitial
                             formControlName="tenderAmtFld"
                             style="text-align: center" 
+                            (change)="onTenderValueChange()"
                             [placeholder]="tenderAmount.placeholder"
                             [required]="tenderAmount.required"
                             [formatterName]="'money'" novalidate type="tel" pattern="{{tenderAmount.pattern ? tenderAmount.pattern : ''}}" autofocus>

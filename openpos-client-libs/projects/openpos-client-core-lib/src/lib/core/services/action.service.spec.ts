@@ -6,9 +6,6 @@ import { IConfirmationDialog } from '../interfaces/confirmation-dialog.interface
 import { ActionService } from './action.service';
 import { of, BehaviorSubject } from 'rxjs';
 import { MessageProvider } from '../../shared/providers/message.provider';
-import { cold } from 'jasmine-marbles';
-import { ActionMessage } from '../messages/action-message';
-
 
 const confirmationDialog: IConfirmationDialog = {
     title: 'Are you sure',

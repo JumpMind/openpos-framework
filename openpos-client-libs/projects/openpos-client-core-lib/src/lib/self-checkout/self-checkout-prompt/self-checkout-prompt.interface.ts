@@ -1,4 +1,4 @@
-import { IOptionItem } from '../../screens-deprecated/choose-options/option-item.interface';
+import { IOptionItem } from '../../core/interfaces/option-item.interface';
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 
 export interface SelfCheckoutPromptInterface extends IAbstractScreen {
