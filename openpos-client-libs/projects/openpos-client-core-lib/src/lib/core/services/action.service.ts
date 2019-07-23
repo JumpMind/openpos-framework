@@ -12,6 +12,7 @@ import { MessageProvider } from '../../shared/providers/message.provider';
 export class ActionService {
 
     private blockActions: boolean;
+    private actionPayloads: Map<string, () => void> = new Map<string, () => void>();
 
     constructor( private dialogService: MatDialog, private logger: Logger, private messageProvider: MessageProvider) {
         messageProvider.getScopedMessages$().subscribe( message => {
@@ -19,16 +20,39 @@ export class ActionService {
         });
     }
 
-    async doAction( action: IActionItem, payload?: any ) {
-        const sendAction = await this.canPerformAction(action);
+    async doAction( actionItem: IActionItem, payload?: any ) {
+        const sendAction = await this.canPerformAction(actionItem);
 
         if ( sendAction ) {
-            this.messageProvider.sendMessage( new ActionMessage(action.action, payload));
-            if ( !action.doNotBlockForResponse ) {
+            // First we will use the payload passed into this function then
+            // Check if we have registered action payload
+            if ( !payload && this.actionPayloads.has(actionItem.action)) {
+                this.logger.info(`Checking registered action payload for ${actionItem.action}`);
+                try {
+                    payload = this.actionPayloads.get(actionItem.action)();
+                } catch (e) {
+                    throw new Error(`invalid action payload for ${actionItem.action}: ` + e);
+                }
+            }
+
+            this.messageProvider.sendMessage( new ActionMessage(actionItem.action, payload));
+            if ( !actionItem.doNotBlockForResponse ) {
                 this.blockActions = true;
                 this.queueLoading();
             }
         }
+    }
+
+    public registerActionPayload(actionName: string, actionValue: () => void) {
+        this.actionPayloads.set(actionName, actionValue);
+    }
+
+    public unregisterActionPayloads() {
+        this.actionPayloads.clear();
+    }
+
+    public unregisterActionPayload(actionName: string) {
+        this.actionPayloads.delete(actionName);
     }
 
     private queueLoading() {

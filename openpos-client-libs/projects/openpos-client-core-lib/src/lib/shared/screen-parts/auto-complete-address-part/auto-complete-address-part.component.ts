@@ -115,7 +115,7 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
         if (actions) {
             actions.forEach(action => {
 
-                this.sessionService.registerActionPayload(action, () => {
+                this.actionService.registerActionPayload(action, () => {
                     if (this.form.valid) {
                         this.formBuilder.buildFormPayload(this.form, this.screenData);
                         return this.screenData;

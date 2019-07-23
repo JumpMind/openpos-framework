@@ -4,6 +4,7 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IForm } from '../../core/interfaces/form.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { SessionService } from '../../core/services/session.service';
+import { ActionService } from '../../core/services/action.service';
 
 /**
  * @ignore
@@ -26,13 +27,13 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
   searchCategoriesText: string;
   public displayCategoryIndex = 0;
 
-  constructor(private session: SessionService, injector: Injector) {
+  constructor(injector: Injector) {
       super(injector);
   }
 
   buildScreen() {
     if (this.screen.template && this.screen.template.localMenuItems && this.screen.template.localMenuItems[0]) {
-        this.session.registerActionPayload(this.screen.template.localMenuItems[0].action, () => {
+        this.actionService.registerActionPayload(this.screen.template.localMenuItems[0].action, () => {
             return this.getSearchPayload();
           });
     }
@@ -47,7 +48,7 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
   }
 
   ngOnDestroy(): void {
-    this.session.unregisterActionPayloads();
+    this.actionService.unregisterActionPayloads();
   }
 
   ngAfterViewInit(): void {

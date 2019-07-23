@@ -1,7 +1,6 @@
 import { ViewChildren, AfterViewInit, Input, QueryList, ViewChild, Component, Injector } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { ScreenPartComponent } from '../screen-part';
-import { MessageProvider } from '../../providers/message.provider';
 import { FormBuilder } from '../../../core/services/form-builder.service';
 import { DynamicFormFieldComponent } from '../../components/dynamic-form-field/dynamic-form-field.component';
 import { ShowErrorsComponent } from '../../components/show-errors/show-errors.component';
@@ -58,7 +57,7 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
         if (actions) {
             actions.forEach(action => {
 
-                this.sessionService.registerActionPayload(action, () => {
+                this.actionService.registerActionPayload(action, () => {
                     if (this.form.valid) {
                         this.formBuilder.buildFormPayload(this.form, this.screenData);
                         return this.screenData;

@@ -1,11 +1,10 @@
-import { Component, OnInit, ViewChild, OnDestroy, Injector } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { IItem } from '../../core/interfaces/item.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ProductListComponent, ItemClickAction } from '../../shared/components/product-list/product-list.component';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
-import { SessionService } from '../../core/services/session.service';
 /**
  * @ignore
  */
@@ -27,10 +26,6 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     localMenuItems: IActionItem[];
     @ViewChild('productList') productList: ProductListComponent;
 
-    constructor( private session: SessionService, injector: Injector) {
-        super(injector);
-    }
-
     buildScreen() {
         this.items = this.screen.items;
         this.itemActionName = this.screen.itemActionName;
@@ -48,7 +43,7 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     ngOnDestroy(): void {
         if (this.localMenuItems) {
             this.localMenuItems.forEach(element => {
-                this.session.unregisterActionPayloads();
+                this.actionService.unregisterActionPayloads();
             });
         }
     }
@@ -69,7 +64,7 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
         if (this.getSelectionModeAsEnum() === SelectionMode.Multiple || this.getSelectionModeAsEnum() === SelectionMode.SingleCheckbox) {
             if (this.localMenuItems) {
                 this.localMenuItems.forEach(element => {
-                    this.session.registerActionPayload(element.action, () => this.productList.selectedItems);
+                    this.actionService.registerActionPayload(element.action, () => this.productList.selectedItems);
                 });
             }
         }

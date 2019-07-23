@@ -40,7 +40,6 @@ export class DynamicListControlComponent implements OnInit {
     private _screenForm: IForm;
 
     constructor(
-        public session: SessionService,
         public screenService: ScreenService,
         private formBuilder: FormBuilder,
         public actionService: ActionService ) {
@@ -75,7 +74,7 @@ export class DynamicListControlComponent implements OnInit {
         this._alternateSubmitActions = actions;
         if (actions) {
             actions.forEach(action => {
-                this.session.registerActionPayload(action, () => {
+                this.actionService.registerActionPayload(action, () => {
                     if (this.form.valid) {
                         this.formBuilder.buildFormPayload(this.form, this._screenForm);
                         return this._screenForm;

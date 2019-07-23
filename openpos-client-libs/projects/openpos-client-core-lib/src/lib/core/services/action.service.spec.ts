@@ -7,6 +7,7 @@ import { ActionService } from './action.service';
 import { of, BehaviorSubject } from 'rxjs';
 import { MessageProvider } from '../../shared/providers/message.provider';
 import { cold } from 'jasmine-marbles';
+import { ActionMessage } from '../messages/action-message';
 
 
 const confirmationDialog: IConfirmationDialog = {
@@ -191,6 +192,78 @@ describe('ActionService', () => {
             tick();
 
             expect(messageProvider.sendMessage).not.toHaveBeenCalledWith(jasmine.objectContaining({type: 'Loading'}));
+        }));
+
+        it('Should send Action payloads with cooresponding actions', fakeAsync( () => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+
+            actionService.registerActionPayload('Test', () => 'Test Payload');
+            actionService.doAction(action);
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining(
+                { actionName: 'Test', payload: 'Test Payload'}));
+        }));
+
+        it('Should use the provided payload over a registered one', fakeAsync( () => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+
+            actionService.registerActionPayload('Test', () => 'Test Payload');
+            actionService.doAction(action, 'UseThisOne');
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining(
+                { actionName: 'Test', payload: 'UseThisOne'}));
+        }));
+
+        it('Should remove payload when unregistered', fakeAsync( () => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+
+            actionService.registerActionPayload('Test', () => 'Test Payload');
+            actionService.unregisterActionPayload('Test');
+            actionService.doAction(action);
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining(
+                { actionName: 'Test', payload: undefined}));
+        }));
+
+        it('Should remove payload when all unregistered', fakeAsync( () => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+
+            actionService.registerActionPayload('Test', () => 'Test Payload');
+            actionService.unregisterActionPayloads();
+            actionService.doAction(action);
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining(
+                { actionName: 'Test', payload: undefined}));
+        }));
+
+        it('Should throw and error if payload function errors', fakeAsync( () => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+
+            actionService.registerActionPayload('Test', () => { throw new Error(); });
+
+            expect( () => {
+                actionService.doAction(action);
+                tick();
+            }).toThrowError();
+
         }));
     });
 

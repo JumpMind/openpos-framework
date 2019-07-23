@@ -79,7 +79,6 @@ export class SessionService implements IMessageHandler<any> {
 
     private stompDebug = false;
 
-    private actionPayloads: Map<string, () => void> = new Map<string, () => void>();
 
     private actionIntercepters: Map<string, ActionIntercepter> = new Map();
 
@@ -432,7 +431,6 @@ export class SessionService implements IMessageHandler<any> {
     private doAction(   action: string | IActionItem,
                         payload?: any, isValueChangedAction?: boolean) {
         if (action) {
-            let response: any = null;
             let actionString = '';
             // we need to figure out if we are a menuItem or just a string
             if (action.hasOwnProperty('action')) {
@@ -462,34 +460,17 @@ export class SessionService implements IMessageHandler<any> {
 
             this.log.info(`action is: ${actionString}`);
 
-            let processAction = true;
 
-            // First we will use the payload passed into this function then
-            // Check if we have registered action payload
-            // Otherwise we will send whatever is in this.response
-            if (payload != null) {
-                response = payload;
-            } else if (this.actionPayloads.has(actionString)) {
-                this.log.info(`Checking registered action payload for ${actionString}`);
-                try {
-                    response = this.actionPayloads.get(actionString)();
-                } catch (e) {
-                    this.log.info(`invalid action payload for ${actionString}: ` + e);
-                    processAction = false;
-                }
-            }
-
-            if (processAction && !this.waitingForResponse) {
-                const sendToServer = () => {
+            const sendToServer = () => {
                     this.log.info(`>>> Post action "${actionString}"`);
-                    this.publish(actionString, 'Screen', response);
+                    this.publish(actionString, 'Screen', payload);
                 };
 
                 // see if we have any intercepters registered
                 // otherwise just send the action
-                if (this.actionIntercepters.has(actionString)) {
+            if (this.actionIntercepters.has(actionString)) {
                     const interceptor = this.actionIntercepters.get(actionString);
-                    interceptor.intercept(response, sendToServer);
+                  //  interceptor.intercept(response, sendToServer);
                     if (interceptor.options && interceptor.options.showLoadingAfterIntercept) {
                         if (!isValueChangedAction) {
                            // this.queueLoading();
@@ -498,11 +479,6 @@ export class SessionService implements IMessageHandler<any> {
                 } else {
                     sendToServer();
                 }
-            } else {
-                this.log.info(
-                    `Not sending action: ${actionString}.  processAction: ${processAction}, waitingForResponse:${this.waitingForResponse}`);
-            }
-
         } else {
             this.log.info(`received an invalid action: ${action}`);
         }
@@ -552,18 +528,6 @@ export class SessionService implements IMessageHandler<any> {
     public cancelLoading() {
         this.waitingForResponse = false;
         this.sendMessage(new CancelLoadingMessage());
-    }
-
-    public registerActionPayload(actionName: string, actionValue: () => void) {
-        this.actionPayloads.set(actionName, actionValue);
-    }
-
-    public unregisterActionPayloads() {
-        this.actionPayloads.clear();
-    }
-
-    public unregisterActionPayload(actionName: string) {
-        this.actionPayloads.delete(actionName);
     }
 
     public registerActionIntercepter(actionName: string, actionIntercepter: ActionIntercepter) {

@@ -5,7 +5,6 @@ import { ShowErrorsComponent } from '../show-errors/show-errors.component';
 import { IFormElement } from '../../../core/interfaces/form-field.interface';
 import { IForm } from '../../../core/interfaces/form.interface';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
-import { SessionService } from '../../../core/services/session.service';
 import { ScreenService } from '../../../core/services/screen.service';
 import { FormBuilder } from '../../../core/services/form-builder.service';
 import { ActionService } from '../../../core/services/action.service';
@@ -28,7 +27,6 @@ export class DynamicFormControlComponent implements AfterViewInit {
   @Input() submitButton: IActionItem;
 
   constructor(
-      public session: SessionService,
       public screenService: ScreenService,
       private formBuilder: FormBuilder,
       private actionService: ActionService) {}
@@ -62,7 +60,7 @@ export class DynamicFormControlComponent implements AfterViewInit {
     if (actions) {
       actions.forEach(action => {
 
-        this.session.registerActionPayload(action, () => {
+        this.actionService.registerActionPayload(action, () => {
           if (this.form.valid) {
             this.formBuilder.buildFormPayload(this.form, this._screenForm);
             return this._screenForm;

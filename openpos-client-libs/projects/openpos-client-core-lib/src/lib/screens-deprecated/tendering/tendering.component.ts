@@ -39,7 +39,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
     ngOnDestroy(): void {
         if (this.screen.template.localMenuItems) {
             this.screen.template.localMenuItems.forEach(element => {
-                this.session.unregisterActionPayload(element.action);
+                this.actionService.unregisterActionPayload(element.action);
                 this.session.unregisterActionIntercepter(element.action);
             });
         }
@@ -78,7 +78,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
 
         if (this.screen.template.localMenuItems) {
             this.screen.template.localMenuItems.forEach(element => {
-                this.session.registerActionPayload(element.action, () => this.tenderFormGroup.get('tenderAmtFld').value);
+                this.actionService.registerActionPayload(element.action, () => this.tenderFormGroup.get('tenderAmtFld').value);
                 this.session.registerActionIntercepter(element.action,
                     new ActionIntercepter(this.log, (payload) => {
                         const value = this.tenderFormGroup.get('tenderAmtFld').value;
