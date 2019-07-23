@@ -149,8 +149,7 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
   }
 
   public onItemListChange(event: number[]): void {
-    this.selectedItemIndexes = event;
-    this.session.onValueChange('SelectedItemsChanged', this.screen.items.filter(item => this.selectedItemIndexes.includes(item.index)));
+    this.session.onValueChange('SelectedItemsChanged', event);
   }
 
   public onMenuAction(event: any) {
