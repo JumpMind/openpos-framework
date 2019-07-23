@@ -359,6 +359,7 @@ export * from './lib/shared/screen-parts/scan-or-search/scan-or-search.interface
 export * from './lib/shared/screen-parts/scan-or-search/scan-type.enum';
 export * from './lib/shared/screen-parts/status-strip/status-strip.component';
 export * from './lib/shared/screen-parts/status-strip/status-strip.interface';
+export * from './lib/shared/screen-parts/system-status/system-status.component';
 
 export * from './lib/shared/utils/date.utils';
 export * from './lib/shared/validators/openpos-validators';

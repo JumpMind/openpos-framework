@@ -1,0 +1,5 @@
+<span *ngIf="showRegisterStatus()" 
+    [ngClass]="{'success':screenData.overallSystemStatus === 'Online', 'warn':screenData.overallSystemStatus === 'Offline'}"
+    (click)="onRegisterStatusClick()">
+        {{screenData.overallSystemStatus}}
+</span>

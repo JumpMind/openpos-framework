@@ -118,6 +118,7 @@ import { RouterModule } from '@angular/router';
 import { DynamicScreenComponent } from './components/dynamic-screen/dynamic-screen.component';
 import { LocationDetailsComponent } from './components/location-details/location-details.component';
 import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
+import { SystemStatusComponent } from './screen-parts/system-status/system-status.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -133,6 +134,7 @@ const screenParts = [
     AutoCompleteAddressPartComponent,
     ProgressBarPartComponent,
     WebcamViewerComponent,
+    SystemStatusComponent
 ];
 
 const components = [

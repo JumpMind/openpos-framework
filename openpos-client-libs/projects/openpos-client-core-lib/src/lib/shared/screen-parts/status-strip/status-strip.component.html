@@ -3,11 +3,7 @@
         {{date|localizeddatetime}}
     </div>
     <div>
-        <span *ngIf="showRegisterStatus()" 
-        [ngClass]="{'success':screenData.systemStatus.overallSystemStatus === 'Online', 'warn':screenData.systemStatus.overallSystemStatus === 'Offline'}"
-        (click)="onRegisterStatusClick()">
-            {{screenData.systemStatus.overallSystemStatus}}
-        </span>
+        <app-system-status></app-system-status>
         <span *ngIf="screenData.timestampBegin">
             {{timer|hourminsec}}
         </span>
