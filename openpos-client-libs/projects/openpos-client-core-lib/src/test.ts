@@ -8,6 +8,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import './public-api';
 
 declare const require: any;
 
