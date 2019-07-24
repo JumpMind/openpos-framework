@@ -78,7 +78,7 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     }
 
     isActionDisabled(action: string): Observable<boolean> {
-        return this.sessionService.actionIsDisabled(action);
+        return this.actionService.actionIsDisabled$(action);
     }
 
     private handleLifeCycleEvent( message: LifeCycleMessage ) {

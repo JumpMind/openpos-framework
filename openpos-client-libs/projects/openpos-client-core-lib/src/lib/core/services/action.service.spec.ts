@@ -262,6 +262,55 @@ describe('ActionService', () => {
             }).toThrowError();
 
         }));
+
+        it('Should not send actions if they are disabled by an action disabler', fakeAsync( () => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+            actionService.registerActionDisabler('Test', of(true));
+            actionService.doAction(action);
+            tick();
+
+            expect(messageProvider.sendMessage).not.toHaveBeenCalled();
+        }));
+
+        it('Should send actions if they are not disabled', fakeAsync( () => {
+            const action: IActionItem = { action: 'Test', enabled: true, doNotBlockForResponse: true };
+
+            setup();
+            actionService.registerActionDisabler('Test', of(false));
+            actionService.doAction(action);
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalled();
+        }));
+
+    });
+
+    describe('actionIsDisabled', () => {
+
+        it('Should be true if action is disabled by disabler', fakeAsync( () => {
+            let result: boolean;
+            setup();
+            actionService.registerActionDisabler('Test', of(true));
+            actionService.actionIsDisabled$('Test').subscribe( r => result = r);
+            tick();
+
+            expect(result).toBeTruthy();
+        }));
+
+        it('Should handle multiple disablers for a single action', fakeAsync( () => {
+            let result: boolean;
+            setup();
+            actionService.registerActionDisabler('Test', of(true));
+            tick();
+            actionService.registerActionDisabler('Test', of(false));
+
+            actionService.actionIsDisabled$('Test').subscribe( r => result = r);
+            tick();
+
+            expect(result).toBeFalsy();
+        }));
     });
 
 });

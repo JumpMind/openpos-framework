@@ -6,8 +6,7 @@ import { IItem } from '../../core/interfaces/item.interface';
 import { IFormElement } from '../../core/interfaces/form-field.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ValidatorsService } from '../../core/services/validators.service';
-import { SessionService } from '../../core/services/session.service';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 
 /**
  * @ignore
@@ -33,7 +32,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
 
     tenderFormGroup: FormGroup;
 
-    constructor(private validatorsService: ValidatorsService, public session: SessionService, injector: Injector) {
+    constructor(private validatorsService: ValidatorsService, injector: Injector) {
         super(injector);
     }
 
@@ -79,7 +78,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
         if (this.screen.template.localMenuItems) {
             this.screen.template.localMenuItems.forEach(element => {
                 this.actionService.registerActionPayload(element.action, () => this.tenderFormGroup.get('tenderAmtFld').value);
-                this.session.registerActionDisabler(element.action, this.formValid$);
+                this.subscriptions.add(this.actionService.registerActionDisabler(element.action, this.formValid$));
             });
         }
         this.formValid$.next(this.isTenderValid());

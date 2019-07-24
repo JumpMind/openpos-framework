@@ -78,8 +78,6 @@ export class SessionService implements IMessageHandler<any> {
 
     private stompDebug = false;
 
-    private actionDisablers = new Map<string, BehaviorSubject<boolean>>();
-
     public inBackground = false;
 
     private stompStateSubscription: Subscription;
@@ -502,22 +500,6 @@ export class SessionService implements IMessageHandler<any> {
 
     public cancelLoading() {
         this.sendMessage(new CancelLoadingMessage());
-    }
-
-    public registerActionDisabler(action: string, disabler: Observable<boolean>): Subscription {
-        if (!this.actionDisablers.has(action)) {
-            this.actionDisablers.set(action, new BehaviorSubject<boolean>(false));
-        }
-
-        return disabler.subscribe(value => this.actionDisablers.get(action).next(value));
-    }
-
-    public actionIsDisabled(action: string): Observable<boolean> {
-        if (!this.actionDisablers.has(action)) {
-            this.actionDisablers.set(action, new BehaviorSubject<boolean>(false));
-        }
-
-        return this.actionDisablers.get(action);
     }
 
     public getCurrencyDenomination(): string {

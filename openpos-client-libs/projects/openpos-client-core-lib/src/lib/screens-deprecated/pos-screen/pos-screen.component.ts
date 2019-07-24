@@ -4,14 +4,18 @@ import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { deepAssign } from '../../utilites/deep-assign';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
-import { Injector } from '@angular/core';
+import { Injector, OnDestroy } from '@angular/core';
 import { ActionService } from '../../core/services/action.service';
+import { Subscription } from 'rxjs';
 
-export abstract class PosScreen<T extends IAbstractScreen> implements IScreen {
+export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, OnDestroy {
+
 
     screen: T;
     log: Logger;
     actionService: ActionService;
+
+    subscriptions = new Subscription();
 
     constructor( injector: Injector) {
         this.log = injector.get(Logger);
@@ -24,11 +28,16 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen {
     }
 
     doAction( action: IActionItem | string, payload?: any) {
-
         if ( typeof(action) === 'string' ) {
             this.actionService.doAction( {action}, payload);
         } else {
             this.actionService.doAction(action, payload);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if ( this.subscriptions ) {
+            this.subscriptions.unsubscribe();
         }
     }
 
