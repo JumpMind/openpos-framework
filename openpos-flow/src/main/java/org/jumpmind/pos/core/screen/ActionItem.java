@@ -39,6 +39,9 @@ public class ActionItem implements Serializable {
     protected String buttonSize;
     protected String fontSize;
     protected String keybind;
+
+    protected String doNotBlockForResponse;
+
     @JsonIgnore
     protected boolean autoAssignEnabled = true;
 
@@ -268,6 +271,15 @@ public class ActionItem implements Serializable {
     
     public boolean isAutoAssignEnabled() {
         return autoAssignEnabled;
+    }
+
+
+    public String getDoNotBlockForResponse() {
+        return doNotBlockForResponse;
+    }
+
+    public void setDoNotBlockForResponse(String doNotBlockForResponse) {
+        this.doNotBlockForResponse = doNotBlockForResponse;
     }
     
 }
