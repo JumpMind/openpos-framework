@@ -131,6 +131,10 @@ export class DialogService {
     private async openDialog(dialog: any) {
         try {
             const dialogComponentFactory: ComponentFactory<IScreen> = this.resolveDialog(dialog.screenType);
+            this.log.info(`[DialogService] Opening a dialog with a ` +
+                `${dialogComponentFactory && dialogComponentFactory.componentType ? dialogComponentFactory.componentType.name : '?'} ` +
+                `component as its content`
+            );
             let closeable = false;
             let forceReopen = false;
             if (dialog.dialogProperties) {
