@@ -5,7 +5,7 @@ import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.compon
 import { OpenposMediaService } from '../../core/services/openpos-media.service';
 import { Configuration } from '../../configuration/configuration';
 import { Observable, from, timer } from 'rxjs';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { INotificationItem } from '../../core/interfaces/notification-item.interface';
 import { trigger, state, style, transition, useAnimation } from '@angular/animations';
 import { map } from 'rxjs/operators';

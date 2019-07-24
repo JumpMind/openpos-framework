@@ -1,7 +1,7 @@
-import { Logger } from './logger.service';
+import { Logger } from '../services/logger.service';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { IActionItem } from '../interfaces/action-item.interface';
+import { IActionItem } from './action-item.interface';
 import { IConfirmationDialog } from '../interfaces/confirmation-dialog.interface';
 import { ActionService } from './action.service';
 import { of, BehaviorSubject } from 'rxjs';

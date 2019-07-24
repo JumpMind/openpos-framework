@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 import { SessionService } from '../../../core/services/session.service';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
 import { LocationService } from '../../../core/services/location.service';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { LocationOverrideDialogComponent } from './location-override-dialog/location-override-dialog.component';

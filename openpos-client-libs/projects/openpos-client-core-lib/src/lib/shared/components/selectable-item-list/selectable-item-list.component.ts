@@ -7,7 +7,7 @@ import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
 import { SelectionMode } from '../../../core/interfaces/selection-mode.enum';
 import { SessionService } from '../../../core/services/session.service';
-import { ActionService } from '../../../core/services/action.service';
+import { ActionService } from '../../../core/actions/action.service';
 
 export class SelectableItemListComponentConfiguration {
     numItemsPerPage: number;

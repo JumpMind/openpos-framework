@@ -3,9 +3,9 @@ import { AppInjector } from '../../core/app-injector';
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { deepAssign } from '../../utilites/deep-assign';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { Injector, OnDestroy } from '@angular/core';
-import { ActionService } from '../../core/services/action.service';
+import { ActionService } from '../../core/actions/action.service';
 import { Subscription } from 'rxjs';
 
 export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, OnDestroy {

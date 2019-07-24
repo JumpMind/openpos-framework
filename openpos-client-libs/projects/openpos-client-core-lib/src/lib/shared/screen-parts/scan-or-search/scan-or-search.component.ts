@@ -1,4 +1,4 @@
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 import { Component, Input, ElementRef, Output, EventEmitter, OnInit, OnDestroy, Injector } from '@angular/core';
 import { ScreenPartComponent } from '../screen-part';
 import { ScanOrSearchInterface } from './scan-or-search.interface';

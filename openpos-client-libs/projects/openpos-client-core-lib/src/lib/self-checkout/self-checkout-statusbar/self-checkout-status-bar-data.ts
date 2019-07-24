@@ -1,4 +1,4 @@
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { IScan } from '../../shared/components/scan-something/scan.interface';
 
 

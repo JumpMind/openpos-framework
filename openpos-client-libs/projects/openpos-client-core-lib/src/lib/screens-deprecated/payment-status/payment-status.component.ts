@@ -1,6 +1,6 @@
 import {Component, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 
 /**

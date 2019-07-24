@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewChecked, ElementRef, OnInit } from '@angular/core';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
 
 @Component({

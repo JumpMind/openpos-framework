@@ -3,7 +3,7 @@ import { SessionService } from '../../core/services/session.service';
 import { IConfirmationDialog } from '../../core/interfaces/confirmation-dialog.interface';
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
-import { ActionService } from '../../core/services/action.service';
+import { ActionService } from '../../core/actions/action.service';
 
 /**
  * @ignore

@@ -16,11 +16,6 @@ import { MatDialog } from '@angular/material';
 // so we will import those files directly
 import { LoaderState } from '../../shared/components/loader/loader-state';
 import { IDeviceResponse } from '../oldplugins/device-response.interface';
-import { InAppBrowserPlugin } from '../oldplugins/in-app-browser.plugin';
-import { IActionItem } from '../interfaces/action-item.interface';
-import { IUrlMenuItem } from '../interfaces/url-menu-item.interface';
-import { OldPluginService } from './old-plugin.service';
-import { AppInjector } from '../app-injector';
 import { HttpClient } from '@angular/common/http';
 import { PingParams } from '../interfaces/ping-params.interface';
 import { PingResult } from '../interfaces/ping-result.interface';
@@ -114,7 +109,7 @@ export class SessionService implements IMessageHandler<any> {
     public sendMessage<T extends OpenposMessage>(message: T) {
         if ( message.type === MessageTypes.ACTION && message instanceof ActionMessage ) {
             const actionMessage = message as ActionMessage;
-            this.doAction(actionMessage.actionName, actionMessage.payload);
+            this.publish(actionMessage.actionName, 'Screen', actionMessage.payload);
         }
         this.sessionMessages$.next(message);
     }
@@ -413,50 +408,6 @@ export class SessionService implements IMessageHandler<any> {
         };
 
         sendResponseBackToServer();
-    }
-
-    private doAction(   action: string | IActionItem,
-                        payload?: any, isValueChangedAction?: boolean) {
-        if (action) {
-            let actionString = '';
-            // we need to figure out if we are a menuItem or just a string
-            if (action.hasOwnProperty('action')) {
-                const menuItem = action as IActionItem;
-                actionString = menuItem.action;
-                // check to see if we are an IURLMenuItem
-                if (menuItem.hasOwnProperty('url')) {
-                    const urlMenuItem = menuItem as IUrlMenuItem;
-                    // tslint:disable-next-line:max-line-length
-                    this.log.info(`About to open: ${urlMenuItem.url} in target mode: ${urlMenuItem.targetMode}, with options: ${urlMenuItem.options}`);
-                    const pluginService = AppInjector.Instance.get(OldPluginService);
-                    // Use inAppBrowserPlugin when available since it tracks whether or not the browser is active.
-                    pluginService.getPlugin('InAppBrowser').then(plugin => {
-                        const inAppPlugin = plugin as InAppBrowserPlugin;
-                        inAppPlugin.open(urlMenuItem.url, urlMenuItem.targetMode, urlMenuItem.options);
-                    }).catch(error => {
-                        this.log.info(`InAppBrowser not found, using window.open. Reason: ${error}`);
-                        window.open(urlMenuItem.url, urlMenuItem.targetMode, urlMenuItem.options);
-                    });
-                    if (!actionString || 0 === actionString.length) {
-                        return;
-                    }
-                }
-            } else {
-                actionString = action as string;
-            }
-
-            this.log.info(`action is: ${actionString}`);
-
-
-            const sendToServer = () => {
-                    this.log.info(`>>> Post action "${actionString}"`);
-                    this.publish(actionString, 'Screen', payload);
-                };
-
-            sendToServer();
-        } else {
-            this.log.info(`received an invalid action: ${action}`);
-        }
     }
 
     public keepAlive() {

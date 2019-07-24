@@ -2,8 +2,8 @@ import { Component, ViewChild, ElementRef, Input, Output, EventEmitter, AfterVie
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 import { SelectableItemListComponentConfiguration } from '../selectable-item-list/selectable-item-list.component';
 import { Configuration } from '../../../configuration/configuration';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
-import { IActionItemGroup } from '../../../core/interfaces/action-item-group.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
+import { IActionItemGroup } from '../../../core/actions/action-item-group.interface';
 import { IItem } from '../../../core/interfaces/item.interface';
 import { Observable } from 'rxjs';
 import { ISelectableListData } from '../selectable-item-list/selectable-list-data.interface';

@@ -1,4 +1,4 @@
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 
 
 export interface SelfCheckoutMenuInterface {

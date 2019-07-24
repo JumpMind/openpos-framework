@@ -1,5 +1,5 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 
 @Component({
     selector: 'app-menu',

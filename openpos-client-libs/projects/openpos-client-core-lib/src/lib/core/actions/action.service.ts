@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { IActionItem } from '../interfaces/action-item.interface';
-import { Logger } from './logger.service';
+import { IActionItem } from './action-item.interface';
+import { Logger } from '../services/logger.service';
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material';
-import { QueueLoadingMessage } from './session.service';
+import { QueueLoadingMessage } from '../services/session.service';
 import { ActionMessage } from '../messages/action-message';
 import { LoaderState } from '../../shared/components/loader/loader-state';
 import { MessageProvider } from '../../shared/providers/message.provider';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { takeLast } from 'rxjs/operators';
+import { IUrlMenuItem } from './url-menu-item.interface';
 
 @Injectable()
 export class ActionService {
@@ -17,7 +17,10 @@ export class ActionService {
     private actionPayloads: Map<string, () => void> = new Map<string, () => void>();
     private actionDisablers = new Map<string, BehaviorSubject<boolean>>();
 
-    constructor( private dialogService: MatDialog, private logger: Logger, private messageProvider: MessageProvider) {
+    constructor(
+        private dialogService: MatDialog,
+        private logger: Logger,
+        private messageProvider: MessageProvider ) {
         messageProvider.getScopedMessages$().subscribe( message => {
             this.blockActions = false;
         });
@@ -27,6 +30,12 @@ export class ActionService {
         const sendAction = await this.canPerformAction(actionItem);
 
         if ( sendAction ) {
+
+            if (actionItem.hasOwnProperty('url')) {
+                this.doUrlAction(actionItem as IUrlMenuItem);
+                return;
+            }
+
             // First we will use the payload passed into this function then
             // Check if we have registered action payload
             if ( !payload && this.actionPayloads.has(actionItem.action)) {
@@ -45,6 +54,13 @@ export class ActionService {
             }
         }
     }
+
+    private doUrlAction( urlItem: IUrlMenuItem ) {
+        // check to see if we are an IURLMenuItem
+        this.logger.info(`About to open: ${urlItem.url} in target mode: ${urlItem.targetMode}, with options: ${urlItem.options}`);
+        window.open(urlItem.url, urlItem.targetMode, urlItem.options);
+    }
+
 
     public registerActionPayload(actionName: string, actionValue: () => void) {
         this.actionPayloads.set(actionName, actionValue);

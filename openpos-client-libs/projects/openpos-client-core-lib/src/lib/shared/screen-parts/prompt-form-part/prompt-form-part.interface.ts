@@ -1,5 +1,5 @@
 import { FieldInputType } from '../../../core/interfaces/field-input-type.enum';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 import { Validator } from '@angular/forms';
 
 export interface PromptFormPartInterface {

@@ -1,7 +1,7 @@
 import { Component, Input, HostListener } from '@angular/core';
 import { SessionService } from '../../../core/services/session.service';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
-import { ActionService } from '../../../core/services/action.service';
+import { IActionItem } from '../../../core/actions/action-item.interface';
+import { ActionService } from '../../../core/actions/action.service';
 
 @Component({
   selector: 'app-receipt-card',

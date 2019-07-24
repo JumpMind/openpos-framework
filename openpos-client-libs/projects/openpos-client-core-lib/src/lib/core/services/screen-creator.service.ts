@@ -1,6 +1,6 @@
 import { Injectable, ComponentFactory, ViewContainerRef, ComponentRef, Injector } from '@angular/core';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
-import { ActionService } from './action.service';
+import { ActionService } from '../actions/action.service';
 
 @Injectable({providedIn: 'root'})
 export class ScreenCreatorService {

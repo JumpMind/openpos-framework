@@ -1,7 +1,7 @@
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 import { Component, Input } from '@angular/core';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
-import { ActionService } from '../../../core/services/action.service';
+import { ActionService } from '../../../core/actions/action.service';
 
 @Component({
     selector: 'app-sell-item-line',

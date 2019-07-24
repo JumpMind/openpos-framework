@@ -5,7 +5,7 @@ import { ILocationProvider } from '../location-providers/location-provider.inter
 import { Subscription } from 'rxjs/internal/Subscription';
 import { ILocationData } from '../location-providers/location-data.interface';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ActionService } from './action.service';
+import { ActionService } from '../actions/action.service';
 
 export const PROVIDERS = new InjectionToken<ILocationProvider[]>('LocationProviders');
 @Injectable({

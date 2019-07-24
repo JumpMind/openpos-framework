@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
-import { ActionService } from '../../../core/services/action.service';
+import { IActionItem } from '../../../core/actions/action-item.interface';
+import { ActionService } from '../../../core/actions/action.service';
 
 /**
  * @ignore

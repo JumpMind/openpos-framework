@@ -4,7 +4,7 @@ import { Subscription } from 'rxjs';
 import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
 import { KebabMenuComponent } from '../kebab-menu/kebab-menu.component';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 
 @Component({
     selector: 'app-kebab-button',

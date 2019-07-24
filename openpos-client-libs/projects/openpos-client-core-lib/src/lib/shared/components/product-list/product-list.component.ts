@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { IItem } from '../../../core/interfaces/item.interface';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 import { SelectionMode } from '../../../core/interfaces/selection-mode.enum';
 
 @Component({

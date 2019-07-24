@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material';
 import { NavListComponent } from '../../shared/components/nav-list/nav-list.component';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IItem } from '../../core/interfaces/item.interface';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { SelectableItemListComponentConfiguration } from '../../shared/components/selectable-item-list/selectable-item-list.component';
 import { ItemClickAction } from '../../shared/components/product-list/product-list.component';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';

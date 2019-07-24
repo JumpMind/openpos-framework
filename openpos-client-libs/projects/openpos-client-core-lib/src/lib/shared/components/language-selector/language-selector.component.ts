@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { LocaleService } from '../../../core/services/locale.service';
 import { SessionService } from '../../../core/services/session.service';
-import { ActionService } from '../../../core/services/action.service';
+import { ActionService } from '../../../core/actions/action.service';
 
 
 @Component({

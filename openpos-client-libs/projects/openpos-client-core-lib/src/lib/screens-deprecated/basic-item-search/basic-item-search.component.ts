@@ -4,7 +4,7 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IForm } from '../../core/interfaces/form.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { SessionService } from '../../core/services/session.service';
-import { ActionService } from '../../core/services/action.service';
+import { ActionService } from '../../core/actions/action.service';
 
 /**
  * @ignore

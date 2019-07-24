@@ -4,7 +4,7 @@ import { FormGroup, ValidatorFn, FormControl } from '@angular/forms';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { IItem } from '../../core/interfaces/item.interface';
 import { IFormElement } from '../../core/interfaces/form-field.interface';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { ValidatorsService } from '../../core/services/validators.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
 

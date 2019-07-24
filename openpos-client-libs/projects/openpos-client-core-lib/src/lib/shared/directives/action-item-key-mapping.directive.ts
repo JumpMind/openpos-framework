@@ -2,8 +2,8 @@ import { Directive, Input, Renderer2, ElementRef, OnDestroy, EventEmitter, Outpu
 import { KeyPressProvider } from '../providers/keypress.provider';
 import { Subscription } from 'rxjs';
 import { Configuration } from '../../configuration/configuration';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
-import { ActionService } from '../../core/services/action.service';
+import { IActionItem } from '../../core/actions/action-item.interface';
+import { ActionService } from '../../core/actions/action.service';
 
 @Directive({
     // tslint:disable-next-line:directive-selector

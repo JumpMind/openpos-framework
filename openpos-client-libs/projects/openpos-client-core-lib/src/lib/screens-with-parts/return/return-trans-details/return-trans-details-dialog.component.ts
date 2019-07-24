@@ -1,5 +1,5 @@
 import { Configuration } from './../../../configuration/configuration';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 import { SelectionMode } from './../../../core/interfaces/selection-mode.enum';
 import { ISellItem } from './../../../core/interfaces/sell-item.interface';
 import { Component, Input } from '@angular/core';

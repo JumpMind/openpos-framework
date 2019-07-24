@@ -5,7 +5,7 @@ import { ScreenPartComponent } from './screen-part';
 import { Component, Injector } from '@angular/core';
 import { ScreenPart } from '../decorators/screen-part.decorator';
 import { MessageProvider } from '../providers/message.provider';
-import { ActionService } from '../../core/services/action.service';
+import { ActionService } from '../../core/actions/action.service';
 import { SessionService } from '../../core/services/session.service';
 import { Logger } from '../../core/services/logger.service';
 import { OpenposMediaService } from '../../core/services/openpos-media.service';

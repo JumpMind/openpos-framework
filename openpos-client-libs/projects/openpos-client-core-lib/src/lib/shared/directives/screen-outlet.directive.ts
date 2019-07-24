@@ -23,7 +23,7 @@ import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
 import { IScreen } from '../components/dynamic-screen/screen.interface';
-import { ActionService } from '../../core/services/action.service';
+import { ActionService } from '../../core/actions/action.service';
 import { ScreenCreatorService } from '../../core/services/screen-creator.service';
 
 // tslint:disable-next-line:directive-selector

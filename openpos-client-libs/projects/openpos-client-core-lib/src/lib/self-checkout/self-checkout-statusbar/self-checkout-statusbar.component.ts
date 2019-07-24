@@ -2,9 +2,9 @@ import { MatDialog, MatDialogConfig, MatSnackBar } from '@angular/material';
 import { Component, Input } from '@angular/core';
 import { SelfCheckoutStatusBarData } from './self-checkout-status-bar-data';
 import { SessionService } from '../../core/services/session.service';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { ScanSomethingComponent } from '../../shared/components/scan-something/scan-something.component';
-import { ActionService } from '../../core/services/action.service';
+import { ActionService } from '../../core/actions/action.service';
 
 @Component({
   selector: 'app-self-checkout-statusbar',

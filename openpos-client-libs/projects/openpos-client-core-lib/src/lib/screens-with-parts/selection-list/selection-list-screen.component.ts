@@ -1,5 +1,5 @@
 import { Component, ViewChildren, QueryList, ElementRef, AfterViewInit, Injector } from '@angular/core';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
 import { SelectableItemListComponentConfiguration } from '../../shared/components/selectable-item-list/selectable-item-list.component';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';

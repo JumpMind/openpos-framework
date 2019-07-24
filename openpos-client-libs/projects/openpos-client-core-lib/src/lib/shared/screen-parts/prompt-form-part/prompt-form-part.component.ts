@@ -2,7 +2,7 @@ import { ScreenPartComponent } from '../screen-part';
 import { AfterViewInit, Component, OnInit, ViewChild, Input, Injector } from '@angular/core';
 import { Validators, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { ValidatorsService } from '../../../core/services/validators.service';
-import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 import { PromptFormPartInterface } from './prompt-form-part.interface';
 
 @Component({

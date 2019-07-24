@@ -6,7 +6,7 @@ import { IScan } from './scan.interface';
 import { Logger } from '../../../core/services/logger.service';
 import { SessionService } from '../../../core/services/session.service';
 import { DeviceService } from '../../../core/services/device.service';
-import { ActionService } from '../../../core/services/action.service';
+import { ActionService } from '../../../core/actions/action.service';
 
 /**
  * Deprecated

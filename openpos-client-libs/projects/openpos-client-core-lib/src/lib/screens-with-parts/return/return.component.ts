@@ -9,7 +9,7 @@ import { ITotal } from '../../core/interfaces/total.interface';
 import { TotalType } from '../../core/interfaces/total-type.enum';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 
 /**
  * @ignore

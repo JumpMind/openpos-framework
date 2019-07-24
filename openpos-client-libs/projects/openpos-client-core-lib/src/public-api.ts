@@ -32,7 +32,7 @@ export * from './lib/core/startup/subscribe-to-session-task';
 
 export * from './lib/core/interfaces/abstract-screen-template.interface';
 export * from './lib/core/interfaces/abstract-screen.interface';
-export * from './lib/core/interfaces/action-item-group.interface';
+export * from './lib/core/actions/action-item-group.interface';
 export * from './lib/core/interfaces/barcode-scan-interceptor.interface';
 export * from './lib/core/interfaces/catalog-browser-form.interface';
 export * from './lib/core/interfaces/confirmation-dialog.interface';
@@ -47,7 +47,7 @@ export * from './lib/core/interfaces/form.interface';
 export * from './lib/core/interfaces/item.interface';
 export * from './lib/core/interfaces/list-component.interface';
 export * from './lib/core/interfaces/loading.interface';
-export * from './lib/core/interfaces/action-item.interface';
+export * from './lib/core/actions/action-item.interface';
 export * from './lib/core/interfaces/message-dialog-properties.interface';
 export * from './lib/core/interfaces/message-handler.interface';
 export * from './lib/core/interfaces/open-pos-dialog-config.interface';
@@ -65,7 +65,7 @@ export * from './lib/core/interfaces/toast-screen.interface';
 export * from './lib/core/interfaces/total-type.enum';
 export * from './lib/core/interfaces/total.interface';
 export * from './lib/core/interfaces/transaction-summary.interface';
-export * from './lib/core/interfaces/url-menu-item.interface';
+export * from './lib/core/actions/url-menu-item.interface';
 export * from './lib/core/interfaces/validator.enum';
 
 export * from './lib/core/oldplugins/barcode-scanner.plugin';

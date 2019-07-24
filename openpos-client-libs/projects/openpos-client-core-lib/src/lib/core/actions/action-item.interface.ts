@@ -1,4 +1,4 @@
-import { IConfirmationDialog } from './confirmation-dialog.interface';
+import { IConfirmationDialog } from '../interfaces/confirmation-dialog.interface';
 
 export interface IActionItem {
     enabled?: boolean;

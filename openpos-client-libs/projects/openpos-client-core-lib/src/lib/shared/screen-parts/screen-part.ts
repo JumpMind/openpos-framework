@@ -2,7 +2,7 @@ import { OnDestroy, OnInit, Injector } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { MessageProvider } from '../providers/message.provider';
-import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { IActionItem } from '../../core/actions/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
 import { Logger } from '../../core/services/logger.service';
 import { deepAssign } from '../../utilites/deep-assign';
@@ -12,7 +12,7 @@ import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
 import { MessageTypes } from '../../core/messages/message-types';
-import { ActionService } from '../../core/services/action.service';
+import { ActionService } from '../../core/actions/action.service';
 
 export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
 
