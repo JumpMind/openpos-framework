@@ -241,7 +241,9 @@ const pipes = [
         PopTartComponent,
         SearchablePopTartComponent,
         DatePartChooserDialogComponent,
-        LocationOverrideDialogComponent
+        LocationOverrideDialogComponent,
+        NavListComponent,
+        SystemStatusDialogComponent
     ],
     imports: [
         FormsModule,

@@ -13,16 +13,6 @@ buildscript {
     }
 }
 
-jar {
-    manifest {
-        attributes("Implementation-Title": project.name,
-                   "Implementation-Version": project.hasProperty('appVersion') ? appVersion : '0.0',
-                   "Project-Artifact": project.name,                       
-                   "Build-Version": project.hasProperty('appVersion') ? appVersion : '0.0',
-                   "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()))
-    }    
-}  
-
 dependencies {
 	compile project(":openpos-util")
 	testCompile project(path: ':openpos-util', configuration: 'testArtifacts') 

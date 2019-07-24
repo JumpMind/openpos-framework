@@ -59,10 +59,11 @@ public class DatabaseScript implements Comparable<DatabaseScript> {
 		parseDescription(parts[3]);
 		
 	}
-	
+
 	public void parseVersion(String version) {
 		if (version != null) {
-		String[] parts = version.split(DELIMITER_VERSION_ESCAPED);
+			String[] snapshotPart = version.split("-");
+			String[] parts = snapshotPart[0].split(DELIMITER_VERSION_ESCAPED);
 			if (parts.length < 3) {
 				throw new RuntimeException(String.format("An invalid version was provided: %s", version));
 			}

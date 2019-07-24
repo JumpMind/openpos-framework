@@ -59,7 +59,7 @@ public class DeviceService implements IDeviceService {
             logger.info("Now redirecting DeviceRequest for node '{}' with id: {}, type: {}, subtype: {} to the ScreenService to show the provided screen payload ...", nodeId, request.getRequestId(), request.getType(), request.getSubType() );
             Screen screen = (Screen) request.getPayload();
             this.decorateScreenAsDeviceRequest(screen, request);
-            this.screenService.showScreen(appId, nodeId, screen, false);
+            this.screenService.showScreen(appId, nodeId, screen);
         } else {
             logger.info("Now sending request to node '{}' with id: {}, type: {}, subtype: {} ...", nodeId, request.getRequestId(), request.getType(), request.getSubType() );
             this.template.convertAndSend(String.format("/topic/app/%s/node/%s", appId, nodeId), request);

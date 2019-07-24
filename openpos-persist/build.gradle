@@ -11,7 +11,7 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
     compile "org.springframework:spring-context:$springVersion"
     compile "com.h2database:h2:${h2databaseVersion}"
-    compile group: 'org.springframework.data', name: 'spring-data-commons', version: '2.1.5.RELEASE'     
+    compile "org.springframework.data:spring-data-commons:$springDataCommon"
     compile "org.jumpmind.symmetric:symmetric-jdbc:$symmetricVersion"
     compile "org.jumpmind.symmetric:symmetric-db:$symmetricVersion"
     compile "org.jumpmind.symmetric:symmetric-io:$symmetricVersion"

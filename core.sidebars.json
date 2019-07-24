@@ -23,5 +23,8 @@
     ],
     "Actions": [
         "actions"
+    ],
+    "Client Services": [
+        "focus"
     ]
 }

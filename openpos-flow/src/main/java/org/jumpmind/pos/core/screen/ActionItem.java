@@ -43,7 +43,7 @@ public class ActionItem implements Serializable {
     protected String doNotBlockForResponse;
 
     @JsonIgnore
-    protected boolean autoAssignEnabled = true;
+    protected transient boolean autoAssignEnabled = true;
 
     public final static String FONT_SIZE_XS = "text-xs";
     public final static String FONT_SIZE_SM = "text-sm";
