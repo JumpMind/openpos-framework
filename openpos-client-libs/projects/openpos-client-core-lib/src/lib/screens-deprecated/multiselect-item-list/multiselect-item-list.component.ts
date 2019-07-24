@@ -10,7 +10,7 @@ import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { Observable } from 'rxjs';
 import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
-import { IConfirmationDialog } from '../../core/interfaces/confirmation-dialog.interface';
+import { IConfirmationDialog } from '../../core/actions/confirmation-dialog.interface';
 
 /**
  * @ignore

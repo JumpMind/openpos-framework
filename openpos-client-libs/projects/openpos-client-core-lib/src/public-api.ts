@@ -35,7 +35,7 @@ export * from './lib/core/interfaces/abstract-screen.interface';
 export * from './lib/core/actions/action-item-group.interface';
 export * from './lib/core/interfaces/barcode-scan-interceptor.interface';
 export * from './lib/core/interfaces/catalog-browser-form.interface';
-export * from './lib/core/interfaces/confirmation-dialog.interface';
+export * from './lib/core/actions/confirmation-dialog.interface';
 export * from './lib/core/interfaces/date-part-chooser-field.interface';
 export * from './lib/core/interfaces/device.interface';
 export * from './lib/core/interfaces/element.interface';

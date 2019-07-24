@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IConfirmationDialog } from '../../interfaces/confirmation-dialog.interface';
+import { IConfirmationDialog } from '../../actions/confirmation-dialog.interface';
 
 @Component({
   selector: 'app-confirmation-dialog',

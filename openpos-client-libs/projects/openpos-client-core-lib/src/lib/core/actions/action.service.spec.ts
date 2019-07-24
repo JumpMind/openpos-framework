@@ -2,7 +2,7 @@ import { Logger } from '../services/logger.service';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { IActionItem } from './action-item.interface';
-import { IConfirmationDialog } from '../interfaces/confirmation-dialog.interface';
+import { IConfirmationDialog } from './confirmation-dialog.interface';
 import { ActionService } from './action.service';
 import { of, BehaviorSubject } from 'rxjs';
 import { MessageProvider } from '../../shared/providers/message.provider';
