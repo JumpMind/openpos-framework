@@ -1,8 +1,7 @@
 <app-waffle [showDrawer]="showDrawer">
     <app-statusbar waffle-header fxFlex="100%" [data]="statusBar"></app-statusbar>
 
-    <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
-        fxLayoutGap="4px" fxLayoutGap.lg="20px">
+    <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch">
         <button mat-raised-button color="primary-inverse" *ngFor="let m of template.localMenuItems" (click)="doMenuItemAction(m)"
             [disabled]="!isMenuItemEnabled(m)" class="sell-template-menu-button sausage-link" [actionItem]="m">
             <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
