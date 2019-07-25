@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.screen;
 
 import org.jumpmind.pos.core.model.MessageType;
+import org.jumpmind.pos.core.ui.ConfirmationDialog;
 
 public class ConfirmDialogScreen extends Screen {
 	private static final long serialVersionUID = 1L;

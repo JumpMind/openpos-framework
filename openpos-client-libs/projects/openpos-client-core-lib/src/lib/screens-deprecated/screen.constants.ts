@@ -15,10 +15,7 @@ import { ChangeComponent } from './change/change.component';
 import { PrintPreviewComponent } from './print-preview/print-preview.component';
 import { WaitComponent } from './wait/wait.component';
 import { FullPageImageComponent } from './full-page-image/full-page-image.component';
-import { MultipleDynamicFormComponent } from './multiple-dynamic-form/multiple-dynamic-form.component';
-import { ItemSearchResultsComponent } from './item-search-results/item-search-results.component';
 import { DynamicFormDialogComponent } from './dynamic-form/dynamic-form-dialog.component';
-import { MultipleDynamicFormDialogComponent } from './multiple-dynamic-form/multiple-dynamic-form-dialog.component';
 import { DynamicListDialogComponent } from './dynamic-list/dynamic-list-dialog.component';
 import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 import { VersionComponent } from './version/version.component';
@@ -52,8 +49,6 @@ export const ScreenConstants = {
         { name: 'PrintPreview', component: PrintPreviewComponent },
         { name: 'Wait', component: WaitComponent },
         { name: 'FullPageImage', component: FullPageImageComponent },
-        { name: 'MultipleDynamicForm', component: MultipleDynamicFormComponent },
-        { name: 'ItemSearchResults', component: ItemSearchResultsComponent },
         { name: 'DetailText', component: DetailTextScreenComponent },
 
         { name: 'Sale', component: SaleComponent },
@@ -65,7 +60,6 @@ export const ScreenConstants = {
         // To make a dialog screen available add it here and in entryComponents in the app.module.ts
         { name: 'DynamicForm', component: DynamicFormDialogComponent },
         { name: 'DynamicList', component: DynamicListDialogComponent },
-        { name: 'MultipleDynamicForm', component: MultipleDynamicFormDialogComponent },
         { name: 'LoadingDialog', component: LoadingDialogComponent },
         { name: 'Prompt', component: PromptDialogComponent },
 
@@ -86,7 +80,6 @@ export const ScreenConstants = {
         { name: 'Wait', component: WaitComponent },
         { name: 'FullPageImage', component: FullPageImageComponent },
         { name: 'Version', component: VersionComponent },
-        { name: 'ItemSearchResults', component: ItemSearchResultsComponent },
         { name: 'DataTable', component: DataTableComponent },
         { name: 'AutoCompleteAddress', component: AutoCompleteAddressComponent}
     ]

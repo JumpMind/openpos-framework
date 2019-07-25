@@ -7,7 +7,6 @@ import { SharedModule } from '../shared/shared.module';
 import { ChangeComponent } from './change/change.component';
 import { WaitComponent } from './wait/wait.component';
 import { FullPageImageComponent } from './full-page-image/full-page-image.component';
-import { MultipleDynamicFormComponent } from './multiple-dynamic-form/multiple-dynamic-form.component';
 import { PrintPreviewComponent } from './print-preview/print-preview.component';
 import { DynamicListDialogComponent } from './dynamic-list/dynamic-list-dialog.component';
 import { ScreenConstants } from './screen.constants';
@@ -25,7 +24,6 @@ const screens = [
     PrintPreviewComponent,
     WaitComponent,
     FullPageImageComponent,
-    MultipleDynamicFormComponent,
     DataTableComponent,
     AutoCompleteAddressComponent,
     PromptComponent

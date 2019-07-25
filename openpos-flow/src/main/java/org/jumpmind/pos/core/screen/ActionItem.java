@@ -24,6 +24,7 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.jumpmind.pos.core.ui.ConfirmationDialog;
 
 public class ActionItem implements Serializable {
 

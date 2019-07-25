@@ -6,11 +6,9 @@ import { ItemListComponent } from './item-list/item-list.component';
 import { SaleRetrievalComponent } from './sale-retrieval/sale-retrieval.component';
 import { SellItemDetailComponent } from './sell-item-detail/sell-item-detail.component';
 import { TenderingComponent } from './tendering/tendering.component';
-import { ItemSearchResultsComponent } from './item-search-results/item-search-results.component';
 import { DynamicFormDialogComponent } from './dynamic-form/dynamic-form-dialog.component';
 import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 import { SignatureCaptureComponent } from './signature-capture/signature-capture.component';
-import { MultipleDynamicFormDialogComponent } from './multiple-dynamic-form/multiple-dynamic-form-dialog.component';
 import { BasicItemSearchComponent } from './basic-item-search/basic-item-search.component';
 import { DetailTextScreenComponent } from './detail-text/detail-text-screen.component';
 import { DynamicFormComponent } from './dynamic-form/dynamic-form.component';
@@ -28,7 +26,6 @@ const screens = [
         SellItemDetailComponent,
         TenderingComponent,
         SaleComponent,
-        ItemSearchResultsComponent,
         SignatureCaptureComponent,
         BasicItemSearchComponent,
         DetailTextScreenComponent,
@@ -44,7 +41,6 @@ const screens = [
 const dialogs = [
         DynamicFormDialogComponent,
         LoadingDialogComponent,
-        MultipleDynamicFormDialogComponent,
         VersionComponent
     ];
 /**
