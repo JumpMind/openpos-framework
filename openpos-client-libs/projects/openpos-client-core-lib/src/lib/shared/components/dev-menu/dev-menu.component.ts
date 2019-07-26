@@ -6,7 +6,6 @@ import { Component, ViewChild, HostListener, ComponentRef, OnInit } from '@angul
 import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatExpansionPanel } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Router } from '@angular/router';
-import { AbstractTemplate } from '../../../core/components/abstract-template';
 import { Configuration } from '../../../configuration/configuration';
 import { IScreen } from '../dynamic-screen/screen.interface';
 import { PersonalizationService } from '../../../core/services/personalization.service';
@@ -95,8 +94,6 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     private installedScreen: IScreen;
 
     private currentTemplateRef: ComponentRef<IScreen>;
-
-    private installedTemplate: AbstractTemplate<any>;
 
     private lastDialogType: string;
 

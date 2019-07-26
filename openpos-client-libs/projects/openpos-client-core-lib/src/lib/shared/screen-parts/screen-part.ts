@@ -1,4 +1,4 @@
-import { OnDestroy, OnInit, Injector } from '@angular/core';
+import { OnDestroy, OnInit, Injector, Optional } from '@angular/core';
 import { Subscription, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { MessageProvider } from '../providers/message.provider';
@@ -27,12 +27,17 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     initialScreenType = '';
     public subscriptions = new Subscription();
 
-    constructor(injector: Injector) {
-        this.sessionService = injector.get(SessionService);
-        this.log = injector.get(Logger);
-        this.mediaService = injector.get(OpenposMediaService);
-        this.messageProvider = injector.get(MessageProvider);
-        this.actionService = injector.get(ActionService);
+    // I don't completely understand why we need @Optional here. I suspect it has something to do with
+    // creating these components dynamically and this being an abstract class.
+    constructor( @Optional() injector: Injector) {
+        // This should never happen, but just incase lets make sure its not null or undefined
+        if ( !!injector ) {
+            this.sessionService = injector.get(SessionService);
+            this.log = injector.get(Logger);
+            this.mediaService = injector.get(OpenposMediaService);
+            this.messageProvider = injector.get(MessageProvider);
+            this.actionService = injector.get(ActionService);
+        }
         const sizeMap = new Map([
             ['xs', true],
             ['sm', false],

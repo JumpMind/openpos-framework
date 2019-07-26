@@ -7,6 +7,7 @@ import { IFormElement } from '../../core/interfaces/form-field.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { ValidatorsService } from '../../core/services/validators.service';
 import { BehaviorSubject, Subscription } from 'rxjs';
+import { SessionService } from '../../core/services/session.service';
 
 /**
  * @ignore
@@ -32,7 +33,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
 
     tenderFormGroup: FormGroup;
 
-    constructor(private validatorsService: ValidatorsService, injector: Injector) {
+    constructor(private validatorsService: ValidatorsService, public session: SessionService, injector: Injector ) {
         super(injector);
     }
 

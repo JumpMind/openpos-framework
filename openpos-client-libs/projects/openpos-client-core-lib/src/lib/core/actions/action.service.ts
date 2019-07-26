@@ -103,7 +103,7 @@ export class ActionService {
     }
 
     private async  canPerformAction( actionItem: IActionItem): Promise<boolean> {
-        if ( !actionItem.enabled ) {
+        if ( actionItem.enabled === false) {
             this.logger.info('Not sending action because it was disabled');
             return false;
         }

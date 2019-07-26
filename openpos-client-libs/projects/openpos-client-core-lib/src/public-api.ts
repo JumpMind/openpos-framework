@@ -11,7 +11,6 @@ export * from './lib/core/core.module';
 export * from './lib/core/app-injector';
 export * from './lib/core/module-import-guard';
 
-export * from './lib/core/components/abstract-template';
 export * from './lib/core/components/confirmation-dialog/confirmation-dialog.component';
 export * from './lib/shared/components/dev-menu/dev-menu.component';
 export * from './lib/core/components/dialog-content/dialog-content.component';
@@ -33,6 +32,7 @@ export * from './lib/core/startup/subscribe-to-session-task';
 export * from './lib/core/interfaces/abstract-screen-template.interface';
 export * from './lib/core/interfaces/abstract-screen.interface';
 export * from './lib/core/actions/action-item-group.interface';
+export * from './lib/core/actions/action.service';
 export * from './lib/core/interfaces/barcode-scan-interceptor.interface';
 export * from './lib/core/actions/confirmation-dialog.interface';
 export * from './lib/core/interfaces/date-part-chooser-field.interface';
