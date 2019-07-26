@@ -23,6 +23,7 @@ public enum FieldInputType {
     PostalCode,
     Phone,
     Money,
+    NonNumericText,
     Income,
     /** MM/dd/yyyy format */
     Date,
