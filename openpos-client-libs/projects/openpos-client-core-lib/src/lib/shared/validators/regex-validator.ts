@@ -11,7 +11,9 @@ export class RegexValidator implements IValidator {
 
         if (ctrl.value) {
             const regex = new RegExp(this.spec.javascriptRegex, this.spec.flags ? this.spec.flags : '');
-            return regex.test(ctrl.value) ? null : {
+            const result = regex.test(ctrl.value);
+            console.log(`Regex is: ${regex}, control value is: ${ctrl.value}, result is: ${result}`);
+            return result ? null : {
                 // tslint:disable-next-line:object-literal-key-quotes
                 'pattern': {
                     valid: false
