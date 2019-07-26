@@ -10,6 +10,10 @@
         color: $app-accent;
     }
 
+    .loyalty {
+        color:mat-color($foreground, disabled);
+    }
+
     .item-label{
         background-origin: solid 1px map-get($mat-grey, 200);
         background-color: map-get($mat-grey, 200);
