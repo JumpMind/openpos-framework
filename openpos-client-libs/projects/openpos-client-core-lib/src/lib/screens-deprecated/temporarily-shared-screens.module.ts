@@ -27,6 +27,7 @@ import { PromptWithOptionsComponent } from './prompt-with-options/prompt-with-op
 import { StaticTableComponent } from './static-table/static-table.component';
 import { VersionComponent } from './version/version.component';
 import { OptionsComponent } from './options/options.component';
+import { WaitComponent } from './wait/wait.component';
 
 const screens = [
         ItemListComponent,
@@ -50,7 +51,8 @@ const screens = [
         PromptWithInfoComponent,
         PromptWithOptionsComponent,
         StaticTableComponent,
-        OptionsComponent
+        OptionsComponent,
+        WaitComponent
     ];
 
 const dialogs = [
