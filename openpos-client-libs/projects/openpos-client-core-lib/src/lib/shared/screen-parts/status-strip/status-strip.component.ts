@@ -2,11 +2,8 @@ import { ScreenPartComponent } from '../screen-part';
 import { StatusStripInterface } from './status-strip.interface';
 import { MatDialog } from '@angular/material';
 import { timer } from 'rxjs';
-import { Configuration } from '../../../configuration/configuration';
-import { SystemStatusType } from '../../../core/interfaces/system-status-type.enum';
 import { Component, Injector } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { SystemStatusDialogComponent } from '../../components/system-status/system-status-dialog.component';
 @ScreenPart({
     name: 'statusStrip'
 })
@@ -31,31 +28,5 @@ export class StatusStripComponent extends ScreenPartComponent<StatusStripInterfa
             }
             this.date = Date.now();
         });
-    }
-
-    showRegisterStatus(): boolean {
-        if (this.screenData.systemStatus && Configuration.showRegisterStatus) {
-            return Configuration.offlineOnlyRegisterStatus ?
-                this.screenData.systemStatus.overallSystemStatus === SystemStatusType.Offline : true;
-        } else {
-            return false;
-        }
-    }
-
-    onRegisterStatusClick(): void {
-        if (Configuration.clickableRegisterStatus) {
-            const dialogRef = this.dialog.open(SystemStatusDialogComponent, {
-                width: '40%',
-                data: {
-                    devices: this.screenData.systemStatus.devices,
-                    deviceHeader: 'Device/Database',
-                    statusHeader: 'Status',
-                    disableClose: false,
-                    autoFocus: false
-                }
-            });
-
-            dialogRef.afterClosed().subscribe(result => {});
-        }
     }
 }

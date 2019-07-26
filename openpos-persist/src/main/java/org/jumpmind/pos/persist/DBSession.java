@@ -166,6 +166,11 @@ public class DBSession {
         return params;
     }
 
+    public <T extends AbstractModel> T findFirstByFields(Class<T> entityClass, Map<String, Object> fieldValues, int maxResults) {
+        List<T> list = findByFields(entityClass, fieldValues, maxResults);
+        return list.size() > 0 ? list.get(0) : null;
+    }
+
     public <T extends AbstractModel> List<T> findByFields(Class<T> entityClass, Map<String, Object> fieldValues, int maxResults) {
         QueryTemplate queryTemplate = new QueryTemplate();
         queryTemplate.setSelect(getSelectSql(entityClass, fieldValues));

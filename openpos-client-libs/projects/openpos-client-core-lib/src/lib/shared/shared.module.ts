@@ -112,6 +112,7 @@ import { LocationDetailsComponent } from './components/location-details/location
 import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
 import { SellLinkedCustomerComponent } from './components/sell-linked-customer/sell-linked-customer.component';
 import { ItemCardComponent } from './components/item-card/item-card.component';
+import { SystemStatusComponent } from './screen-parts/system-status/system-status.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -127,6 +128,7 @@ const screenParts = [
     AutoCompleteAddressPartComponent,
     ProgressBarPartComponent,
     WebcamViewerComponent,
+    SystemStatusComponent
 ];
 
 const components = [

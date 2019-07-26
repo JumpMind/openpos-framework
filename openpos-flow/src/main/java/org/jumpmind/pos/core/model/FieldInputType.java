@@ -1,5 +1,7 @@
 package org.jumpmind.pos.core.model;
 
+import java.util.Arrays;
+
 public enum FieldInputType {
     AlphanumericPassword,
     /** Allows alphabetic characters, numeric characters, and special characters */
@@ -59,5 +61,9 @@ public enum FieldInputType {
             default:
                 return Date;
         }
+    }
+    
+    public static FieldInputType fromString(String strValue) {
+        return Arrays.asList(FieldInputType.values()).stream().filter(val -> val.name().equalsIgnoreCase(strValue)).findFirst().orElse(null);
     }
 }
