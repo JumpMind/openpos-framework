@@ -5,7 +5,7 @@
         <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()">
             <app-prompt-input #promptInput [placeholderText]="screen.placeholderText"
                 [responseType]="screen.responseType" [responseText]="screen.responseText"
-                [promptIcon]="screen.promptIcon" [hintText]="promptText" [maskSpec]="screen.promptMask"
+                [promptIcon]="screen.promptIcon" [hintText]="promptText" 
                 [minLength]="screen.minLength" [maxLength]="screen.maxLength" [promptFormGroup]="promptFormGroup"
                 [readOnly]="screen.readOnly"></app-prompt-input>
             <mat-form-field fxFlexFill *ngIf="screen.showComments">

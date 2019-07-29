@@ -9,7 +9,7 @@
         <mat-dialog-content>
             <app-prompt-input #promptInput cdkFocusInitial="true" [placeholderText]="screen.placeholderText" [responseType]="screen.responseType"
                 [responseText]="screen.responseText" [promptIcon]="screen.promptIcon" [hintText]="screen.prompt"
-                [maskSpec]="screen.promptMask" [minLength]="screen.minLength" [maxLength]="screen.maxLength"
+                [minLength]="screen.minLength" [maxLength]="screen.maxLength"
                 [promptFormGroup]="promptFormGroup" [readOnly]="screen.readOnly">
             </app-prompt-input>
             <mat-form-field fxFlexFill *ngIf="screen.showComments">

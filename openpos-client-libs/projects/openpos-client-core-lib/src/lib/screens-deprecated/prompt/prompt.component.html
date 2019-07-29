@@ -3,7 +3,7 @@
     <mat-card ngStyle.xl="width:30%" ngStyle.lg="width:40%" ngStyle.md="width:60%" ngStyle.sm="width:70%" ngStyle.xs="width:80%">
         <mat-card-content>
             <app-prompt-input #promptInput [placeholderText]="screen.placeholderText" [responseType]="screen.responseType" [promptIcon]="screen.promptIcon"
-                [responseText]="screen.responseText" [hintText]="screen.text" [maskSpec]="screen.promptMask" [minLength]="screen.minLength"
+                [responseText]="screen.responseText" [hintText]="screen.text" [minLength]="screen.minLength"
                 [maxLength]="screen.maxLength" [promptFormGroup]="promptFormGroup" [keyboardPreference]="screen.keyboardPreference" [scanEnabled]="screen.scanEnabled" [readOnly]="!screen.editable"></app-prompt-input>
             <p *ngIf="instructions"><span class="text-sm">{{instructions}}</span></p>
             <div style="height:50px"></div>
