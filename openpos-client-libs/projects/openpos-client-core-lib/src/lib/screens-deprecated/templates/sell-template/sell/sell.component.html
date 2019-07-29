@@ -2,13 +2,13 @@
     <app-statusbar waffle-header fxFlex="100%" [data]="statusBar"></app-statusbar>
 
     <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch">
-        <button mat-raised-button color="primary-inverse" *ngFor="let m of template.localMenuItems" (click)="doMenuItemAction(m)"
+        <app-secondary-button *ngFor="let m of template.localMenuItems" (click)="doMenuItemAction(m)"
             [disabled]="!isMenuItemEnabled(m)" class="sell-template-menu-button sausage-link" [actionItem]="m">
             <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
             <span [ngClass]="{'muted-color': ! m.enabled}" class="sausage-link-button-title">&nbsp;{{m.title}}</span>
             <span fxFlex="1 1 auto" style="padding-right: 8px;"></span>
             <span *ngIf="m.keybind && keybindsEnabled()" class="muted-color">{{m.keybind}}</span>
-        </button>
+        </app-secondary-button>
         <div fxFlex="1 1 auto"></div>
         <ng-container *ngIf="!screen.hideCustomer">
             <app-sell-linked-customer [screenType]="screen.screenType" [customerName]="screen.customerName"

@@ -69,14 +69,17 @@ $mat-card-default-margin: 24px !default;
     padding-bottom: 8px;
   }
 
-  button.sausage-link {
+  app-secondary-button.sausage-link {
     width: 100%;
-    display: flex;
     margin-bottom: 1rem;
-}
+  }
+
+  app-secondary-button.sausage-link button {
+    display: flex;
+  }
 
   .sausage-link-button-title {
-      flex-grow: 1;
+    flex-grow: 1;
   }
 
 }

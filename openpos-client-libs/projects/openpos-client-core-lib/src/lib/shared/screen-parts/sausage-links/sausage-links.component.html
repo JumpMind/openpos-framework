@@ -1,5 +1,5 @@
 <ng-container *ngIf="sausageLinks?.links">
-    <button mat-raised-button 
+    <app-secondary-button
         class="sausage-link"
         color="primary-inverse"
         *ngFor="let m of sausageLinks.links" (click)="onMenuItemClick(m)"
@@ -16,5 +16,5 @@
         <span *ngIf="m.keybind && keybindsEnabled()" fxFlex="1 1 auto" style="padding-right: 8px;"></span>
         <span *ngIf="m.keybind && keybindsEnabled()" class="muted-color">{{m.keybind}}</span>
 
-    </button>
+    </app-secondary-button>
 </ng-container>
