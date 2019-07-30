@@ -13,6 +13,7 @@ import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { SelectionMode } from '../../core/interfaces/selection-mode.enum';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
+import { ITransactionReceipt } from '../../shared/components/receipt-card/transaction-receipt.interface';
 
 /**
  * @ignore
@@ -38,7 +39,7 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     public items: ISellItem[];
     public amountTotals: ITotal[];
     public itemTotal: number;
-    public receipts: any[];
+    public receipts: ITransactionReceipt[];
     public removeReceiptAction: IActionItem;
 
     constructor(
