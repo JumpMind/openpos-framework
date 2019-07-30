@@ -1,0 +1,10 @@
+@mixin prompt-with-info-screen-theme($theme){
+
+    app-prompt-with-info-screen, app-prompt-with-info-screen-dialog {
+        .prompt-with-info-container {
+            .mat-card {
+                box-shadow: none;
+            }
+        }
+    }
+}

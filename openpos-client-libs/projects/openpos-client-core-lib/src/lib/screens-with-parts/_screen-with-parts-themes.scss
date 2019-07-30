@@ -2,9 +2,11 @@
 @import './home/home-theme';
 @import './choose-options-dialog/choose-options-screen-dialog-theme';
 @import './return/return-theme';
+@import './prompt-with-info/prompt-with-info-screen-theme';
 
 @mixin screen-with-parts-themes($theme){
     @include sale-theme($theme);
     @include home-theme($theme);
     @include choose-options-screen-dialog-theme($theme);
+    @include prompt-with-info-screen-theme($theme);
 }
