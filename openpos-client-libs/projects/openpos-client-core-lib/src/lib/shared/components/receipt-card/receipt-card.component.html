@@ -9,12 +9,12 @@
         <div fxFlex>
             <div class="transaction-header">Transaction:</div>
             <div *ngIf="receipt.webOrderId">Order #:</div>
-            <div>Date:</div>
+            <div *ngFor="let line of receipt.transactionInfoSection">{{line.label}}</div>
         </div>
         <div fxFlex style="text-align: end;">
             <div *ngIf="receipt" class="transaction-header">#{{receipt.transactionNumber}}</div>
             <div *ngIf="receipt && receipt.webOrderId"> {{receipt.webOrderId}}</div>
-            <div *ngIf="receipt">{{receipt.businessDate}}</div>
+            <div *ngFor="let line of receipt.transactionInfoSection">{{line.value}}</div>
         </div>
     </div>
 
@@ -24,12 +24,10 @@
 
     <div fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="4px">
         <div fxFlex>
-            <div>Item(s):</div>
-            <div>Total:</div>
+            <div *ngFor="let line of receipt.totalsInfoSection">{{line.label}}</div>
         </div>
         <div fxFlex style="text-align: end;">
-            <div *ngIf="receipt">{{receipt.items}}</div>
-            <div *ngIf="receipt">${{receipt.total}}</div>
+            <div *ngFor="let line of receipt.totalsInfoSection">{{line.value}}</div>
         </div>
     </div>
 
