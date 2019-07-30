@@ -7,6 +7,7 @@ public final class UIMessageType {
     public static String DIALOG="Dialog";
     public static String PROMPT="Prompt";
     public static String PROMPT_WITH_OPTIONS="PromptWithOptions";
+    public static String PROMPT_WITH_INFO="PromptWithInfo";
     public static String HOME="Home";
     public static String CHOOSE_OPTIONS="ChooseOptions";
     public static String SELF_CHECKOUT_FORM = "SelfCheckoutForm";

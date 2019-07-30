@@ -14,11 +14,14 @@ import { ReturnComponent } from './return/return.component';
 import { ReturnTransDetailsDialogComponent } from './return/return-trans-details/return-trans-details-dialog.component';
 import { ChooseOptionsScreenDialogComponent } from './choose-options-dialog/choose-options-screen-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { PromptWithInfoScreenComponent } from './prompt-with-info/prompt-with-info-screen.component';
+import { PromptWithInfoScreenDialogComponent } from './prompt-with-info/prompt-with-info-screen-dialog.component';
 
 const screens = [
     SelectionListScreenComponent,
     PromptScreenComponent,
     PromptWithOptionsScreenComponent,
+    PromptWithInfoScreenComponent,
     HomeComponent,
     ReturnComponent
 ];
@@ -28,6 +31,7 @@ const dialogs = [
     GenericDialogComponent,
     PromptScreenDialogComponent,
     PromptWithOptionsScreenDialogComponent,
+    PromptWithInfoScreenDialogComponent,
     ChooseOptionsScreenDialogComponent,
     ReturnTransDetailsDialogComponent,
     ConfirmDialogComponent
