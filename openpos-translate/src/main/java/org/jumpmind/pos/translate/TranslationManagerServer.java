@@ -245,12 +245,18 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                     if (newTranslator instanceof AbstractScreenTranslator<?>) {
                         AbstractScreenTranslator<?> screenTranslator = (AbstractScreenTranslator<?>) newTranslator;
                         Screen screen = screenTranslator.build();
+                        if(screen.getId() == null){
+                            screen.setId(legacyScreen.getSpecName());
+                        }
                         subscriber.showScreen(screen);
                         screenShown = true;
                     }
                     if (newTranslator instanceof AbstractUIMessageTranslator<?>) {
                         AbstractUIMessageTranslator<?> messageTranslator = (AbstractUIMessageTranslator) newTranslator;
                         UIMessage message = messageTranslator.build();
+                        if(message.getId() == null){
+                            message.setId(legacyScreen.getSpecName());
+                        }
                         subscriber.showScreen(message);
                         screenShown = true;
                     }
