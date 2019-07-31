@@ -1,46 +1,39 @@
-import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { BrowserModule } from '@angular/platform-browser';
+import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 
-import { MatButtonModule, MatCheckboxModule, MatStepperModule, MatFormFieldModule, MatInputModule } from '@angular/material';
+import {
+  CoreModule,
+  SharedModule,
+  PersonalizationService,
+  ClientUrlService,
+  ConfigurationService,
+} from '@jumpmind/openpos-client-core-lib';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { PersonalizeComponent } from './components/personalize/personalize.component';
+import { AppRoutingModule } from './app-routing.module';
 import { NotFoundComponent } from './components/not-found.component';
 
-
 @NgModule({
+  entryComponents: [
+  ],
   declarations: [
     AppComponent,
-    PersonalizeComponent,
     NotFoundComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    BrowserAnimationsModule,
-    FormsModule,
-    ReactiveFormsModule,
-    HttpClientModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatStepperModule,
-    MatFormFieldModule,
-    MatInputModule
+    CoreModule,
+    SharedModule
   ],
-  exports: [
-    FormsModule,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatCheckboxModule,
-    MatStepperModule,
-    MatFormFieldModule,
-    MatInputModule
+  providers: [
+    { provide: LocationStrategy, useClass: HashLocationStrategy }
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
-export class AppModule { }
+export class AppModule {
+  constructor(clientUrlService: ClientUrlService, personalization: PersonalizationService, configuration: ConfigurationService) {
+    clientUrlService.navigateExternal = true;
+  }
+}

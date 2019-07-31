@@ -1,7 +1,8 @@
 import { Routes, RouterModule, ActivatedRouteSnapshot } from '@angular/router';
 import { InjectionToken, NgModule } from '@angular/core';
 
-import { PersonalizeComponent } from './components/personalize/personalize.component';
+import { PersonalizationComponent } from '@jumpmind/openpos-client-core-lib';
+
 import { NotFoundComponent } from './components/not-found.component';
 
 const externalUrlProvider = new InjectionToken('externalUrlRedirectResolver');
@@ -10,7 +11,7 @@ const deactivateGuard = new InjectionToken('deactivateGuard');
 export const routes: Routes = [
   {
     path: '',
-    component: PersonalizeComponent,
+    component: PersonalizationComponent,
     canDeactivate: [deactivateGuard],
   },
   {
