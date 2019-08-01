@@ -7,6 +7,7 @@ export class HourMinSecPipe implements PipeTransform {
     constructor() {}
 
     transform(timeSeconds: number) {
+        timeSeconds = Math.round(timeSeconds);
         const hour = Math.floor(timeSeconds / (60 * 60));
         const min = Math.floor((timeSeconds - (hour * 3600)) / 60);
         const sec = timeSeconds - (hour * 3600) - (min * 60 );
