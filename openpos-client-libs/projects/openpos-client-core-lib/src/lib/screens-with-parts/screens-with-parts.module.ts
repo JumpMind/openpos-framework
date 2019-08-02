@@ -17,6 +17,7 @@ import { PromptWithInfoScreenComponent } from './prompt-with-info/prompt-with-in
 import { PromptWithInfoScreenDialogComponent } from './prompt-with-info/prompt-with-info-screen-dialog.component';
 import { DataTableComponent } from './data-table/data-table.component';
 import { AutoCompleteAddressComponent } from './auto-complete-address/auto-complete-address.component';
+import { SaleComponent } from './sale/sale.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -26,7 +27,8 @@ const screens = [
     HomeComponent,
     ReturnComponent,
     DataTableComponent,
-    AutoCompleteAddressComponent
+    AutoCompleteAddressComponent,
+    SaleComponent
 ];
 
 const dialogs = [
