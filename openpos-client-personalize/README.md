@@ -1,6 +1,6 @@
 # OpenposClientPersonalize
 
-This project is a stand-alone app that reuses the openpos-client-core-lib personalization components.  When the project loads, the personalization screen is shown with an additional step that allows the user to input a client name/IP address, port, and app name/route (e.g. 'pos', 'selfcheckout', etc.) of a running openpos client app.  Once the personalization steps are completed, the component builds a url to the openpos client app and uses the entered personalization properties as query parameters.  The final step routes the angular app to the new url.
+This project is a stand-alone app that reuses the openpos-client-core-lib personalization components.  When the project loads, the personalization screen is shown with an additional step that allows the user to input a client name/IP address, port, and app name/route (e.g. 'pos', 'selfcheckout', etc.) of a running OpenPOS Client app.  Once the personalization steps are completed, the component builds a url to the OpenPOS Client app and uses the entered personalization properties as query parameters.  The final step routes the angular app to the new url.
 
 This project can be embedded in a native app, such as Cordova or React Native, to allow the OpenPOS Client to be hosted on a separate remote server (usually the same server that runs the OpenPOS Server).
 
