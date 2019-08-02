@@ -36,7 +36,7 @@
             </button>
 
             <input *ngSwitchCase="'AlphanumericPassword'" matInput [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)"
-                type="password" [required]="formField.required" id="{{formField.id}}">
+                type="password" [required]="formField.required" id="{{formField.id}}" [formatterName]="formField.inputType">
 
             <mat-select *ngSwitchCase="'ComboBox'" [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)" (selectionChange)="onFormElementChanged(formField)"
                 [required]="formField.required" id="{{formField.id}}">

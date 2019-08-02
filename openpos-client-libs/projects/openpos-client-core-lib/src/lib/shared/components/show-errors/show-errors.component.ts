@@ -15,7 +15,7 @@ export class ShowErrorsComponent {
 
         // @dynamic
         requireAtleastOne: () => 'At least one field is required',
-        pattern: () => 'Input did not match specified pattern',
+        pattern: () => 'Input is invalid',
         required: () => 'This field is required',
         minlength: () => 'Length is invalid',
         maxlength: () => 'Length is invalid',

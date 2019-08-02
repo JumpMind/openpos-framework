@@ -1,0 +1,24 @@
+<div fxLayout="column" fxLayoutAlign="center stretch" class="prompt-with-info-container">
+    <ng-container *ngIf="screen.promptPosition === 'Top'; else formCard">
+        <ng-container *ngTemplateOutlet="promptCard"></ng-container>
+    </ng-container>
+    <ng-container *ngIf="screen.promptPosition === 'Top'; else promptCard">
+        <ng-container *ngTemplateOutlet="formCard"></ng-container>
+    </ng-container>
+</div>
+
+<ng-template #formCard>
+    <mat-card class="page-content-card scrollable-content-card form-card">
+        <mat-card-content fxFlex="0 1 100%" fxLayout="column">
+            <app-dynamic-form-control [screenForm]="screen.form"></app-dynamic-form-control>
+        </mat-card-content>
+    </mat-card>
+</ng-template>
+<ng-template #promptCard>
+    <mat-card class="page-content-card prompt-card">
+        <mat-card-content fxFlex="1 1 auto" fxLayout="column">
+            <app-dialog-header></app-dialog-header>
+            <app-prompt-form-part></app-prompt-form-part>
+        </mat-card-content>
+    </mat-card>
+</ng-template>

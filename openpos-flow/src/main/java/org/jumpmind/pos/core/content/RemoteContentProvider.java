@@ -1,14 +1,24 @@
 package org.jumpmind.pos.core.content;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.jumpmind.pos.core.flow.In;
 import org.jumpmind.pos.core.flow.ScopeType;
+import org.jumpmind.pos.core.service.IHttpConnectionService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -22,13 +32,16 @@ public class RemoteContentProvider implements IContentProvider {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
     private Map<String, Map<String, List<String>>> urlsByKeyAndTag = new HashMap<>();
-    private Map<String, InputStream> contentLookupMap = new HashMap<>();
+    private Map<String, byte[]> contentLookupMap = new HashMap<>();
     private List<String> propertiesForTags = new ArrayList<>();
 
     static Map<String, ContentIndex> deviceContent = new HashMap<>();
 
     @In(scope = ScopeType.Device, required = false)
     Map<String, String> personalizationProperties;
+
+    @Autowired
+    IHttpConnectionService httpConnectionService;
 
     @Override
     public String getContentUrl(String deviceId, String key) {
@@ -88,11 +101,10 @@ public class RemoteContentProvider implements IContentProvider {
 
         String contentLookupKey = key+tagKey+index;
 
-        try {
-            URL url = new URL(urls.get(index));
-            contentLookupMap.put(contentLookupKey, new BufferedInputStream(url.openStream()));
-        } catch ( IOException e ) {
-            // If our remote source fails return null so we can fall back on the next provider
+        try{
+            contentLookupMap.put(contentLookupKey, httpConnectionService.get(urls.get(index)));
+        } catch ( Exception e ){
+            logger.warn("Failed to retrieve content from: " + urls.get(index), e);
             return null;
         }
 
@@ -107,7 +119,7 @@ public class RemoteContentProvider implements IContentProvider {
 
     @Override
     public InputStream getContentInputStream(String contentPath) throws IOException {
-        return contentLookupMap.get(contentPath);
+        return new ByteArrayInputStream(contentLookupMap.get(contentPath));
     }
 
     protected int getDeviceIndex(String deviceId, String key, int size) {

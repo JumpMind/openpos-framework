@@ -25,7 +25,8 @@
         <mat-icon *ngIf="item.isGiftReceipt" color="muted-color">redeem</mat-icon>&nbsp;&nbsp;
         <mat-icon *ngIf="item.isOrderItem" color="muted-color">computer</mat-icon>&nbsp;&nbsp;
     </div>
-    <div gdArea="cost" gdGridAlign="center center" class="primary text-md sell-item-line-cost-outer">
+    <div gdArea="cost" gdGridAlign="center center" [ngClass]="item.type ? item.type : 'primary'" 
+    class="text-md sell-item-line-cost-outer">
         <span *ngIf="item.sellingPrice && item.showSellingPrice" class="muted-color text-sm sell-item-line-selling-price">
             <app-currency-text [amountText]="item.sellingPrice"></app-currency-text>
         </span>

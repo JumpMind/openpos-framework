@@ -41,7 +41,7 @@
             <mat-form-field fxFlexFill *ngSwitchCase="isPassword()" ngClass="text-lg">
                 <app-icon matPrefix iconClass="material-icons mat-48 primary" [iconName]="promptIcon"></app-icon>
                 <input matInput [formControlName]="'promptInputControl'" cdkFocusInitial autoSelectOnFocus
-                    type="password" [textMask]="_textMask" [attr.minlength]="minLength" [attr.maxlength]="maxLength">
+                    type="password" [formatterName]="responseType"  [attr.minlength]="minLength" [attr.maxlength]="maxLength">
                 <mat-placeholder>{{placeholderText}}</mat-placeholder>
                 <mat-hint class="text-sm" align="start">{{hintText}}</mat-hint>
                 <mat-error class="text-sm">

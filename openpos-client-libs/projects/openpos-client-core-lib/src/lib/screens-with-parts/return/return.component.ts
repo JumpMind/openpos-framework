@@ -10,6 +10,7 @@ import { TotalType } from '../../core/interfaces/total-type.enum';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
+import { ITransactionReceipt } from '../../shared/components/receipt-card/transaction-receipt.interface';
 
 /**
  * @ignore
@@ -35,7 +36,7 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     public items: ISellItem[];
     public amountTotals: ITotal[];
     public itemTotal: number;
-    public receipts: any[];
+    public receipts: ITransactionReceipt[];
     public removeReceiptAction: IActionItem;
 
     constructor(

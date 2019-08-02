@@ -68,7 +68,7 @@ public class ReflectUtils {
         return value;
     }
 
-    private static Field getAccessibleField(Object target, String propertyName) {
+    public static Field getAccessibleField(Object target, String propertyName) {
         Class<? extends Object> clazz = target.getClass();
         while (clazz != Object.class) {
             Field field = null;
