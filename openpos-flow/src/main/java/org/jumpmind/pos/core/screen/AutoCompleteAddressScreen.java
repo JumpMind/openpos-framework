@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.screen;
 
 import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.IHasAutoCompleteAddress;
 import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
 import org.jumpmind.pos.core.ui.messagepart.StatusStripPart;
 

@@ -2,7 +2,7 @@ package org.jumpmind.pos.core.ui.message;
 
 import java.util.List;
 
-import org.jumpmind.pos.core.screen.IHasAutoCompleteAddress;
+import org.jumpmind.pos.core.ui.IHasAutoCompleteAddress;
 
 public class SelfCheckoutAddressUIMessage extends SelfCheckoutFormUIMessage implements IHasAutoCompleteAddress {
 
