@@ -5,6 +5,7 @@ import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
 import { KebabMenuComponent } from '../kebab-menu/kebab-menu.component';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { FocusService } from '../../../core/focus/focus.service';
 
 @Component({
     selector: 'app-kebab-button',
@@ -46,7 +47,7 @@ export class KebabButtonComponent implements OnDestroy {
 
     private subscription: Subscription;
 
-    constructor(private dialog: MatDialog, private keyPresses: KeyPressProvider) {
+    constructor(private dialog: MatDialog, private keyPresses: KeyPressProvider, private focusService: FocusService) {
     }
 
     ngOnDestroy(): void {
@@ -61,7 +62,8 @@ export class KebabButtonComponent implements OnDestroy {
                 menuItems: this.menuItems,
                 payload: null,
                 disableClose: false,
-                autoFocus: false
+                autoFocus: false,
+                restoreFocus: false
             }
         });
 
@@ -69,6 +71,7 @@ export class KebabButtonComponent implements OnDestroy {
             if (result) {
                 this.menuItemClick.emit(result);
             }
+            this.focusService.restoreInitialFocus();
         });
     }
 }

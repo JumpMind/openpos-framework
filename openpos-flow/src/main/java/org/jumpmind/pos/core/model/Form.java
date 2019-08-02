@@ -424,6 +424,7 @@ public class Form implements Serializable {
         formField.setElementType(FieldElementType.Display);
         formField.setInputType(type);
         formField.setValue(value);
+        formField.setRequired(false);
         formElements.add(formField);
         return formField;
     }

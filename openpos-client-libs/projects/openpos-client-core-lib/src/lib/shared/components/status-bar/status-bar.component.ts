@@ -9,7 +9,8 @@ import {
     ComponentFactoryResolver,
     AfterViewInit,
     InjectionToken,
-    OnInit
+    OnInit,
+    ComponentRef
 } from '@angular/core';
 import { StatusBarData } from './status-bar-data';
 import { ComponentType } from '@angular/cdk/overlay/';
@@ -25,15 +26,26 @@ export const STATUS_BAR_STATUS_CONTROL_COMPONENT = new InjectionToken<ComponentT
 })
 export class StatusBarComponent implements IStatusBarControl, AfterViewInit, OnInit {
 
-    @Input()
-    data: StatusBarData;
+    _data: StatusBarData;
+    public get data(): StatusBarData {
+        return this._data;
+    }
+
+    @Input('data')
+    public set data(value: StatusBarData) {
+        this._data = value;
+        this.updateStatusBar();
+    }
+
+    private controlRef: ComponentRef<any>;
+
     /** Swappable component that is placed on right hand side of status bar.  Clients
      *  may override this with their own component using a provider with token STATUS_BAR_STATUS_CONTROL_COMPONENT.
      */
     @ViewChild('statusBarStatusControl', { read: ViewContainerRef }) statusBarControlContainer: ViewContainerRef;
 
-    constructor(public session: SessionService,
-        public snackBar: MatSnackBar, private trainingService: TrainingOverlayService,
+    constructor(
+        public session: SessionService, public snackBar: MatSnackBar, private trainingService: TrainingOverlayService,
         @Inject(STATUS_BAR_STATUS_CONTROL_COMPONENT) private statusBarStatusCtrlType: ComponentType<IStatusBarControl>,
         private componentFactoryResolver: ComponentFactoryResolver) {
     }
@@ -46,10 +58,16 @@ export class StatusBarComponent implements IStatusBarControl, AfterViewInit, OnI
 
     ngAfterViewInit(): void {
         const compFactory = this.componentFactoryResolver.resolveComponentFactory(this.statusBarStatusCtrlType);
-        const controlRef = this.statusBarControlContainer.createComponent(compFactory);
-        controlRef.instance.data = this.data;
-        // Run change detection or else get dreaded 'ExpressionChangedAfterItHasBeenCheckedError'
-        controlRef.changeDetectorRef.detectChanges();
+        this.controlRef = this.statusBarControlContainer.createComponent(compFactory);
+        this.updateStatusBar();
+    }
+
+    private updateStatusBar() {
+        if (this.controlRef) {
+            this.controlRef.instance.data = this.data;
+            // Run change detection or else get dreaded 'ExpressionChangedAfterItHasBeenCheckedError'
+            this.controlRef.changeDetectorRef.detectChanges();
+        }
     }
 
     public onTraining() {

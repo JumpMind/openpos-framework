@@ -20,7 +20,6 @@ public class DialogState {
         DialogUIMessage dialog = new DialogUIMessage();
         dialog.setMessage("Test Message");
         dialog.addButton( new ActionItem("Next", "Next"));
-        dialog.addButton( new ActionItem( "Refresh", "Refresh"));
         dialog.addButton( new ActionItem("Close", "Close"));
         dialog.setTitle("Dialog Title");
         return dialog;
@@ -30,10 +29,5 @@ public class DialogState {
     public void onNext(Action action) throws InterruptedException {
         Thread.sleep(5000);
         stateManager.doAction(action);
-    }
-
-    @ActionHandler
-    public void onRefresh(Action action) {
-        stateManager.refreshScreen();
     }
 }

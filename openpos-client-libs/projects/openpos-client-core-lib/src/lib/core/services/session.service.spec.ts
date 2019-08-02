@@ -2,7 +2,7 @@ import { ElectronService } from 'ngx-electron';
 import { Logger } from './logger.service';
 import { TestBed } from '@angular/core/testing';
 import { SessionService } from './session.service';
-import { PersonalizationService } from './personalization.service';
+import { PersonalizationService } from '../personalization/personalization.service';
 import { MatDialog } from '@angular/material';
 import { StompRService } from '@stomp/ng2-stompjs';
 import { DeviceService } from './device.service';

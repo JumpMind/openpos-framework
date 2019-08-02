@@ -2,6 +2,7 @@ import { GreaterThanEqZeroValidator } from './greater-than-eq-zero-validator';
 import { GreaterThanZeroValidator } from './greater-than-zero-validator';
 import { MinValueValidator } from './min-value-validator';
 import { MaxValueValidator } from './max-value-validator';
+import { RegexValidator } from './regex-validator';
 
 export const ValidationConstants = {
 
@@ -15,6 +16,7 @@ export const ValidationConstants = {
         { name: 'MaxValueValidator', validatorClass: MaxValueValidator },
         { name: 'GT_0',              validatorClass: GreaterThanZeroValidator },
         { name: 'GTE_0',             validatorClass: GreaterThanEqZeroValidator },
+        { name: 'RegexValidator',    validatorClass: RegexValidator },
     ],
 
 };

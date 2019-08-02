@@ -95,7 +95,7 @@ public abstract class AbstractLegacyUIMessageTranslator<T extends UIMessage> ext
     }
 
     protected String getDeviceId() {
-        return legacyStoreProperties.getStoreNumber() + "-" + legacyStoreProperties.getWorkstationNumber();
+    	return "#" + legacyStoreProperties.getWorkstationNumber() + "-" + legacyStoreProperties.getStoreNumber();
     }
 
     protected String getOperatorText() {

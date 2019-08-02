@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE JposEntries PUBLIC "-//JavaPOS//DTD//EN"
+        "jpos/res/jcl.dtd">
+<JposEntries>
+
+    <JposEntry logicalName="EpsonPrinter">
+        <creation
+                factoryClass="org.jumpmind.pos.print.EscpServiceInstanceFactory"
+                serviceClass="org.jumpmind.pos.print.EscpPOSPrinter" />
+        <vendor name="JumpMind" url="http://www.jumpmind.com" />
+
+        <jpos category="POSPrinter" version="1.14" />
+
+        <product name="openpos" description="Log4jReceiptPrinter" url="http://www.jumpmind.com"/>
+
+        <!-- Other non JavaPOS required property (mostly vendor properties and
+            bus specific properties i.e. RS232 ) -->
+        <prop name="productURL" type="String" value="Unknown" />
+        <prop name="deviceBus" type="String" value="Unknown" />
+        <prop name="secure" type="String" value="false" />
+        <prop name="productName" type="String" value="false" />
+        <prop name="productDescription" type="String" value="Epson Printer" />
+<!--        <prop name="address" type="String" value="" />-->
+        <prop name="portalName" type="String" value="tcp:192.168.42.197:9100" />
+        <prop name="printerCommands" type="String" value="esc_p.properties, epson.properties" />
+
+    </JposEntry>
+
+</JposEntries>

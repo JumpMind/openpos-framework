@@ -1,5 +1,7 @@
-import { Logger } from './logger.service';
+import { Logger } from '../services/logger.service';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { PersonalizationResponse } from './personalization-response.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -8,11 +10,12 @@ export class PersonalizationService {
 
     private serverBaseUrl: string;
 
-    constructor(private log: Logger) {
+    constructor(private log: Logger, private http: HttpClient) {
     }
 
-    public personalize(serverName: string, serverPort: string, deviceId: string,
-                       personalizationProperties?: Map<string, string>, sslEnabled?: boolean) {
+    public personalize(
+        serverName: string, serverPort: string, deviceId: string,
+        personalizationProperties?: Map<string, string>, sslEnabled?: boolean) {
 
         this.log.info(`personalizing with server: ${serverName}, port: ${serverPort}, deviceId: ${deviceId}`);
         localStorage.setItem('serverName', serverName);
@@ -163,6 +166,31 @@ export class PersonalizationService {
         return `${this.getServerBaseURL()}/api`;
     }
 
+    public async requestPersonalization(serverName: string, serverPort: string, sslEnabled: boolean): Promise<PersonalizationResponse> {
+        let url = sslEnabled ? 'https://' : 'http://';
+        url += serverName + ':' + serverPort + '/personalize';
+
+        console.log('Requesting Personalization with url: ' + url);
+
+        let personalizeError: any = null;
+        try {
+            const httpResult = await this.http.get<PersonalizationResponse>(url, {}).toPromise();
+            if (httpResult) {
+                httpResult.success = true;
+                console.log('Successful Personalization with url: ' + url);
+                return httpResult;
+            } else {
+                personalizeError = { message: '?' };
+            }
+        } catch (error) {
+            personalizeError = error;
+        }
+
+        if (personalizeError) {
+            console.warn('bad validation of ' + url + ' with an error message of :' + personalizeError.message);
+            return { success: false, message: personalizeError.message };
+        }
+    }
 }
 
 

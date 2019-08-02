@@ -18,6 +18,7 @@ import { WordTextFormatter } from '../../shared/formatters/word-text.formatter';
 import { DateTimeFormatter } from '../../shared/formatters/datetime.formatter';
 import { TimeFormatter, TimeFormat } from '../../shared/formatters/time.formatter';
 import { DoNothingFormatter } from '../../shared/formatters/do-nothing.formatter';
+import { NonNumericFormatter } from '../../shared/formatters/non-numeric.formatter';
 
 
 @Injectable({
@@ -44,17 +45,23 @@ export class FormattersService {
         this.formatters.set('ca', CAFormatters);
         this.formatters.set('en-ca', CAFormatters);
 
+        const UKFormatters = new Map<string, IFormatter>();
+        UKFormatters.set('datetime', new DateTimeCAFormatter());
+        this.formatters.set('gb', UKFormatters);
+        this.formatters.set('en-gb', UKFormatters);
+
         // If there isn't a specific formatter for a given locale, we fall back these
         const NOLOCALEFormatters = new Map<string, IFormatter>();
         this.formatters.set('NO-LOCALE', NOLOCALEFormatters);
         // Default formatters if no locale specific
         const numericFormatter = new NumericFormatter();
         NOLOCALEFormatters.set('numeric', numericFormatter);
+        NOLOCALEFormatters.set('nonnumerictext', new NonNumericFormatter());
         NOLOCALEFormatters.set('numerictext', numericFormatter);
         NOLOCALEFormatters.set('giftcode', new GiftCodeFormatter());
         // Use USD formatter as default
         NOLOCALEFormatters.set('money', new MoneyFormatter(localeService));
-        NOLOCALEFormatters.set('phone', defaultPhoneFormatter);
+        NOLOCALEFormatters.set('phone', numericFormatter);
         NOLOCALEFormatters.set('percent', new PercentageFormatter());
         NOLOCALEFormatters.set('percentint', new PercentageFormatter(PercentageFormatter.INTEGER_MODE));
         NOLOCALEFormatters.set('postalcode', new PostalCodeFormatter());

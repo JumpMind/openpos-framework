@@ -1,4 +1,4 @@
-import { Component, Input, Output, EventEmitter, ViewChildren, QueryList, ViewChild, AfterViewInit, ContentChild } from '@angular/core';
+import { Component, Input, Output, EventEmitter, QueryList, ContentChild, ContentChildren } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { ShowErrorsComponent } from '../show-errors/show-errors.component';
 import { DynamicFormFieldComponent } from '../dynamic-form-field/dynamic-form-field.component';
@@ -13,7 +13,7 @@ import { DynamicFormFieldComponent } from '../dynamic-form-field/dynamic-form-fi
 })
 export class FormComponent {
 
-    @ViewChildren(DynamicFormFieldComponent) children: QueryList<DynamicFormFieldComponent>;
+    @ContentChildren(DynamicFormFieldComponent, {descendants: true}) children: QueryList<DynamicFormFieldComponent>;
     @ContentChild('formErrors') formErrors: ShowErrorsComponent;
 
     @Input()

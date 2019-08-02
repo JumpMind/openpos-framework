@@ -1,6 +1,7 @@
 import { Component, Input, HostListener } from '@angular/core';
 import { SessionService } from '../../../core/services/session.service';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { ITransactionReceipt } from './transaction-receipt.interface';
 
 @Component({
   selector: 'app-receipt-card',
@@ -10,7 +11,7 @@ import { IActionItem } from '../../../core/interfaces/action-item.interface';
 export class ReceiptCardComponent {
 
   @Input()
-  public receipt: any;
+  public receipt: ITransactionReceipt;
 
   @Input()
   public removeReceiptAction: IActionItem;

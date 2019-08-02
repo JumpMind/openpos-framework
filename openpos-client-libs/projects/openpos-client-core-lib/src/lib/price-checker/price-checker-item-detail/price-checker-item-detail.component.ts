@@ -3,6 +3,7 @@ import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PriceCheckerItemDetailInterface } from './price-checker-item-detail.interface';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
+import { Subscription } from 'rxjs';
 
 @ScreenComponent({
     name: 'PriceCheckerItemDetail'
@@ -13,15 +14,22 @@ import { ScannerService } from '../../core/platform-plugins/scanners/scanner.ser
     styleUrls: ['./price-checker-item-detail.component.scss']
 })
 export class PriceCheckerItemDetailComponent extends PosScreen<PriceCheckerItemDetailInterface> implements OnDestroy {
+
+    scannerSubscription: Subscription;
+
     constructor( private scannerService: ScannerService) {
         super();
     }
 
     buildScreen() {
-        this.scannerService.startScanning().subscribe( m => this.session.onAction(this.screen.scanAction, m));
+        if (this.scannerSubscription != null) {
+            this.scannerSubscription.unsubscribe();
+        }
+        this.scannerSubscription = this.scannerService.startScanning().subscribe( m => this.session.onAction(this.screen.scanAction, m));
     }
 
     ngOnDestroy(): void {
+        this.scannerSubscription.unsubscribe();
         this.scannerService.stopScanning();
     }
 

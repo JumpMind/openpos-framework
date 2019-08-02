@@ -40,7 +40,7 @@ public class ActionItem implements Serializable {
     protected String fontSize;
     protected String keybind;
     @JsonIgnore
-    protected boolean autoAssignEnabled = true;
+    protected transient boolean autoAssignEnabled = true;
 
     public final static String FONT_SIZE_XS = "text-xs";
     public final static String FONT_SIZE_SM = "text-sm";
@@ -81,6 +81,7 @@ public class ActionItem implements Serializable {
         this(action, title, icon);
         if (confirmationMessage != null) {
             this.confirmationDialog = new ConfirmationDialog();
+            this.confirmationDialog.setTitle(title);
             this.confirmationDialog.setMessage(confirmationMessage);
         }
     }

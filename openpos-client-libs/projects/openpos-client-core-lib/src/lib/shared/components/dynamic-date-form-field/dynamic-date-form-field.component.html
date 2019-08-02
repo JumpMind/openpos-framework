@@ -1,6 +1,6 @@
 <div [formGroup]="form">
-    <mat-form-field fxFlexFill [ngClass]="{'text-xl': isPrompt}">
-        <input matInput [(ngModel)]="value" [formControlName]="controlName" [placeholder]="placeholder"
+    <mat-form-field fxFlexFill [ngClass]="{'text-lg': isPrompt}">
+        <input matInput cdkFocusInitial [(ngModel)]="value" [formControlName]="controlName" [placeholder]="placeholder"
                 [textMask]="{mask: dateMask, pipe: autoCorrectedDatePipe, keepCharPositions: true}" [keyboardLayout]="keyboardLayout" [attr.type]="'tel'"
                 (keyup.enter)="onDateEntered()" (change)="onDateChange()">
         <input matInput hidden [formControlName]="hiddenControl" [min]="minimumDate" [max]="maximumDate"

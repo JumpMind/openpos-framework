@@ -1,7 +1,7 @@
 ---
 BackToBackDialogFlow:
-  - SaleState:
-      ShowDialog: DialogState
+  - HomeState:
+      Next: DialogState
   - DialogState:
       Next: DialogState
-      Close: SaleState
+      Close: HomeState

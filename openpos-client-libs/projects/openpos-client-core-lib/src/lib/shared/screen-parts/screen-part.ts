@@ -7,6 +7,7 @@ import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
 import { Logger } from '../../core/services/logger.service';
 import { deepAssign } from '../../utilites/deep-assign';
+import { getValue } from '../../utilites/object-utils';
 import { OpenposMediaService } from '../../core/services/openpos-media.service';
 import { UIMessage } from '../../core/messages/ui-message';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
@@ -52,8 +53,9 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
                     this.initialScreenType = s.screenType;
                 }
                 if (s.screenType === this.initialScreenType) {
-                    if (s.hasOwnProperty(this.screenPartName)) {
-                        this.screenData = deepAssign(this.screenData, s[this.screenPartName]);
+                    const screenPartData = getValue(s, this.screenPartName);
+                    if (screenPartData !== undefined && screenPartData !== null) {
+                        this.screenData = deepAssign(this.screenData, screenPartData);
                     } else {
                         this.screenData = deepAssign(this.screenData, s);
                     }

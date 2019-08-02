@@ -4,7 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { SessionService } from './session.service';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
-import { PersonalizationService } from './personalization.service';
+import { PersonalizationService } from '../personalization/personalization.service';
 
 @Injectable({
     providedIn: 'root',

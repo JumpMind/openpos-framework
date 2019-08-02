@@ -34,8 +34,8 @@ public class DevicesModule extends AbstractModule {
     }
 
     @Override
-    public String getVersion() {
-        return "0.0.1";
+    protected String getArtifactName() {
+        return "openpos-devices";
     }
 
     @Override

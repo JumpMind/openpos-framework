@@ -31,6 +31,7 @@ public interface IconType {
     public static final String Decrement = "Decrement"; //remove
     public static final String DefaultPrompt = "DefaultPrompt"; //question_answer
     public static final String Delivery = "Delivery"; //local_shipping
+    public static final String DeviceUnknown = "DeviceUnknown"; // device_unknown
     public static final String Discount = "Discount"; //local_offer
     public static final String DollarSign = "DollarSign"; //attach_money
     public static final String Email = "Email"; //email

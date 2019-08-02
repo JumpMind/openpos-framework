@@ -48,7 +48,6 @@ const screens = [
     TillCountOtherTenderComponent,
     ChangeComponent,
     PrintPreviewComponent,
-    WaitComponent,
     CustomerSearchResultsComponent,
     FullPageImageComponent,
     CallForAuthorizationComponent,

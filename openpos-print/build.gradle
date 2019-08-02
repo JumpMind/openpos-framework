@@ -1,0 +1,10 @@
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
+apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
+apply from: '../openpos-gradle/src/main/resources/spring.gradle'
+
+dependencies {
+    compile project(':openpos-devices')
+    compile("org.javapos:javapos:${javaposVersion}")
+    compile group: 'org.usb4java', name: 'usb4java-javax', version: '1.3.0'
+    compile group: 'org.usb4java', name: 'usb4java', version: '1.3.0'
+}

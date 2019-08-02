@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { DatePipe } from '@angular/common';
-import { TextMask, IMaskSpec, ITextMask } from '../../textmask';
 import { ErrorStateMatcher } from '@angular/material';
 import { OldPluginService } from '../../../core/services/old-plugin.service';
 import { BarcodeScannerPlugin } from '../../../core/oldplugins/barcode-scanner.plugin';
@@ -21,7 +20,6 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     @Input() responseText: string;
     @Input() promptIcon: string;
     @Input() hintText: string;
-    @Input() maskSpec: IMaskSpec;
     @Input() minLength: number;
     @Input() maxLength: number;
     @Input() promptFormGroup: FormGroup;
@@ -34,7 +32,6 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     errorMatcher = new MyErrorStateMatcher();
     keyboardLayout = 'en-US';
 
-    _textMask: ITextMask; // Mask object built for text-mask
     private barcodeEventSubscription: Subscription;
 
     constructor(private log: Logger, private datePipe: DatePipe, private pluginService: OldPluginService) {
@@ -70,13 +67,6 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
-        if (this.maskSpec) {
-            const newMask = TextMask.instance(this.maskSpec);
-            this._textMask = newMask;
-        } else {
-            this._textMask = TextMask.NO_MASK;
-        }
 
         if (this.scanEnabled) {
             this.pluginService.getPluginWithOptions('barcodeScannerPlugin', true, { waitForCordovaInit: true }).then(plugin => {

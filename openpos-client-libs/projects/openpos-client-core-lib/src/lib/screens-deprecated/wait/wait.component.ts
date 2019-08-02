@@ -1,9 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 
 /**
  * @ignore
  */
+@ScreenComponent({
+  name: 'Wait'
+})
 @Component({
   selector: 'app-wait-component',
   templateUrl: './wait.component.html'

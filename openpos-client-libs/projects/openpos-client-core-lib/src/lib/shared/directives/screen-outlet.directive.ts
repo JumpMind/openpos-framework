@@ -18,12 +18,12 @@ import { ScreenService } from '../../core/services/screen.service';
 import { SessionService } from '../../core/services/session.service';
 import { ConfigurationService } from '../../core/services/configuration.service';
 import { DialogService } from '../../core/services/dialog.service';
-import { FocusTrapFactory, FocusTrap } from '@angular/cdk/a11y';
 import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
 import { IScreen } from '../components/dynamic-screen/screen.interface';
+import { FocusService } from '../../core/focus/focus.service';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -44,7 +44,6 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     private installedScreen: IScreen;
     private installedTemplate: AbstractTemplate<any>;
     private subscriptions = new Subscription();
-    private focusTrap: FocusTrap;
 
     constructor(
         private log: Logger,
@@ -54,7 +53,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         public configurationService: ConfigurationService,
         public overlayContainer: OverlayContainer,
         private dialogService: DialogService,
-        private focusTrapFactory: FocusTrapFactory,
+        private focusService: FocusService,
         public renderer: Renderer2) {
     }
 
@@ -108,6 +107,12 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             screen = new SplashScreen();
         }
 
+        if ( this.dialogService.isDialogOpen ) {
+            // Close any open dialogs
+            await this.dialogService.closeDialog();
+            this.focusService.restoreInitialFocus();
+        }
+
         // Cancel the loading message
         this.session.cancelLoading();
 
@@ -134,11 +139,8 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
                 this.componentRef.destroy();
             }
 
-            if (!!this.focusTrap) {
-                this.focusTrap.destroy();
-            }
+            this.focusService.destroy();
 
-            this.focusTrap = null;
             this.componentRef = null;
             this.installedScreen = null;
             this.installedTemplate = null;
@@ -169,16 +171,10 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
         if (trap) {
             // If this screen was just created, focus the first element
-            this.focusTrap = this.focusTrapFactory.create(this.componentRef.location.nativeElement);
-            this.focusTrap.focusInitialElementWhenReady();
+            this.focusService.createInitialFocus(this.componentRef.location.nativeElement);
         } else {
             // If this screen was updated, focus the previously focused element
-            setTimeout(() => {
-                const updatedElement = document.getElementById(original.id);
-                if (updatedElement) {
-                    updatedElement.focus();
-                }
-            });
+            this.focusService.restoreFocus(original);
         }
 
         this.updateClasses(screen);

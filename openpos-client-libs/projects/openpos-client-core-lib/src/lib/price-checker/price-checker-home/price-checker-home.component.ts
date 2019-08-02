@@ -1,9 +1,10 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { PriceCheckerHomeInterface } from './price-checker-home.interface';
 import { PosScreen } from '../../screens-with-parts/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { ImageService } from '../../core/services/image.service';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
+import { Subscription } from 'rxjs';
 
 @ScreenComponent({
     name: 'PriceCheckerHome'
@@ -13,12 +14,18 @@ import { ScannerService } from '../../core/platform-plugins/scanners/scanner.ser
   templateUrl: './price-checker-home.component.html',
   styleUrls: ['./price-checker-home.component.scss']
 })
-export class PriceCheckerHomeComponent extends PosScreen<PriceCheckerHomeInterface> implements OnDestroy {
+export class PriceCheckerHomeComponent extends PosScreen<PriceCheckerHomeInterface> implements OnDestroy, OnInit {
 
     backgroundStyle = {};
 
+    scannerSubscription: Subscription;
+
     constructor( private imageService: ImageService, private scannerService: ScannerService) {
-        super();
+        super();        
+    }
+
+    ngOnInit(): void {
+        this.scannerSubscription = this.scannerService.startScanning().subscribe( m => this.onMenuItemClick(this.screen.scanAction, m));
     }
 
     buildScreen() {
@@ -29,11 +36,10 @@ export class PriceCheckerHomeComponent extends PosScreen<PriceCheckerHomeInterfa
             'background-size': 'contain',
             'background-position': 'center'
         };
-
-        this.scannerService.startScanning().subscribe( m => this.onMenuItemClick(this.screen.scanAction, m));
     }
 
     ngOnDestroy(): void {
+        this.scannerSubscription.unsubscribe();
         this.scannerService.stopScanning();
     }
 }

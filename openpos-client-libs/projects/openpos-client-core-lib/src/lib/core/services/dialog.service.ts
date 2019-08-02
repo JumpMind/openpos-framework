@@ -19,6 +19,8 @@ export class DialogService {
 
     public dialogRef: MatDialogRef<DialogContentComponent>;
 
+    private closingDialogRef: MatDialogRef<DialogContentComponent>;
+
     private dialogOpening: boolean;
 
     private lastDialogType: string;
@@ -38,7 +40,6 @@ export class DialogService {
         // but client is starting up. If we wait to subscribe until start() method, we can
         // miss the dialog.
         this.session.getMessages('Dialog').subscribe(s => { if (s) { this.$dialogMessages.next(s); } });
-        this.session.getMessages('CloseDialog').subscribe( s => this.closeDialog() );
     }
 
     public start() {
@@ -90,13 +91,18 @@ export class DialogService {
     public async closeDialog() {
         if (this.dialogRef) {
             this.log.info('[DialogService] closing dialog ref');
-            const loacalDialogRef = this.dialogRef;
+            this.closingDialogRef = this.dialogRef;
             this.dialogRef = null;
-            loacalDialogRef.close();
+            this.closingDialogRef.close();
 
             this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogClosing));
+
             // Wait for the dialog to fully close before moving on
-            await loacalDialogRef.afterClosed().toPromise();
+            await this.closingDialogRef.afterClosed().toPromise();
+
+            this.closingDialogRef = null;
+        } else if (this.closingDialogRef != null) {
+            await this.closingDialogRef.afterClosed().toPromise();
         }
     }
 
@@ -125,6 +131,10 @@ export class DialogService {
     private async openDialog(dialog: any) {
         try {
             const dialogComponentFactory: ComponentFactory<IScreen> = this.resolveDialog(dialog.screenType);
+            this.log.info(`[DialogService] Opening a dialog with a ` +
+                `${dialogComponentFactory && dialogComponentFactory.componentType ? dialogComponentFactory.componentType.name : '?'} ` +
+                `component as its content`
+            );
             let closeable = false;
             let forceReopen = false;
             if (dialog.dialogProperties) {
