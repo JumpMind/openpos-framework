@@ -7,6 +7,7 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.template.SellTemplate;
+import org.jumpmind.pos.core.ui.ActionItem;
 
 public class DynamicFormScreen extends Screen implements IHasForm {
 

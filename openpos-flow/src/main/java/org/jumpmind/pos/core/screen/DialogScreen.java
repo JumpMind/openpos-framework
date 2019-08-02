@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jumpmind.pos.core.model.MessageType;
+import org.jumpmind.pos.core.ui.ActionItem;
 
 public class DialogScreen extends Screen {
 

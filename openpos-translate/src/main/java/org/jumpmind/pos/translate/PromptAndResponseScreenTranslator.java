@@ -8,8 +8,7 @@ import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.screen.DialogProperties;
 import org.jumpmind.pos.core.screen.IconType;
-import org.jumpmind.pos.core.screen.ActionItem;
-import org.jumpmind.pos.core.screen.PromptScreen;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.template.SellTemplate;
 import org.jumpmind.pos.server.model.Action;
 

@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.NotificationItem;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;

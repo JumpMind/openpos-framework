@@ -1,7 +1,7 @@
 package org.jumpmind.pos.core.ui.message;
 
-import org.jumpmind.pos.core.screen.ActionItem;
-import org.jumpmind.pos.core.screen.OptionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.OptionItem;
 
 import java.util.ArrayList;
 import java.util.Iterator;

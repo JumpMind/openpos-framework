@@ -6,7 +6,7 @@ import java.util.Optional;
 import java.util.Properties;
 
 import org.jumpmind.pos.core.ui.message.DialogUIMessage;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

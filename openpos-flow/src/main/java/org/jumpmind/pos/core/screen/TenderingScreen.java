@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.FormField;
 import org.jumpmind.pos.core.model.IFormElement;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 
 @AssignKeyBindings

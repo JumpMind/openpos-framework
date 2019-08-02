@@ -1,6 +1,6 @@
 package org.jumpmind.pos.core.ui.message;
 
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.NotificationItem;
 import org.jumpmind.pos.core.ui.UIMessage;

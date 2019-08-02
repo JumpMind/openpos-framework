@@ -10,7 +10,7 @@ import java.util.Set;
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.model.KeyboardType;
 import org.jumpmind.pos.core.model.Validator;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 public class PromptUIMessage extends UIMessage {

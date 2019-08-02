@@ -9,6 +9,7 @@ import org.jumpmind.pos.core.model.SystemStatus;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 
+@Deprecated
 public abstract class AbstractTemplate implements Serializable {
 
     private static final long serialVersionUID = 1L;

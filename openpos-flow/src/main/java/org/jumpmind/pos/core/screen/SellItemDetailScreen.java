@@ -3,6 +3,7 @@ package org.jumpmind.pos.core.screen;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 
 @AssignKeyBindings

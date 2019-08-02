@@ -5,9 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jumpmind.pos.core.screenpart.BaconStripPart;
 import org.jumpmind.pos.core.template.AbstractTemplate;
 import org.jumpmind.pos.core.template.BlankWithBarTemplate;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasBackButton;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.util.DefaultObjectMapper;

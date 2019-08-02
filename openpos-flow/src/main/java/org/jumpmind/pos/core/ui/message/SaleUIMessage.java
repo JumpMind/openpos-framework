@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.model.Total;
-import org.jumpmind.pos.core.screen.ActionItem;
-import org.jumpmind.pos.core.screen.ActionItemGroup;
+import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItemGroup;
 import org.jumpmind.pos.core.screen.SellItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;

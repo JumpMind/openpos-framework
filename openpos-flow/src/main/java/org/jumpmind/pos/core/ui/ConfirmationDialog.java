@@ -1,7 +1,5 @@
 package org.jumpmind.pos.core.ui;
 
-import org.jumpmind.pos.core.screen.ActionItem;
-
 import java.io.Serializable;
 
 public class ConfirmationDialog implements Serializable {

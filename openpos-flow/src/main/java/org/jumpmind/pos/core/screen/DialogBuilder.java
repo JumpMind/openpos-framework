@@ -1,5 +1,7 @@
 package org.jumpmind.pos.core.screen;
 
+import org.jumpmind.pos.core.ui.ActionItem;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,7 +17,7 @@ public class DialogBuilder {
     public final static String OK_BUTTON_KEY = "Ok";
     public final static String CANCEL_BUTTON_KEY = "Cancel";
     
-    protected static final Map<String, ActionItem> DEFAULT_BUTTON_ACTIONS = new HashMap<>(); 
+    protected static final Map<String, ActionItem> DEFAULT_BUTTON_ACTIONS = new HashMap<>();
     static {
         DEFAULT_BUTTON_ACTIONS.put(OK_BUTTON_KEY, new ActionItem(OK_BUTTON_KEY, OK_BUTTON_KEY));
         DEFAULT_BUTTON_ACTIONS.put(CANCEL_BUTTON_KEY, new ActionItem(CANCEL_BUTTON_KEY, CANCEL_BUTTON_KEY));

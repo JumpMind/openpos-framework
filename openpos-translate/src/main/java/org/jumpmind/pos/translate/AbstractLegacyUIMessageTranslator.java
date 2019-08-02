@@ -3,7 +3,7 @@ package org.jumpmind.pos.translate;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.ModeConstants;
 import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.DynamicFormScreen;
 import org.jumpmind.pos.core.ui.UIMessage;
 

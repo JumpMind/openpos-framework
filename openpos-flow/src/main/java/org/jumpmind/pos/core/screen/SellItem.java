@@ -13,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import org.jumpmind.pos.core.ui.ActionItem;
 
 public class SellItem extends DefaultItem {
     private static final long serialVersionUID = 1L;

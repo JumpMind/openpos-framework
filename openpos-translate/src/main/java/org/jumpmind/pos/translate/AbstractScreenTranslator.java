@@ -3,13 +3,12 @@ package org.jumpmind.pos.translate;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.POSSessionInfo;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.server.model.Action;
 import org.slf4j.Logger;

@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.FormOptionItem;
-import org.jumpmind.pos.core.screen.OptionItem;
+import org.jumpmind.pos.core.ui.OptionItem;
 import org.jumpmind.pos.core.ui.message.ChooseOptionsUIMesage;
 import org.jumpmind.pos.core.ui.message.UIMessageType;
 import org.jumpmind.pos.server.model.Action;

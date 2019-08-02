@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.Signature;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.SignatureCaptureScreen;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.translate.ILegacyRegisterStatusService.Status;

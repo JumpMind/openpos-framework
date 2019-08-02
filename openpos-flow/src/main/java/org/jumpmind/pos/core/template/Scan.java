@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import org.jumpmind.pos.core.model.FieldInputType;
 
+@Deprecated
 public class Scan implements Serializable {
 
     private static final long serialVersionUID = 1L;

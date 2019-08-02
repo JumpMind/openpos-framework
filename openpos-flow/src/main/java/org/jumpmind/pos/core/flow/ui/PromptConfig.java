@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jumpmind.pos.core.model.FieldInputType;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.DialogProperties;
 
 public class PromptConfig {

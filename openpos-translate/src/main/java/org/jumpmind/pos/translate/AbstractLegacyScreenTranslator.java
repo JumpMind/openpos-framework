@@ -15,16 +15,12 @@ import java.util.Properties;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.text.WordUtils;
 import org.jumpmind.pos.core.ModeConstants;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.screen.DynamicFormScreen;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.Screen;
-import org.jumpmind.pos.core.screen.Workstation;
-import org.jumpmind.pos.core.template.BlankWithBarTemplate;
 import org.jumpmind.pos.core.template.SellTemplate;
-import org.jumpmind.pos.core.ui.message.SaleUIMessage;
 import org.jumpmind.pos.translate.ILegacyRegisterStatusService.Status;
 
 public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends AbstractScreenTranslator<T>
@@ -103,28 +99,7 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
         buildBackButton();
         logAvailableLocalMenuItems();
         buildStatusItems();
-        
-        ILegacyStatusBeanModel statusModel = legacyPOSBeanService.getLegacyStatusBeanModel(legacyScreen);
-        int tillStatus = statusModel.checkThresholdStatus(posSessionInfo);
-        
-        if (legacyStoreProperties != null && screen.getTemplate() instanceof SellTemplate) {
-            SellTemplate template = screen.getTemplate();
-            Workstation workstation = new Workstation();
-            workstation.setStoreId(legacyStoreProperties.getStoreNumber());
-            workstation.setWorkstationId(legacyStoreProperties.getWorkstationNumber());
-            workstation.setTillThresholdStatus(tillStatus);
-            template.setWorkstation(workstation);
-        } 
 
-        if (legacyStoreProperties != null && screen.getTemplate() instanceof BlankWithBarTemplate) {
-            BlankWithBarTemplate template = screen.getTemplate();
-            Workstation workstation = new Workstation();
-            workstation.setStoreId(legacyStoreProperties.getStoreNumber());
-            workstation.setWorkstationId(legacyStoreProperties.getWorkstationNumber());
-            workstation.setTillThresholdStatus(tillStatus);
-            template.setWorkstation(workstation);
-        }
-                
         setScreenProperties();
 
         if (getLegacyUIModel() != null) {
@@ -166,19 +141,6 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
         if (isBlank(screen.getIcon())) {
             screen.setIcon(iconRegistry.get(legacyScreen.getSpecName()));
         }
-        
-        if (screen.getTemplate() instanceof SellTemplate) {
-            SellTemplate template = screen.getTemplate();
-            template.setOperatorText(WordUtils.capitalizeFully(getOperatorText()));
-            
-            ILegacyStatusBeanModel statusModel = legacyPOSBeanService.getLegacyStatusBeanModel(legacyScreen);
-            template.setSystemStatus(statusModel.getSystemStatus());
-        }
-        
-        if (screen.getTemplate() instanceof BlankWithBarTemplate) {
-            BlankWithBarTemplate template = screen.getTemplate();
-            template.setOperatorText(WordUtils.capitalizeFully(getOperatorText()));
-             }
     }
 
     protected String getScreenName() {

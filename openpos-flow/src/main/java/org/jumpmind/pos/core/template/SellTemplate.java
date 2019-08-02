@@ -3,11 +3,12 @@ package org.jumpmind.pos.core.template;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jumpmind.pos.core.screen.ActionItem;
-import org.jumpmind.pos.core.screen.ActionItemGroup;
+import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItemGroup;
 import org.jumpmind.pos.core.screen.Workstation;
 import org.jumpmind.pos.core.template.Scan.ScanType;
 
+@Deprecated
 public class SellTemplate extends AbstractTemplate {
 
     protected static final long serialVersionUID = 1L;

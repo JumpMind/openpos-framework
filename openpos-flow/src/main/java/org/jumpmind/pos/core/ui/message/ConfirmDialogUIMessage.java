@@ -1,15 +1,17 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui.message;
 
 import org.jumpmind.pos.core.model.MessageType;
+import org.jumpmind.pos.core.screen.ScreenType;
 import org.jumpmind.pos.core.ui.ConfirmationDialog;
+import org.jumpmind.pos.core.ui.UIMessage;
 
-public class ConfirmDialogScreen extends Screen {
+public class ConfirmDialogUIMessage extends UIMessage {
 	private static final long serialVersionUID = 1L;
 	
     public ConfirmationDialog confirmationDialog;
 
 	
-    public ConfirmDialogScreen(ConfirmationDialog confirmationDialog) {
+    public ConfirmDialogUIMessage(ConfirmationDialog confirmationDialog) {
         setType(MessageType.Dialog);
         setScreenType(ScreenType.ConfirmDialog);
 	    this.confirmationDialog = confirmationDialog;

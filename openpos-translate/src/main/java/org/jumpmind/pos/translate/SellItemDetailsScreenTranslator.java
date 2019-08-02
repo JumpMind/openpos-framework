@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.FormDisplayField;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.SellItem;
 import org.jumpmind.pos.core.screen.SellItemDetailScreen;
 import org.jumpmind.pos.core.template.SellTemplate;

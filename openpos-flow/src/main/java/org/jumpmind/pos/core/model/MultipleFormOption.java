@@ -2,7 +2,7 @@ package org.jumpmind.pos.core.model;
 
 import java.io.Serializable;
 
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 
 @Deprecated
 public class MultipleFormOption implements Serializable {

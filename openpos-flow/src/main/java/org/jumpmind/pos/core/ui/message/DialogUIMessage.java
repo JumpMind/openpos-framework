@@ -1,6 +1,6 @@
 package org.jumpmind.pos.core.ui.message;
 
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.Line;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.messagepart.DialogHeaderPart;

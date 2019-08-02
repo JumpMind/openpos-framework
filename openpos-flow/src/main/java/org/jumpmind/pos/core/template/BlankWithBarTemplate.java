@@ -3,6 +3,7 @@ package org.jumpmind.pos.core.template;
 import org.jumpmind.pos.core.screen.Workstation;
 import org.jumpmind.pos.core.template.Scan.ScanType;
 
+@Deprecated
 public class BlankWithBarTemplate extends AbstractTemplate {
 
     private static final long serialVersionUID = 1L;

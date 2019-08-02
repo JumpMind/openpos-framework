@@ -2,7 +2,7 @@ package org.jumpmind.pos.core.model;
 
 import java.io.Serializable;
 
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 
 public class FormButton extends ActionItem implements IFormElement, Serializable {
     private static final long serialVersionUID = 1L;

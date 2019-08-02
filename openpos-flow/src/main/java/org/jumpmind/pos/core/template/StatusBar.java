@@ -7,6 +7,7 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 
+@Deprecated
 public class StatusBar implements Serializable {
 
     private static final long serialVersionUID = 1L;

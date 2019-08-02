@@ -1,6 +1,6 @@
 package org.jumpmind.pos.core.ui.messagepart;
 
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasBackButton;
 
 import java.io.Serializable;

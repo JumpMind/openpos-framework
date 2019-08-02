@@ -3,8 +3,7 @@ package org.jumpmind.pos.translate;
 import java.util.List;
 import java.util.Properties;
 
-import org.jumpmind.pos.core.screen.OptionItem;
-import org.jumpmind.pos.core.screen.PromptWithOptionsScreen;
+import org.jumpmind.pos.core.ui.OptionItem;
 
 /**
  * General purpose translator that results in rendering a screen with the OrPOS

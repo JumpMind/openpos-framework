@@ -1,7 +1,7 @@
 package org.jumpmind.pos.core.ui.message;
 
 import org.jumpmind.pos.core.model.DisplayProperty;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 import java.util.ArrayList;
