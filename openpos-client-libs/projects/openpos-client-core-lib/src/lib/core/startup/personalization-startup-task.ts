@@ -1,12 +1,12 @@
 import { IStartupTask } from './startup-task.interface';
-import { PersonalizationService } from '../services/personalization.service';
+import { PersonalizationService } from '../personalization/personalization.service';
 import { Observable, Subject } from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { StartupTaskNames } from './startup-task-names';
 import { Injectable } from '@angular/core';
 import { StartupTaskData } from './startup-task-data';
 import { Params } from '@angular/router';
-import { PersonalizationComponent } from '../components/personalization/personalization.component';
+import { PersonalizationComponent } from '../personalization/personalization.component';
 
 @Injectable({
     providedIn: 'root',

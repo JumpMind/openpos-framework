@@ -4,7 +4,7 @@ import { Logger } from './logger.service';
 
 import { Configuration } from './../../configuration/configuration';
 import { IMessageHandler } from './../interfaces/message-handler.interface';
-import { PersonalizationService } from './personalization.service';
+import { PersonalizationService } from '../personalization/personalization.service';
 
 import { Observable, Subscription, BehaviorSubject, Subject, merge } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
@@ -27,7 +27,7 @@ import { AppInjector } from '../app-injector';
 import { HttpClient } from '@angular/common/http';
 import { PingParams } from '../interfaces/ping-params.interface';
 import { PingResult } from '../interfaces/ping-result.interface';
-import { PersonalizationResponse } from '../interfaces/personalization-response.interface';
+import { PersonalizationResponse } from '../personalization/personalization-response.interface';
 import { ElectronService } from 'ngx-electron';
 
 declare var window: any;

@@ -1,10 +1,10 @@
-import { Logger } from './../../services/logger.service';
+import { Logger } from '../services/logger.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
-import { IScreen } from '../../../shared/components/dynamic-screen/screen.interface';
-import { PersonalizationService } from '../../services/personalization.service';
-import { PersonalizationResponse } from '../../interfaces/personalization-response.interface';
-import { ClientUrlService } from '../../services/client-url.service';
+import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
+import { PersonalizationService } from './personalization.service';
+import { PersonalizationResponse } from './personalization-response.interface';
+import { ClientUrlService } from './client-url.service';
 import { MatDialog } from '@angular/material';
 
 @Component({

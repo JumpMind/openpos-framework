@@ -1,7 +1,7 @@
-import { Logger } from './logger.service';
+import { Logger } from '../services/logger.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PersonalizationResponse } from '../interfaces/personalization-response.interface';
+import { PersonalizationResponse } from './personalization-response.interface';
 
 @Injectable({
     providedIn: 'root',
