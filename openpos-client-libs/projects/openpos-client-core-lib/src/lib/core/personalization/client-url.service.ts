@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
+import { ClientResponse } from './client-response.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -29,7 +30,8 @@ export class ClientUrlService {
         return clientUrl;
     }
 
-    public async checkClientStatus(clientName: string, clientPort: string, appName: string, clientSslEnabled: boolean): Promise<any> {
+    public async checkClientStatus(
+        clientName: string, clientPort: string, appName: string, clientSslEnabled: boolean): Promise<ClientResponse> {
 
         this._clientUrl = this.getClientUrl(clientName, clientPort, appName, clientSslEnabled);
 
