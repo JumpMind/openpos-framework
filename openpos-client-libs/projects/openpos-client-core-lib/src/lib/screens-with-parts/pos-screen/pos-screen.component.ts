@@ -1,4 +1,4 @@
-import { Logger } from './../../core/services/logger.service';
+import { Logger } from '../../core/services/logger.service';
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { deepAssign } from '../../utilites/deep-assign';

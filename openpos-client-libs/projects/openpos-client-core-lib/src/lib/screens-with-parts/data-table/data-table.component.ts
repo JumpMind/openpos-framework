@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
+import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 
-/**
- * TODO: This could proably be moved to screens with parts
- */
+@ScreenComponent({
+    name: 'DataTable'
+})
 @Component({
     selector: 'app-data-table',
     templateUrl: './data-table.component.html',

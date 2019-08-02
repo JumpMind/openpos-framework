@@ -1,6 +1,6 @@
 
 import { IActionItem } from '../../core/actions/action-item.interface';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../pos-screen/pos-screen.component';
 import { Component } from '@angular/core';
 import { DialogInterface, ILine } from './dialog.interface';
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';

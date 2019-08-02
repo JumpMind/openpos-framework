@@ -1,7 +1,7 @@
 import { Component, ViewChild, AfterViewChecked, ElementRef, OnInit } from '@angular/core';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen/pos-screen.component';
 
 @Component({
     selector: 'app-self-checkout-transaction',

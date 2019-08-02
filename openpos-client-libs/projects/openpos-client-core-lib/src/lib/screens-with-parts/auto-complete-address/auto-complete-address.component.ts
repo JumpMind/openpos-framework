@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
+import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 
-/**
- * TODO: Can probably move this to screens with parts
- */
+@ScreenComponent({
+    name: 'AutoCompleteAddressComponent'
+})
 @Component({
   selector: 'app-auto-complete-address',
   templateUrl: './auto-complete-address.component.html',

@@ -3,7 +3,6 @@ import { SharedModule } from '../shared/shared.module';
 
 import { SelectionListScreenComponent } from './selection-list/selection-list-screen.component';
 import { SelectionListScreenDialogComponent } from './selection-list/selection-list-screen-dialog.component';
-import { TemporarilySharedScreens } from '../screens-deprecated/temporarily-shared-screens.module';
 import { GenericDialogComponent } from './dialog/generic-dialog.component';
 import { PromptScreenComponent } from './prompt/prompt-screen.component';
 import { PromptScreenDialogComponent } from './prompt/prompt-screen-dialog.component';
@@ -16,6 +15,8 @@ import { ChooseOptionsScreenDialogComponent } from './choose-options-dialog/choo
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { PromptWithInfoScreenComponent } from './prompt-with-info/prompt-with-info-screen.component';
 import { PromptWithInfoScreenDialogComponent } from './prompt-with-info/prompt-with-info-screen-dialog.component';
+import { DataTableComponent } from './data-table/data-table.component';
+import { AutoCompleteAddressComponent } from './auto-complete-address/auto-complete-address.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -23,7 +24,9 @@ const screens = [
     PromptWithOptionsScreenComponent,
     PromptWithInfoScreenComponent,
     HomeComponent,
-    ReturnComponent
+    ReturnComponent,
+    DataTableComponent,
+    AutoCompleteAddressComponent
 ];
 
 const dialogs = [
@@ -47,8 +50,7 @@ const dialogs = [
         ...dialogs
     ],
     imports: [
-        SharedModule,
-        TemporarilySharedScreens
+        SharedModule
     ],
     exports: [
     ],

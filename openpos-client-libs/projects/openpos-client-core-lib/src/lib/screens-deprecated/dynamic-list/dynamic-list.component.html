@@ -1,8 +1,0 @@
- <div fxFlexFill fxLayout="column" fxLayoutAlign="start" fxLayoutGap="6px" style="padding-top:6px;padding-bottom:6px;">
-	<mat-card-title *ngIf="screen.prompt && screen.template.type === 'Blank'" [ngClass]="{'warn':screen.customerFacing}">{{screen.prompt}}</mat-card-title>		
-	<app-dynamic-list-control fxFlexFill [list]="screen.list" [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions"></app-dynamic-list-control>
-	<!--
-	<mat-card fxFlex="1 1 auto" class="scrollable-content-card" fxLayout="column" fxLayoutAlign="start">
-	</mat-card>
-	-->
-</div>   

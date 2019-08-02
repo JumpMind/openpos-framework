@@ -3,7 +3,7 @@ import { ObservableMedia } from '@angular/flex-layout';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
-import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+import { PosScreen } from '../../screens-with-parts/pos-screen/pos-screen.component';
 
 @Component({
   selector: 'app-self-checkout-home',

@@ -3,7 +3,6 @@
 @import '../shared/layout-components/layout-component-themes';
 @import '../shared/components/component-theme-mixins';
 @import '../shared/screen-parts/screen-part-themes';
-@import '../screens-deprecated/screen-themes';
 @import '../screens-with-parts/screen-with-parts-themes';
 @import '../shared/components/component-theme-mixins';
 @import '../price-checker/price-checker-themes';
@@ -31,7 +30,6 @@
     @include layout-component-themes($theme);
     @include openpos-component-theme-mixins($theme);
     @include screen-part-themes($theme);
-    @include screen-themes($theme);
     @include screen-with-parts-themes($theme);
     @include price-checker-themes($theme);
 
