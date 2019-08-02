@@ -1,5 +1,5 @@
 import { Directive, HostListener, Input, HostBinding, Inject, forwardRef } from '@angular/core';
-import { PersonalizationService } from '../../core/services/personalization.service';
+import { PersonalizationService } from '../../core/personalization/personalization.service';
 
 
 @Directive({

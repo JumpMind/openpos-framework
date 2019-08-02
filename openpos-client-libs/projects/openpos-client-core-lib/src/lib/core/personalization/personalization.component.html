@@ -1,0 +1,105 @@
+<div>
+    <mat-vertical-stepper linear='true'>
+        <mat-step *ngIf="navigateExternal" [stepControl]="firstFormGroup">
+            <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Enter the client name and port</ng-template>
+                <mat-form-field>
+                    <input matInput placeholder="Client Name" formControlName="clientName" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Client Port" formControlName="clientPort" required novalidate
+                        type="tel" pattern="[0-9]*">
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="App Name" formControlName="appName" required>
+                </mat-form-field>
+                <mat-checkbox formControlName="sslEnabled">SSL?</mat-checkbox>
+                <div *ngIf="firstFormGroup.status === 'PENDING'">
+                    Trying to ping client url ...
+                </div>
+                <div class="warn" style="word-wrap: break-word"
+                    *ngIf="firstFormGroup.errors && firstFormGroup.errors.message">
+                    Could not ping the client url: {{firstFormGroup.errors.message}}
+                </div>
+                <div class="warn"
+                    *ngIf="firstFormGroup.get('clientPort').errors && firstFormGroup.get('clientPort').errors.pattern ">
+                    The port should be numbers only
+                </div>
+                <div>
+                    <button mat-button matStepperNext color='primary'>Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="secondFormGroup">
+            <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Enter the server name and port</ng-template>
+                <mat-form-field>
+                    <input matInput placeholder="Server Name" formControlName="serverName" required>
+                </mat-form-field>
+                <mat-form-field>
+                    <input matInput placeholder="Server Port" formControlName="serverPort" required novalidate
+                        type="tel" pattern="[0-9]*">
+                </mat-form-field>
+                <mat-checkbox formControlName="sslEnabled">SSL?</mat-checkbox>
+                <div *ngIf="secondFormGroup.status === 'PENDING'">
+                    Trying to ping server ...
+                </div>
+                <div class="warn" style="word-wrap: break-word"
+                    *ngIf="secondFormGroup.errors && secondFormGroup.errors.message">
+                    Could not ping the server: {{secondFormGroup.errors.message}}
+                </div>
+                <div class="warn"
+                    *ngIf="secondFormGroup.get('serverPort').errors && secondFormGroup.get('serverPort').errors.pattern ">
+                    The port should be numbers only
+                </div>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext color='primary'>Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step [stepControl]="lastFormGroup">
+            <form *ngIf="lastFormGroup" [formGroup]="lastFormGroup">
+                <ng-template matStepLabel>Enter device information</ng-template>
+                <mat-form-field>
+                    <input matInput placeholder="Device ID" formControlName="deviceId" required novalidate
+                        pattern="[a-zA-Z0-9\-]+">
+                </mat-form-field>
+
+                <ng-container *ngIf="serverResponse && serverResponse.parameters">
+                    <mat-form-field *ngFor="let prop of serverResponse.parameters">
+                        <input matInput placeholder="{{prop.label}}" formControlName="{{prop.property}}" required
+                            novalidate pattern="[a-zA-Z0-9]*">
+                    </mat-form-field>
+                </ng-container>
+
+                <div class="warn"
+                    *ngIf="lastFormGroup.get('deviceId').errors && lastFormGroup.get('deviceId').errors.pattern">
+                    The Device ID must match openpos.ui.personalization.devicePattern
+                </div>
+
+                <ng-container *ngIf="serverResponse && serverResponse.parameters">
+                    <ng-container *ngFor="let prop of serverResponse.parameters">
+                        <div class="warn"
+                            *ngIf="lastFormGroup.get(prop.property).errors && lastFormGroup.get(prop.property).errors.pattern">
+                            The personalization parameters must be alphanumeric
+                        </div>
+                    </ng-container>
+                </ng-container>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext color='primary'>Next</button>
+                </div>
+            </form>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>Done</ng-template>
+            To finish the setup process press the Complete button
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext color='primary' (click)="personalize()">Complete</button>
+            </div>
+        </mat-step>
+    </mat-vertical-stepper>
+
+</div>

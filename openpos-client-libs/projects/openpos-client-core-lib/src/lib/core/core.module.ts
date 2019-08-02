@@ -13,7 +13,7 @@ import { AppInjector } from './app-injector';
 
 import { throwIfAlreadyLoaded } from './module-import-guard';
 import { StartupComponent } from './startup/startup.component';
-import { PersonalizationService } from './services/personalization.service';
+import { PersonalizationService } from './personalization/personalization.service';
 import { ConfigurationService } from './services/configuration.service';
 import { DialogService } from './services/dialog.service';
 import { ErrorHandlerService } from './services/errorhandler.service';
@@ -30,7 +30,7 @@ import { TrainingOverlayService } from './services/training-overlay.service';
 import { KeyPressProvider } from '../shared/providers/keypress.provider';
 import { fromEvent, Observable } from 'rxjs';
 import { ConfirmationDialogComponent } from './components/confirmation-dialog/confirmation-dialog.component';
-import { PersonalizationComponent } from './components/personalization/personalization.component';
+import { PersonalizationComponent } from './personalization/personalization.component';
 import { ToastService } from './services/toast.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';

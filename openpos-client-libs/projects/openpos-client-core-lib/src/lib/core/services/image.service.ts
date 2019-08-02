@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { PersonalizationService } from './personalization.service';
+import { PersonalizationService } from '../personalization/personalization.service';
 import { SessionService } from './session.service';
 
 @Injectable({

@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Logger } from './logger.service';
 import { FileUploadResult } from './../interfaces/file-upload-result.interface';
-import { PersonalizationService } from './personalization.service';
+import { PersonalizationService } from '../personalization/personalization.service';
 import { CordovaService } from './cordova.service';
 import { Subscription } from 'rxjs';
 import { FileChunkReader } from './../../shared/utils/filechunkreader';
