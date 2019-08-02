@@ -5,12 +5,13 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.screen.ChooseOptionsScreen;
+import org.jumpmind.pos.core.model.FormOptionItem;
 import org.jumpmind.pos.core.screen.OptionItem;
-import org.jumpmind.pos.core.screen.ScreenType;
+import org.jumpmind.pos.core.ui.message.ChooseOptionsUIMesage;
+import org.jumpmind.pos.core.ui.message.UIMessageType;
 import org.jumpmind.pos.server.model.Action;
 
-public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extends AbstractLegacyScreenTranslator<T> { 
+public class ChooseOptionsScreenTranslator<T extends ChooseOptionsUIMesage> extends AbstractLegacyUIMessageTranslator<T> {
     
     protected Function<OptionItem, Boolean> optionItemEvalFunc = null;
     protected InteractionMacro undoMacro;
@@ -32,7 +33,7 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extend
     
     public ChooseOptionsScreenTranslator(ILegacyScreen headlessScreen, Class<T> screenClass, boolean filterDisabledOptions, String[] filteredOptions, String icon) {
         super(headlessScreen, screenClass);
-        screen.setScreenType(ScreenType.ChooseOptions);
+        screen.setScreenType(UIMessageType.CHOOSE_OPTIONS);
         this.filterDisabledOptions = filterDisabledOptions;
         this.filteredOptions = filteredOptions;
         this.icon = icon;
@@ -51,7 +52,7 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extend
         super(headlessScreen, screenClass);
         this.optionItemEvalFunc = optionFilter;
         this.filterDisabledOptions = optionFilter == null;  // If there is an optionFilter, let the optionFilter handle filtering
-        screen.setScreenType(ScreenType.ChooseOptions);
+        screen.setScreenType(UIMessageType.CHOOSE_OPTIONS);
     }
     
     public void setUndoMacro(InteractionMacro undoMacro) {
@@ -65,8 +66,7 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extend
        
         String formattedPromptText = this.getPromptText(this.getLegacyUIModel(), this.getLegacyAssignmentSpec(PROMPT_RESPONSE_PANEL_KEY), 
                 legacyScreen.getResourceBundleFilename()).orElse(null);
-        screen.setPromptText(formattedPromptText);
-        screen.setIcon(this.icon);
+        screen.setInstructions(formattedPromptText);
     }
     
     protected void buildOptions() {
@@ -76,7 +76,7 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsScreen> extend
         if (this.optionItemEvalFunc != null) {
             options = options.stream().filter(o -> { return this.optionItemEvalFunc.apply(o); }).collect(Collectors.toList());
         }
-        screen.setOptions(options);
+        screen.setOptions(options.stream().map( o -> new FormOptionItem(o.getAction(), o.getDisplayValue(), o.getIcon())).collect(Collectors.toList()));
     }
     
     @Override
