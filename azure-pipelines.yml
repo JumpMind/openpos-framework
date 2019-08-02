@@ -40,7 +40,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST*.xml'
-    #codeCoverageToolOption: 'cobertura' # Optional. Options: none, cobertura, jaCoCo
+    codeCoverageToolOption: 'cobertura' # Optional. Options: none, cobertura, jaCoCo
     #codeCoverageClassFilesDirectories: '**/coverage' # Required when codeCoverageToolOption == False
     #codeCoverageClassFilter: # Optional. Comma-separated list of filters to include or exclude classes from collecting code coverage. For example: +:com.*,+:org.*,-:my.app*.*
     #codeCoverageFailIfEmpty: false # Optional
