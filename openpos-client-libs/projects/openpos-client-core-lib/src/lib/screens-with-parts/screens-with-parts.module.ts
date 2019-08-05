@@ -17,6 +17,7 @@ import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.componen
 import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 import { PromptWithInfoScreenComponent } from './prompt-with-info/prompt-with-info-screen.component';
 import { PromptWithInfoScreenDialogComponent } from './prompt-with-info/prompt-with-info-screen-dialog.component';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -24,7 +25,8 @@ const screens = [
     PromptWithOptionsScreenComponent,
     PromptWithInfoScreenComponent,
     HomeComponent,
-    ReturnComponent
+    ReturnComponent,
+    ItemDetailComponent
 ];
 
 const dialogs = [

@@ -1,0 +1,9 @@
+<app-waffle>
+    <app-bacon-strip waffle-header></app-bacon-strip>
+    <app-sausage-links waffle-drawer-content></app-sausage-links>
+    <div waffle-body class="body">
+        <h1>{{screen.itemName}}</h1>
+        <img class="item-image" [src]="screen.imageUrl | imageUrl">
+        <app-display-property *ngFor="let prop of screen.itemProperties" [property]="prop"></app-display-property>
+    </div>
+</app-waffle>
