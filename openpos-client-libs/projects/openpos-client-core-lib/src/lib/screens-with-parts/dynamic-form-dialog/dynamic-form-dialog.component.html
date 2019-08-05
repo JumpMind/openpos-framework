@@ -1,0 +1,3 @@
+<app-dialog-header></app-dialog-header>
+<div *ngIf="screen.instructions">{{screen.instructions}}</div>
+<app-dynamic-form-part [formName]="'form'" [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions"></app-dynamic-form-part>

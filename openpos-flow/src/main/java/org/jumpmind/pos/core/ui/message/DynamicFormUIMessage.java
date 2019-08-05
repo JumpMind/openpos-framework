@@ -16,6 +16,10 @@ public class DynamicFormUIMessage extends UIMessage implements IHasForm {
 
     private List<String> alternateSubmitActions = new ArrayList<String>();
 
+    public DynamicFormUIMessage() {
+        setScreenType(UIMessageType.DYNAMIC_FORM);
+    }
+
     @Override
     public void setForm(Form form) {
         this.form = form;
