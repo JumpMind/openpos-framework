@@ -11,8 +11,8 @@
 	<div *ngIf="data.screenType==='Home'" class="home-screen-logo" (click)="onHome()"></div>
 
 	<span fxFlex="0 1 auto" fxLayout="row" fxLayoutAlign="start center">
-		<mat-icon *ngIf="data && data.operatorText"  class="material-icons">lock_open</mat-icon>
-		<span *ngIf="data && data.operatorText"  class="text-sm" fxHide.xs>
+		<mat-icon *ngIf="data && data.operatorText" class="material-icons" style="vertical-align: middle;">lock_open</mat-icon>
+		<span *ngIf="data && data.operatorText" class="text-sm" fxHide.xs>
 			{{data.operatorText}}&nbsp;on
 			<span *ngIf="data.tillThresholdStatus > 0" class="success">#{{data.workstationId}}-{{data.storeId}}</span>
 			<span *ngIf="data.tillThresholdStatus < 0" class="warn">#{{data.workstationId}}-{{data.storeId}}</span>
