@@ -83,7 +83,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     public onEnter(): void {
         if (this.barcode && this.barcode.trim().length >= this.screenData.scanMinLength) {
-            this.sessionService.onAction(this.screenData.scanActionName, this.barcode);
+            this.sessionService.onAction(this.screenData.keyedActionName, this.barcode);
             this.barcode = '';
         } else if (this.defaultAction && this.defaultAction.enabled) {
             this.sessionService.onAction(this.defaultAction);

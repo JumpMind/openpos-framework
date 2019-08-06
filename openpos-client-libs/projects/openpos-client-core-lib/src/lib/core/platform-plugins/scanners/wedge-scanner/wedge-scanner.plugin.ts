@@ -1,8 +1,8 @@
+import { IScanData } from './../scan.interface';
 import { IScanner } from '../scanner.interface';
 import { Injectable } from '@angular/core';
 import { Observable, of} from 'rxjs';
 import { map, filter, bufferToggle, timeout, catchError, windowToggle, tap, mergeAll} from 'rxjs/operators';
-import { IScanData } from '../scan.interface';
 import { SessionService } from '../../../services/session.service';
 import { WEDGE_SCANNER_ACCEPTED_KEYS } from './wedge-scanner-accepted-keys';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
@@ -186,10 +186,12 @@ interface ControlSequence { modifiers: string[]; key: string; }
 
     private getScanData( s: string ): IScanData {
         let type = s.slice(0, this.codeTypeLength);
+        const scanData: IScanData = {data: s.slice(this.codeTypeLength)};
         if ( !!this.typeMap && this.typeMap.has(type) ) {
             type = this.typeMap.get(type);
+            scanData.type = type;
         }
-        return { type, data: s.slice(this.codeTypeLength)};
+        return scanData;
     }
 
 }

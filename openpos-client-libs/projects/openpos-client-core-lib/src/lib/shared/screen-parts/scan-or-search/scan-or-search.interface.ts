@@ -5,6 +5,7 @@ export interface ScanOrSearchInterface {
     scanMinLength: number;
     scanMaxLength: number;
     scanActionName: string;
+    keyedActionName: string;
     scanSomethingText: string;
     autoFocusOnScan: boolean;
     inputType: FieldInputType;

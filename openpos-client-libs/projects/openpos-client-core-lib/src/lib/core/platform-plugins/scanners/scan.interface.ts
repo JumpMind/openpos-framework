@@ -1,4 +1,4 @@
 export interface IScanData {
-    type: string;
+    type?: string;
     data: string;
 }
