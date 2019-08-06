@@ -36,7 +36,7 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
         if (this.screenData.operatorText && this.screenData.deviceId ) {
             this.operatorInfo = this.screenData.operatorText + ' on ' + this.screenData.deviceId;
         } else {
-            this.operatorInfo = this.screenData.operatorText != null ? this.screenData.operatorText : this.screenData.deviceId;
+            this.operatorInfo = this.screenData.operatorText ? this.screenData.operatorText : this.screenData.deviceId;
         }
     }
 }
