@@ -188,8 +188,10 @@ interface ControlSequence { modifiers: string[]; key: string; }
         let type = s.slice(0, this.codeTypeLength);
         const scanData: IScanData = {data: s.slice(this.codeTypeLength)};
         if ( !!this.typeMap && this.typeMap.has(type) ) {
-            type = this.typeMap.get(type);
-            scanData.type = type;
+            scanData.type = this.typeMap.get(type);
+        }
+        if (!!type && type !== '') {
+           scanData.rawType = type;
         }
         return scanData;
     }
