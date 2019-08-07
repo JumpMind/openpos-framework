@@ -139,7 +139,7 @@ describe('WedgeScanner', () => {
 
         getTestScheduler().flush();
 
-        expect(scanResults[0].type).toEqual('X');
+        expect(scanResults[0].rawType).toEqual('X');
         expect(scanResults[0].data).toEqual('1234AB' + String.fromCharCode(10) + String.fromCharCode(30));
     });
 
@@ -162,7 +162,7 @@ describe('WedgeScanner', () => {
 
         getTestScheduler().flush();
 
-        expect(scanResults[0].type).toEqual('X');
+        expect(scanResults[0].rawType).toEqual('X');
         expect(scanResults[0].data).toEqual('1234AB');
     });
 
@@ -185,7 +185,7 @@ describe('WedgeScanner', () => {
 
         getTestScheduler().flush();
 
-        expect(scanResults[0].type).toEqual('X');
+        expect(scanResults[0].rawType).toEqual('X');
         expect(scanResults[0].data).toEqual('1234ZB');
     });
 
@@ -218,7 +218,7 @@ describe('WedgeScanner', () => {
         dispatchEvent( 'B', false, false );
         dispatchEvent( 'j', true, false );
 
-        expect(scanResults[0].type).toEqual('X');
+        expect(scanResults[0].rawType).toEqual('X');
         expect(scanResults[0].data).toEqual('1234ZB');
     }));
 

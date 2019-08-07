@@ -18,7 +18,7 @@ public class ClientConfigChangedMessage extends Message {
         setConfigType(configType);
     }
 
-    public ClientConfigChangedMessage(String name) {
+    public ClientConfigChangedMessage(String configType) {
         super(MessageType.ConfigChanged);
         setConfigType(configType);
     }
