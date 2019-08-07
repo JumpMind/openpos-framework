@@ -18,6 +18,7 @@ import { LoadingDialogComponent } from './loading-dialog/loading-dialog.componen
 import { PromptWithInfoScreenComponent } from './prompt-with-info/prompt-with-info-screen.component';
 import { PromptWithInfoScreenDialogComponent } from './prompt-with-info/prompt-with-info-screen-dialog.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { TenderComponent } from './tender/tender.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -26,7 +27,8 @@ const screens = [
     PromptWithInfoScreenComponent,
     HomeComponent,
     ReturnComponent,
-    ItemDetailComponent
+    ItemDetailComponent,
+    TenderComponent
 ];
 
 const dialogs = [

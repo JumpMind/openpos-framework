@@ -1,0 +1,48 @@
+<app-form [form]="form">
+<app-waffle>
+    <app-bacon-strip waffle-header></app-bacon-strip>
+    <app-sausage-links waffle-drawer-content></app-sausage-links>
+    <div waffle-title class="text-md">
+        {{screen.instructions}}
+    </div>
+    <div waffle-body gdAreas=   "balance tenderAmount |
+                                 tendersLabel tendersLabel |
+                                 tenders tenders"
+                     gdColumns= "1fr 1fr"
+                     gdRows= "auto auto 1fr">
+            <mat-card class="balance-due" gdArea="balance">
+                <mat-card-title class="text-sm">
+                    {{screen.balanceDue.label}}
+                </mat-card-title>
+                <mat-card-content class="text-xl">
+                    {{screen.balanceDue.value | valueFormatter:'money'}}
+                </mat-card-content>
+            </mat-card>
+    
+            <mat-card class="tender-amount" gdArea="tenderAmount">
+                    <app-dynamic-form-field [formGroup]="form" [formField]="screen.form.formElements[0]"></app-dynamic-form-field>
+            </mat-card>
+            <div class="tenders-label" gdArea="tendersLabel" *ngIf="!!screen.tenderItems">
+                    {{screen.completedTenderListLabel}}
+            </div>
+            <mat-card gdArea="tenders" class="tenders-container serrated-edge">
+                <mat-card-content class="tenders">
+                    <div class="tender-item" *ngFor="let item of screen.tenderItems; index as i;"
+                        gdAreas="type . amount button"
+                        gdColumns="auto 1fr auto auto">
+                        <div gdArea="type">{{item.typeName}}</div>
+                        <div gdArea="amount">{{item.amount | valueFormatter:'money'}}</div>
+                        <app-kebab-button gdArea="button" *ngIf="!!screen.tenderItemActions" 
+                            [menuItems]="screen.tenderItemActions"
+                            (menuItemClick)="onMenuItemClick($event, i)"></app-kebab-button>
+                    </div>
+                    <div *ngIf="!screen.tenderItems || screen.tenderItems.length == 0" class="no-tenders">
+                        <app-icon [iconName]="screen.noCompletedTendersIcon" iconClass="mat-128"></app-icon>
+                        {{screen.noCompletedTendersMessage}}
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        
+    </div>
+</app-waffle>
+</app-form>
