@@ -23,6 +23,9 @@
         .tenders-label{
             @extend .text-md;
         }
+        .tender-item{
+            @extend .text-sm;
+        }
     }
 
 }
