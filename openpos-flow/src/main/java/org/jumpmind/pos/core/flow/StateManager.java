@@ -278,7 +278,10 @@ public class StateManager implements IStateManager {
                 doAction(returnAction); // indirect recursion
             }
         } else {
-            stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), action);
+            //TODO: discuss whether this is how we want to handle cancelled transitions
+            Action cancelAction= new Action("TransitionCancelled");
+            cancelAction.setCausedBy(action);
+            stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         }
 
     }

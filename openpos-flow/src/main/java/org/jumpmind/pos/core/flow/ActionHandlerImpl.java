@@ -22,6 +22,9 @@ public class ActionHandlerImpl {
 
     private static final String METHOD_ON_ANY = "onAnyAction";
 
+    @Autowired
+    private IBeforeActionService beforeActionService;
+
     @Autowired(required = false)
     private IErrorHandler errorHandler;
 
@@ -37,6 +40,9 @@ public class ActionHandlerImpl {
     }
 
     public boolean handleAction(IStateManager stateManager, Object state, Action action) {
+        // Get list of @BeforeAction methods in the state and execute them first
+        beforeActionService.executeBeforeActionMethods(stateManager, state, action);
+
         Method actionMethod = getActionMethod(state, action);
         if (actionMethod != null) {
             invokeActionMethod(stateManager, state, action, actionMethod);
@@ -51,6 +57,9 @@ public class ActionHandlerImpl {
     }
 
     public boolean handleAnyAction(IStateManager stateManager, Object state, Action action) {
+        // Get list of @BeforeAction methods in the state and execute them first
+        beforeActionService.executeBeforeActionMethods(stateManager, state, action);
+        
         Method anyActionMethod = getAnyActionMethod(state);
         if (anyActionMethod != null) {
             invokeActionMethod(stateManager, state, action, anyActionMethod);
@@ -166,5 +175,13 @@ public class ActionHandlerImpl {
                 }
             }
         }
+    }
+
+    public IBeforeActionService getBeforeActionService() {
+        return beforeActionService;
+    }
+
+    public void setBeforeActionService(IBeforeActionService beforeActionService) {
+        this.beforeActionService = beforeActionService;
     }
 }
