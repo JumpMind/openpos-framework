@@ -11,9 +11,8 @@ import org.jumpmind.pos.core.device.IDeviceResponse;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.POSSessionInfo;
-import org.jumpmind.pos.core.screen.NoOpScreen;
-import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.message.NoOpUIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.translate.InteractionMacro.AbortMacro;
 import org.jumpmind.pos.translate.InteractionMacro.DoOnActiveScreen;
@@ -100,7 +99,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                  * This would leave clients waiting for a response. Send a no-op
                  * response so that clients know the server is still alive.
                  */
-                show(new NoOpScreen());
+                show(new NoOpUIMessage());
                 this.lastScreenWasNoOp = true;
             }
         } else {
@@ -212,7 +211,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
         }
     }
 
-    protected void show(Screen screen) {
+    protected void show(UIMessage screen) {
         for (ITranslationManagerSubscriber subscriber : this.subscriberByAppId.values()) {
             if (screen != null && subscriber.isInTranslateState()) {
                 subscriber.showScreen(screen);
@@ -241,15 +240,6 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                     if (newTranslator != null) {
                         newTranslator.setPosSessionInfo(posSessionInfo);
                         stateManager.performInjections(newTranslator);
-                    }
-                    if (newTranslator instanceof AbstractScreenTranslator<?>) {
-                        AbstractScreenTranslator<?> screenTranslator = (AbstractScreenTranslator<?>) newTranslator;
-                        Screen screen = screenTranslator.build();
-                        if(screen.getId() == null){
-                            screen.setId(legacyScreen.getSpecName());
-                        }
-                        subscriber.showScreen(screen);
-                        screenShown = true;
                     }
                     if (newTranslator instanceof AbstractUIMessageTranslator<?>) {
                         AbstractUIMessageTranslator<?> messageTranslator = (AbstractUIMessageTranslator) newTranslator;

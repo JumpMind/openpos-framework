@@ -4,17 +4,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.FormDisplayField;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.screen.SellItem;
-import org.jumpmind.pos.core.screen.SellItemDetailScreen;
 import org.jumpmind.pos.core.template.SellTemplate;
+import org.jumpmind.pos.core.ui.message.ItemDetailUIMessage;
+import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
+import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 import org.jumpmind.pos.server.model.Action;
 
-public class SellItemDetailsScreenTranslator extends AbstractLegacyScreenTranslator<SellItemDetailScreen> {
+public class SellItemDetailsUIMessageTranslator extends AbstractLegacyUIMessageTranslator<ItemDetailUIMessage> {
 
-    public SellItemDetailsScreenTranslator(ILegacyScreen legacyScreen, Class<SellItemDetailScreen> screenClass) {
+    public SellItemDetailsUIMessageTranslator(ILegacyScreen legacyScreen, Class<ItemDetailUIMessage> screenClass) {
         super(legacyScreen, screenClass);
     }
 
@@ -23,8 +26,16 @@ public class SellItemDetailsScreenTranslator extends AbstractLegacyScreenTransla
         super.buildMainContent();
         
         ILegacyPOSListModel legacyPOSListModel = this.getLegacyPOSBeanService().getLegacyPOSListModel(this.getLegacyScreen());
-       
-        screen.setTemplate(new SellTemplate());
+
+        BaconStripPart baconStripPart = new BaconStripPart();
+        List<ActionItem> sausageLinksPart = new ArrayList<>();
+        screen.addMessagePart(MessagePartConstants.BaconStrip, baconStripPart);
+        screen.addMessagePart(MessagePartConstants.SausageLinks, sausageLinksPart);
+
+        baconStripPart.setHeaderText(getScreenName());
+        baconStripPart.setOperatorText(getOperatorText());
+        baconStripPart.setBackButton(getBackButton());
+        baconStripPart.setDeviceId(getDeviceId());
         
         if (!legacyPOSListModel.isEmpty()) {
             ILegacySaleReturnLineItem saleItem = this.legacyPOSBeanService.toILegacyInstance(legacyPOSListModel.firstElement());
@@ -49,23 +60,15 @@ public class SellItemDetailsScreenTranslator extends AbstractLegacyScreenTransla
            
             item.setFields(fields);
             
-            this.screen.setPrompt(String.format("%s - $%s", item.getDescription(), item.getAmount()));
-            this.screen.setItem(item);
+            this.screen.setItemName(String.format("%s - $%s", item.getDescription(), item.getAmount()));
+            this.screen.addItemProperty( new DisplayProperty("Item Number", item.getPosItemId()));
+            this.screen.addItemProperty( new DisplayProperty("UPC Number", formatUPCNumbers(saleItem.getUPCList())));
+            this.screen.addItemProperty( new DisplayProperty( "Description", item.getDescription()));
+            this.screen.addItemProperty( new DisplayProperty( "Current Price", item.getAmount()));
+            this.screen.addItemProperty( new DisplayProperty( "Size", saleItem.getItemSizeCode()));
         }
 
-        ILegacyCargo legacyCargo = getBus().getLegacyCargo();
-        if (legacyCargo != null && legacyCargo.getRetailTransaction() != null) {
-            ILegacyRetailTransaction retailTransaction = legacyCargo.getRetailTransaction();
-            if (retailTransaction != null) {
-                this.screen.getTransaction().setTransactionNumber(retailTransaction.getFormattedTransactionSequenceNumber());
-            }
-        }
-        
-        buildLocalMenuItems();
-    }
-
-    protected void buildLocalMenuItems() {        
-        addLocalMenuItem(new ActionItem("Remove Item", "Remove", false));
+        sausageLinksPart.add(new ActionItem("Remove Item", "Remove", false));
     }
 
     @Override

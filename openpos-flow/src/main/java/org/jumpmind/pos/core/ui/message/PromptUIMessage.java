@@ -16,7 +16,18 @@ import org.jumpmind.pos.core.ui.UIMessage;
 public class PromptUIMessage extends UIMessage {
     
     private static final long serialVersionUID = 1L;
-    
+
+    public static final String TYPE_ALPHANUMERICTEXT = "ALPHANUMERICTEXT";
+    public static final String TYPE_ALPHANUMERICPASSWORD = "ALPHANUMERICPASSWORD";
+    public static final String TYPE_PHONE = "PHONE";
+    public static final String TYPE_CURRENCYTEXT = "CURRENCYTEXT";
+    public static final String TYPE_NUMERICTEXT = "NUMERICTEXT";
+    public static final String TYPE_DATE = "DATE";
+    public static final String TYPE_NO_YEAR_DATE = "NOYEARDATE";
+    public static final String TYPE_ONOFF = "ONOFF";
+    public static final String TYPE_EMAIL = "EMAIL";
+    public static final String TYPE_MONEY = "MONEY";
+
     private String promptIcon;
     private String placeholderText;
     private String hintText;

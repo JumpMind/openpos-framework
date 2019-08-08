@@ -3,7 +3,6 @@ package org.jumpmind.pos.translate;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.screen.IPromptScreen;
 import org.jumpmind.pos.core.screen.IconType;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.message.PromptUIMessage;
@@ -65,7 +64,7 @@ public abstract class AbstractPromptUIMessageTranslator<T extends UIMessage> ext
                 promptScreen.setResponseText(promptAndResponseBeanModel.getResponseText());
                 promptScreen.setEditable(true);
                 
-                if( responseFieldType != null && responseFieldType.equals(IPromptScreen.TYPE_CURRENCYTEXT)) {
+                if( responseFieldType != null && responseFieldType.equals(PromptUIMessage.TYPE_CURRENCYTEXT)) {
                     promptScreen.setResponseType(FieldInputType.Money);
                 }
 
@@ -139,7 +138,7 @@ public abstract class AbstractPromptUIMessageTranslator<T extends UIMessage> ext
             responseFieldType = responseFieldType.substring(responseFieldType.lastIndexOf(".") + 1, responseFieldType.indexOf("Field"))
                     .toUpperCase();
         } else {
-            responseFieldType = IPromptScreen.TYPE_ALPHANUMERICTEXT;
+            responseFieldType = PromptUIMessage.TYPE_ALPHANUMERICTEXT;
         }
 
         return responseFieldType;

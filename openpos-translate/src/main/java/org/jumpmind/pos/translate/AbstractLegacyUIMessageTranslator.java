@@ -4,8 +4,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.ModeConstants;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.screen.DynamicFormScreen;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.message.DynamicFormUIMessage;
 
 import java.util.*;
 
@@ -75,8 +75,8 @@ public abstract class AbstractLegacyUIMessageTranslator<T extends UIMessage> ext
     }
 
     protected Form getForm(UIMessage screen) {
-        if (screen instanceof DynamicFormScreen) {
-            return ((DynamicFormScreen) screen).getForm();
+        if (screen instanceof DynamicFormUIMessage) {
+            return ((DynamicFormUIMessage) screen).getForm();
         } else {
             return null;
         }

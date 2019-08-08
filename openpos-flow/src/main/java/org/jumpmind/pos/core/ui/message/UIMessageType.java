@@ -21,4 +21,5 @@ public final class UIMessageType {
     public static String DYNAMIC_FORM = "DynamicForm";
     public static String ITEM_DETAIL = "ItemDetail";
     public static String TENDER = "Tender";
+    public static String NO_OP = "NoOp";
 }
