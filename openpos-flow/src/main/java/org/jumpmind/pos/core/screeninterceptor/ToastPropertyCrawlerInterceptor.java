@@ -3,7 +3,7 @@ package org.jumpmind.pos.core.screeninterceptor;
 
 import java.util.List;
 
-import org.jumpmind.pos.core.screen.Toast;
+import org.jumpmind.pos.core.ui.Toast;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;

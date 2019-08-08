@@ -1,7 +1,6 @@
 package org.jumpmind.pos.core.service;
 
-import org.jumpmind.pos.core.flow.IMessageInterceptor;
-import org.jumpmind.pos.core.screen.Toast;
+import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 public interface IScreenService {

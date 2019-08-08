@@ -1,6 +1,5 @@
 package org.jumpmind.pos.core.ui.data;
 
-import org.jumpmind.pos.core.screen.SelectionListItem;
 import org.jumpmind.pos.core.ui.UIDataMessage;
 
 import java.util.HashMap;

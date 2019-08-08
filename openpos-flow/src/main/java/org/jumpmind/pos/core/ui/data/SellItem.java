@@ -1,4 +1,4 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui.data;
 
 
 import static org.apache.commons.lang3.StringUtils.isBlank;

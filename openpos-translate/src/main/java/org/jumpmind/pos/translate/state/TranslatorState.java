@@ -11,7 +11,6 @@ import org.jumpmind.pos.core.device.IDeviceRequest;
 import org.jumpmind.pos.core.device.IDeviceResponse;
 import org.jumpmind.pos.core.flow.*;
 import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.screen.Screen;
 import org.jumpmind.pos.core.service.IDeviceService;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;

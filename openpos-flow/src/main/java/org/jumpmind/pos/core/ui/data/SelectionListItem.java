@@ -1,4 +1,6 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui.data;
+
+import org.jumpmind.pos.core.ui.data.SelectionListItemDisplayProperty;
 
 import java.io.Serializable;
 import java.util.ArrayList;

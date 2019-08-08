@@ -8,7 +8,7 @@ import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.FormDisplayField;
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.screen.SellItem;
+import org.jumpmind.pos.core.ui.data.SellItem;
 import org.jumpmind.pos.core.template.SellTemplate;
 import org.jumpmind.pos.core.ui.message.ItemDetailUIMessage;
 import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;

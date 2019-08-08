@@ -1,7 +1,6 @@
 package org.jumpmind.pos.core.ui;
 
 import org.jumpmind.pos.core.model.MessageType;
-import org.jumpmind.pos.core.screen.DialogProperties;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.model.Message;
 

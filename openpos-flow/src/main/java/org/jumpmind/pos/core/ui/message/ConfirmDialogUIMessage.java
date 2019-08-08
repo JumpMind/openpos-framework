@@ -1,7 +1,6 @@
 package org.jumpmind.pos.core.ui.message;
 
 import org.jumpmind.pos.core.model.MessageType;
-import org.jumpmind.pos.core.screen.ScreenType;
 import org.jumpmind.pos.core.ui.ConfirmationDialog;
 import org.jumpmind.pos.core.ui.UIMessage;
 
@@ -13,7 +12,7 @@ public class ConfirmDialogUIMessage extends UIMessage {
 	
     public ConfirmDialogUIMessage(ConfirmationDialog confirmationDialog) {
         setType(MessageType.Dialog);
-        setScreenType(ScreenType.ConfirmDialog);
+        setScreenType(UIMessageType.CONFIRM_DIALOG);
 	    this.confirmationDialog = confirmationDialog;
 	}
 

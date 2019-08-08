@@ -1,6 +1,6 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui;
 
-import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.message.DialogUIMessage;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -120,8 +120,8 @@ public class DialogBuilder {
         this.messages = messages;
     }
     
-    public DialogScreen build() {
-        DialogScreen screen = new DialogScreen();
+    public DialogUIMessage build() {
+        DialogUIMessage screen = new DialogUIMessage();
         screen.setMessage(this.getMessages());
         screen.setTitle(this.getTitle());
         if (this.getDialogProperties() != null) {

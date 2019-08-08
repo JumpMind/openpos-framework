@@ -3,7 +3,7 @@ package org.jumpmind.pos.translate;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.screen.IconType;
+import org.jumpmind.pos.core.ui.IconType;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.message.PromptUIMessage;
 import org.jumpmind.pos.server.model.Action;

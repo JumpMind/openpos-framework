@@ -3,7 +3,7 @@ package org.jumpmind.pos.core.ui.message;
 import java.util.List;
 
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.screen.SellItem;
+import org.jumpmind.pos.core.ui.data.SellItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 public class ReturnTransDetailsUIMessage extends UIMessage {

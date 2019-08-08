@@ -227,8 +227,8 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
 
 
                 ILegacyScreen previousScreen = null;
-                if (lastTranslator instanceof AbstractScreenTranslator<?>) {
-                    previousScreen = ((AbstractScreenTranslator<?>) lastTranslator).getLegacyScreen();
+                if (lastTranslator instanceof AbstractUIMessageTranslator<?>) {
+                    previousScreen = ((AbstractUIMessageTranslator<?>) lastTranslator).getLegacyScreen();
                 }
 
                 if (!screenInterceptor.intercept(legacyScreen, previousScreen, subscriber, this, posSessionInfo)) {

@@ -1,10 +1,11 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.jumpmind.pos.core.model.FormDisplayField;
+import org.jumpmind.pos.core.ui.IItem;
 
 public class DefaultItem implements IItem, Serializable {
     private static final long serialVersionUID = 1L;

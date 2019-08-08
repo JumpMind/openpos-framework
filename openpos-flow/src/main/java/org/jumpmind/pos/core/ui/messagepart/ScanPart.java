@@ -1,7 +1,7 @@
 package org.jumpmind.pos.core.ui.messagepart;
 
 import org.jumpmind.pos.core.model.FieldInputType;
-import org.jumpmind.pos.core.screen.IconType;
+import org.jumpmind.pos.core.ui.IconType;
 
 import java.io.Serializable;
 

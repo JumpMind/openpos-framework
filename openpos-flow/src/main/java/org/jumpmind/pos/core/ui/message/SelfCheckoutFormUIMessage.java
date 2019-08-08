@@ -2,9 +2,9 @@ package org.jumpmind.pos.core.ui.message;
 
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.screen.IHasForm;
-import org.jumpmind.pos.core.screen.IconType;
-import org.jumpmind.pos.core.screen.KeyConstants;
+import org.jumpmind.pos.core.ui.IHasForm;
+import org.jumpmind.pos.core.ui.IconType;
+import org.jumpmind.pos.core.ui.KeyConstants;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.messagepart.ProgressBarPart;
 import org.jumpmind.pos.core.ui.messagepart.SelfCheckoutMenuPart;

@@ -3,7 +3,7 @@ package org.jumpmind.pos.core.model;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.jumpmind.pos.core.screen.SelectionMode;
+import org.jumpmind.pos.core.ui.data.SelectionMode;
 
 import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

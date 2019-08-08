@@ -1,11 +1,9 @@
 package org.jumpmind.pos.core.ui.message;
 
-import org.jumpmind.pos.core.screen.IconType;
-import org.jumpmind.pos.core.screen.KeyConstants;
-import org.jumpmind.pos.core.screen.ScreenType;
+import org.jumpmind.pos.core.ui.IconType;
+import org.jumpmind.pos.core.ui.KeyConstants;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasAutoCompleteAddress;
-import org.jumpmind.pos.core.ui.message.DynamicFormUIMessage;
 import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
 import org.jumpmind.pos.core.ui.messagepart.StatusStripPart;
 
@@ -22,7 +20,7 @@ public class AutoCompleteAddressUIMessage extends DynamicFormUIMessage implement
     private StatusStripPart statusStrip = new StatusStripPart();
 
     public AutoCompleteAddressUIMessage() {
-        setScreenType(ScreenType.AutoCompleteAddress);
+        setScreenType(UIMessageType.AUTO_COMPLETE_ADDRESS);
         ActionItem submitButton = new ActionItem("Next", "Next", IconType.Forward);
         submitButton.setKeybind(KeyConstants.KEY_ENTER);
         setSubmitButton(submitButton);

@@ -13,7 +13,7 @@ import org.jumpmind.pos.core.device.DefaultDeviceResponse;
 import org.jumpmind.pos.core.device.DevicePluginRequest;
 import org.jumpmind.pos.core.device.IDeviceRequest;
 import org.jumpmind.pos.core.device.IDeviceResponse;
-import org.jumpmind.pos.core.screen.Screen;
+import org.jumpmind.pos.core.ui.UIMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,9 +55,9 @@ public class DeviceService implements IDeviceService {
         String mapKey = makeRequestResponseMapKey(appId, nodeId, request.getDeviceId(), request.getRequestId());
         this.requestToResponseMap.put(mapKey, new DeviceResponseMapEntry(futureResponse));
         
-        if (request.getPayload() instanceof Screen) {
+        if (request.getPayload() instanceof UIMessage) {
             logger.info("Now redirecting DeviceRequest for node '{}' with id: {}, type: {}, subtype: {} to the ScreenService to show the provided screen payload ...", nodeId, request.getRequestId(), request.getType(), request.getSubType() );
-            Screen screen = (Screen) request.getPayload();
+            UIMessage screen = (UIMessage) request.getPayload();
             this.decorateScreenAsDeviceRequest(screen, request);
             this.screenService.showScreen(appId, nodeId, screen);
         } else {
@@ -67,7 +67,7 @@ public class DeviceService implements IDeviceService {
         return futureResponse;
     }
     
-    private void decorateScreenAsDeviceRequest(Screen screen, IDeviceRequest request) {
+    private void decorateScreenAsDeviceRequest(UIMessage screen, IDeviceRequest request) {
         // Add the deviceId, requestId and, optionally, the pluginId to the screen so that the screen can still appear to be 
         // device request to the client
         screen.put("requestId", request.getRequestId());

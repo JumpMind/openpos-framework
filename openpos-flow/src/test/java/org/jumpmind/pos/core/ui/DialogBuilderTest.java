@@ -1,9 +1,10 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui;
 
 import static org.junit.Assert.*;
 
-import org.jumpmind.pos.core.screen.DialogBuilder;
-import org.jumpmind.pos.core.screen.DialogScreen;
+import org.jumpmind.pos.core.ui.message.DialogUIMessage;
+import org.jumpmind.pos.core.ui.messagepart.DialogHeaderPart;
+import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,7 +27,7 @@ public class DialogBuilderTest {
     @Test
     public void testDefaultOkCancelDialogBuild() {
         DialogBuilder config = new DialogBuilder(DialogBuilder.OK_CANCEL_TYPE, "Message Line 1");
-        DialogScreen screen = config.build();
+        DialogUIMessage screen = config.build();
         
         assertEquals(2, screen.getButtons().size());
         assertEquals(1, screen.getButtons().stream().filter(
@@ -35,8 +36,8 @@ public class DialogBuilderTest {
         assertEquals(1, screen.getButtons().stream().filter(
                 m -> DialogBuilder.OK_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.OK_BUTTON_KEY.equals(m.getAction())).count()
         );
-        
-        assertNull(screen.getTitle());
+        DialogHeaderPart headerPart = (DialogHeaderPart)screen.get(MessagePartConstants.DialogHeader);
+        assertNull(headerPart.getHeaderText());
         assertEquals(1, screen.getMessage().size());
         assertEquals("Message Line 1", screen.getMessage().get(0));
     }
@@ -49,14 +50,15 @@ public class DialogBuilderTest {
     @Test
     public void testDefaultOkDialogBuild() {
         DialogBuilder config = new DialogBuilder(DialogBuilder.OK_TYPE, "Message Line 1", "Message Line 2");
-        DialogScreen screen = config.build();
+        DialogUIMessage screen = config.build();
         
         assertEquals(1, screen.getButtons().size());
         assertEquals(1, screen.getButtons().stream().filter(
                 m -> DialogBuilder.OK_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.OK_BUTTON_KEY.equals(m.getAction())).count()
         );
-        
-        assertNull(screen.getTitle());
+
+        DialogHeaderPart headerPart = (DialogHeaderPart)screen.get(MessagePartConstants.DialogHeader);
+        assertNull(headerPart.getHeaderText());
         assertEquals(2, screen.getMessage().size());
         assertEquals("Message Line 1", screen.getMessage().get(0));
         assertEquals("Message Line 2", screen.getMessage().get(1));
@@ -71,7 +73,7 @@ public class DialogBuilderTest {
     public void testCustomOkButton_ForOkCancelDialogBuild() {
         DialogBuilder config = new DialogBuilder(DialogBuilder.OK_CANCEL_TYPE, "Message Line 1")
                 .title("My title").putAction(DialogBuilder.OK_BUTTON_KEY, "customOkAction");
-        DialogScreen screen = config.build();
+        DialogUIMessage screen = config.build();
         
         assertEquals(2, screen.getButtons().size());
         assertEquals(1, screen.getButtons().stream().filter(
@@ -80,8 +82,8 @@ public class DialogBuilderTest {
         assertEquals(1, screen.getButtons().stream().filter(
                 m -> DialogBuilder.OK_BUTTON_KEY.equals(m.getTitle()) && "customOkAction".equals(m.getAction())).count()
         );
-        
-        assertEquals("My title", screen.getTitle());
+        DialogHeaderPart headerPart = (DialogHeaderPart)screen.get(MessagePartConstants.DialogHeader);
+        assertEquals("My title", headerPart.getHeaderText());
         assertEquals(1, screen.getMessage().size());
         assertEquals("Message Line 1", screen.getMessage().get(0));
         
@@ -96,7 +98,7 @@ public class DialogBuilderTest {
     public void testCustomButtonTitle() {
         DialogBuilder config = new DialogBuilder(DialogBuilder.OK_CANCEL_TYPE, "Message Line 1")
                 .title("My title").putAction(DialogBuilder.OK_BUTTON_KEY, "Yes", "customOkAction");
-        DialogScreen screen = config.build();
+        DialogUIMessage screen = config.build();
 
         assertEquals(1, screen.getButtons().stream().filter(
                 m -> "Yes".equals(m.getTitle()) && "customOkAction".equals(m.getAction())).count()

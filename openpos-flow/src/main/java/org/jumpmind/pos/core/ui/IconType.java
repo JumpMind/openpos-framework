@@ -1,4 +1,4 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui;
 
 public interface IconType {
     public static final String Account = "Account"; //account_balance

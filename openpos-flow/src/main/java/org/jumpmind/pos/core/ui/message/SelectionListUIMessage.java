@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.screen.SelectionListItem;
+import org.jumpmind.pos.core.ui.data.SelectionListItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 

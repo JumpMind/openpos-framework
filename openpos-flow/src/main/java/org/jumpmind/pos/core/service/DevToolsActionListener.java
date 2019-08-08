@@ -18,8 +18,7 @@ import org.jumpmind.pos.core.flow.ScopeValue;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.javapos.SimulatedScannerService;
-import org.jumpmind.pos.core.screen.ScopeField;
-import org.jumpmind.pos.core.screen.ScreenType;
+import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
@@ -93,7 +92,7 @@ public class DevToolsActionListener implements IActionListener {
     
     private Message createMessage(IStateManager sm) {
         Message message = new Message();
-        message.setType(ScreenType.DevTools);
+        message.setType(MessageType.DevTools);
         message.put("name", "DevTools::Get");
         setScopes(sm, message);
         setCurrentStateAndActions(sm, message);

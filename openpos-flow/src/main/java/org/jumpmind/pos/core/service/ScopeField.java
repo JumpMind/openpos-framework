@@ -1,4 +1,4 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.service;
 
 import java.io.Serializable;
 

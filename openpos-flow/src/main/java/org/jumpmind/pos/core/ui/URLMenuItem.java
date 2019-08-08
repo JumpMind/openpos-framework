@@ -1,9 +1,8 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui;
 
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
-import org.jumpmind.pos.core.ui.ActionItem;
 
 public class URLMenuItem extends ActionItem {
 

@@ -1,4 +1,4 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui;
 
 import java.util.List;
 

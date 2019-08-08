@@ -2,8 +2,8 @@ package org.jumpmind.pos.core.service;
 
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
-import org.jumpmind.pos.core.screen.DialogProperties;
-import org.jumpmind.pos.core.screen.IconType;
+import org.jumpmind.pos.core.ui.DialogProperties;
+import org.jumpmind.pos.core.ui.IconType;
 import org.jumpmind.pos.core.ui.message.DialogUIMessage;
 import org.jumpmind.pos.core.ui.messagepart.DialogHeaderPart;
 import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
