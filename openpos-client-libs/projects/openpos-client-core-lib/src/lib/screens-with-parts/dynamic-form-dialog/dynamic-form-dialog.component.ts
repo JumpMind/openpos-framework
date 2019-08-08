@@ -5,7 +5,7 @@ import { DynamicFormDialogInterface } from './dynamic-form-dialog.interface';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 
 @DialogComponent({
-    name: 'DynamicFormDialog',
+    name: 'DynamicForm',
 })
 @Component({
   selector: 'app-dynamic-form-dialog',

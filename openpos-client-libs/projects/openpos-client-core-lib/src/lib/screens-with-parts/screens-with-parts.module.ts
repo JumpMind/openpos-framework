@@ -22,6 +22,7 @@ import { SaleComponent } from './sale/sale.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { TenderComponent } from './tender/tender.component';
 import { SignatureCaptureComponent } from './signature-capture/signature-capture.component';
+import { DynamicFormDialogComponent } from './dynamic-form-dialog/dynamic-form-dialog.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -47,7 +48,8 @@ const dialogs = [
     ChooseOptionsScreenDialogComponent,
     ReturnTransDetailsDialogComponent,
     ConfirmDialogComponent,
-    LoadingDialogComponent
+    LoadingDialogComponent,
+    DynamicFormDialogComponent
 ];
 
 @NgModule({
