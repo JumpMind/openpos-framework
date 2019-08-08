@@ -13,7 +13,8 @@ import { Subscription } from 'rxjs';
 })
 @Component({
   selector: 'app-dynamic-form',
-  templateUrl: './dynamic-form.component.html'
+  templateUrl: './dynamic-form.component.html',
+  styleUrls: ['./dynamic-form.component.scss']
 })
 export class DynamicFormComponent extends PosScreen<any> implements OnDestroy {
 

@@ -1,0 +1,25 @@
+.dynamic-form-wrapper {
+    background-color: #fafafa;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.scrollable-content-card {
+    overflow: hidden;
+}
+
+.dynamic-form-content {
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.spacer {
+    flex: 1;
+}
+
+app-status-strip {
+    padding-left: 24px;
+    padding-right: 24px;
+    padding-bottom: 16px;
+}
