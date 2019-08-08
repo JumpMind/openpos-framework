@@ -24,4 +24,5 @@ public final class UIMessageType {
     public static String NO_OP = "NoOp";
     public static String AUTO_COMPLETE_ADDRESS = "AutoCompleteAddress";
     public static String CONFIRM_DIALOG = "ConfirmDialog";
+    public static String DATA_TABLE = "DataTable";
 }
