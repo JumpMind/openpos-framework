@@ -21,6 +21,7 @@ import { AutoCompleteAddressComponent } from './auto-complete-address/auto-compl
 import { SaleComponent } from './sale/sale.component';
 import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { TenderComponent } from './tender/tender.component';
+import { SignatureCaptureComponent } from './signature-capture/signature-capture.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -33,7 +34,8 @@ const screens = [
     AutoCompleteAddressComponent,
     SaleComponent,
     ItemDetailComponent,
-    TenderComponent
+    TenderComponent,
+    SignatureCaptureComponent
 ];
 
 const dialogs = [

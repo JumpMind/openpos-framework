@@ -14,6 +14,7 @@ public final class UIMessageType {
     public static String SELF_CHECKOUT_PROMPT = "SelfCheckoutPrompt";
     public static String SELF_CHECKOUT_TENDER = "SelfCheckoutTender";
     public static String SELF_CHECKOUT_OPTIONS = "SelfCheckoutOptions";
+    public static String SIGNATURE_CAPTURE = "SignatureCapture";
     public static String PRICE_CHECKER_ITEM_DETAIL = "PriceCheckerItemDetail";
     public static String PRICE_CHECKER_HOME = "PriceCheckerHome";
     public static String LOADING_DIALOG = "LoadingDialog";
