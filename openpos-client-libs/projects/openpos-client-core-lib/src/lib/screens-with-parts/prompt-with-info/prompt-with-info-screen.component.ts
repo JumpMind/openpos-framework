@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { PromptScreenComponent } from '../prompt/prompt-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { PromptWithInfoInterface } from './prompt-with-info.interface';

@@ -13,11 +13,14 @@ import { ReturnComponent } from './return/return.component';
 import { ReturnTransDetailsDialogComponent } from './return/return-trans-details/return-trans-details-dialog.component';
 import { ChooseOptionsScreenDialogComponent } from './choose-options-dialog/choose-options-screen-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
+import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
 import { PromptWithInfoScreenComponent } from './prompt-with-info/prompt-with-info-screen.component';
 import { PromptWithInfoScreenDialogComponent } from './prompt-with-info/prompt-with-info-screen-dialog.component';
 import { DataTableComponent } from './data-table/data-table.component';
 import { AutoCompleteAddressComponent } from './auto-complete-address/auto-complete-address.component';
 import { SaleComponent } from './sale/sale.component';
+import { ItemDetailComponent } from './item-detail/item-detail.component';
+import { TenderComponent } from './tender/tender.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -28,7 +31,9 @@ const screens = [
     ReturnComponent,
     DataTableComponent,
     AutoCompleteAddressComponent,
-    SaleComponent
+    SaleComponent,
+    ItemDetailComponent,
+    TenderComponent
 ];
 
 const dialogs = [
@@ -39,7 +44,8 @@ const dialogs = [
     PromptWithInfoScreenDialogComponent,
     ChooseOptionsScreenDialogComponent,
     ReturnTransDetailsDialogComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    LoadingDialogComponent
 ];
 
 @NgModule({

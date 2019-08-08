@@ -17,6 +17,7 @@ public class ScanPart implements Serializable{
     private ScanType scanType;
     private String scanIcon = IconType.Barcode;
     private String scanActionName = "Scan";
+    private String keyedActionName = "Scan";
     private String scanSomethingText = "Scan/Key Something";
     private boolean autoFocusOnScan = false;
     private FieldInputType inputType = FieldInputType.AlphanumericText;
@@ -83,5 +84,13 @@ public class ScanPart implements Serializable{
 
     public void setScanIcon(String scanIcon) {
         this.scanIcon = scanIcon;
+    }
+
+    public void setKeyedActionName(String keyedActionName) {
+        this.keyedActionName = keyedActionName;
+    }
+
+    public String getKeyedActionName() {
+        return this.keyedActionName;
     }
 }

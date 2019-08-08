@@ -1,0 +1,39 @@
+[waffle-title]{
+    margin-left:32px;
+    margin-top:16px;
+}
+
+[waffle-body]{
+    height: 100%;
+}
+
+[waffle-footer]{
+    margin-left:32px;
+    margin-bottom:8px
+}
+
+.tenders-label{
+    margin-left:32px;
+}
+
+.balance-due{
+    text-align: center;
+}
+
+.no-tenders{
+    text-align: center;
+}
+
+.tenders{
+    overflow-y: scroll;
+}
+
+.tenders-container{
+    display: flex;
+    flex-direction: column;
+    min-height: 50%;
+}
+
+.tender-item{
+    align-items: center;
+}

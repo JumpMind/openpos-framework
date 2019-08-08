@@ -120,7 +120,7 @@ TODO explain how theming works
 
 ## Build
 
-There are 2 components to building this library, building and minifying the angular files and bundling the SASS theme files into a single flat scss file. This normally will be done by the build server but can be done manually one time by running `npm run build`. This will execute `ng build openpos-client-core-lib` followed by `scss-bundle -c projects/openpos-client-core-lib/scss-bundle.config.json`. This does a production build that places the build artifacts in `/dist/openpos-client-core-lib`
+There are 2 components to building this library, building and minifying the angular files and bundling the SASS theme files into a single flat scss file. This normally will be done by the build server but can be done manually by running `npm run build`. This will execute `ng build openpos-client-core-lib` followed by `scss-bundle -c projects/openpos-client-core-lib/scss-bundle.config.json`. This does a production build that places the build artifacts in `/dist/openpos-client-core-lib`
 
 ## Publishing
 

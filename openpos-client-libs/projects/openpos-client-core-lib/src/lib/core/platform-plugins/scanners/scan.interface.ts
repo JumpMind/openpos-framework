@@ -1,4 +1,5 @@
 export interface IScanData {
-    type: string;
+    rawType?: string;
+    type?: string;
     data: string;
 }

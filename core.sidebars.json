@@ -29,5 +29,8 @@
     ],
     "Personalization": [
         "personalization"
+    ],
+    "Icons": [
+        "available-icons"
     ]
 }

@@ -8,7 +8,6 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 import { Configuration } from '../../configuration/configuration';
 import { Observable, of, merge, Subject, BehaviorSubject } from 'rxjs';
 import { ISelectableListData } from '../../shared/components/selectable-item-list/selectable-list-data.interface';
-import { MessageProvider } from '../../shared/providers/message.provider';
 import { filter, map } from 'rxjs/operators';
 import { ISelectionListItem } from './selection-list-item.interface';
 import { SessionService } from '../../core/services/session.service';

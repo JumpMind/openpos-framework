@@ -1,0 +1,31 @@
+@import "../../styles/mixins/typography";
+
+@mixin tender-theme($theme){
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground );
+    $background: map-get($theme, background );
+
+    app-tender{
+        .balance-due{
+            color: mat-color($foreground, secondary-text)
+        }
+        .no-tenders{
+            color: mat-color($foreground, secondary-text)
+        }
+        .tender-amount{
+            .mat-form-field{
+                @extend .text-md;
+            }
+        }
+        .tenders-label{
+            @extend .text-md;
+        }
+        .tender-item{
+            @extend .text-sm;
+        }
+    }
+
+}

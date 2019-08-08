@@ -9,7 +9,8 @@ import { DynamicFormFieldComponent } from '../dynamic-form-field/dynamic-form-fi
  */
 @Component({
     selector: 'app-form',
-    templateUrl: './form.component.html'
+    templateUrl: './form.component.html',
+    styleUrls: ['./form.component.scss']
 })
 export class FormComponent {
 

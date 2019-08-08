@@ -9,6 +9,7 @@ import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.template.SellTemplate;
 import org.jumpmind.pos.core.ui.ActionItem;
 
+@Deprecated
 public class DynamicFormScreen extends Screen implements IHasForm {
 
     private static final long serialVersionUID = 1L;
