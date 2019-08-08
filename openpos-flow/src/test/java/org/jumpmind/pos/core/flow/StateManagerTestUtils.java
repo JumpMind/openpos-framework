@@ -30,7 +30,9 @@ public class StateManagerTestUtils {
         TestUtil.setField(localeMessageFactory, "supportedLocales", new String[] {"en_US"});
         TestUtil.setField(stateManager, "localeMessageFactory", localeMessageFactory);
         
-        TestUtil.setField(stateManager, "actionHandler", new ActionHandlerImpl());
+        ActionHandlerImpl actionHandler = new ActionHandlerImpl();
+        TestUtil.setField(actionHandler, "beforeActionService" , new BeforeActionStateLifecycleService());
+        TestUtil.setField(stateManager, "actionHandler", actionHandler);
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());
         TestUtil.setField(stateManager, "transitionSteps", Arrays.asList(new TestTransitionStepCancel(), new TestTransitionStepProceed()));
