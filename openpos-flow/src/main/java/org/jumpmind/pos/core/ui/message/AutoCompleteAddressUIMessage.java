@@ -1,7 +1,11 @@
-package org.jumpmind.pos.core.screen;
+package org.jumpmind.pos.core.ui.message;
 
+import org.jumpmind.pos.core.screen.IconType;
+import org.jumpmind.pos.core.screen.KeyConstants;
+import org.jumpmind.pos.core.screen.ScreenType;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasAutoCompleteAddress;
+import org.jumpmind.pos.core.ui.message.DynamicFormUIMessage;
 import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
 import org.jumpmind.pos.core.ui.messagepart.StatusStripPart;
 
@@ -9,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class AutoCompleteAddressScreen extends DynamicFormScreen implements IHasAutoCompleteAddress {
+public class AutoCompleteAddressUIMessage extends DynamicFormUIMessage implements IHasAutoCompleteAddress {
 
     private static final long serialVersionUID = 1L;
 
@@ -17,9 +21,8 @@ public class AutoCompleteAddressScreen extends DynamicFormScreen implements IHas
     private List<ActionItem> sausageLinks = new ArrayList<>();
     private StatusStripPart statusStrip = new StatusStripPart();
 
-    public AutoCompleteAddressScreen() {
+    public AutoCompleteAddressUIMessage() {
         setScreenType(ScreenType.AutoCompleteAddress);
-        setTemplate(null);
         ActionItem submitButton = new ActionItem("Next", "Next", IconType.Forward);
         submitButton.setKeybind(KeyConstants.KEY_ENTER);
         setSubmitButton(submitButton);

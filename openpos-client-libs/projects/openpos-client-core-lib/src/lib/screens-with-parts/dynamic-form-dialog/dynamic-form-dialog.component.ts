@@ -1,7 +1,8 @@
-import { PosScreen } from '../pos-screen.component';
+
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 import { Component } from '@angular/core';
 import { DynamicFormDialogInterface } from './dynamic-form-dialog.interface';
+import { PosScreen } from '../pos-screen/pos-screen.component';
 
 @DialogComponent({
     name: 'DynamicFormDialog',

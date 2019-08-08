@@ -14,6 +14,8 @@ public class DynamicFormUIMessage extends UIMessage implements IHasForm {
 
     private ActionItem submitButton;
 
+    private String instructions;
+
     private List<String> alternateSubmitActions = new ArrayList<String>();
 
     public DynamicFormUIMessage() {
@@ -48,5 +50,14 @@ public class DynamicFormUIMessage extends UIMessage implements IHasForm {
 
     public void addAlternateSubmitAction( String alternatedSubmitAction ) {
 
+    }
+
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 }
