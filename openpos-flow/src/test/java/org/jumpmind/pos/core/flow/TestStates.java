@@ -1,8 +1,10 @@
 package org.jumpmind.pos.core.flow;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.jumpmind.pos.server.model.Action;
 
@@ -358,5 +360,118 @@ public class TestStates {
         public void arrive(Action action) {
             
         }
-    }    
+    }
+    
+    public static class StateWithBeforeActionMethod {
+        
+        boolean onAction1Invoked = false;
+        boolean beforeActionInvoked = false;
+        
+        @ActionHandler
+        public void onAction1(Action action) {
+            assertTrue(this.beforeActionInvoked);
+            this.onAction1Invoked = true;
+        }
+        
+        @BeforeAction
+        public void onBeforeAnyAction(Action action) {
+            assertFalse(this.beforeActionInvoked);
+            assertFalse(this.onAction1Invoked);
+            this.beforeActionInvoked = true;
+            assertEquals("Action1", action.getName());
+        }
+
+    }
+
+    public static class StateWithBeforeActionMethodThatThrowsException extends StateWithBeforeActionMethod {
+        
+        @BeforeAction
+        @Override
+        public void onBeforeAnyAction(Action action) {
+            throw new RuntimeException("Throwing this exception should halt execution of the action since default value of failOnException is true"); 
+        }
+        
+    }
+    
+    public static class StateWithMultipleBeforeActionMethods {
+
+        boolean onAction1Invoked = false;
+        boolean beforeAction_AInvoked = false;
+        boolean beforeAction_BInvoked = false;
+        boolean beforeAction_CInvoked = false;
+        
+        @ActionHandler
+        public void onAction1(Action action) {
+            assertTrue(this.beforeAction_AInvoked);
+            assertTrue(this.beforeAction_BInvoked);
+            assertTrue(this.beforeAction_CInvoked);
+            this.onAction1Invoked = true;
+        }
+        
+        
+        @BeforeAction(order=2)
+        public void onBeforeAnyAction_B(Action action) {
+            assertEquals("Action1", action.getName());
+            assertFalse(this.onAction1Invoked);
+            assertTrue(this.beforeAction_AInvoked);
+            assertFalse(this.beforeAction_BInvoked);
+            assertTrue(this.beforeAction_CInvoked);
+            this.beforeAction_BInvoked = true;
+        }
+        
+        @BeforeAction(order=1)
+        public void onBeforeAnyAction_A(Action action) {
+            assertEquals("Action1", action.getName());
+            assertFalse(this.onAction1Invoked);
+            assertFalse(this.beforeAction_AInvoked);
+            assertFalse(this.beforeAction_BInvoked);
+            assertTrue(this.beforeAction_CInvoked);
+            this.beforeAction_AInvoked = true;            
+        }
+        
+        @BeforeAction(order=-1)
+        public void onBeforeAnyAction_C(Action action) {
+            assertEquals("Action1", action.getName());
+            assertFalse(this.onAction1Invoked);
+            assertFalse(this.beforeAction_AInvoked);
+            assertFalse(this.beforeAction_BInvoked);
+            assertFalse(this.beforeAction_CInvoked);
+            this.beforeAction_CInvoked = true;                        
+        }
+        
+    }
+    
+    public static class StateWithMultipleBeforeActionAndFailOnExceptionIsFalse extends StateWithMultipleBeforeActionMethods {
+        boolean beforeAction_DInvoked = false;
+
+        @BeforeAction(order=-2, failOnException=false)
+        public void onBeforeAnyAction_D(Action action) {
+            assertEquals("Action1", action.getName());
+            assertFalse(this.onAction1Invoked);
+            assertFalse(this.beforeAction_AInvoked);
+            assertFalse(this.beforeAction_BInvoked);
+            assertFalse(this.beforeAction_CInvoked);
+            assertFalse(this.beforeAction_DInvoked);
+            throw new RuntimeException("Throwing this exception should still allow other BeforeAction methods to execute since failOnException=false");
+        }
+
+    }
+
+    public static class StateWithMultipleBeforeActionAndFailOnExceptionIsTrue extends StateWithMultipleBeforeActionMethods {
+        boolean beforeAction_DInvoked = false;
+
+        @BeforeAction(order=0)
+        public void onBeforeAnyAction_D(Action action) {
+            assertEquals("Action1", action.getName());
+            assertFalse(this.onAction1Invoked);
+            // Action_C's order precedes Action_D's, so it should have been invoked already
+            assertTrue(this.beforeAction_CInvoked);
+            assertFalse(this.beforeAction_AInvoked);
+            assertFalse(this.beforeAction_BInvoked);
+            assertFalse(this.beforeAction_DInvoked);
+            throw new RuntimeException("Throwing this exception should not allow BeforeAction_A and BeforeAction_B methods to run");
+        }
+
+    }
+    
 }
