@@ -98,7 +98,7 @@ public class StateManager implements IStateManager {
     private boolean autoSaveState = false;
 
     @Autowired
-    private StateLifecycle stateLifecyce;
+    private StateLifecycle stateLifecycle;
 
     @Autowired
     LocaleMessageFactory localeMessageFactory;
@@ -257,7 +257,7 @@ public class StateManager implements IStateManager {
                     enterSubStateConfig, exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
                     resumeSuspendedState);
 
-            stateLifecyce.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
+            stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
             if (enterSubState) {
                 applicationState.getStateStack().push(applicationState.getCurrentContext());
@@ -271,14 +271,14 @@ public class StateManager implements IStateManager {
             performInjections(newState);
 
             if (resumeSuspendedState == null || returnActionName == null || autoTransition) {
-                stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), action);
+                stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), action);
             } else {
                 Action returnAction = new Action(returnActionName, action.getData());
                 returnAction.setCausedBy(action);
                 doAction(returnAction); // indirect recursion
             }
         } else {
-            stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), action);
+            stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), action);
         }
 
     }
@@ -318,8 +318,10 @@ public class StateManager implements IStateManager {
     }
 
     public void performInjections(Object stateOrStep) {
+        this.logger.trace("Performing injections on {}...", stateOrStep.getClass().getName());
         injector.performInjections(stateOrStep, applicationState.getScope(), applicationState.getCurrentContext());
         refreshDeviceScope();
+        this.logger.trace("Injections completed on {}.", stateOrStep.getClass().getName());
     }
 
     protected void refreshDeviceScope() {
