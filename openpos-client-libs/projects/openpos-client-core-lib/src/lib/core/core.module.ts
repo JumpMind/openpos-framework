@@ -42,6 +42,7 @@ import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-st
 import { WedgeScannerPlugin } from './platform-plugins/scanners/wedge-scanner/wedge-scanner.plugin';
 import { CordovaPlatform } from './platforms/cordova.platform';
 import { InfineaScannerCordovaPlugin } from './platform-plugins/scanners/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
+import { NCRPaymentPlugin } from './platform-plugins/cordova-plugins/ncr-payment-plugin';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
 
 // Add supported locales
@@ -105,6 +106,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: SCANNERS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
+        { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         LocationService,
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
