@@ -16,6 +16,7 @@ import { ChooseOptionsScreenDialogComponent } from './choose-options-dialog/choo
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { PromptWithInfoScreenComponent } from './prompt-with-info/prompt-with-info-screen.component';
 import { PromptWithInfoScreenDialogComponent } from './prompt-with-info/prompt-with-info-screen-dialog.component';
+import { DynamicFormDialogComponent } from './dynamic-form-dialog/dynamic-form-dialog.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -27,6 +28,7 @@ const screens = [
 ];
 
 const dialogs = [
+    DynamicFormDialogComponent,
     SelectionListScreenDialogComponent,
     GenericDialogComponent,
     PromptScreenDialogComponent,

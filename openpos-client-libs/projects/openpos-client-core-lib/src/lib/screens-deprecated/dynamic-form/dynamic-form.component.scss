@@ -1,24 +1,8 @@
-.dynamic-form-wrapper {
-    background-color: #fafafa;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-}
-
-.scrollable-content-card {
+[waffle-body] {
     overflow: hidden;
 }
 
-.dynamic-form-content {
-    padding-left: 24px;
-    padding-right: 24px;
-}
-
-.spacer {
-    flex: 1;
-}
-
-app-status-strip {
+[waffle-footer] {
     padding-left: 24px;
     padding-right: 24px;
     padding-bottom: 16px;
