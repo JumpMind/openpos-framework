@@ -37,6 +37,7 @@ public abstract class AbstractLegacyDialogScreenTranslator extends AbstractLegac
         ILegacyBeanSpec spec = this.getLegacyPOSBeanService().getLegacyBeanSpec(this.getLegacyScreen(), assignmentSpec.getBeanSpecName());
         ILegacyDialogBeanModel dialogModel = this.legacyPOSBeanService.getLegacyDialogBeanModel(this.getLegacyScreen());
         if (dialogModel != null) {
+            logger.info("Dialog resource is: {}", dialogModel.getResourceID());
             Properties resourceBundle = this.legacyPOSBeanService.getLegacyResourceBundleUtil().getGroupText(spec.getSpecName() + "." + dialogModel.getResourceID(),
                     new String[] { legacyScreen.getResourceBundleFilename() }, dialogModel.getLocale());
 
