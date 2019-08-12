@@ -140,7 +140,7 @@ public abstract class AbstractLegacyScreenTranslator<T extends Screen> extends A
     }
     
     protected String getDeviceId() {
-    	return "#" + legacyStoreProperties.getWorkstationNumber() + "-" + legacyStoreProperties.getStoreNumber();
+        return legacyStoreProperties.getStoreNumber() + "-" + legacyStoreProperties.getWorkstationNumber();
     }
     
     protected String getOperatorText() {

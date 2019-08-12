@@ -19,7 +19,6 @@ import { SelectionListComponent } from './selection-list/selection-list.componen
 import { PrintPreviewComponent } from './print-preview/print-preview.component';
 import { ItemOptionsComponent } from './item-options/item-options.component';
 import { CatalogBrowserComponent } from './catalog-browser/catalog-browser.component';
-import { DynamicFormDialogComponent } from './dynamic-form/dynamic-form-dialog.component';
 
 // Templates
 import { TillSummaryComponent } from './till-summary/till-summary.component';
@@ -59,8 +58,7 @@ const screens = [
     DataTableComponent,
     AutoCompleteAddressComponent,
     PromptComponent,
-    HomeComponent,
-    DynamicFormDialogComponent
+    HomeComponent
 ];
 
 const dialogs = [

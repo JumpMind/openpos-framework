@@ -5,7 +5,9 @@ import { DialogComponent } from '../../shared/decorators/dialog-component.decora
 /**
  * @ignore
  */
-
+@DialogComponent({
+    name: 'DynamicForm'
+})
 @Component({
   selector: 'app-dynamic-form-dialog',
   templateUrl: './dynamic-form-dialog.component.html'
