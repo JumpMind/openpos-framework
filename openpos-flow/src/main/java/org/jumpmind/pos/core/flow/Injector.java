@@ -90,7 +90,9 @@ public class Injector {
     protected void performInjectionsImpl(Object target, Scope scope, StateContext currentContext, boolean autowire) {
         Class<?> targetClass = target.getClass();
         if (autowire && applicationContext != null) {
+            logger.trace("Running Spring Autowiring on '{}'...", targetClass.getName());
             applicationContext.autowireBean(target);
+            logger.trace("Spring Autowiring on '{}' completed", targetClass.getName());
         }
         while (targetClass != null) {
             performInjectionsImpl(targetClass, target, scope, currentContext);
@@ -133,6 +135,7 @@ public class Injector {
             name = field.getName();
         }
 
+        logger.trace("Injecting field '{}' on bean {}...", name, target);
         ScopeValue value = null;
 
         switch (scopeType) {
@@ -180,6 +183,7 @@ public class Injector {
         } else if (required) {            
             throw failedToResolveInjection(field, name, targetClass, target, scope, currentContext, scopeType);
         }
+        logger.trace("Injection of field '{}' on bean {} completed", name, target);
     }
 
     protected ScopeValue autoCreate(String name, ScopeType scopeType, Scope scope, StateContext currentContext) {
