@@ -243,10 +243,12 @@ public class StateManager implements IStateManager {
         if (applicationState.getCurrentContext().getState() != null) {
             performOutjections(applicationState.getCurrentContext().getState());
         }
+        
+        boolean enterSubState = enterSubStateConfig != null;
+        stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
         TransitionResult transitionResult = executeTransition(applicationState.getCurrentContext(), newState, action);
         if (transitionResult == TransitionResult.PROCEED) {
-            boolean enterSubState = enterSubStateConfig != null;
             boolean exitSubState = resumeSuspendedState != null;
             String returnActionName = null;
             if (exitSubState) {
@@ -256,9 +258,7 @@ public class StateManager implements IStateManager {
             stateManagerLogger.logStateTransition(applicationState.getCurrentContext().getState(), newState, action, returnActionName,
                     enterSubStateConfig, exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
                     resumeSuspendedState);
-
-            stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
-
+            
             if (enterSubState) {
                 applicationState.getStateStack().push(applicationState.getCurrentContext());
                 applicationState.setCurrentContext(buildSubStateContext(enterSubStateConfig, action));
