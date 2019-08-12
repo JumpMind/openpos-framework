@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 import org.springframework.context.annotation.Scope;
 
+import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,15 +49,10 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
         // Start with default
         tagGroups.add(Arrays.asList("default"));
 
-        // Add each tag individually
-        tagGroups.addAll(tagsForSpecificity.stream().map(Arrays::asList).collect(Collectors.toList()));
-
-        // Create Permutations (tag3, tag2) (tag2, tag1) (tag3, tag2, tag1)
-        for (int i = tagsForSpecificity.size() - 1; i >= 0; i--) {
-            for (int j = i+1; j < tagsForSpecificity.size(); j++) {
-                tagGroups.add(tagsForSpecificity.subList(i, j));
-            }
-        }
+        List<List<String>> uniquePermuations = uniqueTagGroupCombinations(tagsForSpecificity);
+        //sort so that they are in order of least specificity to most specificity ("a" comes before "a, b, c")
+        uniquePermuations.sort(Comparator.comparingInt(List::size));
+        tagGroups.addAll(uniquePermuations);
 
         Map<List<String>, Map<String, Map<String,String>>> clientConfigsByTagsAndName = new HashMap<>();
         clientConfigSets.forEach(clientConfigurationSet -> {
@@ -72,6 +68,21 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
 
         return configurations;
     }
+
+    public static List<List<String>> uniqueTagGroupCombinations(List<String> tags) {
+        List<List<String>> results = new ArrayList<List<String>>();
+        for(int i = 0; i < tags.size(); i++) {
+            int resultsLength = results.size();
+            for(int j = 0; j < resultsLength; j++) {
+                List<String> newList = new ArrayList<>(results.get(j));
+                newList.add(tags.get(i));
+                results.add(newList);
+            }
+            results.add(Arrays.asList(tags.get(i)));
+        }
+        return results;
+    }
+
 
     public List<ClientConfigurationSet> getClientConfigSets() {
         return clientConfigSets;
