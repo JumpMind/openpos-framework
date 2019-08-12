@@ -52,7 +52,6 @@ public class DynamicFormUIMessage extends UIMessage implements IHasForm {
 
     }
 
-
     public String getInstructions() {
         return instructions;
     }

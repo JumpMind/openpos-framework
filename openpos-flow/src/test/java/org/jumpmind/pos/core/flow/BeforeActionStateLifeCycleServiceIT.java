@@ -62,7 +62,7 @@ public class BeforeActionStateLifeCycleServiceIT {
         TestUtil.setField(stateManager, "actionHandler", actionHandler);
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());
-        TestUtil.setField(stateManager, "stateLifecyce", new StateLifecycle());
+        TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
         
     }
 

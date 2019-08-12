@@ -9,12 +9,29 @@
   | [#142](https://github.com/JumpMind/openpos-framework/pull/142) | Use build version as the module version |  |Chris Henson|2019-07-18 18:36:22|
   | [#152](https://github.com/JumpMind/openpos-framework/pull/152) | Restyling Sausage Links |  |Eric Amiralian|2019-07-24 14:12:13|
   | [#157](https://github.com/JumpMind/openpos-framework/pull/157) | Add new method to dbSession.  findFirstByFields |  |Chris Henson|2019-07-24 19:24:16|
+  | [#160](https://github.com/JumpMind/openpos-framework/pull/160) | Drop deprecated screens and refactor Actions |  |Dan Kaste|2019-08-08 22:29:13|
   | [#161](https://github.com/JumpMind/openpos-framework/pull/161) | Feature/sell item style for loyalty |  |Klementina S. Chirico|2019-07-29 13:28:44|
   | [#171](https://github.com/JumpMind/openpos-framework/pull/171) | Feature/dynamic receipt card |  |Klementina S. Chirico|2019-07-30 16:53:42|
   | [#173](https://github.com/JumpMind/openpos-framework/pull/173) | JavaPOS driver and printer support for receipts |  |mmichalek|2019-07-30 20:49:04|
   | [#174](https://github.com/JumpMind/openpos-framework/pull/174) | Add support for getting a map of objects out of ctx_config |  |Jared|2019-07-31 14:05:56|
   | [#180](https://github.com/JumpMind/openpos-framework/pull/180) | Round to nearest second before splitting and add tests |  |Dan Kaste|2019-08-01 15:29:41|
   | [#181](https://github.com/JumpMind/openpos-framework/pull/181) | Date Prompt Focus and Text Size |  |Dan Kaste|2019-08-01 17:25:41|
+  | [#182](https://github.com/JumpMind/openpos-framework/pull/182) | Feature/personalize app |  |maxwellpettit|2019-08-02 14:49:53|
+  | [#183](https://github.com/JumpMind/openpos-framework/pull/183) | ActionItem confirmation message constructor now sets title |  |Eric Amiralian|2019-08-02 12:42:31|
+  | [#184](https://github.com/JumpMind/openpos-framework/pull/184) | Remove unused method from ConfigApplicator |  |Jared|2019-08-05 13:01:11|
+  | [#185](https://github.com/JumpMind/openpos-framework/pull/185) | Adding 3 Icons for a client project |  |Eric Amiralian|2019-08-05 20:50:32|
+  | [#186](https://github.com/JumpMind/openpos-framework/pull/186) | Added Icons section &amp; available icons to docs |  |Eric Amiralian|2019-08-06 12:24:29|
+  | [#187](https://github.com/JumpMind/openpos-framework/pull/187) | Vertically center unlock icon in status bar |  |Eric Amiralian|2019-08-06 12:24:40|
+  | [#188](https://github.com/JumpMind/openpos-framework/pull/188) | The version is not show up in dev tools |  |Chris Henson|2019-08-06 14:24:49Chris Henson|2019-08-06 14:22:20|
+  | [#189](https://github.com/JumpMind/openpos-framework/pull/189) | If no type is configured then don&#39;t send the type at all.  Provide keyedActionName to be able to delineate between scan and keyed |  |Chris Henson|2019-08-06 17:24:20|
+  | [#190](https://github.com/JumpMind/openpos-framework/pull/190) | Fixed Improper Null check that missed empty strings |  |Eric Amiralian|2019-08-06 18:32:50|
+  | [#191](https://github.com/JumpMind/openpos-framework/pull/191) | Pass the raw type in scan data for debugging new scanners |  |Chris Henson|2019-08-06 19:14:06|
+  | [#192](https://github.com/JumpMind/openpos-framework/pull/192) | Subscribe to the scanner service in the scan something component |  |maxwellpettit|2019-08-07 13:54:13|
+  | [#193](https://github.com/JumpMind/openpos-framework/pull/193) | Feature/#24 convert to screen parts |  |Dan Kaste|2019-08-08 13:14:24|
+  | [#194](https://github.com/JumpMind/openpos-framework/pull/194) | Feature/remove config managers and configuration properties |  |Jared|2019-08-08 13:14:03|
+  | [#195](https://github.com/JumpMind/openpos-framework/pull/195) | Add @BeforeAction annotation in support of invoking behavior before an action is handled |  |Jason Mihalick|2019-08-08 19:52:39|
+  | [#196](https://github.com/JumpMind/openpos-framework/pull/196) | Update StateManager so that a Cancel TransitionResult will send a &quot;Tr… |  |Klementina S. Chirico|2019-08-08 20:12:50|
+  | [#24](https://github.com/JumpMind/openpos-framework/issues/24) | Make main floating action buttons the primary color |  |Dan Kaste|2019-08-08 13:14:24|
 
 ## 0.4.1 
 Released on: 2019-08-01 15:05:32

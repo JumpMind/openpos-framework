@@ -40,6 +40,7 @@ const screens = [
 ];
 
 const dialogs = [
+    DynamicFormDialogComponent,
     SelectionListScreenDialogComponent,
     GenericDialogComponent,
     PromptScreenDialogComponent,

@@ -141,7 +141,7 @@ public class StateManagerTest {
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());
         TestUtil.setField(stateManager, "transitionSteps", Arrays.asList(new TestTransitionStepCancel(), new TestTransitionStepProceed()));
-        TestUtil.setField(stateManager, "stateLifecyce", new StateLifecycle());
+        TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
         
 
     }
