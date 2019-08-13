@@ -20,12 +20,7 @@
 package org.jumpmind.pos.core.flow;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -138,8 +133,7 @@ public class StateManager implements IStateManager {
         }
 
         applicationState.getScope().setDeviceScope("stateManager", this);
-
-
+        initDefaultScopeObjects();
 
         if (resumeState) {
             sendConfigurationChangedMessage();
@@ -153,6 +147,10 @@ public class StateManager implements IStateManager {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
 
+    }
+
+    private void initDefaultScopeObjects() {
+        applicationState.getScope().setDeviceScope("additionalTagsForConfiguration", new ArrayList<String>());
     }
 
     public void setErrorHandler(IErrorHandler errorHandler) {
@@ -243,10 +241,12 @@ public class StateManager implements IStateManager {
         if (applicationState.getCurrentContext().getState() != null) {
             performOutjections(applicationState.getCurrentContext().getState());
         }
+        
+        boolean enterSubState = enterSubStateConfig != null;
+        stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
         TransitionResult transitionResult = executeTransition(applicationState.getCurrentContext(), newState, action);
         if (transitionResult == TransitionResult.PROCEED) {
-            boolean enterSubState = enterSubStateConfig != null;
             boolean exitSubState = resumeSuspendedState != null;
             String returnActionName = null;
             if (exitSubState) {
@@ -256,9 +256,7 @@ public class StateManager implements IStateManager {
             stateManagerLogger.logStateTransition(applicationState.getCurrentContext().getState(), newState, action, returnActionName,
                     enterSubStateConfig, exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
                     resumeSuspendedState);
-
-            stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
-
+            
             if (enterSubState) {
                 applicationState.getStateStack().push(applicationState.getCurrentContext());
                 applicationState.setCurrentContext(buildSubStateContext(enterSubStateConfig, action));

@@ -5,16 +5,15 @@
         *ngFor="let m of sausageLinks.links" (click)="doAction(m)"
         [actionItem]="m"
         [disabled]="!m.enabled">
-
-        <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
-        <span [ngClass]="{'muted-color': ! m.enabled}" class="sausage-link-button-title">&nbsp;{{m.title}}</span>
-        <span *ngIf="getNotificationForLink(m)" [matBadge]="getNotificationForLink(m).value" 
-        matBadgePosition="above after"
-        matBadgeSize="medium"
-        matBadgeColor="accent"
-        style="padding-left: 15px;"></span>
-        <span *ngIf="m.keybind && keybindsEnabled()" fxFlex="1 1 auto" style="padding-right: 8px;"></span>
-        <span *ngIf="m.keybind && keybindsEnabled()" class="muted-color">{{m.keybind}}</span>
-
+        <div class="button-content" gdAreas="icon title notify keybind" gdColumns="auto 1fr auto auto" gdGap="6px">
+            <app-icon gdArea="icon" *ngIf="m.icon" [iconName]="m.icon"></app-icon>
+            <span gdArea="title" [ngClass]="{'muted-color': ! m.enabled}" class="sausage-link-button-title">&nbsp;{{m.title}}</span>
+            <span gdArea="notify" *ngIf="getNotificationForLink(m)" [matBadge]="getNotificationForLink(m).value" 
+            matBadgePosition="above after"
+            matBadgeSize="medium"
+            matBadgeColor="accent"
+            style="padding-left: 15px;"></span>
+            <span gdArea="keybind" *ngIf="m.keybind && keybindsEnabled()" class="muted-color">{{m.keybind}}</span>
+        </div>
     </app-secondary-button>
 </ng-container>
