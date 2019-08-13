@@ -24,8 +24,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +48,6 @@ import org.jumpmind.pos.persist.TableDef;
 import org.jumpmind.pos.persist.driver.Driver;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.service.model.ModuleModel;
-import org.jumpmind.pos.util.Versions;
 import org.jumpmind.properties.TypedProperties;
 import org.jumpmind.security.ISecurityService;
 import org.jumpmind.security.SecurityServiceFactory;
@@ -68,11 +65,10 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
-import org.springframework.util.FileSystemUtils;
 
 @EnableTransactionManagement
 @DependsOn({"tagConfig"})
-abstract public class AbstractModule extends AbstractServiceFactory implements IModule {
+abstract public class AbstractRDBMSModule extends AbstractServiceFactory implements IModule, IRDBMSModule {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
@@ -114,7 +110,7 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
         String version = new AbstractVersion() {
             @Override
             protected String getArtifactName() {
-                return AbstractModule.this.getArtifactName();
+                return AbstractRDBMSModule.this.getArtifactName();
             }
         }.version();
         if (version.equals("development")) {
@@ -150,11 +146,21 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
         return txManager;
     }
 
+    @Override
+    public PlatformTransactionManager getPlatformTransactionManager() {
+        return txManager();
+    }
+
     protected IDatabasePlatform databasePlatform() {
         if (databasePlatform == null) {
             databasePlatform = JdbcDatabasePlatformFactory.createNewPlatformInstance(dataSource(), new SqlTemplateSettings(), false, false);
         }
         return databasePlatform;
+    }
+
+    @Override
+    public IDatabasePlatform getDatabasePlatform() {
+        return databasePlatform();
     }
 
     protected ISecurityService securityService() {
@@ -215,6 +221,11 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
             }
         }
         return dataSource;
+    }
+
+    @Override
+    public DataSource getDataSource() {
+        return dataSource();
     }
 
     protected DBSessionFactory sessionFactory() {
@@ -301,6 +312,11 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
 
     protected DBSession session() {
         return sessionFactory().createDbSession();
+    }
+
+    @Override
+    public DBSession getDBSession() {
+        return session();
     }
 
     protected IDBSchemaListener getDbSchemaListener() {

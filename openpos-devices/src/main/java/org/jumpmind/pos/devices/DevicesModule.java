@@ -5,7 +5,7 @@ import javax.sql.DataSource;
 import org.jumpmind.pos.devices.service.IDevicesService;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
-import org.jumpmind.pos.service.AbstractModule;
+import org.jumpmind.pos.service.AbstractRDBMSModule;
 import org.jumpmind.pos.service.ModuleEnabledCondition;
 import org.jumpmind.security.ISecurityService;
 import org.springframework.context.annotation.Bean;
@@ -21,7 +21,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @EnableTransactionManagement
 @Conditional(ModuleEnabledCondition.class)
 @Order(10)
-public class DevicesModule extends AbstractModule {
+public class DevicesModule extends AbstractRDBMSModule {
     
     protected final static String NAME = "dev";
     
