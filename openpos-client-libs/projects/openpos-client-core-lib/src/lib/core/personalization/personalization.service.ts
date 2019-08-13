@@ -2,6 +2,7 @@ import { Logger } from '../services/logger.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonalizationResponse } from './personalization-response.interface';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -9,6 +10,7 @@ import { PersonalizationResponse } from './personalization-response.interface';
 export class PersonalizationService {
 
     private serverBaseUrl: string;
+    private serverBaseUrl$ = new BehaviorSubject<string>(null);
 
     constructor(private log: Logger, private http: HttpClient) {
     }
@@ -103,6 +105,8 @@ export class PersonalizationService {
 
     public setServerName(name: string) {
         localStorage.setItem('serverName', name);
+
+        this.updateServerBaseUrl();
     }
 
     public getServerName(): string {
@@ -119,6 +123,8 @@ export class PersonalizationService {
 
     public setServerPort(port: string) {
         localStorage.setItem('serverPort', port);
+
+        this.updateServerBaseUrl();
     }
 
     public getServerPort(): string {
@@ -131,6 +137,8 @@ export class PersonalizationService {
 
     public setDeviceId(id: string) {
         localStorage.setItem('deviceId', id);
+
+        this.updateServerBaseUrl();
     }
 
     public getPersonalizationResults(): string {
@@ -155,11 +163,20 @@ export class PersonalizationService {
 
     public getServerBaseURL(): string {
         if (!this.serverBaseUrl) {
-            const protocol = this.isSslEnabled() ? 'https' : 'http';
-            this.serverBaseUrl = `${protocol}://${this.getServerName()}${this.getServerPort() ? `:${this.getServerPort()}` : ''}`;
-            this.log.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
+            this.updateServerBaseUrl();
         }
         return this.serverBaseUrl;
+    }
+
+    private updateServerBaseUrl() {
+        const protocol = this.isSslEnabled() ? 'https' : 'http';
+        this.serverBaseUrl = `${protocol}://${this.getServerName()}${this.getServerPort() ? `:${this.getServerPort()}` : ''}`;
+        this.log.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
+        this.serverBaseUrl$.next(this.serverBaseUrl);
+    }
+
+    public getServerBaseURL$(): Observable<string> {
+        return this.serverBaseUrl$;
     }
 
     public getApiServerBaseURL(): string {

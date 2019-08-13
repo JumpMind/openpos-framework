@@ -200,7 +200,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             msg += `)`;
         }
 
-        this.log.info(msg);
+        console.info(msg);
     }
 
     protected updateClasses(screen: any) {
