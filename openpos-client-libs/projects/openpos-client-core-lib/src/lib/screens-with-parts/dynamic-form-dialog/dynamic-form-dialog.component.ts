@@ -1,4 +1,3 @@
-
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 import { Component } from '@angular/core';
 import { DynamicFormDialogInterface } from './dynamic-form-dialog.interface';

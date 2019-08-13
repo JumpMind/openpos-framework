@@ -25,9 +25,23 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Annotation which can be used to mark one or more methods within a state to be
+ * invoked directly before the state machine attempts to transition from
+ * the current state to the next state or subflow.
+ */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface OnDepart {
+    /**
+     * When <code>true</code>, marks this method to be executed upon departure to a subflow.
+     * Default value is <code>true</code>.
+     */
     public boolean toSubflow() default true;
+    /**
+     * When <code>true</code>, marks this method to be executed upon departure to
+     * another state.
+     * Default value is <code>true</code>.
+     */
     public boolean toAnotherState() default true;
 }

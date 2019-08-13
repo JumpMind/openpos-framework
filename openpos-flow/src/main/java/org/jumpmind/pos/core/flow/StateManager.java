@@ -20,12 +20,7 @@
 package org.jumpmind.pos.core.flow;
 
 import java.lang.reflect.Method;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
@@ -98,7 +93,7 @@ public class StateManager implements IStateManager {
     private boolean autoSaveState = false;
 
     @Autowired
-    private StateLifecycle stateLifecyce;
+    private StateLifecycle stateLifecycle;
 
     @Autowired
     LocaleMessageFactory localeMessageFactory;
@@ -138,8 +133,7 @@ public class StateManager implements IStateManager {
         }
 
         applicationState.getScope().setDeviceScope("stateManager", this);
-
-
+        initDefaultScopeObjects();
 
         if (resumeState) {
             sendConfigurationChangedMessage();
@@ -153,6 +147,10 @@ public class StateManager implements IStateManager {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
 
+    }
+
+    private void initDefaultScopeObjects() {
+        applicationState.getScope().setDeviceScope("additionalTagsForConfiguration", new ArrayList<String>());
     }
 
     public void setErrorHandler(IErrorHandler errorHandler) {
@@ -243,10 +241,12 @@ public class StateManager implements IStateManager {
         if (applicationState.getCurrentContext().getState() != null) {
             performOutjections(applicationState.getCurrentContext().getState());
         }
+        
+        boolean enterSubState = enterSubStateConfig != null;
+        stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
         TransitionResult transitionResult = executeTransition(applicationState.getCurrentContext(), newState, action);
         if (transitionResult == TransitionResult.PROCEED) {
-            boolean enterSubState = enterSubStateConfig != null;
             boolean exitSubState = resumeSuspendedState != null;
             String returnActionName = null;
             if (exitSubState) {
@@ -256,9 +256,7 @@ public class StateManager implements IStateManager {
             stateManagerLogger.logStateTransition(applicationState.getCurrentContext().getState(), newState, action, returnActionName,
                     enterSubStateConfig, exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
                     resumeSuspendedState);
-
-            stateLifecyce.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
-
+            
             if (enterSubState) {
                 applicationState.getStateStack().push(applicationState.getCurrentContext());
                 applicationState.setCurrentContext(buildSubStateContext(enterSubStateConfig, action));
@@ -271,7 +269,7 @@ public class StateManager implements IStateManager {
             performInjections(newState);
 
             if (resumeSuspendedState == null || returnActionName == null || autoTransition) {
-                stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), action);
+                stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), action);
             } else {
                 Action returnAction = new Action(returnActionName, action.getData());
                 returnAction.setCausedBy(action);
@@ -281,7 +279,7 @@ public class StateManager implements IStateManager {
             //TODO: discuss whether this is how we want to handle cancelled transitions
             Action cancelAction= new Action("TransitionCancelled");
             cancelAction.setCausedBy(action);
-            stateLifecyce.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
+            stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         }
 
     }
@@ -321,8 +319,10 @@ public class StateManager implements IStateManager {
     }
 
     public void performInjections(Object stateOrStep) {
+        this.logger.trace("Performing injections on {}...", stateOrStep.getClass().getName());
         injector.performInjections(stateOrStep, applicationState.getScope(), applicationState.getCurrentContext());
         refreshDeviceScope();
+        this.logger.trace("Injections completed on {}.", stateOrStep.getClass().getName());
     }
 
     protected void refreshDeviceScope() {

@@ -25,6 +25,9 @@ module.exports = function(grunt) {
                 },
                 cmd: 'npm link'
             },
+            install: {
+                cmd: 'npm install'
+            },
             build: {
                 cmd: 'npm run ng build -- --watch'
             },
@@ -62,8 +65,8 @@ module.exports = function(grunt) {
     grunt.loadNpmTasks('grunt-mkdir');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('default', ['clean', 'mkdir', 'create-package', 'concurrent:target']);
-    grunt.registerTask('withTests', ['clean', 'mkdir', 'create-package', 'concurrent:withTests'])
+    grunt.registerTask('default', ['exec:install', 'clean', 'mkdir', 'create-package', 'concurrent:target']);
+    grunt.registerTask('withTests', ['exec:install', 'clean', 'mkdir', 'create-package', 'concurrent:withTests'])
     grunt.registerTask('watch-build', ['exec:build']);
     grunt.registerTask('watch-bundle', ['exec:bundle']);
     grunt.registerTask('test', ['exec:test']);
