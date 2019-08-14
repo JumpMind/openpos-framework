@@ -40,7 +40,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST*.xml'
-    tasks: 'test deploy generateSourceArtifact'
+    tasks: 'test jacocoTestReport deploy generateSourceArtifact'
 - task: PublishCodeCoverageResults@1
   inputs: 
     codeCoverageTool: Cobertura

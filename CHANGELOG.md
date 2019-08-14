@@ -31,6 +31,18 @@
   | [#194](https://github.com/JumpMind/openpos-framework/pull/194) | Feature/remove config managers and configuration properties |  |Jared|2019-08-08 13:14:03|
   | [#195](https://github.com/JumpMind/openpos-framework/pull/195) | Add @BeforeAction annotation in support of invoking behavior before an action is handled |  |Jason Mihalick|2019-08-08 19:52:39|
   | [#196](https://github.com/JumpMind/openpos-framework/pull/196) | Update StateManager so that a Cancel TransitionResult will send a &quot;Tr… |  |Klementina S. Chirico|2019-08-08 20:12:50|
+  | [#197](https://github.com/JumpMind/openpos-framework/pull/197) | DynamicFormUIMessage |  |stevencarley|2019-08-12 16:40:23Eric Amiralian|2019-08-09 16:46:06|
+  | [#198](https://github.com/JumpMind/openpos-framework/pull/198) | Add logging of the legacy dialog resource id for troubleshooting |  |Jason Mihalick|2019-08-09 15:04:36|
+  | [#200](https://github.com/JumpMind/openpos-framework/pull/200) | Add TRACE level logging before and after state injections are done |  |Jason Mihalick|2019-08-12 01:22:55|
+  | [#201](https://github.com/JumpMind/openpos-framework/pull/201) | Revert &quot;DynamicFormUIMessage&quot; |  |stevencarley|2019-08-12 16:40:23|
+  | [#202](https://github.com/JumpMind/openpos-framework/pull/202) | Bugfix/client config selector permutations |  |Klementina S. Chirico|2019-08-12 17:14:35|
+  | [#203](https://github.com/JumpMind/openpos-framework/pull/203) | Feature/cleanup sausage link alignment |  |Klementina S. Chirico|2019-08-13 13:49:30|
+  | [#204](https://github.com/JumpMind/openpos-framework/pull/204) | Run OnDepart before state transition, add more TRACE logging to injection |  |Jason Mihalick|2019-08-12 21:52:00|
+  | [#205](https://github.com/JumpMind/openpos-framework/pull/205) | add install to grunt so it creates version.ts |  |Dan Kaste|2019-08-13 13:48:14|
+  | [#206](https://github.com/JumpMind/openpos-framework/pull/206) | Remove transient from ActionItem autoAssignEnabled |  |Dan Kaste|2019-08-13 14:22:39|
+  | [#207](https://github.com/JumpMind/openpos-framework/pull/207) | Support EU currency formatting |  |maxwellpettit|2019-08-13 15:54:08|
+  | [#208](https://github.com/JumpMind/openpos-framework/pull/208) | Add a module api specific to modules backed by an RDBMS |  |Chris Henson|2019-08-13 17:55:34|
+  | [#209](https://github.com/JumpMind/openpos-framework/pull/209) | Feature/expose rdbms modules |  |Chris Henson|2019-08-13 18:07:25|
   | [#24](https://github.com/JumpMind/openpos-framework/issues/24) | Make main floating action buttons the primary color |  |Dan Kaste|2019-08-08 13:14:24|
 
 ## 0.4.1 

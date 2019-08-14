@@ -6,6 +6,7 @@ apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
+apply plugin: 'jacoco'
 
 def removeSnapshot = { v ->
     if (v.endsWith('-SNAPSHOT')) {
@@ -69,7 +70,6 @@ jar {
 }
 
 idea {
-
     module {
         testResourceDirs = []
         testSourceDirs = [ file('src/test/java')]
@@ -116,10 +116,19 @@ test {
     // ignoreFailures = true
     testLogging.showStandardStreams = true
 
+    forkEvery = 1
+
     //Dynamic exclude through property defined in the build.gradle file
     if (project.hasProperty('excludeTests')) {
         println('Excluding tests: ' + project.property('excludeTests'))
         exclude project.property('excludeTests')
+    }
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled true
+        xml.destination file("${buildDir}/reports/coverage/coverage.xml")
     }
 }
 
