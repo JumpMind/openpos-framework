@@ -1,4 +1,4 @@
-package org.jumpmind.pos.util.model;
+package org.jumpmind.pos.server.model;
 
 import java.util.UUID;
 
