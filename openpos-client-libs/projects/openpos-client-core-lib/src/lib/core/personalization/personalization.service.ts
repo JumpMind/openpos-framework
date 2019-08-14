@@ -10,7 +10,10 @@ import { Observable, BehaviorSubject } from 'rxjs';
 export class PersonalizationService {
 
     private serverBaseUrl: string;
-    private serverBaseUrl$ = new BehaviorSubject<string>(null);
+    private serverBaseUrl$ = new BehaviorSubject<string>(this.getServerBaseURL());
+    private apiServerBaseUrl$ = new BehaviorSubject<string>(this.getApiServerBaseURL());
+    private deviceAppApiServerBaseUrl$ = new BehaviorSubject<string>(this.getDeviceAppApiServerBaseUrl());
+    private appId: string;
 
     constructor(private log: Logger, private http: HttpClient) {
     }
@@ -20,17 +23,21 @@ export class PersonalizationService {
         personalizationProperties?: Map<string, string>, sslEnabled?: boolean) {
 
         this.log.info(`personalizing with server: ${serverName}, port: ${serverPort}, deviceId: ${deviceId}`);
-        localStorage.setItem('serverName', serverName);
-        localStorage.setItem('serverPort', serverPort);
-        localStorage.setItem('deviceId', deviceId);
+        this.setServerName(serverName);
+        this.setServerPort(serverPort);
+        this.setDeviceId(deviceId);
         this.setPersonalizationProperties(personalizationProperties);
 
         if (sslEnabled) {
-            localStorage.setItem('sslEnabled', '' + sslEnabled);
+            this.setSslEnabled(sslEnabled);
         } else {
-            localStorage.setItem('sslEnabled', 'false');
+            this.setSslEnabled(false);
         }
-        this.serverBaseUrl = null; // will be regenerated on next fetch
+
+        this.updateServerBaseUrl();
+        this.serverBaseUrl$.next(this.serverBaseUrl);
+        this.apiServerBaseUrl$.next(this.getApiServerBaseURL());
+        this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
     }
 
     private setPersonalizationProperties(personalizationProperties?: Map<string, string>) {
@@ -99,29 +106,19 @@ export class PersonalizationService {
         return 'true' === localStorage.getItem('sslEnabled');
     }
 
-    public setSslEnabled(enabled: boolean) {
+    private setSslEnabled(enabled: boolean) {
         localStorage.setItem('sslEnabled', enabled + '');
     }
 
-    public setServerName(name: string) {
+    private setServerName(name: string) {
         localStorage.setItem('serverName', name);
-
-        this.updateServerBaseUrl();
     }
 
     public getServerName(): string {
         return localStorage.getItem('serverName');
     }
 
-    public getDeviceName(): string {
-        return localStorage.getItem('deviceName');
-    }
-
-    public setDeviceName(deviceName: string): void {
-        localStorage.setItem('deviceName', deviceName);
-    }
-
-    public setServerPort(port: string) {
+    private setServerPort(port: string) {
         localStorage.setItem('serverPort', port);
 
         this.updateServerBaseUrl();
@@ -135,18 +132,17 @@ export class PersonalizationService {
         return localStorage.getItem('deviceId');
     }
 
-    public setDeviceId(id: string) {
+    private setDeviceId(id: string) {
         localStorage.setItem('deviceId', id);
-
-        this.updateServerBaseUrl();
     }
 
-    public getPersonalizationResults(): string {
-        return localStorage.getItem('personalizationResults');
+    public setAppId(id: string) {
+        this.appId = id;
+        this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
     }
 
-    public setPersonalizationResults(personalizationResults: string) {
-        localStorage.setItem('personalizationResults', personalizationResults);
+    public getAppId(): string {
+        return this.appId;
     }
 
     public refreshApp() {
@@ -172,7 +168,6 @@ export class PersonalizationService {
         const protocol = this.isSslEnabled() ? 'https' : 'http';
         this.serverBaseUrl = `${protocol}://${this.getServerName()}${this.getServerPort() ? `:${this.getServerPort()}` : ''}`;
         this.log.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
-        this.serverBaseUrl$.next(this.serverBaseUrl);
     }
 
     public getServerBaseURL$(): Observable<string> {
@@ -181,6 +176,18 @@ export class PersonalizationService {
 
     public getApiServerBaseURL(): string {
         return `${this.getServerBaseURL()}/api`;
+    }
+
+    public getApiServerBaseUrl$(): Observable<string> {
+        return this.apiServerBaseUrl$;
+    }
+
+    private getDeviceAppApiServerBaseUrl(): string {
+        return `${this.getApiServerBaseURL()}/appId/${this.getAppId()}/deviceId/${this.getDeviceId()}`;
+    }
+
+    public getDeviceAppApiServerBaseUrl$(): Observable<string> {
+        return this.deviceAppApiServerBaseUrl$;
     }
 
     public async requestPersonalization(serverName: string, serverPort: string, sslEnabled: boolean): Promise<PersonalizationResponse> {

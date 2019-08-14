@@ -65,8 +65,6 @@ export class SessionService implements IMessageHandler<any> {
 
     public state: Observable<string>;
 
-    private appId: string;
-
     private subscription: Subscription;
 
     private authToken: string;
@@ -133,7 +131,7 @@ export class SessionService implements IMessageHandler<any> {
     }
 
     private buildTopicName(): string {
-        return '/topic/app/' + this.appId + '/node/' + this.personalization.getDeviceId();
+        return '/topic/app/' + this.getAppId() + '/node/' + this.personalization.getDeviceId();
     }
 
     public setAuthToken(token: string) {
@@ -145,11 +143,11 @@ export class SessionService implements IMessageHandler<any> {
     }
 
     public setAppId(value: string) {
-        this.appId = value;
+        this.personalization.setAppId(value);
     }
 
     public getAppId(): string {
-        return this.appId;
+        return this.personalization.getAppId();
     }
 
     public connected(): boolean {
@@ -188,7 +186,7 @@ export class SessionService implements IMessageHandler<any> {
         const headers = {
             authToken: this.authToken,
             compatibilityVersion: Configuration.compatibilityVersion,
-            appId: this.appId,
+            appId: this.getAppId(),
             deviceId: this.personalization.getDeviceId(),
             queryParams: JSON.stringify(this.queryParams),
             version: JSON.stringify(VERSION)
@@ -403,7 +401,7 @@ export class SessionService implements IMessageHandler<any> {
             // tslint:disable-next-line:max-line-length
             this.log.info(`>>> Publish deviceResponse requestId: "${deviceResponse.requestId}" deviceId: ${deviceResponse.deviceId} type: ${deviceResponse.type}`);
             this.stompService.publish(
-                `/app/device/app/${this.appId}/node/${this.personalization.getDeviceId()}/device/${deviceResponse.deviceId}`,
+                `/app/device/app/${this.getAppId()}/node/${this.personalization.getDeviceId()}/device/${deviceResponse.deviceId}`,
                 JSON.stringify(deviceResponse));
         };
 
@@ -437,14 +435,14 @@ export class SessionService implements IMessageHandler<any> {
             return false;
         }
         const deviceId = this.personalization.getDeviceId();
-        if (this.appId && deviceId) {
+        if (this.getAppId() && deviceId) {
             this.log.info(`Publishing action '${actionString}' of type '${type}' to server...`);
-            this.stompService.publish('/app/action/app/' + this.appId + '/node/' + deviceId,
+            this.stompService.publish('/app/action/app/' + this.getAppId() + '/node/' + deviceId,
                 JSON.stringify({ name: actionString, type, data: payload }));
             return true;
         } else {
             this.log.info(`Can't publish action '${actionString}' of type '${type}' ` +
-                `due to undefined App ID (${this.appId}) or Device ID (${deviceId})`);
+                `due to undefined App ID (${this.getAppId()}) or Device ID (${deviceId})`);
             return false;
         }
     }

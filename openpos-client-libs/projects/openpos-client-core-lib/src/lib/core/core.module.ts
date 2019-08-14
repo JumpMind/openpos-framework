@@ -49,7 +49,7 @@ import locale_enCA from '@angular/common/locales/en-CA';
 import locale_frCA from '@angular/common/locales/fr-CA';
 import { LocationService, PROVIDERS } from './services/location.service';
 import { LocationProviderDefault } from './location-providers/location-provider-default';
-import { LogIntercepter, LOGGERS } from './logging/console-interceptor.service';
+import { ConsoleIntercepter, LOGGERS } from './logging/console-interceptor.service';
 import { Logger } from './services/logger.service';
 import { ServerLogger } from './logging/server-logger.service';
 
@@ -113,14 +113,14 @@ registerLocaleData(locale_frCA, 'fr-CA');
         TrainingOverlayService,
         ConfigurationService,
         KeyPressProvider,
-        { provide: LOGGERS, useClass: ServerLogger, multi: true }
+        { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] }
     ]
 })
 export class CoreModule {
 
     constructor(@Optional() @SkipSelf() parentModule: CoreModule,
                 private injector: Injector,
-                logger: LogIntercepter,
+                logger: ConsoleIntercepter,
                 toastService: ToastService,
                 keyProvider: KeyPressProvider) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');

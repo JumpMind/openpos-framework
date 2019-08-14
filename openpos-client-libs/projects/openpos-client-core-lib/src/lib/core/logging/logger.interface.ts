@@ -1,7 +1,7 @@
 export interface ILogger {
-    log();
-    info();
-    error();
-    warn();
-    debug();
+    log( message: string );
+    info( message: string );
+    error( message: string );
+    warn( message: string );
+    debug( message: string );
 }

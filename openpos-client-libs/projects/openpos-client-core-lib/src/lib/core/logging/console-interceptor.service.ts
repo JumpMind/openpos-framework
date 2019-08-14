@@ -4,23 +4,25 @@ import { SessionService } from '../services/session.service';
 import { filter } from 'rxjs/operators';
 import { ConsoleInterceptorConfig } from './console-interceptor-config';
 import { MessageTypes } from '../messages/message-types';
-import { ILogAppender } from './log-appender.interface';
-import { LogMethodType } from './log-message-type.enum';
+import { ConsoleInterceptorBypassService } from './console-interceptor-bypass.service';
 
 export const LOGGERS = new InjectionToken<ILogger[]>('Loggers');
-export const LOG_APPENDERS = new InjectionToken<ILogAppender[]>('LogPrepender');
 
 @Injectable({
     providedIn: 'root'
 })
-export class LogIntercepter {
+export class ConsoleIntercepter {
 
     private configuration: ConsoleInterceptorConfig;
     private originalMethods = new Map<string, any>();
 
     constructor( @Optional() @Inject(LOGGERS) private loggers: Array<ILogger>,
-                 @Optional() @Inject(LOG_APPENDERS) private appenders: Array<ILogAppender>,
+                 interceptorBypass: ConsoleInterceptorBypassService,
                  sessionService: SessionService ) {
+
+        interceptorBypass.getMessages$().subscribe( m => {
+            this.byPassInterceptor( m.method, m.message);
+        });
 
         sessionService.getMessages(MessageTypes.CONFIG_CHANGED).pipe(
             filter( m => m.configType === 'ConsoleInterceptor')
@@ -44,25 +46,27 @@ export class LogIntercepter {
             });
     }
 
+    private byPassInterceptor( method: string, message: string ) {
+        if ( this.originalMethods.has(method) ) {
+            this.originalMethods.get(method).call(console, message);
+        } else if ( !!console[method] ) {
+            console[method](message);
+        }
+    }
+
     private intercept(methodName: string) {
         this.originalMethods.set(methodName, console[methodName]);
         console[methodName] = (args) => {
 
-            let message = args;
-            if ( !!this.appenders ) {
-                this.appenders.forEach( a => {
-                    message = a.append(message, LogMethodType[methodName]);
-                });
-            }
             this.loggers.forEach( logger => {
-                logger[methodName](message);
+                logger[methodName](args);
             });
         };
     }
 
     private restore(methodName: string) {
         if (this.originalMethods.has(methodName)) {
-            console[methodName] = this.originalMethods[methodName];
+            console[methodName] = this.originalMethods.get(methodName);
         }
     }
 }
