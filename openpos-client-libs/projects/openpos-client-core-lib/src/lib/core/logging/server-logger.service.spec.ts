@@ -2,17 +2,21 @@ import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ServerLogger } from './server-logger.service';
 import { PersonalizationService } from '../personalization/personalization.service';
-import { of } from 'rxjs';
+import { of, Subject } from 'rxjs';
 import { ConsoleInterceptorBypassService } from './console-interceptor-bypass.service';
 import { ServerLogEntry } from './server-log-entry';
+import { ConfigurationService } from '../services/configuration.service';
+import { ServerLoggerConfiguration } from './server-logger-configuration';
 
 describe('ServerLoggerService', () => {
     let serverLogger: ServerLogger;
     let httpTestingController: HttpTestingController;
     let personalizationService: jasmine.SpyObj<PersonalizationService>;
+    let configurationService: jasmine.SpyObj<ConfigurationService>;
     let consoleInterceptorBypassService: jasmine.SpyObj<ConsoleInterceptorBypassService>;
-
+    let configSubject: Subject<ServerLoggerConfiguration>;
     const personalizationSpy = jasmine.createSpyObj('PersonalizationService', ['getDeviceAppApiServerBaseUrl$']);
+    const configurationSpy = jasmine.createSpyObj('ConfigurationService', ['getConfiguration']);
     const consoleInterceptorBypassServiceSpy =
     jasmine.createSpyObj('ConsoleInterceptorBypassService', ['log', 'error', 'info', 'warn', 'debug']);
 
@@ -22,13 +26,17 @@ describe('ServerLoggerService', () => {
             providers: [
                 ServerLogger,
                 { provide: PersonalizationService, useValue: personalizationSpy },
+                { provide: ConfigurationService, useValue: configurationSpy },
                 { provide: ConsoleInterceptorBypassService, useValue: consoleInterceptorBypassServiceSpy}
             ]
         });
         httpTestingController = TestBed.get(HttpTestingController);
         personalizationService = TestBed.get(PersonalizationService);
+        configurationService = TestBed.get(ConfigurationService);
         consoleInterceptorBypassService = TestBed.get(ConsoleInterceptorBypassService);
         personalizationService.getDeviceAppApiServerBaseUrl$.and.returnValue(of('/test/api'));
+        configSubject = new Subject<ServerLoggerConfiguration>();
+        configurationService.getConfiguration.and.returnValue(configSubject);
         serverLogger = TestBed.get(ServerLogger);
     }
 
@@ -79,5 +87,57 @@ describe('ServerLoggerService', () => {
 
         httpTestingController.verify();
         serverLogger.ngOnDestroy();
+    }));
+
+    it('Should change the Buffer time when updated through a config message', fakeAsync(() => {
+        setup();
+
+        serverLogger.log('Test log message');
+        serverLogger.info('Test info message');
+
+        tick(300);
+
+        httpTestingController.expectOne('/test/api/clientlogs');
+
+        configSubject.next(new ServerLoggerConfiguration(500));
+
+        serverLogger.log('Test log message');
+        serverLogger.info('Test info message');
+
+        tick(300);
+
+        httpTestingController.expectNone('/test/api/clientlogs');
+        httpTestingController.verify();
+        serverLogger.ngOnDestroy();
+    }));
+
+    it('Should not lose any log messages when updating configuration', fakeAsync(() => {
+        setup();
+
+        serverLogger.log('Test log message');
+        serverLogger.info('Test info message');
+
+        tick(200);
+
+        httpTestingController.expectNone('/test/api/clientlogs');
+
+        configSubject.next(new ServerLoggerConfiguration(500));
+
+        serverLogger.log('Test log message');
+        serverLogger.info('Test info message');
+
+        tick(500);
+
+        const req = httpTestingController.expectOne('/test/api/clientlogs');
+        expect(req.request.method).toBe('POST');
+        const body = req.request.body as ServerLogEntry[];
+
+        expect(body.length).toBe(4);
+
+        req.flush('', { status: 200, statusText: 'Ok' });
+
+        httpTestingController.verify();
+        serverLogger.ngOnDestroy();
+
     }));
 });

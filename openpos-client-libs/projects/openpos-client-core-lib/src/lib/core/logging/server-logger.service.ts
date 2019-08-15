@@ -4,32 +4,61 @@ import { HttpClient } from '@angular/common/http';
 import { PersonalizationService } from '../personalization/personalization.service';
 import { ServerLogEntry } from './server-log-entry';
 import { LogMethodType } from './log-method-type.enum';
-import { Subject, of } from 'rxjs';
+import { Subject, of, Subscription } from 'rxjs';
 import { bufferTime, filter, catchError } from 'rxjs/operators';
 import { ConsoleInterceptorBypassService } from './console-interceptor-bypass.service';
+import { ConfigurationService } from '../services/configuration.service';
+import { ServerLoggerConfiguration } from './server-logger-configuration';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ServerLogger implements ILogger, OnDestroy {
 
-    private logBufferTime: number = 300;
+    private logBufferTime = 300;
     private loggerEndpointUrl: string;
     private logEntrySubject = new Subject<ServerLogEntry>();
+
+    subscriptions = new Subscription();
+    logEntrySubjectSubscription: Subscription;
 
     constructor(
         private http: HttpClient,
         personalizationService: PersonalizationService,
-        private consoleInterceptorBypass: ConsoleInterceptorBypassService ) {
-        personalizationService.getDeviceAppApiServerBaseUrl$().subscribe( url => this.loggerEndpointUrl = `${url}/clientlogs`);
-        this.logEntrySubject.pipe(
-            bufferTime( this.logBufferTime),
-            filter( entries => entries.length > 0))
-            .subscribe( entries => this.shipLogs(entries) );
+        private consoleInterceptorBypass: ConsoleInterceptorBypassService,
+        configurationService: ConfigurationService ) {
+
+        this.subscriptions.add(
+            configurationService.getConfiguration<ServerLoggerConfiguration>('server-logger')
+            .subscribe( m => {
+                this.logBufferTime = m.logBufferTime;
+                this.subscribeToLogSubject();
+            })
+        );
+
+        this.subscriptions.add(
+            personalizationService.getDeviceAppApiServerBaseUrl$()
+            .subscribe( url => this.loggerEndpointUrl = `${url}/clientlogs`));
+
+        this.subscribeToLogSubject();
+
+    }
+
+    private subscribeToLogSubject() {
+        if (this.logEntrySubjectSubscription != null) {
+            this.logEntrySubject.complete();
+            this.logEntrySubjectSubscription.unsubscribe();
+        }
+        this.logEntrySubjectSubscription = this.logEntrySubject.pipe(
+            bufferTime(this.logBufferTime),
+            filter(entries => entries.length > 0))
+            .subscribe(entries => this.shipLogs(entries) );
     }
 
     ngOnDestroy(): void {
         this.logEntrySubject.complete();
+        this.logEntrySubjectSubscription.unsubscribe();
+        this.subscriptions.unsubscribe();
     }
 
     log( message: string ) {

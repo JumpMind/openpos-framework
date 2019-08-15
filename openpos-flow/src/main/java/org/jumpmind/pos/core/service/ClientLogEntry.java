@@ -8,6 +8,15 @@ public class ClientLogEntry implements Serializable {
     private Date timestamp;
     private String message;
 
+    public ClientLogEntry() {
+    }
+
+    public ClientLogEntry( ClientLogType type, Date timestamp, String message) {
+        this.type = type;
+        this.timestamp = timestamp;
+        this.message = message;
+    }
+
     public ClientLogType getType() {
         return type;
     }
