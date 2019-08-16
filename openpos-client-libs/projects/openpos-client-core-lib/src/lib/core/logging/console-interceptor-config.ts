@@ -4,6 +4,6 @@ export class ConsoleInterceptorConfig extends ConfigChangedMessage {
     enable: boolean;
 
     constructor() {
-        super('ConsoleInterceptor');
+        super('console-interceptor');
     }
 }
