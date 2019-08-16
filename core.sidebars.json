@@ -32,5 +32,8 @@
     ],
     "Icons": [
         "available-icons"
+    ],
+    "Logging": [
+        "logging"
     ]
 }
