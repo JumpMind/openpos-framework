@@ -28,6 +28,7 @@ export class ServerLogger implements ILogger, OnDestroy {
         private consoleInterceptorBypass: ConsoleInterceptorBypassService,
         configurationService: ConfigurationService ) {
 
+        // Subscribe for updates to our configuration and restart the logging buffer when it changes
         this.subscriptions.add(
             configurationService.getConfiguration<ServerLoggerConfiguration>('server-logger')
             .subscribe( m => {
@@ -36,19 +37,26 @@ export class ServerLogger implements ILogger, OnDestroy {
             })
         );
 
+        // Subscribe for updates to the server base url for APIs
         this.subscriptions.add(
             personalizationService.getDeviceAppApiServerBaseUrl$()
             .subscribe( url => this.loggerEndpointUrl = `${url}/clientlogs`));
 
+        // Go ahead and start the logging buffer
         this.subscribeToLogSubject();
 
     }
 
     private subscribeToLogSubject() {
+        // If we have an existing buffer we need to flush the current one
+        // so any buffered messages are sent to the server and clean up the subscription
         if (this.logEntrySubjectSubscription != null) {
             this.logEntrySubject.complete();
             this.logEntrySubjectSubscription.unsubscribe();
         }
+
+        // We then create a new one with the new buffer period
+        this.logEntrySubject = new Subject<ServerLogEntry>();
         this.logEntrySubjectSubscription = this.logEntrySubject.pipe(
             bufferTime(this.logBufferTime),
             filter(entries => entries.length > 0))

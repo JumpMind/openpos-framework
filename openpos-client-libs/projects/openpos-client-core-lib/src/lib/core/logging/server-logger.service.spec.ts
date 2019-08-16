@@ -123,18 +123,18 @@ describe('ServerLoggerService', () => {
 
         configSubject.next(new ServerLoggerConfiguration(500));
 
-        serverLogger.log('Test log message');
-        serverLogger.info('Test info message');
+        serverLogger.log('Test log message 2');
+        serverLogger.info('Test info message 2');
 
         tick(500);
 
-        const req = httpTestingController.expectOne('/test/api/clientlogs');
-        expect(req.request.method).toBe('POST');
-        const body = req.request.body as ServerLogEntry[];
+        const requests = httpTestingController.match('/test/api/clientlogs');
 
-        expect(body.length).toBe(4);
+        expect(requests.length).toBe(2);
+        expect(requests[0].request.body.length).toBe(2);
+        expect(requests[1].request.body.length).toBe(2);
 
-        req.flush('', { status: 200, statusText: 'Ok' });
+        requests.forEach(r => r.flush('', { status: 200, statusText: 'Ok' }));
 
         httpTestingController.verify();
         serverLogger.ngOnDestroy();
