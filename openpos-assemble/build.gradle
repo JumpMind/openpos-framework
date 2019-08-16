@@ -30,6 +30,25 @@ idea {
     }
 }
 
+task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+    dependsOn = subprojects.test
+    additionalSourceDirs = files(subprojects.findAll{it.name != 'openpos-client-libs'}.sourceSets.main.allSource.srcDirs)
+    sourceDirectories = files(subprojects.findAll{it.name != 'openpos-client-libs'}.sourceSets.main.allSource.srcDirs)
+    classDirectories =  files(subprojects.findAll{it.name != 'openpos-client-libs'}.sourceSets.main.output)
+    executionData = files(subprojects.findAll{it.name != 'openpos-client-libs'}.jacocoTestReport.executionData)
+    reports {
+        html.enabled = true
+        xml.enabled = true
+        csv.enabled = false
+    }
+    doFirst {
+        executionData = files(executionData.findAll {
+            it.exists()
+        })
+    }
+}
+
+
 task generateSourceArtifact(type: Copy) {
     doFirst {
         println "Rebuilding build/openpos-server-core-lib"

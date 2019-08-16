@@ -4,7 +4,7 @@ import javax.sql.DataSource;
 
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
-import org.jumpmind.pos.service.AbstractModule;
+import org.jumpmind.pos.service.AbstractRDBMSModule;
 import org.jumpmind.pos.service.ModuleEnabledCondition;
 import org.jumpmind.security.ISecurityService;
 import org.springframework.context.annotation.Bean;
@@ -18,7 +18,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration("TestModule")
 @EnableTransactionManagement
 @Conditional(ModuleEnabledCondition.class)
-public class TestModule extends AbstractModule {
+public class TestModule extends AbstractRDBMSModule {
     
     static final String NAME = "test";
     

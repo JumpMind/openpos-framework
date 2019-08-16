@@ -16,6 +16,8 @@ import { catchError } from 'rxjs/operators';
 })
 export class CurrencyTextComponent implements OnChanges {
 
+    private euRegex = /,\d\d$/;
+
     @Input()
     amountText: string | number;
 
@@ -38,7 +40,12 @@ export class CurrencyTextComponent implements OnChanges {
             const hasParens = localAmtText.indexOf('(') >= 0;
             // CurrencyPipe does not like text starting with open paren
             localAmtText = this.normalizeNegativeAmount(localAmtText);
-            localAmtText = this.removeCommas(localAmtText);
+
+            if (!this.euRegex.test(localAmtText)) {
+                localAmtText = this.removeCommas(localAmtText);
+            } else {
+                localAmtText = this.formatEuText(localAmtText);
+            }
             let existingSymbolIdx = localAmtText.indexOf(targetSymbol);
             if (existingSymbolIdx < 0) {
                 // No symbol in given text, use currency pipe to insert one
@@ -78,6 +85,11 @@ export class CurrencyTextComponent implements OnChanges {
 
     protected removeCommas(text: string): string {
         return text.replace(/,/g, '');
+    }
+
+    protected formatEuText(text: string): string {
+        text = text.replace(/,/g, '.');
+        return text.replace(/\s/g, '');
     }
 
     protected normalizeNegativeAmount(text: string): string {
