@@ -9,6 +9,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { ConfigChangedMessage } from '../messages/config-changed-message';
 import { ThemeChangedMessage } from '../messages/theme-changed-message';
 import { VersionsChangedMessage } from '../messages/versions-changed-message';
+import { MessageTypes } from '../messages/message-types';
 
 @Injectable({
     providedIn: 'root',
@@ -29,7 +30,7 @@ export class ConfigurationService {
     }
 
     public getConfiguration<T extends ConfigChangedMessage>(configType: string): Observable<T> {
-        return this.sessionService.getMessages('ConfigChanged').pipe (
+        return this.sessionService.getMessages(MessageTypes.CONFIG_CHANGED).pipe (
             filter( m => m.configType === configType),
             tap( m => console.info( `ConfigChanged for ${configType}: ${JSON.stringify(m)}`))
         );

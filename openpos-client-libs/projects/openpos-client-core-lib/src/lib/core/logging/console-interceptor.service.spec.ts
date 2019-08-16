@@ -1,16 +1,16 @@
 import { TestBed, fakeAsync, flushMicrotasks } from '@angular/core/testing';
 import { ConsoleIntercepter, LOGGERS } from './console-interceptor.service';
 import { ILogger } from './logger.interface';
-import { SessionService } from '../services/session.service';
 import { cold, getTestScheduler } from 'jasmine-marbles';
 import { ConsoleInterceptorConfig } from './console-interceptor-config';
 import { ConsoleInterceptorBypassService } from './console-interceptor-bypass.service';
 import { Subject } from 'rxjs';
+import { ConfigurationService } from '../services/configuration.service';
 
 describe( 'ConsoleInterceptor', () => {
     let loggers: ILogger[];
     const interceptMethods = ['log', 'error', 'info', 'warn', 'debug'];
-    let sessionService: jasmine.SpyObj<SessionService>;
+    let configurationService: jasmine.SpyObj<ConfigurationService>;
     let consoleInterceptorBypassService: jasmine.SpyObj<ConsoleInterceptorBypassService>;
     const config = new ConsoleInterceptorConfig();
     const originalConsoleMethodSpies = new Map<string, any>();
@@ -37,7 +37,7 @@ describe( 'ConsoleInterceptor', () => {
 
     function setup() {
         const logSpy = jasmine.createSpyObj('TestLogger', interceptMethods);
-        const sessionSpy = jasmine.createSpyObj('SessionService', ['getMessages']);
+        const configurationSpy = jasmine.createSpyObj('ConfigurationService', ['getConfiguration']);
         const consoleIntercepterBypassSpy = jasmine.createSpyObj('ConsoleInterceptorBypassService', ['getMessages$']);
         const consoleSpy = jasmine.createSpyObj('console', interceptMethods);
         console = consoleSpy;
@@ -51,16 +51,16 @@ describe( 'ConsoleInterceptor', () => {
             providers: [
                 ConsoleIntercepter,
                 {provide: ConsoleInterceptorBypassService, useValue: consoleIntercepterBypassSpy},
-                {provide: SessionService, useValue: sessionSpy },
+                {provide: ConfigurationService, useValue: configurationSpy },
                 {provide: LOGGERS, useValue: logSpy, multi: true},
             ]
         });
-        sessionService = TestBed.get(SessionService);
+        configurationService = TestBed.get(ConfigurationService);
     }
 
     function setupSync() {
         setup();
-        sessionService.getMessages.and.callFake(getConfig);
+        configurationService.getConfiguration.and.callFake(getConfig);
 
         consoleInterceptorBypassService = TestBed.get(ConsoleInterceptorBypassService);
         consoleInterceptorBypassService.getMessages$.and.callFake(getBypassMessages);
@@ -71,7 +71,7 @@ describe( 'ConsoleInterceptor', () => {
     function setupAsync( configSubject: Subject<ConsoleInterceptorConfig> ) {
         setup();
 
-        sessionService.getMessages.and.callFake(() => configSubject);
+        configurationService.getConfiguration.and.callFake(() => configSubject);
 
         consoleInterceptorBypassService = TestBed.get(ConsoleInterceptorBypassService);
         consoleInterceptorBypassService.getMessages$.and.callFake(getBypassMessages);

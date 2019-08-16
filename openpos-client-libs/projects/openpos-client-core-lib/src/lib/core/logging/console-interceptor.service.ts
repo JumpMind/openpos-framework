@@ -1,10 +1,8 @@
 import { Injectable, InjectionToken, Optional, Inject } from '@angular/core';
 import { ILogger } from './logger.interface';
-import { SessionService } from '../services/session.service';
-import { filter } from 'rxjs/operators';
 import { ConsoleInterceptorConfig } from './console-interceptor-config';
-import { MessageTypes } from '../messages/message-types';
 import { ConsoleInterceptorBypassService } from './console-interceptor-bypass.service';
+import { ConfigurationService } from '../services/configuration.service';
 
 export const LOGGERS = new InjectionToken<ILogger[]>('Loggers');
 
@@ -18,14 +16,13 @@ export class ConsoleIntercepter {
 
     constructor( @Optional() @Inject(LOGGERS) private loggers: Array<ILogger>,
                  interceptorBypass: ConsoleInterceptorBypassService,
-                 sessionService: SessionService ) {
+                 configurationService: ConfigurationService ) {
 
         interceptorBypass.getMessages$().subscribe( m => {
             this.byPassInterceptor( m.method, m.message);
         });
 
-        sessionService.getMessages(MessageTypes.CONFIG_CHANGED).pipe(
-            filter( m => m.configType === 'ConsoleInterceptor')
+        configurationService.getConfiguration<ConsoleInterceptorConfig>('console-interceptor').pipe(
             ).subscribe( message => {
                 this.configuration = message as ConsoleInterceptorConfig;
                 if ( !!this.configuration && this.configuration.enable && !!this.loggers) {
