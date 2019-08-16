@@ -52,6 +52,7 @@ import { LocationProviderDefault } from './location-providers/location-provider-
 import { ConsoleIntercepter, LOGGERS } from './logging/console-interceptor.service';
 import { Logger } from './services/logger.service';
 import { ServerLogger } from './logging/server-logger.service';
+import { ElectronLogger } from './logging/electron-logger';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -113,7 +114,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         TrainingOverlayService,
         ConfigurationService,
         KeyPressProvider,
-        { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] }
+        { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
+        { provide: LOGGERS, useExisting: ElectronLogger, multi: true }
     ]
 })
 export class CoreModule {
