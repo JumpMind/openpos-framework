@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Subscription } from 'rxjs';
-import { Logger } from '../../core/services/logger.service';
 import { ScreenService } from '../../core/services/screen.service';
 import { SessionService } from '../../core/services/session.service';
 import { ConfigurationService } from '../../core/services/configuration.service';
@@ -42,7 +41,6 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     private subscriptions = new Subscription();
 
     constructor(
-        private log: Logger,
         public screenService: ScreenService,
         private viewContainerRef: ViewContainerRef,
         public session: SessionService,
@@ -166,7 +164,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     }
 
     protected updateTheme(theme: string) {
-        this.log.info('updating theme to ' + theme);
+        console.info('updating theme to ' + theme);
         this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
         this.overlayContainer.getContainerElement().classList.remove('default-theme');
         this.overlayContainer.getContainerElement().classList.add(theme);

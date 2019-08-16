@@ -1,4 +1,3 @@
-import { Logger } from '../services/logger.service';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonalizationResponse } from './personalization-response.interface';
@@ -15,14 +14,14 @@ export class PersonalizationService {
     private deviceAppApiServerBaseUrl$ = new BehaviorSubject<string>(this.getDeviceAppApiServerBaseUrl());
     private appId: string;
 
-    constructor(private log: Logger, private http: HttpClient) {
+    constructor(private http: HttpClient) {
     }
 
     public personalize(
         serverName: string, serverPort: string, deviceId: string,
         personalizationProperties?: Map<string, string>, sslEnabled?: boolean) {
 
-        this.log.info(`personalizing with server: ${serverName}, port: ${serverPort}, deviceId: ${deviceId}`);
+        console.info(`personalizing with server: ${serverName}, port: ${serverPort}, deviceId: ${deviceId}`);
         this.setServerName(serverName);
         this.setServerPort(serverPort);
         this.setDeviceId(deviceId);
@@ -167,7 +166,7 @@ export class PersonalizationService {
     private updateServerBaseUrl() {
         const protocol = this.isSslEnabled() ? 'https' : 'http';
         this.serverBaseUrl = `${protocol}://${this.getServerName()}${this.getServerPort() ? `:${this.getServerPort()}` : ''}`;
-        this.log.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
+        console.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
     }
 
     public getServerBaseURL$(): Observable<string> {

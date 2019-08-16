@@ -50,7 +50,6 @@ import locale_frCA from '@angular/common/locales/fr-CA';
 import { LocationService, PROVIDERS } from './services/location.service';
 import { LocationProviderDefault } from './location-providers/location-provider-default';
 import { ConsoleIntercepter, LOGGERS } from './logging/console-interceptor.service';
-import { Logger } from './services/logger.service';
 import { ServerLogger } from './logging/server-logger.service';
 import { ElectronLogger } from './logging/electron-logger';
 
@@ -95,7 +94,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StompRService,
         ScannerService,
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
-        { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router, Logger]},
+        { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
         { provide: STARTUP_TASKS, useClass: FinalStartupTask, multi: true, deps: [SessionService]},
         { provide: STARTUP_TASKS, useClass: PlatformReadyStartupTask, multi: true },

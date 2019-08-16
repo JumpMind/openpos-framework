@@ -2,7 +2,6 @@ import { IVersion } from './../interfaces/version.interface';
 import { VERSION } from './../../version';
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
-import { Logger } from './logger.service';
 import { Configuration } from './../../configuration/configuration';
 import { filter, tap } from 'rxjs/operators';
 import { BehaviorSubject, Observable } from 'rxjs';
@@ -19,7 +18,7 @@ export class ConfigurationService {
     public versions: Array<IVersion> = [];
     public theme$ =  new BehaviorSubject<string>('openpos-default-theme');
 
-    constructor(private log: Logger, private sessionService: SessionService ) {
+    constructor(private sessionService: SessionService ) {
 
         this.getConfiguration('uiConfig').subscribe( m => this.mapConfig(m));
         this.getConfiguration<ThemeChangedMessage>('theme').subscribe( m => this.theme$.next(m.name));
@@ -52,7 +51,7 @@ export class ConfigurationService {
                         Configuration[p] = response[p];
                     }
                 } catch (e) {
-                    this.log.warn(`Failed to convert configuration response property '${p}' with value [${response[p]}] ` +
+                    console.warn(`Failed to convert configuration response property '${p}' with value [${response[p]}] ` +
                       `and type '${responsePropertyType}' to Configuration[${p}] of type '${configPropertyType}'` +
                       ` Error: ${e}`);
                 }

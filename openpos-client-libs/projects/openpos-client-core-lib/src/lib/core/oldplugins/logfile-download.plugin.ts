@@ -21,16 +21,16 @@ export class LogfileDownloadPlugin extends CordovaDevicePlugin {
     processRequest(deviceRequest: IDeviceRequest, successCallback: (response: any) => void, errorCallback: (error: string) => void) {
         switch (deviceRequest.subType) {
             case 'LIST': // list the log files
-                this.log.info('list files request received.');
+                console.info('list files request received.');
                 if (this.impl) {
                     this.impl.listLogFiles('DESC', successCallback, errorCallback);
                 } else {
-                    this.log.info('No log files available');
+                    console.info('No log files available');
                     successCallback([]);
                 }
                 break;
             case 'DOWNLOAD_FILES': // download the given list of files
-                this.log.info('download-files request received.');
+                console.info('download-files request received.');
                 if (this.impl) {
                     const logFiles = deviceRequest.payload || [];
                     const uploadPromises: Promise<string>[] = [];
@@ -38,8 +38,8 @@ export class LogfileDownloadPlugin extends CordovaDevicePlugin {
                         uploadPromises.push(this.uploadFile(logfile));
                     });
                     Promise.all(uploadPromises).then(messages => {
-//                        results.forEach(result => this.log.info(`Promise result: ${JSON.stringify(result)}`));
-//                        this.log.info(`Messages received: ${messages}`);
+//                        results.forEach(result => console.info(`Promise result: ${JSON.stringify(result)}`));
+//                        console.info(`Messages received: ${messages}`);
                         successCallback(messages);
                     }).catch( error =>
                         errorCallback(error)
@@ -65,7 +65,7 @@ export class LogfileDownloadPlugin extends CordovaDevicePlugin {
                     });
                 },
                 (error) => {
-                    this.log.info(error);
+                    console.info(error);
                     reject(error);
                 }
             );

@@ -34,19 +34,19 @@ export class BarcodeScannerPlugin extends CordovaDevicePlugin {
     }
 
     processRequest(deviceRequest: IDeviceRequest, successCallback: (response: any) => void, errorCallback: (error: string) => void) {
-        this.log.info(`Attempting to invoke camera scanner via plugin '${this.pluginId}'`);
+        console.info(`Attempting to invoke camera scanner via plugin '${this.pluginId}'`);
         this.impl.scan( (result) => {
             if (! result.cancelled) {
                 let scan = new Scan(result.text, result.format);
                 scan = this.optionallyInterceptScan(scan);
                 successCallback(scan);
-                this.log.info('We got a barcode\n' +
+                console.info('We got a barcode\n' +
                 'Result: ' + scan.value + '\n' +
                 'Format: ' + scan.format + '\n' +
                 'Cancelled: ' + scan.cancelled);
               } else {
                 successCallback(new Scan(null, null, true));
-                this.log.info('Barcode scan cancelled');
+                console.info('Barcode scan cancelled');
             }
           },
           (error) => {
@@ -73,7 +73,7 @@ export class BarcodeScannerPlugin extends CordovaDevicePlugin {
     protected optionallyInterceptScan(scan: Scan): Scan {
         let lScan = scan;
         if (this.barcodeScanInterceptor) {
-            this.log.info(`Scan intercepted by ` +
+            console.info(`Scan intercepted by ` +
                 `'${this.barcodeScanInterceptor.constructor ? this.barcodeScanInterceptor.constructor.name : 'IBarcodeScanInterceptor object'}'`);
             lScan = this.barcodeScanInterceptor.interceptScan(scan);
         }
@@ -83,7 +83,7 @@ export class BarcodeScannerPlugin extends CordovaDevicePlugin {
 
     emitBarcode(scan: Scan) {
         const s = this.optionallyInterceptScan(scan);
-        this.log.info(`Emitting barcode from BarcodeScannerPlugin: ${JSON.stringify(s)}`);
+        console.info(`Emitting barcode from BarcodeScannerPlugin: ${JSON.stringify(s)}`);
         this.onBarcodeScanned.emit(s);
     }
 }

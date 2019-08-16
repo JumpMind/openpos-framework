@@ -1,4 +1,3 @@
-import { Logger } from './logger.service';
 import { concat, throwError, Observable, Subject, ReplaySubject, of } from 'rxjs';
 import { Injectable, InjectionToken, Inject, Optional } from '@angular/core';
 import { IStartupTask } from '../startup/startup-task.interface';
@@ -29,8 +28,7 @@ export class StartupService implements CanActivate {
         @Optional() @Inject(STARTUP_FAILED_TASK) private failedTask: IStartupTask,
         @Optional() @Inject(STARTUP_COMPONENT) private startupComponent: ComponentType<any>,
         @Optional() @Inject(STARTUP_FAILED_COMPONENT) private startupFailedComponent: ComponentType<any>,
-        private matDialog: MatDialog,
-        private log: Logger) {
+        private matDialog: MatDialog) {
 
         // This might not be the best way but it's the best I could come up with for now.
         // This allows task defined in the core module to be overriden by vendor specific modules
@@ -77,11 +75,11 @@ export class StartupService implements CanActivate {
                     next: (message) => { this.handleMessage(message); },
                     error: (error) => {
                         result.next(false);
-                        this.log.error('Startup failed');
+                        console.error('Startup failed');
                         this.handleError( error );
                     },
                     complete: () => {
-                        this.log.info('All Startup Tasks completed successfully');
+                        console.info('All Startup Tasks completed successfully');
                         result.next(true);
                         if ( this.startupDialogRef ) {
                             this.startupDialogRef.close();
@@ -94,18 +92,18 @@ export class StartupService implements CanActivate {
 
     private handleMessage( message: string ) {
         this.startupTaskMessages$.next(message);
-        this.log.info(message);
+        console.info(message);
         this.allMessages.push(message);
     }
 
     private handleError( error: string ) {
-        this.log.error(error);
+        console.error(error);
         if ( this.failedTask ) {
             this.failedTask.execute().subscribe(
                 {
                     next: (message) => this.handleMessage(message),
                     complete: () => this.showFailure(error),
-                    error: (e) => this.log.error(`Error while running failure task: ${e}`)
+                    error: (e) => console.error(`Error while running failure task: ${e}`)
                 }
             );
         } else {
@@ -114,7 +112,7 @@ export class StartupService implements CanActivate {
     }
 
     private logTaskOrder(tasks: IStartupTask[]) {
-        this.log.info(`The following startup tasks will run: ${tasks.map(t => `${t.name}(${t.order})`).join(', ')}`);
+        console.info(`The following startup tasks will run: ${tasks.map(t => `${t.name}(${t.order})`).join(', ')}`);
     }
 
     private showFailure( error: string ) {

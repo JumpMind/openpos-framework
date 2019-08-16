@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { LoaderState } from './loader-state';
 import { SessionService } from '../../../core/services/session.service';
 import { ILoading } from '../../../core/interfaces/loading.interface';
-import { Logger } from '../../../core/services/logger.service';
 import { IMessageHandler } from '../../../core/interfaces/message-handler.interface';
 import { ConfigurationService } from '../../../core/services/configuration.service';
 import { Observable } from 'rxjs';
@@ -23,7 +22,6 @@ export class LoaderComponent implements OnInit, OnDestroy, IMessageHandler<ILoad
     loading = false;
 
     constructor(
-        private log: Logger,
         private configuration: ConfigurationService,
         private session: SessionService,
         private changeRef: ChangeDetectorRef
@@ -34,7 +32,7 @@ export class LoaderComponent implements OnInit, OnDestroy, IMessageHandler<ILoad
     }
 
     handle(message: ILoading) {
-        this.log.info(`received loading message.  queue: ${message.queue}, cancel: ${message.cancel}, title: ${message.title}`);
+        console.info(`received loading message.  queue: ${message.queue}, cancel: ${message.cancel}, title: ${message.title}`);
         if (message.queue) {
             this.loading = true;
             setTimeout(() => {
@@ -58,7 +56,7 @@ export class LoaderComponent implements OnInit, OnDestroy, IMessageHandler<ILoad
             } else {
                 this.stopClock();
             }
-            this.log.info(`showing the loading dialog NOW with a title of: ${message.title} `);
+            console.info(`showing the loading dialog NOW with a title of: ${message.title} `);
             this.loading = true;
             this.title = message.title;
             this.message = message.message;

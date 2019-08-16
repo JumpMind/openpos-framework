@@ -106,7 +106,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
         const content = event.clipboardData.getData('text/plain');
         const filteredContent = this.filterBarcodeValue(content);
         if (filteredContent !== content) {
-            this.log.info(`Clipboard data contains invalid characters for barcode, suppressing pasted content '${content}'`);
+            console.info(`Clipboard data contains invalid characters for barcode, suppressing pasted content '${content}'`);
         }
         return filteredContent === content;
     }

@@ -1,4 +1,3 @@
-import { Logger } from './logger.service';
 import { IMessageHandler } from './../interfaces/message-handler.interface';
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Subject } from 'rxjs';
@@ -29,10 +28,10 @@ export class DeviceService implements IMessageHandler<any> {
 
     private cameraScanInProgress = false;
 
-    constructor(private log: Logger, protected session: SessionService,
-        private cordovaService: CordovaService,
-        public pluginService: OldPluginService,
-        private fileUploadService: FileUploadService) {
+    constructor(    protected session: SessionService,
+                    private cordovaService: CordovaService,
+                    public pluginService: OldPluginService,
+                    private fileUploadService: FileUploadService) {
 
         // On iOS need to enter into loading state when the app is backgrounded, otherwise
         // user can execute actions as app is coming back to foreground.
@@ -43,7 +42,7 @@ export class DeviceService implements IMessageHandler<any> {
                 if (allowBackgroundHandling) {
                     this.handleBackgrounding();
                 } else {
-                    this.log.info(`Skipping background handling`);
+                    console.info(`Skipping background handling`);
                 }
             }
         });
@@ -54,14 +53,14 @@ export class DeviceService implements IMessageHandler<any> {
                 if (allowForegroundHandling) {
                     this.handleForegrounding();
                 } else {
-                    this.log.info(`Skipping foreground handling`);
+                    console.info(`Skipping foreground handling`);
                 }
             }
         });
 
         this.cordovaService.onDeviceReady.subscribe(m => {
             if (m === 'deviceready') {
-                this.log.info('cordova devices are ready for the device service');
+                console.info('cordova devices are ready for the device service');
                 this.initializeInAppBrowserPlugin();
                 this.initializeBarcodeScannerPlugin();
                 this.initializeLogfileDownloadPlugin();
@@ -72,21 +71,21 @@ export class DeviceService implements IMessageHandler<any> {
         // or resiging status as the active app.
         document.addEventListener('resign',
             () => {
-                this.log.info(`OpenPOS received app 'resign' notification`);
+                console.info(`OpenPOS received app 'resign' notification`);
                 this.onAppEnteringBackground.next(true);
             },
             false
         );
         document.addEventListener('resume',
             () => {
-                this.log.info(`OpenPOS received app 'resume' notification`);
+                console.info(`OpenPOS received app 'resume' notification`);
                 this.onAppEnteringForeground.next(true);
             },
             false
         );
         document.addEventListener('active',
             () => {
-                this.log.info(`OpenPOS received app 'active' notification`);
+                console.info(`OpenPOS received app 'active' notification`);
                 this.onAppEnteredForeground.next(true);
             },
             false
@@ -101,13 +100,13 @@ export class DeviceService implements IMessageHandler<any> {
             const inAppPlugin = <InAppBrowserPlugin>await this.pluginService.getPlugin('InAppBrowser');
             return inAppPlugin.isActive();
         } catch (error) {
-            this.log.info(`InAppBrowser plugin not available. Reason: ${error}`);
+            console.info(`InAppBrowser plugin not available. Reason: ${error}`);
             return false;
         }
     }
 
     public isCameraScanInProgress() {
-        this.log.info(`isCameraScanInProgress? ${this.cameraScanInProgress}`);
+        console.info(`isCameraScanInProgress? ${this.cameraScanInProgress}`);
         return this.cameraScanInProgress;
     }
 
@@ -129,13 +128,13 @@ export class DeviceService implements IMessageHandler<any> {
     protected initializeInAppBrowserPlugin(): void {
         const inAppBrowserPlugin = new InAppBrowserPlugin();
         this.pluginService.addPlugin(inAppBrowserPlugin.pluginId, inAppBrowserPlugin);
-        this.log.info('InAppBrowserPlugin initialized.');
+        console.info('InAppBrowserPlugin initialized.');
     }
 
     protected initializeLogfileDownloadPlugin(): void {
         const logfileDownloadPlugin = new LogfileDownloadPlugin(this.fileUploadService);
         this.pluginService.addPlugin(logfileDownloadPlugin.pluginId, logfileDownloadPlugin);
-        this.log.info('LogfileDownloadPlugin initialized.');
+        console.info('LogfileDownloadPlugin initialized.');
     }
 
     public scan(source?: string) {
@@ -144,10 +143,10 @@ export class DeviceService implements IMessageHandler<any> {
         // is the scan-something.component.
         if (this.screen.template && this.screen.template.scan &&
             this.screen.template.scan.scanType === 'CAMERA_CORDOVA') {
-            this.log.info(`request to scan was made for: ${this.screen.template.scan.scanType}`);
+            console.info(`request to scan was made for: ${this.screen.template.scan.scanType}`);
             this.cordovaCameraScan(source);
         } else {
-            this.log.info(`FAILED to invoke scan. Is there a screen.template.scan.scanType?`);
+            console.info(`FAILED to invoke scan. Is there a screen.template.scan.scanType?`);
         }
     }
 
@@ -168,26 +167,26 @@ export class DeviceService implements IMessageHandler<any> {
                     },
                     (error) => {
                         this.cameraScanInProgress = false;
-                        this.log.error('Scanning failed: ' + error);
+                        console.error('Scanning failed: ' + error);
                     }
                 );
             }).catch(error => {
                 this.cameraScanInProgress = false;
-                this.log.error(`barcodeScannerPlugin error: ${error}`);
+                console.error(`barcodeScannerPlugin error: ${error}`);
             });
         }
     }
 
     public onDeviceRequest = (request: IDeviceRequest) => {
-        this.log.info(`request received for device: ${request.deviceId}`);
+        console.info(`request received for device: ${request.deviceId}`);
         // targetted plugin is assumed to be a cordova plugin
 
         const pluginLookupKey = request.pluginId ? request.pluginId : request.deviceId;
         const targetPluginPromise: Promise<IDevicePlugin> = this.pluginService.getDevicePlugin(pluginLookupKey);
 
         targetPluginPromise.then((targetPlugin: IDevicePlugin) => {
-            this.log.info(`targetPlugin = pluginId: ${targetPlugin.pluginId}, pluginName: ${targetPlugin.pluginName}`);
-            this.log.info(`Sending request '${request.subType}:${request.requestId}' to device/plugin '${pluginLookupKey}'...`);
+            console.info(`targetPlugin = pluginId: ${targetPlugin.pluginId}, pluginName: ${targetPlugin.pluginName}`);
+            console.info(`Sending request '${request.subType}:${request.requestId}' to device/plugin '${pluginLookupKey}'...`);
             targetPlugin.processRequest(
                 request,
                 (response) => {
@@ -221,7 +220,7 @@ export class DeviceService implements IMessageHandler<any> {
                 payload: msg
             }
             );
-            this.log.info(msg);
+            console.info(msg);
         }
         );
     }
@@ -244,13 +243,13 @@ export class DeviceService implements IMessageHandler<any> {
         // to Ascena, or find the right place in the core to dismiss the splash screen
 
         if ((<any>(window.navigator)).splashscreen) {
-            this.log.info('Showing splashscreen');
+            console.info('Showing splashscreen');
             (<any>(window.navigator)).splashscreen.show();
         }
         */
         this.session.cancelLoading();
         // Input will get unblocked once re-subscribed to server and current screen is shown
-        this.log.info('Entering into background');
+        console.info('Entering into background');
         this.session.inBackground = true;
     }
 
@@ -258,11 +257,11 @@ export class DeviceService implements IMessageHandler<any> {
         // check for any changes while were are inactive
         // We'll reset the inBackground flag after we receive the response
         this.session.refreshScreen();
-        this.log.info('Start coming into foreground. Screen refresh requested.');
+        console.info('Start coming into foreground. Screen refresh requested.');
         /* 10/12/18 -- Commented out hiding of splashscreen due to improved show/cancel loading
             that we added.  Will remove once fully vetted in QA.
         if ((<any>(window.navigator)).splashscreen) {
-            this.log.debug('Hiding splashscreen');
+            console.debug('Hiding splashscreen');
             (<any>(window.navigator)).splashscreen.hide();
         }
         */
