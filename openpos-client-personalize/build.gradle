@@ -1,0 +1,87 @@
+apply plugin: 'com.moowork.node'
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
+
+node {
+    version = '10.5.0'
+    npmVersion = '6.1.0'
+    download = downloadNode.toBoolean()
+    println """
+      **************************************************************************************************
+        Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties 
+        if you want to use downloaded versions of node and npm
+      **************************************************************************************************
+      """
+    workDir = file("${projectDir}/node")
+    nodeModulesDir = file("./")
+}
+
+task nodeClean {
+    doFirst {
+        delete "${projectDir}/node"
+    }
+}
+
+task npmClean {
+    doFirst {
+        println 'Removing node_modules'
+        delete './node_modules'
+        delete './coverage'
+        delete '.settings'
+        delete './dist'
+    }
+}
+
+task npm_remove_client(type: NpmTask) {
+    workingDir = file("${project.projectDir}")
+    ignoreExitValue true
+    args = [
+        'uninstall',
+        '@jumpmind/openpos-client-core-lib'
+    ]
+}
+
+
+task npm_add_client(type: NpmTask) {
+    dependsOn npm_remove_client
+    workingDir = file("${project.projectDir}")
+    ignoreExitValue true
+    args = [
+        'install',
+        "../openpos-client-libs/dist/openpos-client-core-lib/jumpmind-openpos-client-core-lib-${version}.tgz"
+    ]
+}
+
+task npm_ci(type: NpmTask) {
+    dependsOn npm_add_client
+    workingDir = file("${project.projectDir}")
+    ignoreExitValue true
+    args = ['ci']
+}
+
+task npm_build(type: NpmTask) {
+    dependsOn npm_ci
+    workingDir = file("${project.projectDir}")
+    args = [
+        'run',
+        'build-prod'
+    ]
+}
+
+task pack {}
+npm_pack.dependsOn(build)
+pack.dependsOn(npm_pack)
+
+task copyClientBuildForJarPackaging(type: Copy) {
+    dependsOn npm_build
+    destinationDir = file('src/main/resources')
+    into('public') {
+        from ('dist') { exclude('win/**') }
+    }
+}
+
+processResources.dependsOn(copyClientBuildForJarPackaging)
+
+develop.dependsOn copyClientBuildForJarPackaging
+clean.dependsOn npmClean
+clean.dependsOn nodeClean
+npm_add_client.dependsOn tasks.getByPath(':openpos-client-libs:npm_pack')
