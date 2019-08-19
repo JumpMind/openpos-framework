@@ -15,6 +15,7 @@ export class LanguageSelectorComponent {
 
     locales: string[];
     languages = [];
+    showIcons = true;
 
     constructor(public sessionService: SessionService, public localeService: LocaleService) {
         this.selectedLocale = localeService.getDisplayLocale();
@@ -24,6 +25,8 @@ export class LanguageSelectorComponent {
         this.locales.forEach(loc => {
             this.languages.push({ locale: loc, icon: this.getIcon(loc), displayName: this.getDisplayName(loc) });
         });
+
+        this.showIcons = localeService.isShowIcons();
     }
 
     screenDataUpdated() {
