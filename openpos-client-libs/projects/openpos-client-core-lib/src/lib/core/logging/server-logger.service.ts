@@ -32,8 +32,11 @@ export class ServerLogger implements ILogger, OnDestroy {
         this.subscriptions.add(
             configurationService.getConfiguration<ServerLoggerConfiguration>('server-logger')
             .subscribe( m => {
-                this.logBufferTime = m.logBufferTime;
-                this.subscribeToLogSubject();
+                if ( this.logBufferTime !== m.logBufferTime ) {
+                    this.logBufferTime = m.logBufferTime;
+                    this.subscribeToLogSubject();
+                }
+
             })
         );
 
@@ -59,7 +62,7 @@ export class ServerLogger implements ILogger, OnDestroy {
         this.logEntrySubject = new Subject<ServerLogEntry>();
         this.logEntrySubjectSubscription = this.logEntrySubject.pipe(
             bufferTime(this.logBufferTime),
-            filter(entries => entries.length > 0))
+            filter(entries => !!entries && entries.length > 0))
             .subscribe(entries => this.shipLogs(entries) );
     }
 
@@ -87,6 +90,9 @@ export class ServerLogger implements ILogger, OnDestroy {
     }
 
     private shipLogs( entries: ServerLogEntry[] ) {
+        if ( !entries || entries.length < 1 ) {
+            return;
+        }
         this.http.post(this.loggerEndpointUrl, entries).pipe(
             catchError( error => {
                 // If we fail to send to the server dump them out to the console.
