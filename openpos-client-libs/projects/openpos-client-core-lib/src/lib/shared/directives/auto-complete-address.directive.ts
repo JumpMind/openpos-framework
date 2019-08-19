@@ -16,6 +16,8 @@ export class AutoCompleteAddressDirective implements AfterViewInit, OnDestroy {
     private loadAPIPromise: Promise<any>;
     private listenerAdded = false;
 
+    private suggestions: Element;
+
     protected readonly SCRIPT_ID: string = 'googleMapsApiScript';
     protected readonly CALLBACK_NAME: string = 'initAutoComplete';
 
@@ -41,6 +43,8 @@ export class AutoCompleteAddressDirective implements AfterViewInit, OnDestroy {
 
         // Attach the google auto complete source script
         this.loadAPIPromise = this.attachScript();
+
+        this.addListener();
     }
 
     getFormattedAddress(place: any) {
@@ -118,10 +122,10 @@ export class AutoCompleteAddressDirective implements AfterViewInit, OnDestroy {
         // This method is a workaround for supporting minimum search length (unsupported by Google API)
         if (this.element.value && this.element.value.length >= this.minSearchLength && !this.listenerAdded) {
             // If the input meets minimum length, add the auto complete listener
-            this.addListener();
-        } else if (this.listenerAdded && this.element.value.length < this.minSearchLength) {
+            this.showSuggestions();
+        } else if (this.element.value.length < this.minSearchLength) {
             // If the input doesn't meet minumum length, remove the auto complete listener
-            this.removeListener();
+            this.hideSuggestions();
         }
     }
 
@@ -149,6 +153,26 @@ export class AutoCompleteAddressDirective implements AfterViewInit, OnDestroy {
         while (suggestions) {
             document.body.removeChild(suggestions);
             suggestions = document.querySelector('.pac-container');
+        }
+        this.listenerAdded = false;
+    }
+
+    showSuggestions() {
+        if (this.suggestions) {
+            console.log('Showing search suggestions');
+
+            document.body.appendChild(this.suggestions);
+            this.listenerAdded = true;
+        }
+    }
+
+    hideSuggestions() {
+        // Remove the suggestions box
+        const suggestions = document.querySelector('.pac-container');
+        if (suggestions) {
+            console.log('Hiding search suggestions');
+            this.suggestions = suggestions;
+            document.body.removeChild(suggestions);
         }
         this.listenerAdded = false;
     }
