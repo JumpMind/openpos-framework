@@ -112,6 +112,26 @@ describe( 'ConsoleInterceptor', () => {
             expect(originalConsoleMethodSpies.get('error')).toHaveBeenCalledWith('BypassErrorMessage');
         });
 
+        it('Using the ConsoleInterceptorBypassService should go straight to the original console methods even after new config messages', 
+        fakeAsync(() => {
+            addBypassMessage('log', 'BypassLogMessage');
+            addBypassMessage('error', 'BypassErrorMessage');
+
+            const configSubject = new Subject<ConsoleInterceptorConfig>();
+            setupAsync(configSubject);
+            config.enable = true;
+
+            configSubject.next(config);
+            config.enable = true;
+            flushMicrotasks();
+            configSubject.next(config);
+            flushMicrotasks();
+            getTestScheduler().flush();
+
+            expect(originalConsoleMethodSpies.get('log')).toHaveBeenCalledWith(`BypassLogMessage`);
+            expect(originalConsoleMethodSpies.get('error')).toHaveBeenCalledWith('BypassErrorMessage');
+        }));
+
         ['log', 'error', 'info', 'warn', 'debug'].forEach( method => {
                 it(`Should restore the original ${method} function when configuration is changed back to disabled`, fakeAsync(() => {
 

@@ -52,7 +52,12 @@ export class ConsoleIntercepter {
     }
 
     private intercept(methodName: string) {
-        this.originalMethods.set(methodName, console[methodName]);
+        // Only save off the original method once. Future calls to intercept are from a reconfigure and
+        // at that point console is now the new method
+        if ( !this.originalMethods.has(methodName) ) {
+            this.originalMethods.set(methodName, console[methodName]);
+        }
+
         console[methodName] = (args) => {
 
             this.loggers.forEach( logger => {
