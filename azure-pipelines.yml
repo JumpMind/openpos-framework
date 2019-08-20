@@ -10,7 +10,8 @@ trigger:
   branches:
     include:
     - master
-    - korg
+    - releases/0.4
+    - releases/0.5
 
 pool:
   vmImage: 'Ubuntu-16.04'
@@ -36,16 +37,21 @@ steps:
     gradleWrapperFile: 'openpos-assemble/gradlew'
     gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
-    jdkVersionOption: '1.11'
+    jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST*.xml'
-    tasks: 'test jacocoTestReport deploy generateSourceArtifact'
+    tasks: 'jacocoRootReport deploy generateSourceArtifact'
 - task: PublishCodeCoverageResults@1
+  displayName: 'Publish Server Code Coverage'
+  inputs: 
+    codeCoverageTool: JaCoCo
+    summaryFileLocation: '**/jacocoRootReport.xml'
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish Client Code Coverage'
   inputs: 
     codeCoverageTool: Cobertura
     summaryFileLocation: '**/*coverage.xml'
-    reportDirectory: '**/coverage'
 - task: PublishBuildArtifacts@1
   displayName: 'Publish server source for downstream pipeline consumption'
   inputs:

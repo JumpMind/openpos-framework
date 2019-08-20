@@ -21,7 +21,7 @@ def gitCommit = { files ->
     }
 
     exec {
-        commandLine 'git', 'commit', '-m', "releasing ${version}"
+        commandLine 'git', 'commit', '-m', "updating ${version}"
         ignoreExitValue true
     }
     exec {
@@ -110,7 +110,11 @@ task setPackageJsonVersionToSnapshot(type: NpmTask) {
 }
 
 task release() {
-    dependsOn npm_publish
+    if (project.hasProperty('npmPublishEnabled') && project.getProperty('npmPublishEnabled').toBoolean()) {
+        dependsOn npm_publish
+    } else {
+        dependsOn githubRelease
+    }
     doFirst {
         if (!releaseBuildEnabled.toBoolean()) {
             throw new GradleException('You need to specify -PreleaseBuildEnabled=true when running the release task')
