@@ -75,7 +75,7 @@ task copyClientBuildForJarPackaging(type: Copy) {
     dependsOn npm_build
     destinationDir = file('src/main/resources')
     into('public') {
-        from ('dist') { exclude('win/**') }
+        from ('dist/openpos-client-personalize') { exclude('win/**') }
     }
 }
 

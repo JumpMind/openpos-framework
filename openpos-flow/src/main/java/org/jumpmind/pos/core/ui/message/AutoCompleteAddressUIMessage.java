@@ -39,7 +39,7 @@ public class AutoCompleteAddressUIMessage extends DynamicFormUIMessage implement
         this.getForm().addTextField("streetAddress", "Street Address", "", true);
         this.getForm().addTextField("addressLine2", "Address Line 2", "", false);
         this.getForm().addTextField("locality", "City", "", true);
-        this.getForm().addComboBox("state", "State", states, true);
+        this.getForm().addSearchablePopTart("state", "State", states, true);
         this.getForm().addTextField("postalCode", "Postal Code", "", true);
         this.getForm().addTextField("country", "Country", "", true);
     }

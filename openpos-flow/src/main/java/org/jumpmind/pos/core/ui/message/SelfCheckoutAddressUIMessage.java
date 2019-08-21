@@ -32,7 +32,7 @@ public class SelfCheckoutAddressUIMessage extends SelfCheckoutFormUIMessage impl
         this.getForm().addTextField("streetAddress", streetAddressPlaceholder, "", true);
         this.getForm().addTextField("addressLine2", addressLine2Placeholder, "", false);
         this.getForm().addTextField("locality", localityPlaceholder, "", true);
-        this.getForm().addComboBox("state", statePlaceholder, states, true);
+        this.getForm().addSearchablePopTart("state", statePlaceholder, states, true);
         this.getForm().addTextField("postalCode", postalCodePlaceholder, "", true);
         this.getForm().addTextField("country", countryPlaceholder, "", true);
     }

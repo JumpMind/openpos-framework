@@ -1,21 +1,22 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-    name: 'stringListFilter'})
+    name: 'stringListFilter'
+})
 export class StringListFilterPipe implements PipeTransform {
 
-    constructor() {}
+    constructor() { }
 
     // Filters a list to return any values to contain the filterValue
     transform(values: Array<string>, filterValue: string): Array<string> {
-        if ( filterValue == null || filterValue === undefined || !values ) {
+        if (!values || values.length === 0) {
             return null;
         }
 
-        if ( filterValue.trim() === '') {
-            return [];
+        if (filterValue == null || filterValue === undefined || filterValue.trim() === '') {
+            return values;
         }
 
-        return values.filter( v => v.toLowerCase().search(filterValue.toLowerCase()) >= 0);
+        return values.filter(v => v.toLowerCase().search(filterValue.toLowerCase()) >= 0);
     }
 }
