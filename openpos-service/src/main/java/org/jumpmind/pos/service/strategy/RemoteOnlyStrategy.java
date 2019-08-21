@@ -2,7 +2,11 @@ package org.jumpmind.pos.service.strategy;
 
 import org.jumpmind.pos.service.PosServerException;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
+import org.jumpmind.pos.util.clientcontext.ClientContextPropertyException;
 import org.jumpmind.pos.util.web.ConfiguredRestTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
@@ -22,6 +26,12 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
 
     static final String REMOTE_ONLY_STRATEGY = "REMOTE_ONLY";
 
+    @Autowired
+    protected ApplicationContext applicationContext;
+
+    @Autowired
+    private ClientContext clientContext;
+
     public String getStrategyName() {
         return REMOTE_ONLY_STRATEGY;
     }
@@ -32,12 +42,18 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         ConfiguredRestTemplate template = new ConfiguredRestTemplate(httpTimeoutInSecond);
         RequestMapping mapping = method.getAnnotation(RequestMapping.class);
         RequestMethod[] requestMethods = mapping.method();
+
+        HttpHeaders headers = new HttpHeaders();
+
+        for (String propertyName : clientContext.getPropertyNames()) {
+            headers.set(propertyName, clientContext.get(propertyName));
+        }
+
         if (requestMethods != null && requestMethods.length > 0) {
             HttpMethod requestMethod = translate(requestMethods[0]);
             String serverUrl = buildUrl(config, proxy, method, args);
             Object[] newArgs = findArgs(method, args);
             if (isMultiPartUpload(method, args)) {
-                HttpHeaders headers = new HttpHeaders();
                 headers.setContentType(MediaType.MULTIPART_FORM_DATA);
                 MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
                 body.add(getRequestParamName(method), new FileSystemResource(getMultiPartFile(method, args)));
@@ -49,9 +65,9 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
             } else {
                 Object requestBody = findRequestBody(method, args);
                 if (method.getReturnType().equals(Void.TYPE)) {
-                    template.execute(serverUrl, requestBody, requestMethod, newArgs);
+                    template.execute(serverUrl, requestBody, requestMethod, headers, newArgs);
                 } else {
-                    return template.execute(serverUrl, requestBody, method.getReturnType(), requestMethod, newArgs);
+                    return template.execute(serverUrl, requestBody, method.getReturnType(), requestMethod, headers, newArgs);
                 }
             }
         } else {

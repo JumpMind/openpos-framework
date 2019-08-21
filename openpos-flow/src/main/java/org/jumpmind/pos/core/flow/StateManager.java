@@ -42,6 +42,7 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -56,6 +57,9 @@ public class StateManager implements IStateManager {
     final Logger logger = LoggerFactory.getLogger(getClass());
     final Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
     private final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
+
+    @Autowired(required = false)
+    private String deviceId;
 
     @Autowired
     private IScreenService screenService;
@@ -131,7 +135,6 @@ public class StateManager implements IStateManager {
                 logger.warn("Failed to load openpos-state.json", ex);
             }
         }
-
         applicationState.getScope().setDeviceScope("stateManager", this);
         initDefaultScopeObjects();
 
