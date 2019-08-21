@@ -11,6 +11,9 @@ public class ProxyResponse implements Serializable {
 
     private String payload;
 
+    public ProxyResponse() {
+    }
+
     public ProxyResponse(UUID messageId, String payload) {
         this.messageId = messageId;
         this.payload = payload;

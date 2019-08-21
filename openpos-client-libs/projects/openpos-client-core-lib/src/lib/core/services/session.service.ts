@@ -110,6 +110,9 @@ export class SessionService implements IMessageHandler<any> {
         if ( message.type === MessageTypes.ACTION && message instanceof ActionMessage ) {
             const actionMessage = message as ActionMessage;
             this.publish(actionMessage.actionName, 'Screen', actionMessage.payload);
+        } else if (message.type === MessageTypes.PROXY && message instanceof ActionMessage) {
+            const actionMessage = message as ActionMessage;
+            this.publish(actionMessage.actionName, actionMessage.type, actionMessage.payload);
         }
         this.sessionMessages$.next(message);
     }

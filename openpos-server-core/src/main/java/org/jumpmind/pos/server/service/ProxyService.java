@@ -37,7 +37,7 @@ public class ProxyService implements IActionListener {
     @Override
     public Collection<String> getRegisteredTypes() {
         Set<String> types = new HashSet<>();
-        types.add("Proxy");
+        types.add("proxy");
         return types;
     }
 
@@ -52,7 +52,7 @@ public class ProxyService implements IActionListener {
 
     @Override
     public void actionOccured(String appId, String deviceId, Action action) {
-        ProxyResponse response = action.getData();
+        ProxyResponse response = Action.convertActionData(action.getData(), ProxyResponse.class);
 
         ProxyResponseMapEntry responseEntry = this.requestToResponseMap.get(response.getMessageId());
         if (responseEntry != null) {

@@ -3,4 +3,5 @@ export class MessageTypes {
     static ACTION = 'action';
     static DIALOG = 'dialog';
     static SCREEN = 'screen';
+    static PROXY = 'proxy';
 }

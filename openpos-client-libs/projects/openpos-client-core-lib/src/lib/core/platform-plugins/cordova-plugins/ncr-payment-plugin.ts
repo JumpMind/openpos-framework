@@ -3,6 +3,8 @@ import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { SessionService } from '../../services/session.service';
 import { Injectable } from '@angular/core';
+import { ActionMessage } from '../../messages/action-message';
+import { MessageTypes } from '../../messages/message-types';
 
 @Injectable({
     providedIn: 'root'
@@ -43,22 +45,28 @@ export class NCRPaymentPlugin implements IPlatformPlugin {
     forwardMessage(message: any) {
         if (message.action === 'ActivateDevice') {
             this.NCRCordovaPlugin.activateDevice(
-                response => { this.handleSuccess(response); },
-                response => { this.handleError(response); }
+                response => { this.handleSuccess(message, response); },
+                response => { this.handleError(message, response); }
             );
         } else if (message.action === 'ProcessMessage') {
             this.NCRCordovaPlugin.processMessage(message.payload,
-                response => { this.handleSuccess(response); },
-                response => { this.handleError(response); }
+                response => { this.handleSuccess(message, response); },
+                response => { this.handleError(message, response); }
             );
         }
     }
 
-    handleSuccess(response: string) {
+    handleSuccess(message: any, response: string) {
+        const responseMessage = new ActionMessage('response', { messageId: message.messageId, payload: response });
+        responseMessage.type = MessageTypes.PROXY;
+        this.sessionService.sendMessage(responseMessage);
         console.log('SUCCESSFUL RESPONSE: ' + response);
     }
 
-    handleError(response: string) {
+    handleError(message: any, response: string) {
+        const responseMessage = new ActionMessage('response', { messageId: message.messageId, payload: response });
+        responseMessage.type = MessageTypes.PROXY;
+        this.sessionService.sendMessage(responseMessage);
         console.log('ERROR RESPONSE: ' + response);
     }
 
