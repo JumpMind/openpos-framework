@@ -14,6 +14,8 @@ public class LocaleChangedMessage extends Message {
     private String displayLocale;
 
     String[] supportedLocales;
+    
+    private boolean showIcons = true;
 
     public LocaleChangedMessage() {
         super(MessageType.LocaleChanged);
@@ -59,6 +61,14 @@ public class LocaleChangedMessage extends Message {
 
     public void setSupportedLocales(String[] supportedLocales) {
         this.supportedLocales = supportedLocales;
+    }
+
+    public boolean isShowIcons() {
+        return showIcons;
+    }
+
+    public void setShowIcons(boolean showIcons) {
+        this.showIcons = showIcons;
     }
 
 }
