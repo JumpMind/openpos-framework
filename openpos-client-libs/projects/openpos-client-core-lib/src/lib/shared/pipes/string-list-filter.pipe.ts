@@ -9,7 +9,7 @@ export class StringListFilterPipe implements PipeTransform {
 
     // Filters a list to return any values to contain the filterValue
     transform(values: Array<string>, filterValue: string): Array<string> {
-        if (!values) {
+        if (!values || values.length === 0) {
             return null;
         }
 
