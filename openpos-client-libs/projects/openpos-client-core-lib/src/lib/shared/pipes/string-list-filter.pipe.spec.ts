@@ -33,8 +33,8 @@ describe('StringListFilterPipe', () => {
           expect(pipe.transform([], undefined)).toBeNull();
       });
 
-    it('filter a list with an empty string should be an empty list', () => {
-        expect(pipe.transform(testList, '').length).toBeFalsy();
+    it('filter a list with an empty string should be the entire list', () => {
+        expect(pipe.transform(testList, '').length).toEqual(3);
     });
 
     it('filter the testList with pOP should result in [$%PoppA]', () => {
