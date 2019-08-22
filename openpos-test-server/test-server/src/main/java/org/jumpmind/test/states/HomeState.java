@@ -1,8 +1,8 @@
 package org.jumpmind.test.states;
 
 import org.jumpmind.pos.core.flow.*;
-import org.jumpmind.pos.core.screen.ActionItem;
-import org.jumpmind.pos.core.screen.IconType;
+import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.IconType;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.message.HomeUIMessage;
 import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
