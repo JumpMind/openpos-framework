@@ -60,3 +60,4 @@ openpos-client-core-lib/\.project
 openpos-assemble/.classpath
 openpos-assemble/.project
 openpos-assemble/openpos-assemble.iws
+**/coverage/

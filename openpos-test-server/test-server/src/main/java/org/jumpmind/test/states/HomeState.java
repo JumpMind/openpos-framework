@@ -9,8 +9,6 @@ import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
 import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 import org.jumpmind.pos.server.model.Action;
 
-import javax.swing.*;
-
 public class HomeState {
 
     @In(scope = ScopeType.Device)
@@ -29,7 +27,10 @@ public class HomeState {
 
         message.addMessagePart(MessagePartConstants.BaconStrip, bacon);
 
-        message.addMenuItem( new ActionItem("F1", "Next", IconType.Email));
+        for( int i = 0; i < 12; ++i ) {
+            message.addMenuItem( new ActionItem("F"+i, "Next", IconType.Email));
+        }
+
         return message;
     }
 

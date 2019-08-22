@@ -25,6 +25,8 @@ interface ControlSequence { modifiers: string[]; key: string; }
     private startSequenceObj = this.getControlStrings(this.startSequence);
     private endSequenceObj = this.getControlStrings(this.endSequence);
 
+    private scanObservable: Observable<IScanData>;
+
     constructor( sessionService: SessionService, private domEventManager: DomEventManager, private log: Logger ) {
 
         sessionService.getMessages('ConfigChanged').pipe(
@@ -64,6 +66,18 @@ interface ControlSequence { modifiers: string[]; key: string; }
     startScanning(): Observable<IScanData> {
         this.scannerActive = true;
 
+        if ( this.scanObservable ) {
+            return this.scanObservable;
+        }
+
+        return this.createScanBuffer();
+    }
+
+    stopScanning() {
+        this.scannerActive = false;
+    }
+
+    private createScanBuffer(): Observable<IScanData> {
         const startScanBuffer = this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
             filter( (e: KeyboardEvent) => this.filterForControlSequence(this.startSequenceObj, e),
             tap( e => this.log.debug(`Starting Scan Capture: ${e}`))));
@@ -92,7 +106,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
         });
 
         // buffer up all keydown events and prevent them from propagating while scanning
-        return this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
+        return this.scanObservable = this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
             bufferToggle(
                 startScanBuffer,
                 () => stopScanBuffer
@@ -105,10 +119,6 @@ interface ControlSequence { modifiers: string[]; key: string; }
             map( (s) => s.join('')),
             map( (s: string) => this.getScanData(s))
         );
-    }
-
-    stopScanning() {
-        this.scannerActive = false;
     }
 
     private getControlStrings( sequence: string): ControlSequence {

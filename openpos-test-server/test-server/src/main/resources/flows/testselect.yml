@@ -1,0 +1,6 @@
+---
+TestSelectFlow:
+  - SaleState:
+      Next: DynamicFormState
+  - DynamicFormState:
+      Back: SaleState
