@@ -58,7 +58,9 @@ export class SellComponent extends AbstractTemplate<any> {
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem);
+    if (this.isMenuItemEnabled(menuItem)) {
+      this.session.onAction(menuItem);
+    }
   }
 
   public isMenuItemEnabled(m: IActionItem): boolean {
