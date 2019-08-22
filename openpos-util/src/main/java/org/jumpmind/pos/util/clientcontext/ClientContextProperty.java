@@ -7,5 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.FIELD})
-@interface ClientContextProperty {
+public @interface ClientContextProperty {
+    String name() default "";
+    boolean required() default false;
 }
