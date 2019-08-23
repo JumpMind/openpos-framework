@@ -222,4 +222,12 @@ describe('WedgeScanner', () => {
         expect(scanResults[0].data).toEqual('1234ZB');
     }));
 
+    it('should only create one event observer. subsequent calls to start should return the same observable', () => {
+        setupSync();
+        const observ1 = wedgeScannerPlugin.startScanning();
+        const observ2 = wedgeScannerPlugin.startScanning();
+
+        expect(observ1).toBe(observ2);
+    });
+
 });
