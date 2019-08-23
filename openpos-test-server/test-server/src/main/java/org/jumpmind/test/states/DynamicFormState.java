@@ -9,10 +9,7 @@ import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.FormField;
 import org.jumpmind.pos.core.screen.ActionItem;
 import org.jumpmind.pos.core.screen.DynamicFormScreen;
-import org.jumpmind.pos.core.screen.IconType;
 import org.jumpmind.pos.core.ui.UIMessage;
-import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
-import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 import org.jumpmind.pos.server.model.Action;
 
 import java.util.ArrayList;
