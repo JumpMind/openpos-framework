@@ -4,9 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
@@ -15,6 +17,11 @@ import org.jumpmind.pos.core.flow.TestStates.ActionTestingState;
 import org.jumpmind.pos.core.flow.TestStates.CustomerSearchState;
 import org.jumpmind.pos.core.flow.TestStates.CustomerSignupState;
 import org.jumpmind.pos.core.flow.TestStates.CustomerState;
+import org.jumpmind.pos.core.flow.TestStates.ExceptionInActionHandlerState;
+import org.jumpmind.pos.core.flow.TestStates.ExceptionOnArriveState;
+import org.jumpmind.pos.core.flow.TestStates.ExceptionOnDepartState;
+import org.jumpmind.pos.core.flow.TestStates.GlobalActionHandler;
+import org.jumpmind.pos.core.flow.TestStates.GlobalActionHandlerWithException;
 import org.jumpmind.pos.core.flow.TestStates.HelpState;
 import org.jumpmind.pos.core.flow.TestStates.HomeState;
 import org.jumpmind.pos.core.flow.TestStates.InjectionFailedState;
@@ -34,13 +41,16 @@ import org.jumpmind.pos.core.flow.TestStates.TransitionInterceptionState;
 import org.jumpmind.pos.core.flow.config.FlowBuilder;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.service.ScreenService;
+import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import static org.mockito.Mockito.*;
 import org.mockito.runners.MockitoJUnitRunner;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -57,6 +67,9 @@ public class StateManagerTest {
 
     @Mock
     private IMessageService messageService;
+    
+    @Mock
+    private IErrorHandler errorHandler;
 
     @Before
     public void setup() throws Exception {
@@ -106,7 +119,13 @@ public class StateManagerTest {
                 .withTransition("TestTransitionInterception", TransitionInterceptionState.class)
                 .withTransition("TestFailedInjections", InjectionFailedState.class)
                 .withTransition("TestOptionalInjections", OptionalInjectionState.class)
-                .withTransition("StackOverflow", StackOverflowState.class).build());
+                .withTransition("StackOverflow", StackOverflowState.class)
+                .withTransition("TestExceptionOnArriveAction", ExceptionOnArriveState.class)
+                .withTransition("TestExceptionOnDepartAction", ExceptionOnDepartState.class)
+                .withTransition("GoToExceptionInActionHandlerState", ExceptionInActionHandlerState.class)
+                .build()
+        );
+        config.add(FlowBuilder.addState(ExceptionInActionHandlerState.class).withTransition("ThrowsExceptionAction", HomeState.class).build());
         config.add(FlowBuilder.addState(TestScopesState.class).withTransition("Done", HomeState.class).build());
         config.add(FlowBuilder.addState(SellState.class).withSubTransition("Customer", customerFlow, "CustomerLookupComplete").build());
         config.add(FlowBuilder.addState(ActionTestingState.class).withTransition("Done", HomeState.class).build());
@@ -127,6 +146,8 @@ public class StateManagerTest {
         config.addGlobalTransitionOrActionHandler("RepostActionStateGotToSell", SellState.class);
         config.addGlobalTransitionOrActionHandler("TestTransitionProceed", HomeState.class);
         config.addGlobalTransitionOrActionHandler("TestTransitionCancel", HomeState.class);
+        config.addGlobalTransitionOrActionHandler("SomeGlobalAction", GlobalActionHandler.class);
+        config.addGlobalTransitionOrActionHandler("SomeGlobalActionWithException", GlobalActionHandlerWithException.class);
         config.addGlobalSubTransition("CustomerLookupGlobal", customerFlow);
         // config.addGlobalSubTransition("VendorList", vendorFlow);
         
@@ -142,8 +163,8 @@ public class StateManagerTest {
         TestUtil.setField(stateManager, "outjector", new Outjector());
         TestUtil.setField(stateManager, "transitionSteps", Arrays.asList(new TestTransitionStepCancel(), new TestTransitionStepProceed()));
         TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
-        
-
+     
+        stateManager.setErrorHandler(null);
     }
 
     
@@ -332,20 +353,64 @@ public class StateManagerTest {
         assertEquals("customerFlowTypeWorked", stateManager.getScopeValue("customerFlowTypeWorked"));
     }
 
-    @Test(expected = FlowException.class)
+    @Test
     public void testUnhandledAction() {
         stateManager.init("pos", "100-1");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("UnhandledAction");
+        try {
+            stateManager.doAction("UnhandledAction");
+            fail("should have thrown exception for unhandled action");
+        } catch (Exception ex) {
+            assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+            assertEquals(FlowException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("UnhandledAction"));
+        }
     }
 
-    @Test(expected = FlowException.class)
+    @Test
+    public void testUnhandledAction_WithErrorHandler() {
+        ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
+        
+        stateManager.setErrorHandler(errorHandler);
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("UnhandledAction");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
+        assertEquals(FlowException.class, exArgument.getValue().getClass());
+        assertTrue(exArgument.getValue().getMessage().contains("UnhandledAction"));
+        
+    }
+    
+    
+    @Test
     public void testInjectionFailure() {
         stateManager.init("pos", "100-1");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestFailedInjections");
+        try {
+            stateManager.doAction("TestFailedInjections");
+            fail("should have thrown exception for failed injections");
+        } catch (Exception ex) {
+            // TODO: we transitioned to InjectionFailedState, but injections failed.  Expected behavior?
+            // assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+            assertEquals(FlowException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("inject"));
+        }
     }
 
+    @Test
+    public void testInjectionFailure_WithErrorHandler() {
+        ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
+
+        stateManager.setErrorHandler(errorHandler);
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("TestFailedInjections");
+        verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
+        assertEquals(FlowException.class, exArgument.getValue().getClass());
+        assertTrue(exArgument.getValue().getMessage().contains("inject"));
+    }
+    
     @Test
     public void testOptionalInjections() {
         stateManager.init("pos", "100-1");
@@ -423,6 +488,52 @@ public class StateManagerTest {
     }
 
     @Test
+    public void testGlobalActionHandler() {
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        class Invoked { boolean invoked = false; }
+        final Invoked i = new Invoked();
+        Runnable r = () -> i.invoked = true;
+        
+        assertFalse(i.invoked);
+        stateManager.doAction(new Action("SomeGlobalAction", r));
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        assertTrue(i.invoked);
+    }
+
+    @Test
+    public void testGlobalActionHandlerException() {
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        try {
+            stateManager.doAction(new Action("SomeGlobalActionWithException"));
+            fail("should have thrown an exception when doing action SomeGlobalActionWithException");
+        } catch (Exception ex) {
+            assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+            assertEquals(FlowException.class, ex.getClass());
+            assertEquals(InvocationTargetException.class, ex.getCause().getClass());
+            assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
+            assertTrue( ex.getCause().getCause().getMessage().contains("Global"));
+        }
+    }
+
+    @Test
+    public void testGlobalActionHandlerException_WithErrorHandler() {
+        ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
+
+        stateManager.setErrorHandler(errorHandler);
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction(new Action("SomeGlobalActionWithException"));
+        verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        assertEquals(FlowException.class, exArgument.getValue().getClass());
+        assertEquals(InvocationTargetException.class, exArgument.getValue().getCause().getClass());
+        assertEquals(NullPointerException.class, exArgument.getValue().getCause().getCause().getClass());
+        assertTrue( exArgument.getValue().getCause().getCause().getMessage().contains("Global"));
+    }
+    
+    @Test
     public void testTransitionProceed() {
         stateManager.init("pos", "100-1");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
@@ -447,6 +558,13 @@ public class StateManagerTest {
         stateManager.init("pos", "100-1");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         stateManager.doAction("StackOverflow");
+    }
+
+    @Test
+    public void testStackOverflow_WithErrorHandler() {
+        stateManager.setErrorHandler(errorHandler);
+        this.testStackOverflow();
+        verify(errorHandler).handleError(eq(stateManager), isA(FlowException.class));
     }
     
     @Test
@@ -498,5 +616,108 @@ public class StateManagerTest {
     }
     
 
+    @Test
+    public void testOnArriveThatThrowsException( ) {
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        try {
+            stateManager.doAction("TestExceptionOnArriveAction");
+            fail("should have thrown exception on arrive");
+        } catch (Exception ex) {
+            assertEquals(ExceptionOnArriveState.class, stateManager.getCurrentState().getClass());
+            assertEquals(FlowException.class, ex.getClass());
+            assertEquals(InvocationTargetException.class, ex.getCause().getClass());
+            assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
+            assertTrue( ex.getCause().getCause().getMessage().contains("arrive"));
+        }
+    }
+    
+    @Test
+    public void testOnArriveThatThrowsException_WithErrorHandler( ) {
+        ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
+        
+        stateManager.setErrorHandler(errorHandler);
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("TestExceptionOnArriveAction");
+        
+        verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
+        
+        assertEquals(ExceptionOnArriveState.class, stateManager.getCurrentState().getClass());
+        assertEquals(FlowException.class, exArgument.getValue().getClass());
+        assertEquals(InvocationTargetException.class, exArgument.getValue().getCause().getClass());
+        assertEquals(NullPointerException.class, exArgument.getValue().getCause().getCause().getClass());
+        assertTrue(exArgument.getValue().getCause().getCause().getMessage().contains("arrive"));
+    }
+    
+    @Test
+    public void testOnDepartThatThrowsException( ) {
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("TestExceptionOnDepartAction");
+        assertEquals(ExceptionOnDepartState.class, stateManager.getCurrentState().getClass());
+        try {
+            // OnDepart from prior state should throw the exception here
+            stateManager.doAction("Home");
+            fail("Should have failed in onDepart");
+        } catch (Exception ex) {
+            assertEquals(FlowException.class, ex.getClass());
+            assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
+            assertTrue(ex.getCause().getCause().getMessage().contains("departure"));
+        }
+    }
+    
+    @Test
+    public void testOnDepartThatThrowsException_WithErrorHandler( ) {
+        ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
+        
+        stateManager.setErrorHandler(errorHandler);
+        
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("TestExceptionOnDepartAction");
+        assertEquals(ExceptionOnDepartState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("Home");
+        verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
 
+        assertEquals(FlowException.class, exArgument.getValue().getClass());
+        assertEquals(NullPointerException.class, exArgument.getValue().getCause().getCause().getClass());
+        assertTrue(exArgument.getValue().getCause().getCause().getMessage().contains("departure"));
+    }
+
+    @Test
+    public void testExceptionInActionHandler( ) {
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("GoToExceptionInActionHandlerState");
+        assertEquals(ExceptionInActionHandlerState.class, stateManager.getCurrentState().getClass());
+        try {
+            stateManager.doAction("ThrowsExceptionAction");
+            fail("should have thrown exception when running ThrowsExceptionAction");
+        } catch (Exception ex) {
+            assertEquals(FlowException.class, ex.getClass());
+            assertEquals(RuntimeException.class, ex.getCause().getCause().getClass());
+            assertTrue(ex.getCause().getCause().getMessage().contains("error in action handler"));
+        }
+    }
+    
+    @Test
+    public void testExceptionInActionHandler_WithErrorHandler( ) {
+        ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
+
+        stateManager.setErrorHandler(errorHandler);
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("GoToExceptionInActionHandlerState");
+        assertEquals(ExceptionInActionHandlerState.class, stateManager.getCurrentState().getClass());
+
+        stateManager.doAction("ThrowsExceptionAction");
+        
+        verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
+        assertEquals(FlowException.class, exArgument.getValue().getClass());
+        assertEquals(InvocationTargetException.class, exArgument.getValue().getCause().getClass());
+        assertEquals(RuntimeException.class, exArgument.getValue().getCause().getCause().getClass());
+        assertTrue(exArgument.getValue().getCause().getCause().getMessage().contains("error in action handler"));
+    }
+    
 }

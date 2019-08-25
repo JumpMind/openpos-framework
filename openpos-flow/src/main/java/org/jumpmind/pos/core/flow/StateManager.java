@@ -459,11 +459,21 @@ public class StateManager implements IStateManager {
                         action.getName(), applicationState.getCurrentContext().getState().getClass().getName(), action.getName(),
                         action.getName()));
             }
+        } catch (Throwable ex) {
+            handleOrRaiseException(ex);
         } finally {
             activeCalls.decrementAndGet();
         }
     }
-
+    
+    protected void handleOrRaiseException(Throwable ex) {
+        if (this.getErrorHandler() != null) {
+            this.getErrorHandler().handleError(this, ex);
+        } else {
+            throw ex instanceof RuntimeException ? (RuntimeException) ex : new FlowException(ex);
+        }
+    }
+    
     protected Class<? extends Object> getGlobalActionHandler(Action action) {
         FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
         Class<? extends Object> currentActionHandler = flowConfig.getActionToStateMapping().get(action.getName());

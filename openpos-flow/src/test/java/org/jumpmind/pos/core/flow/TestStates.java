@@ -474,4 +474,45 @@ public class TestStates {
 
     }
     
+    public static class GlobalActionHandler {
+        
+        @OnGlobalAction
+        public void onSomeGlobalAction(Action action) {
+            Runnable r = action.getData();
+            r.run();
+            assertEquals("SomeGlobalAction", action.getName());
+        }
+    }
+
+    public static class GlobalActionHandlerWithException {
+        
+        @OnGlobalAction
+        public void onSomeGlobalActionWithException(Action action) {
+            assertEquals("SomeGlobalActionWithException", action.getName());
+            throw new NullPointerException("Throwing NPE on Global Action");
+        }
+    }
+    
+    public static class ExceptionOnArriveState {
+        @OnArrive
+        public void arrive(Action action) {
+            throw new NullPointerException("Raising exception on arrive");
+        }
+    }
+
+    public static class ExceptionOnDepartState {
+        
+        @OnDepart
+        public void depart() {
+            throw new NullPointerException("Raising exception on departure");
+        }
+    }
+    
+    public static class ExceptionInActionHandlerState {
+        @ActionHandler
+        public void onThrowsExceptionAction(Action action) {
+            throw new RuntimeException("error in action handler");
+        }
+    }
+    
 }
