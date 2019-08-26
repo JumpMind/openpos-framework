@@ -1,6 +1,6 @@
 buildscript {
      repositories { maven { url "http://maven.jumpmind.com/repo" } }
-     dependencies { classpath "org.jumpmind.pos:openpos-gradle:1.0.0-SNAPSHOT" }
+     dependencies { classpath "org.jumpmind.pos:openpos-gradle:0.5.1" }
  }
 
  plugins {

@@ -77,3 +77,7 @@ openpos-wrapper/openpos-wrapper.iml
 openpos-print/openpos-print.iml
 
 **/coverage/
+openpos-client-libs/openpos-client-libs.iml
+openpos-client-personalize/openpos-client-personalize.iml
+openpos-test-server/test-server/test-server.iml
+**/coverage/

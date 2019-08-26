@@ -7,7 +7,7 @@ public abstract class LogfileDownloadResponse extends DefaultDeviceResponse {
 
     private static final long serialVersionUID = 1L;
     
-    LogfileDownloadResponse(IDeviceResponse deviceResponse) {
+    public LogfileDownloadResponse(IDeviceResponse deviceResponse) {
         super(deviceResponse);
     }
 

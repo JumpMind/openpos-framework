@@ -1,11 +1,13 @@
 package org.jumpmind.pos.core.ui.message;
 
 import org.jumpmind.pos.core.model.DisplayProperty;
+import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@AssignKeyBindings
 public class ItemDetailUIMessage extends UIMessage {
 
     private String itemName;

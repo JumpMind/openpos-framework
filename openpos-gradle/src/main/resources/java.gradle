@@ -141,14 +141,18 @@ task sourcesJar(type: Jar, dependsOn:classes) {
     from sourceSets.main.allSource
 }
 
-task develop {
-    description 'Generates Eclipse artifacts and sets up your development environment'
-    dependsOn tasks.cleanEclipse, tasks.eclipse, tasks.cleanIdea, tasks.idea
+task extraClean {
     doFirst {
         println 'Removing bin and .settings directories'
         delete './bin'
         delete '.settings'
     }
+}
+
+task develop {
+    description 'Generates Eclipse artifacts and sets up your development environment'
+    dependsOn tasks.cleanEclipse, tasks.eclipse, tasks.cleanIdea, tasks.idea
+
 }
 
 configurations {
@@ -184,3 +188,4 @@ task deploy {
 }
 
 tasks.uploadArchives.dependsOn build
+clean.dependsOn extraClean

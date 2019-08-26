@@ -11,6 +11,7 @@ export class LocaleService {
     private locale = DEFAULT_LOCALE;
     private displayLocale = DEFAULT_LOCALE;
     private supportedLocales = ['en-US'];
+    private showIcons = true;
 
     constructor(public sessionService: SessionService) {
         this.sessionService.getMessages('LocaleChanged').subscribe(message => this.handleLocaleChanged(message));
@@ -26,6 +27,9 @@ export class LocaleService {
         if (message.supportedLocales) {
             this.supportedLocales = message.supportedLocales.map(locale => this.formatLocaleForBrowser(locale));
         }
+        if (message.hasOwnProperty('showIcons')) {
+            this.showIcons = message.showIcons;
+        }
     }
 
     getLocale(): string {
@@ -38,6 +42,10 @@ export class LocaleService {
 
     getSupportedLocales(): string[] {
         return this.supportedLocales;
+    }
+
+    isShowIcons() {
+        return this.showIcons;
     }
 
     getConstant(key: LocaleConstantKey, locale?: string): any {

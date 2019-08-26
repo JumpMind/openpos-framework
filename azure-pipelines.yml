@@ -10,7 +10,8 @@ trigger:
   branches:
     include:
     - master
-    - korg
+    - releases/0.4
+    - releases/0.5
 
 pool:
   vmImage: 'Ubuntu-16.04'

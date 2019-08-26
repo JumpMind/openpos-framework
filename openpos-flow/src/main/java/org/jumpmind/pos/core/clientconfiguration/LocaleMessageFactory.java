@@ -12,12 +12,16 @@ public class LocaleMessageFactory {
     @Value("${openpos.ui.language.supportedLocales:null}")
     String[] supportedLocales;
 
+    @Value("${openpos.ui.language.showIcons:true}")
+    boolean showIcons;
+
     @Autowired(required = false)
     ILocaleProvider localeProvider;
 
     public LocaleChangedMessage getMessage(Locale locale, Locale displayLocale) {
         LocaleChangedMessage message = new LocaleChangedMessage(locale, displayLocale);
         message.setSupportedLocales(supportedLocales);
+        message.setShowIcons(showIcons);
         return message;
     }
 
@@ -29,6 +33,7 @@ public class LocaleMessageFactory {
             message = new LocaleChangedMessage();
         }
         message.setSupportedLocales(supportedLocales);
+        message.setShowIcons(showIcons);
         return message;
     }
 }

@@ -1,4 +1,5 @@
-apply plugin: "com.moowork.node"
+apply plugin: 'com.moowork.node'
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
 
 repositories {
     mavenCentral()
@@ -53,30 +54,20 @@ task ng_build(type: NpmTask){
     outputs.dir file('dist/openpos-client-core-lib')
 }
 
-task processResources {}
-
-task test {
-    dependsOn ng_test
-}
-
-task build {
-    dependsOn ng_build
-}
-
-task clean {
+task ng_clean {
     delete ng_build.outputs
     delete npm_install.outputs
 }
 
 task npm_pack(type: NpmTask){
-    dependsOn build
+    dependsOn ng_build
     workingDir =  file('dist/openpos-client-core-lib')
     args = [
             'pack'
     ]
 }
 
-task deploy {
+task ng_deploy {
     dependsOn npm_pack
     doLast {
         if (!gitBranch.equals('merge')) {
@@ -96,3 +87,8 @@ task deploy {
         }
     }
 }
+
+deploy.dependsOn ng_deploy
+test.dependsOn ng_test
+build.dependsOn ng_build
+clean.dependsOn ng_clean

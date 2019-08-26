@@ -35,6 +35,7 @@
     "@types/signature_pad": "0.0.30",
     "angular2-text-mask": "^9.0.0",
     "core-js": "^2.5.7",
+    "electron": "^4.1.4",
     "hammer-timejs": "^1.1.0",
     "hammerjs": "^2.0.8",
     "js-logger": "^1.4.1",

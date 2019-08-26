@@ -1,15 +1,13 @@
 package org.jumpmind.test.states;
 
 import org.jumpmind.pos.core.flow.*;
-import org.jumpmind.pos.core.screen.ActionItem;
-import org.jumpmind.pos.core.screen.IconType;
+import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.IconType;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.message.HomeUIMessage;
 import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
 import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 import org.jumpmind.pos.server.model.Action;
-
-import javax.swing.*;
 
 public class HomeState {
 
@@ -29,7 +27,10 @@ public class HomeState {
 
         message.addMessagePart(MessagePartConstants.BaconStrip, bacon);
 
-        message.addMenuItem( new ActionItem("F1", "Next", IconType.Email));
+        for( int i = 0; i < 12; ++i ) {
+            message.addMenuItem( new ActionItem("F"+i, "Next", IconType.Email));
+        }
+
         return message;
     }
 

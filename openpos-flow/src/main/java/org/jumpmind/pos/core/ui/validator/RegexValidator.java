@@ -7,7 +7,9 @@ package org.jumpmind.pos.core.ui.validator;
 public class RegexValidator implements IValidatorSpec {
 
     private static final long serialVersionUID = 1L;
-    
+    /** A validator that disallows a value that is entirely composed of whitespace characters. */
+    public static final RegexValidator NotAllWhitespaceValidator = new RegexValidator("^(?!\\s).+$", "g");
+
     private String javascriptRegex;
     private String flags;
 

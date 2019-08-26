@@ -47,7 +47,7 @@ export class ScanSomethingComponent implements AfterViewInit, IMessageHandler<an
 
   handle(message: any) {
     if (message.template && !message.template.dialog) {
-      this.focusFirst();
+        this.focusFirst();
     }
   }
 
@@ -72,7 +72,7 @@ export class ScanSomethingComponent implements AfterViewInit, IMessageHandler<an
   }
 
   private unregisterScanner() {
-    if (this.scanServiceSubscription !== null) {
+    if (this.scanServiceSubscription) {
       this.scanServiceSubscription.unsubscribe();
       this.scanServiceSubscription = null;
     }
