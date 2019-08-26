@@ -1,4 +1,3 @@
-import { Logger } from '../services/logger.service';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, AbstractControl } from '@angular/forms';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
@@ -25,7 +24,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
 
     constructor(
         private formBuilder: FormBuilder, private clientUrlService: ClientUrlService,
-        private personalizationService: PersonalizationService, private log: Logger,
+        private personalizationService: PersonalizationService,
         private matDialog: MatDialog
     ) { }
 
@@ -156,7 +155,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
                     this.updateLastFormGroup();
                     resolve(null);
                 } else {
-                    this.log.warn(`Personalization request failed with error: ${this.serverResponse.message}`);
+                    console.warn(`Personalization request failed with error: ${this.serverResponse.message}`);
                     resolve(this.serverResponse);
                 }
             }, 1000);

@@ -1,4 +1,3 @@
-import { Logger } from '../services/logger.service';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { IActionItem } from './action-item.interface';
@@ -21,7 +20,6 @@ const scopedMessages$ = new BehaviorSubject(testScreen);
 describe('ActionService', () => {
 
     let messageProvider: jasmine.SpyObj<MessageProvider>;
-    let loggerService: jasmine.SpyObj<Logger>;
     let actionService: ActionService;
     let matDialogRef: jasmine.SpyObj<MatDialogRef<any>>;
     let matDialog: jasmine.SpyObj<MatDialog>;
@@ -31,7 +29,6 @@ describe('ActionService', () => {
         const messageProviderSpy = jasmine.createSpyObj('MessageProvider', ['sendMessage', 'getScopedMessages$']);
         const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
         const matDialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed', 'componentInstance']);
-        const loggerSpy = jasmine.createSpyObj('Logger', ['info']);
         matDialogRef = matDialogRefSpy;
 
         TestBed.configureTestingModule({
@@ -39,12 +36,10 @@ describe('ActionService', () => {
                 ActionService,
                 { provide: MessageProvider, useValue: messageProviderSpy},
                 { provide: MatDialog, useValue: matDialogSpy },
-                { provide: Logger, useValue: loggerSpy },
             ]
         });
 
         messageProviderSpy.getScopedMessages$.and.returnValue(scopedMessages$);
-        loggerService = TestBed.get(Logger);
         messageProvider = TestBed.get(MessageProvider);
         actionService = TestBed.get(ActionService);
         matDialog = TestBed.get(MatDialog);

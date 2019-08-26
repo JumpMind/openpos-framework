@@ -1,4 +1,3 @@
-import { Logger } from './logger.service';
 import { TestBed } from '@angular/core/testing';
 import { StartupService, STARTUP_TASKS, STARTUP_COMPONENT, STARTUP_FAILED_COMPONENT, STARTUP_FAILED_TASK } from './startup.service';
 import { MatDialog, MatDialogRef } from '@angular/material';
@@ -34,7 +33,6 @@ describe('StartupService', () => {
                 StartupService,
                 { provide: STARTUP_COMPONENT, useValue: StartupComponent },
                 { provide: STARTUP_FAILED_COMPONENT, useValue: StartupFailedComponent },
-                { provide: Logger, useValue: loggerSpy },
                 {
                     provide: STARTUP_FAILED_TASK, useValue:
                         { name: 'FailureTask', order: 100, execute: () => cold('--x|', { x: 'FailureTask' }) }

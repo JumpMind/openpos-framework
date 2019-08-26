@@ -1,7 +1,6 @@
 import { Component, Input, OnInit, Inject, forwardRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
-import { Logger } from '../../../core/services/logger.service';
 import { IUrlMenuItem } from '../../../core/actions/url-menu-item.interface';
 import { PersonalizationService } from '../../../core/personalization/personalization.service';
 
@@ -24,8 +23,7 @@ export class CatalogBrowserItemComponent implements OnInit {
 
     // @ViewChild('itemImg') itemImage: Element;
 
-    constructor(private log: Logger,
-        @Inject(forwardRef(() => PersonalizationService))private personalization: PersonalizationService) {
+    constructor(@Inject(forwardRef(() => PersonalizationService))private personalization: PersonalizationService) {
     }
 
     ngOnInit(): void {

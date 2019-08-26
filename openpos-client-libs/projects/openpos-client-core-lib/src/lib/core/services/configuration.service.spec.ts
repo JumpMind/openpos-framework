@@ -2,8 +2,6 @@ import { Configuration } from './../../configuration/configuration';
 import { ConfigurationService } from './configuration.service';
 import { SessionService } from './session.service';
 import { TestBed } from '@angular/core/testing';
-import { Logger } from './logger.service';
-import { of } from 'rxjs';
 import { cold, getTestScheduler } from 'jasmine-marbles';
 import { ElectronService } from 'ngx-electron';
 
@@ -28,7 +26,6 @@ describe('ConfigurationService', () => {
         TestBed.configureTestingModule({
             providers: [
                 ElectronService,
-                Logger,
                 { provide: SessionService, useValue: sessionSpy },
             ]
         });

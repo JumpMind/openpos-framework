@@ -5,7 +5,6 @@ import { cold, getTestScheduler } from 'jasmine-marbles';
 import { IScanData } from '../scan.interface';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
 import { Subscription, of, Subject } from 'rxjs';
-import { Logger } from '../../../services/logger.service';
 import { ElectronService } from 'ngx-electron';
 
 describe('WedgeScanner', () => {
@@ -67,7 +66,6 @@ describe('WedgeScanner', () => {
             providers: [
                 WedgeScannerPlugin,
                 ElectronService,
-                Logger,
                 { provide: SessionService, useValue: sessionSpy },
                 { provide: DomEventManager, useValue: domEventManagerSpy}
             ]
@@ -221,5 +219,13 @@ describe('WedgeScanner', () => {
         expect(scanResults[0].rawType).toEqual('X');
         expect(scanResults[0].data).toEqual('1234ZB');
     }));
+
+    it('should only create one event observer. subsequent calls to start should return the same observable', () => {
+        setupSync();
+        const observ1 = wedgeScannerPlugin.startScanning();
+        const observ2 = wedgeScannerPlugin.startScanning();
+
+        expect(observ1).toBe(observ2);
+    });
 
 });

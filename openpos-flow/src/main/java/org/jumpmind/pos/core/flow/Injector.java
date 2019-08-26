@@ -177,6 +177,7 @@ public class Injector {
         if (value != null && value.getValue() != null) {
             try {
                 field.set(target, value.getValue());
+                logger.trace("Injected field '{}' with value {}", name, value.getValue());
             } catch (Exception ex) {
                 throw new FlowException("Failed to set target field " + field + " to value " + value.getValue(), ex);
             }

@@ -20,7 +20,6 @@ import { ErrorHandlerService } from './services/errorhandler.service';
 import { StompRService } from '@stomp/ng2-stompjs';
 import { SubscribeToSessionTask } from './startup/subscribe-to-session-task';
 import { Router } from '@angular/router';
-import { Logger } from './services/logger.service';
 import { StartupFailedComponent } from './startup/startup-failed.component';
 import { MatDialog } from '@angular/material';
 import { FinalStartupTask } from './startup/final-startup-task';
@@ -50,6 +49,9 @@ import locale_enCA from '@angular/common/locales/en-CA';
 import locale_frCA from '@angular/common/locales/fr-CA';
 import { LocationService, PROVIDERS } from './services/location.service';
 import { LocationProviderDefault } from './location-providers/location-provider-default';
+import { ConsoleIntercepter, LOGGERS } from './logging/console-interceptor.service';
+import { ServerLogger } from './logging/server-logger.service';
+import { ElectronLogger } from './logging/electron-logger';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -92,7 +94,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StompRService,
         ScannerService,
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
-        { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router, Logger]},
+        { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
         { provide: STARTUP_TASKS, useClass: FinalStartupTask, multi: true, deps: [SessionService]},
         { provide: STARTUP_TASKS, useClass: PlatformReadyStartupTask, multi: true },
@@ -110,13 +112,16 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
         TrainingOverlayService,
         ConfigurationService,
-        KeyPressProvider
+        KeyPressProvider,
+        { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
+        { provide: LOGGERS, useExisting: ElectronLogger, multi: true }
     ]
 })
 export class CoreModule {
 
     constructor(@Optional() @SkipSelf() parentModule: CoreModule,
                 private injector: Injector,
+                logger: ConsoleIntercepter,
                 toastService: ToastService,
                 keyProvider: KeyPressProvider) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');
