@@ -132,10 +132,10 @@ public class StateManagerContainer implements IStateManagerContainer {
 
     public void setCurrentStateManager(IStateManager stateManager) {
         currentStateManager.set(stateManager);
-        if( stateManager != null && StringUtils.isNotBlank(stateManager.getDeviceId())) {
-            this.clientContext.put("deviceId", stateManager.getDeviceId());
-        } else {
-            this.clientContext.put("deviceId", "?");
+        if( stateManager != null && stateManager.getClientContext() != null ){
+            for(String property: stateManager.getClientContext().keySet()) {
+                clientContext.put(property, stateManager.getClientContext().get(property));
+            }
         }
     }
 

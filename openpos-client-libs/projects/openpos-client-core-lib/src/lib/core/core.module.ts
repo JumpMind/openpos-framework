@@ -52,6 +52,8 @@ import { LocationProviderDefault } from './location-providers/location-provider-
 import { ConsoleIntercepter, LOGGERS } from './logging/console-interceptor.service';
 import { ServerLogger } from './logging/server-logger.service';
 import { ElectronLogger } from './logging/electron-logger';
+import { CLIENTCONTEXT } from './client-context/client-context-provider.interface';
+import { TimeZoneContext } from './client-context/time-zone-context';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -114,7 +116,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         ConfigurationService,
         KeyPressProvider,
         { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
-        { provide: LOGGERS, useExisting: ElectronLogger, multi: true }
+        { provide: LOGGERS, useExisting: ElectronLogger, multi: true },
+        { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true }
     ]
 })
 export class CoreModule {

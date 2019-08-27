@@ -42,7 +42,6 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
-import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -114,6 +113,8 @@ public class StateManager implements IStateManager {
 
     private Map<String, Boolean> sessionCompatible = new HashMap<>();
 
+    private Map<String, String> clientContext = new HashMap<>();
+
     private IErrorHandler errorHandler;
 
     private final AtomicInteger activeCalls = new AtomicInteger(0);
@@ -182,6 +183,16 @@ public class StateManager implements IStateManager {
         }
         this.sessionAuthenticated.remove(sessionId);
         this.logger.info("Session {} removed from cache of authenticated sessions", sessionId);
+    }
+
+    @Override
+    public void setClientContext(Map<String, String> clientContext) {
+        this.clientContext = clientContext;
+    }
+
+    @Override
+    public Map<String, String> getClientContext(){
+        return this.clientContext;
     }
 
     @Override
