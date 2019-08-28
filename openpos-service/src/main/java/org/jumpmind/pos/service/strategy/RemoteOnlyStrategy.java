@@ -45,10 +45,12 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
 
         HttpHeaders headers = new HttpHeaders();
 
-        for (String propertyName : clientContext.getPropertyNames()) {
-            headers.set("ClientContext-" + propertyName, clientContext.get(propertyName));
+        if( clientContext != null ) {
+            for (String propertyName : clientContext.getPropertyNames()) {
+                headers.set("ClientContext-" + propertyName, clientContext.get(propertyName));
+            }
         }
-
+        
         if (requestMethods != null && requestMethods.length > 0) {
             HttpMethod requestMethod = translate(requestMethods[0]);
             String serverUrl = buildUrl(config, proxy, method, args);
