@@ -8,7 +8,7 @@ import { PersonalizationService } from '../personalization/personalization.servi
 import { Observable, Subscription, BehaviorSubject, Subject, merge } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { Message } from '@stomp/stompjs';
-import { Injectable, NgZone, } from '@angular/core';
+import { Injectable, NgZone, Inject, } from '@angular/core';
 import { StompState, StompRService } from '@stomp/ng2-stompjs';
 import { MatDialog } from '@angular/material';
 // Importing the ../components barrel causes a circular reference since dynamic-screen references back to here,
@@ -23,6 +23,7 @@ import { ElectronService } from 'ngx-electron';
 import { OpenposMessage } from '../messages/message';
 import { MessageTypes } from '../messages/message-types';
 import { ActionMessage } from '../messages/action-message';
+import { CLIENTCONTEXT, IClientContext } from '../client-context/client-context-provider.interface';
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
@@ -92,7 +93,8 @@ export class SessionService implements IMessageHandler<any> {
         public zone: NgZone,
         protected personalization: PersonalizationService,
         private http: HttpClient,
-        private electron: ElectronService
+        private electron: ElectronService,
+        @Inject(CLIENTCONTEXT) private clientContexts: Array<IClientContext>
     ) {
         this.zone.onError.subscribe((e) => {
             console.error(`[OpenPOS]${e}`);
@@ -190,6 +192,12 @@ export class SessionService implements IMessageHandler<any> {
             version: JSON.stringify(VERSION)
         };
         this.appendPersonalizationProperties(headers);
+        this.clientContexts.forEach( context => {
+            const contextsToAdd = context.getContextProperties();
+            contextsToAdd.forEach( (value, key ) => {
+                headers[key] = value;
+            });
+        });
         return headers;
     }
 

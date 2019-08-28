@@ -62,5 +62,7 @@ public interface IStateManager {
     public Injector getInjector();
     public boolean isAtRest();
     public void sendConfigurationChangedMessage();
+    public void setClientContext(Map<String,String> context);
+    public Map<String, String> getClientContext();
     
 }

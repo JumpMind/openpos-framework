@@ -35,5 +35,8 @@
     ],
     "Logging": [
         "logging"
+    ],
+    "Client Context": [
+        "client-context"
     ]
 }

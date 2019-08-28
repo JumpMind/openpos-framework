@@ -273,3 +273,38 @@ Whether a service or method is local or remote is determined by the presence of 
         strategy: REMOTE_FIRST
 ~~~
 
+## Client Context
+
+Whenever an Action request originates from a client device a context object is created and made available to operations resulting from the request. An example of this context information would be Device Id of the client making the request.
+
+The context information can be access by injecting the ClientContext object and accessing the property by name.
+
+~~~java
+    @Autowired
+    ClientContext clientContext;
+~~~
+
+When accessing this context information from and endpoint implementation **@ClientContextProperty** can be used to inject just the property.
+
+~~~java
+    @ClientContextProperty
+    private String deviceId;
+~~~
+
+The ClientContext is pass along with the request when making Remote service calls, which makes the context available on the remote service endpoint implementations as well.
+
+### Configuration
+
+What properties are available in the ClientContext are configurable at an application level using the following configuration.
+
+~~~yaml
+ui:
+    client-context:
+      parameters:
+        - deviceId
+        - timezoneOffset
+~~~
+
+The list of parameters determines what values to pull from the subscription request and add to the context object.
+
+See [Client Context](client-context) for adding additional parameters.
