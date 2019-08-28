@@ -32,6 +32,7 @@ import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
 import org.jumpmind.pos.core.clientconfiguration.LocaleChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
+import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
