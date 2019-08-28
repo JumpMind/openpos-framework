@@ -363,22 +363,6 @@ public class Form implements Serializable {
         return formField;
     }
 
-    public ComboField addStatesListField(String fieldId, String label, String value, List<String> values, boolean required) {
-        ComboField formField = createStatesListField(fieldId, label, value, values, required);
-        formElements.add(formField);
-        return formField;
-    }
-
-    public ComboField createStatesListField(String fieldId, String label, String value, List<String> values, boolean required) {
-
-        ComboField formField = new ComboField(fieldId, label, null, values);
-        if (value != null)
-            formField.setValue(value);
-        formField.required(required);
-        formField.setValueChangedAction("StateSelected");
-        return formField;
-    }
-    
     public static FormField createPhoneField(String fieldId, String label, String value, boolean required) {
         FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.Phone, required);
         formField.setValue(value);
