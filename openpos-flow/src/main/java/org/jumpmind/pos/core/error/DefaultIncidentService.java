@@ -21,7 +21,7 @@ public class DefaultIncidentService implements IIncidentService {
     private static final String INCIDENT_ID_FILENAME = ".incident_id";
 
     private String incidentIdFileLocation;
-    private String incidentMessage;
+    private String incidentMessage = "An error has occurred. Please use incident id: %s when reporting the issue.";
 
     private File incidentIdFile;
     private Integer incidentCount;
