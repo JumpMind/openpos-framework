@@ -38,6 +38,7 @@ import org.jumpmind.pos.core.util.LogFormatter;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +63,7 @@ public class ScreenService implements IScreenService, IActionListener {
     Logger logger = LoggerFactory.getLogger(getClass());
     Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
 
-    ObjectMapper mapper = new ObjectMapper();
+    ObjectMapper mapper = DefaultObjectMapper.defaultObjectMapper();
 
     @Autowired
     IStateManagerContainer stateManagerContainer;
@@ -357,7 +358,7 @@ public class ScreenService implements IScreenService, IActionListener {
                     action.setData(form);
                 }
             } catch (IllegalArgumentException ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
                 // We should not assume a form will always be returned by
                 // the DynamicFormScreen.
                 // The barcode scanner can also return a value.

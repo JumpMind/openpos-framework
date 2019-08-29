@@ -17,7 +17,7 @@ public class RestRequestLoggingFilter extends AbstractRequestLoggingFilter {
         setBeforeMessageSuffix("\n*****************************************");
         setIncludePayload(true);
         setMaxPayloadLength(10000);
-        setIncludeHeaders(false);
+        setIncludeHeaders(true);
         setAfterMessagePrefix("\n*****************************************\n  SERVICE RESULT: ");
         setAfterMessageSuffix("\n*****************************************");
     }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Configuration
 @ComponentScan(
-        basePackages = {  "org.jumpmind.pos.service" })
+        basePackages = {  "org.jumpmind.pos.service", "org.jumpmind.pos.util" })
 public class TestServiceConfig {
 
     @Bean

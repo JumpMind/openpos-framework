@@ -1,5 +1,4 @@
 import { ConfigurationService } from '../../../core/services/configuration.service';
-import { Logger } from '../../../core/services/logger.service';
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Renderer2, ElementRef } from '@angular/core';
 import { Component, ViewChild, HostListener, ComponentRef, OnInit } from '@angular/core';
@@ -104,7 +103,6 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     @ViewChild('devMenuPanel') devMenuPanel: MatExpansionPanel;
 
     constructor(
-            private log: Logger,
             private personalization: PersonalizationService,
             public screenService: ScreenService, public dialogService: DialogService, public session: SessionService,
             public deviceService: DeviceService, public dialog: MatDialog,
@@ -136,7 +134,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     private populateDevTables(message: any) {
         if (message.currentState) {
-            this.log.info('Pulling current state actions...');
+            console.info('Pulling current state actions...');
             this.currentState = message.currentState.stateName;
             this.currentStateClass = message.currentState.stateClass;
             this.currentStateActions = [];
@@ -149,7 +147,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             }
         }
         if (message.scopes.ConversationScope) {
-            this.log.info('Pulling Conversation Scope Elements...');
+            console.info('Pulling Conversation Scope Elements...');
             this.ConvElements = [];
             message.scopes.ConversationScope.forEach(element => {
                 if (!this.ConvElements.includes(element, 0)) {
@@ -163,7 +161,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             });
         }
         if (message.scopes.SessionScope) {
-            this.log.info('Pulling Session Scope Elements...');
+            console.info('Pulling Session Scope Elements...');
             this.SessElements = [];
             message.scopes.SessionScope.forEach(element => {
                 if (!this.SessElements.includes(element, 0)) {
@@ -177,7 +175,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             });
         }
         if (message.scopes.DeviceScope) {
-            this.log.info('Pulling Device Scope Elements...');
+            console.info('Pulling Device Scope Elements...');
             this.DeviceElements = [];
             message.scopes.DeviceScope.forEach(element => {
                 if (!this.DeviceElements.includes(element, 0)) {
@@ -191,7 +189,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             });
         }
         if (message.scopes.FlowScope) {
-            this.log.info('Pulling Flow Scope Elements...');
+            console.info('Pulling Flow Scope Elements...');
             this.FlowElements = [];
             message.scopes.FlowScope.forEach(element => {
                 if (!this.FlowElements.includes(element, 0)) {
@@ -203,11 +201,11 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                     });
                 }
             });
-            this.log.info(this.FlowElements);
+            console.info(this.FlowElements);
         }
 
         if (message.scopes.ConfigScope) {
-            this.log.info('Pulling Config Scope Elements...');
+            console.info('Pulling Config Scope Elements...');
             this.ConfElements = [];
             message.scopes.ConfigScope.forEach(element => {
                 if (!this.ConfElements.includes(element, 0)) {
@@ -219,15 +217,15 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                     });
                 }
             });
-            this.log.info(this.ConfElements);
+            console.info(this.ConfElements);
         }
 
         if (message.saveFiles) {
-            this.log.info('Pulling save files...');
+            console.info('Pulling save files...');
             this.savePoints = [];
             message.saveFiles.forEach(saveName => {
                 this.savePoints.push(saveName);
-                this.log.info(this.savePoints);
+                console.info(this.savePoints);
             });
         }
     }
@@ -235,7 +233,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     @HostListener('document:keydown', ['$event'])
     handleKeydownEvent(event: any) {
         const key = event.key;
-        // this.log.info(key);
+        // console.info(key);
         if (key === 'ArrowUp' && this.keyCount !== 1) {
             this.keyCount = 1;
         } else if (key === 'ArrowUp' && this.keyCount === 1) {
@@ -269,11 +267,11 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         let x = event.clientX;
         let y = event.clientY;
         if (event.type === 'touchstart') {
-            // this.log.info(event);
+            // console.info(event);
             x = event.changedTouches[0].pageX;
             y = event.changedTouches[0].pageY;
         }
-        // this.log.info(`${screenWidth} ${x} ${y}`);
+        // console.info(`${screenWidth} ${x} ${y}`);
         if (this.clickCount === 0 || Date.now() - this.firstClickTime > 1000 ||
             (y > 100) || this.disableDevMenu) {
             this.firstClickTime = Date.now();
@@ -297,7 +295,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             this.devClicks = 0;
         }
 
-        // this.log.info(this.devClicks + " y="+y + ",x="+x+",h="+screenHeight+",w="+screenWidth);
+        // console.info(this.devClicks + " y="+y + ",x="+x+",h="+screenHeight+",w="+screenWidth);
 
     }
 
@@ -331,7 +329,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         if (this.personalization.isPersonalized()) {
             this.session.publish('DevTools::Get', DevMenuComponent.MSG_TYPE);
         } else {
-            this.log.info(`DevTools can't fetch server status since device is not yet personalized.`);
+            console.info(`DevTools can't fetch server status since device is not yet personalized.`);
         }
         this.showDevMenu = !this.showDevMenu;
         if (! this.personalization.isPersonalized()) {
@@ -349,7 +347,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     }
 
     public onDevMenuRefresh() {
-        this.log.info('refreshing tools... ');
+        console.info('refreshing tools... ');
         this.displayStackTrace = false;
         this.currentState = 'Updating State... ';
         this.currentStateClass = 'Updating State...';
@@ -398,14 +396,14 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     public onLoadSavePoint(savePoint: string) {
         if (this.savePoints.includes(savePoint)) {
             this.session.publish('DevTools::Load::' + savePoint, DevMenuComponent.MSG_TYPE);
-            this.log.info('Loaded Save Point: \'' + savePoint + '\'');
+            console.info('Loaded Save Point: \'' + savePoint + '\'');
         } else {
-            this.log.info('Unable to load Save Point: \'' + savePoint + '\'');
+            console.info('Unable to load Save Point: \'' + savePoint + '\'');
         }
     }
 
     public onSimulateScan(value: string) {
-        this.log.info('onSimulatedScan(' + value + ')');
+        console.info('onSimulatedScan(' + value + ')');
         if (value) {
             this.session.publish('DevTools::Scan', DevMenuComponent.MSG_TYPE, value);
         }
@@ -454,7 +452,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             const httpClient = this.httpClient;
             httpClient.get(url).subscribe(response => {
                 const msg = `Node '${nodeId}' restarted successfully.`;
-                this.log.info(msg);
+                console.info(msg);
                 resolve({ success: true, message: msg });
             },
                 err => {
@@ -490,7 +488,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                 () => {
                 },
                 (error) => {
-                    this.log.info(error);
+                    console.info(error);
                 }
             );
         }
@@ -515,7 +513,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                         });
                 },
                 (error) => {
-                    this.log.info(error);
+                    console.info(error);
                 }
             );
         }
@@ -536,7 +534,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                     dialogRef.componentInstance.text = logFileContents;
                 },
                 (error) => {
-                    this.log.info(error);
+                    console.info(error);
                 }
             );
         }
@@ -552,33 +550,33 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                 this.savePoints.push(newSavePoint);
             }
             this.session.publish('DevTools::Save::' + newSavePoint, DevMenuComponent.MSG_TYPE);
-            this.log.info('Save Point Created: \'' + newSavePoint + '\'');
+            console.info('Save Point Created: \'' + newSavePoint + '\'');
         }
     }
 
     protected removeSaveFile(saveName: string) {
-        this.log.info('Attempting to remove Save Point \'' + saveName + '\'...');
+        console.info('Attempting to remove Save Point \'' + saveName + '\'...');
         const index = this.savePoints.findIndex(item => {
             return saveName === item;
         });
         if (index !== -1) {
             this.session.publish('DevTools::RemoveSave::' + saveName, DevMenuComponent.MSG_TYPE);
             this.savePoints.splice(index, 1);
-            this.log.info('Save Points updated: ');
-            this.log.info(this.savePoints);
+            console.info('Save Points updated: ');
+            console.info(this.savePoints);
         }
     }
 
     protected removeNodeElement(element: Element) {
-        this.log.info('Attempting to remove \'' + element.Value + '\'...');
+        console.info('Attempting to remove \'' + element.Value + '\'...');
         const index = this.DeviceElements.findIndex(item => {
             return element.Value === item.Value;
         });
         if (index !== -1) {
             this.session.publish('DevTools::Remove::Node', DevMenuComponent.MSG_TYPE, element);
             this.DeviceElements.splice(index, 1);
-            this.log.info('Node Scope updated: ');
-            this.log.info(this.DeviceElements);
+            console.info('Node Scope updated: ');
+            console.info(this.DeviceElements);
         }
     }
 
@@ -603,54 +601,54 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     }
 
     public removeSessionElement(element: Element) {
-        this.log.info('Attempting to remove \'' + element.Value + '\'...');
+        console.info('Attempting to remove \'' + element.Value + '\'...');
         const index = this.SessElements.findIndex(item => {
             return element.Value === item.Value;
         });
         if (index !== -1) {
             this.session.publish('DevTools::Remove::Session', DevMenuComponent.MSG_TYPE, element);
             this.SessElements.splice(index, 1);
-            this.log.info('Session Scope updated: ');
-            this.log.info(this.DeviceElements);
+            console.info('Session Scope updated: ');
+            console.info(this.DeviceElements);
         }
     }
 
     protected removeConversationElement(element: Element) {
-        this.log.info('Attempting to remove \'' + element.Value + '\'...');
+        console.info('Attempting to remove \'' + element.Value + '\'...');
         const index = this.ConvElements.findIndex(item => {
             return element.Value === item.Value;
         });
         if (index !== -1) {
             this.session.publish('DevTools::Remove::Conversation', DevMenuComponent.MSG_TYPE, element);
             this.ConvElements.splice(index, 1);
-            this.log.info('Conversation Scope updated: ');
-            this.log.info(this.ConvElements);
+            console.info('Conversation Scope updated: ');
+            console.info(this.ConvElements);
         }
     }
 
     protected removeConfigElement(element: Element) {
-        this.log.info('Attempting to remove \'' + element.Value + '\'...');
+        console.info('Attempting to remove \'' + element.Value + '\'...');
         const index = this.ConfElements.findIndex(item => {
             return element.Value === item.Value;
         });
         if (index !== -1) {
             this.session.publish('DevTools::Remove::Config', DevMenuComponent.MSG_TYPE, element);
             this.ConfElements.splice(index, 1);
-            this.log.info('Config Scope updated: ');
-            this.log.info(this.ConfElements);
+            console.info('Config Scope updated: ');
+            console.info(this.ConfElements);
         }
     }
 
     protected removeFlowElement(element: Element) {
-        this.log.info('Attempting to remove \'' + element.Value + '\'...');
+        console.info('Attempting to remove \'' + element.Value + '\'...');
         const index = this.FlowElements.findIndex(item => {
             return element.Value === item.Value;
         });
         if (index !== -1) {
             this.session.publish('DevTools::Remove::Flow', DevMenuComponent.MSG_TYPE, element);
             this.FlowElements.splice(index, 1);
-            this.log.info('Flow Scope updated: ');
-            this.log.info(this.FlowElements);
+            console.info('Flow Scope updated: ');
+            console.info(this.FlowElements);
         }
     }
 }

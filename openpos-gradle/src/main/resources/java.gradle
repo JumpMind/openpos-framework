@@ -156,7 +156,7 @@ task develop {
 }
 
 configurations {
-    testArtifacts
+    testArtifacts.extendsFrom testRuntime
     deployerJars
 }
 

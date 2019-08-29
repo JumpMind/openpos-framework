@@ -10,7 +10,6 @@ import { DynamicDateFormFieldComponent } from '../dynamic-date-form-field/dynami
 import { PopTartComponent } from '../pop-tart/pop-tart.component';
 import { SearchablePopTartComponent } from '../searchable-pop-tart/searchable-pop-tart.component';
 import { IFormElement, ISearchablePopTartField } from '../../../core/interfaces/form-field.interface';
-import { Logger } from '../../../core/services/logger.service';
 import { SessionService } from '../../../core/services/session.service';
 import { ScreenService } from '../../../core/services/screen.service';
 import { OldPluginService } from '../../../core/services/old-plugin.service';
@@ -59,8 +58,10 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
       return false;
   }
 
-  constructor(private log: Logger, public session: SessionService, public screenService: ScreenService, protected dialog: MatDialog,
-    private pluginService: OldPluginService) { }
+  constructor(  public session: SessionService,
+                public screenService: ScreenService,
+                protected dialog: MatDialog,
+                private pluginService: OldPluginService) { }
 
   ngOnInit() {
     this.controlName = this.formField.id;
@@ -81,11 +82,11 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
       if (getValuesFromServer) {
         this.valuesSubscription = this.screenService.getFieldValues(this.formField.id).subscribe((data) => {
             this.values = data;
-            this.log.info('asynchronously received ' + this.values.length + ' items for ' + this.formField.id);
+            console.info('asynchronously received ' + this.values.length + ' items for ' + this.formField.id);
         });
       } else {
         this.values = this.formField.values;
-        this.log.info(`Using ${this.values.length} values received on the screen for ${this.formField.id}`);
+        console.info(`Using ${this.values.length} values received on the screen for ${this.formField.id}`);
       }
 
 
@@ -105,15 +106,15 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
             // which come from other sources such as a scan device
             this.barcodeEventSubscription = (<BarcodeScannerPlugin> plugin).onBarcodeScanned.subscribe({
                 next: (scan: Scan) => {
-                    this.log.info(`dynamic-form-field '${this.formField.id}' got scan event: ${scan.value}`);
+                    console.info(`dynamic-form-field '${this.formField.id}' got scan event: ${scan.value}`);
                     if (this.field.focused) {
                         this.setFieldValue(this.formField.id, scan.value);
                     }
                 }
             });
-            this.log.info(`dynamic-form-field '${this.formField.id}' is subscribed for barcode scan events`);
+            console.info(`dynamic-form-field '${this.formField.id}' is subscribed for barcode scan events`);
 
-        }).catch( error => this.log.info(`Failed to get barcodeScannerPlugin.  Reason: ${error}`) );
+        }).catch( error => console.info(`Failed to get barcodeScannerPlugin.  Reason: ${error}`) );
 
     }
   }
@@ -176,7 +177,7 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.log.info('pop tart closed with value of: ' + result);
+      console.info('pop tart closed with value of: ' + result);
       this.formGroup.get(this.formField.id).setValue(result);
       this.onFormElementChanged(this.formField);
     });
@@ -196,7 +197,7 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.log.info('pop tart closed with value of: ' + result);
+      console.info('pop tart closed with value of: ' + result);
       this.formGroup.get(this.formField.id).setValue(result);
       this.onFormElementChanged(this.formField);
     });
@@ -240,15 +241,15 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
           {requestId: 'scan', deviceId: 'barcode-scanner', type: null, subType: null, payload: null},
           (scan) => {
             if (scan instanceof Scan && ! scan.cancelled) {
-                this.log.info(`Scan value of '${scan.value}' received for field '${formField.id}'`);
+                console.info(`Scan value of '${scan.value}' received for field '${formField.id}'`);
                 this.setFieldValue(formField.id, scan.value);
             }
           },
           (error) => {
-            this.log.info('Scanning failed: ' + error);
+            console.info('Scanning failed: ' + error);
           }
         )
-    ).catch( error => this.log.info(`Scanning failed: ${error}`));
+    ).catch( error => console.info(`Scanning failed: ${error}`));
   }
 
   private setFieldValue(fieldId: string, value: any) {

@@ -69,7 +69,7 @@ export class SignatureCaptureComponent extends PosScreen<SignatureCaptureInterfa
 
   onSaveSignature(): void {
     if ( this.signaturePad.isEmpty()) {
-      this.log.info('Signature is empty');
+      console.info('Signature is empty');
       return;
     }
     const mediaType: string = this.screen.signatureMediaType ?
@@ -105,11 +105,11 @@ export class SignatureCaptureComponent extends PosScreen<SignatureCaptureInterfa
         let totalSignaturePoints = 0;
         if (sigData.pointGroups) {
             sigData.pointGroups.forEach(pArray => totalSignaturePoints += pArray.length);
-            this.log.info(`Total signature points: ${totalSignaturePoints}`);
+            console.info(`Total signature points: ${totalSignaturePoints}`);
         }
 
         if (totalSignaturePoints > Configuration.maxSignaturePoints) {
-            this.log.info(`Signature point count of ${totalSignaturePoints} exceeds the Configuration.maxSignaturePoints of ` +
+            console.info(`Signature point count of ${totalSignaturePoints} exceeds the Configuration.maxSignaturePoints of ` +
             `${Configuration.maxSignaturePoints}`);
             return false;
         }
@@ -117,9 +117,9 @@ export class SignatureCaptureComponent extends PosScreen<SignatureCaptureInterfa
 
     if (Configuration.maxResponseSizeBytes >= 0) {
         const signatureResponseSize = JSON.stringify(sigData).length;
-        this.log.info(`Signature response size: ${signatureResponseSize}`);
+        console.info(`Signature response size: ${signatureResponseSize}`);
         if (signatureResponseSize > Configuration.maxResponseSizeBytes) {
-            this.log.info(`Signature response size of ${signatureResponseSize} exceeds the Configuration.maxResponseSizeBytes of ` +
+            console.info(`Signature response size of ${signatureResponseSize} exceeds the Configuration.maxResponseSizeBytes of ` +
               `${Configuration.maxResponseSizeBytes}`);
             return false;
         }

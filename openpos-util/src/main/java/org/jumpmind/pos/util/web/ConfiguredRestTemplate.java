@@ -81,12 +81,25 @@ public class ConfiguredRestTemplate extends RestTemplate {
         execute(url, buildRequestEntity(request), Void.class, method, args);
     }
 
+    public void execute(String url, Object request, HttpMethod method, HttpHeaders headers, Object... args) {
+        execute(url, buildRequestEntity(request), Void.class, method, headers, args);
+    }
+
     public <T> T execute(String url, Object request, Class<T> responseClass, HttpMethod method, Object... args) {
         return exchange(url, method, buildRequestEntity(request), responseClass, args).getBody();
     }
 
+    public <T> T execute(String url, Object request, Class<T> responseClass, HttpMethod method, HttpHeaders headers, Object... args) {
+        return exchange(url, method, buildRequestEntity(request, headers), responseClass, args).getBody();
+    }
+
     public <T> HttpEntity<T> buildRequestEntity(T request) {
         return new HttpEntity<T>(request, buildHeaders());
+    }
+
+    public <T> HttpEntity<T> buildRequestEntity(T request, HttpHeaders headers) {
+        headers.addAll(buildHeaders());
+        return new HttpEntity<T>(request, headers);
     }
 
     public HttpHeaders buildHeaders() {

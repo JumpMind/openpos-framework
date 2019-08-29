@@ -4,4 +4,5 @@ export class MessageTypes {
     static DIALOG = 'dialog';
     static SCREEN = 'screen';
     static PROXY = 'proxy';
+    static CONFIG_CHANGED = 'ConfigChanged';
 }

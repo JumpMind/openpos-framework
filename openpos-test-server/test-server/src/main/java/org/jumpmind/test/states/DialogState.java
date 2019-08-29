@@ -1,7 +1,7 @@
 package org.jumpmind.test.states;
 
 import org.jumpmind.pos.core.flow.*;
-import org.jumpmind.pos.core.screen.ActionItem;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.message.DialogUIMessage;
 import org.jumpmind.pos.server.model.Action;

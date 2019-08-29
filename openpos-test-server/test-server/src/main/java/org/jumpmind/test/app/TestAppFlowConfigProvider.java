@@ -20,5 +20,6 @@ public class TestAppFlowConfigProvider extends YamlConfigProvider {
 
         super.load("loadingscreen", "flows", "LoadingScreenFlow");
         super.load("backtobackdialog", "flows", "BackToBackDialogFlow");
+        super.load( "testselect", "flows", "TestSelectFlow");
     }
 }

@@ -32,5 +32,11 @@
     ],
     "Icons": [
         "available-icons"
+    ],
+    "Logging": [
+        "logging"
+    ],
+    "Client Context": [
+        "client-context"
     ]
 }

@@ -7,7 +7,7 @@ node {
     download = downloadNode.toBoolean()
     println """
       **************************************************************************************************
-        Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties 
+        Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties
         if you want to use downloaded versions of node and npm
       **************************************************************************************************
       """
@@ -43,6 +43,7 @@ task npm_remove_client(type: NpmTask) {
 
 task npm_add_client(type: NpmTask) {
     dependsOn npm_remove_client
+    dependsOn tasks.getByPath(':openpos-client-libs:npm_pack')
     workingDir = file("${project.projectDir}")
     ignoreExitValue true
     args = [
@@ -63,7 +64,7 @@ task npm_build(type: NpmTask) {
     workingDir = file("${project.projectDir}")
     args = [
         'run',
-        'build-prod'
+        'build'
     ]
 }
 
@@ -84,4 +85,3 @@ processResources.dependsOn(copyClientBuildForJarPackaging)
 develop.dependsOn copyClientBuildForJarPackaging
 clean.dependsOn npmClean
 clean.dependsOn nodeClean
-npm_add_client.dependsOn tasks.getByPath(':openpos-client-libs:npm_pack')
