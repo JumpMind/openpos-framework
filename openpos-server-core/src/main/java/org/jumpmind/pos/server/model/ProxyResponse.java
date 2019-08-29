@@ -11,6 +11,8 @@ public class ProxyResponse implements Serializable {
 
     private String payload;
 
+    private boolean success = true;
+
     public ProxyResponse() {
     }
 
@@ -33,6 +35,14 @@ public class ProxyResponse implements Serializable {
 
     public void setPayload(String payload) {
         this.payload = payload;
+    }
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public void setSuccess(boolean success) {
+        this.success = success;
     }
 
 }
