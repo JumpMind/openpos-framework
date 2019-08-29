@@ -19,6 +19,8 @@ public class DefaultErrorHandler implements IErrorHandler {
     public void handleError(IStateManager stateManager, Throwable throwable) {
         Message message = incidentService.createIncident(throwable, new IncidentContext(stateManager.getDeviceId()));
 
-        messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+        if( message != null ) {
+            messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+        }
     }
 }
