@@ -34,7 +34,8 @@
         "available-icons"
     ],
     "Logging": [
-        "logging"
+        "logging",
+        "incidents"
     ],
     "Client Context": [
         "client-context"
