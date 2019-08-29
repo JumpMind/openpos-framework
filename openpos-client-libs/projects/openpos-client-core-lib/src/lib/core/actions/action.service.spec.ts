@@ -16,6 +16,7 @@ const confirmationDialog: IConfirmationDialog = {
 
 const testScreen = {};
 const scopedMessages$ = new BehaviorSubject(testScreen);
+const allMessages$ = new BehaviorSubject(testScreen);
 
 
 describe('ActionService', () => {
@@ -28,7 +29,7 @@ describe('ActionService', () => {
 
     function setup() {
 
-        const messageProviderSpy = jasmine.createSpyObj('MessageProvider', ['sendMessage', 'getScopedMessages$']);
+        const messageProviderSpy = jasmine.createSpyObj('MessageProvider', ['sendMessage', 'getScopedMessages$',  'getAllMessages$']);
         const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
         const matDialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed', 'componentInstance']);
         const loggerSpy = jasmine.createSpyObj('Logger', ['info']);
@@ -44,6 +45,7 @@ describe('ActionService', () => {
         });
 
         messageProviderSpy.getScopedMessages$.and.returnValue(scopedMessages$);
+        messageProviderSpy.getAllMessages$.and.returnValue(allMessages$);
         loggerService = TestBed.get(Logger);
         messageProvider = TestBed.get(MessageProvider);
         actionService = TestBed.get(ActionService);
