@@ -33,6 +33,7 @@ export * from './lib/core/interfaces/abstract-screen-template.interface';
 export * from './lib/core/interfaces/abstract-screen.interface';
 export * from './lib/core/actions/action-item-group.interface';
 export * from './lib/core/actions/action.service';
+export * from './lib/core/actions/action-item';
 export * from './lib/core/interfaces/barcode-scan-interceptor.interface';
 export * from './lib/core/actions/confirmation-dialog.interface';
 export * from './lib/core/interfaces/date-part-chooser-field.interface';
