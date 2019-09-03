@@ -1,11 +1,8 @@
 package org.jumpmind.pos.print;
 
-import jpos.BaseJposControl;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
-import jpos.services.POSPrinterService19;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 
 import javax.imageio.ImageIO;
@@ -16,11 +13,13 @@ import java.util.Map;
 
 public class EscpPOSPrinter implements IOpenposPrinter {
 
-    private PrinterCommands printerCommands;
+    private PrinterCommands printerCommands = new PrinterCommandPlaceholders();
     private int receiptLineSpacing;
     private OutputStream outputStream;
     private PrintWriter out;
-    private String hostname;
+    private String hostName;
+    private String port;
+    private String printerCommandLocations;
     private EscpImagePrinter imagePrinter;
 
     private int printWidth = 48;
@@ -158,12 +157,28 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         this.printerCommands = printerCommands;
     }
 
-    public String getHostname() {
-        return hostname;
+    public String getHostName() {
+        return hostName;
     }
 
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public void setPort(String port) {
+        this.port = port;
+    }
+
+    public String getPort() {
+        return port;
+    }
+
+    public void setPrinterCommandLocations(String printerCommandLocations) {
+        this.printerCommandLocations = printerCommandLocations;
+    }
+
+    public String getPrinterCommandLocations() {
+        return printerCommandLocations;
     }
 
     public int getPrintWidth() {

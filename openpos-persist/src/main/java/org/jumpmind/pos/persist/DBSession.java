@@ -36,6 +36,7 @@ import org.jumpmind.pos.persist.model.ITaggedModel;
 import org.jumpmind.pos.persist.model.SearchCriteria;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.persist.model.TagModel;
+import org.jumpmind.pos.util.ReflectUtils;
 import org.jumpmind.pos.util.model.ITypeCode;
 import org.jumpmind.util.LinkedCaseInsensitiveMap;
 import org.springframework.dao.DuplicateKeyException;

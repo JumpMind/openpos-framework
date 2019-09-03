@@ -1,9 +1,8 @@
-package org.jumpmind.pos.persist.impl;
+package org.jumpmind.pos.util;
 
 import java.lang.reflect.Field;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.jumpmind.pos.persist.PersistException;
 
 public class ReflectUtils {
 
@@ -24,7 +23,7 @@ public class ReflectUtils {
                 }
             }
         } catch (Exception ex) {
-            throw new PersistException(String.format("Failed to set field '%s' on target '%s' to value '%s'", field.getName(), target, value),
+            throw new ReflectionException(String.format("Failed to set field '%s' on target '%s' to value '%s'", field.getName(), target, value),
                     ex);
         }
     }
@@ -54,7 +53,11 @@ public class ReflectUtils {
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void setProperty(Object target, String propertyName, Object value) {
         Field field = getAccessibleField(target, propertyName);
-        setProperty(field, target, value);
+        if (field != null) {
+            setProperty(field, target, value);
+        } else {
+            throw new ReflectionException("Did not find %s on the target class of %s", propertyName, target.getClass().getName());
+        }
     }
 
     private static Object messageNulls(Field field, Object value) {
