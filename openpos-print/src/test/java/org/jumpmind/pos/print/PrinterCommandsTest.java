@@ -44,8 +44,8 @@ public class PrinterCommandsTest {
         assertCommandsEqual(EscP_Constants.FONT_SIZE_LARGE_EPSON, printerCommands.get(PrinterCommands.FONT_SIZE_LARGE));
 
         EscpPOSPrinter printer = new EscpPOSPrinter();
-        printer.setPrinterCommands(printerCommands);
-        printer.setOutputStream(new ByteArrayOutputStream());
+        printer.printerCommands = printerCommands;
+        printer.connectionFactory = new ByteArrayConnectionFactory();
         printer.open("Printer", null);
 
         String barcodeCommand = printer.buildBarcodeCommand(0, "380502001835720192324", POSPrinterConst.PTR_BCS_Code128, 0, 0, 0, 0);

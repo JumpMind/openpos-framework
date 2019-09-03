@@ -7,7 +7,7 @@ public class PrinterConfig {
     boolean enabled = true;
     PrinterTypeCode type;
     Map<String, Object> settings;
-    String stylesSheet;
+    String styleSheet;
 
     public PrinterTypeCode getType() {
         return type;
@@ -25,12 +25,12 @@ public class PrinterConfig {
         this.settings = settings;
     }
 
-    public String getStylesSheet() {
-        return stylesSheet;
+    public String getStyleSheet() {
+        return styleSheet;
     }
 
-    public void setStylesSheet(String stylesSheet) {
-        this.stylesSheet = stylesSheet;
+    public void setStyleSheet(String styleSheet) {
+        this.styleSheet = styleSheet;
     }
 
     public boolean isEnabled() {
