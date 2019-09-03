@@ -35,6 +35,15 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public void open(String logicalName, EventCallbacks cb) {
         out = new PrintWriter(outputStream);
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
+        initializePrinter();
+    }
+
+    protected void initializePrinter() {
+        printNormal(0, getCommand(PrinterCommands.ESC_P_MODE));
+        printNormal(0, getCommand(PrinterCommands.FONT_SIZE_MEDIUM));
+        printNormal(0, getCommand(PrinterCommands.FORMAT_NORMAL));
+        printNormal(0, getCommand(PrinterCommands.ALIGN_LEFT));
+        printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
     }
 
     @Override
