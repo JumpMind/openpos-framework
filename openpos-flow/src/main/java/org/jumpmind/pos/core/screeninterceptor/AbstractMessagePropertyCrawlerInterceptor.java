@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.screeninterceptor;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Collection;
@@ -110,7 +111,14 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
                 }
             }
             return true;
-
+        } else if (value != null && value.getClass().isArray() && value.getClass().getComponentType().equals(String.class)) { // Array of Strings
+            for (int i = 0; i < Array.getLength(value); i++) {
+                Object arrayElem = Array.get(value, i);
+                if (arrayElem != null) {
+                    Array.set(value, i, doStrategies(appId, deviceId, arrayElem, arrayElem.getClass(), message, messageContext));
+                }
+            }
+            return true;
         } else if (value instanceof Map) {
             @SuppressWarnings("unchecked")
             Map<Object, Object> map = (Map<Object, Object>) value;
