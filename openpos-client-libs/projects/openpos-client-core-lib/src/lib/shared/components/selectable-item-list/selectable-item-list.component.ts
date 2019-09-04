@@ -219,10 +219,12 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
                     switch (this.configuration.selectionMode) {
                         case SelectionMode.Single:
                             this.selectedItem = this.itemsToShow[this.scrollToIndex];
+                            this.scrollToItem(this.scrollToIndex);
                             this.selectedItemChange.emit(originalItemIndex);
                             break;
                         case SelectionMode.Multiple:
                             this.selectedItemList.push(this.itemsToShow[this.scrollToIndex]);
+                            this.scrollToItem(this.scrollToIndex);
                             const indexes = [];
                             this.selectedItemList.forEach(i =>
                                 indexes.push(this.itemsToShow.indexOf(i) + ((this.currentPage - 1) * this.configuration.numItemsPerPage)));
