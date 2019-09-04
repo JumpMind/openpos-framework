@@ -37,13 +37,13 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
         this.listData = merge( this.session.getMessages('UIData').pipe(
             filter( d => d.dataType === 'SelectionListData'),
             map((d) => {
-                const items = new Map<string, ISelectionListItem>();
-                const disabledItems = new Map<string, ISelectionListItem>();
+                const items = new Map<number, ISelectionListItem>();
+                const disabledItems = new Map<number, ISelectionListItem>();
                 Object.getOwnPropertyNames(d.items).forEach(element => {
-                    items.set( element, d.items[element]);
+                    items.set( Number(element), d.items[element]);
                 });
                 Object.getOwnPropertyNames(d.disabledItems).forEach(element => {
-                    disabledItems.set( element, d.disabledItems[element]);
+                    disabledItems.set( Number(element), d.disabledItems[element]);
                 });
                 d.items = items;
                 d.disabledItems = disabledItems;
