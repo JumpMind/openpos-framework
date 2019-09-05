@@ -203,6 +203,9 @@ public class QueryTemplate implements Cloneable {
                     throw new PersistException(
                             String.format("Missing required query parameter '%s'. Cannot build query: %s", key, sqlStatement.getSql()));
                 }
+            } else if (value instanceof Boolean) {
+                boolean bool = (Boolean)value;
+                value = bool ? 1 : 0;
             }
             values.add(value);
         }
