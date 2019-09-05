@@ -1,11 +1,15 @@
-package org.jumpmind.pos.persist.impl;
+package org.jumpmind.pos.util;
 
 import java.lang.reflect.Field;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.jumpmind.pos.persist.PersistException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import static java.lang.String.*;
 
 public class ReflectUtils {
+
+    static final Logger log = LoggerFactory.getLogger(ReflectUtils.class);
 
     public static void setProperty(Field field, Object target, Object value) {
         value = messageNulls(field, value);
@@ -24,7 +28,7 @@ public class ReflectUtils {
                 }
             }
         } catch (Exception ex) {
-            throw new PersistException(String.format("Failed to set field '%s' on target '%s' to value '%s'", field.getName(), target, value),
+            throw new ReflectionException(String.format("Failed to set field '%s' on target '%s' to value '%s'", field.getName(), target, value),
                     ex);
         }
     }
@@ -51,10 +55,20 @@ public class ReflectUtils {
         return value;
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static void setProperty(Object target, String propertyName, Object value) {
+        setProperty(target, propertyName, value, false);
+    }
+
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    public static void setProperty(Object target, String propertyName, Object value, boolean ignoreIfFieldNotFound) {
         Field field = getAccessibleField(target, propertyName);
-        setProperty(field, target, value);
+        if (field != null) {
+            setProperty(field, target, value);
+        } else if (!ignoreIfFieldNotFound) {
+            throw new ReflectionException("Did not find %s on the target class of %s", propertyName, target.getClass().getName());
+        } else {
+            log.debug("Did not find {}} on the target class of {}}", propertyName, target.getClass().getName());
+        }
     }
 
     private static Object messageNulls(Field field, Object value) {

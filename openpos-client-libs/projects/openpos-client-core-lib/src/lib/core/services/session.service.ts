@@ -1,5 +1,6 @@
 import { VERSION } from './../../version';
 import { ILoading } from './../interfaces/loading.interface';
+import { Logger } from './logger.service';
 
 import { Configuration } from './../../configuration/configuration';
 import { IMessageHandler } from './../interfaces/message-handler.interface';
@@ -8,7 +9,7 @@ import { PersonalizationService } from '../personalization/personalization.servi
 import { Observable, Subscription, BehaviorSubject, Subject, merge } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { Message } from '@stomp/stompjs';
-import { Injectable, NgZone, Inject, } from '@angular/core';
+import { Injectable, NgZone, } from '@angular/core';
 import { StompState, StompRService } from '@stomp/ng2-stompjs';
 import { MatDialog } from '@angular/material';
 // Importing the ../components barrel causes a circular reference since dynamic-screen references back to here,
@@ -23,7 +24,6 @@ import { ElectronService } from 'ngx-electron';
 import { OpenposMessage } from '../messages/message';
 import { MessageTypes } from '../messages/message-types';
 import { ActionMessage } from '../messages/action-message';
-import { CLIENTCONTEXT, IClientContext } from '../client-context/client-context-provider.interface';
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
@@ -65,6 +65,8 @@ export class SessionService implements IMessageHandler<any> {
 
     public state: Observable<string>;
 
+    private appId: string;
+
     private subscription: Subscription;
 
     private authToken: string;
@@ -88,13 +90,13 @@ export class SessionService implements IMessageHandler<any> {
     private deletedLaunchFlg = false;
 
     constructor(
+        private log: Logger,
         private stompService: StompRService,
         public dialogService: MatDialog,
         public zone: NgZone,
         protected personalization: PersonalizationService,
         private http: HttpClient,
-        private electron: ElectronService,
-        @Inject(CLIENTCONTEXT) private clientContexts: Array<IClientContext>
+        private electron: ElectronService
     ) {
         this.zone.onError.subscribe((e) => {
             console.error(`[OpenPOS]${e}`);
@@ -134,7 +136,7 @@ export class SessionService implements IMessageHandler<any> {
     }
 
     private buildTopicName(): string {
-        return '/topic/app/' + this.getAppId() + '/node/' + this.personalization.getDeviceId();
+        return '/topic/app/' + this.appId + '/node/' + this.personalization.getDeviceId();
     }
 
     public setAuthToken(token: string) {
@@ -146,11 +148,11 @@ export class SessionService implements IMessageHandler<any> {
     }
 
     public setAppId(value: string) {
-        this.personalization.setAppId(value);
+        this.appId = value;
     }
 
     public getAppId(): string {
-        return this.personalization.getAppId();
+        return this.appId;
     }
 
     public connected(): boolean {
@@ -172,14 +174,14 @@ export class SessionService implements IMessageHandler<any> {
     private deleteLaunchingFlg() {
         const fs = this.electron.isElectronApp ? this.electron.remote.require('fs') : window.fs;
         const launchingFile = 'launching.flg';
-        console.info('node.js fs exists? ' + fs);
-        console.info('launching.flg file exists? ' + (fs && fs.existsSync(launchingFile)));
+        this.log.info('node.js fs exists? ' + fs);
+        this.log.info('launching.flg file exists? ' + (fs && fs.existsSync(launchingFile)));
         if (fs && fs.existsSync(launchingFile)) {
             fs.unlink(launchingFile, (err) => {
                 if (err) {
-                    console.info('unable to remove ' + launchingFile);
+                    this.log.info('unable to remove ' + launchingFile);
                 } else {
-                    console.info(launchingFile + ' was removed');
+                    this.log.info(launchingFile + ' was removed');
                 }
             });
         }
@@ -189,18 +191,12 @@ export class SessionService implements IMessageHandler<any> {
         const headers = {
             authToken: this.authToken,
             compatibilityVersion: Configuration.compatibilityVersion,
-            appId: this.getAppId(),
+            appId: this.appId,
             deviceId: this.personalization.getDeviceId(),
             queryParams: JSON.stringify(this.queryParams),
             version: JSON.stringify(VERSION)
         };
         this.appendPersonalizationProperties(headers);
-        this.clientContexts.forEach( context => {
-            const contextsToAdd = context.getContextProperties();
-            contextsToAdd.forEach( (value, key ) => {
-                headers[key] = value;
-            });
-        });
         return headers;
     }
 
@@ -210,7 +206,7 @@ export class SessionService implements IMessageHandler<any> {
         }
 
         const url = this.personalization.getWebsocketUrl();
-        console.info('creating new stomp service at: ' + url);
+        this.log.info('creating new stomp service at: ' + url);
 
         this.stompService.config = {
             url,
@@ -225,14 +221,14 @@ export class SessionService implements IMessageHandler<any> {
 
         const currentTopic = this.buildTopicName();
 
-        console.info('subscribing to server at: ' + currentTopic);
+        this.log.info('subscribing to server at: ' + currentTopic);
 
         const messages: Observable<Message> = this.stompService.subscribe(currentTopic);
 
         this.subscription = messages.subscribe((message: Message) => {
-            console.info('Got STOMP message');
+            this.log.info('Got STOMP message');
             if (this.inBackground) {
-                console.info('Leaving background');
+                this.log.info('Leaving background');
                 this.inBackground = false;
             }
             if (this.isMessageVersionValid(message)) {
@@ -240,7 +236,7 @@ export class SessionService implements IMessageHandler<any> {
                 this.logStompJson(json);
                 this.stompJsonMessages$.next(json);
             } else {
-                console.info(`Showing incompatible version screen`);
+                this.log.info(`Showing incompatible version screen`);
                 this.stompJsonMessages$.next(this.buildIncompatibleVersionScreen());
             }
         });
@@ -250,16 +246,16 @@ export class SessionService implements IMessageHandler<any> {
         if (!this.stompStateSubscription) {
             this.stompStateSubscription = this.state.subscribe(stompState => {
                 if (stompState === 'CONNECTED') {
-                    console.info('STOMP connecting');
+                    this.log.info('STOMP connecting');
                     if (!this.onServerConnect.value) {
                         this.onServerConnect.next(true);
                     }
                     this.sendMessage(new ConnectedMessage());
                     this.cancelLoading();
                 } else if (stompState === 'DISCONNECTING') {
-                    console.info('STOMP disconnecting');
+                    this.log.info('STOMP disconnecting');
                 } else if (stompState === 'CLOSED') {
-                    console.info('STOMP closed');
+                    this.log.info('STOMP closed');
                     this.sendDisconnected();
                 }
             });
@@ -284,11 +280,11 @@ export class SessionService implements IMessageHandler<any> {
 
     private logStompJson(json: any) {
         if (json && json.sequenceNumber && json.screenType) {
-            console.info(`[logStompJson] type: ${json.type}, screenType: ${json.screenType}, seqNo: ${json.sequenceNumber}`);
+            this.log.info(`[logStompJson] type: ${json.type}, screenType: ${json.screenType}, seqNo: ${json.sequenceNumber}`);
         } else if (json) {
-            console.info(`[logStompJson] type: ${json.type}`);
+            this.log.info(`[logStompJson] type: ${json.type}`);
         } else {
-            console.info(`[logStompJson] ${json}`);
+            this.log.info(`[logStompJson] ${json}`);
         }
     }
 
@@ -306,7 +302,7 @@ export class SessionService implements IMessageHandler<any> {
     private isMessageVersionValid(message: Message): boolean {
         const valid = message.headers.compatibilityVersion === Configuration.compatibilityVersion;
         if (!valid) {
-            console.info(`INCOMPATIBLE VERSIONS. Client compatibilityVersion: ${Configuration.compatibilityVersion}, ` +
+            this.log.info(`INCOMPATIBLE VERSIONS. Client compatibilityVersion: ${Configuration.compatibilityVersion}, ` +
                 `server compatibilityVersion: ${message.headers.compatibilityVersion}`);
         }
         return valid;
@@ -329,13 +325,13 @@ export class SessionService implements IMessageHandler<any> {
             url = `${this.personalization.getServerBaseURL()}/ping`;
         }
 
-        console.info('testing url: ' + url);
+        this.log.info('testing url: ' + url);
 
         let pingError: any = null;
         try {
             const httpResult = await this.http.get(url, {}).toPromise();
             if (httpResult) {
-                console.info('successful validation of ' + url);
+                this.log.info('successful validation of ' + url);
                 return { success: true };
             } else {
                 pingError = { message: '?' };
@@ -345,7 +341,7 @@ export class SessionService implements IMessageHandler<any> {
         }
 
         if (pingError) {
-            console.info('bad validation of ' + url + ' with an error message of :' + pingError.message);
+            this.log.info('bad validation of ' + url + ' with an error message of :' + pingError.message);
             return { success: false, message: pingError.message };
         }
     }
@@ -367,14 +363,14 @@ export class SessionService implements IMessageHandler<any> {
             url = `${this.personalization.getServerBaseURL()}/personalize`;
         }
 
-        console.info('Requesting Personalization with url: ' + url);
+        this.log.info('Requesting Personalization with url: ' + url);
 
         let personalizeError: any = null;
         try {
             const httpResult = await this.http.get<PersonalizationResponse>(url, {}).toPromise();
             if (httpResult) {
                 httpResult.success = true;
-                console.info('Successful Personalization with url: ' + url);
+                this.log.info('Successful Personalization with url: ' + url);
                 return httpResult;
             } else {
                 personalizeError = { message: '?' };
@@ -384,7 +380,7 @@ export class SessionService implements IMessageHandler<any> {
         }
 
         if (personalizeError) {
-            console.info('bad validation of ' + url + ' with an error message of :' + personalizeError.message);
+            this.log.info('bad validation of ' + url + ' with an error message of :' + personalizeError.message);
             return { success: false, message: personalizeError.message };
         }
     }
@@ -394,23 +390,23 @@ export class SessionService implements IMessageHandler<any> {
             return;
         }
 
-        console.info('unsubscribing from stomp service ...');
+        this.log.info('unsubscribing from stomp service ...');
 
         // This will internally unsubscribe from Stomp Broker
         // There are two subscriptions - one created explicitly, the other created in the template by use of 'async'
         this.subscription.unsubscribe();
         this.subscription = null;
 
-        console.info('disconnecting from stomp service');
+        this.log.info('disconnecting from stomp service');
         this.stompService.disconnect();
     }
 
     public onDeviceResponse(deviceResponse: IDeviceResponse) {
         const sendResponseBackToServer = () => {
             // tslint:disable-next-line:max-line-length
-            console.info(`>>> Publish deviceResponse requestId: "${deviceResponse.requestId}" deviceId: ${deviceResponse.deviceId} type: ${deviceResponse.type}`);
+            this.log.info(`>>> Publish deviceResponse requestId: "${deviceResponse.requestId}" deviceId: ${deviceResponse.deviceId} type: ${deviceResponse.type}`);
             this.stompService.publish(
-                `/app/device/app/${this.getAppId()}/node/${this.personalization.getDeviceId()}/device/${deviceResponse.deviceId}`,
+                `/app/device/app/${this.appId}/node/${this.personalization.getDeviceId()}/device/${deviceResponse.deviceId}`,
                 JSON.stringify(deviceResponse));
         };
 
@@ -419,7 +415,7 @@ export class SessionService implements IMessageHandler<any> {
 
     public keepAlive() {
         if (this.subscription) {
-            console.info(`>>> KeepAlive`);
+            this.log.info(`>>> KeepAlive`);
             this.publish('KeepAlive', 'KeepAlive');
         }
     }
@@ -440,18 +436,18 @@ export class SessionService implements IMessageHandler<any> {
         // Block any actions if we are backgrounded and running in cordova
         // (unless we are coming back out of the background)
         if (this.inBackground && actionString !== 'Refresh') {
-            console.info(`Blocked action '${actionString}' because app is in background.`);
+            this.log.info(`Blocked action '${actionString}' because app is in background.`);
             return false;
         }
         const deviceId = this.personalization.getDeviceId();
-        if (this.getAppId() && deviceId) {
-            console.info(`Publishing action '${actionString}' of type '${type}' to server...`);
-            this.stompService.publish('/app/action/app/' + this.getAppId() + '/node/' + deviceId,
+        if (this.appId && deviceId) {
+            this.log.info(`Publishing action '${actionString}' of type '${type}' to server...`);
+            this.stompService.publish('/app/action/app/' + this.appId + '/node/' + deviceId,
                 JSON.stringify({ name: actionString, type, data: payload }));
             return true;
         } else {
-            console.info(`Can't publish action '${actionString}' of type '${type}' ` +
-                `due to undefined App ID (${this.getAppId()}) or Device ID (${deviceId})`);
+            this.log.info(`Can't publish action '${actionString}' of type '${type}' ` +
+                `due to undefined App ID (${this.appId}) or Device ID (${deviceId})`);
             return false;
         }
     }

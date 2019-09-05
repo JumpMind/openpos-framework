@@ -1,4 +1,5 @@
 import { AppInjector } from '../app-injector';
+import { Logger } from '../services/logger.service';
 import { IOldPlugin } from './oldplugin.interface';
 
 declare var cordova: any;
@@ -7,9 +8,11 @@ export class CordovaPlugin implements IOldPlugin {
     pluginId: string;
     pluginName?: string;
     impl: any;
+    protected log: Logger;
 
     constructor(pluginId: string) {
         this.pluginId = pluginId;
+        this.log = AppInjector.Instance.get(Logger);
         if (typeof cordova !== 'undefined') {
             if (cordova.plugins && cordova.plugins[pluginId]) {
                 this.impl = cordova.plugins[pluginId];
@@ -18,7 +21,7 @@ export class CordovaPlugin implements IOldPlugin {
                 this.impl = cordova[pluginId];
                 this.pluginName = pluginId;
             } else {
-                console.info(`Unable to locate cordova '${pluginId}' plugin.`);
+                this.log.info(`Unable to locate cordova '${pluginId}' plugin.`);
             }
         }
     }

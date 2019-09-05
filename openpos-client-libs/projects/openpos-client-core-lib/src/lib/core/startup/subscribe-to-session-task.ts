@@ -3,6 +3,7 @@ import { IStartupTask } from './startup-task.interface';
 import { Observable, Subject } from 'rxjs';
 import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
+import { Logger } from '../services/logger.service';
 import { StartupTaskData } from './startup-task-data';
 import { StartupTaskNames } from './startup-task-names';
 
@@ -13,7 +14,8 @@ export class SubscribeToSessionTask implements IStartupTask {
 
     constructor(
         protected session: SessionService,
-        protected router: Router
+        protected router: Router,
+        protected log: Logger
     ) { }
 
     execute(data: StartupTaskData): Observable<string> {
@@ -22,7 +24,7 @@ export class SubscribeToSessionTask implements IStartupTask {
 
                 if (!this.session.getAppId()) {
                     let appId = data.state.url.substring(1);
-                    console.info('calculating app id from ' + appId);
+                    this.log.info('calculating app id from ' + appId);
                     if (appId.indexOf('?') > 0) {
                         appId = appId.substring(0, appId.indexOf('?'));
                     }

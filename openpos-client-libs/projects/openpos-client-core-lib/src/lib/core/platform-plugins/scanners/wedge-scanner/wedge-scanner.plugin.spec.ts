@@ -5,6 +5,7 @@ import { cold, getTestScheduler } from 'jasmine-marbles';
 import { IScanData } from '../scan.interface';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
 import { Subscription, of, Subject } from 'rxjs';
+import { Logger } from '../../../services/logger.service';
 import { ElectronService } from 'ngx-electron';
 
 describe('WedgeScanner', () => {
@@ -66,6 +67,7 @@ describe('WedgeScanner', () => {
             providers: [
                 WedgeScannerPlugin,
                 ElectronService,
+                Logger,
                 { provide: SessionService, useValue: sessionSpy },
                 { provide: DomEventManager, useValue: domEventManagerSpy}
             ]

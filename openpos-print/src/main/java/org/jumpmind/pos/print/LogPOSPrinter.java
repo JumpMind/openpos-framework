@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Map;
 
 public class LogPOSPrinter implements IOpenposPrinter {
 
@@ -16,23 +17,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
     private StringBuilder buff = new StringBuilder(128);
 
     @Override
-    public PrinterCommands getPrinterCommands() {
-        return printerCommands;
-    }
-
-    @Override
-    public void setPrinterCommands(PrinterCommands printerCommands) {
-
-    }
-
-    @Override
-    public void setOutputStream(OutputStream outputStream) {
-
-    }
-
-    @Override
     public void printImage(InputStream image) {
-
     }
 
     @Override
@@ -53,6 +38,11 @@ public class LogPOSPrinter implements IOpenposPrinter {
     @Override
     public int getPrintWidth() {
         return 48;
+    }
+
+    @Override
+    public void init(Map<String, Object> settings) {
+
     }
 
     @Override

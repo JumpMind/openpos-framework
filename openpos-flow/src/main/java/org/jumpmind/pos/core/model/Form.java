@@ -351,21 +351,34 @@ public class Form implements Serializable {
     public FormField createDriversLicenseField(String fieldId, String label, String value, String state, boolean required) {
         FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.AlphanumericText, required);
         formField.setScanEnabled(true);
-        if (state != null) {
+        if (state != null)
             if (value != null && value.equals(DriversLicenseUtils.HASH_MASK)) {
                 formField.setPattern(DriversLicenseUtils.getRule("HASHED") + "|" + DriversLicenseUtils.getRule(state));
             }
-            else {
+            else
                 formField.setPattern(DriversLicenseUtils.getRule(state));
-            }
-        } else {
+        else
             formField.disabled(true);
-        }
         formField.setValue(value);
-        formField.setMaxLength(20);
         return formField;
     }
 
+    public ComboField addStatesListField(String fieldId, String label, String value, List<String> values, boolean required) {
+        ComboField formField = createStatesListField(fieldId, label, value, values, required);
+        formElements.add(formField);
+        return formField;
+    }
+
+    public ComboField createStatesListField(String fieldId, String label, String value, List<String> values, boolean required) {
+
+        ComboField formField = new ComboField(fieldId, label, null, values);
+        if (value != null)
+            formField.setValue(value);
+        formField.required(required);
+        formField.setValueChangedAction("StateSelected");
+        return formField;
+    }
+    
     public static FormField createPhoneField(String fieldId, String label, String value, boolean required) {
         FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.Phone, required);
         formField.setValue(value);

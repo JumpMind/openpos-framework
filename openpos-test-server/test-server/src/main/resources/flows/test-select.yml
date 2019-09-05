@@ -1,6 +1,0 @@
----
-TestSelectFlow:
-  - HomeState:
-      Next: DynamicFormState
-  - DynamicFormState:
-      Back: HomeState

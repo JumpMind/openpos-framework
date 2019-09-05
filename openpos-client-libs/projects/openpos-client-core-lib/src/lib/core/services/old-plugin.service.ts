@@ -1,3 +1,4 @@
+import { Logger } from './logger.service';
 import { Injectable } from '@angular/core';
 import { CordovaService } from './cordova.service';
 import { IOldPlugin } from '../oldplugins/oldplugin.interface';
@@ -15,10 +16,10 @@ export class OldPluginService {
     // private onDeviceReady: BehaviorSubject<string> = new BehaviorSubject<string>(null);
     // private onDeviceReadySubscription: Subscription;
 
-    constructor(private cordovaService: CordovaService) {
+    constructor(private log: Logger, private cordovaService: CordovaService) {
         this.cordovaService.onDeviceReady.subscribe(m => {
             if (m === 'deviceready') {
-                console.info('cordova devices are ready for the plugin service');
+                this.log.info('cordova devices are ready for the plugin service');
                 // cordova file plugin doesn't put itself in cordova.plugins, so add it there if present.
                 // Makes it possible for us to access plugins dynamically by name.
                 // There apparently is not a consistent way to access references to
@@ -26,10 +27,10 @@ export class OldPluginService {
                 if (this.cordovaService.cordova.file) {
                     if (! this.cordovaService.plugins || ! this.cordovaService.plugins['file']) {
                         this.cordovaService.plugins['file'] = this.cordovaService.cordova.file;
-                        console.info('PluginService added cordova-plugin-file to cordova.plugins');
+                        this.log.info('PluginService added cordova-plugin-file to cordova.plugins');
                     }
                 } else {
-                    console.info(`Failed to load the Cordova 'file' plugin. Log file uploads will not work unless this is resolved.` +
+                    this.log.info(`Failed to load the Cordova 'file' plugin. Log file uploads will not work unless this is resolved.` +
                         ` Is the Cordova 'file' plugin included in the project?`);
                 }
             }
@@ -42,41 +43,41 @@ export class OldPluginService {
 
     public addPlugin(pluginId: string, plugin: IOldPlugin) {
         this.plugins.set(pluginId, {plugin, initialized: false});
-        console.info(`plugin '${pluginId}' added to the PluginService`);
+        this.log.info(`plugin '${pluginId}' added to the PluginService`);
     }
 
     public configurePlugin(pluginId: string, pluginConfig: any): Promise<boolean> {
-        console.info(`Configuring plugin '${pluginId}'...`);
+        this.log.info(`Configuring plugin '${pluginId}'...`);
         return new Promise<boolean>( (resolve, reject) => {
             this.getPlugin(pluginId, false).then(
                 plugin => {
-                    console.info(`Got plugin '${pluginId}'...`);
+                    this.log.info(`Got plugin '${pluginId}'...`);
                     if (typeof plugin.configure !== 'undefined') {
-                        console.info(`Invoking plugin.configure for '${pluginId}'...`);
+                        this.log.info(`Invoking plugin.configure for '${pluginId}'...`);
                         resolve(plugin.configure(pluginConfig));
-                        console.info(`'${pluginId}' configured.`);
+                        this.log.info(`'${pluginId}' configured.`);
                     } else if (plugin.impl && typeof plugin.impl.configure === 'function') {
-                        console.info(`Invoking plugin.impl.configure for '${pluginId}'...`);
+                        this.log.info(`Invoking plugin.impl.configure for '${pluginId}'...`);
                         resolve(plugin.impl.configure(pluginConfig));
-                        console.info(`'${pluginId}' configured.`);
+                        this.log.info(`'${pluginId}' configured.`);
                     } else if (plugin.hasOwnProperty('config')) {
-                        console.info(`Setting plugin.config for '${pluginId}'...`);
+                        this.log.info(`Setting plugin.config for '${pluginId}'...`);
                         plugin.config = pluginConfig;
                         resolve(true);
-                        console.info(`'${pluginId}' configured.`);
+                        this.log.info(`'${pluginId}' configured.`);
                     } else if (plugin.impl && plugin.impl.hasOwnProperty('config')) {
-                        console.info(`Setting plugin.impl.config for '${pluginId}'...`);
+                        this.log.info(`Setting plugin.impl.config for '${pluginId}'...`);
                         plugin.impl.config = pluginConfig;
                         resolve(true);
-                        console.info(`'${pluginId}' configured.`);
+                        this.log.info(`'${pluginId}' configured.`);
                     } else {
-                        console.info(`No method of configuration is available for plugin '${pluginId}'`);
+                        this.log.info(`No method of configuration is available for plugin '${pluginId}'`);
                         resolve(false);
                     }
                 }
             ).catch(
                 (error) => {
-                    console.info(error);
+                    this.log.info(error);
                     reject(error);
                 }
             );
@@ -118,16 +119,16 @@ export class OldPluginService {
 
     public getPlugin(pluginId: string, doInitWhenNeeded: boolean = true): Promise<IOldPlugin> {
         return new Promise( (resolve, reject) => {
-            console.debug(`Getting plugin '${pluginId}'...`);
+            this.log.debug(`Getting plugin '${pluginId}'...`);
             let pluginEntry: PluginMapEntry = this.plugins.get(pluginId);
             let initRequired = false;
             let targetPlugin: IOldPlugin;
             if (pluginEntry) {
                 initRequired = ! pluginEntry.initialized;
                 targetPlugin = pluginEntry.plugin;
-                console.debug(`Plugin '${pluginId}' found. initRequired? ${initRequired}`);
+                this.log.debug(`Plugin '${pluginId}' found. initRequired? ${initRequired}`);
             } else {
-                console.info(`Plugin '${pluginId}' is being fetched for the first time.`);
+                this.log.info(`Plugin '${pluginId}' is being fetched for the first time.`);
                 if (this.isCordovaPlugin(pluginId)) {
                     if (typeof this.cordovaService.plugins[pluginId].processRequest !== 'undefined') {
                         targetPlugin = new CordovaDevicePlugin(pluginId);
@@ -137,7 +138,7 @@ export class OldPluginService {
 
                     pluginEntry = {plugin: targetPlugin, initialized: false};
                     this.plugins.set(pluginId, pluginEntry);
-                    console.info(`Added plugin '${pluginId}' to map.`);
+                    this.log.info(`Added plugin '${pluginId}' to map.`);
                     if (doInitWhenNeeded) {
                         initRequired = true;
                     }
@@ -150,29 +151,29 @@ export class OldPluginService {
             }
 
             if (doInitWhenNeeded && initRequired) {
-                console.info(`Initializing plugin '${pluginId}'...`);
+                this.log.info(`Initializing plugin '${pluginId}'...`);
                 this.pluginInit(targetPlugin).then(
                     (inittedPlugin) => {
                         pluginEntry.initialized = true;
                         // this.plugins[pluginId] = inittedPlugin;
                         // plugin = inittedPlugin;
-                        console.info(`plugin '${pluginId}' initialized`);
+                        this.log.info(`plugin '${pluginId}' initialized`);
                         resolve(inittedPlugin);
                     }
                 ).catch(
                     (error) => {
                         if (error) {
                             reject(error);
-                            console.info(error);
+                            this.log.info(error);
                         } else {
                             const err = `plugin '${pluginId}' failed to initialize`;
-                            console.info(err);
+                            this.log.info(err);
                             reject(err);
                         }
                     }
                 );
             } else {
-                console.debug(`Init of plugin '${pluginId}' not required.`);
+                this.log.debug(`Init of plugin '${pluginId}' not required.`);
                 resolve(targetPlugin);
             }
         });

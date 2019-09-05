@@ -18,10 +18,10 @@ export class MoneyFormatter implements IFormatter {
         }
 
         let amount = '0';
-        let decimalChar = '.';
+        const decimalChar = '.';
 
         if (this.euRegex.test(value.toString())) {
-            decimalChar = ',';
+            value = value.replace(',', decimalChar);
         }
 
         const i = value.toString().indexOf(decimalChar);

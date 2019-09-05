@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { MessageProvider } from '../providers/message.provider';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
+import { Logger } from '../../core/services/logger.service';
 import { deepAssign } from '../../utilites/deep-assign';
 import { getValue } from '../../utilites/object-utils';
 import { OpenposMediaService } from '../../core/services/openpos-media.service';
@@ -17,6 +18,7 @@ import { ActionService } from '../../core/actions/action.service';
 export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
 
     sessionService: SessionService;
+    log: Logger;
     screenPartName: string;
     screenData: T;
     messageProvider: MessageProvider;
@@ -33,6 +35,7 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
         // This should never happen, but just incase lets make sure its not null or undefined
         if ( !!injector ) {
             this.sessionService = injector.get(SessionService);
+            this.log = injector.get(Logger);
             this.mediaService = injector.get(OpenposMediaService);
             this.messageProvider = injector.get(MessageProvider);
             this.actionService = injector.get(ActionService);

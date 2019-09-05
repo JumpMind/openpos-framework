@@ -113,7 +113,7 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
         });
 
         dialogRef.afterClosed().subscribe(result => {
-            console.info('The dialog was closed');
+            this.log.info('The dialog was closed');
         });
     }
 

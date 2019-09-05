@@ -3,6 +3,7 @@ import { MatDialogRef, MAT_DIALOG_DATA, MatInput } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { IMessageHandler } from '../../../core/interfaces/message-handler.interface';
 import { IScan } from './scan.interface';
+import { Logger } from '../../../core/services/logger.service';
 import { SessionService } from '../../../core/services/session.service';
 import { DeviceService } from '../../../core/services/device.service';
 import { ActionService } from '../../../core/actions/action.service';
@@ -33,7 +34,7 @@ export class ScanSomethingComponent implements AfterViewInit, IMessageHandler<an
   private scanServiceSubscription: Subscription;
 
   constructor(
-    private session: SessionService, public devices: DeviceService,
+    private log: Logger, private session: SessionService, public devices: DeviceService,
     private actionService: ActionService,
     @Optional() public dialogRef: MatDialogRef<ScanSomethingComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: IScan, private scannerService: ScannerService) {
@@ -121,7 +122,7 @@ export class ScanSomethingComponent implements AfterViewInit, IMessageHandler<an
     const content = event.clipboardData.getData('text/plain');
     const filteredContent = this.filterBarcodeValue(content);
     if (filteredContent !== content) {
-      console.info(`Clipboard data contains invalid characters for barcode, suppressing pasted content '${content}'`);
+      this.log.info(`Clipboard data contains invalid characters for barcode, suppressing pasted content '${content}'`);
     }
     return filteredContent === content;
   }

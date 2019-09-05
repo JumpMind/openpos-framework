@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IActionItem } from './action-item.interface';
+import { Logger } from '../services/logger.service';
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material';
 import { QueueLoadingMessage } from '../services/session.service';
@@ -8,8 +9,6 @@ import { LoaderState } from '../../shared/components/loader/loader-state';
 import { MessageProvider } from '../../shared/providers/message.provider';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { IUrlMenuItem } from './url-menu-item.interface';
-import { OpenposMessage } from '../messages/message';
-import { MessageTypes } from '../messages/message-types';
 
 @Injectable()
 export class ActionService {
@@ -20,13 +19,14 @@ export class ActionService {
 
     constructor(
         private dialogService: MatDialog,
+        private logger: Logger,
         private messageProvider: MessageProvider ) {
         messageProvider.getScopedMessages$().subscribe( message => {
-            this.blockActions = false;
-        });
-        messageProvider.getAllMessages$<OpenposMessage>().subscribe( message => {
-            if (message.type === MessageTypes.TOAST) {
-                this.blockActions = false;
+            if (message.disabled) {
+               console.log('creating a screen that is disabled');
+               this.blockActions = true;
+            } else {
+               this.blockActions = false;
             }
         });
     }
@@ -44,7 +44,7 @@ export class ActionService {
             // First we will use the payload passed into this function then
             // Check if we have registered action payload
             if ( !payload && this.actionPayloads.has(actionItem.action)) {
-                console.info(`Checking registered action payload for ${actionItem.action}`);
+                this.logger.info(`Checking registered action payload for ${actionItem.action}`);
                 try {
                     payload = this.actionPayloads.get(actionItem.action)();
                 } catch (e) {
@@ -62,7 +62,7 @@ export class ActionService {
 
     private doUrlAction( urlItem: IUrlMenuItem ) {
         // check to see if we are an IURLMenuItem
-        console.info(`About to open: ${urlItem.url} in target mode: ${urlItem.targetMode}, with options: ${urlItem.options}`);
+        this.logger.info(`About to open: ${urlItem.url} in target mode: ${urlItem.targetMode}, with options: ${urlItem.options}`);
         window.open(urlItem.url, urlItem.targetMode, urlItem.options);
     }
 
@@ -109,29 +109,29 @@ export class ActionService {
 
     private async  canPerformAction( actionItem: IActionItem): Promise<boolean> {
         if ( actionItem.enabled === false) {
-            console.info('Not sending action because it was disabled');
+            this.logger.info('Not sending action because it was disabled');
             return false;
         }
 
         if ( this.blockActions ) {
-            console.info('Not sending action because previous action required a response that we are still waiting for');
+            this.logger.info('Not sending action because previous action required a response that we are still waiting for');
             return false;
         }
 
         if ( this.actionIsDisabled(actionItem.action )) {
-            console.info('Not sending action because it was disabled by a disabler');
+            this.logger.info('Not sending action because it was disabled by a disabler');
             return false;
         }
 
         if ( actionItem.confirmationDialog ) {
-            console.info('Confirming action');
+            this.logger.info('Confirming action');
             const dialogRef = this.dialogService.open(ConfirmationDialogComponent, { disableClose: true });
             dialogRef.componentInstance.confirmDialog = actionItem.confirmationDialog;
             const result = await dialogRef.afterClosed().toPromise();
 
             // if we didn't confirm return and don't send the action to the server
             if (!result) {
-                console.info('Canceling action because confirmation was negative');
+                this.logger.info('Canceling action because confirmation was negative');
                 return false;
             }
         }

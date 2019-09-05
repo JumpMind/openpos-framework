@@ -15,7 +15,6 @@ import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 import org.apache.log4j.Logger;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
@@ -26,6 +25,7 @@ import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.PersistException;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 import org.jumpmind.pos.persist.model.TagModel;
+import org.jumpmind.pos.util.ReflectUtils;
 import org.jumpmind.pos.util.model.ITypeCode;
 
 public class ModelWrapper {

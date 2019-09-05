@@ -12,7 +12,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Arrays;
 
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
-import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.TestStates.AboutState;
 import org.jumpmind.pos.core.flow.TestStates.ActionTestingState;
 import org.jumpmind.pos.core.flow.TestStates.CustomerSearchState;

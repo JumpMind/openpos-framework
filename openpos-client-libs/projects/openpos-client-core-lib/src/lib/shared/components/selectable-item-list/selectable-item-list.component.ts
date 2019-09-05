@@ -66,6 +66,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
     disabledItems: Map<number, ItemType>;
     itemsToShow: ItemType[];
     itemPageMap: Map<number, ItemType[]> = new Map<number, ItemType[]>();
+    disabledItemPageMap: Map<number, Map<number, ItemType>> = new Map<number, Map<number, ItemType>>();
     scrollToIndex: number;
 
     private _selectedItem: ItemType;
@@ -201,14 +202,22 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
                 this.configuration.numItemsPerPage, this.configuration.numItemsPerPage * this.currentPage);
             } else if (this.isPageSavedInMap()) {
                 this.itemsToShow = this.itemPageMap.get(this.currentPage);
+                if (this.disabledItemPageMap && this.disabledItemPageMap.get(this.currentPage) !== undefined
+                    && this.disabledItemPageMap.get(this.currentPage) !== null) {
+                    this.disabledItems = this.disabledItemPageMap.get(this.currentPage);
+                }
             } else {
                 this.itemsToShow = Array.from(this.items.values());
                 if (this.itemsToShow.length > 0) {
                     this.itemPageMap.set(this.currentPage, this.itemsToShow);
                 }
+                if (this.disabledItems.size > 0) {
+                    this.disabledItemPageMap.set(this.currentPage, this.disabledItems);
+                }
             }
 
-            if (this.defaultSelect && this.useDefaultSelectIndexToStart && this.configuration.defaultSelectItemIndex) {
+            if (this.defaultSelect && this.useDefaultSelectIndexToStart
+                && this.configuration.defaultSelectItemIndex !== undefined && this.configuration.defaultSelectItemIndex !== null) {
                 this.scrollToIndex = this.configuration.defaultSelectItemIndex % this.configuration.numItemsPerPage;
                 let originalItemIndex = this.scrollToIndex + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
                 while (this.disabledItems.get(originalItemIndex)) {

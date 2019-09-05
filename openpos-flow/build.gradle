@@ -9,7 +9,6 @@ buildscript {
 
 apply from: '../openpos-gradle/src/main/resources/java.gradle'
 apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
-apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 jar {
     manifest {

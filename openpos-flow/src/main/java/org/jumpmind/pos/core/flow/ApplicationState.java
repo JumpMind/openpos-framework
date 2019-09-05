@@ -182,7 +182,6 @@ public class ApplicationState {
 
     public void setDeviceId(String nodeId) {
         this.deviceId = nodeId;
-        this.scope.setDeviceScope("deviceId", deviceId);
     }
 
     public String getDeviceId() {

@@ -1,6 +1,8 @@
+import { Logger } from './../../../core/services/logger.service';
 import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { DatePipe } from '@angular/common';
 import { ErrorStateMatcher } from '@angular/material';
 import { OldPluginService } from '../../../core/services/old-plugin.service';
 import { BarcodeScannerPlugin } from '../../../core/oldplugins/barcode-scanner.plugin';
@@ -32,7 +34,7 @@ export class PromptInputComponent implements OnInit, OnDestroy {
 
     private barcodeEventSubscription: Subscription;
 
-    constructor( private pluginService: OldPluginService) {
+    constructor(private log: Logger, private datePipe: DatePipe, private pluginService: OldPluginService) {
     }
 
     isNumericField(): boolean {
@@ -74,13 +76,13 @@ export class PromptInputComponent implements OnInit, OnDestroy {
                 // which come from other sources such as a scan device
                 this.barcodeEventSubscription = (<BarcodeScannerPlugin>plugin).onBarcodeScanned.subscribe({
                     next: (scan: Scan) => {
-                        console.info(`app-prompt-input got scan event: ${scan.value}`);
+                        this.log.info(`app-prompt-input got scan event: ${scan.value}`);
                         this.setFieldValue(scan.value);
                     }
                 });
-                console.info(`app-prompt-input is subscribed for barcode scan events`);
+                this.log.info(`app-prompt-input is subscribed for barcode scan events`);
 
-            }).catch(error => console.info(`Failed to get barcodeScannerPlugin.  Reason: ${error}`));
+            }).catch(error => this.log.info(`Failed to get barcodeScannerPlugin.  Reason: ${error}`));
         }
 
         this.setKeyboardLayout();
@@ -115,7 +117,7 @@ export class PromptInputComponent implements OnInit, OnDestroy {
                     console.error('Scanning failed: ' + error);
                 }
             )
-        ).catch(error => console.info(`Scanning failed: ${error}`)
+        ).catch(error => this.log.info(`Scanning failed: ${error}`)
         );
     }
 

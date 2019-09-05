@@ -66,7 +66,7 @@ public class ChooseOptionsScreenTranslator<T extends ChooseOptionsUIMesage> exte
        
         String formattedPromptText = this.getPromptText(this.getLegacyUIModel(), this.getLegacyAssignmentSpec(PROMPT_RESPONSE_PANEL_KEY), 
                 legacyScreen.getResourceBundleFilename()).orElse(null);
-        screen.setInstructions(formattedPromptText);
+        //screen.setInstructions(formattedPromptText);
     }
     
     protected void buildOptions() {

@@ -1,7 +1,8 @@
-package org.jumpmind.pos.persist.impl;
+package org.jumpmind.pos.util;
 
 import static org.junit.Assert.assertEquals;
 
+import org.jumpmind.pos.util.ReflectUtils;
 import org.junit.Test;
 
 public class ReflectUtilsTest {

@@ -1,3 +1,4 @@
+import { Logger } from '../../core/services/logger.service';
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { deepAssign } from '../../utilites/deep-assign';
@@ -10,6 +11,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
 
 
     screen: T;
+    log: Logger;
     actionService: ActionService;
 
     subscriptions = new Subscription();
@@ -19,6 +21,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
     constructor( @Optional() injector: Injector) {
         // This should never happen, but just incase lets make sure its not null or undefined
         if ( !!injector ) {
+            this.log = injector.get(Logger);
             this.actionService = injector.get(ActionService);
         }
     }

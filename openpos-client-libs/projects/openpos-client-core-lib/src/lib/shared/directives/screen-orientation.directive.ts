@@ -1,3 +1,4 @@
+import { Logger } from './../../core/services/logger.service';
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
 import { DeviceService } from '../../core/services/device.service';
 
@@ -22,7 +23,7 @@ export class ScreenOrientationDirective implements OnInit, OnDestroy {
     private _enabled = false;
     @Input('screenOrientation') orientationMode: OrientationMode;
 
-    constructor(private deviceService: DeviceService) {
+    constructor(private log: Logger, private deviceService: DeviceService) {
     }
 
 
@@ -32,17 +33,17 @@ export class ScreenOrientationDirective implements OnInit, OnDestroy {
                 if (window.screen && (<any>window.screen).orientation) {
                     this._enabled = true;
                     const currentOrientation = (<any>window.screen).orientation.type;
-                    console.info(`Current screen orientation is: ${currentOrientation}`);
-                    console.info(`Requested orientationMode is: ${this.orientationMode}`);
+                    this.log.info(`Current screen orientation is: ${currentOrientation}`);
+                    this.log.info(`Requested orientationMode is: ${this.orientationMode}`);
                     if (this.orientationMode) {
                         switch (this.orientationMode) {
                             case MODE_LOCK_CURRENT:
                                 (<any>window.screen).orientation.lock(currentOrientation);
-                                console.info(`Locking orientation to: ${currentOrientation}`);
+                                this.log.info(`Locking orientation to: ${currentOrientation}`);
                                 break;
                             default:
                                 (<any>window.screen).orientation.lock(this.orientationMode);
-                                console.info(`Locking orientation to: ${this.orientationMode}`);
+                                this.log.info(`Locking orientation to: ${this.orientationMode}`);
                         }
                     }
                 }
@@ -52,7 +53,7 @@ export class ScreenOrientationDirective implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         if (this._enabled) {
-            console.info('Unlocking orientation');
+            this.log.info('Unlocking orientation');
             (<any>window.screen).orientation.unlock();
         }
     }

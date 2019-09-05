@@ -26,10 +26,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
 import org.jumpmind.pos.core.service.IScreenService;
-import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Scope;
@@ -50,9 +48,6 @@ public class StateManagerContainer implements IStateManagerContainer {
 
     @Autowired(required=false)
     IErrorHandler errorHandler;
-
-    @Autowired
-    private ClientContext clientContext;
 
     private Map<String, Map<String, StateManager>> stateManagersByAppIdByNodeId = new HashMap<>();
 
@@ -132,11 +127,6 @@ public class StateManagerContainer implements IStateManagerContainer {
 
     public void setCurrentStateManager(IStateManager stateManager) {
         currentStateManager.set(stateManager);
-        if( stateManager != null && stateManager.getClientContext() != null ){
-            for(String property: stateManager.getClientContext().keySet()) {
-                clientContext.put(property, stateManager.getClientContext().get(property));
-            }
-        }
     }
 
     public IStateManager getCurrentStateManager() {

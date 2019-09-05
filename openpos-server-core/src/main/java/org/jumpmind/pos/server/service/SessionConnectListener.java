@@ -9,7 +9,6 @@ import org.jumpmind.pos.server.config.PersonalizationParameter;
 import org.jumpmind.pos.server.config.PersonalizationParameters;
 import org.jumpmind.pos.util.BoxLogging;
 import org.jumpmind.pos.util.DefaultObjectMapper;
-import org.jumpmind.pos.util.clientcontext.ClientContextConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,8 +32,6 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
 
     Map<String, Map<String, Object>> sessionQueryParamsMap = Collections.synchronizedMap(new HashMap<>());
 
-    Map<String, Map<String, String>> clientContext = Collections.synchronizedMap(new HashMap<>());
-
     @Value("${openpos.auth.token:#{null}}")
     String serverAuthToken;
 
@@ -43,9 +40,6 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
 
     @Autowired(required = false)
     PersonalizationParameters personalizationParameters;
-
-    @Autowired(required = false)
-    ClientContextConfig clientContextConfig;
 
     public void onApplicationEvent(SessionConnectEvent event) {
         String sessionId = (String) event.getMessage().getHeaders().get("simpSessionId");
@@ -63,22 +57,6 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
         sessionCompatible.put(sessionId, serverCompatibilityVersion == null || serverCompatibilityVersion.equals(compatibilityVersion));
 
         setPersonalizationResults(sessionId, event);
-        setClientContext(sessionId, event);
-    }
-
-    private void setClientContext(String sessionId, SessionConnectEvent event) {
-        if(clientContextConfig != null && clientContextConfig.getParameters() != null) {
-            Map<String, String> context = new HashMap<>();
-            for(String param: clientContextConfig.getParameters()) {
-                String value = getHeader(event.getMessage(), param);
-                if( value != null ){
-                    context.put(param, value);
-                } else {
-                    context.put(param, "?");
-                }
-            }
-            clientContext.put(sessionId, context);
-        }
     }
 
     private void setPersonalizationResults(String sessionId, SessionConnectEvent event) {
@@ -124,7 +102,5 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
         this.sessionAuthenticated.remove(sessionId);
         this.sessionCompatible.remove(sessionId);
     }
-
-    public Map<String, String> getClientContext(String sessionId) { return clientContext.get(sessionId); }
 
 }

@@ -1,11 +1,9 @@
 package org.jumpmind.pos.print;
 
-import jpos.BaseJposControl;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
-import jpos.services.POSPrinterService19;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 
 import javax.imageio.ImageIO;
@@ -16,31 +14,51 @@ import java.util.Map;
 
 public class EscpPOSPrinter implements IOpenposPrinter {
 
-    private PrinterCommands printerCommands;
-    private int receiptLineSpacing;
-    private OutputStream outputStream;
-    private PrintWriter out;
-    private String hostname;
-    private EscpImagePrinter imagePrinter;
+    PrinterCommands printerCommands = new PrinterCommandPlaceholders();
+    int receiptLineSpacing;
+    OutputStream stream;
+    PrintWriter writer;
+    Map<String, Object> settings;
+    EscpImagePrinter imagePrinter;
+    IConnectionFactory connectionFactory;
+    boolean deviceEnabled  = true;
 
-    private int printWidth = 48;
-
-    private boolean deviceEnabled  = true;
-
-    @Override
-    public void claim(int timeout) throws JposException {
+    public EscpPOSPrinter() {
 
     }
 
+    public EscpPOSPrinter(Map<String,Object> settings) {
+        this.settings = settings;
+    }
+
+    @Override
+    public void claim(int timeout) throws JposException {
+    }
+
+
     @Override
     public void open(String logicalName, EventCallbacks cb) {
-        out = new PrintWriter(outputStream);
+        this.stream = connectionFactory.open(this.settings);
+        this.writer = new PrintWriter(this.stream);
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
+        initializePrinter();
+    }
+
+    protected void initializePrinter() {
+        printNormal(0, getCommand(PrinterCommands.ESC_P_MODE));
+        printNormal(0, getCommand(PrinterCommands.FONT_SIZE_MEDIUM));
+        printNormal(0, getCommand(PrinterCommands.FORMAT_NORMAL));
+        printNormal(0, getCommand(PrinterCommands.ALIGN_LEFT));
+        printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
     }
 
     @Override
     public void close() throws JposException {
-
+        if (this.writer != null) {
+            this.writer.close();
+            this.writer = null;
+        }
+        this.connectionFactory.close();
     }
 
     @Override
@@ -51,11 +69,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void printNormal(int station, String data) {
         if (data != null && data.length() > 0) {
-            if (out == null) {
+            if (writer == null) {
                 throw new PrintException("The output stream for the printer driver cannot be null at this point. It probably was not initialized properly. (Hint: you may need to call open()");
             }
-            out.print(data);
-            out.flush();
+            writer.print(data);
+            writer.flush();
         }
     }
 
@@ -123,11 +141,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             if (imagePrinter == null) {
                 throw new PrintException("imagePrinter cannot be null here. This printer driver was not initialized properly.");
             }
-            if (outputStream == null) {
+            if (stream == null) {
                 throw new PrintException("outputStream cannot be null here. This printer driver was not initialized properly.");
             }
             BufferedImage bufferedImage = ImageIO.read(image);
-            imagePrinter.printImage(outputStream, bufferedImage);
+            imagePrinter.printImage(stream, bufferedImage);
             printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
         } catch (Exception ex) {
             throw new PrintException("Failed to read and print buffered image", ex);
@@ -144,34 +162,40 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         this.receiptLineSpacing = receiptLineSpacing;
     }
 
-    @Override
-    public PrinterCommands getPrinterCommands() {
-        return printerCommands;
-    }
-
     public String getCommand(String commandName) {
-        return getPrinterCommands().get(commandName);
+        return printerCommands.get(commandName);
+    }
+
+    public void init(Map<String, Object> settings) {
+        this.settings = settings;
+        this.refreshConnectionFactoryFromSettings();
+        this.refreshPrinterCommandsFromSettings();
+    }
+
+    private void refreshConnectionFactoryFromSettings() {
+        try {
+            this.connectionFactory = (IConnectionFactory)Class.forName((String)this.settings.get("connectionClass")).newInstance();
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
+            throw new PrintException("Failed to create the connection factory for " + getClass().getName());
+        }
+    }
+
+    private void refreshPrinterCommandsFromSettings() {
+        this.printerCommands = new PrinterCommands();
+        String printerCommandLocations = (String)settings.get("printerCommandLocations");
+        String[] locationsSplit = printerCommandLocations.split(",");
+        for (String printerCommandLocation : locationsSplit) {
+            printerCommands.load(Thread.currentThread().getContextClassLoader().getResource(printerCommandLocation.trim()));
+        }
     }
 
     @Override
-    public void setPrinterCommands(PrinterCommands printerCommands) {
-        this.printerCommands = printerCommands;
-    }
-
-    public String getHostname() {
-        return hostname;
-    }
-
-    public void setHostname(String hostname) {
-        this.hostname = hostname;
-    }
-
     public int getPrintWidth() {
+        Integer printWidth = (Integer)settings.get("printWidth");
+        if (printWidth == null) {
+            printWidth = 48;
+        }
         return printWidth;
-    }
-
-    public void setPrintWidth(int printWidth) {
-        this.printWidth = printWidth;
     }
 
     @Override
@@ -1135,13 +1159,5 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void directIO(int command, int[] data, Object object) throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
-    }
-
-    public OutputStream getOutputStream() {
-        return outputStream;
-    }
-
-    public void setOutputStream(OutputStream outputStream) {
-        this.outputStream = outputStream;
     }
 }

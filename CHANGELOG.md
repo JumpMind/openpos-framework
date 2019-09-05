@@ -7,7 +7,21 @@
   | [#211](https://github.com/JumpMind/openpos-framework/pull/211) | Introduce a pluggable logging framework uses console methods as it&#39;s api |  |Dan Kaste|2019-08-26 14:44:05|
   | [#214](https://github.com/JumpMind/openpos-framework/pull/214) | Add support for disabling the language icons on language selector |  |maxwellpettit|2019-08-19 17:21:56|
   | [#215](https://github.com/JumpMind/openpos-framework/pull/215) | Build openpos-client-personalize via gradle |  |Chris Henson|2019-08-19 17:40:27|
+  | [#218](https://github.com/JumpMind/openpos-framework/issues/218) | Layout with bottom components (total, tax, etc) and scrolling is funky on sale screen and return screen when there are &gt; 7 or 8 items |  |Dan Kaste|2019-08-29 18:48:18|
   | [#228](https://github.com/JumpMind/openpos-framework/pull/228) | add UIMessage version of dynamic form screen and tests |  |Dan Kaste|2019-08-23 11:21:12|
+  | [#231](https://github.com/JumpMind/openpos-framework/pull/231) | Feature/client context |  |Dan Kaste|2019-08-28 17:01:37|
+  | [#233](https://github.com/JumpMind/openpos-framework/pull/233) | Bugfix/cleanup form functions |  |Klementina S. Chirico|2019-08-28 19:04:52|
+  | [#235](https://github.com/JumpMind/openpos-framework/pull/235) | Feature/incident reporting |  |Dan Kaste|2019-08-29 17:42:04|
+  | [#239](https://github.com/JumpMind/openpos-framework/pull/239) | Client-side ActionItem implementation |  |Eric Amiralian|2019-08-30 20:01:05|
+  | [#240](https://github.com/JumpMind/openpos-framework/pull/240) | Baconator builds BaconStrips |  |Eric Amiralian|2019-09-03 13:41:06|
+  | [#241](https://github.com/JumpMind/openpos-framework/pull/241) | Add support for property crawling of top level String[] property |  |Jason Mihalick|2019-09-04 14:47:39|
+
+## 0.5.4 
+Released on: 2019-09-04 18:24:49
+
+|       | Name   | Labels | Author | Time |
+|-------|--------|--------|--------|------|
+  | [#244](https://github.com/JumpMind/openpos-framework/pull/244) | Bugfix/selectable item list default select on disabled |  |Klementina S. Chirico|2019-09-04 18:21:48|
 
 ## 0.5.2 
 Released on: 2019-08-28 15:41:59

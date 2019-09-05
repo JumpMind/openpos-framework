@@ -23,7 +23,6 @@ import { ItemDetailComponent } from './item-detail/item-detail.component';
 import { TenderComponent } from './tender/tender.component';
 import { SignatureCaptureComponent } from './signature-capture/signature-capture.component';
 import { DynamicFormDialogComponent } from './dynamic-form-dialog/dynamic-form-dialog.component';
-import { DynamicFormComponent } from './dynamic-form-dialog/dynamic-form.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -37,8 +36,7 @@ const screens = [
     SaleComponent,
     ItemDetailComponent,
     TenderComponent,
-    SignatureCaptureComponent,
-    DynamicFormComponent
+    SignatureCaptureComponent
 ];
 
 const dialogs = [

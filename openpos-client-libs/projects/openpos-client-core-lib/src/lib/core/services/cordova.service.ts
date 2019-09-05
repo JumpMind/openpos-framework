@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subject, BehaviorSubject } from 'rxjs';
+import { Logger } from './logger.service';
 
 declare var cordova: any;
 
@@ -11,9 +12,9 @@ export class CordovaService {
     private _isRunningInCordova: boolean = null;
     public plugins: any;
 
-    constructor() {
+    constructor(private log: Logger) {
         document.addEventListener('deviceready', () => {
-                console.info('Cordova devices are ready');
+                this.log.info('Cordova devices are ready');
                 this._isRunningInCordova = true;
                 this.plugins = cordova.plugins;
                 this.onDeviceReady.next(`deviceready`);

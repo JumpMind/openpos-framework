@@ -1,9 +1,9 @@
 package org.jumpmind.pos.core.ui.messagepart;
 
-import java.io.Serializable;
-
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasBackButton;
+
+import java.io.Serializable;
 
 public class BaconStripPart implements IHasBackButton, Serializable {
 
