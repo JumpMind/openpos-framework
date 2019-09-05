@@ -11,6 +11,7 @@ public class UIMessage extends Message {
     private String id;
     private int sessionTimeoutMillis;
     private Action sessionTimeoutAction;
+    private boolean disabled = false;
 
     public UIMessage(String screenType, String id) {
         this();
@@ -50,6 +51,14 @@ public class UIMessage extends Message {
         return sessionTimeoutAction;
     }
 
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
+    }
+
     public void setSessionTimeoutAction(Action sessionTimeoutAction) {
         this.sessionTimeoutAction = sessionTimeoutAction;
     }
@@ -71,9 +80,8 @@ public class UIMessage extends Message {
      * Allows this screen content to be displayed in a Dialog on the client
      * side.
      *
-     * @param dialogProperties
-     *            Additional properties that can control dialog behavior and
-     *            rendering on the server side.
+     * @param dialogProperties Additional properties that can control dialog behavior and
+     *                         rendering on the server side.
      */
     public UIMessage asDialog(DialogProperties dialogProperties) {
         this.setType(MessageType.Dialog);

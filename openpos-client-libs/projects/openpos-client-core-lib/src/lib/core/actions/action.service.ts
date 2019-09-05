@@ -22,7 +22,12 @@ export class ActionService {
         private logger: Logger,
         private messageProvider: MessageProvider ) {
         messageProvider.getScopedMessages$().subscribe( message => {
-            this.blockActions = false;
+            if (message.disabled) {
+               console.log('creating a screen that is disabled');
+               this.blockActions = true;
+            } else {
+               this.blockActions = false;
+            }
         });
     }
 
