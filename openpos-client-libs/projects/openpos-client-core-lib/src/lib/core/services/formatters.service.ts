@@ -19,7 +19,6 @@ import { DateTimeFormatter } from '../../shared/formatters/datetime.formatter';
 import { TimeFormatter, TimeFormat } from '../../shared/formatters/time.formatter';
 import { DoNothingFormatter } from '../../shared/formatters/do-nothing.formatter';
 import { NonNumericFormatter } from '../../shared/formatters/non-numeric.formatter';
-import { AlphaNumericFormatter } from '../../shared/formatters/alphanumeric.formatter';
 
 
 @Injectable({
