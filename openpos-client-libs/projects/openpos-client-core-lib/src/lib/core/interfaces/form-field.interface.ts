@@ -41,6 +41,7 @@ export interface IFormElement {
     hideCalendar: any;
     maxDate: any;
     minDate: any;
+    startAtDate: any;
     hintText: string;
     hideButtons: boolean;
 }

@@ -9,6 +9,7 @@ public class DateField extends FormField {
     private boolean hideCalendar;
     private Date maxDate;
     private Date minDate;
+    private Date startAtDate;
 
     public DateField() {
         setInputType(FieldInputType.Date);
@@ -42,6 +43,11 @@ public class DateField extends FormField {
         this.setMaxDate(maxDate);
     }
     
+    public DateField(String id, String label, boolean required, boolean hideCalendar, Date minDate, Date maxDate, Date startAtDate) {
+        this(id, label, required, hideCalendar, minDate, maxDate);
+        this.setStartAtDate(startAtDate);
+    }
+    
     public boolean isHideCalendar() {
         return hideCalendar;
     }
@@ -65,5 +71,12 @@ public class DateField extends FormField {
     public void setMinDate(Date minDate) {
         this.minDate = minDate;
     }
-
+    
+    public Date getStartAtDate() {
+        return startAtDate;
+    }
+    
+    public void setStartAtDate(Date startAtDate) {
+        this.startAtDate = startAtDate;
+    }
 }
