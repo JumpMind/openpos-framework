@@ -19,6 +19,7 @@ import { DateTimeFormatter } from '../../shared/formatters/datetime.formatter';
 import { TimeFormatter, TimeFormat } from '../../shared/formatters/time.formatter';
 import { DoNothingFormatter } from '../../shared/formatters/do-nothing.formatter';
 import { NonNumericFormatter } from '../../shared/formatters/non-numeric.formatter';
+import { AlphaNumericFormatter } from '../../shared/formatters/alphanumeric.formatter';
 
 
 @Injectable({
@@ -58,6 +59,7 @@ export class FormattersService {
         NOLOCALEFormatters.set('numeric', numericFormatter);
         NOLOCALEFormatters.set('nonnumerictext', new NonNumericFormatter());
         NOLOCALEFormatters.set('numerictext', numericFormatter);
+        NOLOCALEFormatters.set('alphanumerictext', new AlphaNumericFormatter());
         NOLOCALEFormatters.set('giftcode', new GiftCodeFormatter());
         // Use USD formatter as default
         NOLOCALEFormatters.set('money', new MoneyFormatter(localeService));

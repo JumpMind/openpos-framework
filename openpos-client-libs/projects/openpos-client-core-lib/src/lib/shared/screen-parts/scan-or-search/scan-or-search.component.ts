@@ -93,23 +93,4 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     public onValueChange($event: any): void {
         this.change.emit(this.barcode);
     }
-
-    private filterBarcodeValue(val: string): string {
-        if (!val) {
-            return val;
-        }
-        // Filter out extra characters permitted by HTML5 input type=number (for exponentials)
-        const pattern = /[e|E|\+|\-|\.]/g;
-
-        return val.toString().replace(pattern, '');
-    }
-
-    onBarcodePaste(event: ClipboardEvent) {
-        const content = event.clipboardData.getData('text/plain');
-        const filteredContent = this.filterBarcodeValue(content);
-        if (filteredContent !== content) {
-            this.log.info(`Clipboard data contains invalid characters for barcode, suppressing pasted content '${content}'`);
-        }
-        return filteredContent === content;
-    }
 }
