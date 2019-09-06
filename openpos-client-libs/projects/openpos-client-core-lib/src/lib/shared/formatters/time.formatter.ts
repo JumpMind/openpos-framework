@@ -17,8 +17,9 @@ export class TimeFormatter implements IFormatter {
     formatValue(value: string): string {
         if (!value) {
             return '';
+        } else {
+            return value;
         }
-        return value;
     }
 
     unFormatValue(value: string): string {

@@ -59,7 +59,6 @@ export class FormattersService {
         NOLOCALEFormatters.set('numeric', numericFormatter);
         NOLOCALEFormatters.set('nonnumerictext', new NonNumericFormatter());
         NOLOCALEFormatters.set('numerictext', numericFormatter);
-        NOLOCALEFormatters.set('alphanumerictext', new AlphaNumericFormatter());
         NOLOCALEFormatters.set('giftcode', new GiftCodeFormatter());
         // Use USD formatter as default
         NOLOCALEFormatters.set('money', new MoneyFormatter(localeService));
