@@ -18,7 +18,7 @@ import { OpenposMediaService } from '../../../core/services/openpos-media.servic
     constructor( private mediaService: OpenposMediaService ) {
         const openMap = new Map([
             ['xs', false],
-            ['sm', true],
+            ['sm', false],
             ['md', true],
             ['lg', true],
             ['xl', true]
@@ -26,7 +26,7 @@ import { OpenposMediaService } from '../../../core/services/openpos-media.servic
 
         const modeMap = new Map([
             ['xs', 'over'],
-            ['sm', 'side'],
+            ['sm', 'over'],
             ['md', 'side'],
             ['lg', 'side'],
             ['xl', 'side']
