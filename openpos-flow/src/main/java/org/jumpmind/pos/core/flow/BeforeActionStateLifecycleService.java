@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.ClassUtils.Interfaces;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.server.model.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

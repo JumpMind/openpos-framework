@@ -23,13 +23,13 @@ export class InAppBrowserPlugin extends CordovaPlugin {
         }
         this.ref.addEventListener('exit', () => {
             this._active = false;
-            this.log.info('InAppBrowser exited');
+            console.info('InAppBrowser exited');
         });
         return this.ref;
     }
 
     isActive(): boolean {
-        this.log.info(`InAppBrowser active? ${this._active}`);
+        console.info(`InAppBrowser active? ${this._active}`);
         return this._active;
     }
 

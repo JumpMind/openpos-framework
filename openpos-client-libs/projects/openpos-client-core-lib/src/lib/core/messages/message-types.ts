@@ -3,4 +3,6 @@ export class MessageTypes {
     static ACTION = 'action';
     static DIALOG = 'dialog';
     static SCREEN = 'screen';
+    static TOAST = 'Toast';
+    static CONFIG_CHANGED = 'ConfigChanged';
 }

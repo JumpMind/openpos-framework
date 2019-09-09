@@ -7,7 +7,6 @@ import { ScreenPart } from '../decorators/screen-part.decorator';
 import { MessageProvider } from '../providers/message.provider';
 import { ActionService } from '../../core/actions/action.service';
 import { SessionService } from '../../core/services/session.service';
-import { Logger } from '../../core/services/logger.service';
 import { OpenposMediaService } from '../../core/services/openpos-media.service';
 
 interface TestPartInterface extends IAbstractScreen {
@@ -43,7 +42,6 @@ describe('ScreenPart', () => {
         TestBed.configureTestingModule({
             declarations: [ TestPartComponent ],
             providers: [
-                { provide: Logger, useValue: jasmine.createSpyObj('Logger', ['log'])},
                 { provide: OpenposMediaService, useValue: jasmine.createSpyObj('OpenposMediaService', ['mediaObservableFromMap'])},
                 { provide: SessionService, useValue: jasmine.createSpyObj('SessionService', ['sendMessage'])},
                 { provide: MessageProvider, useValue: messageProviderSpy },

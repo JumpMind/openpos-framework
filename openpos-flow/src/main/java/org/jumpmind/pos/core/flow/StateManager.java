@@ -32,6 +32,7 @@ import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
 import org.jumpmind.pos.core.clientconfiguration.LocaleChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
+import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
@@ -56,6 +57,9 @@ public class StateManager implements IStateManager {
     final Logger logger = LoggerFactory.getLogger(getClass());
     final Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
     private final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
+
+    @Autowired(required = false)
+    private String deviceId;
 
     @Autowired
     private IScreenService screenService;
@@ -110,6 +114,8 @@ public class StateManager implements IStateManager {
 
     private Map<String, Boolean> sessionCompatible = new HashMap<>();
 
+    private Map<String, String> clientContext = new HashMap<>();
+
     private IErrorHandler errorHandler;
 
     private final AtomicInteger activeCalls = new AtomicInteger(0);
@@ -131,7 +137,6 @@ public class StateManager implements IStateManager {
                 logger.warn("Failed to load openpos-state.json", ex);
             }
         }
-
         applicationState.getScope().setDeviceScope("stateManager", this);
         initDefaultScopeObjects();
 
@@ -179,6 +184,16 @@ public class StateManager implements IStateManager {
         }
         this.sessionAuthenticated.remove(sessionId);
         this.logger.info("Session {} removed from cache of authenticated sessions", sessionId);
+    }
+
+    @Override
+    public void setClientContext(Map<String, String> clientContext) {
+        this.clientContext = clientContext;
+    }
+
+    @Override
+    public Map<String, String> getClientContext(){
+        return this.clientContext;
     }
 
     @Override
@@ -326,7 +341,7 @@ public class StateManager implements IStateManager {
     }
 
     protected void refreshDeviceScope() {
-        for (String name : applicationState.getScope().getDeviceScope().keySet()) {
+        for (String name : new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
             Object value = applicationState.getScopeValue(ScopeType.Device, name);
             performOutjections(value);
             if (DeviceScope.isDeviceScope(name)) {
@@ -677,7 +692,7 @@ public class StateManager implements IStateManager {
     }
 
     private void clearScopeOnDeviceScopeBeans(ScopeType scopeType) {
-        for (String name : applicationState.getScope().getDeviceScope().keySet()) {
+        for (String name :  new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
             Object value = applicationState.getScopeValue(ScopeType.Device, name);
             injector.resetInjections(value, scopeType);
         }

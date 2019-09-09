@@ -1,4 +1,3 @@
-import { Logger } from '../services/logger.service';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { IActionItem } from './action-item.interface';
@@ -6,6 +5,7 @@ import { IConfirmationDialog } from './confirmation-dialog.interface';
 import { ActionService } from './action.service';
 import { of, BehaviorSubject } from 'rxjs';
 import { MessageProvider } from '../../shared/providers/message.provider';
+import { ToastMessage } from '../messages/toast-message';
 
 const confirmationDialog: IConfirmationDialog = {
     title: 'Are you sure',
@@ -16,22 +16,21 @@ const confirmationDialog: IConfirmationDialog = {
 
 const testScreen = {};
 const scopedMessages$ = new BehaviorSubject(testScreen);
+const allMessages$ = new BehaviorSubject(testScreen);
 
 
 describe('ActionService', () => {
 
     let messageProvider: jasmine.SpyObj<MessageProvider>;
-    let loggerService: jasmine.SpyObj<Logger>;
     let actionService: ActionService;
     let matDialogRef: jasmine.SpyObj<MatDialogRef<any>>;
     let matDialog: jasmine.SpyObj<MatDialog>;
 
     function setup() {
 
-        const messageProviderSpy = jasmine.createSpyObj('MessageProvider', ['sendMessage', 'getScopedMessages$']);
+        const messageProviderSpy = jasmine.createSpyObj('MessageProvider', ['sendMessage', 'getScopedMessages$', 'getAllMessages$']);
         const matDialogSpy = jasmine.createSpyObj('MatDialog', ['open']);
         const matDialogRefSpy = jasmine.createSpyObj('MatDialogRef', ['afterClosed', 'componentInstance']);
-        const loggerSpy = jasmine.createSpyObj('Logger', ['info']);
         matDialogRef = matDialogRefSpy;
 
         TestBed.configureTestingModule({
@@ -39,12 +38,11 @@ describe('ActionService', () => {
                 ActionService,
                 { provide: MessageProvider, useValue: messageProviderSpy},
                 { provide: MatDialog, useValue: matDialogSpy },
-                { provide: Logger, useValue: loggerSpy },
             ]
         });
 
         messageProviderSpy.getScopedMessages$.and.returnValue(scopedMessages$);
-        loggerService = TestBed.get(Logger);
+        messageProviderSpy.getAllMessages$.and.returnValue(allMessages$);
         messageProvider = TestBed.get(MessageProvider);
         actionService = TestBed.get(ActionService);
         matDialog = TestBed.get(MatDialog);
@@ -142,7 +140,7 @@ describe('ActionService', () => {
             expect(messageProvider.sendMessage).not.toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
         }));
 
-        it('Should unblock actions when a response is recieved', fakeAsync(() => {
+        it('Should unblock actions when a scoped response is recieved', fakeAsync(() => {
             const action1: IActionItem = { action: 'Test1', enabled: true};
             const action2: IActionItem = { action: 'Test2', enabled: true};
 
@@ -152,6 +150,27 @@ describe('ActionService', () => {
             tick();
 
             scopedMessages$.next({});
+
+            tick();
+
+            actionService.doAction(action2);
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test1'}));
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
+        }));
+
+        it('Should unblock actions when a toast message is recieved', fakeAsync(() => {
+            const action1: IActionItem = { action: 'Test1', enabled: true};
+            const action2: IActionItem = { action: 'Test2', enabled: true};
+
+            setup();
+            actionService.doAction(action1);
+
+            tick();
+
+            allMessages$.next(new ToastMessage());
 
             tick();
 

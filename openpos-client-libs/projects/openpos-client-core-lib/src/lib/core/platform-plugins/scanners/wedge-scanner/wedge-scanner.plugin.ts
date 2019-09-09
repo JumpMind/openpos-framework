@@ -6,7 +6,6 @@ import { map, filter, bufferToggle, timeout, catchError, windowToggle, tap, merg
 import { SessionService } from '../../../services/session.service';
 import { WEDGE_SCANNER_ACCEPTED_KEYS } from './wedge-scanner-accepted-keys';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
-import { Logger } from '../../../services/logger.service';
 import { OpenposScanType } from '../openpos-scan-type.enum';
 
 interface ControlSequence { modifiers: string[]; key: string; }
@@ -27,7 +26,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
 
     private scanObservable: Observable<IScanData>;
 
-    constructor( sessionService: SessionService, private domEventManager: DomEventManager, private log: Logger ) {
+    constructor( sessionService: SessionService, private domEventManager: DomEventManager ) {
 
         sessionService.getMessages('ConfigChanged').pipe(
             filter( m => m.configType === 'WedgeScanner')
@@ -80,14 +79,14 @@ interface ControlSequence { modifiers: string[]; key: string; }
     private createScanBuffer(): Observable<IScanData> {
         const startScanBuffer = this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
             filter( (e: KeyboardEvent) => this.filterForControlSequence(this.startSequenceObj, e),
-            tap( e => this.log.debug(`Starting Scan Capture: ${e}`))));
+            tap( e => console.debug(`Starting Scan Capture: ${e}`))));
 
         const stopScanBuffer = this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
             timeout(this.timeout),
             filter((e: KeyboardEvent) => this.filterForControlSequence(this.endSequenceObj, e)),
-            tap( e => this.log.debug(`Stopping Scan Capture: ${e}`)),
+            tap( e => console.debug(`Stopping Scan Capture: ${e}`)),
             catchError( e => {
-                this.log.debug('Scan Capture timed out');
+                console.debug('Scan Capture timed out');
                 return of('timed out');
             }),
         );
@@ -113,7 +112,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
             ),
             // We need to filter out any incomplete scans
             filter( (events: KeyboardEvent[]) => this.filterForControlSequence(this.endSequenceObj, events[events.length - 1])),
-            tap( events => this.log.debug(`Complete Scan: ${events.map(e => e.key).join(', ')}`)),
+            tap( events => console.debug(`Complete Scan: ${events.map(e => e.key).join(', ')}`)),
             map( (events: KeyboardEvent[]) => this.convertKeyEventsToChars(events) ),
             // Join the buffer into a string and remove the start and stop characters
             map( (s) => s.join('')),
@@ -141,10 +140,10 @@ interface ControlSequence { modifiers: string[]; key: string; }
             return false;
         }
         const keyPressed = e.key === sequence.key;
-        this.log.debug(`Start/Stop key (${e.key}) pressed: ${keyPressed} `);
+        console.debug(`Start/Stop key (${e.key}) pressed: ${keyPressed} `);
         if ( !!sequence.modifiers ) {
             const modifiersPressed = sequence.modifiers.map( m => this.checkModifier(e, m)).reduce((accum, m) => accum && m );
-            this.log.debug(`Start/Stop Modifiers (${sequence.modifiers.join(', ')}) pressed: ${modifiersPressed}`);
+            console.debug(`Start/Stop Modifiers (${sequence.modifiers.join(', ')}) pressed: ${modifiersPressed}`);
             return modifiersPressed && keyPressed;
         }
         return keyPressed;
