@@ -1,6 +1,6 @@
 <div fxFlexFill fxLayout="column">
-    <app-dialog-header fxFlex="100%"></app-dialog-header>
-    <mat-dialog-content>
+    <app-dialog-header></app-dialog-header>
+    <mat-dialog-content style="flex: 1 1 auto; display: flex; flex-direction: column;">
         <ng-container *ngIf="messages && messages.length > 0">
             <div *ngFor="let m of messages" [innerHTML]="m | markdownFormatter" class="generic-dialog-line">
             </div>
