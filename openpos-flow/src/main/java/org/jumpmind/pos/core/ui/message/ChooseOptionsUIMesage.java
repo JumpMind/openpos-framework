@@ -1,7 +1,6 @@
 package org.jumpmind.pos.core.ui.message;
-import org.jumpmind.pos.core.model.Form;
+
 import org.jumpmind.pos.core.model.FormOptionItem;
-import org.jumpmind.pos.core.ui.IHasForm;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 import java.util.ArrayList;
@@ -10,6 +9,7 @@ import java.util.List;
 public class ChooseOptionsUIMesage extends UIMessage {
 
     private List<FormOptionItem> options = new ArrayList<FormOptionItem>();
+    private String instructions;
 
     public ChooseOptionsUIMesage() {
         setScreenType(UIMessageType.CHOOSE_OPTIONS);
@@ -29,6 +29,14 @@ public class ChooseOptionsUIMesage extends UIMessage {
         }
 
         options.add(form);
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
 }
