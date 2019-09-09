@@ -1,6 +1,5 @@
 import { ValidationConstants } from './../../shared/validators/validation.constants';
 import { IValidator, IValidatorSpec } from './../interfaces/validator.interface';
-import { Logger } from './logger.service';
 import { Injectable } from '@angular/core';
 import { ValidatorFn, Validators } from '@angular/forms';
 // Since there are directives in shared that import validator service using the ../../shared
@@ -15,7 +14,7 @@ export class ValidatorsService {
 
     private validators = new Map<string, Map<string, IValidator>>();
 
-    constructor(private log: Logger, private localeService: LocaleService) {
+    constructor(private localeService: LocaleService) {
         const USValidators = new Map<string, IValidator>();
         const NOLOCALEValidators = new Map<string, IValidator>();
         const CAValidators = new Map<string, IValidator>();
@@ -71,7 +70,7 @@ export class ValidatorsService {
                     return typeof v !== 'undefined' ? v.validationFunc : undefined;
                 }
             }
-            this.log.info(`No validator found for locale '${locale}' validator name '${name}'. Using an 'always valid' validator`);
+            console.info(`No validator found for locale '${locale}' validator name '${name}'. Using an 'always valid' validator`);
             return () => null;
         }
     }

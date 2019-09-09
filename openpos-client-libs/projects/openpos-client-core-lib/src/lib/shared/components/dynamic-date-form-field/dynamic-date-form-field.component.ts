@@ -40,6 +40,7 @@ import { DateUtils, DatePartPositions } from '../../utils/date.utils';
     @Input() form: FormGroup;
     @Input() minDate: Date;
     @Input() maxDate: Date;
+    @Input() startAtDate: Date;
 
     @Output() valueChange = new EventEmitter<any>();
 
@@ -50,6 +51,7 @@ import { DateUtils, DatePartPositions } from '../../utils/date.utils';
     private datePartPos: DatePartPositions;
     minimumDate: Date;
     maximumDate: Date;
+    startAt: Date;
 
     constructor(@Optional() private datePipe: DatePipe) {
     }
@@ -69,6 +71,10 @@ import { DateUtils, DatePartPositions } from '../../utils/date.utils';
 
         if (this.maxDate) {
           this.maximumDate = new Date(this.maxDate);
+        }
+
+        if (this.startAtDate) {
+          this.startAt = new Date(this.startAtDate);
         }
 
     }

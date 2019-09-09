@@ -7,7 +7,7 @@
                 [matDatepicker]="picker" (dateChange)="onDatePicked($event)" [keyboardLayout]="keyboardLayout" [attr.type]="'tel'">
         <mat-datepicker-toggle *ngIf="!isPrompt && !hideCalendar" matSuffix [for]="picker" class="primary"></mat-datepicker-toggle>
         <mat-datepicker-toggle *ngIf="isPrompt && !hideCalendar" matPrefix [for]="picker" class="primary"></mat-datepicker-toggle>
-        <mat-datepicker #picker touchUi="true"></mat-datepicker>
+        <mat-datepicker #picker [startAt]="startAt" touchUi="true"></mat-datepicker>
         <mat-hint *ngIf="isPrompt" align="start">{{hintText}}</mat-hint>
     </mat-form-field>
 </div>

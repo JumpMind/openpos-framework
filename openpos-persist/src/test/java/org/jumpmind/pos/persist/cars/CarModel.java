@@ -29,6 +29,8 @@ public class CarModel extends AbstractTaggedModel implements ITaggedModel {
     private CarTrimTypeCode carTrimTypeCode;
     @ColumnDef
     private byte[] image;
+    @ColumnDef
+    private boolean antique;
     
     
     
@@ -80,6 +82,12 @@ public class CarModel extends AbstractTaggedModel implements ITaggedModel {
     public void setImage(byte[] image) {
         this.image = image;
     }
-    
-    
+
+    public boolean isAntique() {
+        return antique;
+    }
+
+    public void setAntique(boolean antique) {
+        this.antique = antique;
+    }
 }

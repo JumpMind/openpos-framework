@@ -1,19 +1,19 @@
 package org.jumpmind.test.states;
 
-
-import org.jumpmind.pos.core.flow.IStateManager;
-import org.jumpmind.pos.core.flow.In;
-import org.jumpmind.pos.core.flow.OnArrive;
-import org.jumpmind.pos.core.flow.ScopeType;
-import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.model.FormField;
-import org.jumpmind.pos.core.screen.ActionItem;
-import org.jumpmind.pos.core.screen.DynamicFormScreen;
-import org.jumpmind.pos.core.ui.UIMessage;
-import org.jumpmind.pos.server.model.Action;
-
 import java.util.ArrayList;
 import java.util.List;
+import org.jumpmind.pos.core.flow.*;
+import org.jumpmind.pos.core.model.Form;
+import org.jumpmind.pos.core.model.FormField;
+import org.jumpmind.pos.core.model.IFormElement;
+import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.IconType;
+import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.message.DynamicFormUIMessage;
+import org.jumpmind.pos.core.ui.messagepart.BaconStripPart;
+import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
+import org.jumpmind.pos.server.model.Action;
+
 
 public class DynamicFormState {
     @In(scope = ScopeType.Device)
@@ -25,11 +25,13 @@ public class DynamicFormState {
     }
 
     private UIMessage buildScreen() {
-        DynamicFormScreen message = new DynamicFormScreen();
-        message.setRefreshAlways(true);
-        message.setBackButton(new ActionItem("Back", null));
-        message.setSubmitButton(new ActionItem("Back", "Back"));
-        message.setUseOnScreenKeyboard(true);
+        DynamicFormUIMessage message = new DynamicFormUIMessage();
+        BaconStripPart bacon = new BaconStripPart();
+        bacon.setHeaderIcon(IconType.AddCustomer);
+        bacon.setHeaderText("Loading Screen Test");
+        bacon.setBackButton(new ActionItem("Back", null));
+
+        message.addMessagePart(MessagePartConstants.BaconStrip, bacon);
 
         Form form = message.getForm();
         List<String> comboValues = new ArrayList<>();
@@ -38,16 +40,9 @@ public class DynamicFormState {
             comboValues.add("TestValue"+i);
         }
 
-        for( int i = 0; i < 3; ++i){
-            form.addComboBox("testCombo" +1, "Test Combo" +1, comboValues);
-        }
-
-
-        for( int i = 0; i < 10; ++i){
-            FormField input = form.addTextField("testField"+i, "Test Input"+i, "", false);
-            input.setMaxLength(30);
-        }
-
+        form.addComboBox("testCombo", "Test Combo", comboValues);
+        FormField input = form.addTextField("testField", "Test Input", "", false);
+        input.setMaxLength(30);
 
         return message;
     }

@@ -1,12 +1,10 @@
-import { Logger } from './logger.service';
-
 import { Injectable, Type, ComponentFactoryResolver, ComponentFactory } from '@angular/core';
 import { SessionService } from './session.service';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { DialogContentComponent } from '../components/dialog-content/dialog-content.component';
 import { MatDialogRef, MatDialog } from '@angular/material';
 import { OpenPOSDialogConfig } from '../interfaces/open-pos-dialog-config.interface';
-import { BehaviorSubject, Subject, Observable } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 import { LifeCycleMessage } from '../messages/life-cycle-message';
 import { LifeCycleEvents } from '../messages/life-cycle-events.enum';
 
@@ -30,7 +28,6 @@ export class DialogService {
     public $dialogMessages = new BehaviorSubject<any>(null);
 
     constructor(
-        private log: Logger,
         private componentFactoryResolver: ComponentFactoryResolver,
         private session: SessionService,
         private dialog: MatDialog) {
@@ -59,7 +56,7 @@ export class DialogService {
 
         if (DialogService.dialogs.get(name)) {
             // tslint:disable-next-line:max-line-length
-            this.log.info(`replacing registration of dialog for the key of ${name} in the dialog service`);
+            console.info(`replacing registration of dialog for the key of ${name} in the dialog service`);
             DialogService.dialogs.delete(name);
         }
         DialogService.dialogs.set(name, type);
@@ -90,7 +87,7 @@ export class DialogService {
     // Make this async so we can await it
     public async closeDialog() {
         if (this.dialogRef) {
-            this.log.info('[DialogService] closing dialog ref');
+            console.info('[DialogService] closing dialog ref');
             this.closingDialogRef = this.dialogRef;
             this.dialogRef = null;
             this.closingDialogRef.close();
@@ -119,11 +116,11 @@ export class DialogService {
         if (dialog) {
             const dialogType = this.hasDialog(dialog.subType) ? dialog.subType : 'Dialog';
             if (!this.dialogOpening) {
-                this.log.info('opening dialog \'' + dialogType + '\'');
+                console.info('opening dialog \'' + dialogType + '\'');
                 this.dialogOpening = true;
                 setTimeout(() => this.openDialog(dialog), 0);
             } else {
-                this.log.info(`[DialogService] Not opening dialog! Here's why: dialogOpening? ${this.dialogOpening}`);
+                console.info(`[DialogService] Not opening dialog! Here's why: dialogOpening? ${this.dialogOpening}`);
             }
         }
     }
@@ -131,7 +128,7 @@ export class DialogService {
     private async openDialog(dialog: any) {
         try {
             const dialogComponentFactory: ComponentFactory<IScreen> = this.resolveDialog(dialog.screenType);
-            this.log.info(`[DialogService] Opening a dialog with a ` +
+            console.info(`[DialogService] Opening a dialog with a ` +
                 `${dialogComponentFactory && dialogComponentFactory.componentType ? dialogComponentFactory.componentType.name : '?'} ` +
                 `component as its content`
             );
@@ -153,7 +150,7 @@ export class DialogService {
                         dialogProperties[key] = dialog.dialogProperties[key];
                     }
                 }
-                this.log.info(`Dialog options: ${JSON.stringify(dialogProperties)}`);
+                console.info(`Dialog options: ${JSON.stringify(dialogProperties)}`);
             }
 
             if (!this.dialogRef || !this.dialogRef.componentInstance
@@ -165,26 +162,26 @@ export class DialogService {
                 await this.closeDialog();
 
                 if (!this.dialogRef || !this.dialogRef.componentInstance) {
-                    this.log.info('[DialogService] Dialog \'' + dialog.screenType + '\' opening...');
+                    console.info('[DialogService] Dialog \'' + dialog.screenType + '\' opening...');
                     this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogOpening));
                     this.dialogRef = this.dialog.open(DialogContentComponent, dialogProperties);
                 } else {
                     // I don't think this code will ever run
-                    this.log.info('[DialogService] Dialog \'' + dialog.screenType + '\' refreshing content...');
+                    console.info('[DialogService] Dialog \'' + dialog.screenType + '\' refreshing content...');
                     this.dialogRef.updateSize('' + dialogProperties.minWidth, '' + dialogProperties.minHeight);
                     this.dialogRef.disableClose = dialogProperties.disableClose;
                 }
                 this.dialogRef.componentInstance.installScreen(dialogComponentFactory);
                 this.session.cancelLoading();
             } else {
-                this.log.info(`Using previously created dialogRef. current dialog type: ${dialog.screenType},
+                console.info(`Using previously created dialogRef. current dialog type: ${dialog.screenType},
             last dialog type: ${this.lastDialogType}`);
                 this.session.cancelLoading();
             }
 
-            this.log.info('[DialogService] Dialog \'' + dialog.screenType + '\' showing...');
+            console.info('[DialogService] Dialog \'' + dialog.screenType + '\' showing...');
             this.dialogRef.componentInstance.show(dialog);
-            this.log.info('[DialogService] Dialog \'' + dialog.screenType + '\' opened/shown');
+            console.info('[DialogService] Dialog \'' + dialog.screenType + '\' opened/shown');
 
             this.lastDialogType = dialog.screenType;
             this.lastDialogId = dialog.id;

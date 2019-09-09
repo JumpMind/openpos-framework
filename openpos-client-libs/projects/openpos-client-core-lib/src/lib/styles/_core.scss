@@ -40,7 +40,6 @@ $mat-card-default-margin: 24px !default;
     padding:0;
     height: 100vh;
     overflow: hidden;
-    cursor: pointer;
   }
 
   .scrollable{
@@ -81,6 +80,17 @@ $mat-card-default-margin: 24px !default;
   .sausage-link-button-title {
     text-align: left;
     flex-grow: 1;
+  }
+
+  // Workaround for issues mentioned in https://github.com/angular/components/issues/4580
+  mat-dialog-content {
+    .mat-form-field-underline {
+        position: static;
+    }
+
+    .mat-form-field-subscript-wrapper {
+        position: static;
+    }
   }
 
 }

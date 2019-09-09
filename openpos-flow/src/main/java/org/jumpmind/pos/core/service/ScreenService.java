@@ -22,6 +22,7 @@ import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.SerializationUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.content.ContentProviderService;
+import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.FlowException;
 import org.jumpmind.pos.core.flow.IMessageInterceptor;
@@ -82,6 +83,9 @@ public class ScreenService implements IScreenService, IActionListener {
 
     @Autowired
     ApplicationContext applicationContext;
+
+    @Autowired
+    IErrorHandler errorHandler;
 
     @PostConstruct
     public void init() {
@@ -210,9 +214,13 @@ public class ScreenService implements IScreenService, IActionListener {
                         logger.debug("Posting action {}", action);
                         stateManager.doAction(action);
                     } catch (Throwable ex) {
-                        logger.error(String.format("Unexpected exception while processing action from %s: %s", deviceId, action), ex);
-                        messageService.sendMessage(appId, deviceId, Toast.createWarningToast(
-                                "The application received an unexpected error. Please report to the appropriate technical personnel"));
+                        if( errorHandler != null){
+                            errorHandler.handleError(stateManager, ex);
+                        } else {
+                            logger.error(String.format("Unexpected exception while processing action from %s: %s", deviceId, action), ex);
+                            messageService.sendMessage(appId, deviceId, Toast.createWarningToast(
+                                    "The application received an unexpected error. Please report to the appropriate technical personnel"));
+                        }
                     }
                 }
             } finally {

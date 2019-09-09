@@ -1,7 +1,6 @@
 
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Logger } from './logger.service';
 import { FileUploadResult } from './../interfaces/file-upload-result.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
 import { CordovaService } from './cordova.service';
@@ -11,7 +10,7 @@ import { FileChunkReader } from './../../shared/utils/filechunkreader';
     providedIn: 'root',
   })
 export class FileUploadService {
-    constructor(private log: Logger, private cordovaService: CordovaService, private personalization: PersonalizationService, private httpClient: HttpClient) {
+    constructor(private cordovaService: CordovaService, private personalization: PersonalizationService, private httpClient: HttpClient) {
     }
 
     public async uploadLocalDeviceFileToServer(context: string, filename: string, contentType: string, filepath: string):
@@ -22,10 +21,10 @@ export class FileUploadService {
             if (! filename.startsWith('file:')) {
                 localfilepath = `file://${localfilepath}`;
             }
-            this.log.info(`File to upload: ${localfilepath}`);
+            console.info(`File to upload: ${localfilepath}`);
 
             const url = this.getUploadServiceUrl();
-            this.log.info(`File upload endpoint url: ${url}`);
+            console.info(`File upload endpoint url: ${url}`);
             try {
                 return this.uploadFileInChunks(url, context, localfilepath, filename, contentType);
             } catch (error) {
@@ -37,7 +36,7 @@ export class FileUploadService {
             }
         } else {
             const msg = `Not running in Cordova, cannot upload file ${filename}`;
-            this.log.warn(msg);
+            console.warn(msg);
            return Promise.reject({success: false, message: msg});
        }
 
@@ -58,7 +57,7 @@ export class FileUploadService {
                 f.append('file', blob);
                 f.append('chunkIndex', fileChunkReader.chunkIndex.toString());
                 uploadSub = this.httpClient.post(url, f, {observe: 'response'}).subscribe(response => {
-                        this.log.debug(`${filename} chunk uploaded.  bytes uploaded/total: ${fileChunkReader.bytesReadCount}/${fileChunkReader.fileSize}`);
+                        console.debug(`${filename} chunk uploaded.  bytes uploaded/total: ${fileChunkReader.bytesReadCount}/${fileChunkReader.fileSize}`);
                         resolve(true);
                     },
                     err => {
@@ -77,7 +76,7 @@ export class FileUploadService {
 
         const timeoutPromise = new Promise<FileUploadResult>((resolve, reject) => {
             fileUploadTimer = setTimeout( () => {
-                this.log.info(`upload timed out`);
+                console.info(`upload timed out`);
                 fileChunkReader.cancel();
                 if (uploadSub) {
                     uploadSub.unsubscribe();
@@ -95,12 +94,12 @@ export class FileUploadService {
                 }
                 if (result) {
                     const msg = `File '${filename}' uploaded to server successfully.`;
-                    this.log.info(msg);
-                    // this.log.info(`File upload response: ${JSON.stringify(response)}`);
+                    console.info(msg);
+                    // console.info(`File upload response: ${JSON.stringify(response)}`);
                     resolve({success: true, message: msg});
                 } else {
                     const msg = `Upload of file '${filename}' FAILED!`;
-                    this.log.error(msg);
+                    console.error(msg);
                     resolve({success: false, message: msg});
                 }
             }).catch(err => {
@@ -108,7 +107,7 @@ export class FileUploadService {
                     clearTimeout(fileUploadTimer);
                 }
                 const msg = `Upload Error occurred: ${err}`;
-                this.log.error(msg);
+                console.error(msg);
                 const statusCode = err.status || (err.error ? err.error.status : null);
                 let errMsg = '';
                 if (err.error) {
@@ -135,7 +134,7 @@ export class FileUploadService {
 
     protected handleError(msg: string, e: any) {
         const errorMsg = `${msg}; Error code: ${e.code}, ${JSON.stringify(e)}`;
-        this.log.error(errorMsg);
+        console.error(errorMsg);
         throw new Error(errorMsg);
     }
 

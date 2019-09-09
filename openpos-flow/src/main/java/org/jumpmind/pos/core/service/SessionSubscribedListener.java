@@ -56,6 +56,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
         Message<?> msg = event.getMessage();
         String sessionId = (String) msg.getHeaders().get("simpSessionId");
         Map<String, Object> queryParams = sessionAuthTracker.getQueryParams(sessionId);
+        Map<String, String> clientContext = sessionAuthTracker.getClientContext(sessionId);
         String topicName = (String) msg.getHeaders().get("simpDestination");
         String compatibilityVersion = this.getHeader(msg, MessageUtils.COMPATIBILITY_VERSION_HEADER);
         String deviceId = topicName.substring(topicName.indexOf("/node/") + "/node/".length());
@@ -112,6 +113,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
 
             stateManager.setSessionAuthenticated(sessionId, sessionAuthTracker.isSessionAuthenticated(sessionId));
             stateManager.setSessionCompatible(sessionId, sessionAuthTracker.isSessionCompatible(sessionId));
+            stateManager.setClientContext(clientContext);
 
             if (!created) {
                 stateManager.refreshScreen();

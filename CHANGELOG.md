@@ -15,6 +15,15 @@
   | [#239](https://github.com/JumpMind/openpos-framework/pull/239) | Client-side ActionItem implementation |  |Eric Amiralian|2019-08-30 20:01:05|
   | [#240](https://github.com/JumpMind/openpos-framework/pull/240) | Baconator builds BaconStrips |  |Eric Amiralian|2019-09-03 13:41:06|
   | [#241](https://github.com/JumpMind/openpos-framework/pull/241) | Add support for property crawling of top level String[] property |  |Jason Mihalick|2019-09-04 14:47:39|
+  | [#246](https://github.com/JumpMind/openpos-framework/pull/246) | Change to printing to support configuration via yml.  Also removed deprecated fields from ChooseOptionsUIMessage |  |Chris Henson|2019-09-05 15:16:01|
+
+## 0.5.5 
+Released on: 2019-09-05 14:07:44
+
+|       | Name   | Labels | Author | Time |
+|-------|--------|--------|--------|------|
+  | [#245](https://github.com/JumpMind/openpos-framework/pull/245) | Handle pre-formatted eu values in money formatter |  |maxwellpettit|2019-09-04 18:51:46|
+  | [#247](https://github.com/JumpMind/openpos-framework/pull/247) | Add feature to allow a uimessage to be disabled |  |Chris Henson|2019-09-05 14:04:25|
 
 ## 0.5.4 
 Released on: 2019-09-04 18:24:49
@@ -23,12 +32,6 @@ Released on: 2019-09-04 18:24:49
 |-------|--------|--------|--------|------|
   | [#244](https://github.com/JumpMind/openpos-framework/pull/244) | Bugfix/selectable item list default select on disabled |  |Klementina S. Chirico|2019-09-04 18:21:48|
 
-## 0.5.2 
-Released on: 2019-08-28 15:41:59
-
-|       | Name   | Labels | Author | Time |
-|-------|--------|--------|--------|------|
-  | [#220](https://github.com/JumpMind/openpos-framework/pull/220) | Return the entire list when filtering with an empty string |  |maxwellpettit|2019-08-21 15:57:52|
 
 ## 0.4.2 
 Released on: 2019-08-28 15:15:09
@@ -54,6 +57,7 @@ Released on: 2019-08-28 15:15:09
   | [#207](https://github.com/JumpMind/openpos-framework/pull/207) | Support EU currency formatting |  |maxwellpettit|2019-08-13 15:54:08|
   | [#214](https://github.com/JumpMind/openpos-framework/pull/214) | Add support for disabling the language icons on language selector |  |maxwellpettit|2019-08-19 17:23:56|
   | [#216](https://github.com/JumpMind/openpos-framework/pull/216) | Only add google autocomplete listener once to improve performance |  |maxwellpettit|2019-08-19 21:17:21|
+  | [#220](https://github.com/JumpMind/openpos-framework/pull/220) | Return the entire list when filtering with an empty string |  |maxwellpettit|2019-08-21 15:57:52|
   | [#221](https://github.com/JumpMind/openpos-framework/pull/221) | Use searchable poptarts for auto complete address screens |  |maxwellpettit|2019-08-23 13:23:21maxwellpettit|2019-08-21 17:35:19|
   | [#224](https://github.com/JumpMind/openpos-framework/pull/224) | Add validator for disallowing a field to contain all whitespace |  |Jason Mihalick|2019-08-22 19:45:42|
   | [#225](https://github.com/JumpMind/openpos-framework/pull/225) | Preventing disabled links from submitting actions |  |stevencarley|2019-08-22 18:44:20|

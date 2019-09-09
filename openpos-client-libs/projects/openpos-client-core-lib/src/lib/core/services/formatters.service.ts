@@ -1,4 +1,3 @@
-import { Logger } from './logger.service';
 import { Injectable } from '@angular/core';
 import { LocaleService } from './locale.service';
 import { IFormatter } from '../../shared/formatters/formatter.interface';
@@ -27,7 +26,7 @@ import { NonNumericFormatter } from '../../shared/formatters/non-numeric.formatt
 export class FormattersService {
     private formatters = new Map<string, Map<string, IFormatter>>();
 
-    constructor(private log: Logger, private localeService: LocaleService) {
+    constructor(private localeService: LocaleService) {
         const USFormatters = new Map<string, IFormatter>();
         const defaultPhoneFormatter = new PhoneUSFormatter();
 
@@ -94,7 +93,7 @@ export class FormattersService {
         }
 
         if ( name ) {
-            this.log.debug(`No formatter found for locale '${locale}' formatter name '${name}'. Using a 'Do Nothing' formatter`);
+            console.debug(`No formatter found for locale '${locale}' formatter name '${name}'. Using a 'Do Nothing' formatter`);
         }
         return new DoNothingFormatter();
     }
