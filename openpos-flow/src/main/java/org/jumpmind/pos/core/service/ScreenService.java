@@ -32,6 +32,7 @@ import org.jumpmind.pos.core.flow.SessionTimer;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.IDynamicListField;
 import org.jumpmind.pos.core.model.IFormElement;
+import org.jumpmind.pos.core.ui.DialogProperties;
 import org.jumpmind.pos.core.ui.IHasForm;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
@@ -321,7 +322,8 @@ public class ScreenService implements IScreenService, IActionListener {
                 messageService.sendMessage(appId, deviceId, screen);
             }
 
-            if (screen.isDialog()) {
+            DialogProperties properties = (DialogProperties) screen.get("dialogProperties");
+            if (properties == null || !properties.isCloseable()) {
                 applicationState.setLastDialog(screen);
                 applicationState.setLastPreInterceptedDialog(preInterceptedScreen);
             } else if (!screen.getScreenType().equals("NoOp")) {
