@@ -42,6 +42,13 @@ export function getFormattedTime( timeFormat: string, time: Time, labels: TimeUn
         labelsToUse.hours = labels.hourLabelPlural;
     }
 
+
+    if( (!timeFormat.includes('HH') || time.hours === 0) &&
+        (!timeFormat.includes('mm') || time.minutes === 0) &&
+        (!timeFormat.includes('ss') || time.seconds === 0)){
+        return labels.nowLabel;
+    }
+
     let formattedTime = timeFormat;
 
     let secondsValue = '';
@@ -62,9 +69,6 @@ export function getFormattedTime( timeFormat: string, time: Time, labels: TimeUn
     }
     formattedTime = formattedTime.replace( 'HH', hoursValue);
 
-    if(time.hours === 0 && time.minutes === 0 && time.seconds === 0){
-        return labels.nowLabel;
-    }
 
     return formattedTime.replace(/[ ]{2,}/g, ' ');
 }
