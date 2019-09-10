@@ -31,6 +31,7 @@ import org.jumpmind.pos.core.flow.SessionTimer;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.IDynamicListField;
 import org.jumpmind.pos.core.model.IFormElement;
+import org.jumpmind.pos.core.screen.DialogProperties;
 import org.jumpmind.pos.core.screen.IHasForm;
 import org.jumpmind.pos.core.screen.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
@@ -314,8 +315,12 @@ public class ScreenService implements IScreenService, IActionListener {
             }
 
             if (screen.isDialog()) {
-                applicationState.setLastDialog(screen);
-                applicationState.setLastPreInterceptedDialog(preInterceptedScreen);
+                // Don't save a dialog if it is closable, otherwise it gets shown on a refresh
+                DialogProperties properties = (DialogProperties) screen.get("dialogProperties");
+                if (properties == null || !properties.isCloseable()) {
+                    applicationState.setLastDialog(screen);
+                    applicationState.setLastPreInterceptedDialog(preInterceptedScreen);
+                }
             } else if (!screen.getScreenType().equals("NoOp")) {
                 applicationState.setLastScreen(screen);
                 applicationState.setLastPreInterceptedScreen(preInterceptedScreen);
