@@ -1,7 +1,7 @@
 package org.jumpmind.pos.print;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.net.URL;
 import java.util.HashMap;
