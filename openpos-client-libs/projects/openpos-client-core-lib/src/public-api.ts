@@ -364,6 +364,7 @@ export * from './lib/shared/screen-parts/system-status/system-status.component';
 
 export * from './lib/shared/utils/date.utils';
 export * from './lib/shared/validators/openpos-validators';
+export * from './lib/shared/validators/regex-validator';
 export * from './lib/utilites/deep-assign';
 
 export * from './lib/styles/theme-test.module';
