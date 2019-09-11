@@ -16,7 +16,6 @@ public class OpenposUncaughtExceptionHandler implements UncaughtExceptionHandler
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        System.out.println("uncaughtException invoked: " + t);
         logger().error(String.format("An uncaught exception was raised from thread %s. Stack trace follows.", t), e);
     }
     
