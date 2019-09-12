@@ -86,7 +86,7 @@ public class StatementInterceptor extends WrapperInterceptor {
     }
     
     public void preparedStatementExecute(String methodName, long elapsed, String sql) {
-        log.info("PreparedStatement." + methodName + " (" + elapsed + "ms.) " + sql) ;          
+        log.info("PreparedStatement." + methodName + " (" + elapsed + "ms.) " + sql.trim()) ;
     }
     
     public void statementExecute(String methodName, long elapsed, Object... parameters) {
