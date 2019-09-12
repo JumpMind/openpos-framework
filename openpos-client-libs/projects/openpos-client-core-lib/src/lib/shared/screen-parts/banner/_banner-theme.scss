@@ -1,0 +1,26 @@
+@mixin banner-theme($theme) {
+    $accent: mat-color(map-get($theme, accent));
+    $error: mat-color(map-get($theme, warn));
+    $warning: mat-color(mat-palette($mat-amber, 600));
+    
+    app-banner {
+        .info {
+            .banner-icon {
+                color: $accent;
+            }
+        }
+        .warning {
+            .banner-icon {
+                color: $warning;
+            }
+        }
+        .error {
+            .banner-icon {
+                color: $error;
+            }
+            .banner-message {
+                color: $error;
+            }
+        }
+    }
+}
