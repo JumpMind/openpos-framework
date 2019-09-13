@@ -5,10 +5,11 @@
 
 .container{
     display: flex;
-    padding: 16px;
+    padding: 4px 16px;
     width: 100%;
     align-items: center;
     font-size: 20px;
+    height: 48px;
 }
 
 .header {
@@ -17,12 +18,12 @@
     white-space: nowrap;
 }
 
-.back-button{
-    margin-left:-20px; 
-    margin-right:10px;
-    margin-top: -12px;
-    margin-bottom: -18px;
-    z-index:10;
+.back-button-container {
+    width: 80px;
+}
+
+.back-button {
+    margin-top: 4px;
 }
 
 .operator{

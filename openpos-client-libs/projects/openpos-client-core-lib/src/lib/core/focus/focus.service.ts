@@ -29,10 +29,8 @@ export class FocusService {
     }
 
     restoreFocus(element: HTMLElement) {
-        setTimeout(() => {
-            if (element) {
-                element.focus();
-            }
-        });
+        if (element) {
+            element.focus();
+        }
     }
 }

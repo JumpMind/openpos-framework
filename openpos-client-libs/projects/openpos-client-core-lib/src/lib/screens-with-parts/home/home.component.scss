@@ -2,6 +2,9 @@
 
 .home-wrapper {
     height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 .menu-button-border{
     @include mat-elevation(10);
@@ -31,9 +34,8 @@
     white-space: normal;
 }
 
-.system-status-container {
-    text-align: right;
-    margin-right: 10px;
+.menu-list {
+    margin-bottom: auto;
 }
 
 @supports not (display: grid) {
@@ -52,9 +54,7 @@
 
 @supports (display: grid) {
     .button-grid{
-        height: 90%;
         display: grid;
-        place-self: center;
         place-content: center;
         place-items: stretch;
         grid-template-columns: repeat(auto-fit, 240px)
