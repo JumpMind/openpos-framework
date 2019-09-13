@@ -47,7 +47,7 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         HttpHeaders headers = new HttpHeaders();
 
         if( clientContext != null ) {
-            clientContext.put("sessionId", UUID.randomUUID().toString());
+            clientContext.put("correlationId", UUID.randomUUID().toString());
             for (String propertyName : clientContext.getPropertyNames()) {
                 headers.set("ClientContext-" + propertyName, clientContext.get(propertyName));
             }
