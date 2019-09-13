@@ -175,6 +175,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         } else {
             // If this screen was updated, focus the previously focused element
             setTimeout(() => {
+                // Get an updated element in the case where the screen/form has been refreshed
                 const updatedElement = document.getElementById(original.id);
                 this.focusService.restoreFocus(updatedElement);
             });
