@@ -14,7 +14,7 @@ public class SelectionListItem implements Serializable {
 
     private List<SelectionListItemDisplayProperty> properties;
 
-    private boolean isSelected;
+    private boolean selected;
 
     private boolean enabled=true;
 
@@ -56,11 +56,11 @@ public class SelectionListItem implements Serializable {
     }
 
     public boolean isSelected() {
-        return isSelected;
+        return selected;
     }
 
-    public void setSelected(boolean isSelected) {
-        this.isSelected = isSelected;
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 
     public boolean isEnabled() {
