@@ -9,6 +9,7 @@
             class="checkout-button mat-elevation-z0"
             [disabled]="!screenData.checkoutButton.enabled"
             (click)="doAction(screenData.checkoutButton)"
+            [attr.cdkfocusinitial]="screenData.checkoutButton.enabled ? '' : null"
             >
             <span class="text-md">{{screenData.checkoutButton.title}}</span>
             <app-icon [iconClass]="'mat-48'" [iconName]="screenData.checkoutButton.icon"></app-icon>
