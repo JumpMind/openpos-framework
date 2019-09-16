@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, EventEmitter, Input, Output} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {TaskListManagerService} from '../task-list/task-list-manager.service';
 
 @Component({
@@ -6,21 +6,24 @@ import {TaskListManagerService} from '../task-list/task-list-manager.service';
   templateUrl: './task-check-box.component.html',
   styleUrls: ['./task-check-box.component.scss']
 })
-export class TaskCheckBoxComponent {
+export class TaskCheckBoxComponent implements OnDestroy{
 
   uncheckedIconName = 'check_box_outline_blank';
   checkedIconName = 'check_box';
 
-  constructor( taskListManager: TaskListManagerService, private cd: ChangeDetectorRef ) {
-    taskListManager.registerTaskCheckBox(this);
+  constructor( private taskListManager: TaskListManagerService, private cd: ChangeDetectorRef ) {
+    this.taskListManager.registerTaskCheckBox(this);
   }
 
   private _checked: boolean;
 
   @Input()
   set checked( value: boolean) {
+    if( value !== this._checked ) {
       this._checked = value;
+      this.checkedChange.emit(this.checked);
       this.cd.detectChanges();
+    }
   };
 
   get checked(): boolean {
@@ -33,5 +36,9 @@ export class TaskCheckBoxComponent {
   public onClick(){
     this.checked = !this.checked;
     this.checkedChange.emit(this.checked);
+  }
+
+  ngOnDestroy(): void {
+    this.taskListManager.removeTaskCheckBox(this);
   }
 }

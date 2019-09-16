@@ -30,8 +30,11 @@ export class TaskCheckAllBoxComponent {
 
   @Input()
   set state( value: TaskCheckAllStateEnum) {
-    this._state = value;
-    this.cd.detectChanges();
+    if( value !== this._state) {
+      this._state = value;
+      this.stateChanged.emit(this._state);
+      this.cd.detectChanges();
+    }
   }
 
   get state(): TaskCheckAllStateEnum {

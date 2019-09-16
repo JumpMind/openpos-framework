@@ -10,15 +10,17 @@ export class TaskListManagerService implements OnDestroy {
     private checkBoxes = new Set();
     private checkAllBox: TaskCheckAllBoxComponent;
 
-    private subscriptions = new Subscription();
+    private subscriptions = new Map<TaskCheckBoxComponent, Subscription>();
 
     registerTaskCheckBox( taskCheckBox: TaskCheckBoxComponent ) {
         this.checkBoxes.add(taskCheckBox);
-        this.subscriptions.add(taskCheckBox.checkedChange.subscribe(value => this.checkboxChanged()));
+        this.subscriptions.set( taskCheckBox, taskCheckBox.checkedChange.subscribe(value => this.checkboxChanged()));
     }
 
-    removeTaskCheckBox( taskCheckBox: TaskCheckAllBoxComponent ) {
+    removeTaskCheckBox( taskCheckBox: TaskCheckBoxComponent ) {
         this.checkBoxes.delete(taskCheckBox);
+        this.subscriptions.get(taskCheckBox).unsubscribe();
+        this.subscriptions.delete(taskCheckBox);
     }
 
     registerCheckAllBox( checkAllBox: TaskCheckAllBoxComponent ) {
@@ -49,6 +51,6 @@ export class TaskListManagerService implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        this.subscriptions.unsubscribe();
+        [...this.subscriptions.values()].forEach( value => value.unsubscribe());
     }
 }
