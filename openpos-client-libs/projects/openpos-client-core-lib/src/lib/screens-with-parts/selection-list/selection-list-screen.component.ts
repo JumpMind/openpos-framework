@@ -30,6 +30,8 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     indexes = [];
     lastSelection = -1;
     previousIndexes = [];
+    selectedItem: ISelectionListItem;
+    selectedItems: ISelectionListItem[];
 
     private screenData$ = new BehaviorSubject<ISelectableListData<ISelectionListItem>>(null);
 
@@ -69,6 +71,12 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
                 disabledItems: allDisabledItems,
             } as ISelectableListData<ISelectionListItem>
             );
+
+            if (this.screen.multiSelect) {
+                this.selectedItems = this.screen.selectionList.filter(item => item.selected);
+            } else {
+                this.selectedItem = this.screen.selectionList.find(item => item.selected);
+            }
         }
 
         this.listConfig = new SelectableItemListComponentConfiguration();
@@ -122,4 +130,9 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     public keybindsEnabled(menuItem: IActionItem): boolean {
         return Configuration.enableKeybinds && menuItem.keybind && menuItem.keybind !== 'Enter';
     }
+
+    public isSelectionDisabled(): boolean {
+        return this.index < 0 && (this.indexes === undefined || this.indexes === null || this.indexes.length === 0);
+    }
+
 }

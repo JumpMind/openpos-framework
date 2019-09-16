@@ -5,6 +5,8 @@
             <div *ngIf="screen.instructions" class="text-sm"> {{screen.instructions}}</div>
             <app-selectable-item-list fxFlex="0 1 100%" [listData]="listData"
                 [configuration]="listConfig" [defaultSelect]="screen.defaultSelect"
+                [selectedItemList]="selectedItems"
+                [selectedItem]="selectedItem"
                 (selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)">
                 <ng-template let-item>
                     <div #items gdAreas="img info" gdColumns="auto 2fr" [ngClass]="{'muted-color' : !item.enabled}">
@@ -31,13 +33,13 @@
     </mat-dialog-content>
     <mat-dialog-actions fxLayoutAlign="end">
         <button *ngFor="let m of screen.nonSelectionButtons" mat-raised-button color="primary-inverse" [actionItem]="m"
-            (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)" [disabled]="index >= 0">
+            (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)" [disabled]="!isSelectionDisabled()">
             <span>{{m.title}}</span>&nbsp;
             <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>
         </button>
         <button *ngFor="let m of screen.selectionButtons;  let i = index"
             [attr.cdkFocusInitial]="screen.selectionButtons.length-1 == i ? '' : null" mat-raised-button
-            [color]="screen.selectionButtons.length-1 == i ? 'primary' : 'primary-inverse'" [disabled]="index<0"
+            [color]="screen.selectionButtons.length-1 == i ? 'primary' : 'primary-inverse'" [disabled]="isSelectionDisabled()"
             [actionItem]="m" (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)">
             <span>{{m.title}}</span>&nbsp;
             <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>
