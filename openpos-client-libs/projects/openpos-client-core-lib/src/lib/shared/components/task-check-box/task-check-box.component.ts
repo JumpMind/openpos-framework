@@ -28,10 +28,10 @@ export class TaskCheckBoxComponent {
   }
 
   @Output()
-  checkChanged = new EventEmitter<boolean>();
+  checkedChange = new EventEmitter<boolean>();
 
   public onClick(){
     this.checked = !this.checked;
-    this.checkChanged.emit(this.checked);
+    this.checkedChange.emit(this.checked);
   }
 }

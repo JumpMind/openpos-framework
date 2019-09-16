@@ -14,7 +14,7 @@ export class TaskListManagerService implements OnDestroy {
 
     registerTaskCheckBox( taskCheckBox: TaskCheckBoxComponent ) {
         this.checkBoxes.add(taskCheckBox);
-        this.subscriptions.add(taskCheckBox.checkChanged.subscribe( value => this.checkboxChanged()));
+        this.subscriptions.add(taskCheckBox.checkedChange.subscribe(value => this.checkboxChanged()));
     }
 
     removeTaskCheckBox( taskCheckBox: TaskCheckAllBoxComponent ) {
