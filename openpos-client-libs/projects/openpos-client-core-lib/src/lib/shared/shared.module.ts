@@ -6,6 +6,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { TextMaskModule } from 'angular2-text-mask';
 import { MaterialModule } from '../material/material.module';
 import { MatKeyboardModule } from '../keyboard/keyboard.module';
+import {TaskCheckAllBoxComponent} from './components/task-check-all-box/task-check-all-box.component';
+import {TaskCheckBoxComponent} from './components/task-check-box/task-check-box.component';
+import {TaskListComponent} from './components/task-list/task-list.component';
 
 import { SafePipe } from './pipes/safe.pipe';
 import { DynamicListControlComponent } from './components/dynamic-list-control/dynamic-list-control.component';
@@ -187,7 +190,10 @@ const components = [
     LocationDetailsComponent,
     LocationOverrideDialogComponent,
     SellLinkedCustomerComponent,
-    ItemCardComponent
+    ItemCardComponent,
+    TaskCheckAllBoxComponent,
+    TaskCheckBoxComponent,
+    TaskListComponent
 ];
 
 const directives = [

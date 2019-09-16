@@ -1,0 +1,15 @@
+<app-icon
+        mat-ripple
+        [iconName]="state === TaskCheckAllStateEnum.AllChecked ? checkedIconName :
+                    state === TaskCheckAllStateEnum.SomeChecked ? someCheckedIconName : uncheckedIconName"
+        (click)="onClick()"
+></app-icon>
+<app-icon
+        mat-ripple
+        [matMenuTriggerFor]="appMenu"
+        [iconName]="actionsIcon"></app-icon>
+
+<mat-menu #appMenu="matMenu">
+    <button mat-menu-item (click)="onClick(TaskCheckAllStateEnum.AllChecked)">{{allActionName}}</button>
+    <button mat-menu-item (click)="onClick(TaskCheckAllStateEnum.NoneChecked)">{{noneActionName}}</button>
+</mat-menu>
