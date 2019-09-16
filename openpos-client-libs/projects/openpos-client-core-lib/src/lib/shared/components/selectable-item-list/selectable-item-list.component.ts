@@ -138,9 +138,9 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
     }
 
     private updateKeySubscriptions() {
-        if ( (this.selectedItemList.length || this.selectedItem) && !this.selectedItemSubscription) {
+        if (((this.selectedItemList && this.selectedItemList.length) || this.selectedItem) && !this.selectedItemSubscription) {
             this.buildKeySubscriptions();
-        } else if ( !(this.selectedItemList.length || this.selectedItem) && this.selectedItemSubscription ) {
+        } else if ( !((this.selectedItemList  && this.selectedItemList.length) || this.selectedItem) && this.selectedItemSubscription ) {
             this.selectedItemSubscription.unsubscribe();
             this.selectedItemSubscription = null;
         }
