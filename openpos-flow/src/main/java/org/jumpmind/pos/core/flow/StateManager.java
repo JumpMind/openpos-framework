@@ -37,6 +37,7 @@ import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
 import org.jumpmind.pos.core.ui.Toast;
+import org.jumpmind.pos.core.ui.DialogProperties;
 import org.jumpmind.pos.core.service.IScreenService;
 import org.jumpmind.pos.core.service.spring.DeviceScope;
 import org.jumpmind.pos.core.ui.UIMessage;
@@ -393,8 +394,13 @@ public class StateManager implements IStateManager {
             showScreen(lastScreen);
         }
         if (lastDialog != null) {
-            lastDialog.put("refreshAlways", true);
-            showScreen(lastDialog);
+            // Don't save a dialog if it is closable, otherwise it gets shown on
+            // a refresh
+            DialogProperties properties = (DialogProperties) lastDialog.get("dialogProperties");
+            if (properties == null || !properties.isCloseable()) {
+                lastDialog.put("refreshAlways", true);
+                showScreen(lastDialog);
+            }
         }
     }
 

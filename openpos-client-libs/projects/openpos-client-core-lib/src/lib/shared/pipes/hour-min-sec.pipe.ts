@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { formatNumber } from '@angular/common';
+import {getHourMinSeconds} from '../../utilites/time-utils';
 
 @Pipe({ name: 'hourminsec' })
 export class HourMinSecPipe implements PipeTransform {
@@ -7,11 +8,8 @@ export class HourMinSecPipe implements PipeTransform {
     constructor() {}
 
     transform(timeSeconds: number) {
-        timeSeconds = Math.round(timeSeconds);
-        const hour = Math.floor(timeSeconds / (60 * 60));
-        const min = Math.floor((timeSeconds - (hour * 3600)) / 60);
-        const sec = timeSeconds - (hour * 3600) - (min * 60 );
+        const time = getHourMinSeconds(timeSeconds);
 
-        return `${formatNumber(hour, 'en', '2.0-0')}:${formatNumber(min, 'en', '2.0-0')}:${formatNumber(sec, 'en', '2.0-0')}`;
-    }
+        return `${formatNumber(time.hours, 'en', '2.0-0')}:${formatNumber(time.minutes, 'en', '2.0-0')}:${formatNumber(time.seconds, 'en', '2.0-0')}`;
+  }
 }

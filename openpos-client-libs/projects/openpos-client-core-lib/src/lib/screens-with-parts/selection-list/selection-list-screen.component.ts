@@ -29,6 +29,7 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     index = -1;
     indexes = [];
     lastSelection = -1;
+    previousIndexes = [];
 
     private screenData$ = new BehaviorSubject<ISelectableListData<ISelectionListItem>>(null);
 
@@ -94,6 +95,11 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
 
     public onItemListChange(event: any[]): void {
         this.indexes = event;
+
+        if (this.screen.selectionChangedAction && this.indexes !== this.previousIndexes) {
+            this.previousIndexes = this.indexes;
+            this.doAction(this.screen.selectionChangedAction, this.indexes);
+        }
     }
 
     public onItemChange(event: any): void {

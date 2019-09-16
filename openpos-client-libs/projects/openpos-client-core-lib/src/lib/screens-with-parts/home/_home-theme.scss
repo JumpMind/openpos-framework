@@ -31,5 +31,13 @@
                 top: -30px;
             }
         }
+
+        .status-strip-container {
+            app-status-strip {
+                .status-strip {
+                    padding: 5px 10px;
+                }
+            }
+        }
     }
 }

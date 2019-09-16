@@ -20,6 +20,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Component(RemoteOnlyStrategy.REMOTE_ONLY_STRATEGY)
 public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements IInvocationStrategy {
@@ -46,6 +47,7 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         HttpHeaders headers = new HttpHeaders();
 
         if( clientContext != null ) {
+            clientContext.put("correlationId", UUID.randomUUID().toString());
             for (String propertyName : clientContext.getPropertyNames()) {
                 headers.set("ClientContext-" + propertyName, clientContext.get(propertyName));
             }

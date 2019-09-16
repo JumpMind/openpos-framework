@@ -75,5 +75,11 @@ export class ValidatorsService {
         }
     }
 
+    public overrideValidator(locale: string, validatorName: string, validator: IValidator) {
+        const map = this.validators.get(locale);
+        if (map) {
+            map.set(validatorName, validator);
+        }
+    }
 
 }

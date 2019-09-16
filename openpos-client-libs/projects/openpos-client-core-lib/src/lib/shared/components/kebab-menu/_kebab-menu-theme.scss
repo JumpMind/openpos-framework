@@ -1,3 +1,11 @@
 @mixin kebab-menu-theme($theme){
-    
+    app-kebab-menu {
+        .buttons {
+            .menu-item {
+                .mat-button-wrapper {
+                    justify-content: start;
+                }
+            }
+        }
+    }
 }

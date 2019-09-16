@@ -102,7 +102,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             screen = new SplashScreen();
         }
 
-        if ( this.dialogService.isDialogOpen ) {
+        if ( this.dialogService.isDialogOpen() ) {
             // Close any open dialogs
             await this.dialogService.closeDialog();
             this.focusService.restoreInitialFocus();
@@ -153,7 +153,11 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             this.focusService.createInitialFocus(this.componentRef.location.nativeElement);
         } else {
             // If this screen was updated, focus the previously focused element
-            this.focusService.restoreFocus(original);
+            setTimeout(() => {
+                // Get an updated element in the case where the screen/form has been refreshed
+                const updatedElement = document.getElementById(original.id);
+                this.focusService.restoreFocus(updatedElement);
+            });
         }
 
         this.updateClasses(screen);

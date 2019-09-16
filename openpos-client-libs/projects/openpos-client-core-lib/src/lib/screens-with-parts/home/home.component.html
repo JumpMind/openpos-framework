@@ -24,7 +24,7 @@
             </button>
         </div>
     </div>
-    <mat-card *ngIf="(isMobile | async) && screen.menuItems.length > 0">
+    <mat-card *ngIf="(isMobile | async) && screen.menuItems.length > 0" class="menu-list">
         <mat-nav-list>
             <mat-list-item *ngFor="let menuItem of screen.menuItems" (click)="doAction(menuItem)">
                 <app-icon class="primary text-lg" iconName="{{menuItem.icon}}" iconClass="material-icons"></app-icon>
@@ -38,7 +38,7 @@
             </mat-list-item>
         </mat-nav-list>
     </mat-card>
-    <div class="system-status-container">
-        <app-system-status></app-system-status>
+    <div class="status-strip-container">
+        <app-status-strip *ngIf="screen.statusStrip"></app-status-strip>
     </div>
 </div>

@@ -7,7 +7,6 @@
         "openpos-server-core",
         "openpos-service",
         "openpos-persist",
-        "openpos-devices",
         "openpos-util"
     ],
     "Scanner Framework": [

@@ -32,6 +32,7 @@ import org.jumpmind.pos.core.flow.SessionTimer;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.IDynamicListField;
 import org.jumpmind.pos.core.model.IFormElement;
+import org.jumpmind.pos.core.ui.DialogProperties;
 import org.jumpmind.pos.core.ui.IHasForm;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;

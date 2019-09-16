@@ -13,6 +13,7 @@ import org.apache.commons.text.lookup.StringLookup;
 import org.jumpmind.pos.persist.PersistException;
 import org.jumpmind.pos.persist.Query;
 import org.jumpmind.pos.persist.SqlStatement;
+import org.jumpmind.pos.util.model.AbstractTypeCode;
 import org.springframework.util.Assert;
 
 public class QueryTemplate implements Cloneable {
@@ -206,6 +207,8 @@ public class QueryTemplate implements Cloneable {
             } else if (value instanceof Boolean) {
                 boolean bool = (Boolean)value;
                 value = bool ? 1 : 0;
+            } else if (value instanceof AbstractTypeCode) {
+                value = ((AbstractTypeCode)value).value();
             }
             values.add(value);
         }

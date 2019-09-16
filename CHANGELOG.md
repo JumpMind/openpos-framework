@@ -16,13 +16,42 @@
   | [#240](https://github.com/JumpMind/openpos-framework/pull/240) | Baconator builds BaconStrips |  |Eric Amiralian|2019-09-03 13:41:06|
   | [#241](https://github.com/JumpMind/openpos-framework/pull/241) | Add support for property crawling of top level String[] property |  |Jason Mihalick|2019-09-04 14:47:39|
   | [#246](https://github.com/JumpMind/openpos-framework/pull/246) | Change to printing to support configuration via yml.  Also removed deprecated fields from ChooseOptionsUIMessage |  |Chris Henson|2019-09-05 15:16:01|
+  | [#248](https://github.com/JumpMind/openpos-framework/pull/248) | Convert boolean to integer to play nicely with databases |  |Chris Henson|2019-09-05 19:38:52|
+  | [#251](https://github.com/JumpMind/openpos-framework/pull/251) | Feature/mobile fixes |  |maxwellpettit|2019-09-09 15:37:49|
+  | [#252](https://github.com/JumpMind/openpos-framework/pull/252) | Feature/add instructions to choose options message |  |Klementina S. Chirico|2019-09-09 17:47:11|
+  | [#254](https://github.com/JumpMind/openpos-framework/pull/254) | Added some Time helpers |  |Dan Kaste|2019-09-10 19:18:15|
+  | [#255](https://github.com/JumpMind/openpos-framework/pull/255) | Don&#39;t save last dialog if the dialog is closable |  |Chris Henson|2019-09-10 19:41:31|
+  | [#256](https://github.com/JumpMind/openpos-framework/pull/256) | Remove deprecated projects that aren&#39;t really being used |  |Chris Henson|2019-09-11 13:57:37|
+  | [#258](https://github.com/JumpMind/openpos-framework/pull/258) | Make the session timer more robust by using spring&#39;s infrastructure |  |Chris Henson|2019-09-11 16:40:16|
+  | [#261](https://github.com/JumpMind/openpos-framework/pull/261) | Trim sql to avoid blank lines in the log file |  |Chris Henson|2019-09-12 15:51:49|
+  | [#263](https://github.com/JumpMind/openpos-framework/pull/263) | Convert AbstractTypeCode to String to place nicely with dbSession.fin… |  |Chris Henson|2019-09-12 20:01:05|
+  | [#264](https://github.com/JumpMind/openpos-framework/pull/264) | Adding support for status strip on Home Page Component |  |stevencarley|2019-09-13 14:05:26|
+  | [#265](https://github.com/JumpMind/openpos-framework/pull/265) | Add comment for restore focus |  |maxwellpettit|2019-09-13 14:52:50|
+
+## 0.4.4 
+Released on: 2019-09-12 19:53:00
+
+|       | Name   | Labels | Author | Time |
+|-------|--------|--------|--------|------|
+  | [#260](https://github.com/JumpMind/openpos-framework/pull/260) | Feature/bacon strip back button |  |stevencarley|2019-09-12 15:58:49|
+  | [#262](https://github.com/JumpMind/openpos-framework/pull/262) | Get an updated element reference when restoring focus |  |maxwellpettit|2019-09-12 17:25:14|
+
+## 0.4.3 
+Released on: 2019-09-12 14:58:45
+
+|       | Name   | Labels | Author | Time |
+|-------|--------|--------|--------|------|
+  | [#245](https://github.com/JumpMind/openpos-framework/pull/245) | Handle pre-formatted eu values in money formatter |  |maxwellpettit|2019-09-04 18:51:46|
+  | [#249](https://github.com/JumpMind/openpos-framework/pull/249) | Adding support for setting startAt for dynamic-date-form-field |  |stevencarley|2019-09-06 12:58:14|
+  | [#253](https://github.com/JumpMind/openpos-framework/pull/253) | Don&#39;t save last dialog if it is closable |  |maxwellpettit|2019-09-10 16:02:55|
+  | [#257](https://github.com/JumpMind/openpos-framework/pull/257) | Expose method to override validators |  |maxwellpettit|2019-09-11 16:30:56|
+  | [#259](https://github.com/JumpMind/openpos-framework/pull/259) | Add support for logging of uncaught exceptions. |  |Jason Mihalick|2019-09-12 13:56:50|
 
 ## 0.5.5 
 Released on: 2019-09-05 14:07:44
 
 |       | Name   | Labels | Author | Time |
 |-------|--------|--------|--------|------|
-  | [#245](https://github.com/JumpMind/openpos-framework/pull/245) | Handle pre-formatted eu values in money formatter |  |maxwellpettit|2019-09-04 18:51:46|
   | [#247](https://github.com/JumpMind/openpos-framework/pull/247) | Add feature to allow a uimessage to be disabled |  |Chris Henson|2019-09-05 14:04:25|
 
 ## 0.5.4 
@@ -31,7 +60,6 @@ Released on: 2019-09-04 18:24:49
 |       | Name   | Labels | Author | Time |
 |-------|--------|--------|--------|------|
   | [#244](https://github.com/JumpMind/openpos-framework/pull/244) | Bugfix/selectable item list default select on disabled |  |Klementina S. Chirico|2019-09-04 18:21:48|
-
 
 ## 0.4.2 
 Released on: 2019-08-28 15:15:09
