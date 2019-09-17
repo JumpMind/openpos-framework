@@ -9,6 +9,8 @@ import { LoaderState } from '../../shared/components/loader/loader-state';
 import { MessageProvider } from '../../shared/providers/message.provider';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { IUrlMenuItem } from './url-menu-item.interface';
+import {OpenposMessage} from "../messages/message";
+import {MessageTypes} from "../messages/message-types";
 
 @Injectable()
 export class ActionService {
@@ -27,6 +29,11 @@ export class ActionService {
                this.blockActions = true;
             } else {
                this.blockActions = false;
+            }
+        });
+        messageProvider.getAllMessages$<OpenposMessage>().subscribe( message => {
+            if (message.type === MessageTypes.TOAST) {
+                this.blockActions = false;
             }
         });
     }
