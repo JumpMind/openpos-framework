@@ -6,11 +6,10 @@
         <span *ngIf="keybindsEnabled() && transactionMenu.keybind && !readOnly && selectedItems.length > 0 && multiSelectedMenuItems && multiSelectedMenuItems.length > 0" class="muted-color text-sm">{{transactionMenu.keybind}}</span>
     </div>
     <ng-template #transactionMenuElse>
-        <div (click)="openTxMenu()">
-            <span>{{prompt}}</span>
-            <app-kebab-button #txMenu *ngIf="transactionMenu?.actionItems?.length > 0" [keyBinding]="transactionMenu.keybind" [menuItems]="transactionMenu.actionItems" (menuItemClick)="onMenuItemClick($event)"></app-kebab-button>
-            <span *ngIf="keybindsEnabled() && transactionMenu?.actionItems?.length > 0 && transactionMenu.keybind" class="muted-color text-sm">{{transactionMenu.keybind}}</span>
-        </div>
+        <app-kebab-label-button *ngIf="transactionMenu?.actionItems?.length > 0" [keyBinding]="transactionMenu.keybind" [menuItems]="transactionMenu.actionItems" 
+            [label]="prompt" (menuItemClick)="onMenuItemClick($event)">
+        </app-kebab-label-button>
+        <span *ngIf="keybindsEnabled() && transactionMenu?.actionItems?.length > 0 && transactionMenu.keybind" class="muted-color text-sm">{{transactionMenu.keybind}}</span>
     </ng-template>
 </div>
 

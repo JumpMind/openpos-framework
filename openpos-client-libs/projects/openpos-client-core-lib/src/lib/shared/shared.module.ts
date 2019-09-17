@@ -119,6 +119,7 @@ import { DynamicScreenComponent } from './components/dynamic-screen/dynamic-scre
 import { LocationDetailsComponent } from './components/location-details/location-details.component';
 import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
 import { SystemStatusComponent } from './screen-parts/system-status/system-status.component';
+import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -181,6 +182,7 @@ const components = [
     IconFabButtonComponent,
     ReceiptCardComponent,
     KebabButtonComponent,
+    KebabLabelButtonComponent,
     KebabMenuComponent,
     IconSquareButtonComponent,
     DisplayPropertyComponent,

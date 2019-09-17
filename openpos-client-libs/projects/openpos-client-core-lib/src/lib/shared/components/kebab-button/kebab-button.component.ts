@@ -45,9 +45,9 @@ export class KebabButtonComponent implements OnDestroy {
     @Output()
     menuItemClick = new EventEmitter<IActionItem>();
 
-    private subscription: Subscription;
+    protected subscription: Subscription;
 
-    constructor(private dialog: MatDialog, private keyPresses: KeyPressProvider, private focusService: FocusService) {
+    constructor(protected dialog: MatDialog, protected keyPresses: KeyPressProvider, protected focusService: FocusService) {
     }
 
     ngOnDestroy(): void {
