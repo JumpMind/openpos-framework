@@ -24,15 +24,15 @@ export class KebabButtonComponent implements OnDestroy {
     iconName = 'KebabMenu';
 
     @Input()
-    set keyBinding( key: string) {
-        if ( this.subscription ) {
+    set keyBinding(key: string) {
+        if (this.subscription) {
             this.subscription.unsubscribe();
         }
         // Only subscribe to keypress if key is defined.
         if (!!key) {
-            this.subscription = this.keyPresses.subscribe( key, 100, event => {
+            this.subscription = this.keyPresses.subscribe(key, 100, event => {
                 // ignore repeats
-                if ( event.repeat || !Configuration.enableKeybinds ) {
+                if (event.repeat || !Configuration.enableKeybinds) {
                     return;
                 }
                 if (event.type === 'keydown') {
@@ -57,21 +57,23 @@ export class KebabButtonComponent implements OnDestroy {
     }
 
     public openKebabMenu() {
-        const dialogRef = this.dialog.open(KebabMenuComponent, {
-            data: {
-                menuItems: this.menuItems,
-                payload: null,
-                disableClose: false,
-                autoFocus: false,
-                restoreFocus: false
-            }
-        });
+        if (this.dialog.openDialogs.length < 1) {
+            const dialogRef = this.dialog.open(KebabMenuComponent, {
+                data: {
+                    menuItems: this.menuItems,
+                    payload: null,
+                    disableClose: false,
+                    autoFocus: false,
+                    restoreFocus: false
+                }
+            });
 
-        dialogRef.afterClosed().subscribe(result => {
-            if (result) {
-                this.menuItemClick.emit(result);
-            }
-            this.focusService.restoreInitialFocus();
-        });
+            dialogRef.afterClosed().subscribe(result => {
+                if (result) {
+                    this.menuItemClick.emit(result);
+                }
+                this.focusService.restoreInitialFocus();
+            });
+        }
     }
 }
