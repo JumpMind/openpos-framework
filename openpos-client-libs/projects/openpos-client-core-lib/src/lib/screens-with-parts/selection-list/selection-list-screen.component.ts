@@ -72,10 +72,20 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
             } as ISelectableListData<ISelectionListItem>
             );
 
-            if (this.screen.multiSelect) {
-                this.selectedItems = this.screen.selectionList.filter(item => item.selected);
-            } else {
-                this.selectedItem = this.screen.selectionList.find(item => item.selected);
+            if (this.screen.selectionList && (this.screen.fetchDataAction === undefined || this.screen.fetchDataAction === null)) {
+                if (this.screen.multiSelect) {
+                    this.selectedItems = this.screen.selectionList.filter(item => item.selected);
+                    if ((this.indexes === undefined || this.indexes === null || this.indexes.length === 0) &&
+                        this.selectedItems && this.selectedItems.length > 0) {
+                            this.screen.selectionList.forEach(i =>
+                                this.indexes.push(this.screen.selectionList.indexOf(i)));
+                    }
+                } else {
+                    this.selectedItem = this.screen.selectionList.find(item => item.selected);
+                    if ((this.index === undefined || this.index === null) && this.selectedItem) {
+                            this.index = this.screen.selectionList.indexOf(this.selectedItem);
+                    }
+                }
             }
         }
 
