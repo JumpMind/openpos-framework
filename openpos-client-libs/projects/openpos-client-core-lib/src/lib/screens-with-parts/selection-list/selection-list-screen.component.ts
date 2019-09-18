@@ -30,6 +30,8 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     indexes = [];
     lastSelection = -1;
     previousIndexes = [];
+    selectedItem: ISelectionListItem;
+    selectedItems: ISelectionListItem[];
 
     private screenData$ = new BehaviorSubject<ISelectableListData<ISelectionListItem>>(null);
 
@@ -69,6 +71,22 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
                 disabledItems: allDisabledItems,
             } as ISelectableListData<ISelectionListItem>
             );
+
+            if (this.screen.selectionList && (this.screen.fetchDataAction === undefined || this.screen.fetchDataAction === null)) {
+                if (this.screen.multiSelect) {
+                    this.selectedItems = this.screen.selectionList.filter(item => item.selected);
+                    if ((this.indexes === undefined || this.indexes === null || this.indexes.length === 0) &&
+                        this.selectedItems && this.selectedItems.length > 0) {
+                            this.screen.selectionList.forEach(i =>
+                                this.indexes.push(this.screen.selectionList.indexOf(i)));
+                    }
+                } else {
+                    this.selectedItem = this.screen.selectionList.find(item => item.selected);
+                    if ((this.index === undefined || this.index === null) && this.selectedItem) {
+                            this.index = this.screen.selectionList.indexOf(this.selectedItem);
+                    }
+                }
+            }
         }
 
         this.listConfig = new SelectableItemListComponentConfiguration();
@@ -122,4 +140,9 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     public keybindsEnabled(menuItem: IActionItem): boolean {
         return Configuration.enableKeybinds && menuItem.keybind && menuItem.keybind !== 'Enter';
     }
+
+    public isSelectionDisabled(): boolean {
+        return this.index < 0 && (this.indexes === undefined || this.indexes === null || this.indexes.length === 0);
+    }
+
 }

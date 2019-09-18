@@ -13,6 +13,8 @@
                     <app-selectable-item-list *ngIf="screen.selectionList" 
                         [listData]="listData" [configuration]="listConfig"
                         [defaultSelect]="screen.defaultSelect"
+                        [selectedItemList]="selectedItems"
+                        [selectedItem]="selectedItem"
                         (selectedItemChange)="onItemChange($event)"
                         (selectedItemListChange)="onItemListChange($event)">
                         <ng-template let-item>
@@ -46,14 +48,14 @@
                 <mat-card-actions fxLayoutAlign="end">
                     <button *ngFor="let m of screen.nonSelectionButtons" mat-raised-button color="primary-inverse"
                         [actionItem]="m" (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)"
-                        [disabled]="index >= 0">
+                        [disabled]="!isSelectionDisabled()">
                         <span>{{m.title}}</span>&nbsp;
                         <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>
                     </button>
                     <button *ngFor="let m of screen.selectionButtons;  let i = index"
                         mat-raised-button
                         [color]="screen.selectionButtons.length-1 == i ? 'primary' : 'primary-inverse'"
-                        [disabled]="index<0" [actionItem]="m" (actionClick)="doMenuItemAction(m)"
+                        [disabled]="isSelectionDisabled()" [actionItem]="m" (actionClick)="doMenuItemAction(m)"
                         (click)="doMenuItemAction(m)">
                         <span>{{m.title}}</span>&nbsp;
                         <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybind}}</span>

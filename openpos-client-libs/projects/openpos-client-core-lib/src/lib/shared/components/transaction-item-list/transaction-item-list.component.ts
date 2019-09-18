@@ -7,6 +7,8 @@ import { IActionItemGroup } from '../../../core/actions/action-item-group.interf
 import { IItem } from '../../../core/interfaces/item.interface';
 import { Observable } from 'rxjs';
 import { ISelectableListData } from '../selectable-item-list/selectable-list-data.interface';
+import { KebabButtonComponent } from '../kebab-button/kebab-button.component';
+
 
 @Component({
   selector: 'app-transaction-item-list',
@@ -16,6 +18,7 @@ import { ISelectableListData } from '../selectable-item-list/selectable-list-dat
 export class TransactionItemListComponent implements AfterViewChecked {
 
   @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
+  @ViewChild('txMenu') private txMenuButton: KebabButtonComponent;
 
   @Input() listData: Observable<ISelectableListData<ISellItem>>;
   @Input() listConfig: SelectableItemListComponentConfiguration;
@@ -73,6 +76,10 @@ export class TransactionItemListComponent implements AfterViewChecked {
 
   public keybindsEnabled() {
     return Configuration.enableKeybinds;
+  }
+
+  public openTxMenu() {
+    this.txMenuButton.openKebabMenu();
   }
 
 }

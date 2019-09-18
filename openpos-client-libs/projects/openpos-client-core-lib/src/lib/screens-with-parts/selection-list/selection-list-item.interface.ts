@@ -3,7 +3,7 @@ import { SelectionListItemDisplayProperty } from './selection-list-item-display-
 export interface ISelectionListItem {
     title: string;
     properties: SelectionListItemDisplayProperty[];
-    isSelected: boolean;
+    selected: boolean;
     enabled: boolean;
     itemImageUrl: string;
 }
