@@ -6,6 +6,7 @@
 @import '../screens-with-parts/screen-with-parts-themes';
 @import '../shared/components/component-theme-mixins';
 @import '../price-checker/price-checker-themes';
+@import './mixins/serrated-edge';
 
 @include mat-core();
 
@@ -32,6 +33,7 @@
     @include screen-part-themes($theme);
     @include screen-with-parts-themes($theme);
     @include price-checker-themes($theme);
+    @include serrated-edge($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));

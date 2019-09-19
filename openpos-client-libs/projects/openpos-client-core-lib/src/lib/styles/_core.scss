@@ -25,7 +25,6 @@ $mat-card-default-margin: 24px !default;
   @include openpos-list();
   @include openpos-menu();
   @include openpos-progress-bar();
-  @include serrated-edge();
   @include openpos-slide-toggle();
   @include openpos-table();
   @include openpos-typography();
