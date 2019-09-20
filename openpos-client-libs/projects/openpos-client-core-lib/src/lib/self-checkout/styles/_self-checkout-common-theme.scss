@@ -1,0 +1,51 @@
+@mixin self-checkout-common-theme($theme) {
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+
+    .self-checkout-text-xs {
+        font-size: 12px !important;
+    }
+
+    .self-checkout-text-sm {
+        font-size: 18px !important;
+    }
+
+    .self-checkout-text-md {
+        font-size: 24px !important;
+    }
+
+    .self-checkout-text-lg {
+        font-size: 32px !important;
+    }
+
+    .self-checkout-text-xl {
+        font-size: 48px !important;
+    }
+
+    // Shrink text on iPads/Tablets and below
+    @media(max-width: 1024px) {
+        .self-checkout-text-xs {
+            font-size: 8px !important;
+        }
+
+        .self-checkout-text-sm {
+            font-size: 14px !important;
+        }
+
+        .self-checkout-text-md {
+            font-size: 18px !important;
+        }
+
+        .self-checkout-text-lg {
+            font-size: 24px !important;
+        }
+
+        .self-checkout-text-xl {
+            font-size: 36px !important;
+        }
+    }
+}

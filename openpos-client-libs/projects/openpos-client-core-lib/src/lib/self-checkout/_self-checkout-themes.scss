@@ -1,0 +1,9 @@
+@import './styles/self-checkout-common-theme';
+@import './screen-parts/self-checkout-menu/self-checkout-menu-theme';
+@import './self-checkout-sale/self-checkout-sale-theme';
+
+@mixin self-checkout-themes($theme) {
+    @include self-checkout-common-theme($theme);
+    @include self-checkout-menu-theme($theme);
+    @include self-checkout-sale-theme($theme);
+}
