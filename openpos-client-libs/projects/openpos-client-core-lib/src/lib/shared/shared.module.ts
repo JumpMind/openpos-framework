@@ -120,6 +120,7 @@ import { LocationDetailsComponent } from './components/location-details/location
 import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
 import { SystemStatusComponent } from './screen-parts/system-status/system-status.component';
 import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
+import { NgxPaginationModule } from 'ngx-pagination';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -268,6 +269,7 @@ const pipes = [
         MaterialModule,
         MatKeyboardModule,
         TextMaskModule,
+        NgxPaginationModule,
     ],
     exports: [
         FormsModule,
@@ -279,6 +281,7 @@ const pipes = [
         MaterialModule,
         MatKeyboardModule,
         TextMaskModule,
+        NgxPaginationModule,
 
         ...directives,
         ...components,
