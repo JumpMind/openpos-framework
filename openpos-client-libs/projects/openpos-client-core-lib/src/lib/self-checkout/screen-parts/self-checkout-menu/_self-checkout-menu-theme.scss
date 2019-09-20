@@ -1,0 +1,28 @@
+@mixin self-checkout-menu-theme($theme) {
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+
+    .self-checkout-menu {
+        background-color: $app-primary;
+        color: map-get($foreground, inverse-text);
+
+        .mat-form-field-underline,
+        .mat-form-field-ripple,
+        .mat-focused .mat-form-field-ripple {
+            background-color: map-get($foreground, inverse-text);
+        }
+
+        .mat-form-field-label,
+        .mat-focused .mat-form-field-label,
+        .mat-select-value,
+        .mat-select-arrow,
+        .mat-form-field.mat-focused .mat-select-arrow {
+            color: inherit;
+        }
+    }
+
+}
