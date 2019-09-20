@@ -1,14 +1,15 @@
 import { Component, HostListener } from '@angular/core';
-import { ObservableMedia } from '@angular/flex-layout';
-import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
-import { SessionService } from '../../core/services/session.service';
 import { PosScreen } from '../../screens-with-parts/pos-screen/pos-screen.component';
+import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 
+@ScreenComponent({
+    name: 'SelfCheckoutHome'
+})
 @Component({
-  selector: 'app-self-checkout-home',
-  templateUrl: './self-checkout-home.component.html',
-  styleUrls: ['./self-checkout-home.component.scss']
+    selector: 'app-self-checkout-home',
+    templateUrl: './self-checkout-home.component.html',
+    styleUrls: ['./self-checkout-home.component.scss']
 
 })
 export class SelfCheckoutHomeComponent extends PosScreen<any> {
@@ -19,9 +20,7 @@ export class SelfCheckoutHomeComponent extends PosScreen<any> {
     @HostListener('document:click', [])
     @HostListener('document:touchstart', [])
     begin() {
-        if (this.menuItems && this.menuItems.length > 0) {
-        this.onMenuItemClick(this.menuItems[0]);
-        }
+        this.doAction('Sell');
     }
 
     buildScreen() {
@@ -40,8 +39,8 @@ export class SelfCheckoutHomeComponent extends PosScreen<any> {
 
     onMenuItemClick(menuItem: IActionItem) {
         if (!this.actionSent) {
-        this.doAction(menuItem);
-        this.actionSent = true;
+            this.doAction(menuItem);
+            this.actionSent = true;
         }
     }
 }
