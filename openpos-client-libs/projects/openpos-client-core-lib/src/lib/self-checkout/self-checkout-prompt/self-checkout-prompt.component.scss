@@ -1,13 +1,13 @@
 .self-checkout-prompt-outer {
     height: 100%;
-    background-color: inherit;
+    display: flex;
+    flex-direction: column;
 }
 
 .self-checkout-prompt-body {
     padding: 24px 16px;
-    width: 60%;
-    justify-self: center;
-    align-self: center;
+
+    flex: 1 1 100%;
 }
 
 .self-checkout-prompt-image {
@@ -16,6 +16,11 @@
 }
 
 ::ng-deep .self-checkout-prompt-body {
+
+    .mat-card {
+        padding: 48px;
+    }
+
     .mat-form-field {
         font-size: 36px !important;
 
@@ -25,13 +30,14 @@
     }
 
     .mat-raised-button {
-        font-size: 24px;
+        font-size: 36px;
         line-height: 48px;
+        padding: 16px;
 
-        .mat-icon {
-            font-size: 28px;
-            height: 28px;
-            width: 28px;
+        .material-icons {
+            font-size: 36px;
+            height: 36px;
+            width: 36px;
         }
     }
 }

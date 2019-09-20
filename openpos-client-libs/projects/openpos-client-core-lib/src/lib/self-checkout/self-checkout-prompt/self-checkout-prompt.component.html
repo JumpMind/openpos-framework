@@ -1,9 +1,7 @@
-<div class="self-checkout-prompt-outer" gdAreas="header | content" gdRows="auto 1fr">
-    <div gdArea="header" gdAreas="menu" gdColumns="1fr">
-        <app-self-checkout-menu gdArea="menu"></app-self-checkout-menu>
-    </div>
+<div class="lighter self-checkout-prompt-outer">
+    <app-self-checkout-menu></app-self-checkout-menu>
 
-    <div class="self-checkout-prompt-body" gdArea="content" gdAreas="icon | prompt" gdRows="auto 1fr">
+    <div class="self-checkout-prompt-body" gdAreas="icon | prompt" gdRows="auto 1fr">
 
         <img *ngIf="screen.imageUrl" gdArea="icon" [src]="screen.imageUrl | imageUrl"
             class="self-checkout-prompt-image">
