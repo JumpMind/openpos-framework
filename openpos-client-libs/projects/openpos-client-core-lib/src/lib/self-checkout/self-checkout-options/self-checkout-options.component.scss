@@ -1,20 +1,19 @@
 .self-checkout-options-outer {
     height: 100%;
-    background-color: inherit;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .self-checkout-options-body {
     padding: 24px 16px;
-    width: 60%;
-    justify-self: center;
-    align-self: center;
+    flex: 1 1 100%;
 }
 
 ::ng-deep .options-icon {
     mat-icon {
-        width: 400px !important; 
-        height: 100px !important; 
+        width: 400px !important;
+        height: 100px !important;
         padding-top: 0px !important;
     }
 }

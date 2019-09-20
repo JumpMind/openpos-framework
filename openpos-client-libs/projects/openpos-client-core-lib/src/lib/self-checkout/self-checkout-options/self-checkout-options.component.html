@@ -1,9 +1,7 @@
-<div class="self-checkout-options-outer" gdAreas="header | content" gdRows="auto 1fr">
-    <div gdArea="header" gdAreas="menu" gdColumns="1fr">
-        <app-self-checkout-menu gdArea="menu"></app-self-checkout-menu>
-    </div>
+<div class="lighter self-checkout-options-outer">
+    <app-self-checkout-menu></app-self-checkout-menu>
 
-    <div class="self-checkout-options-body" gdArea="content" fxLayout="column" fxLayoutAlign="center stretch">
+    <div class="self-checkout-options-body" fxLayout="column" fxLayoutAlign="center stretch">
 
         <div *ngIf="screen.icon" fxFlex="0 0 auto" fxLayoutAlign="center center">
             <app-icon [iconName]="screen.icon" class="options-icon"></app-icon>
