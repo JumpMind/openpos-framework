@@ -1,9 +1,6 @@
 // Angular Includes
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
-import { ScreenConstants } from './screen.constants';
-import { SelfCheckoutTransactionComponent } from './self-checkout-transaction/self-checkout-transaction.component';
-import { SelfCheckoutStatusBarComponent } from './self-checkout-statusbar/self-checkout-statusbar.component';
 import { SelfCheckoutHomeComponent } from './self-checkout-home/self-checkout-home.component';
 import { SelfCheckoutOptionsComponent } from './self-checkout-options/self-checkout-options.component';
 import { ScreenService } from '../core/services/screen.service';
@@ -13,22 +10,23 @@ import { SelfCheckoutPromptComponent } from './self-checkout-prompt/self-checkou
 import { SelfCheckoutMenuComponent } from './screen-parts/self-checkout-menu/self-checkout-menu.component';
 import { SelfCheckoutTenderComponent } from './self-checkout-tender/self-checkout-tender.component';
 import { SelfCheckoutOptionsPartComponent } from './screen-parts/self-checkout-options-part/self-checkout-options-part.component';
+import { SelfCheckoutSaleComponent } from './self-checkout-sale/self-checkout-sale.component';
 
 
 const screens = [
-    SelfCheckoutTransactionComponent,
     SelfCheckoutHomeComponent,
     SelfCheckoutOptionsComponent,
     SelfCheckoutFormComponent,
     SelfCheckoutPromptComponent,
-    SelfCheckoutTenderComponent
+    SelfCheckoutTenderComponent,
+    SelfCheckoutSaleComponent
 ];
 
 const dialogs = [
 ];
 
 const components = [
-    SelfCheckoutStatusBarComponent
+
 ];
 
 const screenParts = [
@@ -51,7 +49,6 @@ const screenParts = [
         SharedModule
     ],
     exports: [
-        SelfCheckoutTransactionComponent,
         ...components,
         ...screenParts,
     ],
@@ -60,13 +57,6 @@ const screenParts = [
 })
 export class SelfCheckoutModule {
     constructor(screenService: ScreenService, dialogService: DialogService) {
-        ScreenConstants.screens.forEach((screen) => {
-            screenService.addScreen(screen.name, screen.component);
-        });
-
-        ScreenConstants.dialogs.forEach((dialog) => {
-            dialogService.addDialog(dialog.name, dialog.component);
-        });
     }
 
- }
+}

@@ -1,0 +1,15 @@
+@mixin self-checkout-sale-theme($theme) {
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+
+    .total {
+        border-top-style: solid;
+        border-top-width: 1px;
+        border-top-color: $app-primary;
+    }
+
+}

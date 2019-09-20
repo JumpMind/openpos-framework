@@ -163,10 +163,8 @@ export * from './lib/screens-with-parts/prompt/prompt-screen-dialog.component';
 
 export * from './lib/self-checkout/self-checkout.module';
 export * from './lib/self-checkout/self-checkout-home/self-checkout-home.component';
+export * from './lib/self-checkout/self-checkout-sale/self-checkout-sale.component';
 export * from './lib/self-checkout/self-checkout-options/self-checkout-options.component';
-export * from './lib/self-checkout/self-checkout-statusbar/self-checkout-status-bar-data';
-export * from './lib/self-checkout/self-checkout-statusbar/self-checkout-statusbar.component';
-export * from './lib/self-checkout/self-checkout-transaction/self-checkout-transaction.component';
 
 export * from './lib/shared/shared.module';
 export * from './lib/shared/components/catalog-browser-item/catalog-browser-item.component';

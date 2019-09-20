@@ -1,0 +1,118 @@
+.self-checkout-sale-outer {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.self-checkout-sale-body {
+    padding: 24px 16px;
+    flex: 1 1 100%;
+    padding: 24px;
+    display: grid;
+    grid-template-columns: 1fr 20em;
+}
+
+.checkout-button {
+    width: 100%;
+    height: 70px;
+    margin-top: 16px;
+}
+
+.border-button {
+    background-color: white;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #222222;
+    width: 100%;
+    height: 70px;
+    margin-top: 16px;
+}
+
+.border-button:disabled {
+    border-color: gray;
+}
+
+.loyalty-button {
+    background-color: white;
+    border-style: solid;
+    border-width: 2px;
+    border-color: #222222;
+    width: 100%;
+    height: 70px;
+    padding: 16px;
+    margin-top: 16px;
+}
+
+::ng-deep .loyalty-icon {
+    mat-icon {
+        height: 50% !important;
+        width: 65% !important;
+    }
+}
+
+::ng-deep .loyalty-button-icon {
+    mat-icon {
+        height: 40px;
+        width: 120px;
+        margin-top: -22px;
+    }
+}
+
+.promo-button {
+    width: 100%;
+    height: 24px;
+    line-height: 24px;
+    font-size: 16px;
+    letter-spacing: 1px;
+    text-align: left;
+    padding: 0px;
+}
+
+.subtotal {
+    text-align: center;
+
+    .subtotal-title {
+        padding-bottom: 8px;
+    }
+}
+
+.total {
+    text-align: center;
+
+    .total-title {
+        padding-top: 16px;
+        padding-bottom: 8px;
+    }
+}
+
+.self-checkout-list-background {
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-self: stretch;
+    justify-self: stretch;
+    padding-right: 16px;
+}
+
+.self-checkout-total-background {
+    min-height: 100px;
+    align-self: stretch;
+    justify-self: stretch;
+    margin: 0px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+}
+
+.self-checkout-total-content {
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.self-checkout-sell-prompt {
+    font-size: 36px;
+    padding: 16px;
+}
+
+.self-checkout-sell-webcam {
+    padding-bottom: 45px;
+}
