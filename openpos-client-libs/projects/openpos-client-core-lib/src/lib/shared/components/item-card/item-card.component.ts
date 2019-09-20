@@ -15,10 +15,10 @@ export class ItemCardComponent {
   @Input() item: ISellItem;
   @Input() isReadOnly = false;
 
-  constructor( public actionService: ActionService, public session: SessionService) {}
+  constructor(public actionService: ActionService, public session: SessionService) { }
 
-  public doMenuItemAction(menuItem: IActionItem, payLoad: any) {
-    this.actionService.doAction(menuItem, payLoad );
+  public doMenuItemAction(menuItem: IActionItem, payload: number) {
+    this.actionService.doAction(menuItem, [payload]);
   }
 
   public isMenuItemEnabled(m: IActionItem): boolean {
