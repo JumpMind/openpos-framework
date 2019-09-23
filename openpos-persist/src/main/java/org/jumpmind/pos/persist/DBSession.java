@@ -421,11 +421,12 @@ public class DBSession {
                 DefaultMapper mapper = new DefaultMapper();
                 try {
                     ps.setFetchSize(maxResults);
+                    ps.setMaxRows(maxResults);
                     con.setAutoCommit(false);
                     new ArgumentPreparedStatementSetter(statement.getValues().toArray()).setValues(ps);
                     ResultSet rs = ps.executeQuery();
                     int rowCount = 0;
-                    while (rs.next()) {
+                    while (rs.next() && rowCount < maxResults) {
                         Row row = mapper.mapRow(rs, ++rowCount);
                         if (row != null) {
                             results.add(row);
@@ -439,7 +440,7 @@ public class DBSession {
             }
         });
 
-        for (int j = 0; j < rows.size() && j < maxResults; j++) {
+        for (int j = 0; j < rows.size(); j++) {
             Row row = rows.get(j);
             T object = null;
 
