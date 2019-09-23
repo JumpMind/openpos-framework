@@ -5,6 +5,7 @@ import { ILoading } from '../../../core/interfaces/loading.interface';
 import { IMessageHandler } from '../../../core/interfaces/message-handler.interface';
 import { ConfigurationService } from '../../../core/services/configuration.service';
 import { Observable } from 'rxjs';
+import { Configuration } from '../../../configuration/configuration';
 
 @Component({
     selector: 'app-loader',
@@ -37,7 +38,7 @@ export class LoaderComponent implements OnInit, OnDestroy, IMessageHandler<ILoad
             this.loading = true;
             setTimeout(() => {
                 this.updateLoading(message, false);
-            }, 1000);
+            }, Configuration.loadingDialogDelay);
         } else {
             this.updateLoading(message, true);
         }

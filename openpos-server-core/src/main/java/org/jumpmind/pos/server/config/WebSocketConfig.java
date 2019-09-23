@@ -36,8 +36,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
 
     final protected Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
 
-    @Autowired
-    MutableBoolean initialized;
+    @Autowired(required = false)
+    MutableBoolean initialized = new MutableBoolean(false);
 
     @Autowired
     Environment env;
