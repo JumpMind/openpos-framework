@@ -22,5 +22,9 @@
                 color: $error;
             }
         }
+
+        .banner-message > p {
+            margin: 0;
+        }
     }
 }

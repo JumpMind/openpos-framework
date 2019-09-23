@@ -11,7 +11,7 @@
             <div class="banner-message-container">
                 <ng-container *ngFor="let message of screenData.messages">
                     <div fxLayout="column" fxLayoutAlign="start" class="banner-message-container">
-                        <div class="banner-message">{{message}}</div>
+                        <div class="banner-message" [innerHTML]="message | markdownFormatter"></div>
                     </div>
                 </ng-container>
             </div>
