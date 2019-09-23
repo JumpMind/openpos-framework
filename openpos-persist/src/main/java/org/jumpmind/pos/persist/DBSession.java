@@ -8,6 +8,8 @@ import java.io.FileReader;
 import java.io.Reader;
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -38,8 +40,12 @@ import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.persist.model.TagModel;
 import org.jumpmind.pos.util.model.ITypeCode;
 import org.jumpmind.util.LinkedCaseInsensitiveMap;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
+import org.springframework.jdbc.core.ArgumentTypePreparedStatementSetter;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.PreparedStatementCallback;
 
 public class DBSession {
 
@@ -404,11 +410,36 @@ public class DBSession {
     }
 
     @SuppressWarnings("unchecked")
-    protected <T> List<T> queryInternal(Class<T> resultClass, SqlStatement statement, int maxResutls) throws Exception {
+    protected <T> List<T> queryInternal(Class<T> resultClass, SqlStatement statement, int maxResults) throws Exception {
         List<T> objects = new ArrayList<T>();
-        List<Row> rows = jdbcTemplate.query(statement.getSql(), new DefaultMapper(), statement.getValues().toArray());
+        List<Row> rows = jdbcTemplate.execute(statement.getSql(), new PreparedStatementCallback<List<Row>>() {
+            @Override
+            public List<Row> doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                Connection con = ps.getConnection();
+                boolean autoCommitBefore = con.getAutoCommit();
+                List<Row> results = new ArrayList<>();
+                DefaultMapper mapper = new DefaultMapper();
+                try {
+                    ps.setFetchSize(maxResults);
+                    con.setAutoCommit(false);
+                    new ArgumentPreparedStatementSetter(statement.getValues().toArray()).setValues(ps);
+                    ResultSet rs = ps.executeQuery();
+                    int rowCount = 0;
+                    while (rs.next()) {
+                        Row row = mapper.mapRow(rs, ++rowCount);
+                        if (row != null) {
+                            results.add(row);
+                        }
+                    }
+                    rs.close();
+                    return results;
+                } finally {
+                    con.setAutoCommit(autoCommitBefore);
+                }
+            }
+        });
 
-        for (int j = 0; j < rows.size() && j < maxResutls; j++) {
+        for (int j = 0; j < rows.size() && j < maxResults; j++) {
             Row row = rows.get(j);
             T object = null;
 
