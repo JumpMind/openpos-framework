@@ -42,6 +42,7 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   gridColumns: Observable<number>;
   isMobile: Observable<boolean>;
   pageNum = 0;
+  menuItemsPerPage = 15;
 
   constructor(media: OpenposMediaService) {
     super();

@@ -9,7 +9,7 @@
         <div class="home-content" klass.xs="xs">
             <div *ngIf="!(isMobile | async) && screen.menuItems.length > 0" class="button-grid">
                 <div class="menu-button-border"
-                    *ngFor="let menuItem of screen.menuItems | paginate: { itemsPerPage: 15, currentPage: pageNum }"
+                    *ngFor="let menuItem of screen.menuItems | paginate: { itemsPerPage: menuItemsPerPage, currentPage: pageNum }"
                     [matBadge]="getNotificationForButton(menuItem)?.value" matBadgePosition="above after"
                     matBadgeSize="large" matBadgeColor="accent" [matBadgeHidden]="!getNotificationForButton(menuItem)"
                     [@bounce]="getNotificationForButton(menuItem)? (bounceInterval | async) : 'down'">

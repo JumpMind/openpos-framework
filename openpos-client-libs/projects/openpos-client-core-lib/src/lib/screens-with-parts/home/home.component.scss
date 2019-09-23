@@ -8,7 +8,6 @@
 }
 
 .home-content {
-  height: 100%;
   flex: 1;
   overflow: overlay;
   display: flex;
@@ -18,11 +17,15 @@
 
 .home-content-wrapper {
   overflow: overlay;
-  height: 100%;
+}
+
+.home-content-wrapper.xs {
+    height: 100%;
 }
 
 .home-content.xs {
   justify-content: normal;
+  height: 100%;
 }
 
 .home-content-wrapper.xs::-webkit-scrollbar-track,.home-content.xs::-webkit-scrollbar-track {
