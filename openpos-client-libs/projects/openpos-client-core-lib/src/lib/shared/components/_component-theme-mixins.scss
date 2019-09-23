@@ -10,6 +10,7 @@
 @import './sell-item-line/sell-item-line-theme';
 @import './toggle-button/toggle-button-theme';
 @import './overflow-list/overflow-list-theme';
+@import './kebab-menu/kebab-menu-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -24,4 +25,5 @@
     @include sell-item-line-theme($theme);
     @include toggle-button-theme($theme);
     @include overflow-list-theme($theme);
+    @include kebab-menu-theme($theme);
 }

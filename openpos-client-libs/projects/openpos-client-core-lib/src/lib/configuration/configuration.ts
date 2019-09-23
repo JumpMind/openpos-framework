@@ -14,6 +14,7 @@ export const Configuration = {
     enableMenuClose: true,
     enableKeybinds: false,
     googleApiKey: '',
+    loadingDialogDelay: 1000,
 
     // These properties are static on the client and not overriden by configuration.service.ts
     compatibilityVersion: 'v1',
