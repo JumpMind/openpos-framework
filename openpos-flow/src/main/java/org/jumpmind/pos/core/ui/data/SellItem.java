@@ -1,6 +1,5 @@
 package org.jumpmind.pos.core.ui.data;
 
-
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.ArrayList;
@@ -13,11 +12,12 @@ import org.apache.commons.lang3.StringUtils;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+
 import org.jumpmind.pos.core.ui.ActionItem;
 
 public class SellItem extends DefaultItem {
     private static final long serialVersionUID = 1L;
-    
+
     private String posItemId;
     private String altItemId;
     private String originalAmount;
@@ -29,6 +29,8 @@ public class SellItem extends DefaultItem {
     private boolean isGiftReceipt = false;
     private boolean isQuantityChangeable;
     private boolean isOrderItem = false;
+    private List<AdditionalLabel> additionalLabels = new ArrayList<>();
+    private String imageUrl;
 
     /**
      * Put properties in this map if they are optional. When not set, they don't
@@ -38,19 +40,20 @@ public class SellItem extends DefaultItem {
 
     @Override
     public String getSubtitle() {
-        if(isBlank(subtitle)) {
+        if (isBlank(subtitle)) {
             subtitle = "Item: %s%s %s@%s";
             String altItemId = isBlank(this.getAltItemId()) ? "" : "/" + this.getAltItemId();
             if (this.salesAssociate != null && this.salesAssociate != "") {
                 subtitle = subtitle + " - Sales Associate: %s";
-                subtitle = String.format(subtitle, this.getPosItemId(), altItemId, this.getQuantity(), this.getSellingPrice(), this.getSalesAssociate());
+                subtitle = String.format(subtitle, this.getPosItemId(), altItemId, this.getQuantity(), this.getSellingPrice(),
+                        this.getSalesAssociate());
             } else {
                 subtitle = String.format(subtitle, this.getPosItemId(), altItemId, this.getQuantity(), this.getSellingPrice());
             }
         }
         return subtitle;
     }
-    
+
     @Override
     public void setSubtitle(String subtitle) {
         this.subtitle = subtitle;
@@ -59,15 +62,15 @@ public class SellItem extends DefaultItem {
     public void setPosItemId(String posItemId) {
         this.posItemId = posItemId;
     }
-    
+
     public String getPosItemId() {
         return posItemId;
     }
-    
+
     public void setAltItemId(String altItemId) {
         this.altItemId = altItemId;
     }
-    
+
     public String getAltItemId() {
         return altItemId;
     }
@@ -83,25 +86,27 @@ public class SellItem extends DefaultItem {
     public void setSellingPrice(String sellingPrice) {
         this.sellingPrice = sellingPrice;
     }
-    
+
     public String getSellingPrice() {
         return sellingPrice;
     }
-    public void setIsGiftReceipt( boolean giftReceipt ) {
+
+    public void setIsGiftReceipt(boolean giftReceipt) {
         this.isGiftReceipt = giftReceipt;
     }
-    
+
     public boolean getIsGiftReceipt() {
         return this.isGiftReceipt;
     }
+
     public void addMenuItem(ActionItem menuItem) {
         this.menuItems.add(menuItem);
     }
-    
+
     public void setMenuItems(List<ActionItem> transactionMenuItems) {
         this.menuItems = transactionMenuItems;
     }
-    
+
     public void addMenuItems(ActionItem... transactionMenuItems) {
         if (this.menuItems == null) {
             this.setMenuItems(Arrays.asList(transactionMenuItems));
@@ -109,35 +114,35 @@ public class SellItem extends DefaultItem {
             this.menuItems.addAll(Arrays.asList(transactionMenuItems));
         }
     }
-    
+
     public List<ActionItem> getMenuItems() {
         return menuItems;
     }
 
-	public String getDiscountAmount() {
-		return discountAmount;
-	}
+    public String getDiscountAmount() {
+        return discountAmount;
+    }
 
-	public void setDiscountAmount(String discountAmount) {
-		this.discountAmount = discountAmount;
-	}
-	
-	public String getSalesAssociate() {
-		return salesAssociate;
-	}
+    public void setDiscountAmount(String discountAmount) {
+        this.discountAmount = discountAmount;
+    }
 
-	public void setSalesAssociate(String salesAssociate) {
-		this.salesAssociate = salesAssociate;
-	}
-    
+    public String getSalesAssociate() {
+        return salesAssociate;
+    }
+
+    public void setSalesAssociate(String salesAssociate) {
+        this.salesAssociate = salesAssociate;
+    }
+
     public String getOriginalAmount() {
-    	return this.originalAmount;
+        return this.originalAmount;
     }
-    
+
     public void setOriginalAmount(String originalAmount) {
-    	this.originalAmount = originalAmount;
+        this.originalAmount = originalAmount;
     }
-	
+
     @JsonAnyGetter
     public Map<String, Object> any() {
         return this.optionalProperties;
@@ -163,28 +168,28 @@ public class SellItem extends DefaultItem {
     public void setQuantityChangeable(boolean isQuantityChangeable) {
         this.isQuantityChangeable = isQuantityChangeable;
     }
-    
+
     /**
-    **  Determine if the given item has a quantity value that indicates
-    **  it is being returned.
-    **
-    **  @return   If the quantity is negative, the item is being returned.
-    **            Otherwise, if we have a quantity of zero or more or if
-    **            the quantity is unknown, return false.
-    */
-    public boolean hasReturnQuantity()  {
-    	boolean hasReturnQuantity = false;
-    	
-    	if (!StringUtils.isEmpty(quantity))  {
-    		try  {
-    			int num = Integer.parseInt(quantity);
-    			hasReturnQuantity = (num < 0);
-    		}  catch (Throwable err)  {
-    			//  Invalid number format. Can't tell.
-    		}
-    	}
-    	
-    	return hasReturnQuantity;
+     ** Determine if the given item has a quantity value that indicates it is
+     * being returned.
+     **
+     ** @return If the quantity is negative, the item is being returned.
+     **         Otherwise, if we have a quantity of zero or more or if the
+     *         quantity is unknown, return false.
+     */
+    public boolean hasReturnQuantity() {
+        boolean hasReturnQuantity = false;
+
+        if (!StringUtils.isEmpty(quantity)) {
+            try {
+                int num = Integer.parseInt(quantity);
+                hasReturnQuantity = (num < 0);
+            } catch (Throwable err) {
+                // Invalid number format. Can't tell.
+            }
+        }
+
+        return hasReturnQuantity;
     }
 
     public boolean getIsOrderItem() {
@@ -194,4 +199,25 @@ public class SellItem extends DefaultItem {
     public void setIsOrderItem(boolean isOrderItem) {
         this.isOrderItem = isOrderItem;
     }
+
+    public List<AdditionalLabel> getAdditionalLabels() {
+        return additionalLabels;
+    }
+
+    public void setAdditionalLabels(List<AdditionalLabel> additionalLabels) {
+        this.additionalLabels = additionalLabels;
+    }
+
+    public void addAdditionalLabel(String label, String value) {
+        this.additionalLabels.add(new AdditionalLabel(label, value));
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
 }
