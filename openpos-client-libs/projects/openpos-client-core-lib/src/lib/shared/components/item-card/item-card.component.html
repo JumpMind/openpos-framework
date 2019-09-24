@@ -4,11 +4,9 @@
         <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="16px" style="padding-left: 16px">
             <div fxFlex="1 1 auto" fxLayout="column">
                 <div fxFlex="1 1 auto">
-                    <div *ngIf="item.productDescription" class="self-checkout-text-md item-card-title">
-                        {{item.productDescription}}
+                    <div *ngIf="item.description" class="self-checkout-text-md item-card-title">
+                        {{item.description}}
                     </div>
-                    <div *ngIf="!item.productDescription" class="self-checkout-text-md item-card-title">
-                        {{item.description}}</div>
                     <app-currency-text *ngIf="item.amount !== item.sellingPrice"
                         class="self-checkout-text-sm item-card-discount" [amountText]="item.amount"></app-currency-text>
                     <app-currency-text *ngIf="item.amount !== item.sellingPrice"

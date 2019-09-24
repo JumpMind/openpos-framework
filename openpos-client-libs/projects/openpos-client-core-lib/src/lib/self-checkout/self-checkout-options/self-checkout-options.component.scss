@@ -10,6 +10,10 @@
     flex: 1 1 100%;
 }
 
+.self-checkout-options {
+    width: 75%;
+}
+
 ::ng-deep .options-icon {
     mat-icon {
         width: 400px !important;
@@ -19,7 +23,6 @@
 }
 
 .options-title {
-    font-size: 36px;
     font-weight: bold;
     margin-top: 0px;
     margin-bottom: 64px;
@@ -27,7 +30,6 @@
 }
 
 .options-prompt {
-    font-size: 26px;
     max-width: 400px;
     margin-top: 64px;
     margin-bottom: 64px;

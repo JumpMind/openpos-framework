@@ -9,77 +9,50 @@
     flex: 1 1 100%;
     padding: 24px;
     display: grid;
-    grid-template-columns: 1fr 20em;
+    grid-template-columns: 1fr 25%;
 }
 
-.checkout-button {
+.self-checkout-checkout-button {
+    margin-top: 16px;
     width: 100%;
-    height: 70px;
+}
+
+.self-checkout-border-button {
+    width: 100%;
     margin-top: 16px;
 }
 
-.border-button {
-    background-color: white;
-    border-style: solid;
-    border-width: 2px;
-    border-color: #222222;
-    width: 100%;
-    height: 70px;
-    margin-top: 16px;
-}
-
-.border-button:disabled {
-    border-color: gray;
-}
-
-.loyalty-button {
-    background-color: white;
-    border-style: solid;
-    border-width: 2px;
-    border-color: #222222;
-    width: 100%;
-    height: 70px;
-    padding: 16px;
-    margin-top: 16px;
-}
-
-::ng-deep .loyalty-icon {
+::ng-deep .self-checkout-loyalty-icon {
     mat-icon {
         height: 50% !important;
         width: 65% !important;
     }
 }
 
-::ng-deep .loyalty-button-icon {
-    mat-icon {
-        height: 40px;
-        width: 120px;
-        margin-top: -22px;
-    }
+.self-checkout-loyalty-button-icon {
+    padding-left: 8px;
 }
 
-.promo-button {
+.self-checkout-promo-button {
     width: 100%;
-    height: 24px;
-    line-height: 24px;
-    font-size: 16px;
-    letter-spacing: 1px;
     text-align: left;
     padding: 0px;
 }
 
-.subtotal {
+.self-checkout-subtotal {
     text-align: center;
 
-    .subtotal-title {
+    .self-checkout-subtotal-title {
         padding-bottom: 8px;
     }
 }
 
-.total {
+.self-checkout-total {
     text-align: center;
+    border-top-style: solid;
+    border-top-width: 1px;
 
-    .total-title {
+    .self-checkout-total-title {
         padding-top: 16px;
         padding-bottom: 8px;
     }

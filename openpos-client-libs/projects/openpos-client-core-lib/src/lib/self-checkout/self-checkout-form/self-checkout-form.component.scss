@@ -1,14 +1,13 @@
 .self-checkout-form-outer {
     height: 100%;
-    background-color: inherit;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .self-checkout-form-body {
     padding: 24px 16px;
-    width: 60%;
-    justify-self: center;
-    align-self: center;
+    flex: 1 1 100%;
 }
 
 .self-checkout-form-image {
@@ -16,19 +15,6 @@
     justify-self: center;
 }
 
-:host::ng-deep .self-checkout-form-body {
-    .mat-form-field {
-        font-size: 24px !important;
-    }
-
-    .mat-raised-button {
-        font-size: 24px;
-        line-height: 48px;
-
-        .mat-icon {
-            font-size: 28px;
-            height: 28px;
-            width: 28px;
-        }
-    }
+.self-checkout-form-card {
+    width: 75%;
 }

@@ -5,6 +5,13 @@
     $app-warn: mat-color(map-get($theme, warn));
 
     $foreground: map-get($theme, foreground);
+    $background: map_get($mat-grey, 200);
+    $border: map_get($mat-grey, 800);
+    $disabled: map_get($mat-grey, 300);
+
+    .self-checkout-background {
+        background-color: $background;
+    }
 
     .self-checkout-text-xs {
         font-size: 12px !important;
@@ -48,4 +55,99 @@
             font-size: 36px !important;
         }
     }
+
+    .self-checkout-button {
+        padding: 16px;
+    }
+
+    .self-checkout-border-color {
+        border-color: $border;
+    }
+
+    .self-checkout-border {
+        @extend .self-checkout-border-color;
+        border-style: solid;
+        border-width: 2px;
+    }
+
+    .self-checkout-border-button {
+        @extend .self-checkout-border;
+        background-color: white;
+        padding: 14px 16px;
+    }
+
+    .self-checkout-border-button:disabled {
+        border-color: $disabled;
+    }
+
+    .self-checkout-form-body {
+        .mat-card {
+            padding: 48px;
+        }
+
+        .mat-form-field {
+            font-size: 24px !important;
+        }
+
+        .mat-raised-button {
+            font-size: 32px;
+            padding: 16px;
+
+            .mat-icon {
+                font-size: 28px;
+                height: 28px;
+                width: 28px;
+            }
+        }
+
+        @media(max-width: 1024px) {
+            .mat-form-field {
+                font-size: 18px !important;
+            }
+
+            .mat-raised-button {
+                font-size: 24px;
+            }
+        }
+    }
+
+    .self-checkout-prompt-body {
+        .mat-card {
+            padding: 48px;
+        }
+
+        .mat-form-field {
+            font-size: 36px !important;
+
+            .mat-hint {
+                font-size: 24px !important;
+            }
+        }
+
+        .mat-raised-button {
+            font-size: 36px;
+            padding: 16px;
+
+            .material-icons {
+                font-size: 36px;
+                height: 36px;
+                width: 36px;
+            }
+        }
+
+        @media(max-width: 1024px) {
+            .mat-form-field {
+                font-size: 24px !important;
+
+                .mat-hint {
+                    font-size: 18px !important;
+                }
+            }
+
+            .mat-raised-button {
+                font-size: 24px;
+            }
+        }
+    }
+
 }

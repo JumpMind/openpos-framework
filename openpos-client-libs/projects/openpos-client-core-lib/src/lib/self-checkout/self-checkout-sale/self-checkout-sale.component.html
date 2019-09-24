@@ -1,4 +1,4 @@
-<div class="lighter self-checkout-sale-outer">
+<div class="self-checkout-background self-checkout-sale-outer">
 	<app-self-checkout-menu></app-self-checkout-menu>
 
 	<div class="self-checkout-sale-body">
@@ -20,20 +20,21 @@
 
 			<div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px"
 				class="self-checkout-total-content">
-				<div *ngFor="let total of screen.totals" fxFlex="1 1 auto" class="subtotal">
-					<div class="self-checkout-text-sm primary subtotal-title">{{total.name}}</div>
-					<div class="self-checkout-text-lg subtotal-amount">
+				<div *ngFor="let total of screen.totals" fxFlex="1 1 auto" class="self-checkout-subtotal">
+					<div class="self-checkout-text-sm primary self-checkout-subtotal-title">{{total.name}}</div>
+					<div class="self-checkout-text-lg self-checkout-subtotal-amount">
 						<app-currency-text [amountText]="total.amount"></app-currency-text>
 					</div>
 				</div>
-				<div *ngIf="screen.grandTotal" fxFlex="1 1 auto" class="total">
-					<div class="self-checkout-text-lg primary total-title">{{screen.grandTotal.label}}</div>
-					<div class="self-checkout-text-xl total-amount">
+				<div *ngIf="screen.grandTotal" fxFlex="1 1 auto" class="self-checkout-border-color self-checkout-total">
+					<div class="self-checkout-text-lg primary self-checkout-total-title">{{screen.grandTotal.label}}
+					</div>
+					<div class="self-checkout-text-xl self-checkout-total-amount">
 						<app-currency-text [amountText]="screen.grandTotal.value"></app-currency-text>
 					</div>
 				</div>
 				<button mat-button *ngIf="screen.promoButton" (click)="doMenuItemAction(screen.promoButton)"
-					class="promo-button self-checkout-text-sm">
+					class="self-checkout-promo-button self-checkout-text-sm">
 					<span fxFlex="1 1 auto">{{screen.promoButton.title}}</span>
 					<app-icon [iconName]="screen.promoButton.icon" [iconClass]="'primary mat-24'"></app-icon>
 				</button>
@@ -46,15 +47,17 @@
 
 			<div>
 				<button mat-button *ngIf="!screen.readOnly && !screen.customer && screen.loyaltyButton"
-					(click)="doMenuItemAction(screen.loyaltyButton)" class="loyalty-button self-checkout-text-md">
+					(click)="doMenuItemAction(screen.loyaltyButton)"
+					class="self-checkout-button self-checkout-border-button self-checkout-loyalty-button self-checkout-text-md">
 					<span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
 					<app-icon [iconName]="screen.loyaltyButton.icon" [iconClass]="'material-icons'"
-						class="loyalty-button-icon"></app-icon>
+						class="self-checkout-loyalty-button-icon"></app-icon>
 					<span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
 				</button>
 				<div *ngIf="screen.customer" class="self-checkout-text-sm text-center" fxLayout="column"
 					fxLayoutAlign="center center" fxLayoutGap="8px">
-					<app-icon [iconName]="screen.customer.icon" [iconClass]="'material-icons'" class="loyalty-icon">
+					<app-icon [iconName]="screen.customer.icon" [iconClass]="'material-icons'"
+						class="self-checkout-loyalty-icon">
 					</app-icon>
 					<div class="muted-color">{{screen.customer.name}}</div>
 					<div class="muted-color">{{screen.customer.label}}: {{screen.customer.id}}</div>
@@ -63,9 +66,10 @@
 				<button mat-button *ngIf="!screen.readOnly && screen.checkoutButton"
 					[disabled]="!items || items.length == 0" (click)="doMenuItemAction(screen.checkoutButton)"
 					color="primary-inverse"
-					class="checkout-button self-checkout-text-lg">{{screen.checkoutButton.title}}</button>
+					class="self-checkout-button self-checkout-checkout-button self-checkout-text-lg">{{screen.checkoutButton.title}}</button>
 				<button mat-button *ngIf="!screen.readOnly && screen.logoutButton"
-					(click)="doMenuItemAction(screen.logoutButton)" class="border-button self-checkout-text-lg">
+					(click)="doMenuItemAction(screen.logoutButton)"
+					class="self-checkout-button self-checkout-border-button self-checkout-text-lg">
 					<span>
 						<app-icon *ngIf="screen.logoutButton.icon" [iconName]="screen.logoutButton.icon">
 						</app-icon>
