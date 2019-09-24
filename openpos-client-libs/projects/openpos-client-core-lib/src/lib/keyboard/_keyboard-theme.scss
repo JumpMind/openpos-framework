@@ -1,0 +1,15 @@
+$keyboard-config: mat-typography-config($button: mat-typography-level(22px, 60px, 300));
+
+@mixin keyboard-theme($theme) {
+
+    mat-keyboard-container {
+        width: 100%;
+    }
+
+    .mat-keyboard-key {
+        line-height: mat-line-height($keyboard-config, button);
+        font-size: mat-font-size($keyboard-config, button);
+        font-weight: mat-font-weight($keyboard-config, button);
+        min-height: 60px;
+    }
+}

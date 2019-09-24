@@ -8,6 +8,7 @@
 @import '../price-checker/price-checker-themes';
 @import './mixins/serrated-edge';
 @import '../self-checkout/self-checkout-themes';
+@import '../keyboard/keyboard-theme';
 
 @include mat-core();
 
@@ -36,6 +37,7 @@
     @include price-checker-themes($theme);
     @include serrated-edge($theme);
     @include self-checkout-themes($theme);
+    @include keyboard-theme($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
