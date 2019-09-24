@@ -115,7 +115,6 @@ public class StateManagerContainer implements IStateManagerContainer {
         Map<String, StateManager> stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
         if (stateManagersByNodeId != null) {
             stateManagersByNodeId.remove(deviceId);
-            // TODO call a cleanup/destroy method on the state manager being removed
         }
     }
 

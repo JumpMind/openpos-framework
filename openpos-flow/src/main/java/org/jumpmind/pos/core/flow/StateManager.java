@@ -103,9 +103,6 @@ public class StateManager implements IStateManager {
     @Autowired
     LocaleMessageFactory localeMessageFactory;
 
-    @Autowired
-    FlowEventBus flowEventBus;
-
     private FlowConfig initialFlowConfig;
 
     private AtomicReference<Date> lastInteractionTime = new AtomicReference<Date>(new Date());
@@ -125,9 +122,9 @@ public class StateManager implements IStateManager {
     private final AtomicInteger activeCalls = new AtomicInteger(0);
     private final AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
 
-    public void init(String appId, String deviceId) {
+    public void init(String appId, String nodeId) {
         this.applicationState.setAppId(appId);
-        this.applicationState.setDeviceId(deviceId);
+        this.applicationState.setDeviceId(nodeId);
 
         boolean resumeState = false;
 
@@ -148,9 +145,6 @@ public class StateManager implements IStateManager {
             sendConfigurationChangedMessage();
             refreshScreen();
         } else if (initialFlowConfig != null) {
-            flowEventBus.register(deviceId, (e) -> {
-                processFlowEvent(e);
-            });
             applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
             sendConfigurationChangedMessage();
             // TODO: think about making this ASYNC so it doesn't hold up the rest of initialization
@@ -158,10 +152,7 @@ public class StateManager implements IStateManager {
         } else {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
-    }
 
-    private void processFlowEvent(FlowEvent event) {
-         stateLifecycle.executeFlowEvent(applicationState.getCurrentContext().getState(), event);
     }
 
     private void initDefaultScopeObjects() {
@@ -251,7 +242,6 @@ public class StateManager implements IStateManager {
 
     protected void transitionTo(Action action, Object newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState,
             boolean autoTransition) {
-
         if (applicationState.getCurrentContext() == null) {
             throw new FlowException(
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In to get the StateManager, not @Autowired.");
@@ -264,9 +254,7 @@ public class StateManager implements IStateManager {
                             + "existing a subState. These two should be be happening at the same time.");
         }
 
-        String oldStateName = null;
         if (applicationState.getCurrentContext().getState() != null) {
-            oldStateName = applicationState.getCurrentContext().getState().getClass().getSimpleName();
             performOutjections(applicationState.getCurrentContext().getState());
         }
         
@@ -303,8 +291,6 @@ public class StateManager implements IStateManager {
                 returnAction.setCausedBy(action);
                 doAction(returnAction); // indirect recursion
             }
-
-            flowEventBus.publish(new TransitionFlowEvent(getDeviceId(), getAppId(), action, oldStateName,  applicationState.getCurrentContext().getState().getClass().getSimpleName()));
         } else {
             //TODO: discuss whether this is how we want to handle cancelled transitions
             Action cancelAction= new Action("TransitionCancelled");

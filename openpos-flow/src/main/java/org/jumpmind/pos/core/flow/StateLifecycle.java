@@ -43,20 +43,6 @@ public class StateLifecycle {
             }
         }
     }
-
-    public void executeFlowEvent(Object state, FlowEvent event) {
-        if (state == null) {
-            return;
-        }
-
-        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(state.getClass(), OnEvent.class, true, true);
-        if (methods != null && !methods.isEmpty()) {
-            for (Method method : methods) {
-                OnEvent onEvent = method.getAnnotation(OnEvent.class);
-                invokeMethod(state, event, method);
-            }
-        }
-    }
     
     protected void invokeArrive(StateManager stateManager, Object state, Action action) {
         List<Method> methods = MethodUtils.getMethodsListWithAnnotation(state.getClass(), OnArrive.class, true, true);
@@ -68,13 +54,9 @@ public class StateLifecycle {
     }    
 
     protected void invokeLifecyleMethod(Object state, Action action, Method method) {
-        invokeMethod(state, action, method);
-    }
-
-    protected void invokeMethod(Object state, Object arg, Method method) {
-        try {
-            if (method.getParameters() != null && method.getParameters().length == 1) {
-                method.invoke(state, arg);
+        try {            
+            if (method.getParameters() != null && method.getParameters().length == 1) {                        
+                method.invoke(state, action);
             } else {
                 method.invoke(state);
             }
