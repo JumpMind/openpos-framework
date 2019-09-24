@@ -564,7 +564,7 @@ public class StateManagerTest {
     public void testStackOverflow_WithErrorHandler() {
         stateManager.setErrorHandler(errorHandler);
         this.testStackOverflow();
-        verify(errorHandler).handleError(eq(stateManager), isA(FlowException.class));
+        verify(errorHandler, atLeastOnce()).handleError(eq(stateManager), isA(FlowException.class));
     }
     
     @Test
