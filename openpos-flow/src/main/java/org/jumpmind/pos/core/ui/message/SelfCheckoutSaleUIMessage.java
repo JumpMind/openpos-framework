@@ -13,6 +13,8 @@ public class SelfCheckoutSaleUIMessage extends SaleUIMessage {
 
     private SelfCheckoutCustomer customer;
 
+    private String prompt;
+
     public SelfCheckoutSaleUIMessage() {
         this.setScreenType(UIMessageType.SELF_CHECKOUT_SALE);
         this.setId("selfcheckout-sale");
@@ -41,5 +43,13 @@ public class SelfCheckoutSaleUIMessage extends SaleUIMessage {
 
     public void setCustomer(SelfCheckoutCustomer customer) {
         this.customer = customer;
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
     }
 }
