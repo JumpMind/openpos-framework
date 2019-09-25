@@ -2,9 +2,11 @@
 @import './scan-or-search/scan-or-search-theme';
 @import './status-strip/status-strip-theme';
 @import './choose-options-part/choose-options-part-theme';
+@import './banner/banner-theme';
 
 @mixin screen-part-themes($theme){
     @include bacon-strip-theme($theme);
     @include scan-or-search-theme($theme);
     @include choose-options-part-theme($theme);
+    @include banner-theme($theme);
 }

@@ -1,0 +1,27 @@
+<ng-container *ngIf="screenData.messages && screenData.messages.length > 0">
+    <mat-card class="banner-container" [ngClass]="{
+            'info': screenData.messageType === MessageType.INFO,
+            'warning': screenData.messageType === MessageType.WARNING,
+            'error': screenData.messageType === MessageType.ERROR
+        }">
+        <mat-card-content fxLayout="row" fxLayoutAlign="start center" class="banner-content-container">
+            <div *ngIf="screenData.iconName" class="banner-icon">
+                <app-icon [iconName]="screenData.iconName"></app-icon>
+            </div>
+            <div class="banner-message-container">
+                <ng-container *ngFor="let message of screenData.messages">
+                    <div fxLayout="column" fxLayoutAlign="start" class="banner-message-container">
+                        <div class="banner-message" [innerHTML]="message | markdownFormatter"></div>
+                    </div>
+                </ng-container>
+            </div>
+        </mat-card-content>
+        <ng-container *ngIf="screenData.buttons && screenData.buttons.length > 0">
+            <mat-card-actions fxLayout="row wrap" fxLayoutAlign="end center" class="banner-button-container">
+                <button mat-button type="button" color="primary" *ngFor="let button of screenData.buttons" (click)="onMenuItemClick(button)" class="banner-button">
+                    {{button.title}}
+                </button>
+            </mat-card-actions>
+        </ng-container>
+    </mat-card>
+</ng-container>

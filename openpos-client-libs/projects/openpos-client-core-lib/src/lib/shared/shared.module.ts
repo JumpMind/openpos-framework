@@ -119,6 +119,7 @@ import { DynamicScreenComponent } from './components/dynamic-screen/dynamic-scre
 import { LocationDetailsComponent } from './components/location-details/location-details.component';
 import { LocationOverrideDialogComponent } from './components/location-details/location-override-dialog/location-override-dialog.component';
 import { SystemStatusComponent } from './screen-parts/system-status/system-status.component';
+import { BannerComponent } from './screen-parts/banner/banner.component';
 import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
 import { NgxPaginationModule } from 'ngx-pagination';
 
@@ -136,7 +137,8 @@ const screenParts = [
     AutoCompleteAddressPartComponent,
     ProgressBarPartComponent,
     WebcamViewerComponent,
-    SystemStatusComponent
+    SystemStatusComponent,
+    BannerComponent
 ];
 
 const components = [
