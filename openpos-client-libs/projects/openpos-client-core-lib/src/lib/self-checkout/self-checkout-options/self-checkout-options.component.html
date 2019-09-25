@@ -1,7 +1,7 @@
-<div class="self-checkout-background self-checkout-options-outer">
+<div class="self-checkout-background self-checkout-outer self-checkout-options-outer">
     <app-self-checkout-menu></app-self-checkout-menu>
 
-    <div class="self-checkout-options-body" fxLayout="column" fxLayoutAlign="center center">
+    <div class="self-checkout-body self-checkout-options-body" fxLayout="column" fxLayoutAlign="center center">
 
         <div *ngIf="screen.icon" fxFlex="0 0 auto" fxLayoutAlign="center center">
             <app-icon [iconName]="screen.icon" class="options-icon"></app-icon>

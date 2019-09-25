@@ -1,13 +1,4 @@
-.self-checkout-sale-outer {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
 .self-checkout-sale-body {
-    padding: 24px 16px;
-    flex: 1 1 100%;
-    padding: 24px;
     display: grid;
     grid-template-columns: 1fr 25%;
 }

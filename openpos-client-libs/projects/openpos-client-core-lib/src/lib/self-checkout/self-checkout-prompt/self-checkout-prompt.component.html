@@ -1,7 +1,7 @@
-<div class="self-checkout-background self-checkout-prompt-outer">
+<div class="self-checkout-background self-checkout-outer self-checkout-prompt-outer">
     <app-self-checkout-menu></app-self-checkout-menu>
 
-    <div class="self-checkout-prompt-body" gdAreas="icon | prompt" gdRows="auto 1fr">
+    <div class="self-checkout-body self-checkout-prompt-body" gdAreas="icon | prompt" gdRows="auto 1fr">
 
         <img *ngIf="screen.imageUrl" gdArea="icon" [src]="screen.imageUrl | imageUrl"
             class="self-checkout-prompt-image">
