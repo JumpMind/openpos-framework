@@ -1,31 +1,29 @@
-.self-checkout-tender-outer {
-    height: 100%;
-    background-color: inherit;
+.self-checkout-tender-options {
+    width: 75%;
 }
 
-.self-checkout-tender-body {
-    padding: 24px 16px;
-    width: 60%;
-    justify-self: center;
-    align-self: center;
+.self-checkout-payment-amount-outer {
+    padding: 32px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
 }
 
-.payment-title {
-    font-size: 36px;
+.self-checkout-payment-title {
+    text-align: center;
+}
+
+.self-checkout-payment-amount-due {
     font-weight: bold;
+    text-align: center;
 }
 
-.payment-instructions {
-    font-size: 26px;
+.self-checkout-payment-instructions {
+    text-align: center;
 }
 
-.payment-amount-due {
-    padding-top: 32px;
+.self-checkout-payment-remaining-balance {
     font-weight: bold;
-}
-
-.payment-remaining-balance {
-    font-weight: bold;
-    border-top: 1px solid black;
+    border-top-width: 2px;
+    border-top-style: solid;
     padding-top: 32px;
 }
