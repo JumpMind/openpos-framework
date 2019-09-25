@@ -42,7 +42,7 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   gridColumns: Observable<number>;
   isMobile: Observable<boolean>;
   pageNum = 0;
-  pageSize = 0;
+  pageSize = 15;
   paginationSettings = { itemsPerPage: this.pageSize, currentPage: this.pageNum };
   
   constructor(media: OpenposMediaService) {
@@ -74,7 +74,7 @@ export class HomeComponent extends PosScreen<HomeInterface> {
     // Menu items per page
     media.mediaObservableFromMap(new Map([
       ['xs', 3],
-      ['sm', this.pageSize/2],
+      ['sm', Math.round(this.pageSize/2)],
       ['md', this.pageSize],
       ['lg', this.pageSize],
       ['xl', this.pageSize]
