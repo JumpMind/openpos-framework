@@ -9,7 +9,7 @@
         <div class="home-content" klass.xs="xs">
             <div *ngIf="!(isMobile | async) && screen.menuItems.length > 0" class="button-grid">
                 <div class="menu-button-border"
-                    *ngFor="let menuItem of screen.menuItems | paginate: { itemsPerPage: menuItemsPerPage, currentPage: pageNum }"
+                    *ngFor="let menuItem of screen.menuItems | paginate: paginationSettings"
                     [matBadge]="getNotificationForButton(menuItem)?.value" matBadgePosition="above after"
                     matBadgeSize="large" matBadgeColor="accent" [matBadgeHidden]="!getNotificationForButton(menuItem)"
                     [@bounce]="getNotificationForButton(menuItem)? (bounceInterval | async) : 'down'">
@@ -45,7 +45,7 @@
 
     <div class="status-strip-container">
         <div style="text-align: center;">
-            <pagination-template #p="paginationApi" (pageChange)="pageNum = $event">
+            <pagination-template #p="paginationApi" (pageChange)="changePage($event)">
                 <div class="pagination-wrapper" *ngIf="p.pages.length > 1 && !(isMobile | async)">
                     <div *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value"
                         class="pagination-nav-button" klass.xs="xs">

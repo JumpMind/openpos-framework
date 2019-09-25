@@ -53,10 +53,13 @@
 
     .pagination-nav-button div {
       background-color: $app-primary;
-      margin: 0.5rem 2rem 2rem 2rem;
       color: white;
       padding: 0.5rem 1rem;
       border-radius: 0.5rem;
+      border-width: 0.5rem;
+      border-style: solid;
+      border-color: white;
+      margin: 0.4rem;
     }
 
     .pagination-nav-button.current div {

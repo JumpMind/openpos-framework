@@ -1,14 +1,14 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
 import { HomeInterface } from './home.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
 import { OpenposMediaService } from '../../core/services/openpos-media.service';
 import { Configuration } from '../../configuration/configuration';
-import { Observable, from, timer } from 'rxjs';
+import { Observable, timer } from 'rxjs';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { INotificationItem } from '../../core/interfaces/notification-item.interface';
-import { trigger, state, style, transition, animate, keyframes, useAnimation } from '@angular/animations';
-import { repeat, delay, tap, map } from 'rxjs/operators';
+import { trigger, state, style, transition, useAnimation } from '@angular/animations';
+import { map } from 'rxjs/operators';
 import { bounceAnimation } from '../../shared/animations/bounce.animation';
 
 @ScreenComponent({
@@ -42,8 +42,9 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   gridColumns: Observable<number>;
   isMobile: Observable<boolean>;
   pageNum = 0;
-  menuItemsPerPage = 15;
-
+  pageSize = 0;
+  paginationSettings = { itemsPerPage: this.pageSize, currentPage: this.pageNum };
+  
   constructor(media: OpenposMediaService) {
     super();
     this.gridColumns = media.mediaObservableFromMap(new Map([
@@ -69,6 +70,19 @@ export class HomeComponent extends PosScreen<HomeInterface> {
       ['lg', false],
       ['xl', false]
     ]));
+
+    // Menu items per page
+    media.mediaObservableFromMap(new Map([
+      ['xs', 3],
+      ['sm', this.pageSize/2],
+      ['md', this.pageSize],
+      ['lg', this.pageSize],
+      ['xl', this.pageSize]
+    ])).subscribe((val => {
+      this.pageNum = 0;
+      this.pageSize = val;
+      this.updatePaginationSettings();
+    }));
   }
 
   buildScreen() { }
@@ -82,5 +96,14 @@ export class HomeComponent extends PosScreen<HomeInterface> {
       return this.screen.notificationItems.find(i => i.id === item.action);
     }
     return null;
+  }
+
+  public changePage($event) {
+    this.pageNum = $event;
+    this.updatePaginationSettings();
+  }
+
+  public updatePaginationSettings() {
+    this.paginationSettings = { itemsPerPage: this.pageSize, currentPage: this.pageNum };
   }
 }

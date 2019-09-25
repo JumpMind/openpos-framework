@@ -14,27 +14,29 @@ export class ActionItemKeyMappingDirective implements OnDestroy {
 
     @Input()
     set actionItem(item: IActionItem) {
-        if ( this.subscription ) {
+        if (this.subscription) {
             this.subscription.unsubscribe();
         }
 
-        this.subscription = this.keyPresses.subscribe( item.keybind, 100, event => {
-            // ignore repeats
-            if ( event.repeat || !Configuration.enableKeybinds ) {
-                return;
-            }
-            if ( event.type === 'keydown') {
-                this.renderer.addClass(this.el.nativeElement, 'key-mapping-active');
-                if (this.actionClick.observers !== null && this.actionClick.observers.length > 0) {
-                    this.actionClick.emit();
-                } else {
-                    this.session.onAction(item);
+        if (item && item.keybind) {
+            this.subscription = this.keyPresses.subscribe(item.keybind, 100, event => {
+                // ignore repeats
+                if (event.repeat || !Configuration.enableKeybinds) {
+                    return;
                 }
-                event.preventDefault();
-            } else if ( event.type === 'keyup') {
-                this.renderer.removeClass(this.el.nativeElement, 'key-mapping-active');
-            }
-        });
+                if (event.type === 'keydown') {
+                    this.renderer.addClass(this.el.nativeElement, 'key-mapping-active');
+                    if (this.actionClick.observers !== null && this.actionClick.observers.length > 0) {
+                        this.actionClick.emit();
+                    } else {
+                        this.session.onAction(item);
+                    }
+                    event.preventDefault();
+                } else if (event.type === 'keyup') {
+                    this.renderer.removeClass(this.el.nativeElement, 'key-mapping-active');
+                }
+            });
+        }
     }
 
     private subscription: Subscription;
@@ -48,7 +50,7 @@ export class ActionItemKeyMappingDirective implements OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if ( this.subscription ) {
+        if (this.subscription) {
             this.subscription.unsubscribe();
         }
     }
