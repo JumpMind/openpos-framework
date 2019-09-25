@@ -1,6 +1,7 @@
 .options-list-item {
-    padding: 60px !important;
-    margin: 8px !important;
+    padding: 16px !important;
+    margin: 8px;
+    height: unset !important;
     background-color: white;
     white-space: normal;
 }
@@ -18,7 +19,6 @@
     padding-bottom: 64px;
 
     span {
-        line-height: 64px;
         padding: 32px;
     }
 }

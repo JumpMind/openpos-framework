@@ -4,7 +4,7 @@
         *ngIf="screenData && screenData.additionalButtons" class="options-buttons">
         <button mat-raised-button color="primary" *ngFor="let button of screenData.additionalButtons"
             (click)="doAction(button.action)">
-            <span class="text-md">{{button.title}}</span>
+            <span class="self-checkout-text-md">{{button.title}}</span>
             <app-icon *ngIf="button.icon" [iconName]="button.icon" [iconClass]="'material-icons'"></app-icon>
         </button>
     </div>
