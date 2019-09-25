@@ -5,11 +5,11 @@
  * to you under the GNU General Public License, version 3.0 (GPLv3)
  * (the "License"); you may not use this file except in compliance
  * with the License.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
  * <http://www.gnu.org/licenses/>.
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -44,11 +44,14 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
+import org.jumpmind.pos.util.event.Event;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -193,7 +196,7 @@ public class StateManager implements IStateManager {
     }
 
     @Override
-    public Map<String, String> getClientContext(){
+    public Map<String, String> getClientContext() {
         return this.clientContext;
     }
 
@@ -241,7 +244,7 @@ public class StateManager implements IStateManager {
     }
 
     protected void transitionTo(Action action, Object newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState,
-            boolean autoTransition) {
+                                boolean autoTransition) {
         if (applicationState.getCurrentContext() == null) {
             throw new FlowException(
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In to get the StateManager, not @Autowired.");
@@ -257,7 +260,7 @@ public class StateManager implements IStateManager {
         if (applicationState.getCurrentContext().getState() != null) {
             performOutjections(applicationState.getCurrentContext().getState());
         }
-        
+
         boolean enterSubState = enterSubStateConfig != null;
         stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
@@ -272,7 +275,7 @@ public class StateManager implements IStateManager {
             stateManagerLogger.logStateTransition(applicationState.getCurrentContext().getState(), newState, action, returnActionName,
                     enterSubStateConfig, exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
                     resumeSuspendedState);
-            
+
             if (enterSubState) {
                 applicationState.getStateStack().push(applicationState.getCurrentContext());
                 applicationState.setCurrentContext(buildSubStateContext(enterSubStateConfig, action));
@@ -293,7 +296,7 @@ public class StateManager implements IStateManager {
             }
         } else {
             //TODO: discuss whether this is how we want to handle cancelled transitions
-            Action cancelAction= new Action("TransitionCancelled");
+            Action cancelAction = new Action("TransitionCancelled");
             cancelAction.setCausedBy(action);
             stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         }
@@ -487,7 +490,7 @@ public class StateManager implements IStateManager {
             activeCalls.decrementAndGet();
         }
     }
-    
+
     protected void handleOrRaiseException(Throwable ex) {
         if (this.getErrorHandler() != null) {
             this.getErrorHandler().handleError(this, ex);
@@ -495,7 +498,7 @@ public class StateManager implements IStateManager {
             throw ex instanceof RuntimeException ? (RuntimeException) ex : new FlowException(ex);
         }
     }
-    
+
     protected Class<? extends Object> getGlobalActionHandler(Action action) {
         FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
         Class<? extends Object> currentActionHandler = flowConfig.getActionToStateMapping().get(action.getName());
@@ -698,7 +701,7 @@ public class StateManager implements IStateManager {
     }
 
     private void clearScopeOnDeviceScopeBeans(ScopeType scopeType) {
-        for (String name :  new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
+        for (String name : new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
             Object value = applicationState.getScopeValue(ScopeType.Device, name);
             injector.resetInjections(value, scopeType);
         }
@@ -851,6 +854,29 @@ public class StateManager implements IStateManager {
         } catch (NoSuchBeanDefinitionException e) {
             logger.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
                     IClientConfigSelector.class.getSimpleName());
+        }
+    }
+
+    protected void onEvent(Event event) {
+        Object state = getCurrentState();
+        if (state != null) {
+            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(state.getClass(), OnEvent.class, true, true);
+            if (methods != null && !methods.isEmpty()) {
+                for (Method method : methods) {
+                    try {
+                        if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
+                            ;
+                            method.setAccessible(true);
+                            method.invoke(state, event);
+                        } else if (method.getParameters() == null || method.getParameters().length == 0) {
+                            method.setAccessible(true);
+                            method.invoke(state);
+                        }
+                    } catch (Exception ex) {
+                        throw new FlowException("Failed to execute method on state. Method: " + method + " state: " + state, ex);
+                    }
+                }
+            }
         }
     }
 }

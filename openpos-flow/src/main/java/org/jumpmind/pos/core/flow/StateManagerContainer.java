@@ -30,14 +30,16 @@ import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
 import org.jumpmind.pos.core.service.IScreenService;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
+import org.jumpmind.pos.util.event.Event;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
-@Scope("singleton")
-public class StateManagerContainer implements IStateManagerContainer {
+public class StateManagerContainer implements IStateManagerContainer, ApplicationListener<Event> {
 
     @Autowired
     IFlowConfigProvider flowConfigProvider;
@@ -143,4 +145,14 @@ public class StateManagerContainer implements IStateManagerContainer {
         return currentStateManager.get();        
     }
 
+    @Override
+    public void onApplicationEvent(Event event) {
+        for (Map<String, StateManager> map : new ArrayList<>(stateManagersByAppIdByNodeId.values())) {
+            for (StateManager stateManager : new ArrayList<>(map.values())) {
+                if (!event.getSource().equals(stateManager)) {
+                   stateManager.onEvent(event);
+                }
+            }
+        }
+    }
 }
