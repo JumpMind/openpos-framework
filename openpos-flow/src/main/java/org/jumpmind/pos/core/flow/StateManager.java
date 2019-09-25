@@ -19,6 +19,7 @@
  */
 package org.jumpmind.pos.core.flow;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -281,6 +282,14 @@ public class StateManager implements IStateManager {
             }
 
             applicationState.getCurrentContext().setState(newState);
+
+            if( transitionSteps != null ) {
+                for (ITransitionStep transitionStep : transitionSteps) {
+                    performInjections(transitionStep);
+                    transitionStep.afterTransition(new TransitionContext(action, applicationState.getCurrentContext()));
+                    performOutjections(transitionStep);
+                }
+            }
 
             performInjections(newState);
 
