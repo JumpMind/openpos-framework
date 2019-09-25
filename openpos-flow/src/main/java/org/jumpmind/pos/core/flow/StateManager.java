@@ -283,10 +283,12 @@ public class StateManager implements IStateManager {
 
             applicationState.getCurrentContext().setState(newState);
 
-            for (ITransitionStep transitionStep : transitionSteps) {
-                performInjections(transitionStep);
-                transitionStep.afterTransition(new TransitionContext(action, applicationState.getCurrentContext()));
-                performOutjections(transitionStep);
+            if( transitionSteps != null ) {
+                for (ITransitionStep transitionStep : transitionSteps) {
+                    performInjections(transitionStep);
+                    transitionStep.afterTransition(new TransitionContext(action, applicationState.getCurrentContext()));
+                    performOutjections(transitionStep);
+                }
             }
 
             performInjections(newState);
