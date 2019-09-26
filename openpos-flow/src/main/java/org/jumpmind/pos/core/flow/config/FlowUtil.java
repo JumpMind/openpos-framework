@@ -27,6 +27,7 @@ import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
 import org.jumpmind.pos.core.flow.IState;
 import org.jumpmind.pos.core.flow.OnArrive;
+import org.jumpmind.pos.util.event.OnEvent;
 import org.jumpmind.pos.core.flow.OnGlobalAction;
 
 public class FlowUtil {
@@ -62,6 +63,20 @@ public class FlowUtil {
             }
         } catch (Throwable ex) {
             log.debug("Failed to check isGlobalActionHandler on clazz " + clazz, ex);
+            return false;
+        }
+    }
+
+    public static boolean isEventHandler(Class<? extends Object> clazz) {
+        try {
+            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnEvent.class, true, true);
+            if (methods != null && !methods.isEmpty()) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Throwable ex) {
+            log.debug("Failed to check if class has @OnEvent annotation " + clazz, ex);
             return false;
         }
     }

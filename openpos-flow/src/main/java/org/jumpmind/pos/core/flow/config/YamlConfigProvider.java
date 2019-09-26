@@ -7,15 +7,16 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.jumpmind.pos.core.flow.FlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 public class YamlConfigProvider implements IFlowConfigProvider {
 
-    private static final Logger log = Logger.getLogger(YamlConfigProvider.class);
+    private static final Logger log = LoggerFactory.getLogger(YamlConfigProvider.class);
 
     private YamlFlowConfigFileLoader flowConfigLoader = new YamlFlowConfigFileLoader();
     private YamlConfigConverter flowConfigConverter;
@@ -101,7 +102,7 @@ public class YamlConfigProvider implements IFlowConfigProvider {
     }
 
     protected List<YamlFlowConfig> loadYamlResource(String appId, String path, Resource resource) {
-        log.info("Loading flow config from " + resource);
+        log.info("Loading flow config from {} for {}", resource.toString(), appId);
         try {
             return loadYamlResource(appId, resource.getInputStream());
         } catch (Exception ex) {
