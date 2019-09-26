@@ -22,6 +22,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     EscpImagePrinter imagePrinter;
     IConnectionFactory connectionFactory;
     boolean deviceEnabled  = true;
+    private String printerName;
 
     public EscpPOSPrinter() {
 
@@ -38,6 +39,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public void open(String logicalName, EventCallbacks cb) {
+        this.printerName = logicalName;
         this.stream = connectionFactory.open(this.settings);
         this.writer = new PrintWriter(this.stream);
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
@@ -80,6 +82,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void cutPaper(int percentage) {
         printNormal(0, printerCommands.get(PrinterCommands.CUT_PAPER));
+    }
+
+    @Override
+    public void openCashDrawer(String cashDrawerId) {
+        printNormal(0, printerCommands.get(PrinterCommands.CASH_DRAWER_OPEN));
     }
 
     @Override
@@ -170,6 +177,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         this.settings = settings;
         this.refreshConnectionFactoryFromSettings();
         this.refreshPrinterCommandsFromSettings();
+    }
+
+    @Override
+    public String getPrinterName() {
+        return printerName;
     }
 
     private void refreshConnectionFactoryFromSettings() {

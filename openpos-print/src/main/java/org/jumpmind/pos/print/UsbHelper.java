@@ -41,7 +41,9 @@ public class UsbHelper {
         UsbPipe pipe = usbEndpoint.getUsbPipe();
 
         try {
-            pipe.open();
+            if (!pipe.isOpen()) {
+                pipe.open();
+            }
         } catch (Exception ex) {
             throw new PrintException("Failed to open pipe to USB device vendorId=" + vendorId + " productId=" + productId, ex);
         }
@@ -105,9 +107,9 @@ public class UsbHelper {
         for (UsbDevice device : (List<UsbDevice>) hub.getAttachedUsbDevices()) {
             UsbDeviceDescriptor desc = device.getUsbDeviceDescriptor();
 
-            if (log.isInfoEnabled()) {
+            if (log.isDebugEnabled()) {
                 try {
-                    log.info("Found USB device while scanning for vendorId=" + vendorId + " productId=" + productId + " " +
+                    log.debug("Found USB device while scanning for vendorId=" + vendorId + " productId=" + productId + " " +
                             desc + " device.getManufacturerString()=" + device.getManufacturerString() + " device.getProductString()=" +
                             device.getProductString() + " device.getProductString()=" + device.getSerialNumberString());
                 } catch (Exception ex) {

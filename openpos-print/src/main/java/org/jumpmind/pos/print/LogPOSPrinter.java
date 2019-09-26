@@ -46,6 +46,25 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public String getPrinterName() {
+        return "LogPOSPrinter";
+    }
+
+    @Override
+    public void openCashDrawer(String cashDrawerId) {
+        log.info("\r\n" +
+                "      ------------------------------ -\n" +
+                "    -/                              /|\n" +
+                "  -/                              -/ |\n" +
+                "-/                               /   |\n" +
+                "+-------------------------------+    |\n" +
+                "|      CASH DRAWER OPEN         |   / \n" +
+                "|            ----               | -/  \n" +
+                "|        LogPOSPrinter          |/    \n" +
+                "+-------------------------------+     ");
+    }
+
+    @Override
     public boolean getCapRecPageMode() throws JposException {
         return false;
     }
