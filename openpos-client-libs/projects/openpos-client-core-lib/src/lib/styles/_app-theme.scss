@@ -15,16 +15,38 @@
     $openpos-mat-theme: mat-light-theme($primary, $accent, $warn);
 
     $mat-foreground: map-get($openpos-mat-theme, foreground);
-    $openpos-foreground-addons: (
-        divider: map-get($mat-grey, 800)
+    $openpos-foreground: (
+        base: black,
+        divider: $black-12-opacity,
+        dividers: $black-12-opacity,
+        border: map-get($mat-grey, 800),
+        disabled: rgba(black, 0.38),
+        disabled-button: rgba(black, 0.38),
+        disabled-text: rgba(black, 0.38),
+        hint-text: rgba(black, 0.38),
+        secondary-text: rgba(black, 0.54),
+        icon: rgba(black, 0.54),
+        icons: rgba(black, 0.54),
+        text: rgba(black, 0.87)
     );
 
     $openpos-background: (
-        background: map-get($mat-grey, 200)
+        status-bar: map-get($mat-grey, 400),
+        app-bar: map-get($mat-grey, 300),
+        background: map-get($mat-grey, 200),
+        hover: rgba(black, 0.04),
+        card: white,
+        dialog: white,
+        disabled-button: $black-12-opacity,
+        raised-button: white,
+        focused-button: $black-6-opacity,
+        selected-button: map-get($mat-grey, 300),
+        selected-disabled-button: map_get($mat-grey, 400),
+        disabled-button-toggle: map_get($mat-grey, 200)
     );
 
     $openpos-addons: (
-        foreground: map-merge($mat-foreground, $openpos-foreground-addons),
+        foreground: map-merge($mat-foreground, $openpos-foreground),
         background: map-merge($mat-light-theme-background, $openpos-background),
         selected: $selected
     );
