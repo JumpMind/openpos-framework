@@ -19,7 +19,6 @@
  */
 package org.jumpmind.pos.core.flow;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -46,20 +45,19 @@ import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
+import org.jumpmind.pos.util.event.OnEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationEvent;
-import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component()
 @org.springframework.context.annotation.Scope("prototype")
 public class StateManager implements IStateManager {
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
+    final Logger log = LoggerFactory.getLogger(getClass());
     final Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
     private final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
 
@@ -137,9 +135,9 @@ public class StateManager implements IStateManager {
                 applicationState = applicationStateSerializer.deserialize(this, "./openpos-state.json");
                 resumeState = true;
             } catch (FlowException ex) {
-                logger.info(ex.getMessage());
+                log.info(ex.getMessage());
             } catch (Exception ex) {
-                logger.warn("Failed to load openpos-state.json", ex);
+                log.warn("Failed to load openpos-state.json", ex);
             }
         }
         applicationState.getScope().setDeviceScope("stateManager", this);
@@ -188,7 +186,7 @@ public class StateManager implements IStateManager {
             }
         }
         this.sessionAuthenticated.remove(sessionId);
-        this.logger.info("Session {} removed from cache of authenticated sessions", sessionId);
+        this.log.info("Session {} removed from cache of authenticated sessions", sessionId);
     }
 
     @Override
@@ -347,10 +345,10 @@ public class StateManager implements IStateManager {
     }
 
     public void performInjections(Object stateOrStep) {
-        this.logger.trace("Performing injections on {}...", stateOrStep.getClass().getName());
+        this.log.trace("Performing injections on {}...", stateOrStep.getClass().getName());
         injector.performInjections(stateOrStep, applicationState.getScope(), applicationState.getCurrentContext());
         refreshDeviceScope();
-        this.logger.trace("Injections completed on {}.", stateOrStep.getClass().getName());
+        this.log.trace("Injections completed on {}.", stateOrStep.getClass().getName());
     }
 
     protected void refreshDeviceScope() {
@@ -544,7 +542,7 @@ public class StateManager implements IStateManager {
     }
 
     private void callGlobalActionHandler(Action action, Class<? extends Object> globalActionHandler) {
-        logger.info("Calling global action handler: {}", globalActionHandler.getName());
+        log.info("Calling global action handler: {}", globalActionHandler.getName());
 
         if (isState(globalActionHandler) && isActionHandler(globalActionHandler)) {
             throw new FlowException("Class cannot implement @OnArrive and @OnGlobalAction: " + globalActionHandler.getClass().getName());
@@ -794,7 +792,7 @@ public class StateManager implements IStateManager {
 
     protected void sessionTimeout() {
         try {
-            logger.info(String.format("Node %s session timed out.", applicationState.getDeviceId()));
+            log.info(String.format("Node %s session timed out.", applicationState.getDeviceId()));
             if (!CollectionUtils.isEmpty(sessionTimeoutListeners)) {
                 Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : new Action("Timeout");
                 for (ISessionTimeoutListener sessionTimeoutListener : sessionTimeoutListeners) {
@@ -802,7 +800,7 @@ public class StateManager implements IStateManager {
                 }
             }
         } catch (Exception ex) {
-            logger.error("Failed to process the session timeout", ex);
+            log.error("Failed to process the session timeout", ex);
         }
     }
 
@@ -818,14 +816,14 @@ public class StateManager implements IStateManager {
     @Override
     public void registerQueryParams(Map<String, Object> queryParams) {
         if (queryParams != null) {
-            logger.info("Registering query params " + queryParams.toString());
+            log.info("Registering query params " + queryParams.toString());
             applicationState.getScope().setScopeValue(ScopeType.Device, "queryParams", queryParams);
         }
     }
 
     @Override
     public void registerPersonalizationProperties(Map<String, String> personalizationProperties) {
-        logger.info("Registering personalization properties " + personalizationProperties.toString());
+        log.info("Registering personalization properties " + personalizationProperties.toString());
         applicationState.getScope().setScopeValue(ScopeType.Device, "personalizationProperties", personalizationProperties);
     }
 
@@ -861,29 +859,45 @@ public class StateManager implements IStateManager {
             messageService.sendMessage(appId, deviceId, localeMessage);
 
         } catch (NoSuchBeanDefinitionException e) {
-            logger.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
+            log.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
                     IClientConfigSelector.class.getSimpleName());
         }
     }
 
     protected void onEvent(Event event) {
+        List<Class> classes = initialFlowConfig.getEventHandlers();
+        classes.forEach(clazz->sendEventToMethods(clazz, null, event));
+
         Object state = getCurrentState();
         if (state != null) {
-            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(state.getClass(), OnEvent.class, true, true);
-            if (methods != null && !methods.isEmpty()) {
-                for (Method method : methods) {
-                    try {
-                        if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
-                            ;
-                            method.setAccessible(true);
-                            method.invoke(state, event);
-                        } else if (method.getParameters() == null || method.getParameters().length == 0) {
-                            method.setAccessible(true);
-                            method.invoke(state);
-                        }
-                    } catch (Exception ex) {
-                        throw new FlowException("Failed to execute method on state. Method: " + method + " state: " + state, ex);
+            sendEventToMethods(state.getClass(), state, event);
+        }
+    }
+
+    protected void sendEventToMethods(Class clazz, Object object, Event event) {
+        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnEvent.class, true, true);
+        if (methods != null && !methods.isEmpty()) {
+            if (object == null) {
+                try {
+                    object = clazz.newInstance();
+                    performInjections(object);
+                } catch (InstantiationException | IllegalAccessException ex) {
+                    throw new FlowException("Failed to create event handler of type " + clazz.getName(), ex);
+                } catch (Exception ex) {
+                    throw new FlowException("Failed to inject values on the event handler of type " + clazz.getName(), ex);
+                }
+            }
+            for (Method method : methods) {
+                try {
+                    if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
+                        method.setAccessible(true);
+                        method.invoke(object, event);
+                    } else if (method.getParameters() == null || method.getParameters().length == 0) {
+                        method.setAccessible(true);
+                        method.invoke(object);
                     }
+                } catch (Exception ex) {
+                    throw new FlowException("Failed to execute method on state. Method: " + method + " object: " + object, ex);
                 }
             }
         }

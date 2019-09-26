@@ -9,20 +9,23 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+
 import org.jumpmind.pos.core.flow.CompleteState;
 import org.jumpmind.pos.core.flow.FlowException;
 import org.jumpmind.pos.core.flow.IState;
 import org.jumpmind.pos.core.flow.OnArrive;
 import org.jumpmind.pos.util.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class YamlConfigConverter {
     
-    private static final Logger log = LogManager.getLogger(YamlConfigConverter.class);
+    private static final Logger log = LoggerFactory.getLogger(YamlConfigConverter.class);
     
     private static Map<String, Class<Object>> knownStateClasses;
+
+    private static Map<String, Class<Object>> knownOnEventClasses;
     
     private final static String GLOBAL_CONFIG = "Global";
 
@@ -41,7 +44,6 @@ public class YamlConfigConverter {
     }
     
     public List<FlowConfig> convertToFlowConfig(List<YamlFlowConfig> yamlFlowConfigs) {
-        
         List<FlowConfig> flowConfigs = new ArrayList<FlowConfig>();
         
         for (YamlFlowConfig yamlFlowConfig : yamlFlowConfigs) {            
@@ -63,6 +65,15 @@ public class YamlConfigConverter {
 
     private FlowConfig converFlowConfig(List<YamlFlowConfig> yamlFlowConfigs, YamlFlowConfig yamlFlowConfig) {
         FlowConfig flowConfig = new FlowConfig(yamlFlowConfig.getFlowName());
+
+        yamlFlowConfig.getGlobalEventHandlers().forEach((s)->{
+            Class<?> clazz = resolveOnEventClass(s);
+            if (clazz != null) {
+                flowConfig.addEventHandler(clazz);
+            } else {
+                log.error("A global event handler was defined as {} but no matching class could be found", s);
+            }
+        });
         
         Map<String, YamlStateConfig> concreteStateConfigs = getConcreteStateConfigs(yamlFlowConfig);
         
@@ -192,13 +203,23 @@ public class YamlConfigConverter {
                     .collect(Collectors.toMap(e -> ((Class)e).getSimpleName(), v -> v) );
         }
         
-        Class<Object> state = knownStateClasses.get(yamlStateConfig.getStateName());
-        
-        if (state != null) {
-            return state;
-        } else {
-            return null;
+        return knownStateClasses.get(yamlStateConfig.getStateName());
+    }
+
+    protected Class<? extends Object> resolveOnEventClass(String simpleClassName) {
+        if (knownOnEventClasses == null) {
+            List<Class<Object>> knownOnEventClassesList = ClassUtils.getClassesForPackageAndType("org.jumpmind.pos", Object.class);
+            if(additionalPackages != null) {
+                additionalPackages.forEach( p -> knownOnEventClassesList.addAll( ClassUtils.getClassesForPackageAndType( p, Object.class)));
+            }
+
+            knownOnEventClasses = knownOnEventClassesList.stream()
+                    .filter(clazz -> FlowUtil.isEventHandler(clazz))
+                    .collect(Collectors.toMap(e -> ((Class)e).getSimpleName(), v -> v) );
         }
+
+        return knownOnEventClasses.get(simpleClassName);
+
     }
 
     private boolean filterStateClass(Class<Object> clazz, boolean allowGlobalActionHandler) {

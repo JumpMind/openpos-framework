@@ -18,7 +18,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.jumpmind.pos.core.flow;
+package org.jumpmind.pos.util.event;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

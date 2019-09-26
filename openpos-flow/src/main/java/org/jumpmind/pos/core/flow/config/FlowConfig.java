@@ -6,11 +6,11 @@
  * to you under the GNU General Public License, version 3.0 (GPLv3)
  * (the "License"); you may not use this file except in compliance
  * with the License.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
  * <http://www.gnu.org/licenses/>.
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,9 +20,7 @@
  */
 package org.jumpmind.pos.core.flow.config;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -30,7 +28,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 public class FlowConfig {
-    
+
     private String name;
     @JsonIgnore
     private StateConfig initialState;
@@ -42,48 +40,59 @@ public class FlowConfig {
     private Map<String, Class<? extends Object>> actionToStateMapping = new HashMap<>();
     @JsonIgnore
     private Map<String, SubTransition> actionToSubStateMapping = new HashMap<>();
-    
+
+    private List<Class> eventHandlers = new ArrayList<>();
+
     public FlowConfig() {
-        
+
     }
+
     public FlowConfig(String name) {
         this.name = name;
     }
-    
+
     public FlowConfig(String name, Map<String, Object> configScope) {
         this(name);
         this.configScope = configScope;
     }
-    
+
+    public List<Class> getEventHandlers() {
+        return eventHandlers;
+    }
+
+    public void addEventHandler(Class<?> actionHandler) {
+        this.eventHandlers.add(actionHandler);
+    }
+
     public StateConfig getStateConfig(Object state) {
         return stateConfigs.get(state.getClass());
     }
-    
+
     public StateConfig getStateConfig(Class<? extends Object> stateClass) {
         return stateConfigs.get(stateClass);
     }
-    
+
     public void add(StateConfig config) {
         stateConfigs.put(config.getStateClass(), config);
         autoConfigureTargetStates(config);
     }
-    
+
     protected void autoConfigureTargetStates(StateConfig config) {
-        Collection<Class<? extends Object>> targetStateClasses = 
+        Collection<Class<? extends Object>> targetStateClasses =
                 config.getActionToStateMapping().values();
-        
+
         for (Class<? extends Object> targetStateClass : targetStateClasses) {
             autoConfigureTargetState(targetStateClass);
         }
     }
-    
+
     protected void autoConfigureTargetState(Class<? extends Object> targetStateClass) {
         if (!stateConfigs.containsKey(targetStateClass)) {
             StateConfig stateConfig = new StateConfig();
             stateConfig.setStateName(FlowUtil.getStateName(targetStateClass));
-            stateConfig.setStateClass(targetStateClass);                
+            stateConfig.setStateClass(targetStateClass);
             stateConfigs.put(targetStateClass, stateConfig);
-        }        
+        }
     }
 
     public StateConfig getInitialState() {
@@ -103,7 +112,7 @@ public class FlowConfig {
     public void setConfigScope(Map<String, Object> configScope) {
         this.configScope = configScope;
     }
-    
+
     public void addGlobalTransitionOrActionHandler(String actionName, Class<? extends Object> destinationOrActionHandler) {
         actionToStateMapping.put(actionName, destinationOrActionHandler);
         autoConfigureTargetState(destinationOrActionHandler);
@@ -143,7 +152,7 @@ public class FlowConfig {
             String className = this.getClass().getSimpleName();
             final String CONFIG_SUFFIX = "Config";
             if (className.endsWith("Config")) {
-                name = className.substring(0, className.length()-CONFIG_SUFFIX.length());
+                name = className.substring(0, className.length() - CONFIG_SUFFIX.length());
             } else {
                 name = className;
             }
@@ -154,5 +163,5 @@ public class FlowConfig {
     public void setName(String name) {
         this.name = name;
     }
-    
+
 }
