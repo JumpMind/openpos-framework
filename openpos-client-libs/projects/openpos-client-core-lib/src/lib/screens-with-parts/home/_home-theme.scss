@@ -42,28 +42,8 @@
     }
 
     .pagination-wrapper {
-        display: flex;
-        justify-content: center;
+      margin: 1rem;
     }
 
-    .pagination-nav-button.xs div {
-        margin: 0.25rem;
-        padding: 0.25rem 0.5rem;
-    }
-
-    .pagination-nav-button div {
-      background-color: $app-primary;
-      color: white;
-      padding: 0.5rem 1rem;
-      border-radius: 0.5rem;
-      border-width: 0.5rem;
-      border-style: solid;
-      border-color: white;
-      margin: 0.4rem;
-    }
-
-    .pagination-nav-button.current div {
-      background-color: $app-selected;
-    }
   }
 }

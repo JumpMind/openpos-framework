@@ -8,8 +8,7 @@
     <div class="home-content-wrapper" klass.xs="xs">
         <div class="home-content" klass.xs="xs">
             <div *ngIf="!(isMobile | async) && screen.menuItems.length > 0" class="button-grid">
-                <div class="menu-button-border"
-                    *ngFor="let menuItem of screen.menuItems | paginate: paginationSettings"
+                <div class="menu-button-border" *ngFor="let menuItem of screen.menuItems | paginate: paginationSettings"
                     [matBadge]="getNotificationForButton(menuItem)?.value" matBadgePosition="above after"
                     matBadgeSize="large" matBadgeColor="accent" [matBadgeHidden]="!getNotificationForButton(menuItem)"
                     [@bounce]="getNotificationForButton(menuItem)? (bounceInterval | async) : 'down'">
@@ -47,12 +46,14 @@
         <div style="text-align: center;">
             <pagination-template #p="paginationApi" (pageChange)="changePage($event)">
                 <div class="pagination-wrapper" *ngIf="p.pages.length > 1 && !(isMobile | async)">
-                    <div *ngFor="let page of p.pages" [class.current]="p.getCurrent() === page.value"
-                        class="pagination-nav-button" klass.xs="xs">
-                        <div (click)="p.getCurrent() !== page.value? p.setCurrent(page.value) : null">
-                            <span>Page {{ page.label }}</span>
-                        </div>
-                    </div>
+
+                    <mat-button-toggle-group>
+                        <mat-button-toggle (click)="p.getCurrent() !== page.value? p.setCurrent(page.value) : null"
+                            *ngFor="let page of p.pages; trackBy:pageTracker" class="pagination-nav-button" klass.xs="xs" [checked]="p.getCurrent() === page.value">
+                            Page {{ page.label }}
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+
                 </div>
             </pagination-template>
         </div>

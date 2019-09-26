@@ -106,4 +106,8 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   public updatePaginationSettings() {
     this.paginationSettings = { itemsPerPage: this.pageSize, currentPage: this.pageNum };
   }
+
+  public pageTracker(index, page) {
+    return `${index}-${page.value}`;
+  }
 }
