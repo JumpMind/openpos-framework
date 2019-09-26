@@ -20,7 +20,7 @@
 }
 
 .home-content-wrapper.xs {
-    height: 100%;
+  height: 100%;
 }
 
 .home-content.xs {
@@ -28,11 +28,13 @@
   height: 100%;
 }
 
-.home-content-wrapper.xs::-webkit-scrollbar-track,.home-content.xs::-webkit-scrollbar-track {
+.home-content-wrapper.xs::-webkit-scrollbar-track,
+.home-content.xs::-webkit-scrollbar-track {
   display: none;
 }
 
-.home-content-wrapper.xs::-webkit-scrollbar,.home-content.xs::-webkit-scrollbar {
+.home-content-wrapper.xs::-webkit-scrollbar,
+.home-content.xs::-webkit-scrollbar {
   display: none;
 }
 
@@ -73,6 +75,12 @@
 
 .button-grid {
   height: 95%;
+}
+
+mat-button-toggle-group {
+  border-radius: 0.5rem;
+  box-shadow: 0px 6px 6px -3px rgba(0, 0, 0, 0.2), 0px 10px 14px 1px rgba(0, 0, 0, 0.14),
+    0px 4px 18px 3px rgba(0, 0, 0, 0.12) !important;
 }
 
 @supports not (display: grid) {
