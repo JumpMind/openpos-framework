@@ -122,12 +122,16 @@ public class StateManager implements IStateManager {
 
     private IErrorHandler errorHandler;
 
+    private EventBroadcaster eventBroadcaster;
+
     private final AtomicInteger activeCalls = new AtomicInteger(0);
     private final AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
 
     public void init(String appId, String nodeId) {
+
         this.applicationState.setAppId(appId);
         this.applicationState.setDeviceId(nodeId);
+        this.eventBroadcaster = new EventBroadcaster(this);
 
         boolean resumeState = false;
 
@@ -867,43 +871,13 @@ public class StateManager implements IStateManager {
 
     protected void onEvent(Event event) {
         List<Class> classes = initialFlowConfig.getEventHandlers();
-        classes.forEach(clazz->sendEventToMethods(clazz, null, event));
+        classes.forEach(clazz->eventBroadcaster.postEventToObject(clazz, null, event));
 
         Object state = getCurrentState();
         if (state != null) {
-            sendEventToMethods(state.getClass(), state, event);
+            eventBroadcaster.postEventToObject(state.getClass(), state, event);
         }
     }
 
-    protected void sendEventToMethods(Class clazz, Object object, Event event) {
-        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnEvent.class, true, true);
-        if (methods != null && !methods.isEmpty()) {
-            if (object == null) {
-                try {
-                    object = clazz.newInstance();
-                    performInjections(object);
-                } catch (InstantiationException | IllegalAccessException ex) {
-                    throw new FlowException("Failed to create event handler of type " + clazz.getName(), ex);
-                } catch (Exception ex) {
-                    throw new FlowException("Failed to inject values on the event handler of type " + clazz.getName(), ex);
-                }
-            }
-            for (Method method : methods) {
-                try {
-                    OnEvent onEvent = method.getAnnotation(OnEvent.class);
-                    if (onEvent.receiveEventsFromSelf() || !event.getSource().equals(AppEvent.createSourceString(getAppId(), deviceId))) {
-                        if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
-                            method.setAccessible(true);
-                            method.invoke(object, event);
-                        } else if (method.getParameters() == null || method.getParameters().length == 0) {
-                            method.setAccessible(true);
-                            method.invoke(object);
-                        }
-                    }
-                } catch (Exception ex) {
-                    throw new FlowException("Failed to execute method on state. Method: " + method + " object: " + object, ex);
-                }
-            }
-        }
-    }
+
 }
