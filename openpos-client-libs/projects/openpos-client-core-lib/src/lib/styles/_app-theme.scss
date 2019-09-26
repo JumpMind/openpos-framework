@@ -16,10 +16,16 @@
 
     $mat-foreground: map-get($openpos-mat-theme, foreground);
     $openpos-foreground-addons: (
-        inverse-text: whitesmoke
+        divider: map-get($mat-grey, 800)
     );
+
+    $openpos-background: (
+        background: map-get($mat-grey, 200)
+    );
+
     $openpos-addons: (
         foreground: map-merge($mat-foreground, $openpos-foreground-addons),
+        background: map-merge($mat-light-theme-background, $openpos-background),
         selected: $selected
     );
     @return map-merge(map-merge($openpos-mat-theme, $openpos-addons), $addons);
