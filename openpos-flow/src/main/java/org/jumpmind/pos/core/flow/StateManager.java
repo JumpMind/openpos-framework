@@ -44,6 +44,7 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
+import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.event.OnEvent;
 import org.slf4j.Logger;
@@ -889,12 +890,15 @@ public class StateManager implements IStateManager {
             }
             for (Method method : methods) {
                 try {
-                    if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
-                        method.setAccessible(true);
-                        method.invoke(object, event);
-                    } else if (method.getParameters() == null || method.getParameters().length == 0) {
-                        method.setAccessible(true);
-                        method.invoke(object);
+                    OnEvent onEvent = method.getAnnotation(OnEvent.class);
+                    if (onEvent.receiveEventsFromSelf() || !event.getSource().equals(AppEvent.createSourceString(getAppId(), deviceId))) {
+                        if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
+                            method.setAccessible(true);
+                            method.invoke(object, event);
+                        } else if (method.getParameters() == null || method.getParameters().length == 0) {
+                            method.setAccessible(true);
+                            method.invoke(object);
+                        }
                     }
                 } catch (Exception ex) {
                     throw new FlowException("Failed to execute method on state. Method: " + method + " object: " + object, ex);

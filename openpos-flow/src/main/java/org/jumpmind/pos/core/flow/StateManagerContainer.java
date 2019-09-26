@@ -6,11 +6,11 @@
  * to you under the GNU General Public License, version 3.0 (GPLv3)
  * (the "License"); you may not use this file except in compliance
  * with the License.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
  * <http://www.gnu.org/licenses/>.
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -50,7 +50,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     @Autowired
     ApplicationContext applicationContext;
 
-    @Autowired(required=false)
+    @Autowired(required = false)
     IErrorHandler errorHandler;
 
     @Autowired
@@ -84,9 +84,9 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
     @Override
     public IStateManager create(String appId, String deviceId, Map<String, Object> queryParams, Map<String, String> personalizationProperties) {
-        
+
         Map<String, StateManager> stateManagersByNodeId;
-        synchronized (this) {            
+        synchronized (this) {
             stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
             if (stateManagersByNodeId == null) {
                 if (stateManagersByNodeId == null) {
@@ -134,24 +134,22 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
     public void setCurrentStateManager(IStateManager stateManager) {
         currentStateManager.set(stateManager);
-        if( stateManager != null && stateManager.getClientContext() != null ){
-            for(String property: stateManager.getClientContext().keySet()) {
+        if (stateManager != null && stateManager.getClientContext() != null) {
+            for (String property : stateManager.getClientContext().keySet()) {
                 clientContext.put(property, stateManager.getClientContext().get(property));
             }
         }
     }
 
     public IStateManager getCurrentStateManager() {
-        return currentStateManager.get();        
+        return currentStateManager.get();
     }
 
     @Override
     public void onApplicationEvent(Event event) {
         for (Map<String, StateManager> map : new ArrayList<>(stateManagersByAppIdByNodeId.values())) {
             for (StateManager stateManager : new ArrayList<>(map.values())) {
-                if (!event.getSource().equals(stateManager)) {
-                   stateManager.onEvent(event);
-                }
+                stateManager.onEvent(event);
             }
         }
     }
