@@ -871,11 +871,11 @@ public class StateManager implements IStateManager {
 
     protected void onEvent(Event event) {
         List<Class> classes = initialFlowConfig.getEventHandlers();
-        classes.forEach(clazz->eventBroadcaster.postEventToObject(clazz, null, event));
+        classes.forEach(clazz->eventBroadcaster.postEventToObject(clazz, event));
 
         Object state = getCurrentState();
         if (state != null) {
-            eventBroadcaster.postEventToObject(state.getClass(), state, event);
+            eventBroadcaster.postEventToObject(state, event);
         }
     }
 

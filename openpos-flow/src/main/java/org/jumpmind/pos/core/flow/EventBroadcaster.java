@@ -18,6 +18,14 @@ public class EventBroadcaster {
         this.stateManager = stateManager;
     }
 
+    public void postEventToObject(Class clazz, Event event) {
+        postEventToObject(clazz, null, event);
+    }
+
+    public void postEventToObject(Object object, Event event) {
+        postEventToObject(object.getClass(), object, event);
+    }
+
     public void postEventToObject(Class clazz, Object object, Event event) {
         List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnEvent.class, true, true);
         if (methods != null && !methods.isEmpty()) {

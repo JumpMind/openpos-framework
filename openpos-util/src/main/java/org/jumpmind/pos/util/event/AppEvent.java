@@ -6,7 +6,7 @@ public class AppEvent extends Event {
     String appId;
 
     public AppEvent(String deviceId, String appId) {
-        super(createSourceString(deviceId, appId));
+        super(createSourceString(appId, deviceId));
         this.deviceId = deviceId;
         this.appId = appId;
     }
