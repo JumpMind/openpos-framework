@@ -2,12 +2,10 @@
     width: 75%;
 }
 
-::ng-deep .options-icon {
-    mat-icon {
-        width: 400px !important;
-        height: 100px !important;
-        padding-top: 0px !important;
-    }
+.self-checkout-options-image {
+    max-width: 50%;
+    filter: grayscale(1) invert(1) brightness(2);
+    -webkit-filter: grayscale(1) invert(1) brightness(2); 
 }
 
 .options-title {
@@ -19,7 +17,7 @@
 
 .options-prompt {
     max-width: 400px;
-    margin-top: 64px;
-    margin-bottom: 64px;
+    margin-top: 32px;
+    margin-bottom: 32px;
     align-self: center;
 }

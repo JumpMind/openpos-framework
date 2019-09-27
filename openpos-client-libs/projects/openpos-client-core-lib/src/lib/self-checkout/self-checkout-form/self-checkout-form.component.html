@@ -8,8 +8,10 @@
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-form-image">
 
-        <app-auto-complete-address-part gdArea="form" [formName]="'form'" [submitButton]="screen.submitButton"
-            [alternateSubmitActions]="screen.alternateSubmitActions" class="self-checkout-form-card">
-        </app-auto-complete-address-part>
+        <div class="self-checkout-border self-checkout-form-part-outer">
+            <app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
+                [alternateSubmitActions]="screen.alternateSubmitActions">
+            </app-auto-complete-address-part>
+        </div>
     </div>
 </div>

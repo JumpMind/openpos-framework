@@ -9,13 +9,12 @@
         <div *ngIf="screen.title" fxFlex="0 0 auto" class="self-checkout-text-xl options-title">
             {{screen.title}}
         </div>
-        <div *ngIf="screen.imageUrl" fxFlex="0 0 auto" fxLayoutAlign="center center">
-            <div [ngStyle]="screen.imageUrl | backgroundImageUrl" class="self-checkout-options-image"></div>
-        </div>
+
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-options-image">
+
         <div *ngIf="screen.prompt" fxFlex="0 0 auto" class="self-checkout-text-lg text-center options-prompt">
             {{screen.prompt}}
         </div>
-
 
         <app-self-checkout-options-part class="self-checkout-options"></app-self-checkout-options-part>
 

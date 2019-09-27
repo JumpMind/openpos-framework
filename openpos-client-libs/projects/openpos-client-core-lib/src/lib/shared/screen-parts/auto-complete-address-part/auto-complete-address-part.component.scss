@@ -1,3 +1,7 @@
+.auto-complete-address-form {
+    padding: 48px;
+}
+
 .address-city-state {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -10,13 +14,7 @@
     grid-column-gap: 8px;
 }
 
-.scrollable-form-card {
+.auto-complete-address-buttons {
     display: flex;
-    flex-direction: column;
-
-    .mat-card-content {
-        flex: 1 1 100%;
-        margin-bottom: 0px;
-        overflow-y: auto;
-    }
+    place-content: stretch flex-end;
 }
