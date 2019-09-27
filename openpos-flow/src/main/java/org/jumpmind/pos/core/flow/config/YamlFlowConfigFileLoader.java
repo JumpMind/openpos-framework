@@ -6,11 +6,11 @@
  * to you under the GNU General Public License, version 3.0 (GPLv3)
  * (the "License"); you may not use this file except in compliance
  * with the License.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
  * <http://www.gnu.org/licenses/>.
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -29,52 +29,64 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.flow.FlowException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.yaml.snakeyaml.Yaml;
 
 @SuppressWarnings("unchecked")
 public class YamlFlowConfigFileLoader {
-    
+
+    static final Logger log = LoggerFactory.getLogger(YamlFlowConfigFileLoader.class);
+
+    protected final String GLOBAL_EVENT_HANDLERS = "EventHandlers";
+
     public List<YamlFlowConfig> loadYamlFlowConfigs(String path) {
         InputStream inputStream = Thread.currentThread().getContextClassLoader()
                 .getResourceAsStream(path);
         return loadYamlFlowConfigs(inputStream);
     }
-    
+
     public List<YamlFlowConfig> loadYamlFlowConfigs(InputStream inputStream) {
         Yaml yaml = new Yaml();
-        
+
         List<YamlFlowConfig> yamlFlowConfigs = new ArrayList<>();
 
 
         Map<String, Object> yamlDoc = (Map<String, Object>) yaml.load(inputStream);
-        
+
         for (String flowName : yamlDoc.keySet()) {
             YamlFlowConfig flowConfig = new YamlFlowConfig();
             flowConfig.setFlowName(flowName);
-            
+
             List<Map<String, Object>> stateConfigs = (List<Map<String, Object>>) yamlDoc.get(flowName);
             for (Map<String, Object> stateConfig : stateConfigs) {
                 for (String stateName : stateConfig.keySet()) {
                     parseStateConfig(flowConfig, new YamlStateConfig(stateName), (Map<String, Object>) stateConfig.get(stateName));
                 }
             }
-            
+
             yamlFlowConfigs.add(flowConfig);
         }
-        
+
         return yamlFlowConfigs;
     }
-    
+
     public void parseStateConfig(YamlFlowConfig flowConfig, YamlStateConfig currentStateConfig, Map<String, Object> stateActionMapping) {
         flowConfig.getFlowStateConfigs().add(currentStateConfig);
-        
+
         if (stateActionMapping == null) {
             return;
         }
-        
+
         for (String actionName : stateActionMapping.keySet()) {
-            Object stateReferenceOrConfig= stateActionMapping.get(actionName);
-            if (stateReferenceOrConfig instanceof String) {
+            Object stateReferenceOrConfig = stateActionMapping.get(actionName);
+            if (actionName.equals(GLOBAL_EVENT_HANDLERS)) {
+                if (stateReferenceOrConfig instanceof List) {
+                    List<String> eventHandlers = (List)stateReferenceOrConfig;
+                    flowConfig.setGlobalEventHandlers(eventHandlers);
+                    log.debug("Added event handers: {} to: {}", stateReferenceOrConfig, flowConfig.getFlowName());
+                }
+            } else if (stateReferenceOrConfig instanceof String) {
                 YamlStateConfig stateConfig = new YamlStateConfig((String) stateReferenceOrConfig);
                 flowConfig.getFlowStateConfigs().add(stateConfig);
                 currentStateConfig.getActionToStateConfigs().put(actionName, stateConfig);
@@ -83,25 +95,25 @@ public class YamlFlowConfigFileLoader {
                 if (nestedStateConfig.containsKey("subflow")) {
                     String subFlowRefOrState = (String) nestedStateConfig.get("subflow");
                     Map<String, String> configScope = (Map<String, String>) nestedStateConfig.get("ConfigScope");
-                    
+
                     YamlStateConfig subStateConfig = new YamlStateConfig(subFlowRefOrState);
                     subStateConfig.setSubTransition(true);
-                    
+
                     List<String> returnActions = getReturnActions(nestedStateConfig);
                     subStateConfig.setReturnActions(returnActions);
-                    
-                    if (configScope != null) {                        
+
+                    if (configScope != null) {
                         subStateConfig.setConfigScope(configScope);
                     }
                     flowConfig.getFlowStateConfigs().add(subStateConfig);
-                    
-                    currentStateConfig.getActionToStateConfigs().put(actionName, subStateConfig);    
-                    
+
+                    currentStateConfig.getActionToStateConfigs().put(actionName, subStateConfig);
+
                 } else {
                     String nestedStateName = (String) nestedStateConfig.keySet().toArray()[0];
                     YamlStateConfig inlineState = new YamlStateConfig(nestedStateName);
                     // OK here, a concrete action would get added as an action refernce as well as top level.
-                    if (nestedStateConfig.get(nestedStateName) instanceof Map) {                        
+                    if (nestedStateConfig.get(nestedStateName) instanceof Map) {
                         parseStateConfig(flowConfig, inlineState, (Map<String, Object>) nestedStateConfig.get(nestedStateName));  //recurse
                     } else {
                         throw new FlowException("Malformed yml state flow config. "
@@ -111,30 +123,30 @@ public class YamlFlowConfigFileLoader {
 //                        // action: inline state, as an action: reference here.
 //                        currentStateConfig.getActionToStateConfigs().put(actionName, new YamlStateConfig(nestedStateName));
 //                    } else {                        
-                        currentStateConfig.getActionToStateConfigs().put(actionName, inlineState);
+                    currentStateConfig.getActionToStateConfigs().put(actionName, inlineState);
 //                    }
                     // TODO here we are dropping the action name / mapping to the inlined 
                 }
-            }       
-        }        
+            }
+        }
     }
 
     protected List<String> getReturnActions(Map<String, Object> nestedStateConfig) {
         String returnActionSingle = (String) nestedStateConfig.get("ReturnAction");
         String returnActionsMultiple = (String) nestedStateConfig.get("ReturnActions");
-        
+
         if (!StringUtils.isEmpty(returnActionSingle) && !StringUtils.isEmpty(returnActionsMultiple)) {
             throw new FlowException("Invalid flow config: both ReturnAction and ReturnActions (plural) defined "
                     + "for a substate. Only one or of the other can be specified. substae: " + nestedStateConfig);
         }
-        
+
         String returnActions = null;
         if (!StringUtils.isEmpty(returnActionSingle)) {
             returnActions = returnActionSingle;
         } else {
             returnActions = returnActionsMultiple;
         }
-        
+
         return Arrays.asList(returnActions.split(";")).stream().
                 map(s -> s.trim()).collect(Collectors.toList());
     }

@@ -107,9 +107,9 @@ public class UsbHelper {
         for (UsbDevice device : (List<UsbDevice>) hub.getAttachedUsbDevices()) {
             UsbDeviceDescriptor desc = device.getUsbDeviceDescriptor();
 
-            if (log.isDebugEnabled()) {
+            if (log.isInfoEnabled()) {
                 try {
-                    log.debug("Found USB device while scanning for vendorId=" + vendorId + " productId=" + productId + " " +
+                    log.info("Found USB device while scanning for vendorId=" + vendorId + " productId=" + productId + " " +
                             desc + " device.getManufacturerString()=" + device.getManufacturerString() + " device.getProductString()=" +
                             device.getProductString() + " device.getProductString()=" + device.getSerialNumberString());
                 } catch (Exception ex) {

@@ -5,7 +5,6 @@
 @import '../shared/screen-parts/screen-part-themes';
 @import '../screens-with-parts/screen-with-parts-themes';
 @import '../shared/components/component-theme-mixins';
-@import '../price-checker/price-checker-themes';
 @import './mixins/serrated-edge';
 
 @include mat-core();
@@ -15,11 +14,39 @@
     $openpos-mat-theme: mat-light-theme($primary, $accent, $warn);
 
     $mat-foreground: map-get($openpos-mat-theme, foreground);
-    $openpos-foreground-addons: (
-        inverse-text: whitesmoke
+    $openpos-foreground: (
+        base: black,
+        divider: $black-12-opacity,
+        dividers: $black-12-opacity,
+        border: map-get($mat-grey, 800),
+        disabled: rgba(black, 0.38),
+        disabled-button: rgba(black, 0.38),
+        disabled-text: rgba(black, 0.38),
+        hint-text: rgba(black, 0.38),
+        secondary-text: rgba(black, 0.54),
+        icon: rgba(black, 0.54),
+        icons: rgba(black, 0.54),
+        text: rgba(black, 0.87)
     );
+
+    $openpos-background: (
+        status-bar: map-get($mat-grey, 400),
+        app-bar: map-get($mat-grey, 300),
+        background: map-get($mat-grey, 200),
+        hover: rgba(black, 0.04),
+        card: white,
+        dialog: white,
+        disabled-button: $black-12-opacity,
+        raised-button: white,
+        focused-button: $black-6-opacity,
+        selected-button: map-get($mat-grey, 300),
+        selected-disabled-button: map_get($mat-grey, 400),
+        disabled-button-toggle: map_get($mat-grey, 200)
+    );
+
     $openpos-addons: (
-        foreground: map-merge($mat-foreground, $openpos-foreground-addons),
+        foreground: map-merge($mat-foreground, $openpos-foreground),
+        background: map-merge($mat-light-theme-background, $openpos-background),
         selected: $selected
     );
     @return map-merge(map-merge($openpos-mat-theme, $openpos-addons), $addons);
@@ -32,7 +59,6 @@
     @include openpos-component-theme-mixins($theme);
     @include screen-part-themes($theme);
     @include screen-with-parts-themes($theme);
-    @include price-checker-themes($theme);
     @include serrated-edge($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
