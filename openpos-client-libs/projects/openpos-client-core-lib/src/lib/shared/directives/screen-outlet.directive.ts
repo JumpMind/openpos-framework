@@ -10,6 +10,7 @@ import {
     Renderer2
 } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
+import {forEach} from '@angular/router/src/utils/collection';
 import { Subscription } from 'rxjs';
 import { ScreenService } from '../../core/services/screen.service';
 import { SessionService } from '../../core/services/session.service';
@@ -169,14 +170,31 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
     protected updateTheme(theme: string) {
         console.info('updating theme to ' + theme);
-        this.overlayContainer.getContainerElement().classList.remove(this.currentTheme);
+
+        let currentThemes = !!this.currentTheme ? this.currentTheme.split(' ') : [];
+        let newThemes = !!theme ? theme.split(' ') : [];
+
+        currentThemes.forEach( themeClass => {
+            this.overlayContainer.getContainerElement().classList.remove(themeClass);
+        });
+
         this.overlayContainer.getContainerElement().classList.remove('default-theme');
-        this.overlayContainer.getContainerElement().classList.add(theme);
+
+        newThemes.forEach( themeClass => {
+            this.overlayContainer.getContainerElement().classList.add(themeClass);
+        });
+
         if ( !!this.componentRef ) {
             const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
-            this.renderer.removeClass(parent, this.currentTheme);
+            currentThemes.forEach( themeClass => {
+                this.renderer.removeClass(parent, themeClass);
+            });
+
             this.renderer.removeClass(parent, 'default-theme');
-            this.renderer.addClass(parent, theme);
+
+            newThemes.forEach( themeClass => {
+                this.renderer.addClass(parent, themeClass);
+            });
         }
         this.currentTheme = theme;
     }

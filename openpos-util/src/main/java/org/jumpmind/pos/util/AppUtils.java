@@ -57,6 +57,14 @@ public final class AppUtils {
         }
         return HOST_NAME.get();
     }
+
+    public static void sleep(long millis) {
+        try {
+            Thread.sleep(millis);
+        } catch (InterruptedException ex) {
+            logger.debug("Thread sleep interrupted.", ex);
+        }
+    }
     
     
 }

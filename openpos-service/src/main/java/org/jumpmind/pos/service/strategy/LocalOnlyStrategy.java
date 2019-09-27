@@ -35,7 +35,7 @@ public class LocalOnlyStrategy extends AbstractInvocationStrategy implements IIn
         }
 
         throw new PosServerException(String.format("No endpoint found for path '%s' Please define a Spring-discoverable @Component class, "
-                + "with a method annotated like  @Endpoint(\"%s\")", path, path));
+                + "with a method annotated like  @Endpoint(path=\"%s\")", path, path));
     }
 
 }

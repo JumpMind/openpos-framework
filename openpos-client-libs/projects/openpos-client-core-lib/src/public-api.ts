@@ -132,8 +132,6 @@ export * from './lib/keyboard/pipes/kebab-case.pipe';
 export * from './lib/keyboard/services/keyboard.service';
 export * from './lib/keyboard/utils/keyboard.utils';
 
-export * from './lib/price-checker/price-checker.module';
-
 export * from './lib/screens-with-parts/auto-complete-address/auto-complete-address.component';
 export * from './lib/core/interfaces/option-item.interface';
 export * from './lib/screens-with-parts/data-table/data-table.component';

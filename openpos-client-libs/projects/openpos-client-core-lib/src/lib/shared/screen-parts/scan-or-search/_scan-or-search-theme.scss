@@ -1,7 +1,7 @@
 @mixin scan-or-search-theme($theme){
 
     $foreground: map-get($theme, foreground );
-
+    $background: map-get($theme, background );
     app-scan-or-search{
         .scan-button .mat-button{
             border-top-right-radius: 0px;
@@ -10,6 +10,7 @@
         }
 
         .scan-input{
+            background-color: mat-color($background, card);
             border-color: mat-color($foreground, divider);
             border-style: solid;
             border-width: 1px;

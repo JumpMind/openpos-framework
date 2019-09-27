@@ -36,7 +36,6 @@ public class PrinterCommandsTest {
         assertCommandsEqual(EscP_Constants.ALIGN_CENTER, printerCommands.get(PrinterCommands.ALIGN_CENTER));
         assertCommandsEqual(EscP_Constants.FORMAT_NORMAL, printerCommands.get(PrinterCommands.FORMAT_NORMAL));
         assertCommandsEqual(EscP_Constants.FORMAT_BOLD, printerCommands.get(PrinterCommands.FORMAT_BOLD));
-        assertCommandsEqual(EscP_Constants.ESP_P_MODE, printerCommands.get(PrinterCommands.ESC_P_MODE));
         assertCommandsEqual(EscP_Constants.LINE_SPACING_SINGLE_EPSON, printerCommands.get(PrinterCommands.LINE_SPACING_SINGLE));
         assertCommandsEqual(EscP_Constants.LINE_SPACING_1_AND_HALF_EPSON, printerCommands.get(PrinterCommands.LINE_SPACING_1_AND_HALF));
         assertCommandsEqual(EscP_Constants.LINE_SPACING_TIGHT_EPSON, printerCommands.get(PrinterCommands.LINE_SPACING_TIGHT));

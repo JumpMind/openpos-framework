@@ -1,5 +1,6 @@
 @mixin waffle-theme($theme){
     $app-primary: mat-color(map-get($theme, primary));
+    $app-primary-contrast: mat-color(map-get($theme, primary), default-contrast);
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
     $background: map-get($theme, background );
@@ -8,7 +9,7 @@
     app-waffle{
         .waffle-header-container{
             background-color: $app-primary;
-            color: map-get($foreground, inverse-text);
+            color: $app-primary-contrast;
         }
         .waffle-drawer-content{
             background-color: map-get($background, app-bar);

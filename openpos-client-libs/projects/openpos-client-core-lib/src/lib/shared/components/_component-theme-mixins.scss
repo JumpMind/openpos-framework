@@ -11,6 +11,8 @@
 @import './toggle-button/toggle-button-theme';
 @import './overflow-list/overflow-list-theme';
 @import './kebab-menu/kebab-menu-theme';
+@import './task-check-all-box/task-check-all-box-theme';
+@import './task-check-box/task-check-box-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -26,4 +28,6 @@
     @include toggle-button-theme($theme);
     @include overflow-list-theme($theme);
     @include kebab-menu-theme($theme);
+    @include task-check-all-box-theme($theme);
+    @include task-check-box-theme($theme);
 }

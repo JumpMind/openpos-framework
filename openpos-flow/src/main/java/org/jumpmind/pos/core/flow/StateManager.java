@@ -5,11 +5,11 @@
  * to you under the GNU General Public License, version 3.0 (GPLv3)
  * (the "License"); you may not use this file except in compliance
  * with the License.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
  * <http://www.gnu.org/licenses/>.
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -44,6 +44,9 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
+import org.jumpmind.pos.util.event.AppEvent;
+import org.jumpmind.pos.util.event.Event;
+import org.jumpmind.pos.util.event.OnEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
@@ -55,7 +58,7 @@ import org.springframework.stereotype.Component;
 @org.springframework.context.annotation.Scope("prototype")
 public class StateManager implements IStateManager {
 
-    final Logger logger = LoggerFactory.getLogger(getClass());
+    final Logger log = LoggerFactory.getLogger(getClass());
     final Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
     private final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
 
@@ -119,12 +122,16 @@ public class StateManager implements IStateManager {
 
     private IErrorHandler errorHandler;
 
+    private EventBroadcaster eventBroadcaster;
+
     private final AtomicInteger activeCalls = new AtomicInteger(0);
     private final AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
 
     public void init(String appId, String nodeId) {
+
         this.applicationState.setAppId(appId);
         this.applicationState.setDeviceId(nodeId);
+        this.eventBroadcaster = new EventBroadcaster(this);
 
         boolean resumeState = false;
 
@@ -133,9 +140,9 @@ public class StateManager implements IStateManager {
                 applicationState = applicationStateSerializer.deserialize(this, "./openpos-state.json");
                 resumeState = true;
             } catch (FlowException ex) {
-                logger.info(ex.getMessage());
+                log.info(ex.getMessage());
             } catch (Exception ex) {
-                logger.warn("Failed to load openpos-state.json", ex);
+                log.warn("Failed to load openpos-state.json", ex);
             }
         }
         applicationState.getScope().setDeviceScope("stateManager", this);
@@ -184,7 +191,7 @@ public class StateManager implements IStateManager {
             }
         }
         this.sessionAuthenticated.remove(sessionId);
-        this.logger.info("Session {} removed from cache of authenticated sessions", sessionId);
+        this.log.info("Session {} removed from cache of authenticated sessions", sessionId);
     }
 
     @Override
@@ -193,7 +200,7 @@ public class StateManager implements IStateManager {
     }
 
     @Override
-    public Map<String, String> getClientContext(){
+    public Map<String, String> getClientContext() {
         return this.clientContext;
     }
 
@@ -241,7 +248,7 @@ public class StateManager implements IStateManager {
     }
 
     protected void transitionTo(Action action, Object newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState,
-            boolean autoTransition) {
+                                boolean autoTransition) {
         if (applicationState.getCurrentContext() == null) {
             throw new FlowException(
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In to get the StateManager, not @Autowired.");
@@ -257,7 +264,7 @@ public class StateManager implements IStateManager {
         if (applicationState.getCurrentContext().getState() != null) {
             performOutjections(applicationState.getCurrentContext().getState());
         }
-        
+
         boolean enterSubState = enterSubStateConfig != null;
         stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
@@ -272,7 +279,7 @@ public class StateManager implements IStateManager {
             stateManagerLogger.logStateTransition(applicationState.getCurrentContext().getState(), newState, action, returnActionName,
                     enterSubStateConfig, exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
                     resumeSuspendedState);
-            
+
             if (enterSubState) {
                 applicationState.getStateStack().push(applicationState.getCurrentContext());
                 applicationState.setCurrentContext(buildSubStateContext(enterSubStateConfig, action));
@@ -281,6 +288,14 @@ public class StateManager implements IStateManager {
             }
 
             applicationState.getCurrentContext().setState(newState);
+
+            if( transitionSteps != null ) {
+                for (ITransitionStep transitionStep : transitionSteps) {
+                    performInjections(transitionStep);
+                    transitionStep.afterTransition(new TransitionContext(action, applicationState.getCurrentContext()));
+                    performOutjections(transitionStep);
+                }
+            }
 
             performInjections(newState);
 
@@ -293,7 +308,7 @@ public class StateManager implements IStateManager {
             }
         } else {
             //TODO: discuss whether this is how we want to handle cancelled transitions
-            Action cancelAction= new Action("TransitionCancelled");
+            Action cancelAction = new Action("TransitionCancelled");
             cancelAction.setCausedBy(action);
             stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         }
@@ -335,10 +350,10 @@ public class StateManager implements IStateManager {
     }
 
     public void performInjections(Object stateOrStep) {
-        this.logger.trace("Performing injections on {}...", stateOrStep.getClass().getName());
+        this.log.trace("Performing injections on {}...", stateOrStep.getClass().getName());
         injector.performInjections(stateOrStep, applicationState.getScope(), applicationState.getCurrentContext());
         refreshDeviceScope();
-        this.logger.trace("Injections completed on {}.", stateOrStep.getClass().getName());
+        this.log.trace("Injections completed on {}.", stateOrStep.getClass().getName());
     }
 
     protected void refreshDeviceScope() {
@@ -487,7 +502,7 @@ public class StateManager implements IStateManager {
             activeCalls.decrementAndGet();
         }
     }
-    
+
     protected void handleOrRaiseException(Throwable ex) {
         if (this.getErrorHandler() != null) {
             this.getErrorHandler().handleError(this, ex);
@@ -495,7 +510,7 @@ public class StateManager implements IStateManager {
             throw ex instanceof RuntimeException ? (RuntimeException) ex : new FlowException(ex);
         }
     }
-    
+
     protected Class<? extends Object> getGlobalActionHandler(Action action) {
         FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
         Class<? extends Object> currentActionHandler = flowConfig.getActionToStateMapping().get(action.getName());
@@ -532,7 +547,7 @@ public class StateManager implements IStateManager {
     }
 
     private void callGlobalActionHandler(Action action, Class<? extends Object> globalActionHandler) {
-        logger.info("Calling global action handler: {}", globalActionHandler.getName());
+        log.info("Calling global action handler: {}", globalActionHandler.getName());
 
         if (isState(globalActionHandler) && isActionHandler(globalActionHandler)) {
             throw new FlowException("Class cannot implement @OnArrive and @OnGlobalAction: " + globalActionHandler.getClass().getName());
@@ -698,7 +713,7 @@ public class StateManager implements IStateManager {
     }
 
     private void clearScopeOnDeviceScopeBeans(ScopeType scopeType) {
-        for (String name :  new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
+        for (String name : new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
             Object value = applicationState.getScopeValue(ScopeType.Device, name);
             injector.resetInjections(value, scopeType);
         }
@@ -782,7 +797,7 @@ public class StateManager implements IStateManager {
 
     protected void sessionTimeout() {
         try {
-            logger.info(String.format("Node %s session timed out.", applicationState.getDeviceId()));
+            log.info(String.format("Node %s session timed out.", applicationState.getDeviceId()));
             if (!CollectionUtils.isEmpty(sessionTimeoutListeners)) {
                 Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : new Action("Timeout");
                 for (ISessionTimeoutListener sessionTimeoutListener : sessionTimeoutListeners) {
@@ -790,7 +805,7 @@ public class StateManager implements IStateManager {
                 }
             }
         } catch (Exception ex) {
-            logger.error("Failed to process the session timeout", ex);
+            log.error("Failed to process the session timeout", ex);
         }
     }
 
@@ -806,14 +821,14 @@ public class StateManager implements IStateManager {
     @Override
     public void registerQueryParams(Map<String, Object> queryParams) {
         if (queryParams != null) {
-            logger.info("Registering query params " + queryParams.toString());
+            log.info("Registering query params " + queryParams.toString());
             applicationState.getScope().setScopeValue(ScopeType.Device, "queryParams", queryParams);
         }
     }
 
     @Override
     public void registerPersonalizationProperties(Map<String, String> personalizationProperties) {
-        logger.info("Registering personalization properties " + personalizationProperties.toString());
+        log.info("Registering personalization properties " + personalizationProperties.toString());
         applicationState.getScope().setScopeValue(ScopeType.Device, "personalizationProperties", personalizationProperties);
     }
 
@@ -849,8 +864,20 @@ public class StateManager implements IStateManager {
             messageService.sendMessage(appId, deviceId, localeMessage);
 
         } catch (NoSuchBeanDefinitionException e) {
-            logger.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
+            log.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
                     IClientConfigSelector.class.getSimpleName());
         }
     }
+
+    protected void onEvent(Event event) {
+        List<Class> classes = initialFlowConfig.getEventHandlers();
+        classes.forEach(clazz->eventBroadcaster.postEventToObject(clazz, event));
+
+        Object state = getCurrentState();
+        if (state != null) {
+            eventBroadcaster.postEventToObject(state, event);
+        }
+    }
+
+
 }

@@ -15,8 +15,7 @@ export class IconComponent implements OnInit, OnChanges {
     iconName: string;
 
     private lastIcon: string;
-
-    @Input() iconClass: string;
+    @Input() iconClass;
 
     parser = new DOMParser();
     icon: Observable<SafeHtml>;
@@ -28,14 +27,19 @@ export class IconComponent implements OnInit, OnChanges {
     }
 
     ngOnChanges(): void {
-        if (!this.lastIcon || this.lastIcon !== this.iconName) {
-            this.renderIcon();
+
+        if(!this.iconClass){
+            this.iconClass = 'mat-24';
         }
+        else if(!this.iconClass.includes('mat-')){
+            this.iconClass += ' mat-24';
+        }
+
+        this.renderIcon();
     }
 
     private renderIcon() {
         this.icon = this.iconService.getIconHtml(this.iconName);
-        this.renderer.addClass(this.elementRef.nativeElement, 'mat-24');
         if (this.iconClass) {
             this.iconClass.split(' ').forEach(e => this.renderer.addClass(this.elementRef.nativeElement, e));
         }
