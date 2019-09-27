@@ -11,7 +11,7 @@
 				fxLayoutAlign="center center">
 				<div class="self-checkout-sell-prompt text-center">{{this.screen.prompt}}</div>
 				<div class="self-checkout-text-sm text-center">{{this.screen.instructions}}</div>
-				<div [ngStyle]="screen.backgroundImage | backgroundImageUrl" class="scan-item-icon"></div>
+				<img [src]="screen.backgroundImage | imageUrl" class="scan-item-icon">
 			</div>
 		</div>
 
@@ -65,8 +65,7 @@
 
 				<button mat-button *ngIf="!screen.readOnly && screen.checkoutButton"
 					[disabled]="!items || items.length == 0" (click)="doMenuItemAction(screen.checkoutButton)"
-					color="primary-inverse"
-					class="self-checkout-button self-checkout-checkout-button self-checkout-text-lg">{{screen.checkoutButton.title}}</button>
+					class="self-checkout-primary-button self-checkout-checkout-button self-checkout-text-lg">{{screen.checkoutButton.title}}</button>
 				<button mat-button *ngIf="!screen.readOnly && screen.logoutButton"
 					(click)="doMenuItemAction(screen.logoutButton)"
 					class="self-checkout-button self-checkout-border-button self-checkout-text-lg">

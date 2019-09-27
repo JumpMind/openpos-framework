@@ -25,7 +25,7 @@
                 <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'">
                 </app-icon>
                 <div *ngIf="!isReadOnly">
-                    <button mat-button color="warn" *ngFor="let m of item.menuItems" class="item-card-button"
+                    <button mat-button color="primary" *ngFor="let m of item.menuItems" class="item-card-button"
                         (click)="doMenuItemAction(m, item.index)" [disabled]="!isMenuItemEnabled(m)">
                         <span class="self-checkout-text-md" [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
                         <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>

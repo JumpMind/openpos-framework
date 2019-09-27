@@ -15,6 +15,8 @@ public class SelfCheckoutSaleUIMessage extends SaleUIMessage {
 
     private String prompt;
 
+    private String backgroundImage;
+
     public SelfCheckoutSaleUIMessage() {
         this.setScreenType(UIMessageType.SELF_CHECKOUT_SALE);
         this.setId("selfcheckout-sale");
@@ -51,5 +53,13 @@ public class SelfCheckoutSaleUIMessage extends SaleUIMessage {
 
     public void setPrompt(String prompt) {
         this.prompt = prompt;
+    }
+
+    public String getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 }
