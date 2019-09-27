@@ -1,6 +1,6 @@
 <mat-card class="item-card">
     <mat-card-content>
-        <img *ngIf="item.imageUrl" src="{{item.imageUrl}}" alt="{{item.description}}" class="item-card-image">
+        <img *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image">
         <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="16px" style="padding-left: 16px">
             <div fxFlex="1 1 auto" fxLayout="column">
                 <div fxFlex="1 1 auto">

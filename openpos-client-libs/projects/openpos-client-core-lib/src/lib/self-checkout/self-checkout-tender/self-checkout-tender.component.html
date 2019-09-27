@@ -38,9 +38,7 @@
         <app-self-checkout-options-part *ngIf="screen.selfCheckoutOptionsPart" class="self-checkout-tender-options">
         </app-self-checkout-options-part>
 
-        <div *ngIf="screen.imageUrl" fxLayoutAlign="center center">
-            <div [ngStyle]="screen.imageUrl | backgroundImageUrl" class="self-checkout-payment-auth-icon"></div>
-        </div>
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-payment-auth-image">
 
         <div fxFlex></div>
     </div>

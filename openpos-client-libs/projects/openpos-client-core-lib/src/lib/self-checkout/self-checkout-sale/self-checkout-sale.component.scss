@@ -13,15 +13,13 @@
     margin-top: 16px;
 }
 
-::ng-deep .self-checkout-loyalty-icon {
-    mat-icon {
-        height: 50% !important;
-        width: 65% !important;
-    }
+.self-checkout-loyalty-icon {
+    max-width: 100%;
 }
 
 .self-checkout-loyalty-button-icon {
-    padding-left: 8px;
+    padding: 0px 8px;
+    max-width: 100%;
 }
 
 .self-checkout-promo-button {

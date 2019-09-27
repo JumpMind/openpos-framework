@@ -50,14 +50,13 @@
 					(click)="doMenuItemAction(screen.loyaltyButton)"
 					class="self-checkout-button self-checkout-border-button self-checkout-loyalty-button self-checkout-text-md">
 					<span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
-					<app-icon [iconName]="screen.loyaltyButton.icon" [iconClass]="'material-icons'"
+					<app-icon [iconName]="screen.loyaltyButton.icon" [iconClass]="'none'"
 						class="self-checkout-loyalty-button-icon"></app-icon>
 					<span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
 				</button>
 				<div *ngIf="screen.customer" class="self-checkout-text-sm text-center" fxLayout="column"
 					fxLayoutAlign="center center" fxLayoutGap="8px">
-					<app-icon [iconName]="screen.customer.icon" [iconClass]="'material-icons'"
-						class="self-checkout-loyalty-icon">
+					<app-icon [iconName]="screen.customer.icon" [iconClass]="'none'" class="self-checkout-loyalty-icon">
 					</app-icon>
 					<div class="muted-color">{{screen.customer.name}}</div>
 					<div class="muted-color">{{screen.customer.label}}: {{screen.customer.id}}</div>

@@ -1,14 +1,13 @@
-.home-logo {
-    width: 300px; 
-    height: 200px; 
-    position: inherit;
-    filter: grayscale(1) invert(1) brightness(10);
-    -webkit-filter: grayscale(1) invert(1) brightness(10); 
+.self-checkout-home-image {
+    max-width: 50%;
+    margin: 64px;
 }
 
-.home-button {
-    font-weight: bold; 
-    padding: 16px; 
-    padding-left: 32px; 
-    padding-right: 32px;
+.self-checkout-home-text {
+    text-align: center;
+    max-width: 50%;
+    color: black;
+    -webkit-text-fill-color: white;
+    -webkit-text-stroke-width: 2px;
+    -webkit-text-stroke-color: black;
 }
