@@ -12,9 +12,12 @@ public class SelfCheckoutHomeUIMessage extends UIMessage {
 
     private String imageUrl;
 
+    private String action;
+
     public SelfCheckoutHomeUIMessage() {
         setId("selfcheckout-home");
         setScreenType(UIMessageType.SELF_CHECKOUT_HOME);
+        this.action = "Sell";
     }
 
     public String getBackgroundImage() {
@@ -39,5 +42,13 @@ public class SelfCheckoutHomeUIMessage extends UIMessage {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getAction() {
+        return action;
+    }
+
+    public void setAction(String action) {
+        this.action = action;
     }
 }
