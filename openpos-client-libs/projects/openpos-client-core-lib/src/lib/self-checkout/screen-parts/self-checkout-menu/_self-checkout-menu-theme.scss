@@ -3,17 +3,17 @@
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
-
+    $app-primary-contrast: mat-color(map-get($theme, primary), default-contrast);
     $foreground: map-get($theme, foreground);
 
     .self-checkout-menu {
         background-color: $app-primary;
-        color: map-get($foreground, inverse-text);
+        color: $app-primary-contrast;
 
         .mat-form-field-underline,
         .mat-form-field-ripple,
         .mat-focused .mat-form-field-ripple {
-            background-color: map-get($foreground, inverse-text);
+            background-color: $app-primary-contrast;
         }
 
         .mat-form-field-label,
