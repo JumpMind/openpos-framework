@@ -21,7 +21,7 @@
                             <div #items gdAreas="img info" gdColumns="auto 4fr"
                                 [ngClass]="{'muted-color' : !item.enabled}">
                                 <div gdArea="img">
-                                    <img *ngIf="item.itemImageUrl" src="{{item.itemImageUrl}}" alt="{{item.title}}"
+                                    <img *ngIf="item.itemImageUrl" src="{{item.itemImageUrl | imageUrl}}" alt="{{item.title}}"
                                         class="item-card-image">
                                 </div>
                                 <div gdArea="info">

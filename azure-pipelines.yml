@@ -12,6 +12,8 @@ trigger:
     - master
     - releases/0.4
     - releases/0.5
+    - feature/self-checkout
+    - feature/orders
 
 pool:
   vmImage: 'Ubuntu-16.04'
