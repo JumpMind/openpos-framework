@@ -22,7 +22,7 @@ public class StateManagerContainerTest {
         final IFlowConfigProvider flowConfigProvider = Mockito.mock(IFlowConfigProvider.class);
         
         Mockito.when(applicationContext.getBean(StateManager.class)).thenReturn(stateManager);
-        
+        Mockito.when(applicationContext.getBeanNamesForType(ITransitionStep.class)).thenReturn(new String[0]);
         TestUtil.setField(container, "applicationContext", applicationContext);
         TestUtil.setField(container, "flowConfigProvider", flowConfigProvider);
         
