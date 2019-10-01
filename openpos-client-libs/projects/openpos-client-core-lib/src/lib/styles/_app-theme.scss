@@ -179,8 +179,8 @@
     }
 
     .mat-button-toggle-group-appearance-standard .mat-button-toggle:not(.mat-button-toggle-disabled):not(.mat-button-toggle-checked){
-        background-color: mat-color(map-get($theme, selected), lighter);
-        color: white;
+        background-color: mat-color(map-get($theme, primary), default-contrast);
+        color: $app-selected;
     }
 
     .mat-basic-chip:focus {outline:0;}
@@ -192,7 +192,7 @@
 
     .mat-button-toggle-group-appearance-standard .mat-button-toggle-checked{
         background: $app-selected;
-        color: white;
+        color: mat-color(map-get($theme, primary), default-contrast);
     }
 
     .mat-button-toggle {
