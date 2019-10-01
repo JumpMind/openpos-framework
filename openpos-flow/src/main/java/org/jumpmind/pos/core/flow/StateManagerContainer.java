@@ -149,7 +149,12 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     public void onApplicationEvent(Event event) {
         for (Map<String, StateManager> map : new ArrayList<>(stateManagersByAppIdByNodeId.values())) {
             for (StateManager stateManager : new ArrayList<>(map.values())) {
-                stateManager.onEvent(event);
+                try {
+                    setCurrentStateManager(stateManager);
+                    stateManager.onEvent(event);
+                } finally {
+                    setCurrentStateManager(null);
+                }
             }
         }
     }
