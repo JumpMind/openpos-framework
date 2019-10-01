@@ -20,10 +20,7 @@
  */
 package org.jumpmind.pos.core.flow;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.jumpmind.pos.core.error.IErrorHandler;
@@ -36,6 +33,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -101,6 +99,9 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
             if (stateManager == null) {
                 stateManager = applicationContext.getBean(StateManager.class);
                 setCurrentStateManager(stateManager);
+
+
+                stateManager.setTransitionSteps(createTransitionSteps());
                 stateManager.registerQueryParams(queryParams);
                 stateManager.registerPersonalizationProperties(personalizationProperties);
                 stateManager.setErrorHandler(errorHandler);
@@ -110,6 +111,30 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
             }
         }
         return stateManager;
+    }
+
+    private List<ITransitionStep> createTransitionSteps() {
+        List<ITransitionStep> steps = new ArrayList<>();
+        String[] names = applicationContext.getBeanNamesForType(ITransitionStep.class);
+        for(String name: names) {
+            steps.add((ITransitionStep)applicationContext.getBean(name));
+        }
+
+        Collections.sort(steps, (o1, o2) -> {
+            Integer o1order = 0;
+            Integer o2order = 0;
+            try {
+                o1order = o1.getClass().getAnnotation(Order.class).value();
+            } catch (NullPointerException ex) {
+            }
+            try {
+                o2order = o2.getClass().getAnnotation(Order.class).value();
+            } catch (NullPointerException ex) {
+            }
+
+            return o1order.compareTo(o2order);
+        });
+        return steps;
     }
 
     @Override
