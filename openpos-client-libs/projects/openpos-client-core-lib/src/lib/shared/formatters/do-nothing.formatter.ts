@@ -4,8 +4,11 @@ export class DoNothingFormatter implements IFormatter {
     locale?: string;
 
     formatValue(value: string): string {
-        if (!value) { return ''; }
-        return value;
+        if (!value) {
+            return '';
+        } else {
+            return value;
+        }
     }
 
 

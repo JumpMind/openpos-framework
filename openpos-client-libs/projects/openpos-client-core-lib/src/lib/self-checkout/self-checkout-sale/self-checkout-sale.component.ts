@@ -8,6 +8,7 @@ import { ScannerService } from '../../core/platform-plugins/scanners/scanner.ser
 import { Subscription } from 'rxjs';
 import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
+import {ImageService} from '../../core/services/image.service';
 
 @ScreenComponent({
     name: 'SelfCheckoutSale'
@@ -32,7 +33,7 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
 
     private scanServiceSubscription: Subscription;
 
-    constructor(public devices: DeviceService, injector: Injector, private scannerService: ScannerService) {
+    constructor( public imageService: ImageService, public devices: DeviceService, injector: Injector, private scannerService: ScannerService) {
         super(injector);
     }
 
@@ -66,6 +67,12 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
         try {
             this.scrollList.nativeElement.scrollTop = this.scrollList.nativeElement.scrollHeight;
         } catch (err) { }
+    }
+
+    getLoyaltyImage(url : string) : string {
+        
+        const filtedredUrl = this.imageService.replaceImageUrl(url);
+        return filtedredUrl;
     }
 
     ngOnInit(): void {

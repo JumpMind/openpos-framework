@@ -19,6 +19,9 @@ export class PercentageFormatter implements IFormatter {
     }
 
     formatValue(value: string): string {
+        if (!value) {
+            return '';
+        }
         const parts = value.split('.');
 
         if (parts.length > 1) {

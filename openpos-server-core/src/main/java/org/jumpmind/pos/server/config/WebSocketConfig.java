@@ -121,8 +121,9 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
             public void afterMessageHandled(Message<?> message, MessageChannel channel, MessageHandler handler, Exception ex) {
                 SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.wrap(message);
                 SimpMessageType messageType = accessor.getMessageType();
+
                 if (messageType == SimpMessageType.MESSAGE) {
-                    logger.info("Post send of message: " + new String((byte[]) message.getPayload()));
+                    logger.info("Post send of message for session " + accessor.getSessionId() + " with destination " + accessor.getDestination() + ":\n" + new String((byte[]) message.getPayload()));
                 }
             }
         });

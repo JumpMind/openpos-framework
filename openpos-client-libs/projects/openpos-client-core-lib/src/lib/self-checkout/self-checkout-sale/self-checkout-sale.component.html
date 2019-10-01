@@ -39,9 +39,11 @@
 				<button mat-button *ngIf="!screen.readOnly && !screen.customer && screen.loyaltyButton"
 					(click)="doMenuItemAction(screen.loyaltyButton)"
 					class="self-checkout-button self-checkout-border-button self-checkout-loyalty-button self-checkout-text-md">
-					<span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
-					<app-icon [iconName]="screen.loyaltyButton.icon" [iconClass]="'none'"
-						class="self-checkout-loyalty-button-icon"></app-icon>
+					<span *ngIf="loyaltyBefore">{{loyaltyBefore}}HI</span>
+
+					<img [src]="getLoyaltyImage(screen.loyaltyButton.icon)" class="self-checkout-loyalty-button-icon">
+
+
 					<span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
 				</button>
 				<div *ngIf="screen.customer" class="self-checkout-text-sm text-center" fxLayout="column"

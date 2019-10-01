@@ -1,13 +1,18 @@
+.mat-button-focus-overlay { background-color: transparent!important; }
+
 .self-checkout-home-image {
     max-width: 50%;
     margin: 64px;
 }
 
+.self-checkout-home-text-container {
+    margin-top: auto;
+    margin-bottom: 10%;
+}
+
 .self-checkout-home-text {
     text-align: center;
-    max-width: 50%;
-    color: black;
-    -webkit-text-fill-color: white;
-    -webkit-text-stroke-width: 2px;
-    -webkit-text-stroke-color: black;
+    max-width: 60%;
+    color: white;
+    background:rgba(0,0,0,0.2);
 }

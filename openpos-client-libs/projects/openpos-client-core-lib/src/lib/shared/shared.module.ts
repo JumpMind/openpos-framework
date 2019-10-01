@@ -116,6 +116,7 @@ import { LocationOverrideDialogComponent } from './components/location-details/l
 import { SellLinkedCustomerComponent } from './components/sell-linked-customer/sell-linked-customer.component';
 import { ItemCardComponent } from './components/item-card/item-card.component';
 import { SystemStatusComponent } from './screen-parts/system-status/system-status.component';
+import { BannerComponent } from './screen-parts/banner/banner.component';
 import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
 import { SaleItemCardListComponent } from './screen-parts/sale-item-card-list/sale-item-card-list.component';
 
@@ -134,7 +135,8 @@ const screenParts = [
     ProgressBarPartComponent,
     WebcamViewerComponent,
     SystemStatusComponent,
-    SaleItemCardListComponent
+    SaleItemCardListComponent,
+    BannerComponent
 ];
 
 const components = [
@@ -267,7 +269,7 @@ const pipes = [
         CommonModule,
         MaterialModule,
         MatKeyboardModule,
-        TextMaskModule,
+        TextMaskModule
     ],
     exports: [
         FormsModule,
@@ -279,7 +281,6 @@ const pipes = [
         MaterialModule,
         MatKeyboardModule,
         TextMaskModule,
-
         ...directives,
         ...components,
         ...screenParts,
