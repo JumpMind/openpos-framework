@@ -1,0 +1,24 @@
+@mixin rounded-input-theme($theme) {
+
+  $app-primary: mat-color(map-get($theme, primary));
+  $app-accent: mat-color(map-get($theme, accent));
+  $app-warn: mat-color(map-get($theme, warn));
+
+  $foreground: map-get($theme, foreground );
+  $background: map-get($theme, background );
+
+  app-rounded-input{
+
+    background-color: white;
+    border-radius: 32px;
+    border: map-get($foreground, divider) solid 1px;
+
+    app-icon{
+      color: map-get($foreground, hint-text);
+    }
+
+    input{
+      border: none;
+    }
+  }
+}

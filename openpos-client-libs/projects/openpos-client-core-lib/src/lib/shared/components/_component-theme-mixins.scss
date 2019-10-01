@@ -13,6 +13,7 @@
 @import './kebab-menu/kebab-menu-theme';
 @import './task-check-all-box/task-check-all-box-theme';
 @import './task-check-box/task-check-box-theme';
+@import './rounded-input/rounded-input-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -30,4 +31,5 @@
     @include kebab-menu-theme($theme);
     @include task-check-all-box-theme($theme);
     @include task-check-box-theme($theme);
+    @include rounded-input-theme($theme);
 }
