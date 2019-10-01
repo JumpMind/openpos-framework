@@ -1,8 +1,12 @@
 <div fxFlexFill fxLayout="column" fxLayoutAlign="start center" [ngStyle]="screen.backgroundImage | backgroundImageUrl"
     class="self-checkout-home">
     <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-home-image">
-    <div fxFlex="1 1 auto" fxLayoutAlign="center center" *ngIf="screen.prompt"
-        class="self-checkout-text-xl self-checkout-home-text">
+    <div fxFlex="0 1 auto" fxLayoutAlign="center center" *ngIf="screen.prompt"
+        class="self-checkout-home-text-container">
+        <div class="self-checkout-text-xl self-checkout-home-text">
         {{screen.prompt}}
+        </div>
+        
+
     </div>
 </div>
