@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 import { bounceAnimation } from '../../shared/animations/bounce.animation';
 
 @ScreenComponent({
-    name: 'Home'
+  name: 'Home'
 })
 @Component({
   selector: 'app-home',
@@ -26,10 +26,10 @@ import { bounceAnimation } from '../../shared/animations/bounce.animation';
       })),
       transition('* => move', [
         useAnimation( bounceAnimation, {
-            params: {
-                height: '100px',
-                time: '2s'
-            }
+          params: {
+            height: '100px',
+            time: '2s'
+          }
         })
       ])
     ]),
@@ -37,7 +37,7 @@ import { bounceAnimation } from '../../shared/animations/bounce.animation';
 })
 export class HomeComponent extends PosScreen<HomeInterface> {
 
-    bounceInterval = timer(5000, 5000).pipe( map( i => i % 2 ? 'down' : 'move'));
+  bounceInterval = timer(5000, 5000).pipe( map( i => i % 2 ? 'down' : 'move'));
   gutterSize: Observable<number>;
   gridColumns: Observable<number>;
   isMobile: Observable<boolean>;
@@ -45,27 +45,27 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   constructor( media: OpenposMediaService, injector: Injector ) {
     super(injector);
     this.gridColumns = media.mediaObservableFromMap(new Map([
-        ['xs', 1],
-        ['sm', 2],
-        ['md', 3],
-        ['lg', 3],
-        ['xl', 3]
-      ]));
+      ['xs', 1],
+      ['sm', 2],
+      ['md', 3],
+      ['lg', 3],
+      ['xl', 3]
+    ]));
 
     this.gutterSize = media.mediaObservableFromMap(new Map([
-        ['xs', 10],
-        ['sm', 10],
-        ['md', 20],
-        ['lg', 20],
-        ['xl', 20]
+      ['xs', 10],
+      ['sm', 10],
+      ['md', 20],
+      ['lg', 20],
+      ['xl', 20]
     ]));
 
     this.isMobile = media.mediaObservableFromMap(new Map([
-        ['xs', true],
-        ['sm', false],
-        ['md', false],
-        ['lg', false],
-        ['xl', false]
+      ['xs', true],
+      ['sm', false],
+      ['md', false],
+      ['lg', false],
+      ['xl', false]
     ]));
   }
 
@@ -76,9 +76,9 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   }
 
   public getNotificationForButton(item: IActionItem): INotificationItem {
-      if (this.screen.notificationItems) {
-        return this.screen.notificationItems.find(i => i.id === item.action);
-      }
-      return null;
+    if (this.screen.notificationItems) {
+      return this.screen.notificationItems.find(i => i.id === item.action);
+    }
+    return null;
   }
 }

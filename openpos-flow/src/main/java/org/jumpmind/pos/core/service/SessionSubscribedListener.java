@@ -76,7 +76,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                 messageService.sendMessage(appId, deviceId, errorDialog);
                 return;
             } else if (!sessionAuthTracker.isSessionCompatible(sessionId)) {
-                log.warn("Client compatiblity version of '{}' for deviceId '{}' is not compatible with the server", compatibilityVersion,
+                log.warn("Client compatibility version of '{}' for deviceId '{}' is not compatible with the server", compatibilityVersion,
                         deviceId);
                 DialogUIMessage errorDialog = new DialogUIMessage();
                 // If there is no compatibility version, the client is an older

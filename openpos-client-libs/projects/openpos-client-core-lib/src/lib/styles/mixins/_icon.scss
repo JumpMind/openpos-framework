@@ -53,4 +53,27 @@
   height: 180px;
   width: 180px;
 }
+
+
+  .material-icons.sm {
+    @extend .mat-30;
+    &.mobile{
+      @extend .mat-18;
+    }
+  }
+
+  .material-icons.md {
+    @extend .mat-40;
+    &.mobile{
+      @extend .mat-24;
+    }
+  }
+
+  .material-icons.lg {
+    @extend .mat-64;
+    &.mobile{
+      @extend .mat-48;
+    }
+  }
+
 }

@@ -1,5 +1,5 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
-import { Observable, merge, Subject, Subscription } from 'rxjs';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, merge, Subscription } from 'rxjs';
 
 @Injectable()
 export class KeyPressProvider implements OnDestroy {
@@ -22,10 +22,14 @@ export class KeyPressProvider implements OnDestroy {
 
     subscribe(key: string, priority: number, next: (KeyboardEvent) => void): Subscription {
 
+        if (key === null || key === undefined) {
+            throw new Error('Cannot subscribe to null or undefined keybinding');
+        }
+
         const subscriptionOutput = new Subscription(() => {
             const priorityMap = this.subscribers.get(key);
             const keybindSubscription = priorityMap.get(priority);
-            if (keybindSubscription.subscription === subscriptionOutput) {
+            if (keybindSubscription && keybindSubscription.subscription === subscriptionOutput) {
                 priorityMap.delete(priority);
             }
         });
@@ -34,9 +38,9 @@ export class KeyPressProvider implements OnDestroy {
             this.subscribers.set(key, new Map<number, KeybindSubscription>());
         }
 
-        // if ( this.subscribers.get(key).has(priority)) {
-        //     throw new Error( `Another subscriber already exists with key ${key} and priority ${priority}`);
-        // }
+        if (this.subscribers.get(key).has(priority)) {
+            console.warn(`Another subscriber already exists with key ${key} and priority ${priority}`);
+        }
         this.subscribers.get(key).set(priority, new KeybindSubscription(subscriptionOutput, priority, next));
 
         return subscriptionOutput;

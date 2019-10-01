@@ -20,7 +20,7 @@ public class ScanPart implements Serializable{
     private String keyedActionName = "Scan";
     private String scanSomethingText = "Scan/Key Something";
     private boolean autoFocusOnScan = false;
-    private FieldInputType inputType = FieldInputType.AlphanumericText;
+    private FieldInputType inputType = FieldInputType.WordText;
     
     public Integer getScanMinLength() {
         return scanMinLength;

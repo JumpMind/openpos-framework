@@ -1,62 +1,62 @@
 @import '~@angular/material/theming';
 
 .home-wrapper {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 .menu-button-border{
-    @include mat-elevation(10);
-    margin: 20px;
-    padding: 20px;
-    border-radius: 4px;
+  @include mat-elevation(10);
+  margin: 20px;
+  padding: 20px;
+  border-radius: 4px;
 }
 
 .menu-button{
-    min-width: 160px;
-    min-height: 160px;
+  min-width: 160px;
+  min-height: 160px;
 }
 
 .menu-button-content{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .notification-badge {
-    padding-left: 13px;
-    padding-bottom: 10px;
-    margin-right: 10px;
+  padding-left: 13px;
+  padding-bottom: 10px;
+  margin-right: 10px;
 }
 
 .menu-button-title {
-    white-space: normal;
+  white-space: normal;
 }
 
 .menu-list {
-    margin-bottom: auto;
+  margin-bottom: auto;
 }
 
 @supports not (display: grid) {
 
-    .button-grid{
-        text-align: center;
-        position: absolute;
-        top: 40%;
-        width: 100%;
-    }
+  .button-grid{
+    text-align: center;
+    position: absolute;
+    top: 40%;
+    width: 100%;
+  }
 
-    .menu-button-border{
-        display: inline-block;
-    }
+  .menu-button-border{
+    display: inline-block;
+  }
 }
 
 @supports (display: grid) {
-    .button-grid{
-        display: grid;
-        place-content: center;
-        place-items: stretch;
-        grid-template-columns: repeat(auto-fit, 240px)
-    }
+  .button-grid{
+    display: grid;
+    place-content: center;
+    place-items: stretch;
+    grid-template-columns: repeat(auto-fit, 240px)
+  }
 }

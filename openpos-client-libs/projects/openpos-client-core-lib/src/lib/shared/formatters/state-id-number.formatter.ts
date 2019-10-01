@@ -9,7 +9,11 @@ export class StateIDNumberFormatter implements IFormatter {
     }
 
     formatValue(value: string): string {
-        return value;
+        if (!value) {
+            return '';
+        } else {
+            return value;
+        }
     }
 
     unFormatValue(value: string): string {

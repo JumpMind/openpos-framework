@@ -9,13 +9,17 @@ export class PostalCodeFormatter implements IFormatter {
     }
 
     formatValue(value: string): string {
-        // remove any invalid chars
-        let returnValue = value.replace(PostalCodeFormatter.CHAR_REGEX, '');
-        // trim to max len of 20
-        if (returnValue && returnValue.length > 20) {
-            returnValue = returnValue.substring(0, 20);
+        if (!value) {
+            return '';
+        } else {
+            // remove any invalid chars
+            let returnValue = value.replace(PostalCodeFormatter.CHAR_REGEX, '');
+            // trim to max len of 20
+            if (returnValue && returnValue.length > 20) {
+                returnValue = returnValue.substring(0, 20);
+            }
+            return returnValue;
         }
-        return returnValue;
     }
 
     unFormatValue(value: string): string {

@@ -46,7 +46,8 @@ public class DBSessionQueryConcurrentTest {
         ResultSet rs = Mockito.mock(ResultSet.class);
         
         Table table = new Table();
-        
+
+        Mockito.when(ps.getConnection()).thenReturn(connection);
         Mockito.when(databasePlatform.getDataSource()).thenReturn(dataSource);
         Mockito.when(databaseSchema.getTable(CarModel.class, CarModel.class)).thenReturn(table);
         Mockito.when(dataSource.getConnection()).thenReturn(connection);

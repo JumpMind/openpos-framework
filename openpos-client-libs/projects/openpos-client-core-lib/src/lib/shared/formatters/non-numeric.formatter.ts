@@ -10,9 +10,13 @@ export class NonNumericFormatter implements IFormatter {
     }
 
     formatValue(value: string): string {
-        // remove any invalid chars
-        // convert to string JIC value passed in isn't actually a string.  Saw a case of that.
-        return value !== null ? value.toString().replace(NonNumericFormatter.CHAR_REGEX, '') : null;
+        if (!value) {
+            return '';
+        } else {
+            // remove any invalid chars
+            // convert to string JIC value passed in isn't actually a string.  Saw a case of that.
+            return value.toString().replace(NonNumericFormatter.CHAR_REGEX, '');
+        }
     }
 
     unFormatValue(value: string): string {

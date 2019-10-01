@@ -14,7 +14,11 @@ export class GiftCodeFormatter implements IFormatter {
     }
 
     formatValue(value: string): string {
-        return value.toUpperCase();
+        if (!value) {
+            return '';
+        } else {
+            return value.toUpperCase();
+        }
     }
 
     unFormatValue(value: string): string {
