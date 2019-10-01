@@ -1,0 +1,14 @@
+:host{
+  display: flex;
+  flex-direction: row;
+  padding: 4px 12px;
+}
+
+input{
+  flex: 1 1 100%;
+  outline: none;
+}
+
+app-icon{
+  margin-right: 8px;
+}

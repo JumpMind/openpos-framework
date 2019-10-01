@@ -3,10 +3,12 @@
 @import './status-strip/status-strip-theme';
 @import './choose-options-part/choose-options-part-theme';
 @import './banner/banner-theme';
+@import './notifications/notifications-theme';
 
 @mixin screen-part-themes($theme){
     @include bacon-strip-theme($theme);
     @include scan-or-search-theme($theme);
     @include choose-options-part-theme($theme);
     @include banner-theme($theme);
+    @include notification-theme($theme);
 }
