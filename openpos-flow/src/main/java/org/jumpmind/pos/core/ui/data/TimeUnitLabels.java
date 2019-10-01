@@ -1,6 +1,8 @@
 package org.jumpmind.pos.core.ui.data;
 
-public class TimeUnitLabels {
+import java.io.Serializable;
+
+public class TimeUnitLabels implements Serializable {
 
     public TimeUnitLabels(String hourLabel, String hourLabelPlural, String minuteLabel, String minuteLabelPlural, String secondLabel, String secondLabelPlural, String nowLabel) {
         this.hourLabel = hourLabel;
