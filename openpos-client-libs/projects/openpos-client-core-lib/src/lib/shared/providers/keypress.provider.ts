@@ -23,7 +23,8 @@ export class KeyPressProvider implements OnDestroy {
     subscribe(key: string, priority: number, next: (KeyboardEvent) => void): Subscription {
 
         if (key === null || key === undefined) {
-            throw new Error('Cannot subscribe to null or undefined keybinding');
+            console.warn('Cannot subscribe to null or undefined keybinding');
+            return;
         }
 
         const subscriptionOutput = new Subscription(() => {
