@@ -69,7 +69,7 @@
 
     $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
-    $success-color: green;
+    $success-color: mat-color(map-get($theme, success));
 
     // this is a hack to get around a default value in angular material that they removed in future versions
     // if we ever upgrade we can probably remove this. This allows the field to be sized by flex instead of being
@@ -116,7 +116,7 @@
     }
 
     .lighter{
-        background-color: mat-color($background, app-bar);
+        background-color: mat-color($background, background);
     }
 
     input.bordered{
@@ -178,21 +178,25 @@
         background-color:mat-color($background, app-bar); 
     }
 
-    .mat-button-toggle:not(.mat-button-toggle-disabled):not(.mat-button-toggle-checked){
-        background-color: white;
-        border: solid mat-color(map-get($theme, primary)) 1px;
-        color: mat-color(map-get($theme, primary));
+    .mat-button-toggle-group-appearance-standard .mat-button-toggle:not(.mat-button-toggle-disabled):not(.mat-button-toggle-checked){
+        background-color: mat-color(map-get($theme, selected), lighter);
+        color: white;
     }
 
     .mat-basic-chip:focus {outline:0;}
 
-    .mat-button-toggle{
+    .mat-button-toggle-group{
         text-align: center;
+        border-radius: 8px;
     }
 
-    .mat-button-toggle-checked{
+    .mat-button-toggle-group-appearance-standard .mat-button-toggle-checked{
         background: $app-selected;
         color: white;
+    }
+
+    .mat-button-toggle {
+        min-width: 80px;
     }
     
     .overflow-menu-panel{
