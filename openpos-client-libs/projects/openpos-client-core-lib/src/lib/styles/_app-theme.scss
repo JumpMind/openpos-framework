@@ -47,7 +47,8 @@
     $openpos-addons: (
         foreground: map-merge($mat-foreground, $openpos-foreground),
         background: map-merge($mat-light-theme-background, $openpos-background),
-        selected: $selected
+        selected: $selected,
+        success: mat-palette($mat-green)
     );
     @return map-merge(map-merge($openpos-mat-theme, $openpos-addons), $addons);
 }
