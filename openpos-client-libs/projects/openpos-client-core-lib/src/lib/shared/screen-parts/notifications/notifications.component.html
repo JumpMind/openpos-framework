@@ -1,0 +1,22 @@
+<div gdAreas="icon title"
+     gdColumns="auto 1fr"
+     gdGap="8px">
+    <app-icon gdArea="icon" [iconName]="screenData.icon"></app-icon>
+    <div class="text-md" gdArea="title">{{screenData.title}}</div>
+</div>
+<div *ngFor="let item of screenData.items"
+     mat-ripple
+     class="notification-item"
+     gdAreas="icon title |
+              . subitems"
+     gdGap="8px"
+     gdColumns="auto 1fr"
+     (click)="doAction(item)">
+    <app-icon gdArea="icon" [iconName]="item.icon"></app-icon>
+    <div class="item-title" gdArea="title">{{item.title}}</div>
+    <div gdArea="subitems">
+        <div class="item-sub-item" *ngFor="let subItem of item.subItems">
+            {{subItem}}
+        </div>
+    </div>
+</div>

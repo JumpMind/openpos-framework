@@ -1,0 +1,22 @@
+@mixin notification-theme($theme){
+
+  $app-primary: mat-color(map-get($theme, primary));
+  $app-accent: mat-color(map-get($theme, accent));
+  $app-warn: mat-color(map-get($theme, warn));
+
+  $foreground: map-get($theme, foreground );
+
+  app-notifications{
+    color: white;
+    background-color: rgba(0,0,0, .7);
+
+    .notification-item{
+      border-color: rgba(255, 255, 255, 0.5);
+      background-color: rgba(105, 105, 105, 0.5);
+    }
+
+    .item-sub-item{
+      color: rgba(200, 200, 200, 0.5);
+    }
+  }
+}

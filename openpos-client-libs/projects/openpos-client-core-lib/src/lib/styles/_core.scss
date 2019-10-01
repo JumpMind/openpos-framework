@@ -13,6 +13,7 @@
 @import './mixins/typography';
 @import './mixins/tabs';
 @import './mixins/multiple-dynamic-form-dialog';
+@import './mixins/badge';
 
 $mat-card-default-margin: 24px !default;
 
@@ -30,6 +31,7 @@ $mat-card-default-margin: 24px !default;
   @include openpos-typography();
   @include openpos-tabs();
   @include multiple-dynamic-form-dialog();
+  @include openpos-badge();
 
   @include openpos-themes();
 
