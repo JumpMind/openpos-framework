@@ -1,6 +1,5 @@
 package org.jumpmind.pos.core.flow;
 
-import com.sun.deploy.panel.ITreeNode;
 import org.jumpmind.pos.core.service.spring.DeviceScope;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
