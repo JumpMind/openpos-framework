@@ -117,6 +117,7 @@ import { SellLinkedCustomerComponent } from './components/sell-linked-customer/s
 import { ItemCardComponent } from './components/item-card/item-card.component';
 import { SystemStatusComponent } from './screen-parts/system-status/system-status.component';
 import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
+import { SaleItemCardListComponent } from './screen-parts/sale-item-card-list/sale-item-card-list.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -132,7 +133,8 @@ const screenParts = [
     AutoCompleteAddressPartComponent,
     ProgressBarPartComponent,
     WebcamViewerComponent,
-    SystemStatusComponent
+    SystemStatusComponent,
+    SaleItemCardListComponent
 ];
 
 const components = [

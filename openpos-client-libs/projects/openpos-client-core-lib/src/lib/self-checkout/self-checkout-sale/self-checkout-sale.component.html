@@ -3,17 +3,7 @@
 
 	<div class="self-checkout-body self-checkout-sale-body">
 
-		<div #scrollList class="self-checkout-list-background">
-
-			<app-item-card *ngFor="let i of items" [item]=i [isReadOnly]=screen.readOnly></app-item-card>
-
-			<div *ngIf="items.length == 0 && !screen.readOnly" fxFlexFill fxLayout="column"
-				fxLayoutAlign="center center">
-				<div class="self-checkout-sell-prompt text-center">{{this.screen.prompt}}</div>
-				<div class="self-checkout-text-sm text-center">{{this.screen.instructions}}</div>
-				<img [src]="screen.backgroundImage | imageUrl" class="scan-item-icon">
-			</div>
-		</div>
+		<app-sale-item-card-list #scrollList class="self-checkout-list-background"></app-sale-item-card-list>
 
 		<mat-card class="self-checkout-total-background" fxLayout="column" fxLayoutAlign="start stretch"
 			fxLayoutGap="16px">

@@ -19,7 +19,7 @@ import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active
 })
 export class SelfCheckoutSaleComponent extends PosScreen<any> implements
     OnInit, OnDestroy, OnBecomingActive, OnLeavingActive, AfterViewChecked {
-    @ViewChild('scrollList') private scrollList: ElementRef;
+    @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
 
     initialized = false;
 

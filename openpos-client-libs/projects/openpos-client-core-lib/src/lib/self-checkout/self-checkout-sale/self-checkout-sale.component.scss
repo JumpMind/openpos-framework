@@ -3,6 +3,14 @@
     grid-template-columns: 1fr 25%;
 }
 
+.self-checkout-list-background {
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-self: stretch;
+    justify-self: stretch;
+    padding-right: 16px;
+}
+
 .self-checkout-checkout-button {
     margin-top: 16px;
     width: 100%;
@@ -47,14 +55,6 @@
     }
 }
 
-.self-checkout-list-background {
-    overflow-y: auto;
-    overflow-x: hidden;
-    align-self: stretch;
-    justify-self: stretch;
-    padding-right: 16px;
-}
-
 .self-checkout-total-background {
     min-height: 100px;
     align-self: stretch;
@@ -70,15 +70,6 @@
     padding-right: 24px;
 }
 
-.self-checkout-sell-prompt {
-    font-size: 36px;
-    padding: 16px;
-}
-
 .self-checkout-sell-webcam {
     padding-bottom: 45px;
-}
-
-.scan-item-icon {
-    max-width: 75%;
 }
