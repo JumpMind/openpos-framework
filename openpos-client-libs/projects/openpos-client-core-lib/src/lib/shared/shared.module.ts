@@ -89,6 +89,7 @@ import { TransactionItemListComponent } from './components/transaction-item-list
 import { GridTableComponent } from './components/grid-table/grid-table.component';
 import { DialogHeaderComponent } from './screen-parts/dialog-header/dialog-header.component';
 import { BaconStripComponent } from './screen-parts/bacon-strip/bacon-strip.component';
+import {NotificationsComponent} from './screen-parts/notifications/notifications.component';
 import { ScanOrSearchComponent } from './screen-parts/scan-or-search/scan-or-search.component';
 import { SausageLinksComponent } from './screen-parts/sausage-links/sausage-links.component';
 import { StatusStripComponent } from './screen-parts/status-strip/status-strip.component';
@@ -136,7 +137,8 @@ const screenParts = [
     ProgressBarPartComponent,
     WebcamViewerComponent,
     SystemStatusComponent,
-    BannerComponent
+    BannerComponent,
+    NotificationsComponent
 ];
 
 const components = [
