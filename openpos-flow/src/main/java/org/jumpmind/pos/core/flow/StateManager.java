@@ -80,7 +80,7 @@ public class StateManager implements IStateManager {
     @Autowired
     private ApplicationStateSerializer applicationStateSerializer;
 
-    @Autowired(required = false)
+    //@Autowired(required = false)
     private List<? extends ITransitionStep> transitionSteps;
 
     @Autowired(required = false)
@@ -160,6 +160,10 @@ public class StateManager implements IStateManager {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
 
+    }
+
+    protected void setTransitionSteps(List<? extends ITransitionStep> transitionSteps) {
+        this.transitionSteps = transitionSteps;
     }
 
     private void initDefaultScopeObjects() {
