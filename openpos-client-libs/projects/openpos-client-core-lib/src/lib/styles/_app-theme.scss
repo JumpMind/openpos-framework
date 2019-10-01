@@ -30,7 +30,7 @@
     );
 
     $openpos-background: (
-        status-bar: map-get($mat-grey, 400),
+        status-bar: map-get($mat-grey, 600),
         app-bar: map-get($mat-grey, 300),
         background: map-get($mat-grey, 200),
         hover: rgba(black, 0.04),
