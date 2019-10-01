@@ -69,12 +69,6 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
         } catch (err) { }
     }
 
-    getLoyaltyImage(url : string) : string {
-        
-        const filtedredUrl = this.imageService.replaceImageUrl(url);
-        return filtedredUrl;
-    }
-
     ngOnInit(): void {
         this.scrollToBottom();
         this.registerScanner();
