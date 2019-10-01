@@ -14,6 +14,7 @@
 @import './task-check-all-box/task-check-all-box-theme';
 @import './task-check-box/task-check-box-theme';
 @import './rounded-input/rounded-input-theme';
+@import './mobile-footer/mobile-footer-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -32,4 +33,5 @@
     @include task-check-all-box-theme($theme);
     @include task-check-box-theme($theme);
     @include rounded-input-theme($theme);
+    @include mobile-footer-theme($theme);
 }

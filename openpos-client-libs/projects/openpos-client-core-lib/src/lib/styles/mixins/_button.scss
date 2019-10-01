@@ -5,7 +5,12 @@
         justify-items: center;
         align-content: center;
         justify-content: center;
-        width:100%
+        width:100%;
+        line-height: unset !important;
+    }
+
+    .mat-raised-button{
+        line-height: unset !important;
     }
 
     .mat-button-toggle-appearance-standard .mat-button-toggle-label-content{

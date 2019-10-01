@@ -119,6 +119,7 @@ import { SystemStatusComponent } from './screen-parts/system-status/system-statu
 import { BannerComponent } from './screen-parts/banner/banner.component';
 import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
 import { RoundedInputComponent } from './components/rounded-input/rounded-input.component';
+import { MobileFooterComponent } from './components/mobile-footer/mobile-footer.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -199,7 +200,8 @@ const components = [
     TaskCheckAllBoxComponent,
     TaskCheckBoxComponent,
     TaskListComponent,
-    RoundedInputComponent
+    RoundedInputComponent,
+    MobileFooterComponent
 ];
 
 const directives = [
