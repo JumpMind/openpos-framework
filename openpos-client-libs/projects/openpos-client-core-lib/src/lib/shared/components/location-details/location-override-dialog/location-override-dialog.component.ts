@@ -1,7 +1,7 @@
 import { Component, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 import { FormGroup, FormBuilder } from '@angular/forms';
-import { ILocationData } from 'projects/openpos-client-core-lib/src/lib/core/location-providers/location-data.interface';
+import {ILocationData} from '../../../../core/location-providers/location-data.interface';
 
 @Component({
     templateUrl: './location-override-dialog.component.html'
