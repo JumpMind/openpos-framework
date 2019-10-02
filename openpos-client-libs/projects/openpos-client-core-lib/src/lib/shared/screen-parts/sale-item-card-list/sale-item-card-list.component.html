@@ -2,7 +2,7 @@
 
 <div *ngIf="screenData.items.length == 0 && !screenData.readOnly" fxFlexFill fxLayout="column"
     fxLayoutAlign="center center">
-    <div class="self-checkout-sell-prompt text-center">{{screenData.prompt}}</div>
+    <div class="sale-item-list-prompt self-checkout-text-xl text-center">{{screenData.prompt}}</div>
     <div class="self-checkout-text-sm text-center">{{screenData.instructions}}</div>
     <img [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
 </div>

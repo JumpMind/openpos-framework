@@ -47,7 +47,7 @@
             class="self-checkout-primary-button sale-total-checkout-button self-checkout-text-lg">{{screenData.checkoutButton.title}}</button>
         <button mat-button *ngIf="!screenData.readOnly && screenData.logoutButton"
             (click)="doMenuItemAction(screenData.logoutButton)"
-            class="self-checkout-button self-checkout-border-button self-checkout-text-lg">
+            class="self-checkout-border-button self-checkout-text-lg sale-total-border-button">
             <span>
                 <app-icon *ngIf="screenData.logoutButton.icon" [iconName]="screenData.logoutButton.icon">
                 </app-icon>

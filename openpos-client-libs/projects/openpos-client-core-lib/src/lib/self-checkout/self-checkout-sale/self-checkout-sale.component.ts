@@ -1,6 +1,5 @@
 import { Component, ViewChild, AfterViewChecked, ElementRef, OnInit, Injector, OnDestroy } from '@angular/core';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
-import { IActionItem } from '../../core/actions/action-item.interface';
 import { PosScreen } from '../../screens-with-parts/pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { DeviceService } from '../../core/services/device.service';
@@ -8,7 +7,6 @@ import { ScannerService } from '../../core/platform-plugins/scanners/scanner.ser
 import { Subscription } from 'rxjs';
 import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
-import { ImageService } from '../../core/services/image.service';
 
 @ScreenComponent({
     name: 'SelfCheckoutSale'
