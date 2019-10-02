@@ -11,65 +11,8 @@
     padding-right: 16px;
 }
 
-.self-checkout-checkout-button {
-    margin-top: 16px;
-    width: 100%;
-}
-
-.self-checkout-border-button {
-    width: 100%;
-    margin-top: 16px;
-}
-
-.self-checkout-loyalty-icon {
-    max-width: 100%;
-}
-
-.self-checkout-loyalty-button-icon {
-    padding: 0px 8px;
-    max-width: 100%;
-}
-
-.self-checkout-promo-button {
-    width: 100%;
-    text-align: left;
-    padding: 0px;
-}
-
-.self-checkout-subtotal {
-    text-align: center;
-
-    .self-checkout-subtotal-title {
-        padding-bottom: 8px;
-    }
-}
-
-.self-checkout-total {
-    text-align: center;
-    border-top-style: solid;
-    border-top-width: 1px;
-
-    .self-checkout-total-title {
-        padding-top: 16px;
-        padding-bottom: 8px;
-    }
-}
-
 .self-checkout-total-background {
     min-height: 100px;
     align-self: stretch;
     justify-self: stretch;
-    margin: 0px;
-    padding-top: 24px;
-    padding-bottom: 24px;
-}
-
-.self-checkout-total-content {
-    width: 100%;
-    padding-left: 24px;
-    padding-right: 24px;
-}
-
-.self-checkout-sell-webcam {
-    padding-bottom: 45px;
 }

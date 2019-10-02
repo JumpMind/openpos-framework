@@ -8,7 +8,7 @@ import { ScannerService } from '../../core/platform-plugins/scanners/scanner.ser
 import { Subscription } from 'rxjs';
 import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
-import {ImageService} from '../../core/services/image.service';
+import { ImageService } from '../../core/services/image.service';
 
 @ScreenComponent({
     name: 'SelfCheckoutSale'
@@ -27,29 +27,15 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
     public items: ISellItem[];
     public size = -1;
 
-    private loyaltyIconToken = '${icon}';
-    public loyaltyBefore: string;
-    public loyaltyAfter: string;
 
     private scanServiceSubscription: Subscription;
 
-    constructor( public imageService: ImageService, public devices: DeviceService, injector: Injector, private scannerService: ScannerService) {
+    constructor(public devices: DeviceService, injector: Injector, private scannerService: ScannerService) {
         super(injector);
     }
 
     buildScreen() {
         this.items = this.screen.items;
-
-        if (this.screen.loyaltyButton) {
-            const title = this.screen.loyaltyButton.title as string;
-            const parts = title.split(this.loyaltyIconToken);
-            if (parts && parts.length > 0) {
-                this.loyaltyBefore = parts[0].trim();
-                if (parts.length > 1) {
-                    this.loyaltyAfter = parts[1].trim();
-                }
-            }
-        }
     }
 
     ngAfterViewChecked() {
@@ -57,10 +43,6 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
             this.scrollToBottom();
             this.size = this.items.length;
         }
-    }
-
-    public doMenuItemAction(menuItem: IActionItem) {
-        this.doAction(menuItem);
     }
 
     scrollToBottom(): void {

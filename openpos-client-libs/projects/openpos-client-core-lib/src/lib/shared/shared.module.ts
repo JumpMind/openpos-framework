@@ -122,6 +122,7 @@ import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab
 import { SaleItemCardListComponent } from './screen-parts/sale-item-card-list/sale-item-card-list.component';
 import { RoundedInputComponent } from './components/rounded-input/rounded-input.component';
 import { MobileFooterComponent } from './components/mobile-footer/mobile-footer.component';
+import { SaleTotalPanelComponent } from './screen-parts/sale-total-panel/sale-total-panel.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -140,7 +141,8 @@ const screenParts = [
     SystemStatusComponent,
     SaleItemCardListComponent,
     BannerComponent,
-    NotificationsComponent
+    NotificationsComponent,
+    SaleTotalPanelComponent
 ];
 
 const components = [
