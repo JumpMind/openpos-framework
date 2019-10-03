@@ -13,6 +13,7 @@
                     [iconName]="screenData.headerIcon"></app-icon>
         <span class="header-text">{{screenData.headerText}}</span>
     </div>
+    <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl" class="home-screen-logo">
     <div class="operator" *ngIf="!(isMobile$ | async)">
         <mat-icon *ngIf="screenData.operatorText" class="material-icons" style="vertical-align: middle;">lock_open</mat-icon>{{operatorInfo}}
     </div>

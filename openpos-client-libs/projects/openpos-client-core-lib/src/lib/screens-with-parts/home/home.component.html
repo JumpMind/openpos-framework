@@ -1,6 +1,5 @@
 <div [ngStyle]="screen.backgroundImage | backgroundImageUrl" class="home-wrapper">
     <div class="mat-elevation-z10">
-        <img *ngIf="screen.logo" [src]="screen.logo | imageUrl" class="home-screen-logo">
         <app-bacon-strip></app-bacon-strip>
     </div>
     <div *ngIf="!(isMobile | async) && screen.menuItems.length > 0" class="body-container">

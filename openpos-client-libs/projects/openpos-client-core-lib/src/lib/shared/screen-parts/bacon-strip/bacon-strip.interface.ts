@@ -6,5 +6,6 @@ export interface BaconStripInterface {
     operatorText: string;
     headerText: string;
     headerIcon: string;
+    logo: string;
     backButton: IActionItem;
 }
