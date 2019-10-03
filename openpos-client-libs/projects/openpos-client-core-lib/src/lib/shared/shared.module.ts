@@ -121,6 +121,7 @@ import { BannerComponent } from './screen-parts/banner/banner.component';
 import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
 import { RoundedInputComponent } from './components/rounded-input/rounded-input.component';
 import { MobileFooterComponent } from './components/mobile-footer/mobile-footer.component';
+import { ResponsiveClassDirective } from './directives/responsive-class.directive';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -229,7 +230,8 @@ const directives = [
     AutoCompleteAddressDirective,
     KeyPressSourceDirective,
     ArrowTabDirective,
-    ArrowTabItemDirective
+    ArrowTabItemDirective,
+    ResponsiveClassDirective
 ];
 
 const pipes = [

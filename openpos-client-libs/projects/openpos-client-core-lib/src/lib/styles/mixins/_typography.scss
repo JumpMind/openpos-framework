@@ -1,87 +1,36 @@
-@mixin openpos-typography{
+@import '../variables/font-sizes';
 
-  .super-currency-symbol {
-    vertical-align: super;
-    font-size: 0.5em;
-    padding-right: 2px;
+%text-xs{
+  font-size:$text-xs;
+  &.mobile{
+    font-size:$text-xs-mobile;
   }
+}
 
-  ::-webkit-input-placeholder { /* WebKit, Blink, Edge */
-    color:    #c8c8c8;
-    font-weight: lighter;
+%text-sm{
+  font-size:$text-sm;
+  &.mobile{
+    font-size:$text-sm-mobile;
   }
+}
 
-  .mat-hint{
-    font-size:60%;
+%text-md{
+  font-size:$text-md;
+  &.mobile{
+    font-size:$text-md-mobile;
   }
+}
 
-  .mat-dialog-actions {
-    text-align: center;
+%text-lg{
+  font-size:$text-lg;
+  &.mobile{
+    font-size:$text-lg-mobile;
   }
-  .prompt-text {
-    font-size:60%;
-  }
+}
 
-  .text-center{
-    text-align: center;
-  }
-
-  .text-right {
-    text-align: right;
-  }
-
-  .text-left {
-    text-align: left;
-  }
-
-  .no-wrap {
-      white-space: nowrap;
-  }
-  
-  .wrap-text{
-    white-space: normal;
-  }
-
-  .text-xs{
-    font-size:12px !important;
-  }
-
-  .text-sm{
-      font-size:18px !important;
-  }
-
-  .text-md{
-      font-size:24px !important;
-  }
-
-  .text-lg{
-      font-size:32px !important;
-  }
-
-  .text-xl{
-      font-size:48px !important;
-  }
-
-
-  @media( max-width: 600px){
-      .text-xs{
-          font-size:10px !important;
-      }
-
-      .text-sm{
-          font-size:12px !important;
-      }
-
-      .text-md{
-          font-size:18px !important;
-      }
-
-      .text-lg{
-          font-size:24px !important;
-      }
-
-      .text-xl{
-          font-size:36px !important;
-      }
+%text-xl{
+  font-size:$text-xl;
+  &.mobile{
+    font-size:$text-xl-mobile;
   }
 }

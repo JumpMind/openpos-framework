@@ -1,0 +1,79 @@
+$mobile-factor: 4;
+
+$x-small-space: .25rem;
+$small-space: .5rem;
+$med-space: .75rem;
+$large-space: 1rem;
+$x-large-space: 1.5rem;
+$xx-large-space: 3rem;
+
+// Applies a padding to all the children of the container element
+%sub-element-container{
+  > * {
+    padding: $large-space;
+  }
+  &.mobile{
+    > * {
+      padding: $large-space/$mobile-factor;
+    }
+  }
+}
+
+// Sets the spacing for the container element
+%sub-element-spaced-content{
+  display: grid;
+  row-gap: $small-space;
+  column-gap:$small-space;
+  &.mobile {
+    row-gap: $small-space/$mobile-factor;
+    column-gap:$small-space/$mobile-factor;
+  }
+}
+
+// Set spacing for the header element
+%page-header{
+  padding: $med-space;
+  margin-bottom: $x-large-space;
+  &.mobile{
+    padding: $med-space/$mobile-factor;
+    margin-bottom: $x-large-space/$mobile-factor;
+  }
+}
+
+// Set spacing for the footer element
+%page-footer {
+  margin: $med-space;
+  &.mobile{
+    margin: $med-space/$mobile-factor;
+  }
+}
+
+// Set the gutters on the sides of a page
+%page-gutter {
+  margin-left: $xx-large-space;
+  margin-right: $xx-large-space;
+  &.mobile{
+    margin-left: $xx-large-space/$mobile-factor;
+    margin-right: $xx-large-space/$mobile-factor;
+  }
+}
+
+// Sets margin for the page (between header and footer)
+%page-element {
+  margin-top: $large-space;
+  &.mobile{
+    margin-top: $large-space/$mobile-factor;
+  }
+}
+
+// Sets spacing between all child elements of a page
+%page-spaced-content {
+  display: grid;
+  row-gap: $large-space;
+  column-gap:$x-small-space;
+  &.mobile {
+      row-gap: $large-space/$mobile-factor;
+      column-gap:$x-small-space/$mobile-factor;
+  }
+}
+
