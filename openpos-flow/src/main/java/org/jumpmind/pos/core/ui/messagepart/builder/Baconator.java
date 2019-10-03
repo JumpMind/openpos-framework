@@ -42,6 +42,12 @@ public class Baconator {
 		baconStrip.setBackButton(backButton);
 		return this;
 	}
+
+	public Baconator setLogo(String logo) {
+		BaconStripPart baconStripPart = getBaconStrip();
+		baconStripPart.setLogo(logo);
+		return this;
+	}
 	
 	private BaconStripPart getBaconStrip() {
 		BaconStripPart baconStrip = (BaconStripPart) message.get(MessagePartConstants.BaconStrip);
