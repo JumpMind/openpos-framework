@@ -1,23 +1,18 @@
-import {Directive, ElementRef, OnDestroy, Renderer2} from '@angular/core';
+import {Directive, ElementRef, Inject, OnDestroy, Renderer2} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {OpenposMediaService} from '../../core/services/openpos-media.service';
+import {DEFAULT_RESPONSIVE_MAP} from '../../core/default-responsive-map';
 
 @Directive({
   selector: '[responsive-class]'
 })
 export class ResponsiveClassDirective implements OnDestroy{
 
-    private breakpointToClassName = new Map([
-        ['xs', 'mobile'],
-        ['sm', 'mobile'],
-        ['md', 'desktop'],
-        ['lg', 'desktop'],
-        ['xl', 'desktop']
-    ]);
-
     readonly subscription: Subscription;
 
     constructor(
+        @Inject(DEFAULT_RESPONSIVE_MAP)
+      private breakpointToClassName: Map<string,string>,
       mediaService: OpenposMediaService,
       renderer: Renderer2,
       elRef: ElementRef) {

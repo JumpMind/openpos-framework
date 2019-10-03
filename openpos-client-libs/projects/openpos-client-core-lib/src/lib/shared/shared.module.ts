@@ -9,6 +9,7 @@ import { MatKeyboardModule } from '../keyboard/keyboard.module';
 import {TaskCheckAllBoxComponent} from './components/task-check-all-box/task-check-all-box.component';
 import {TaskCheckBoxComponent} from './components/task-check-box/task-check-box.component';
 import {TaskListComponent} from './components/task-list/task-list.component';
+import {ResponsiveGridDirective} from './directives/responsive-grid.directive';
 
 import { SafePipe } from './pipes/safe.pipe';
 import { DynamicListControlComponent } from './components/dynamic-list-control/dynamic-list-control.component';
@@ -235,7 +236,8 @@ const directives = [
     KeyPressSourceDirective,
     ArrowTabDirective,
     ArrowTabItemDirective,
-    ResponsiveClassDirective
+    ResponsiveClassDirective,
+    ResponsiveGridDirective
 ];
 
 const pipes = [
