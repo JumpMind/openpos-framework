@@ -72,7 +72,7 @@ jar {
 idea {
     module {
         testResourceDirs = []
-        testSourceDirs = [ file('src/test/java')]
+        testSourceDirs = [ file('src/test/java'), file('src/test/groovy')]
         resourceDirs += file('src/test/resources')
         downloadJavadoc = true
         downloadSources = true
