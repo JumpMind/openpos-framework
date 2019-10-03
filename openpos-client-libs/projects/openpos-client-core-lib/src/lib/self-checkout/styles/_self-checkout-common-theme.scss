@@ -1,0 +1,146 @@
+@mixin self-checkout-common-theme($theme) {
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+    $background: map-get($mat-grey, 200);
+    $border: map-get($mat-grey, 800);
+    $primary: map-get($theme, primary);
+    $disabled: mat-color(map-get($theme, background), disabled-button);
+    $contrast: mat-color($primary, default-contrast);
+
+    .self-checkout-background {
+        background-color: $background;
+    }
+
+    .self-checkout-outer {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .self-checkout-body {
+        padding: 24px 16px;
+        flex: 1 1 100%;
+        overflow-y: auto;
+    }
+
+    .self-checkout-text-xs {
+        font-size: 12px !important;
+    }
+
+    .self-checkout-text-sm {
+        font-size: 18px !important;
+    }
+
+    .self-checkout-text-md {
+        font-size: 24px !important;
+    }
+
+    .self-checkout-text-lg {
+        font-size: 32px !important;
+    }
+
+    .self-checkout-text-xl {
+        font-size: 48px !important;
+    }
+
+    // Shrink text on iPads/Tablets and below
+    @media(max-width: 1024px) {
+        .self-checkout-text-xs {
+            font-size: 8px !important;
+        }
+
+        .self-checkout-text-sm {
+            font-size: 14px !important;
+        }
+
+        .self-checkout-text-md {
+            font-size: 18px !important;
+        }
+
+        .self-checkout-text-lg {
+            font-size: 24px !important;
+        }
+
+        .self-checkout-text-xl {
+            font-size: 36px !important;
+        }
+    }
+
+    .self-checkout-button {
+        padding: 16px;
+    }
+
+    .self-checkout-primary-button {
+        padding: 16px;
+        color: $contrast;
+        background-color: $app-primary;
+    }
+
+    .self-checkout-primary-button:disabled {
+        background-color: $disabled;
+    }
+
+    .self-checkout-border-color {
+        border-color: $border;
+    }
+
+    .self-checkout-border {
+        border-color: $border;
+        border-style: solid;
+        border-width: 2px;
+    }
+
+    .self-checkout-border-button {
+        border-color: $border;
+        border-style: solid;
+        border-width: 2px;
+        background-color: white;
+        padding: 14px 16px;
+    }
+
+    .self-checkout-border-button:disabled {
+        border-color: $disabled;
+    }
+
+    .self-checkout-form-body {
+        .mat-form-field {
+            @extend .self-checkout-text-lg;
+
+            app-icon {
+                margin-right: 8px;
+            }
+        }
+
+        .mat-button {
+            @extend .self-checkout-primary-button;
+            @extend .self-checkout-text-lg;
+        }
+    }
+
+    .self-checkout-prompt-body {
+        .mat-form-field {
+            @extend .self-checkout-text-lg;
+
+            app-icon {
+                margin-right: 8px;
+            }
+
+            .mat-hint {
+                @extend .self-checkout-text-md;
+            }
+        }
+    }
+
+    .mat-dialog-actions {
+        padding: 16px 0px;
+
+        .mat-raised-button {
+            @extend .self-checkout-button;
+            @extend .self-checkout-text-lg;
+        }
+    }
+}

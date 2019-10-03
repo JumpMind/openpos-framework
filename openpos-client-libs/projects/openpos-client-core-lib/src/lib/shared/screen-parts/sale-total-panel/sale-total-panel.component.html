@@ -1,0 +1,58 @@
+<mat-card class="sale-total-background" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
+
+    <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px"
+        class="sale-total-content">
+        <div *ngFor="let total of screenData.totals" fxFlex="1 1 auto" class="sale-total-subtotal">
+            <div class="self-checkout-text-sm primary sale-total-subtotal-title">{{total.name}}</div>
+            <div class="self-checkout-text-lg sale-total-subtotal-amount">
+                <app-currency-text [amountText]="total.amount"></app-currency-text>
+            </div>
+        </div>
+        <div *ngIf="screenData.grandTotal" fxFlex="1 1 auto" class="self-checkout-border-color sale-total-total">
+            <div class="self-checkout-text-lg primary sale-total-total-title">{{screenData.grandTotal.name}}
+            </div>
+            <div class="self-checkout-text-xl sale-total-total-amount">
+                <app-currency-text [amountText]="screenData.grandTotal.amount"></app-currency-text>
+            </div>
+        </div>
+        <button mat-button *ngIf="screenData.promoButton" (click)="doMenuItemAction(screenData.promoButton)"
+            class="sale-total-promo-button self-checkout-text-sm">
+            <span fxFlex="1 1 auto">{{screenData.promoButton.title}}</span>
+            <app-icon [iconName]="screenData.promoButton.icon" [iconClass]="'primary mat-24'"></app-icon>
+        </button>
+    </div>
+
+    <div fxFlex="2 1 auto"></div>
+
+    <div>
+        <button mat-button *ngIf="!screenData.readOnly && !screenData.customer && screenData.loyaltyButton"
+            (click)="doMenuItemAction(screenData.loyaltyButton)"
+            class="self-checkout-button self-checkout-border-button sale-total-loyalty-button self-checkout-text-md">
+            <span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
+
+            <img [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
+
+            <span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
+        </button>
+        <div *ngIf="screenData.customer" class="self-checkout-text-sm text-center" fxLayout="column"
+            fxLayoutAlign="center center" fxLayoutGap="8px">
+            <img [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon">
+            <div class="muted-color">{{screenData.customer.name}}</div>
+            <div class="muted-color">{{screenData.customer.label}}: {{screenData.customer.id}}</div>
+        </div>
+
+        <button mat-button *ngIf="!screenData.readOnly && screenData.checkoutButton"
+            [disabled]="!screenData.items || screenData.items.length == 0"
+            (click)="doMenuItemAction(screenData.checkoutButton)"
+            class="self-checkout-primary-button sale-total-checkout-button self-checkout-text-lg">{{screenData.checkoutButton.title}}</button>
+        <button mat-button *ngIf="!screenData.readOnly && screenData.logoutButton"
+            (click)="doMenuItemAction(screenData.logoutButton)"
+            class="self-checkout-border-button self-checkout-text-lg sale-total-border-button">
+            <span>
+                <app-icon *ngIf="screenData.logoutButton.icon" [iconName]="screenData.logoutButton.icon">
+                </app-icon>
+                {{screenData.logoutButton.title}}
+            </span>
+        </button>
+    </div>
+</mat-card>

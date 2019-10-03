@@ -32,10 +32,11 @@ export class IconComponent implements OnInit, OnChanges {
 
     ngOnChanges(): void {
 
-        if(!this.iconClass){
+        if (!this.iconClass) {
             this.iconClass = 'mat-24';
-        }
-        else if(!this.iconClass.includes('mat-')){
+        } else if(this.iconClass === 'none') {
+            this.iconClass = null;
+        } else if (!this.iconClass.includes('mat-')) {
             this.iconClass += ' mat-24';
         }
 

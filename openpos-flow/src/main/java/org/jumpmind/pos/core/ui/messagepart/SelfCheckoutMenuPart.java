@@ -18,6 +18,11 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
     private boolean showAdmin;
     private boolean showSkip;
     private boolean showLanguageSelector = false;
+    private String logo;
+
+    public SelfCheckoutMenuPart() {
+        logo = "content:home-screen-logo";
+    }
 
     public String getDeviceId() {
         return deviceId;
@@ -89,5 +94,13 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
 
     public void setShowLanguageSelector(boolean showLanguageSelector) {
         this.showLanguageSelector = showLanguageSelector;
+    }
+
+    public String getLogo() {
+        return logo;
+    }
+
+    public void setLogo(String logo) {
+        this.logo = logo;
     }
 }

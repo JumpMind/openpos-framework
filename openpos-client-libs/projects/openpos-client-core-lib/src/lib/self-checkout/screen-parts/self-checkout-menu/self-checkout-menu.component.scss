@@ -1,14 +1,14 @@
-.screen-icon{
+.screen-icon {
     display: flex;
 }
 
-.mat-toolbar{
+.mat-toolbar {
     font-weight: normal;
 }
 
-.back-button{
-    margin-left:-20px; 
-    z-index:10;
+.back-button {
+    margin-left: -20px;
+    z-index: 10;
 }
 
 .large-statusbar {
@@ -17,4 +17,8 @@
 
 .small-statusbar {
     height: 56px;
+}
+
+.self-checkout-logo {
+    height: 75%;
 }

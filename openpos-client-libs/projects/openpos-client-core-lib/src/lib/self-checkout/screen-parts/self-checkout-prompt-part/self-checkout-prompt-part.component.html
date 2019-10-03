@@ -1,0 +1,26 @@
+<form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
+    <div class="self-checkout-border self-checkout-prompt-part-outer">
+        <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText"
+            [responseType]="screenData.responseType" [promptIcon]="screenData.promptIcon"
+            [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
+            [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
+            [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
+            [readOnly]="!screenData.editable"></app-prompt-input>
+
+        <div *ngIf="instructions" class="text-sm">{{instructions}}</div>
+
+        <div *ngIf="screenData.otherActions || screenData.actionButton" class="self-checkout-prompt-buttons">
+            <button *ngFor="let menuItem of screenData.otherActions" mat-raised-button class="self-checkout-button" (click)="onAction(menuItem)">
+                <span class="self-checkout-text-lg">{{menuItem.title}}</span>
+                <app-icon *ngIf="menuItem.icon" [iconClass]="'mat-24 material-icons'" [iconName]="menuItem.icon">
+                </app-icon>
+            </button>
+            <button mat-button class="self-checkout-primary-button" (click)="onFormSubmit()">
+                <span class="self-checkout-text-lg">{{screenData.actionButton.title}}</span>
+                <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'mat-24 material-icons'"
+                    [iconName]="screenData.actionButton.icon"></app-icon>
+            </button>
+        </div>
+    </div>
+
+</form>

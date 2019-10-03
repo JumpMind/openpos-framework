@@ -1,0 +1,63 @@
+.sale-total-checkout-button {
+    margin-top: 16px;
+    width: 100%;
+}
+
+.sale-total-border-button {
+    width: 100%;
+    margin-top: 16px;
+}
+
+.sale-total-loyalty-icon {
+    max-width: 100%;
+}
+
+.sale-total-loyalty-button {
+    width: 100%;
+}
+
+.sale-total-loyalty-button-icon {
+    padding: 0px 8px;
+    max-width: 100%;
+}
+
+.sale-total-promo-button {
+    width: 100%;
+    text-align: left;
+    padding: 0px;
+}
+
+.sale-total-subtotal {
+    text-align: center;
+
+    .sale-total-subtotal-title {
+        padding-bottom: 8px;
+    }
+}
+
+.sale-total-total {
+    text-align: center;
+    border-top-style: solid;
+    border-top-width: 1px;
+
+    .sale-total-total-title {
+        padding-top: 16px;
+        padding-bottom: 8px;
+    }
+}
+
+.sale-total-background {
+    height: 100%;
+    align-self: stretch;
+    justify-self: stretch;
+    margin: 0px;
+    padding-top: 24px;
+    padding-bottom: 24px;
+    overflow-y: auto;
+}
+
+.sale-total-content {
+    width: 100%;
+    padding-left: 24px;
+    padding-right: 24px;
+}

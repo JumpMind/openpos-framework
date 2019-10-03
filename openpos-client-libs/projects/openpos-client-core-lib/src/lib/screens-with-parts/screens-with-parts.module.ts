@@ -24,6 +24,7 @@ import { TenderComponent } from './tender/tender.component';
 import { SignatureCaptureComponent } from './signature-capture/signature-capture.component';
 import { DynamicFormDialogComponent } from './dynamic-form-dialog/dynamic-form-dialog.component';
 import { DynamicFormComponent } from './dynamic-form-dialog/dynamic-form.component';
+import { ScanInputDialogComponent } from './scan-input-dialog/scan-input-dialog.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -51,7 +52,8 @@ const dialogs = [
     ReturnTransDetailsDialogComponent,
     ConfirmDialogComponent,
     LoadingDialogComponent,
-    DynamicFormDialogComponent
+    DynamicFormDialogComponent,
+    ScanInputDialogComponent
 ];
 
 @NgModule({

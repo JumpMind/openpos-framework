@@ -5,9 +5,7 @@ import { Component, Injector } from '@angular/core';
 import { ScreenPartComponent } from '../../../shared/screen-parts/screen-part';
 import { ScreenPart } from '../../../shared/decorators/screen-part.decorator';
 import { IActionItem } from '../../../core/actions/action-item.interface';
-import { MatDialogConfig, MatDialog } from '@angular/material';
-import { ScanSomethingComponent } from '../../../shared/components/scan-something/scan-something.component';
-
+import { MatDialog } from '@angular/material';
 
 @ScreenPart({
     name: 'selfCheckoutMenu'
@@ -54,8 +52,7 @@ export class SelfCheckoutMenuComponent extends ScreenPartComponent<SelfCheckoutM
     }
 
     public showScan() {
-        const dialogConfig: MatDialogConfig = { autoFocus: true };
-        this.dialogService.open(ScanSomethingComponent, dialogConfig);
+        this.doAction('ShowScan');
     }
 
 }

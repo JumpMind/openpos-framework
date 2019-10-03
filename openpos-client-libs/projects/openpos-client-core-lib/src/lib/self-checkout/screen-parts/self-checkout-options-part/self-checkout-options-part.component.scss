@@ -1,17 +1,24 @@
 .options-list-item {
-    padding: 60px !important;
-    margin: 8px !important;
+    padding: 16px !important;
+    margin: 8px;
+    height: unset !important;
+    background-color: white;
+    white-space: normal;
+}
+
+.mat-list-item {
+    // Fix weird overflow in list items
+    width: unset !important;
 }
 
 .mat-line {
-   text-align: center;
+    text-align: center;
 }
 
 .options-buttons {
     padding-bottom: 64px;
-    
+
     span {
-        line-height: 64px;
         padding: 32px;
     }
 }

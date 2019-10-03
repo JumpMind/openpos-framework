@@ -1,14 +1,18 @@
-.home-logo {
-    width: 300px; 
-    height: 200px; 
-    position: inherit;
-    filter: grayscale(1) invert(1) brightness(10);
-    -webkit-filter: grayscale(1) invert(1) brightness(10); 
+.mat-button-focus-overlay { background-color: transparent!important; }
+
+.self-checkout-home-image {
+    max-width: 50%;
+    margin: 64px;
 }
 
-.home-button {
-    font-weight: bold; 
-    padding: 16px; 
-    padding-left: 32px; 
-    padding-right: 32px;
+.self-checkout-home-text-container {
+    margin-top: auto;
+    margin-bottom: 10%;
+}
+
+.self-checkout-home-text {
+    text-align: center;
+    max-width: 60%;
+    color: white;
+    background:rgba(0,0,0,0.2);
 }

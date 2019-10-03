@@ -11,4 +11,5 @@ export interface SelfCheckoutMenuInterface {
     showAdmin: boolean;
     showSkip: boolean;
     showLanguageSelector: boolean;
+    logo: string;
 }

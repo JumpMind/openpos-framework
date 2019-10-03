@@ -1,5 +1,5 @@
 .item-card {
-    margin: 0px; 
+    margin: 0px;
     margin-bottom: 16px;
 }
 
@@ -8,30 +8,18 @@
 }
 
 .item-card-title {
-    padding-bottom: 8px; 
-    font-size: 22px;
+    padding-bottom: 8px;
 }
 
 .item-card-price {
-    font-weight: bold; 
-    font-size: 24px;
+    font-weight: bold;
     text-align: right;
 }
 
-.item-card-discount {
-    font-size: 20px;
-}
-
 .item-card-original {
-    text-decoration: line-through; 
-    font-size: 20px;
-}
-
-.item-card-details {
-    font-size: 20px;
+    text-decoration: line-through;
 }
 
 .item-card-button {
     width: 130px;
-    font-size: 24px;
 }
