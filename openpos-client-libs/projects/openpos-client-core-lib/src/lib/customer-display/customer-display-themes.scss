@@ -1,0 +1,5 @@
+@import './customer-display-sale/customer-display-sale-theme.scss';
+
+@mixin customer-display-themes($theme) {
+    @include customer-display-sale-theme($theme);
+}

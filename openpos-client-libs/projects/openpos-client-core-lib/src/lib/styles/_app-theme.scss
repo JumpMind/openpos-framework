@@ -7,6 +7,7 @@
 @import '../shared/components/component-theme-mixins';
 @import './mixins/serrated-edge';
 @import '../self-checkout/self-checkout-themes';
+@import '../customer-display/customer-display-themes';
 @import '../keyboard/keyboard-theme';
 
 @include mat-core();
@@ -64,6 +65,7 @@
     @include screen-with-parts-themes($theme);
     @include serrated-edge($theme);
     @include self-checkout-themes($theme);
+    @include customer-display-themes($theme);
     @include keyboard-theme($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
