@@ -2,13 +2,22 @@ package org.jumpmind.pos.server.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import lombok.Data;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.web.filter.AbstractRequestLoggingFilter;
 
+import java.util.List;
+
+@Data
+@ConfigurationProperties("openpos.server.http-requests.logging")
 public class RestRequestLoggingFilter extends AbstractRequestLoggingFilter {
 
     Logger log = LoggerFactory.getLogger(getClass());
+
+    List<String> include;
 
     public RestRequestLoggingFilter() {
         setIncludeClientInfo(true);
@@ -30,9 +39,7 @@ public class RestRequestLoggingFilter extends AbstractRequestLoggingFilter {
     }
 
     protected boolean log(HttpServletRequest request) {
-        String uri = request.getRequestURI();
-        return !uri.contains("swagger") && !uri.contains("/symds") && !uri.contains("/sql") && !uri.contains("/api/websocket")
-                && !(uri.contains("/content") && request.getQueryString().contains("contentPath")) && !uri.contains("/logs/upload");
+        return include != null && include.stream().anyMatch((p)->request.getRequestURI().contains(p));
     }
 
     @Override

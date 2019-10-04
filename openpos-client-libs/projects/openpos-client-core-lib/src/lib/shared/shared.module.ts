@@ -9,6 +9,7 @@ import { MatKeyboardModule } from '../keyboard/keyboard.module';
 import {TaskCheckAllBoxComponent} from './components/task-check-all-box/task-check-all-box.component';
 import {TaskCheckBoxComponent} from './components/task-check-box/task-check-box.component';
 import {TaskListComponent} from './components/task-list/task-list.component';
+import {ResponsiveGridDirective} from './directives/responsive-grid.directive';
 
 import { SafePipe } from './pipes/safe.pipe';
 import { DynamicListControlComponent } from './components/dynamic-list-control/dynamic-list-control.component';
@@ -123,6 +124,7 @@ import { SaleItemCardListComponent } from './screen-parts/sale-item-card-list/sa
 import { RoundedInputComponent } from './components/rounded-input/rounded-input.component';
 import { MobileFooterComponent } from './components/mobile-footer/mobile-footer.component';
 import { SaleTotalPanelComponent } from './screen-parts/sale-total-panel/sale-total-panel.component';
+import { ResponsiveClassDirective } from './directives/responsive-class.directive';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -233,7 +235,9 @@ const directives = [
     AutoCompleteAddressDirective,
     KeyPressSourceDirective,
     ArrowTabDirective,
-    ArrowTabItemDirective
+    ArrowTabItemDirective,
+    ResponsiveClassDirective,
+    ResponsiveGridDirective
 ];
 
 const pipes = [

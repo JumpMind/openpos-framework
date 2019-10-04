@@ -10,10 +10,13 @@
 @import './mixins/serrated-edge';
 @import './mixins/slide-toggle';
 @import './mixins/table';
-@import './mixins/typography';
+@import 'mixins/old-typography';
 @import './mixins/tabs';
 @import './mixins/multiple-dynamic-form-dialog';
 @import './mixins/badge';
+@import 'mixins/typography';
+@import 'variables/font-sizes';
+@import 'variables/spacing';
 
 $mat-card-default-margin: 24px !default;
 
@@ -28,7 +31,7 @@ $mat-card-default-margin: 24px !default;
   @include openpos-progress-bar();
   @include openpos-slide-toggle();
   @include openpos-table();
-  @include openpos-typography();
+  @include old-openpos-typography();
   @include openpos-tabs();
   @include multiple-dynamic-form-dialog();
   @include openpos-badge();
@@ -36,6 +39,7 @@ $mat-card-default-margin: 24px !default;
   @include openpos-themes();
 
   html, body {
+    font-size: $text-base;
     font-family: Roboto, sans-serif;
     margin:0;
     padding:0;
