@@ -13,15 +13,18 @@ export class ImageService {
     constructor(private personalizationService: PersonalizationService, private session: SessionService) { }
 
     replaceImageUrl(originalUrl: string): string {
-        const apiServerBaseUrl = this.personalizationService.getApiServerBaseURL();
-        const deviceId = this.personalizationService.getDeviceId();
-        const appId = this.session.getAppId();
+        if (originalUrl) {
+            const apiServerBaseUrl = this.personalizationService.getApiServerBaseURL();
+            const deviceId = this.personalizationService.getDeviceId();
+            const appId = this.session.getAppId();
 
-        let url = originalUrl.replace(this.baseUrlToken, apiServerBaseUrl);
-        url = url.replace(this.appIdToken, appId);
-        url = url.replace(this.deviceIdToken, deviceId);
-
-        return url;
+            let url = originalUrl.replace(this.baseUrlToken, apiServerBaseUrl);
+            url = url.replace(this.appIdToken, appId);
+            url = url.replace(this.deviceIdToken, deviceId);
+            return url;
+        } else {
+            return originalUrl;
+        }
     }
 
 }
