@@ -3,9 +3,11 @@ import { SharedModule } from '../shared/shared.module';
 import { ScreenService } from '../core/services/screen.service';
 import { DialogService } from '../core/services/dialog.service';
 import { CustomerDisplayHomeComponent } from './customer-display-home/customer-display-home.component';
+import { CustomerDisplaySaleComponent } from './customer-display-sale/customer-display-sale.component';
 
 const screens = [
-    CustomerDisplayHomeComponent
+    CustomerDisplayHomeComponent,
+    CustomerDisplaySaleComponent
 ];
 
 const dialogs = [
