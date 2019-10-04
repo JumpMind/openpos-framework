@@ -29,4 +29,5 @@ public final class UIMessageType {
     public static String DATA_TABLE = "DataTable";
     public static String SCAN_INPUT_DIALOG = "ScanInputDialog";
     public static String CUSTOMER_DISPLAY_HOME = "CustomerDisplayHome";
+    public static String CUSTOMER_DISPLAY_SALE = "CustomerDisplaySale";
 }
