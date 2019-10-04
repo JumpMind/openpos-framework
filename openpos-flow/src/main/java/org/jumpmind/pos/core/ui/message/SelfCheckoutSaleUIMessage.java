@@ -18,20 +18,16 @@ public class SelfCheckoutSaleUIMessage extends UIMessage {
     private List<SellItem> items = new ArrayList<>();
 
     private List<Total> totals;
-
     private Total grandTotal;
 
     private boolean transactionActive = false;
 
     private ActionItem checkoutButton;
-
     private ActionItem logoutButton;
-
     private ActionItem loyaltyButton;
-
     private ActionItem promoButton;
 
-    private SelfCheckoutCustomer customer;
+    private UICustomer customer;
 
     private String prompt;
 
@@ -126,11 +122,11 @@ public class SelfCheckoutSaleUIMessage extends UIMessage {
         this.promoButton = promoButton;
     }
 
-    public SelfCheckoutCustomer getCustomer() {
+    public UICustomer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(SelfCheckoutCustomer customer) {
+    public void setCustomer(UICustomer customer) {
         this.customer = customer;
     }
 

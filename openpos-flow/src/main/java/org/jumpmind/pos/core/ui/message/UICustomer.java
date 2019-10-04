@@ -2,7 +2,7 @@ package org.jumpmind.pos.core.ui.message;
 
 import java.io.Serializable;
 
-public class SelfCheckoutCustomer implements Serializable {
+public class UICustomer implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;
@@ -10,7 +10,11 @@ public class SelfCheckoutCustomer implements Serializable {
     private String label;
     private String icon;
 
-    public SelfCheckoutCustomer(String name, String id, String label, String icon) {
+    public UICustomer(String name) {
+        this.name = name;
+    }
+
+    public UICustomer(String name, String id, String label, String icon) {
         this.name = name;
         this.id = id;
         this.label = label;

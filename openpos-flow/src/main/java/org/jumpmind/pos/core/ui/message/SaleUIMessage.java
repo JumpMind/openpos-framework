@@ -3,7 +3,6 @@ package org.jumpmind.pos.core.ui.message;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.ActionItemGroup;
@@ -18,20 +17,26 @@ public class SaleUIMessage extends UIMessage {
     private String transactionMenuPrompt;
     private ActionItemGroup transactionMenu = new ActionItemGroup();
     private List<ActionItem> multiSelectedMenuItems;
+
     private List<SellItem> items = new ArrayList<>();
     private int[] selectedItemIndexes = new int[0];
+
     private List<Total> totals;
+    private Total grandTotal;
+
+    private ActionItem checkoutButton;
+    private ActionItem logoutButton;
+    private ActionItem loyaltyButton;
+    private ActionItem promoButton;
 
     private String itemCount;
-    private DisplayProperty grandTotal;
     private boolean transactionActive = false;
-    private String customerName;
+
+    private UICustomer customer;
     private String noCustomerText;
-    private ActionItem loyaltyButton;
+
     private boolean locationEnabled;
     private String locationOverridePrompt;
-    private ActionItem promoButton;
-    private ActionItem checkoutButton;
 
     public SaleUIMessage() {
         this.setScreenType(UIMessageType.SALE);
@@ -46,22 +51,6 @@ public class SaleUIMessage extends UIMessage {
         this.items = items;
     }
 
-    public DisplayProperty getGrandTotal() {
-        return grandTotal;
-    }
-
-    public void setGrandTotal(DisplayProperty grandTotal) {
-        this.grandTotal = grandTotal;
-    }
-
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
-
-    public String getCustomerName() {
-        return customerName;
-    }
-
     public List<Total> getTotals() {
         return totals;
     }
@@ -71,10 +60,22 @@ public class SaleUIMessage extends UIMessage {
     }
 
     public void addTotal(String name, String amount) {
-    	if( totals == null ) {
-    		totals = new ArrayList<>();
-    	}
+        if (totals == null) {
+            totals = new ArrayList<>();
+        }
         totals.add(new Total(name, amount));
+    }
+
+    public Total getGrandTotal() {
+        return grandTotal;
+    }
+
+    public void setGrandTotal(Total grandTotal) {
+        this.grandTotal = grandTotal;
+    }
+
+    public void setGrandTotal(String name, String amount) {
+        this.grandTotal = new Total(name, amount);
     }
 
     public String getNoCustomerText() {
@@ -83,6 +84,14 @@ public class SaleUIMessage extends UIMessage {
 
     public void setNoCustomerText(String noCustomerText) {
         this.noCustomerText = noCustomerText;
+    }
+
+    public UICustomer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(UICustomer customer) {
+        this.customer = customer;
     }
 
     public ActionItem getLoyaltyButton() {
@@ -125,14 +134,15 @@ public class SaleUIMessage extends UIMessage {
         this.multiSelectedMenuItems = multiSelectedMenuItems;
     }
 
-  /*  public ActionItem getLocalSausageLinkByAction(String action) {
-        return this.sausageLinks.stream().filter(mi -> action.equalsIgnoreCase(mi.getAction())).findFirst().orElse(null);
-    }
-
-    public ActionItem getSausageLinkByTitle(String title) {
-        return this.sausageLinks.stream().filter(mi -> title.equalsIgnoreCase(mi.getTitle())).findFirst().orElse(null);
-    }*/
-
+    /*
+     * public ActionItem getLocalSausageLinkByAction(String action) { return
+     * this.sausageLinks.stream().filter(mi ->
+     * action.equalsIgnoreCase(mi.getAction())).findFirst().orElse(null); }
+     * 
+     * public ActionItem getSausageLinkByTitle(String title) { return
+     * this.sausageLinks.stream().filter(mi ->
+     * title.equalsIgnoreCase(mi.getTitle())).findFirst().orElse(null); }
+     */
 
     public String getTransactionMenuPrompt() {
         return transactionMenuPrompt;
@@ -153,26 +163,26 @@ public class SaleUIMessage extends UIMessage {
     public void setTransactionActive(boolean isTransactionActive) {
         this.transactionActive = isTransactionActive;
     }
-    
+
     public boolean isTransactionActive() {
         return transactionActive;
     }
 
-	public String getItemCount() {
-		return itemCount;
-	}
+    public String getItemCount() {
+        return itemCount;
+    }
 
-	public void setItemCount(String itemCount) {
-		this.itemCount = itemCount;
-	}
+    public void setItemCount(String itemCount) {
+        this.itemCount = itemCount;
+    }
 
-	public ActionItem getCheckoutButton() {
-		return checkoutButton;
-	}
+    public ActionItem getCheckoutButton() {
+        return checkoutButton;
+    }
 
-	public void setCheckoutButton(ActionItem checkoutButton) {
-		this.checkoutButton = checkoutButton;
-	}
+    public void setCheckoutButton(ActionItem checkoutButton) {
+        this.checkoutButton = checkoutButton;
+    }
 
     public void addTransactionMenuItem(ActionItem menuItem) {
         this.transactionMenu.getActionItems().add(menuItem);
@@ -184,5 +194,13 @@ public class SaleUIMessage extends UIMessage {
 
     public ActionItemGroup getTransactionMenu() {
         return transactionMenu;
+    }
+
+    public ActionItem getLogoutButton() {
+        return logoutButton;
+    }
+
+    public void setLogoutButton(ActionItem logoutButton) {
+        this.logoutButton = logoutButton;
     }
 }
