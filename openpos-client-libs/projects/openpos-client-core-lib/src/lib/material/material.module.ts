@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
+import { MatBottomSheetModule} from '@angular/material/bottom-sheet';
 import {
   MatBadgeModule,
   MatDialog,
@@ -74,7 +74,8 @@ import {
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatBottomSheetModule
   ],
   exports: [
     MatAutocompleteModule,
@@ -109,7 +110,8 @@ import {
     MatTableModule,
     MatTabsModule,
     MatToolbarModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatBottomSheetModule
   ],
   providers: [
     MatDialog
