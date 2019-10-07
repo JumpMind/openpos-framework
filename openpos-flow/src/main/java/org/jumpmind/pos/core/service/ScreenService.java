@@ -70,7 +70,7 @@ public class ScreenService implements IScreenService, IActionListener {
     @Autowired
     IStateManagerContainer stateManagerContainer;
 
-    @Value("${openpos.screenService.jsonIncludeNulls:true}")
+    @Value("${openpos.screens.jsonIncludeNulls:true}")
     boolean jsonIncludeNulls = true;
 
     @Value("${openpos.ui.content.maxage:null}")
