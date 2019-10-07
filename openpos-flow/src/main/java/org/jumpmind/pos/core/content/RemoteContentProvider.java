@@ -34,6 +34,7 @@ public class RemoteContentProvider implements IContentProvider {
     private Map<String, Map<String, List<String>>> urlsByKeyAndTag = new HashMap<>();
     private Map<String, byte[]> contentLookupMap = new HashMap<>();
     private List<String> propertiesForTags = new ArrayList<>();
+    private boolean cacheContent;
 
     static Map<String, ContentIndex> deviceContent = new HashMap<>();
 
@@ -101,11 +102,13 @@ public class RemoteContentProvider implements IContentProvider {
 
         String contentLookupKey = key+tagKey+index;
 
-        try{
-            contentLookupMap.put(contentLookupKey, httpConnectionService.get(urls.get(index)));
-        } catch ( Exception e ){
-            logger.warn("Failed to retrieve content from: " + urls.get(index), e);
-            return null;
+        if (!cacheContent || !contentLookupMap.containsKey(contentLookupKey)) {
+            try {
+                contentLookupMap.put(contentLookupKey, httpConnectionService.get(urls.get(index)));
+            } catch (Exception e) {
+                logger.warn("Failed to retrieve content from: " + urls.get(index), e);
+                return null;
+            }
         }
 
         StringBuilder urlBuilder = new StringBuilder("${apiServerBaseUrl}/appId/${appId}/deviceId/${deviceId}/content?contentPath=");
@@ -183,5 +186,11 @@ public class RemoteContentProvider implements IContentProvider {
         this.urlsByKeyAndTag = urlsByKey;
     }
 
+    public void setCacheContent(boolean cacheContent) {
+        this.cacheContent = cacheContent;
+    }
 
+    public boolean isCacheContent() {
+        return cacheContent;
+    }
 }

@@ -19,6 +19,25 @@ $xx-large-space: 3rem;
   }
 }
 
+%clickable-sub-element{
+    padding: $xx-large-space $x-large-space;
+  &.mobile{
+      padding: $xx-large-space/$mobile-factor $x-large-space/$mobile-factor;
+  }
+}
+
+%clickable-spaced-content{
+  display: grid;
+  row-gap: $large-space;
+  column-gap:$large-space;
+  &.mobile {
+    row-gap: $large-space/$mobile-factor;
+    column-gap:$large-space/$mobile-factor;
+  }
+}
+
+
+
 // Sets the spacing for the container element
 %sub-element-spaced-content{
   display: grid;
@@ -42,9 +61,9 @@ $xx-large-space: 3rem;
 
 // Set spacing for the footer element
 %page-footer {
-  margin: $med-space;
+  padding: $med-space;
   &.mobile{
-    margin: $med-space/$mobile-factor;
+    padding: $med-space/$mobile-factor;
   }
 }
 
