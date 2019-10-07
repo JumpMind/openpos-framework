@@ -17,8 +17,8 @@ export class ItemCardComponent {
 
   constructor(public actionService: ActionService, public session: SessionService) { }
 
-  public doMenuItemAction(menuItem: IActionItem, payload: number) {
-    this.actionService.doAction(menuItem, [payload]);
+  public doItemAction(action: IActionItem, payload: number) {
+    this.actionService.doAction(action, [payload]);
   }
 
   public isMenuItemEnabled(m: IActionItem): boolean {
