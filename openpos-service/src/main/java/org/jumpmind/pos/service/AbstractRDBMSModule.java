@@ -89,10 +89,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     protected IDatabasePlatform databasePlatform;
 
-    @Value("${openpos.modules.datasourceBeanName:#{null}}")
+    @Value("${openpos.general.datasourceBeanName:#{null}}")
     protected String dataSourceBeanName;
 
-    @Value("${openpos.modules.sqlScriptProfile:test}")
+    @Value("${openpos.general.sqlScriptProfile:test}")
     protected String sqlScriptProfile;
 
     protected DataSource dataSource;

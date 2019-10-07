@@ -48,7 +48,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     /*
      * Default to 'v1' so pre-existing clients aren't broken
      */
-    @Value("${openpos.compatibility.version:v1}")
+    @Value("${openpos.general.compatibility.version:v1}")
     String serverCompatibilityVersion;
 
     @Override

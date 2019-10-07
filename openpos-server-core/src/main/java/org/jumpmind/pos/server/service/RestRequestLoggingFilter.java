@@ -12,7 +12,7 @@ import org.springframework.web.filter.AbstractRequestLoggingFilter;
 import java.util.List;
 
 @Data
-@ConfigurationProperties("openpos.server.http-requests.logging")
+@ConfigurationProperties("openpos.general.http-requests.logging")
 public class RestRequestLoggingFilter extends AbstractRequestLoggingFilter {
 
     Logger log = LoggerFactory.getLogger(getClass());
