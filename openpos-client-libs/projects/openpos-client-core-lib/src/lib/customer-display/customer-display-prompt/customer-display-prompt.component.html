@@ -1,0 +1,10 @@
+<div class="customer-display-background customer-display-outer">
+    <app-bacon-strip></app-bacon-strip>
+
+    <div class="customer-display-body" fxLayout="column" fxLayoutAlign="center center">
+
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="customer-display-prompt-image">
+
+        <app-self-checkout-prompt-part class="customer-display-prompt-card"></app-self-checkout-prompt-part>
+    </div>
+</div>
