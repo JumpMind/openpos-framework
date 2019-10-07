@@ -24,13 +24,13 @@ public class DefaultHttpConnectionService implements IHttpConnectionService {
     private Logger logger = LoggerFactory.getLogger(getClass());
     CloseableHttpClient httpclient = HttpClients.createDefault();
 
-    @Value("${remote.image.request.connection.timeout:2000}")
+    @Value("${openpos.http.client.connect.timeout:2000}")
     private int connectTimeout;
 
     @Value("${openpos.http.client.socket.timeout:2000}")
     private int socketTimeout;
 
-    @Value("${openpos.http.client.connect.timeout:2000}")
+    @Value("${openpos.http.client.connection.request.timeout:1}")
     private int connectionRequestTimeout;
 
     @Override
