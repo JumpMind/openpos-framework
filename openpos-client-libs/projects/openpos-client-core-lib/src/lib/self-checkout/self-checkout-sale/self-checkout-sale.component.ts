@@ -25,7 +25,6 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
     public items: ISellItem[];
     public size = -1;
 
-
     private scanServiceSubscription: Subscription;
 
     constructor(public devices: DeviceService, injector: Injector, private scannerService: ScannerService) {

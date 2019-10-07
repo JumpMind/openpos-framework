@@ -1,22 +1,15 @@
-<app-waffle>
-    <app-bacon-strip waffle-header></app-bacon-strip>
-    <div waffle-drawer-content fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
-        fxLayoutGap="4px" fxLayoutGap.lg="20px">
-        <app-sausage-links waffle-drawer-content></app-sausage-links>
-        <div fxFlex="1 1 auto"></div>
-        <app-sell-linked-customer [screenType]="screen.screenType" [customerName]="screen.customerName"
-            [noCustomerText]="screen.noCustomerText" [loyaltyButton]="screen.loyaltyButton"></app-sell-linked-customer>
-        <app-location-details *ngIf="screen.locationEnabled" [locationOverridePrompt]="screen.locationOverridePrompt"></app-location-details>
-        <div fxFlex="0 1 auto" class="sell-screen-logo"></div>
-    </div>
+<div class="self-checkout-background self-checkout-outer self-checkout-sale-outer">
+    <app-bacon-strip></app-bacon-strip>
 
-    <app-scan-or-search waffle-top-content class="scan-or-search mat-elevation-z3" [defaultAction]="screen.checkoutButton"></app-scan-or-search>
+    <div class="self-checkout-body self-checkout-sale-body">
+        <div fxLayout="column" class="sale-items-outer">
+            <app-scan-or-search class="scan-or-search mat-elevation-z1" [defaultAction]="screen.checkoutButton"></app-scan-or-search>
 
-    <div waffle-body class="sale-content">
-        <app-sale-item-list></app-sale-item-list>
-        <app-overflow-list *ngIf="screen.transactionActive" [numberItemsToShow]="overFlowListSize"
-            [items]="totals"></app-overflow-list>
-        <app-sale-footer></app-sale-footer>
-        <app-status-strip></app-status-strip>
+            <app-sale-item-card-list #scrollList fxFlex="1 1 auto" class="self-checkout-list-background">
+            </app-sale-item-card-list>
+
+            <app-status-strip></app-status-strip>
+        </div>
+        <app-sale-total-panel class="self-checkout-total-background"></app-sale-total-panel>
     </div>
-</app-waffle>
+</div>
