@@ -17,17 +17,9 @@ public class CustomerDisplaySaleUIMessage extends UIMessage {
 
     private Total grandTotal;
 
-    private boolean transactionActive = false;
-
     private ActionItem loyaltyButton;
 
-    private ActionItem promoButton;
-
     private SelfCheckoutCustomer customer;
-
-    private String prompt;
-
-    private String backgroundImage;
 
     public CustomerDisplaySaleUIMessage() {
         this.setScreenType(UIMessageType.CUSTOMER_DISPLAY_SALE);
@@ -69,14 +61,6 @@ public class CustomerDisplaySaleUIMessage extends UIMessage {
         this.grandTotal = new Total(name, amount);
     }
 
-    public boolean isTransactionActive() {
-        return transactionActive;
-    }
-
-    public void setTransactionActive(boolean transactionActive) {
-        this.transactionActive = transactionActive;
-    }
-
     public ActionItem getLoyaltyButton() {
         return loyaltyButton;
     }
@@ -85,36 +69,12 @@ public class CustomerDisplaySaleUIMessage extends UIMessage {
         this.loyaltyButton = loyaltyButton;
     }
 
-    public ActionItem getPromoButton() {
-        return promoButton;
-    }
-
-    public void setPromoButton(ActionItem promoButton) {
-        this.promoButton = promoButton;
-    }
-
     public SelfCheckoutCustomer getCustomer() {
         return customer;
     }
 
     public void setCustomer(SelfCheckoutCustomer customer) {
         this.customer = customer;
-    }
-
-    public String getPrompt() {
-        return prompt;
-    }
-
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
-    }
-
-    public String getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(String backgroundImage) {
-        this.backgroundImage = backgroundImage;
     }
 
 }
