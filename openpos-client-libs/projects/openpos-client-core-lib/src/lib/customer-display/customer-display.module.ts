@@ -4,10 +4,13 @@ import { ScreenService } from '../core/services/screen.service';
 import { DialogService } from '../core/services/dialog.service';
 import { CustomerDisplayHomeComponent } from './customer-display-home/customer-display-home.component';
 import { CustomerDisplaySaleComponent } from './customer-display-sale/customer-display-sale.component';
+import { CustomerDisplayOptionsComponent } from './customer-display-options/customer-display-options.component';
+import { SelfCheckoutModule } from '../self-checkout/self-checkout.module';
 
 const screens = [
     CustomerDisplayHomeComponent,
-    CustomerDisplaySaleComponent
+    CustomerDisplaySaleComponent,
+    CustomerDisplayOptionsComponent
 ];
 
 const dialogs = [
@@ -31,7 +34,8 @@ const screenParts = [
         ...screenParts,
     ],
     imports: [
-        SharedModule
+        SharedModule,
+        SelfCheckoutModule
     ],
     exports: [
         ...components,
