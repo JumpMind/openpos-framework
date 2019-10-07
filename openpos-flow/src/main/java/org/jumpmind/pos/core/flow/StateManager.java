@@ -204,7 +204,7 @@ public class StateManager implements IStateManager {
     }
 
     @Override
-    public Map<String, String> getClientContext() {
+    public Map<String, String> getClientContext(){
         return this.clientContext;
     }
 
