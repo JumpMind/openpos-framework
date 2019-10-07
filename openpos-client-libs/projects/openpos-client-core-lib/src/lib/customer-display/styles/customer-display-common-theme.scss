@@ -1,0 +1,30 @@
+@mixin customer-display-common-theme($theme) {
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+    $background: map-get($mat-grey, 200);
+    $border: map-get($mat-grey, 800);
+    $primary: map-get($theme, primary);
+    $disabled: mat-color(map-get($theme, background), disabled-button);
+    $contrast: mat-color($primary, default-contrast);
+
+    .customer-display-background {
+        background-color: $background;
+    }
+
+    .customer-display-outer {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .customer-display-body {
+        padding: 24px 16px;
+        flex: 1 1 100%;
+        overflow-y: auto;
+    }
+    
+}

@@ -1,15 +1,3 @@
-.customer-display-outer {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-}
-
-.customer-display-body {
-    padding: 24px 16px;
-    flex: 1 1 100%;
-    overflow-y: auto;
-}
-
 .customer-display-sale-body {
     display: grid;
     grid-template-columns: 1fr 25%;
