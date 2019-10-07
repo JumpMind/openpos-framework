@@ -19,7 +19,6 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 @Service
-@Primary
 public class DefaultHttpConnectionService implements IHttpConnectionService {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
