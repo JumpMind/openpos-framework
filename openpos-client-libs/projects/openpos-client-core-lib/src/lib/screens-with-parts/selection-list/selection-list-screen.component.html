@@ -7,7 +7,7 @@
     <app-scan-or-search *ngIf="screen.showScan" waffle-top-content class="scan-or-search mat-elevation-z3"></app-scan-or-search>
     <div waffle-body fxFlexFill>
         <div fxLayout="column" class="outer">
-            <mat-card fxLayout="column" class="lighter scrollable-content-card selection-list-card">
+            <mat-card fxLayout="column" class="scrollable-content-card selection-list-card">
                 <mat-card-title *ngIf="screen.instructions" class="text-sm">{{screen.instructions}}</mat-card-title>
                 <mat-card-content fxFlex="1 1 100%">
                     <app-selectable-item-list *ngIf="screen.selectionList" 
