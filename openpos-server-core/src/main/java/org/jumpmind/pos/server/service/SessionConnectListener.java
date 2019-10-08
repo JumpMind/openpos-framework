@@ -35,10 +35,10 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
 
     Map<String, Map<String, String>> clientContext = Collections.synchronizedMap(new HashMap<>());
 
-    @Value("${openpos.auth.token:#{null}}")
+    @Value("${openpos.general.authToken:#{null}}")
     String serverAuthToken;
 
-    @Value("${openpos.compatibility.version:#{null}}")
+    @Value("${openpos.general.compatibility.version:#{null}}")
     String serverCompatibilityVersion;
 
     @Autowired(required = false)
