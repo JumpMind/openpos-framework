@@ -277,6 +277,7 @@ export * from './lib/shared/components/scan-something/scan-something.component';
 export * from './lib/shared/components/searchable-pop-tart/searchable-pop-tart.component';
 export * from './lib/shared/components/secondary-button/secondary-button.component';
 export * from './lib/shared/components/selectable-item-list/selectable-item-list.component';
+export * from './lib/shared/components/selectable-item-list/selectable-list-data.interface';
 export * from './lib/shared/components/show-errors/show-errors.component';
 export * from './lib/shared/components/status-bar/status-bar-data';
 export * from './lib/shared/components/status-bar/status-bar.component';
