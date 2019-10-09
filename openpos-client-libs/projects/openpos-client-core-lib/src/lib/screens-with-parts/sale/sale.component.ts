@@ -12,6 +12,7 @@ import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-acti
 import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
+import { IActionItem } from '../../core/actions/action-item.interface';
 
 @ScreenComponent({
     name: 'Sale'
@@ -38,7 +39,7 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
     private scanServiceSubscription: Subscription;
 
     constructor(private scannerService: ScannerService, protected mediaService: OpenposMediaService,
-                protected dialog: MatDialog, injector: Injector) {
+        protected dialog: MatDialog, injector: Injector) {
         super(injector);
         this.overFlowListSize = this.mediaService.mediaObservableFromMap(new Map([
             ['xs', 3],
@@ -62,6 +63,12 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
 
     onEnter(value: string) {
         this.doAction('Next', value);
+    }
+
+    public onMenuItemClick(menuItem: IActionItem) {
+        if (menuItem.enabled) {
+            this.doAction(menuItem);
+        }
     }
 
     ngAfterViewChecked() {

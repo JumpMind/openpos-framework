@@ -1,25 +1,29 @@
-.self-checkout-sale-body {
+.sale-outer {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
+.sale-body {
+    padding: 16px;
     display: grid;
     grid-template-columns: 1fr 25%;
+    overflow-y: auto;
 }
 
 .sale-items-outer {
     padding-right: 16px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow-y: auto;
 }
 
 .scan-or-search {
     margin-bottom: 16px;
 }
 
-.self-checkout-list-background {
+.sale-list-background {
     overflow-y: auto;
-    overflow-x: hidden;
-    align-self: stretch;
-    justify-self: stretch;
 }
 
-.self-checkout-total-background {
-    min-height: 100px;
-    align-self: stretch;
-    justify-self: stretch;
-}
+.sale-total-background {}

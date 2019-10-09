@@ -1,7 +1,6 @@
 <app-item-card *ngFor="let i of screenData.items" [item]="i" [isReadOnly]="screenData.readOnly"></app-item-card>
 
-<div *ngIf="screenData.items.length == 0 && !screenData.readOnly" fxFlex="1 1 auto" fxLayout="column"
-    fxLayoutAlign="center center">
+<div *ngIf="screenData.items.length == 0 && !screenData.readOnly" class="sale-item-prompt-outer">
     <div class="sale-item-list-prompt self-checkout-text-xl text-center">{{screenData.prompt}}</div>
     <div class="self-checkout-text-sm text-center">{{screenData.instructions}}</div>
     <img [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">

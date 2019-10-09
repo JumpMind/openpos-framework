@@ -1,13 +1,19 @@
-:host {
+.sale-item-prompt-outer {
+    height: 100%;
     display: flex;
     flex-direction: column;
+    place-content: center center;
 }
 
 .sale-item-list-prompt {
     padding: 16px;
     max-width: 75%;
+    max-height: 75%;
+    align-self: center;
 }
 
 .scan-item-icon {
     max-width: 75%;
+    max-height: 75%;
+    align-self: center;
 }

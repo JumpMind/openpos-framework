@@ -1,7 +1,8 @@
 <mat-card class="sale-total-background" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
 
-    <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px"
+    <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px"
         class="sale-total-content">
+
         <div *ngFor="let total of screenData.totals" fxFlex="1 1 auto" class="sale-total-subtotal">
             <div class="self-checkout-text-sm primary sale-total-subtotal-title">{{total.name}}</div>
             <div class="self-checkout-text-lg sale-total-subtotal-amount">
