@@ -31,6 +31,7 @@ public class SellItem extends DefaultItem {
     private boolean isOrderItem = false;
     private List<AdditionalLabel> additionalLabels = new ArrayList<>();
     private String imageUrl;
+    private String optionsLabel;
 
     /**
      * Put properties in this map if they are optional. When not set, they don't
@@ -218,6 +219,14 @@ public class SellItem extends DefaultItem {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public String getOptionsLabel() {
+        return optionsLabel;
+    }
+
+    public void setOptionsLabel(String optionsLabel) {
+        this.optionsLabel = optionsLabel;
     }
 
 }
