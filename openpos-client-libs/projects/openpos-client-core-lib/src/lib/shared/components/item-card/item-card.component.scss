@@ -5,6 +5,12 @@
 
 .item-card-image {
     height: 275px;
+    &.tablet {
+        height: 150px;
+    }
+    &.mobile {
+        height: 50px;
+    }
 }
 
 .item-card-title {

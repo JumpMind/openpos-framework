@@ -1,0 +1,18 @@
+.customer-display-sale-body {
+    display: grid;
+    grid-template-columns: 1fr 25%;
+}
+
+.customer-display-list-background {
+    overflow-y: auto;
+    overflow-x: hidden;
+    align-self: stretch;
+    justify-self: stretch;
+    padding-right: 16px;
+}
+
+.customer-display-total-background {
+    min-height: 100px;
+    align-self: stretch;
+    justify-self: stretch;
+}

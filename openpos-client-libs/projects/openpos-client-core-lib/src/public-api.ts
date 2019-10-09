@@ -164,6 +164,10 @@ export * from './lib/self-checkout/self-checkout-home/self-checkout-home.compone
 export * from './lib/self-checkout/self-checkout-sale/self-checkout-sale.component';
 export * from './lib/self-checkout/self-checkout-options/self-checkout-options.component';
 
+export * from './lib/customer-display/customer-display.module';
+export * from './lib/customer-display/customer-display-home/customer-display-home.component';
+export * from './lib/customer-display/customer-display-sale/customer-display-sale.component';
+
 export * from './lib/shared/shared.module';
 export * from './lib/shared/components/catalog-browser-item/catalog-browser-item.component';
 export * from './lib/shared/components/counter/counter.component';

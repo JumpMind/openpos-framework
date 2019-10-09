@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
+import static org.apache.commons.lang3.StringUtils.*;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 
@@ -35,10 +36,10 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
 
     Map<String, Map<String, String>> clientContext = Collections.synchronizedMap(new HashMap<>());
 
-    @Value("${openpos.auth.token:#{null}}")
+    @Value("${openpos.general.authToken:#{null}}")
     String serverAuthToken;
 
-    @Value("${openpos.compatibility.version:#{null}}")
+    @Value("${openpos.general.compatibility.version:#{null}}")
     String serverCompatibilityVersion;
 
     @Autowired(required = false)
@@ -55,8 +56,8 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
         String compatibilityVersion = getHeader(event.getMessage(), COMPATIBILITY_VERSION_HEADER);
         String queryParams = getHeader(event.getMessage(), QUERY_PARAMS_HEADER);
         sessionQueryParamsMap.put(sessionId, toQueryParams(queryParams));
-        sessionAuthenticated.put(sessionId, serverAuthToken == null || serverAuthToken.equals(authToken));
-        if (serverAuthToken != null && ! serverAuthToken.equals(authToken)) {
+        sessionAuthenticated.put(sessionId, isBlank(serverAuthToken)  || serverAuthToken.equals(authToken));
+        if (isNotBlank(serverAuthToken) && ! serverAuthToken.equals(authToken)) {
             String clientAuthTokenValueIfNull = authToken == null || "".equals(authToken) || "undefined".equals(authToken) ? String.format(" (value is: '%s')", authToken) : "";
             this.log.warn("Client auth token{} does not match server auth token, client connection will be rejected.", clientAuthTokenValueIfNull);
         };
