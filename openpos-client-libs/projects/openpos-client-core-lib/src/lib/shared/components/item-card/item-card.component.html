@@ -25,8 +25,9 @@
                 <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'">
                 </app-icon>
                 <div *ngIf="!isReadOnly && item.menuItems" fxLayout="row" fxLayoutAlign="end">
-                    <app-kebab-button *ngIf="item.menuItems.length > 1; else elseBlock" [menuItems]="item.menuItems"
-                        (menuItemClick)="doItemAction($event, item.index)"></app-kebab-button>
+                    <app-kebab-label-button *ngIf="item.menuItems.length > 1; else elseBlock"
+                        [menuItems]="item.menuItems" [label]="item.optionsLabel"
+                        (menuItemClick)="doItemAction($event, item.index)" class="primary"></app-kebab-label-button>
 
                     <ng-template #elseBlock>
                         <button mat-button color="primary" *ngFor="let m of item.menuItems" class="item-card-button"
