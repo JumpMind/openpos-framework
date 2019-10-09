@@ -14,12 +14,11 @@ import org.jumpmind.pos.core.ui.UIMessage;
 public class SaleUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
-    private String transactionMenuPrompt;
-    private ActionItemGroup transactionMenu = new ActionItemGroup();
-    private List<ActionItem> multiSelectedMenuItems;
+    private List<ActionItem> sausageLinks;
+
+    private String prompt;
 
     private List<SellItem> items = new ArrayList<>();
-    private int[] selectedItemIndexes = new int[0];
 
     private List<Total> totals;
     private Total grandTotal;
@@ -33,14 +32,23 @@ public class SaleUIMessage extends UIMessage {
     private boolean transactionActive = false;
 
     private UICustomer customer;
-    private String noCustomerText;
 
     private boolean locationEnabled;
     private String locationOverridePrompt;
 
+    private String backgroundImage;
+
     public SaleUIMessage() {
         this.setScreenType(UIMessageType.SALE);
         this.setId("sale");
+    }
+
+    public List<ActionItem> getSausageLinks() {
+        return sausageLinks;
+    }
+
+    public void setSausageLinks(List<ActionItem> sausageLinks) {
+        this.sausageLinks = sausageLinks;
     }
 
     public List<SellItem> getItems() {
@@ -76,14 +84,6 @@ public class SaleUIMessage extends UIMessage {
 
     public void setGrandTotal(String name, String amount) {
         this.grandTotal = new Total(name, amount);
-    }
-
-    public String getNoCustomerText() {
-        return noCustomerText;
-    }
-
-    public void setNoCustomerText(String noCustomerText) {
-        this.noCustomerText = noCustomerText;
     }
 
     public UICustomer getCustomer() {
@@ -126,38 +126,12 @@ public class SaleUIMessage extends UIMessage {
         this.promoButton = promoButton;
     }
 
-    public List<ActionItem> getMultiSelectedMenuItems() {
-        return multiSelectedMenuItems;
+    public String getPrompt() {
+        return prompt;
     }
 
-    public void setMultiSelectedMenuItems(List<ActionItem> multiSelectedMenuItems) {
-        this.multiSelectedMenuItems = multiSelectedMenuItems;
-    }
-
-    /*
-     * public ActionItem getLocalSausageLinkByAction(String action) { return
-     * this.sausageLinks.stream().filter(mi ->
-     * action.equalsIgnoreCase(mi.getAction())).findFirst().orElse(null); }
-     * 
-     * public ActionItem getSausageLinkByTitle(String title) { return
-     * this.sausageLinks.stream().filter(mi ->
-     * title.equalsIgnoreCase(mi.getTitle())).findFirst().orElse(null); }
-     */
-
-    public String getTransactionMenuPrompt() {
-        return transactionMenuPrompt;
-    }
-
-    public void setTransactionMenuPrompt(String transactionMenuPrompt) {
-        this.transactionMenuPrompt = transactionMenuPrompt;
-    }
-
-    public int[] getSelectedItemIndexes() {
-        return selectedItemIndexes;
-    }
-
-    public void setSelectedItemIndexes(int[] selectedItemIndexes) {
-        this.selectedItemIndexes = selectedItemIndexes;
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
     }
 
     public void setTransactionActive(boolean isTransactionActive) {
@@ -184,23 +158,19 @@ public class SaleUIMessage extends UIMessage {
         this.checkoutButton = checkoutButton;
     }
 
-    public void addTransactionMenuItem(ActionItem menuItem) {
-        this.transactionMenu.getActionItems().add(menuItem);
-    }
-
-    public void setTransactionMenu(ActionItemGroup transactionMenu) {
-        this.transactionMenu = transactionMenu;
-    }
-
-    public ActionItemGroup getTransactionMenu() {
-        return transactionMenu;
-    }
-
     public ActionItem getLogoutButton() {
         return logoutButton;
     }
 
     public void setLogoutButton(ActionItem logoutButton) {
         this.logoutButton = logoutButton;
+    }
+
+    public String getBackgroundImage() {
+        return backgroundImage;
+    }
+
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 }
