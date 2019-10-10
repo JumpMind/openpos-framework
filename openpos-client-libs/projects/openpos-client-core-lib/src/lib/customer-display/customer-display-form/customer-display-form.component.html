@@ -8,6 +8,10 @@
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="customer-display-form-image">
 
+        <div *ngIf="screen.instructions" fxFlex="0 0 auto" class="text-lg text-center form-instructions">
+            {{screen.instructions}}
+        </div>
+
         <div class="customer-display-border customer-display-form-part-outer">
             <app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
                 [alternateSubmitActions]="screen.alternateSubmitActions">

@@ -21,6 +21,8 @@ public class CustomerDisplayFormUIMessage extends UIMessage implements IHasForm 
 
     private ProgressBarPart progressBar;
 
+    private String instructions;
+
     public CustomerDisplayFormUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DISPLAY_FORM);
         ActionItem submitButton = new ActionItem("Next", "Next", IconType.Forward);
@@ -66,6 +68,14 @@ public class CustomerDisplayFormUIMessage extends UIMessage implements IHasForm 
 
     public void setProgressBar(ProgressBarPart progressBar) {
         this.progressBar = progressBar;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
 }
