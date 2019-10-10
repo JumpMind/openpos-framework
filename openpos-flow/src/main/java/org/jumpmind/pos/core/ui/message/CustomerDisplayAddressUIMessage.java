@@ -15,6 +15,8 @@ public class CustomerDisplayAddressUIMessage extends CustomerDisplayFormUIMessag
     private String postalCodePlaceholder = "Postal Code";
     private String countryPlaceholder = "Country";
 
+    private boolean autoComplete = true;
+
     public CustomerDisplayAddressUIMessage() {
         super();
     }
@@ -38,13 +40,21 @@ public class CustomerDisplayAddressUIMessage extends CustomerDisplayFormUIMessag
     }
 
     public void setPlaceholders(String streetAddressPlaceholder, String addressLine2Placeholder, String localityPlaceholder,
-                                String statePlaceholder, String postalCodePlaceholder, String countryPlaceholder) {
+            String statePlaceholder, String postalCodePlaceholder, String countryPlaceholder) {
         this.streetAddressPlaceholder = streetAddressPlaceholder;
         this.addressLine2Placeholder = addressLine2Placeholder;
         this.localityPlaceholder = localityPlaceholder;
         this.statePlaceholder = statePlaceholder;
         this.postalCodePlaceholder = postalCodePlaceholder;
         this.countryPlaceholder = countryPlaceholder;
+    }
+
+    public boolean isAutoComplete() {
+        return autoComplete;
+    }
+
+    public void setAutoComplete(boolean autoComplete) {
+        this.autoComplete = autoComplete;
     }
 
 }
