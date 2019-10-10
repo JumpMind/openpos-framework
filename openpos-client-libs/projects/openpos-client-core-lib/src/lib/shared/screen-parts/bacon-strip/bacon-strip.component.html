@@ -1,20 +1,26 @@
-<div class="container">
-    <div class="back-button-container" *ngIf="screenData.backButton" (click)="doAction(screenData.backButton)">
-        <app-icon-button
-            class="back-button"
-            [actionItem]="screenData.backButton"
-            iconName="keyboard_arrow_left"
-            iconClass="mat-48">
-        </app-icon-button> 
-    </div> 
-    <div class="header">
-        <app-icon   *ngIf="!(isMobile$ | async) && screenData.headerIcon" 
-                    class="header-icon" 
-                    [iconName]="screenData.headerIcon"></app-icon>
-        <span class="header-text">{{screenData.headerText}}</span>
+<div class="container mat-elevation-z5"
+     responsive-class
+     gdAlignColumns="center center">
+    <div>
+        <app-icon-button *ngIf="iconButtonName" [iconName]="iconButtonName" iconClass="md" (buttonClick)="buttonClick()"></app-icon-button>
     </div>
-    <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl" class="home-screen-logo">
-    <div class="operator" *ngIf="!(isMobile$ | async)">
-        <mat-icon *ngIf="screenData.operatorText" class="material-icons" style="vertical-align: middle;">lock_open</mat-icon>{{operatorInfo}}
+    <span>
+        <app-icon *ngIf="screenData.headerIcon" [iconName]="screenData.headerIcon"></app-icon>
+        <span>{{screenData.headerText}}</span>
+    </span>
+    <div>
+        <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
     </div>
+    <span>
+        <app-icon *ngIf="screenData.operatorText" iconName="lock_open" iconClass="md"></app-icon>
+        <span>{{operatorInfo}}</span>
+    </span>
 </div>
+<mat-sidenav-container>
+    <mat-sidenav>
+        <app-bacon-drawer></app-bacon-drawer>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <ng-content></ng-content>
+    </mat-sidenav-content>
+</mat-sidenav-container>

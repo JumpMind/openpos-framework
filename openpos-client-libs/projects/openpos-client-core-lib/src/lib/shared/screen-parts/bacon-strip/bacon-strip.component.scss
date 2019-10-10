@@ -1,37 +1,35 @@
+@import "../../../styles/variables/spacing";
+@import "../../../styles/mixins/typography";
+
 :host {
-    display: flex;
-    width: 100%;
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
 }
 
 .container{
-    display: flex;
-    padding: 4px 16px;
-    width: 100%;
+    @extend %text-md;
+    @extend %page-header;
+    grid-auto-flow: column;
+    grid-auto-columns: max-content;
+    grid-template-columns: auto auto 1fr auto;
+    z-index: 100;
     align-items: center;
-    font-size: 20px;
-    height: 48px;
-}
 
-.header {
-    display: flex;
-    align-items: center;
-    white-space: nowrap;
-}
+    > * {
+        @extend %sub-element-spaced-content;
+        display: grid;
+        grid-auto-flow: column;
+        align-items: center;
+    }
 
-
-.back-button-container {
-    width: 80px;
-}
-
-.back-button {
-    margin-top: 4px;
-}
-
-.operator{
-    width: 100%;
-    text-align: right;
-}
-
-.header-text{
-    margin-left: 10px;
+    img{
+        max-height: 50px;
+        justify-self: center;
+    }
+    &.mobile{
+        img{
+            display: none;
+        }
+    }
 }

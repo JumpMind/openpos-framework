@@ -1,11 +1,11 @@
-$mobile-factor: 4;
+$mobile-factor: 2;
 
 $x-small-space: .25rem;
 $small-space: .5rem;
 $med-space: .75rem;
 $large-space: 1rem;
 $x-large-space: 1.5rem;
-$xx-large-space: 3rem;
+$xx-large-space: 2rem;
 
 // Applies a padding to all the children of the container element
 %sub-element-container{
@@ -16,6 +16,13 @@ $xx-large-space: 3rem;
     > * {
       padding: $large-space/$mobile-factor;
     }
+  }
+}
+
+%sub-element{
+  padding: $large-space;
+  &.mobile{
+    padding: $large-space/$mobile-factor;
   }
 }
 
@@ -36,8 +43,6 @@ $xx-large-space: 3rem;
   }
 }
 
-
-
 // Sets the spacing for the container element
 %sub-element-spaced-content{
   display: grid;
@@ -52,10 +57,10 @@ $xx-large-space: 3rem;
 // Set spacing for the header element
 %page-header{
   padding: $med-space;
-  margin-bottom: $x-large-space;
+  column-gap:$large-space;
   &.mobile{
     padding: $med-space/$mobile-factor;
-    margin-bottom: $x-large-space/$mobile-factor;
+    column-gap:$large-space/$mobile-factor;
   }
 }
 

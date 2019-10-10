@@ -1,0 +1,29 @@
+@mixin bacon-drawer-theme($theme){
+
+  $app-primary: mat-color(map-get($theme, primary));
+  $app-primary-contrast: mat-color(map-get($theme, primary), default-contrast);
+  $app-accent: mat-color(map-get($theme, accent));
+  $app-warn: mat-color(map-get($theme, warn));
+
+  $foreground: map-get($theme, foreground );
+  $background: map-get($theme, background );
+
+  app-bacon-drawer {
+    background-color: map-get($background, card);
+
+    .header{
+        background-color: $app-primary;
+        color: $app-primary-contrast;
+    }
+
+    .button{
+      app-icon{
+        color: map_get($foreground, icon);
+      }
+      border-top: map_get($foreground, divider) solid 1px;
+      &:last-child{
+        border-bottom: map_get($foreground, divider) solid 1px;
+      }
+    }
+  }
+}

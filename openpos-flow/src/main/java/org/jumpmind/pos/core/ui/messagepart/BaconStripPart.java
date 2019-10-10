@@ -1,66 +1,36 @@
 package org.jumpmind.pos.core.ui.messagepart;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasBackButton;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BaconStripPart implements IHasBackButton, Serializable {
-
-    private static final long serialVersionUID = 1L;
-
     private String deviceId;
     private String operatorText;
     private String headerText;
     private String headerIcon;
     private String logo;
-    private ActionItem backButton;
+    private List<ActionItem> actions;
 
-    public String getDeviceId() {
-        return deviceId;
-    }
-
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getOperatorText() {
-        return operatorText;
-    }
-
-    public void setOperatorText(String operatorText) {
-        this.operatorText = operatorText;
-    }
-
-    public String getHeaderText() {
-        return headerText;
-    }
-
-    public void setHeaderText(String headerText) {
-        this.headerText = headerText;
-    }
-
-    public String getHeaderIcon() {
-        return headerIcon;
-    }
-
-    public void setHeaderIcon(String headerIcon) {
-        this.headerIcon = headerIcon;
-    }
-
-    public String getLogo() {
-        return logo;
-    }
-
-    public void setLogo(String logo) {
-        this.logo = logo;
-    }
-
-    public ActionItem getBackButton() {
-        return backButton;
-    }
-
-    public void setBackButton(ActionItem backButton) {
-        this.backButton = backButton;
+    @Override
+    public void setBackButton(ActionItem button) {
+        if(button != null){
+            if(actions == null){
+                actions = new ArrayList<>();
+            }
+            actions.add(button);
+        }
     }
 }

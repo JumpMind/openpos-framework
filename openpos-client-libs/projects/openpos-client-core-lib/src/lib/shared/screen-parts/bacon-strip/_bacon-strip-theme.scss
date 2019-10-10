@@ -1,4 +1,8 @@
+@import "bacon-drawer/bacon-drawer-theme";
+
 @mixin bacon-strip-theme($theme){
+
+    @include bacon-drawer-theme($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
     $app-primary-contrast: mat-color(map-get($theme, primary), default-contrast);
@@ -11,20 +15,6 @@
         .container{
             background-color: $app-primary;
             color: $app-primary-contrast;
-
-            .mat-form-field-underline,
-            .mat-form-field-ripple,
-            .mat-focused .mat-form-field-ripple {
-                background-color: $app-primary-contrast;
-            }
-          
-            .mat-form-field-label,
-            .mat-focused .mat-form-field-label,
-            .mat-select-value,
-            .mat-select-arrow,
-            .mat-form-field.mat-focused .mat-select-arrow {
-                color: inherit;
-            }
         }
     }
 }
