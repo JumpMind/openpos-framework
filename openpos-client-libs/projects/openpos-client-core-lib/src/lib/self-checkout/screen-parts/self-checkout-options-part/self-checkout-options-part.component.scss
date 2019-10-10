@@ -4,6 +4,12 @@
     height: unset !important;
     background-color: white;
     white-space: normal;
+    &.tablet {
+        padding: 5px !important;
+    }
+    &.mobile {
+        padding: 5px !important;
+    }
 }
 
 .mat-list-item {
