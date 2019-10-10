@@ -16,5 +16,9 @@
             background-color: $app-primary;
             color: $app-primary-contrast;
         }
+
+        .mat-drawer-backdrop.mat-drawer-shown{
+            background-color: rgba(0, 0, 0, 0.7);
+        }
     }
 }
