@@ -8,8 +8,6 @@ public class CustomerDisplayOptionsUIMessage extends UIMessage {
 
     private static final long serialVersionUID = 1L;
 
-    private SelfCheckoutMenuPart selfCheckoutMenu = new SelfCheckoutMenuPart();
-
     private String title;
 
     private String prompt;
@@ -22,14 +20,6 @@ public class CustomerDisplayOptionsUIMessage extends UIMessage {
 
     public CustomerDisplayOptionsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DISPLAY_OPTIONS);
-    }
-
-    public SelfCheckoutMenuPart getSelfCheckoutMenu() {
-        return selfCheckoutMenu;
-    }
-
-    public void setSelfCheckoutMenu(SelfCheckoutMenuPart selfCheckoutMenu) {
-        this.selfCheckoutMenu = selfCheckoutMenu;
     }
 
     public String getTitle() {
