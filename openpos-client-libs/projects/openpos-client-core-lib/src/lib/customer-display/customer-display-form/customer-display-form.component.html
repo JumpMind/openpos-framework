@@ -13,9 +13,12 @@
         </div>
 
         <div class="customer-display-border customer-display-form-part-outer">
-            <app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
-                [alternateSubmitActions]="screen.alternateSubmitActions">
+            <app-auto-complete-address-part *ngIf="screen.autoComplete" [formName]="'form'"
+                [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
             </app-auto-complete-address-part>
+            <app-dynamic-form-part class="customer-display-form-part" *ngIf="!screen.autoComplete" [formName]="'form'"
+                [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
+            </app-dynamic-form-part>
         </div>
     </div>
 </div>

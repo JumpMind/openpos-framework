@@ -15,3 +15,9 @@
     align-self: center;
     color: gray;
 }
+
+::ng-deep .customer-display-form-part {
+    form {
+        padding: 48px;
+    }
+}

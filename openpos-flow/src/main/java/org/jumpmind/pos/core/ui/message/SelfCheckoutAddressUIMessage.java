@@ -15,6 +15,8 @@ public class SelfCheckoutAddressUIMessage extends SelfCheckoutFormUIMessage impl
     private String postalCodePlaceholder = "Postal Code";
     private String countryPlaceholder = "Country";
 
+    private boolean autoComplete = true;
+
     public SelfCheckoutAddressUIMessage() {
         super();
     }
@@ -45,6 +47,14 @@ public class SelfCheckoutAddressUIMessage extends SelfCheckoutFormUIMessage impl
         this.statePlaceholder = statePlaceholder;
         this.postalCodePlaceholder = postalCodePlaceholder;
         this.countryPlaceholder = countryPlaceholder;
+    }
+
+    public boolean isAutoComplete() {
+        return autoComplete;
+    }
+
+    public void setAutoComplete(boolean autoComplete) {
+        this.autoComplete = autoComplete;
     }
 
 }

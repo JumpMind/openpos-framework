@@ -7,4 +7,5 @@ export interface CustomerDisplayFormInterface extends IAbstractScreen {
     alternateSubmitActions: IActionItem[];
     imageUrl: string;
     instructions: string;
+    autoComplete: boolean;
 }
