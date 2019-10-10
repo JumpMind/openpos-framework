@@ -11,6 +11,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasBackButton;
+import org.jumpmind.pos.core.ui.IconType;
 
 @Data
 @Builder
@@ -29,6 +30,9 @@ public class BaconStripPart implements IHasBackButton, Serializable {
         if(button != null){
             if(actions == null){
                 actions = new ArrayList<>();
+            }
+            if(button.getIcon() == null){
+                button.setIcon(IconType.Back);
             }
             actions.add(button);
         }
