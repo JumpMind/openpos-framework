@@ -1,17 +1,7 @@
-import {FlexibleConnectedPositionStrategy, Overlay, OverlayRef, VerticalConnectionPos} from '@angular/cdk/overlay';
-import {ComponentPortal, PortalInjector} from '@angular/cdk/portal';
-import {MatDialog} from '@angular/material/dialog';
 import {MatSidenav} from '@angular/material/sidenav';
-import {over} from '@stomp/stompjs';
-import {SideNavComponent} from '../../../../../../../dist/openpos-client-core-lib';
-import {ActionService} from '../../../core/actions/action.service';
-import {MessageProvider} from '../../providers/message.provider';
-import {BaconDrawerComponent} from './bacon-drawer/bacon-drawer.component';
 import { BaconStripInterface } from './bacon-strip.interface';
 import { ScreenPartComponent } from '../screen-part';
-import { OpenposMediaService } from '../../../core/services/openpos-media.service';
-import { Observable } from 'rxjs';
-import {Component, ElementRef, Injector, ViewChild, ViewContainerRef} from '@angular/core';
+import {Component, ViewChild } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 
 @ScreenPart({
