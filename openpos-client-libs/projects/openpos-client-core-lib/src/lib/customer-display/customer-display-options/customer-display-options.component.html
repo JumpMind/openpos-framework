@@ -6,13 +6,13 @@
         <div *ngIf="screen.icon" fxFlex="0 0 auto" fxLayoutAlign="center center">
             <app-icon [iconName]="screen.icon" class="options-icon"></app-icon>
         </div>
-        <div *ngIf="screen.title" fxFlex="0 0 auto" class="text-lg options-title">
+        <div *ngIf="screen.title" fxFlex="0 0 auto" class="options-title" responsive-class>
             {{screen.title}}
         </div>
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="customer-display-options-image">
 
-        <div *ngIf="screen.prompt" fxFlex="0 0 auto" class="text-md text-center options-prompt">
+        <div *ngIf="screen.prompt" fxFlex="0 0 auto" class="text-center options-prompt" responsive-class>
             {{screen.prompt}}
         </div>
 

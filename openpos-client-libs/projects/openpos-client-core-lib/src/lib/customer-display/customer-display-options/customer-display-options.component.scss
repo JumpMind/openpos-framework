@@ -1,3 +1,6 @@
+@import "../../styles/variables/spacing";
+@import "../../styles/mixins/typography";
+
 .customer-display-options {
     width: 75%;
 }
@@ -7,6 +10,7 @@
 }
 
 .options-title {
+    @extend %text-lg;
     font-weight: bold;
     margin-top: 0px;
     margin-bottom: 64px;
@@ -14,6 +18,7 @@
 }
 
 .options-prompt {
+    @extend %text-md;
     max-width: 700px;
     margin-top: 30px;
     margin-bottom: 17px;

@@ -8,7 +8,7 @@
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="customer-display-form-image">
 
-        <div *ngIf="screen.instructions" fxFlex="0 0 auto" class="text-md text-center form-instructions">
+        <div *ngIf="screen.instructions" fxFlex="0 0 auto" class="text-center form-instructions" responsive-class>
             {{screen.instructions}}
         </div>
 
