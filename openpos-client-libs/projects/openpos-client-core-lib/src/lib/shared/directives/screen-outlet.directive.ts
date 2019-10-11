@@ -10,8 +10,8 @@ import {
     Renderer2
 } from '@angular/core';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import {forEach} from '@angular/router/src/utils/collection';
 import { Subscription } from 'rxjs';
+import {PersonalizationService} from '../../core/personalization/personalization.service';
 import { ScreenService } from '../../core/services/screen.service';
 import { SessionService } from '../../core/services/session.service';
 import { ConfigurationService } from '../../core/services/configuration.service';
@@ -31,26 +31,29 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     @Output() componentEmitter = new EventEmitter<{ componentRef: ComponentRef<any>, screen: any }>();
     @Input() unsubscribe = true;
 
-    public templateTypeName: string;
     public screenTypeName: string;
     private screenName: string;
 
-    public classes = '';
+    //public classes = '';
 
     public currentTheme: string;
+
+    private themeClazzes = [];
+    private personalizationClazzes = [];
 
     private subscriptions = new Subscription();
 
     constructor(
-        public screenService: ScreenService,
+        private screenService: ScreenService,
         private viewContainerRef: ViewContainerRef,
-        public session: SessionService,
-        public configurationService: ConfigurationService,
-        public overlayContainer: OverlayContainer,
+        private session: SessionService,
+        private configurationService: ConfigurationService,
+        private overlayContainer: OverlayContainer,
         private dialogService: DialogService,
         private focusService: FocusService,
         private screenCreator: ScreenCreatorService,
-        public renderer: Renderer2) {
+        private personalization: PersonalizationService,
+        private renderer: Renderer2) {
     }
 
     ngOnInit(): void {
@@ -61,6 +64,9 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             MessageTypes.LIFE_CYCLE_EVENT).subscribe( message => this.handleLifeCycleEvent(message)));
         this.subscriptions.add(this.configurationService.theme$.subscribe( theme => {
             this.updateTheme(theme);
+        }));
+        this.subscriptions.add(this.personalization.getPersonalizationProperties$().subscribe( properties => {
+            this.updatePersonalizationProperties(properties);
         }));
     }
 
@@ -136,13 +142,8 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             // Create our screen component
             const componentFactory = this.screenService.resolveScreen(this.screenTypeName, this.currentTheme);
             this.componentRef = this.screenCreator.createScreenComponent(componentFactory, this.viewContainerRef );
-            this.updateTheme(this.currentTheme);
 
             trap = true;
-        }
-
-        if ( this.componentRef.instance.initialize ) {
-            this.componentRef.instance.initialize( this.componentRef.injector );
         }
 
         if (this.componentRef.instance.show) {
@@ -161,7 +162,8 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             });
         }
 
-        this.updateClasses(screen);
+        this.updateClazzes( this.personalizationClazzes, this.personalizationClazzes);
+        this.updateClazzes( this.themeClazzes, this.themeClazzes);
 
         // Output the componentRef and screen to the training-wrapper
         this.componentEmitter.emit({ componentRef: this.componentRef, screen });
@@ -171,32 +173,38 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     protected updateTheme(theme: string) {
         console.info('updating theme to ' + theme);
 
-        let currentThemes = !!this.currentTheme ? this.currentTheme.split(' ') : [];
-        let newThemes = !!theme ? theme.split(' ') : [];
+        let clazzes = !!theme ? theme.split(' ') : [];
+        this.updateClazzes(this.themeClazzes, clazzes);
+        this.themeClazzes = clazzes;
+    }
 
-        currentThemes.forEach( themeClass => {
-            this.overlayContainer.getContainerElement().classList.remove(themeClass);
+    private updatePersonalizationProperties( properties: Map<string, string>){
+        let clazzes = [];
+        properties.forEach( (value, key) => {
+            clazzes.push( `personalization-${key}-${value}`);
+        });
+        this.updateClazzes(this.personalizationClazzes, clazzes);
+        this.personalizationClazzes = clazzes;
+    }
+
+    private updateClazzes( oldClazzes: string[], newClazzes: string[]){
+        //remove old classes
+        oldClazzes.forEach( clazz => {
+            this.overlayContainer.getContainerElement().classList.remove(clazz);
+            if( this.componentRef ){
+                const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
+                this.renderer.removeClass(parent, clazz);
+            }
         });
 
-        this.overlayContainer.getContainerElement().classList.remove('default-theme');
-
-        newThemes.forEach( themeClass => {
-            this.overlayContainer.getContainerElement().classList.add(themeClass);
+        //add new classes
+        newClazzes.forEach( clazz => {
+            this.overlayContainer.getContainerElement().classList.add(clazz);
+            if( this.componentRef ){
+                const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
+                this.renderer.addClass(parent, clazz);
+            }
         });
-
-        if ( !!this.componentRef ) {
-            const parent = this.renderer.parentNode(this.componentRef.location.nativeElement);
-            currentThemes.forEach( themeClass => {
-                this.renderer.removeClass(parent, themeClass);
-            });
-
-            this.renderer.removeClass(parent, 'default-theme');
-
-            newThemes.forEach( themeClass => {
-                this.renderer.addClass(parent, themeClass);
-            });
-        }
-        this.currentTheme = theme;
     }
 
     protected logSwitchScreens(screen: any) {
@@ -221,36 +229,6 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         }
 
         console.info(msg);
-    }
-
-    protected updateClasses(screen: any) {
-        if (screen) {
-            // remove old classes
-            if (this.classes) {
-                this.classes.split(' ').forEach(c => this.renderer.removeClass(this.componentRef.location.nativeElement, c));
-            }
-            this.classes = '';
-            switch (this.session.getAppId()) {
-                case 'pos':
-                    if (screen.screenType === 'Home') {
-                        this.classes = 'pos main-background';
-                    } else {
-                        this.classes = 'pos';
-                    }
-                    break;
-                case 'selfcheckout':
-                    this.classes = 'selfcheckout';
-                    break;
-                case 'customerdisplay':
-                    this.classes = 'selfcheckout';
-                    break;
-            }
-
-            // Add new classes
-            if (this.classes) {
-                this.classes.split(' ').forEach(c => this.renderer.addClass(this.componentRef.location.nativeElement, c));
-            }
-        }
     }
 }
 

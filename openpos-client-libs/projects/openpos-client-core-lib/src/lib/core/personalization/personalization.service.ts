@@ -12,6 +12,7 @@ export class PersonalizationService {
     private serverBaseUrl$ = new BehaviorSubject<string>(this.getServerBaseURL());
     private apiServerBaseUrl$ = new BehaviorSubject<string>(this.getApiServerBaseURL());
     private deviceAppApiServerBaseUrl$ = new BehaviorSubject<string>(this.getDeviceAppApiServerBaseUrl());
+    private personalizationProperties$ = new BehaviorSubject<Map<string, string>>(this.getPersonalizationProperties());
     private appId: string;
 
     constructor(private http: HttpClient) {
@@ -48,6 +49,8 @@ export class PersonalizationService {
             for (const key of keys) {
                 localStorage.setItem(key, personalizationProperties.get(key));
             }
+
+            this.personalizationProperties$.next(this.getPersonalizationProperties());
         }
     }
 
@@ -62,6 +65,8 @@ export class PersonalizationService {
             }
         }
         localStorage.removeItem('personalizationProperties');
+
+        this.personalizationProperties$.next(this.getPersonalizationProperties());
     }
 
     public dePersonalize() {
@@ -86,6 +91,10 @@ export class PersonalizationService {
             }
         }
         return map;
+    }
+
+    public getPersonalizationProperties$(): Observable<Map<string, string>> {
+        return this.personalizationProperties$;
     }
 
     public getWebsocketUrl(): string {
