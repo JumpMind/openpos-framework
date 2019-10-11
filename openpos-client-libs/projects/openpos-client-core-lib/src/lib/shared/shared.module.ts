@@ -125,6 +125,7 @@ import { RoundedInputComponent } from './components/rounded-input/rounded-input.
 import { MobileFooterComponent } from './components/mobile-footer/mobile-footer.component';
 import { SaleTotalPanelComponent } from './screen-parts/sale-total-panel/sale-total-panel.component';
 import { ResponsiveClassDirective } from './directives/responsive-class.directive';
+import { BaconDrawerComponent } from './screen-parts/bacon-strip/bacon-drawer/bacon-drawer.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -259,7 +260,8 @@ const pipes = [
         ...directives,
         ...components,
         ...screenParts,
-        ...pipes
+        ...pipes,
+        BaconDrawerComponent
     ],
     entryComponents: [
         KebabMenuComponent,
@@ -269,7 +271,8 @@ const pipes = [
         DatePartChooserDialogComponent,
         LocationOverrideDialogComponent,
         NavListComponent,
-        SystemStatusDialogComponent
+        SystemStatusDialogComponent,
+        BaconDrawerComponent
     ],
     imports: [
         FormsModule,

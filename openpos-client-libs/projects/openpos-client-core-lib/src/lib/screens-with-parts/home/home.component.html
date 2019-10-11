@@ -1,7 +1,5 @@
 <div [ngStyle]="screen.backgroundImage | backgroundImageUrl" class="home-wrapper">
-    <div class="mat-elevation-z10">
-        <app-bacon-strip></app-bacon-strip>
-    </div>
+    <app-bacon-strip></app-bacon-strip>
     <div *ngIf="!(isMobile | async) && screen.menuItems.length > 0" class="body-container">
         <div class="button-grid">
             <div class="menu-button-border"
