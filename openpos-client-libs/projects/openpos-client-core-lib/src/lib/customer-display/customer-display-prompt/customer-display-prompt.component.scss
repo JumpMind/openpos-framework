@@ -1,8 +1,12 @@
+:host{
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
 .customer-display-prompt-image {
     padding: 24px 0px;
     max-width: 50%;
-}
-
-.customer-display-prompt-card {
-    width: 75%;
+    justify-self: center;
 }

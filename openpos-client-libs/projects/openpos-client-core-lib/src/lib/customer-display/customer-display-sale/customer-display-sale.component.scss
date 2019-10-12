@@ -1,6 +1,17 @@
+@import "../../styles/variables/spacing";
+
+:host{
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}
+
 .customer-display-sale-body {
+    padding: 24px 16px;
     display: grid;
     grid-template-columns: 1fr 25%;
+    @extend %page-spaced-content; 
 }
 
 .customer-display-list-background {
