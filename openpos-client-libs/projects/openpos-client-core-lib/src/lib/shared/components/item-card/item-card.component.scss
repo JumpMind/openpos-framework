@@ -5,9 +5,11 @@
 
 .item-card-image {
     height: 275px;
+
     &.tablet {
         height: 150px;
     }
+
     &.mobile {
         height: 50px;
     }
@@ -28,4 +30,10 @@
 
 .item-card-button {
     width: 130px;
+}
+
+::ng-deep .item-kebab-label {
+    button {
+        padding: 0px;
+    }
 }

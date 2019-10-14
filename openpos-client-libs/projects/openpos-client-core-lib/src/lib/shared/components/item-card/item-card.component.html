@@ -1,6 +1,7 @@
 <mat-card class="item-card">
     <mat-card-content>
-        <img *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image" responsive-class>
+        <img *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image"
+            responsive-class>
         <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="16px" style="padding-left: 16px">
             <div fxFlex="1 1 auto" fxLayout="column">
                 <div fxFlex="1 1 auto">
@@ -27,7 +28,8 @@
                 <div *ngIf="!isReadOnly && item.menuItems" fxLayout="row" fxLayoutAlign="end">
                     <app-kebab-label-button *ngIf="item.menuItems.length > 1; else elseBlock"
                         [menuItems]="item.menuItems" [label]="item.optionsLabel"
-                        (menuItemClick)="doItemAction($event, item.index)" class="primary"></app-kebab-label-button>
+                        (menuItemClick)="doItemAction($event, item.index)" class="primary item-kebab-label">
+                    </app-kebab-label-button>
 
                     <ng-template #elseBlock>
                         <button mat-button color="primary" *ngFor="let m of item.menuItems" class="item-card-button"
