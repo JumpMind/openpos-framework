@@ -16,8 +16,6 @@ export class MessageProvider {
     private subscription: Subscription;
 
     constructor( private sessionService: SessionService ) {
-        //Default to Dialog for the root scope. The screen-outlet will create an instance with type screen
-        this.setMessageType(MessageTypes.DIALOG);
     }
 
     setMessageType( messageType: string ) {

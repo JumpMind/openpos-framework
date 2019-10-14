@@ -1,5 +1,7 @@
 import { Injectable, Type, ComponentFactoryResolver, ComponentFactory } from '@angular/core';
 import {MessageProvider} from '../../shared/providers/message.provider';
+import {MessageType} from '../../shared/screen-parts/banner/banner.interface';
+import {MessageTypes} from '../messages/message-types';
 import { SessionService } from './session.service';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { DialogContentComponent } from '../components/dialog-content/dialog-content.component';
@@ -26,8 +28,6 @@ export class DialogService {
 
     private lastDialogId: string;
 
-    public $dialogMessages = new BehaviorSubject<any>(null);
-
     constructor(
         private messageProvider: MessageProvider,
         private componentFactoryResolver: ComponentFactoryResolver,
@@ -41,6 +41,7 @@ export class DialogService {
         // We use a Startup Task to invoke this start method at nearly the end of startup.
 
         // Pipe all the messages for dialog updates
+        this.messageProvider.setMessageType(MessageTypes.DIALOG);
         this.messageProvider.getScopedMessages$().subscribe(m => this.updateDialog(m));
 
     }
