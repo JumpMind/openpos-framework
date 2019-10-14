@@ -19,7 +19,7 @@ public class CustomerDisplaySaleUIMessage extends UIMessage {
 
     private ActionItem loyaltyButton;
 
-    private SelfCheckoutCustomer customer;
+    private UICustomer customer;
 
     public CustomerDisplaySaleUIMessage() {
         this.setScreenType(UIMessageType.CUSTOMER_DISPLAY_SALE);
@@ -69,11 +69,11 @@ public class CustomerDisplaySaleUIMessage extends UIMessage {
         this.loyaltyButton = loyaltyButton;
     }
 
-    public SelfCheckoutCustomer getCustomer() {
+    public UICustomer getCustomer() {
         return customer;
     }
 
-    public void setCustomer(SelfCheckoutCustomer customer) {
+    public void setCustomer(UICustomer customer) {
         this.customer = customer;
     }
 
