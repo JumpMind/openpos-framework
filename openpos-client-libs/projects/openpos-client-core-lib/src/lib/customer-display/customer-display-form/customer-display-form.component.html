@@ -1,17 +1,20 @@
-<div class="customer-display-background customer-display-outer">
-    <div>
-        <app-bacon-strip></app-bacon-strip>
-        <app-progress-bar-part></app-progress-bar-part>
+<app-bacon-strip></app-bacon-strip>
+<app-progress-bar-part></app-progress-bar-part>
+
+<div class="customer-display-body customer-display-form-body">
+
+    <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="customer-display-form-image">
+
+    <div *ngIf="screen.instructions" class="text-center form-instructions customer-display-instructional-text" responsive-class>
+        {{screen.instructions}}
     </div>
 
-    <div class="customer-display-body customer-display-form-body" fxLayout="column" fxLayoutAlign="center center">
-
-        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="customer-display-form-image">
-
-        <div class="customer-display-border customer-display-form-part-outer">
-            <app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
-                [alternateSubmitActions]="screen.alternateSubmitActions">
-            </app-auto-complete-address-part>
-        </div>
+    <div class="customer-display-border customer-display-form-part-outer">
+        <app-auto-complete-address-part *ngIf="screen.autoComplete" [formName]="'form'"
+            [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
+        </app-auto-complete-address-part>
+        <app-dynamic-form-part class="customer-display-form-part" *ngIf="!screen.autoComplete" [formName]="'form'"
+            [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
+        </app-dynamic-form-part>
     </div>
 </div>

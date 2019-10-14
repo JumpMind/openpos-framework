@@ -9,9 +9,11 @@
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-form-image">
 
         <div class="self-checkout-border self-checkout-form-part-outer">
-            <app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
-                [alternateSubmitActions]="screen.alternateSubmitActions">
+            <app-auto-complete-address-part *ngIf="screen.autoComplete" [formName]="'form'"
+                [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
             </app-auto-complete-address-part>
+            <app-dynamic-form-part class="self-checkout-form-part" *ngIf="!screen.autoComplete" [formName]="'form'" [submitButton]="screen.submitButton"
+                [alternateSubmitActions]="screen.alternateSubmitActions"></app-dynamic-form-part>
         </div>
     </div>
 </div>

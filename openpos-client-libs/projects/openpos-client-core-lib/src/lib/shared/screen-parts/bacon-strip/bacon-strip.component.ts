@@ -1,8 +1,7 @@
+import {MatSidenav} from '@angular/material/sidenav';
 import { BaconStripInterface } from './bacon-strip.interface';
 import { ScreenPartComponent } from '../screen-part';
-import { OpenposMediaService } from '../../../core/services/openpos-media.service';
-import { Observable } from 'rxjs';
-import { Component, Injector } from '@angular/core';
+import {Component, ViewChild } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 
 @ScreenPart({
@@ -13,29 +12,32 @@ import { ScreenPart } from '../../decorators/screen-part.decorator';
     styleUrls: ['./bacon-strip.component.scss']})
 export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface> {
 
-    isMobile$: Observable<boolean>;
     operatorInfo: string;
+    iconButtonName: string;
 
-    constructor( mediaService: OpenposMediaService, injector: Injector) {
-        super(injector);
-        const mobileMap = new Map([
-            ['xs', true],
-            ['sm', false],
-            ['md', false],
-            ['lg', false],
-            ['xl', false]
-        ]);
-        this.isMobile$ = mediaService.mediaObservableFromMap(mobileMap);
-    }
+    @ViewChild(MatSidenav)
+    baconDrawer: MatSidenav;
+
 
     screenDataUpdated() {
-        if (this.screenData.backButton) {
-            this.screenData.backButton.keybind = 'Escape';
+        if(this.screenData.actions && this.screenData.actions.length == 1){
+            this.iconButtonName = this.screenData.actions[0].icon;
+        } else if( this.screenData.actions ){
+            this.iconButtonName = 'menu';
         }
+
         if (this.screenData.operatorText && this.screenData.deviceId ) {
             this.operatorInfo = this.screenData.operatorText + ' on ' + this.screenData.deviceId;
         } else {
             this.operatorInfo = this.screenData.operatorText ? this.screenData.operatorText : this.screenData.deviceId;
+        }
+    }
+
+    buttonClick(){
+        if(this.screenData.actions.length == 1){
+            this.doAction(this.screenData.actions[0]);
+        } else {
+            this.baconDrawer.toggle();
         }
     }
 }

@@ -1,0 +1,8 @@
+<div *ngFor="let item of screenData.actions"
+     mat-ripple
+     responsive-class
+     class="button"
+     (click)="doAction(item)">
+  <app-icon [iconName]="item.icon" iconClass="md"></app-icon>
+  <span>{{item.title}}</span>
+</div>

@@ -8,11 +8,6 @@
     flex-direction: column;
 }
 
-.waffle-header{
-    width: 100%;
-    display: flex;
-}
-
 .drawer-button{
     display: flex;
     align-items: center;
@@ -29,7 +24,9 @@
 
 .waffle-header-container{
     z-index: 100;
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-columns: 1fr auto;
 }
 
 .waffle-drawer-content {

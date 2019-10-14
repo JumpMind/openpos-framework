@@ -7,3 +7,9 @@
     background-color: white;
     width: 75%;
 }
+
+::ng-deep .self-checkout-form-part {
+    form {
+        padding: 48px;
+    }
+}

@@ -1,0 +1,12 @@
+@import "../../../../styles/variables/spacing";
+@import "../../../../styles/mixins/typography";
+
+.button{
+  @extend %clickable-sub-element;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  @extend %clickable-spaced-content;
+  @extend %text-md;
+}
+

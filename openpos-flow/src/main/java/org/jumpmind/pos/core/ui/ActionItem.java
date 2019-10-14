@@ -24,7 +24,11 @@ import java.io.Serializable;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
+@Builder
+@AllArgsConstructor
 public class ActionItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
