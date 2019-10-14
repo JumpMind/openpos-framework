@@ -1,25 +1,31 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from '../../core/services/session.service';
-import { Observable, ConnectableObservable } from 'rxjs';
+import { Observable, ReplaySubject, Subscription} from 'rxjs';
 import { OpenposMessage } from '../../core/messages/message';
-import { map, publishReplay } from 'rxjs/operators';
+import {map} from 'rxjs/operators';
 import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 
-@Injectable()
+@Injectable({providedIn:'root'})
 export class MessageProvider {
 
-    private messages$: Observable<any>;
+    //Create state for our messages
+    private messages$ = new ReplaySubject<any>(1);
     private messageType: string;
+    private subscription: Subscription;
 
     constructor( private sessionService: SessionService ) {
-
+        //Default to Dialog for the root scope. The screen-outlet will create an instance with type screen
+        this.setMessageType(MessageTypes.DIALOG);
     }
 
     setMessageType( messageType: string ) {
-        this.messages$ = this.sessionService.getMessages( messageType ).pipe(publishReplay(1));
-        (this.messages$ as ConnectableObservable<any>).connect();
+        if( this.subscription ) {
+            this.subscription.unsubscribe();
+        }
+        // Update state withe the latest message
+        this.subscription  = this.sessionService.getMessages( messageType ).subscribe( m => this.messages$.next(m));
         this.messageType = messageType;
     }
 

@@ -1,4 +1,5 @@
 import { Injectable, Type, ComponentFactoryResolver, ComponentFactory } from '@angular/core';
+import {MessageProvider} from '../../shared/providers/message.provider';
 import { SessionService } from './session.service';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { DialogContentComponent } from '../components/dialog-content/dialog-content.component';
@@ -28,15 +29,10 @@ export class DialogService {
     public $dialogMessages = new BehaviorSubject<any>(null);
 
     constructor(
+        private messageProvider: MessageProvider,
         private componentFactoryResolver: ComponentFactoryResolver,
         private session: SessionService,
         private dialog: MatDialog) {
-
-        // Use BehaviorSubject to hang on to most recent dialog so it can be displayed
-        // once dialog service has started. Handles case where server is 'showing' a dialog
-        // but client is starting up. If we wait to subscribe until start() method, we can
-        // miss the dialog.
-        this.session.getMessages('Dialog').subscribe(s => { if (s) { this.$dialogMessages.next(s); } });
     }
 
     public start() {
@@ -45,7 +41,7 @@ export class DialogService {
         // We use a Startup Task to invoke this start method at nearly the end of startup.
 
         // Pipe all the messages for dialog updates
-        this.$dialogMessages.subscribe(m => this.updateDialog(m));
+        this.messageProvider.getScopedMessages$().subscribe(m => this.updateDialog(m));
 
     }
 
