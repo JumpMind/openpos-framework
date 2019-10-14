@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.ui.ActionItemGroup;
 import org.jumpmind.pos.core.ui.data.SellItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
@@ -13,8 +12,6 @@ import org.jumpmind.pos.core.ui.UIMessage;
 @AssignKeyBindings
 public class SaleUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
-
-    private List<ActionItem> sausageLinks;
 
     private String prompt;
 
@@ -41,14 +38,6 @@ public class SaleUIMessage extends UIMessage {
     public SaleUIMessage() {
         this.setScreenType(UIMessageType.SALE);
         this.setId("sale");
-    }
-
-    public List<ActionItem> getSausageLinks() {
-        return sausageLinks;
-    }
-
-    public void setSausageLinks(List<ActionItem> sausageLinks) {
-        this.sausageLinks = sausageLinks;
     }
 
     public List<SellItem> getItems() {

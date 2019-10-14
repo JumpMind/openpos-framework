@@ -1,7 +1,15 @@
+:host {
+    height: 100%;
+}
+
+.sale-bacon-strip {
+    height: 100%;
+}
+
 .sale-outer {
+    height: 100%;
     display: grid;
     grid-template-rows: 1fr;
-    height: 100%;
 }
 
 .sale-body {
@@ -9,6 +17,7 @@
     display: grid;
     grid-template-columns: 1fr 25%;
     overflow-y: auto;
+
 }
 
 .sale-items-outer {
