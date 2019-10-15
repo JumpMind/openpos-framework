@@ -1,22 +1,28 @@
-.customer-display-options {
-    width: 75%;
+@import "../../styles/mixins/typography";
+
+:host{
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+    height: 100%;
 }
 
 .customer-display-options-image {
     max-width: 50%;
+    justify-self: center;
 }
 
 .options-title {
+    @extend %text-lg;
     font-weight: bold;
     margin-top: 0px;
-    margin-bottom: 64px;
     align-self: center;
+    justify-self: center;
 }
 
 .options-prompt {
+    @extend %text-md;
     max-width: 700px;
-    margin-top: 32px;
-    margin-bottom: 32px;
     align-self: center;
-    color: gray;
+    justify-self: center;
 }

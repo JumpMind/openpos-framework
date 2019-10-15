@@ -20,7 +20,7 @@
     <mat-sidenav>
         <app-bacon-drawer></app-bacon-drawer>
     </mat-sidenav>
-    <mat-sidenav-content>
+    <mat-sidenav-content (swiperight)="baconDrawer.open()">
         <ng-content></ng-content>
     </mat-sidenav-content>
 </mat-sidenav-container>

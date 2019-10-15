@@ -1,3 +1,5 @@
+@import "../../styles/variables/spacing";
+
 @mixin customer-display-common-theme($theme) {
 
     $app-primary: mat-color(map-get($theme, primary));
@@ -11,20 +13,17 @@
     $disabled: mat-color(map-get($theme, background), disabled-button);
     $contrast: mat-color($primary, default-contrast);
 
-    .customer-display-background {
-        background-color: $background;
-    }
-
-    .customer-display-outer {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
+    .customer-display-instructional-text{
+        color: mat-color($foreground, secondary-text);
     }
     
     .customer-display-body {
-        padding: 24px 16px;
-        flex: 1 1 100%;
         overflow-y: auto;
+        display: grid;
+        width: 75%;
+        justify-self: center;
+        align-content: center;
+        @extend %page-spaced-content; 
     }
 
     .customer-display-border {
@@ -39,7 +38,7 @@
         background-color: $app-primary;
     }
 
-    .customer-display-form-body {
+    .customer-display-form-body {     
         .mat-form-field {
             @extend .text-sm;
 
@@ -53,5 +52,12 @@
             @extend .text-md;
         }
     }
-    
+
+    app-customer-display-sale,
+    app-customer-display-prompt,
+    app-customer-display-options,
+    app-customer-display-form {
+        background-color: $background;
+    }
+
 }

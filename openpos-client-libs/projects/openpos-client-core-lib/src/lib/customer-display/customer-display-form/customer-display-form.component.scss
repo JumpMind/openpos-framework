@@ -1,3 +1,12 @@
+@import "../../styles/mixins/typography";
+
+:host{
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto auto 1fr;
+    height: 100%;
+}
+
 .customer-display-form-image {
     padding: 24px 0px;
     justify-self: center;
@@ -5,11 +14,11 @@
 
 .customer-display-form-part-outer {
     background-color: white;
-    width: 75%;
+    padding: 48px;
 }
 
-::ng-deep .customer-display-form-part {
-    form {
-        padding: 48px;
-    }
+.form-instructions {
+    @extend %text-md;
+    max-width: 700px;
+    align-self: center;
 }
