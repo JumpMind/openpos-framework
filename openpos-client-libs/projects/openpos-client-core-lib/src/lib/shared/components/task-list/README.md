@@ -1,4 +1,4 @@
-#Task List
+# Task List
 
 This component is meant to be the container for `TaskCheckBoxComponent` and `TaskCheckAllBoxComponent` to create a tri-state check box that works with a list of items that have an TaskCheckBoxComponent element.
 
