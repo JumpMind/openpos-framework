@@ -1,20 +1,5 @@
 @mixin self-checkout-common-theme($theme) {
 
-    $app-primary: mat-color(map-get($theme, primary));
-    $app-accent: mat-color(map-get($theme, accent));
-    $app-warn: mat-color(map-get($theme, warn));
-
-    $foreground: map-get($theme, foreground);
-    $background: map-get($mat-grey, 200);
-    $border: map-get($mat-grey, 800);
-    $primary: map-get($theme, primary);
-    $disabled: mat-color(map-get($theme, background), disabled-button);
-    $contrast: mat-color($primary, default-contrast);
-
-    .self-checkout-background {
-        background-color: $background;
-    }
-
     .self-checkout-outer {
         height: 100%;
         display: flex;
@@ -70,45 +55,9 @@
         }
     }
 
-    .self-checkout-button {
-        padding: 16px;
-    }
-
-    .self-checkout-primary-button {
-        padding: 16px;
-        color: $contrast;
-        background-color: $app-primary;
-    }
-
-    .self-checkout-primary-button:disabled {
-        background-color: $disabled;
-    }
-
-    .self-checkout-border-color {
-        border-color: $border;
-    }
-
-    .self-checkout-border {
-        border-color: $border;
-        border-style: solid;
-        border-width: 2px;
-    }
-
-    .self-checkout-border-button {
-        border-color: $border;
-        border-style: solid;
-        border-width: 2px;
-        background-color: white;
-        padding: 14px 16px;
-    }
-
-    .self-checkout-border-button:disabled {
-        border-color: $disabled;
-    }
-
     .self-checkout-form-body {
         .mat-form-field {
-            @extend .self-checkout-text-lg;
+            @extend .text-lg;
 
             app-icon {
                 margin-right: 8px;
@@ -117,20 +66,20 @@
 
         .mat-button {
             @extend .self-checkout-primary-button;
-            @extend .self-checkout-text-lg;
+            @extend .text-lg;
         }
     }
 
     .self-checkout-prompt-body {
         .mat-form-field {
-            @extend .self-checkout-text-lg;
+            @extend .text-lg;
 
             app-icon {
                 margin-right: 8px;
             }
 
             .mat-hint {
-                @extend .self-checkout-text-md;
+                @extend .text-md;
             }
         }
     }
@@ -140,7 +89,7 @@
 
         .mat-raised-button {
             @extend .self-checkout-button;
-            @extend .self-checkout-text-lg;
+            @extend .text-lg;
         }
     }
 }

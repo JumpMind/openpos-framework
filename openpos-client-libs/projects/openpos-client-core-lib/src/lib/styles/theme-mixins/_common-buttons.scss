@@ -1,0 +1,35 @@
+@mixin openpos-common-buttons($theme) {
+
+    $app-primary: mat-color(map-get($theme, primary));
+
+    $border: map-get($mat-grey, 800);
+    $primary: map-get($theme, primary);
+    $disabled: mat-color(map-get($theme, background), disabled-button);
+    $contrast: mat-color($primary, default-contrast);
+
+    .self-checkout-button {
+        padding: 16px;
+    }
+
+    .self-checkout-primary-button {
+        padding: 16px;
+        color: $contrast;
+        background-color: $app-primary;
+    }
+
+    .self-checkout-primary-button:disabled {
+        background-color: $disabled;
+    }
+
+    .self-checkout-border-button {
+        border-color: $border;
+        border-style: solid;
+        border-width: 2px;
+        background-color: white;
+        padding: 14px 16px;
+    }
+
+    .self-checkout-border-button:disabled {
+        border-color: $disabled;
+    }
+}

@@ -1,0 +1,8 @@
+@mixin openpos-background($theme) {
+
+    $background: map-get($mat-grey, 200);
+
+    .self-checkout-background {
+        background-color: $background;
+    }
+}
