@@ -1,9 +1,13 @@
+@import "../../../styles/mixins/typography";
+
 .sale-total-checkout-button {
+    @extend %text-lg;
     margin-top: 16px;
     width: 100%;
 }
 
 .sale-total-border-button {
+    @extend %text-lg;
     width: 100%;
     margin-top: 16px;
 }
@@ -23,6 +27,7 @@
 }
 
 .sale-total-promo-button {
+    @extend %text-sm;
     width: 100%;
     text-align: left;
     padding: 0px;
@@ -32,7 +37,12 @@
     text-align: center;
 
     .sale-total-subtotal-title {
+        @extend %text-sm;
         padding-bottom: 8px;
+    }
+
+    .sale-total-subtotal-amount {
+        @extend %text-lg;
     }
 }
 
@@ -42,8 +52,13 @@
     border-top-width: 1px;
 
     .sale-total-total-title {
+        @extend %text-lg;
         padding-top: 16px;
         padding-bottom: 8px;
+    }
+
+    .sale-total-total-amount {
+        @extend %text-xl;
     }
 }
 
@@ -61,4 +76,9 @@
     width: 100%;
     padding-left: 24px;
     padding-right: 24px;
+}
+
+.sale-total-customer-label {
+    @extend %text-sm;
+    text-align: center;
 }

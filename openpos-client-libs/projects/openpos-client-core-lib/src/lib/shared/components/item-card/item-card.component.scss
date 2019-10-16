@@ -1,3 +1,5 @@
+@import "../../../styles/mixins/typography";
+
 .item-card {
     margin: 0px;
     margin-bottom: 16px;
@@ -16,19 +18,31 @@
 }
 
 .item-card-title {
+    @extend %text-md;
     padding-bottom: 8px;
 }
 
 .item-card-price {
+    @extend %text-lg;
     font-weight: bold;
     text-align: right;
 }
 
+.item-card-discount {
+    @extend %text-sm;
+}
+
 .item-card-original {
+    @extend %text-sm;
     text-decoration: line-through;
 }
 
+.item-card-details {
+    @extend %text-sm;
+}
+
 .item-card-button {
+    @extend %text-md;
     width: 130px;
 }
 
