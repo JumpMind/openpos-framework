@@ -8,7 +8,7 @@
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-form-image">
 
-        <div class="self-checkout-border self-checkout-form-part-outer">
+        <div class="common-border self-checkout-form-part-outer">
             <app-auto-complete-address-part *ngIf="screen.autoComplete" [formName]="'form'"
                 [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
             </app-auto-complete-address-part>

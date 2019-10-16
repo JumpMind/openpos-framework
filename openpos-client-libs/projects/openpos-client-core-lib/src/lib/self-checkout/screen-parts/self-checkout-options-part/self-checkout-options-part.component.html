@@ -10,7 +10,7 @@
     </div>
 
     <mat-nav-list *ngIf="screenData && screenData.options && screenData.options.length > 0">
-        <mat-list-item fxLayoutAlign="center center" class="self-checkout-border options-list-item" *ngFor="let o of screenData.options"
+        <mat-list-item fxLayoutAlign="center center" class="common-border options-list-item" *ngFor="let o of screenData.options"
             (click)="doAction(o.action)" responsive-class>
             <app-icon matLine [iconName]="o.icon" [iconClass]="'primary material-icons mat-64'"
                 class="self-checkout-options-list-icon"></app-icon>

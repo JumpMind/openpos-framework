@@ -7,7 +7,7 @@
         <div fxFlex></div>
 
         <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && amountDue"
-            class="self-checkout-border-color self-checkout-payment-amount-outer">
+            class="common-border-color self-checkout-payment-amount-outer">
             <div class="self-checkout-text-lg self-checkout-payment-title">{{amountTitle}}</div>
             <div class="self-checkout-text-xl self-checkout-payment-amount-due">
                 <app-currency-text [amountText]="amountDue"></app-currency-text>
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div fxLayout="row" fxLayoutAlign="start start"
-                class="self-checkout-border-color self-checkout-payment-remaining-balance">
+                class="common-border-color self-checkout-payment-remaining-balance">
                 <div fxFlex="1 1 100%" class="self-checkout-text-md">{{amountTitle}}</div>
                 <div class="self-checkout-text-md">
                     <app-currency-text [amountText]="amountDue"></app-currency-text>

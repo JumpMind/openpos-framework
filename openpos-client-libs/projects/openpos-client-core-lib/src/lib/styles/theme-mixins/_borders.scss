@@ -2,11 +2,11 @@
 
     $border: map-get($mat-grey, 800);
 
-    .self-checkout-border-color {
+    .common-border-color {
         border-color: $border;
     }
 
-    .self-checkout-border {
+    .common-border {
         border-color: $border;
         border-style: solid;
         border-width: 2px;
