@@ -28,7 +28,7 @@
     <div>
         <button responsive-class mat-button *ngIf="!screenData.readOnly && !screenData.customer && screenData.loyaltyButton"
             (click)="doMenuItemAction(screenData.loyaltyButton)"
-            class="self-checkout-button self-checkout-border-button sale-total-loyalty-button text-md">
+            class="common-button-padding common-border-button sale-total-loyalty-button text-md">
             <span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
 
             <img [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
@@ -45,10 +45,10 @@
         <button responsive-class mat-button *ngIf="!screenData.readOnly && screenData.checkoutButton"
             [disabled]="!screenData.items || screenData.items.length == 0"
             (click)="doMenuItemAction(screenData.checkoutButton)"
-            class="self-checkout-primary-button sale-total-checkout-button">{{screenData.checkoutButton.title}}</button>
+            class="common-primary-button sale-total-checkout-button">{{screenData.checkoutButton.title}}</button>
         <button responsive-class mat-button *ngIf="!screenData.readOnly && screenData.logoutButton"
             (click)="doMenuItemAction(screenData.logoutButton)"
-            class="self-checkout-border-button sale-total-border-button">
+            class="common-border-button sale-total-border-button">
             <span>
                 <app-icon *ngIf="screenData.logoutButton.icon" [iconName]="screenData.logoutButton.icon">
                 </app-icon>

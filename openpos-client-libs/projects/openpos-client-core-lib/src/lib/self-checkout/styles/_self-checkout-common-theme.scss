@@ -65,7 +65,7 @@
         }
 
         .mat-button {
-            @extend .self-checkout-primary-button;
+            @extend .common-primary-button;
             @extend .text-lg;
         }
     }
@@ -88,7 +88,7 @@
         padding: 16px 0px;
 
         .mat-raised-button {
-            @extend .self-checkout-button;
+            @extend .common-button-padding;
             @extend .text-lg;
         }
     }

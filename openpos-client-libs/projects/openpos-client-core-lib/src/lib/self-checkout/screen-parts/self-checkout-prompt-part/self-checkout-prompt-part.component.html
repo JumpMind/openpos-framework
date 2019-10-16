@@ -10,12 +10,12 @@
         <div *ngIf="instructions" class="text-sm">{{instructions}}</div>
 
         <div *ngIf="screenData.otherActions || screenData.actionButton" class="self-checkout-prompt-buttons">
-            <button *ngFor="let menuItem of screenData.otherActions" mat-raised-button class="self-checkout-button" (click)="onAction(menuItem)">
+            <button *ngFor="let menuItem of screenData.otherActions" mat-raised-button class="common-button-padding" (click)="onAction(menuItem)">
                 <span class="self-checkout-text-lg">{{menuItem.title}}</span>
                 <app-icon *ngIf="menuItem.icon" [iconClass]="'mat-24 material-icons'" [iconName]="menuItem.icon">
                 </app-icon>
             </button>
-            <button mat-button class="self-checkout-primary-button" (click)="onFormSubmit()">
+            <button mat-button class="common-primary-button" (click)="onFormSubmit()">
                 <span class="self-checkout-text-lg">{{screenData.actionButton.title}}</span>
                 <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'mat-24 material-icons'"
                     [iconName]="screenData.actionButton.icon"></app-icon>

@@ -7,21 +7,21 @@
     $disabled: mat-color(map-get($theme, background), disabled-button);
     $contrast: mat-color($primary, default-contrast);
 
-    .self-checkout-button {
+    .common-button-padding {
         padding: 16px;
     }
 
-    .self-checkout-primary-button {
+    .common-primary-button {
         padding: 16px;
         color: $contrast;
         background-color: $app-primary;
     }
 
-    .self-checkout-primary-button:disabled {
+    .common-primary-button:disabled {
         background-color: $disabled;
     }
 
-    .self-checkout-border-button {
+    .common-border-button {
         border-color: $border;
         border-style: solid;
         border-width: 2px;
@@ -29,7 +29,7 @@
         padding: 14px 16px;
     }
 
-    .self-checkout-border-button:disabled {
+    .common-border-button:disabled {
         border-color: $disabled;
     }
 }
