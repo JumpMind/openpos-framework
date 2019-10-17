@@ -1,4 +1,8 @@
-.mat-button-focus-overlay { background-color: transparent!important; }
+@import "../../styles/mixins/typography";
+
+.mat-button-focus-overlay {
+    background-color: transparent !important;
+}
 
 .self-checkout-home-image {
     max-width: 50%;
@@ -11,8 +15,9 @@
 }
 
 .self-checkout-home-text {
+    @extend %text-xl;
     text-align: center;
     max-width: 60%;
     color: white;
-    background:rgba(0,0,0,0.2);
+    background: rgba(0, 0, 0, 0.2);
 }

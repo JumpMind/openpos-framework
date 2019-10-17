@@ -1,3 +1,5 @@
+@import "../../../styles/mixins/typography";
+
 .self-checkout-prompt-part-outer {
     background-color: white;
     padding: 48px;
@@ -6,4 +8,8 @@
 .self-checkout-prompt-buttons {
     display: flex;
     place-content: stretch flex-end;
+}
+
+.self-checkout-prompt-button {
+    @extend %text-lg;
 }

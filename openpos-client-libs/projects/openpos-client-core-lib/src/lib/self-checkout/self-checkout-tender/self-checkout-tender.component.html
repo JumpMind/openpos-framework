@@ -8,34 +8,35 @@
 
         <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && amountDue"
             class="common-border-color self-checkout-payment-amount-outer">
-            <div class="self-checkout-text-lg self-checkout-payment-title">{{amountTitle}}</div>
-            <div class="self-checkout-text-xl self-checkout-payment-amount-due">
+            <div responsive-class class="self-checkout-payment-title">{{amountTitle}}</div>
+            <div responsive-class class="self-checkout-payment-amount-due">
                 <app-currency-text [amountText]="amountDue"></app-currency-text>
             </div>
         </div>
 
         <div *ngIf="screen.amounts && screen.amounts.length > 1 && amountDue" fxLayout="column" fxLayoutGap="32px">
-            <div *ngFor="let amount of screen.amounts" fxLayout="row" fxLayoutAlign="start start"
+            <div *ngFor="let amount of screen.amounts" fxLayout="row" fxLayoutAlign="start start" responsive-class
                 class="self-checkout-payment-amounts">
-                <div fxFlex="1 1 100%" class="self-checkout-text-md">{{amount.name}}</div>
-                <div class="self-checkout-text-md">
+                <div fxFlex="1 1 100%">{{amount.name}}</div>
+                <div>
                     <app-currency-text [amountText]="amount.amount"></app-currency-text>
                 </div>
             </div>
-            <div fxLayout="row" fxLayoutAlign="start start"
+            <div fxLayout="row" fxLayoutAlign="start start" responsive-class
                 class="common-border-color self-checkout-payment-remaining-balance">
-                <div fxFlex="1 1 100%" class="self-checkout-text-md">{{amountTitle}}</div>
-                <div class="self-checkout-text-md">
+                <div fxFlex="1 1 100%">{{amountTitle}}</div>
+                <div>
                     <app-currency-text [amountText]="amountDue"></app-currency-text>
                 </div>
             </div>
         </div>
 
-        <div *ngIf="screen.prompt" class="self-checkout-text-md self-checkout-payment-instructions">
+        <div *ngIf="screen.prompt" responsive-class class="self-checkout-payment-instructions">
             {{screen.prompt}}
         </div>
 
-        <app-self-checkout-options-part *ngIf="screen.selfCheckoutOptionsPart" class="self-checkout-tender-options">
+        <app-self-checkout-options-part *ngIf="screen.selfCheckoutOptionsPart" responsive-class
+            class="self-checkout-tender-options">
         </app-self-checkout-options-part>
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-payment-auth-image">

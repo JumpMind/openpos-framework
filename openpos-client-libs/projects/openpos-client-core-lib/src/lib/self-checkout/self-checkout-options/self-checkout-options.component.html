@@ -6,17 +6,17 @@
         <div *ngIf="screen.icon" fxFlex="0 0 auto" fxLayoutAlign="center center">
             <app-icon [iconName]="screen.icon" class="options-icon"></app-icon>
         </div>
-        <div *ngIf="screen.title" fxFlex="0 0 auto" class="self-checkout-text-xl options-title">
+        <div *ngIf="screen.title" responsive-class fxFlex="0 0 auto" class="options-title">
             {{screen.title}}
         </div>
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-options-image">
 
-        <div *ngIf="screen.prompt" fxFlex="0 0 auto" class="self-checkout-text-lg text-center options-prompt">
+        <div *ngIf="screen.prompt" responsive-class fxFlex="0 0 auto" class="text-center options-prompt">
             {{screen.prompt}}
         </div>
 
-        <app-self-checkout-options-part class="self-checkout-options"></app-self-checkout-options-part>
+        <app-self-checkout-options-part responsive-class class="self-checkout-options"></app-self-checkout-options-part>
 
     </div>
 </div>

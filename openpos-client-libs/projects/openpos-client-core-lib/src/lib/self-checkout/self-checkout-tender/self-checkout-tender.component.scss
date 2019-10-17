@@ -1,5 +1,15 @@
+@import "../../styles/mixins/typography";
+
 .self-checkout-tender-options {
-    width: 75%;
+    width: 50%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 75%;
+    }
 }
 
 .self-checkout-payment-amount-outer {
@@ -8,21 +18,29 @@
     border-bottom-style: solid;
 }
 
+.self-checkout-payment-amounts {
+    @extend %text-md;
+}
+
 .self-checkout-payment-title {
+    @extend %text-lg;
     text-align: center;
 }
 
 .self-checkout-payment-amount-due {
+    @extend %text-xl;
     font-weight: bold;
     text-align: center;
 }
 
 .self-checkout-payment-instructions {
+    @extend %text-md;
     text-align: center;
     color: gray;
 }
 
 .self-checkout-payment-remaining-balance {
+    @extend %text-md;
     font-weight: bold;
     border-top-width: 2px;
     border-top-style: solid;

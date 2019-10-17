@@ -7,57 +7,14 @@
     }
 
     .self-checkout-body {
-        padding: 24px 16px;
+        padding: 16px 16px;
         flex: 1 1 100%;
         overflow-y: auto;
     }
 
-    .self-checkout-text-xs {
-        font-size: 12px !important;
-    }
-
-    .self-checkout-text-sm {
-        font-size: 18px !important;
-    }
-
-    .self-checkout-text-md {
-        font-size: 24px !important;
-    }
-
-    .self-checkout-text-lg {
-        font-size: 32px !important;
-    }
-
-    .self-checkout-text-xl {
-        font-size: 48px !important;
-    }
-
-    // Shrink text on iPads/Tablets and below
-    @media(max-width: 1024px) {
-        .self-checkout-text-xs {
-            font-size: 8px !important;
-        }
-
-        .self-checkout-text-sm {
-            font-size: 14px !important;
-        }
-
-        .self-checkout-text-md {
-            font-size: 18px !important;
-        }
-
-        .self-checkout-text-lg {
-            font-size: 24px !important;
-        }
-
-        .self-checkout-text-xl {
-            font-size: 36px !important;
-        }
-    }
-
     .self-checkout-form-body {
         .mat-form-field {
-            @extend .text-lg;
+            @extend %text-lg;
 
             app-icon {
                 margin-right: 8px;
@@ -65,21 +22,21 @@
         }
 
         .mat-button {
+            @extend %text-lg;
             @extend .common-primary-button;
-            @extend .text-lg;
         }
     }
 
     .self-checkout-prompt-body {
         .mat-form-field {
-            @extend .text-lg;
+            @extend %text-lg;
 
             app-icon {
                 margin-right: 8px;
             }
 
             .mat-hint {
-                @extend .text-md;
+                @extend %text-md;
             }
         }
     }
@@ -88,8 +45,8 @@
         padding: 16px 0px;
 
         .mat-raised-button {
+            @extend %text-lg;
             @extend .common-button-padding;
-            @extend .text-lg;
         }
     }
 }

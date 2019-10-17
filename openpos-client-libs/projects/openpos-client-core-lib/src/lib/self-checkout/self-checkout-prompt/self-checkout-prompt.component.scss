@@ -4,5 +4,13 @@
 }
 
 .self-checkout-prompt-card {
-    width: 75%;
+    width: 50%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 75%;
+    }
 }

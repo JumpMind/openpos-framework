@@ -5,7 +5,15 @@
 
 .self-checkout-form-part-outer {
     background-color: white;
-    width: 75%;
+    width: 50%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 75%;
+    }
 }
 
 ::ng-deep .self-checkout-form-part {
