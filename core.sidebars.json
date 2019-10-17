@@ -41,5 +41,8 @@
     ],
     "UI Components": [
         "task-list"
-    ]
+    ],
+	"Styles": [
+		"styles"
+	]
 }
