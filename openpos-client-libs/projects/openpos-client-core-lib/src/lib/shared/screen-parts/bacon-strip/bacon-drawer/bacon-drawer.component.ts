@@ -1,4 +1,5 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
+import {IActionItem} from '../../../../core/actions/action-item.interface';
 import {ScreenPart} from '../../../decorators/screen-part.decorator';
 import {ScreenPartComponent} from '../../screen-part';
 import {BaconStripInterface} from '../bacon-strip.interface';
@@ -11,6 +12,15 @@ import {BaconStripInterface} from '../bacon-strip.interface';
 })
 export class BaconDrawerComponent extends ScreenPartComponent<BaconStripInterface> implements OnDestroy{
 
+  @Output()
+  buttonClicked = new EventEmitter();
+
+
   screenDataUpdated() {
+  }
+
+  buttonClick(action: IActionItem ) {
+    this.buttonClicked.emit();
+    super.doAction(action);
   }
 }

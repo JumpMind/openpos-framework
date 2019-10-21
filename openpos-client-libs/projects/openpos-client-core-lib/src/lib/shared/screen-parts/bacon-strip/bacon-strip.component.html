@@ -1,24 +1,21 @@
 <div class="container mat-elevation-z5"
-     responsive-class
-     gdAlignColumns="center center">
-    <div>
+     responsive-class>
+    <div class="leftside">
         <app-icon-button *ngIf="iconButtonName" [iconName]="iconButtonName" iconClass="md" (buttonClick)="buttonClick()"></app-icon-button>
-    </div>
-    <span>
         <app-icon *ngIf="screenData.headerIcon" [iconName]="screenData.headerIcon"></app-icon>
         <span>{{screenData.headerText}}</span>
-    </span>
+    </div>
     <div>
         <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
     </div>
-    <span>
+    <div class="rightside">
         <app-icon *ngIf="screenData.operatorText" iconName="lock_open" iconClass="md"></app-icon>
         <span>{{operatorInfo}}</span>
-    </span>
+    </div>
 </div>
 <mat-sidenav-container>
     <mat-sidenav>
-        <app-bacon-drawer></app-bacon-drawer>
+        <app-bacon-drawer (buttonClicked)="baconDrawer.close()"></app-bacon-drawer>
     </mat-sidenav>
     <mat-sidenav-content (swiperight)="baconDrawer.open()">
         <ng-content></ng-content>

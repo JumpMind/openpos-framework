@@ -10,11 +10,16 @@
 .container{
     @extend %text-md;
     @extend %page-header;
-    grid-auto-flow: column;
-    grid-auto-columns: max-content;
-    grid-template-columns: auto auto 1fr auto;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     z-index: 100;
     align-items: center;
+    .leftside{
+        justify-self: start;
+    }
+    .rightside{
+        justify-self: end;
+    }
 
     > * {
         @extend %sub-element-spaced-content;
