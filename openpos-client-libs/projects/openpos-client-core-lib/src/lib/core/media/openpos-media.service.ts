@@ -75,17 +75,19 @@ export class OpenposMediaService {
         }
     }
 
-    observe<T>(nameToObject: Map<string, T>): Observable<T[]> {
+    observe<T>(nameToObject: Map<string, T>): Observable<T> {
         return this.breakpointObserver.observe(
             Array.from(this.breakpointToName.keys())
         ).pipe(
             map(state => {
-                return Object.keys(state.breakpoints).map(breakpoint => {
+                let returnObj: T;
+                Object.keys(state.breakpoints).forEach(breakpoint => {
                     if (state.breakpoints[breakpoint]) {
                         const name = this.breakpointToName.get(breakpoint);
-                        return nameToObject.get(name);
+                        returnObj = nameToObject.get(name);
                     }
-                }).filter(value => value);
+                });
+                return returnObj;
             })
         );
     }

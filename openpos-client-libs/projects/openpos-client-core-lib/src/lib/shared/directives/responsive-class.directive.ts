@@ -33,11 +33,11 @@ export class ResponsiveClassDirective implements OnDestroy {
                 renderer.removeClass(elRef.nativeElement, className);
             });
 
-            classNames.forEach(classes => {
-                classes.forEach(className => {
+            if (classNames) {
+                classNames.forEach(className => {
                     renderer.addClass(elRef.nativeElement, className);
                 });
-            });
+            }
         });
     }
 
