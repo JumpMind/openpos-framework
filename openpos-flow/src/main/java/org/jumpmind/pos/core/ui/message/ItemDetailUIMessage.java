@@ -11,7 +11,7 @@ import java.util.List;
 public class ItemDetailUIMessage extends UIMessage {
 
     private String itemName;
-    private String imageUrl;
+    private List<String> imageUrls;
     private List<DisplayProperty> itemProperties;
 
     public ItemDetailUIMessage() {
@@ -19,12 +19,19 @@ public class ItemDetailUIMessage extends UIMessage {
     }
 
 
-    public String getImageUrl() {
-        return imageUrl;
+    public List<String> getImageUrls() {
+        return imageUrls;
     }
 
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
+    public void setImageUrls(List<String> imageUrls) {
+        this.imageUrls = imageUrls;
+    }
+
+    public void addImageUrl(String imageUrl) {
+        if(imageUrls == null) {
+            this.imageUrls = new ArrayList<>();
+        }
+        this.imageUrls.add(imageUrl);
     }
 
     public List<DisplayProperty> getItemProperties() {
