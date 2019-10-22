@@ -1,10 +1,8 @@
 import { Component, Injector, OnInit, OnDestroy, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
 import { SaleInterface } from './sale.interface';
-import { Observable } from 'rxjs/internal/Observable';
 import { MatDialog } from '@angular/material';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
-import { OpenposMediaService } from '../../core/services/openpos-media.service';
 import { ITotal } from '../../core/interfaces/total.interface';
 
 import { Subscription } from 'rxjs';
@@ -25,7 +23,6 @@ import { IActionItem } from '../../core/actions/action-item.interface';
 export class SaleComponent extends PosScreen<SaleInterface> implements
     OnInit, OnDestroy, OnBecomingActive, OnLeavingActive, AfterViewChecked {
 
-    overFlowListSize: Observable<number>;
     trainingDrawerOpen = false;
     totals: ITotal[];
 
@@ -38,17 +35,8 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
 
     private scanServiceSubscription: Subscription;
 
-    constructor(private scannerService: ScannerService, protected mediaService: OpenposMediaService,
-        protected dialog: MatDialog, injector: Injector) {
+    constructor(private scannerService: ScannerService, protected dialog: MatDialog, injector: Injector) {
         super(injector);
-        this.overFlowListSize = this.mediaService.mediaObservableFromMap(new Map([
-            ['xs', 3],
-            ['sm', 3],
-            ['md', 4],
-            ['lg', 5],
-            ['xl', 5]
-        ]));
-
     }
 
     buildScreen() {
