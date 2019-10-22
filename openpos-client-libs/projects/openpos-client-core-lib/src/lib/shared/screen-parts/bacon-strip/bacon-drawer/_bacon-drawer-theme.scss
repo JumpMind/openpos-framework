@@ -24,6 +24,9 @@
       &:last-child{
         border-bottom: map_get($foreground, divider) solid 1px;
       }
+      &:hover{
+        background-color: map_get($background, hover);
+      }
     }
   }
 }
