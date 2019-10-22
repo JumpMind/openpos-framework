@@ -7,7 +7,7 @@ import { ScreenPart } from '../decorators/screen-part.decorator';
 import { MessageProvider } from '../providers/message.provider';
 import { ActionService } from '../../core/actions/action.service';
 import { SessionService } from '../../core/services/session.service';
-import { OpenposMediaService } from '../../core/services/openpos-media.service';
+import { OpenposMediaService } from '../../core/media/openpos-media.service';
 
 interface TestPartInterface extends IAbstractScreen {
     testProperty: string;

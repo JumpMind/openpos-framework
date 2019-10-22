@@ -4,7 +4,7 @@ import { ScreenPartComponent } from '../screen-part';
 import { ScanOrSearchInterface } from './scan-or-search.interface';
 import { DeviceService } from '../../../core/services/device.service';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { OpenposMediaService } from '../../../core/services/openpos-media.service';
+import { OpenposMediaService } from '../../../core/media/openpos-media.service';
 import { Observable, Subscription } from 'rxjs';
 import { ScannerService } from '../../../core/platform-plugins/scanners/scanner.service';
 import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-active.interface';

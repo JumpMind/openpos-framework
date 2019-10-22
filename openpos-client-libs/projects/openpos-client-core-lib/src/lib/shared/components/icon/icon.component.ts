@@ -3,7 +3,6 @@ import {MediaService} from '@angular/flex-layout';
 import { IconService } from '../../../core/services/icon.service';
 import { Observable } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
-import {OpenposMediaService} from '../../../core/services/openpos-media.service';
 
 @Component({
     selector: 'app-icon',

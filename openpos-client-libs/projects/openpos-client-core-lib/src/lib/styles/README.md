@@ -104,23 +104,7 @@ Classes based on personalization parameters are also added to the parent contain
 
 ## Responsive Media Types
 
-OpenPos framework has abstracted the typical media breakpoints (xs, sm, md, lg, xl) into (mobile, tablet and desktop). Currently this is static but a future improvement would be to drive this from configuration. These device sizes are then used consistently across the app to trigger, styles, layout and features.
-
-The directive `responsive-class` when attached to an element will add and remove classes for the active device size so that classes can be built as such:
-
-```scss
-.element{
-    //default style
-    &.mobile{
-      //style to apply when mobile target is active
-    }
-    &.tablet{
-      //style to apply when tablet target is active
-    }
-}
-```
-
-There is also an `opGridAreas` directive to replace `gdAreas` and work with the OpenPos responsive API: `opAreas.mobile, opAreas.tablet`
+See [OpenPOS Media Documentation](../core/media/README.md) for more information on media sizing
 
 ## Typography
 

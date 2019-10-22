@@ -1,7 +1,7 @@
 import {Directive, ElementRef, Inject, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Subscription} from 'rxjs';
 import {DEFAULT_RESPONSIVE_MAP} from '../../core/default-responsive-map';
-import {OpenposMediaService} from '../../core/services/openpos-media.service';
+import {OpenposMediaService} from '../../core/media/openpos-media.service';
 
 @Directive({
     selector: '[opAreas], [opAreas.mobile], [opAreas.tablet], [opAreas.desktop]'

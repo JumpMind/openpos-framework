@@ -6,7 +6,7 @@ import { IActionItem } from '../../core/actions/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
 import { deepAssign } from '../../utilites/deep-assign';
 import { getValue } from '../../utilites/object-utils';
-import { OpenposMediaService } from '../../core/services/openpos-media.service';
+import { OpenposMediaService } from '../../core/media/openpos-media.service';
 import { UIMessage } from '../../core/messages/ui-message';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';

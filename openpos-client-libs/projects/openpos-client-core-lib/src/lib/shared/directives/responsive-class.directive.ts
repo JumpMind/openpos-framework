@@ -1,6 +1,6 @@
 import { Directive, ElementRef, OnDestroy, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { OpenposMediaService, MediaBreakpoints } from '../../core/services/openpos-media.service';
+import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 
 @Directive({
     selector: '[responsive-class]'

@@ -3,7 +3,7 @@ import { MediaService } from '@angular/flex-layout';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { startWith, map, filter } from 'rxjs/operators';
-import { SessionService } from './session.service';
+import { SessionService } from '../services/session.service';
 
 export class MediaBreakpoints {
     static MOBILE_PORTRAIT = 'mobile-portrait';
