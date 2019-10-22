@@ -6,7 +6,7 @@ import { IActionItem } from '../../core/actions/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
 import { deepAssign } from '../../utilites/deep-assign';
 import { getValue } from '../../utilites/object-utils';
-import { OpenposMediaService } from '../../core/media/openpos-media.service';
+import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 import { UIMessage } from '../../core/messages/ui-message';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
@@ -38,13 +38,14 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
             this.actionService = injector.get(ActionService);
         }
         const sizeMap = new Map([
-            ['xs', true],
-            ['sm', false],
-            ['md', false],
-            ['lg', false],
-            ['xl', false]
+            [MediaBreakpoints.MOBILE_PORTRAIT, true],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, true],
+            [MediaBreakpoints.TABLET_PORTRAIT, false],
+            [MediaBreakpoints.TABLET_LANDSCAPE, false],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
         ]);
-        this.isMobile$ = this.mediaService.mediaObservableFromMap(sizeMap);
+        this.isMobile$ = this.mediaService.observe(sizeMap);
     }
 
     ngOnInit(): void {
