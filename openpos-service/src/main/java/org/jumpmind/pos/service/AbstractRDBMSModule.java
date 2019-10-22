@@ -72,6 +72,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
 
+    protected static final String JDBC_QUERY_TIMEOUT = "jdbc.query.timeout.sec";
+    protected static final String JDBC_FETCH_SIZE = "jdbc.fetch.size";
+
     @Autowired
     protected Environment env;
 

@@ -62,14 +62,15 @@ public class DBSession {
 
     public DBSession(String catalogName, String schemaName, DatabaseSchema databaseSchema, IDatabasePlatform databasePlatform,
             Map<String, String> sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates,
-            TagHelper tagHelper) {
+            TagHelper tagHelper, int queryTimeout, int fetchSize) {
         super();
         this.dmlTemplates = dmlTemplates;
         this.databaseSchema = databaseSchema;
         this.databasePlatform = databasePlatform;
         this.sessionContext = sessionContext;
         this.jdbcTemplate = new JdbcTemplate(databasePlatform.getDataSource());
-        this.jdbcTemplate.setFetchSize(1000);
+        this.jdbcTemplate.setQueryTimeout(queryTimeout);
+        this.jdbcTemplate.setFetchSize(fetchSize);
         this.queryTemplates = queryTemplates;
         this.tagHelper = tagHelper;
     }
