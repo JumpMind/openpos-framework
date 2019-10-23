@@ -1,0 +1,18 @@
+@mixin carousel-theme($theme){
+    $app-primary: mat-color(map-get($theme, primary));
+
+    app-carousel{
+        app-icon-button{
+        position: relative;
+        color: transparent;
+            &:hover{
+                background-color: rgba(0,0,0,0.3);
+                color: white;
+            } 
+        }
+    }
+
+    .dot.active {
+        background-color: $app-primary;
+    }
+}

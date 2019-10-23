@@ -1,0 +1,39 @@
+:host {
+    display: grid;
+}
+
+.carousel{
+    display: grid;
+    grid-template-columns: auto;
+    align-items: center;
+    justify-items: center;
+    justify-self: start;
+}
+
+.item {
+    grid-area: 1/1/1/1;
+}
+
+.left-arrow {
+    grid-area: 1/1/1/1;
+    justify-self:start;
+}
+
+.right-arrow {
+    grid-area: 1/1/1/1;
+    justify-self:end;
+}
+
+.carousel-nav-dots {
+    grid-area: 2/1/2/1;
+}
+
+.dot {
+    border: 1px solid;
+    border-radius: 10px;
+    display: inline-block;
+    height: 10px;
+    width: 10px;
+    margin-left:5px;
+    margin-right:5px
+}

@@ -1,0 +1,21 @@
+<section class="carousel">
+    <app-icon-button *ngIf="items.length > 1 && backwardEnabled()" class="left-arrow" 
+        [iconName]="'Back'" 
+        iconClass="lg"
+        (buttonClick)="moveBackward()"
+        (swiperight)="moveBackward()">
+    </app-icon-button>
+    <div aria-label="Carousel Item" class="item">
+        <ng-container *ngTemplateOutlet="currentItem"></ng-container>
+    </div>
+    <app-icon-button *ngIf="items.length > 1 && forwardEnabled()" class="right-arrow"
+        [iconName]="'Forward'" 
+        iconClass="lg"
+        (buttonClick)="moveForward()"
+        (swipeleft)="moveForward()">
+    </app-icon-button>
+    <div aria-label="Carousel Navigation Dots" *ngIf="items.length > 1" class="carousel-nav-dots">
+        <span aria-label="Carousel Dot" *ngFor="let item of items; index as i" [ngClass]="isDotActive(i) ? 'dot active': 'dot'"></span>
+    </div>
+</section>
+
