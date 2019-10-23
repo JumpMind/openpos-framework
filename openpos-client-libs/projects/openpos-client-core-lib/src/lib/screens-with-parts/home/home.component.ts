@@ -2,7 +2,7 @@ import { Component, Injector } from '@angular/core';
 import { HomeInterface } from './home.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PosScreen } from '../pos-screen/pos-screen.component';
-import { OpenposMediaService } from '../../core/services/openpos-media.service';
+import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 import { Configuration } from '../../configuration/configuration';
 import { Observable, from, timer } from 'rxjs';
 import { IActionItem } from '../../core/actions/action-item.interface';
@@ -44,28 +44,31 @@ export class HomeComponent extends PosScreen<HomeInterface> {
 
   constructor( media: OpenposMediaService, injector: Injector ) {
     super(injector);
-    this.gridColumns = media.mediaObservableFromMap(new Map([
-      ['xs', 1],
-      ['sm', 2],
-      ['md', 3],
-      ['lg', 3],
-      ['xl', 3]
+    this.gridColumns = media.observe(new Map([
+      [MediaBreakpoints.MOBILE_PORTRAIT, 1],
+      [MediaBreakpoints.MOBILE_LANDSCAPE, 2],
+      [MediaBreakpoints.TABLET_PORTRAIT, 3],
+      [MediaBreakpoints.TABLET_LANDSCAPE, 3],
+      [MediaBreakpoints.DESKTOP_PORTRAIT, 3],
+      [MediaBreakpoints.DESKTOP_LANDSCAPE, 3]
     ]));
 
-    this.gutterSize = media.mediaObservableFromMap(new Map([
-      ['xs', 10],
-      ['sm', 10],
-      ['md', 20],
-      ['lg', 20],
-      ['xl', 20]
+    this.gutterSize = media.observe(new Map([
+      [MediaBreakpoints.MOBILE_PORTRAIT, 10],
+      [MediaBreakpoints.MOBILE_LANDSCAPE, 10],
+      [MediaBreakpoints.TABLET_PORTRAIT, 20],
+      [MediaBreakpoints.TABLET_LANDSCAPE, 20],
+      [MediaBreakpoints.DESKTOP_PORTRAIT, 20],
+      [MediaBreakpoints.DESKTOP_LANDSCAPE, 20]
     ]));
 
-    this.isMobile = media.mediaObservableFromMap(new Map([
-      ['xs', true],
-      ['sm', false],
-      ['md', false],
-      ['lg', false],
-      ['xl', false]
+    this.isMobile = media.observe(new Map([
+      [MediaBreakpoints.MOBILE_PORTRAIT, true],
+      [MediaBreakpoints.MOBILE_LANDSCAPE, true],
+      [MediaBreakpoints.TABLET_PORTRAIT, false],
+      [MediaBreakpoints.TABLET_LANDSCAPE, false],
+      [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+      [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
     ]));
   }
 

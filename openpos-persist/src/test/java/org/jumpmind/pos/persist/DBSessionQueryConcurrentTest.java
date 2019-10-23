@@ -15,6 +15,7 @@ import org.jumpmind.pos.persist.impl.DatabaseSchema;
 import org.jumpmind.pos.persist.impl.DmlTemplate;
 import org.jumpmind.pos.persist.impl.QueryTemplate;
 import org.jumpmind.pos.persist.model.TagHelper;
+import org.jumpmind.properties.TypedProperties;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -58,7 +59,7 @@ public class DBSessionQueryConcurrentTest {
         Map<String, QueryTemplate> queryTemplates = new HashMap<>();
         Map<String, DmlTemplate> dmlTemplates = new HashMap<>();
         
-        DBSession db = new DBSession("catalog", "schema", databaseSchema, databasePlatform, null, queryTemplates, dmlTemplates, tagHelper);
+        DBSession db = new DBSession("catalog", "schema", databaseSchema, databasePlatform, new TypedProperties(), queryTemplates, dmlTemplates, tagHelper);
         
         for (int i = 0; i < 1000; i++) {            
             db.query(carLookup);

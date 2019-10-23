@@ -1,5 +1,5 @@
 import { Directive, Renderer2, ElementRef, Input, OnInit, OnDestroy } from '@angular/core';
-import { OpenposMediaService } from '../../core/services/openpos-media.service';
+import { OpenposMediaService } from '../../core/media/openpos-media.service';
 import { Subscription } from 'rxjs';
 
 const selectors = `

@@ -40,6 +40,7 @@ import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.persist.model.TagModel;
 import org.jumpmind.pos.util.ReflectUtils;
 import org.jumpmind.pos.util.model.ITypeCode;
+import org.jumpmind.properties.TypedProperties;
 import org.jumpmind.util.LinkedCaseInsensitiveMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
@@ -52,24 +53,28 @@ public class DBSession {
 
     private static final Logger log = Logger.getLogger(DBSession.class);
 
+    public static final String JDBC_QUERY_TIMEOUT = "openpos.jdbc.queryTimeoutSec";
+    public static final String JDBC_FETCH_SIZE = "openpos.jdbc.fetchSize";
+
     private DatabaseSchema databaseSchema;
     private IDatabasePlatform databasePlatform;
     private JdbcTemplate jdbcTemplate;
-    private Map<String, String> sessionContext;
+    private TypedProperties sessionContext;
     private Map<String, QueryTemplate> queryTemplates;
     private Map<String, DmlTemplate> dmlTemplates;
     private TagHelper tagHelper;
 
     public DBSession(String catalogName, String schemaName, DatabaseSchema databaseSchema, IDatabasePlatform databasePlatform,
-            Map<String, String> sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates,
-            TagHelper tagHelper) {
+                     TypedProperties sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates,
+                     TagHelper tagHelper) {
         super();
         this.dmlTemplates = dmlTemplates;
         this.databaseSchema = databaseSchema;
         this.databasePlatform = databasePlatform;
         this.sessionContext = sessionContext;
         this.jdbcTemplate = new JdbcTemplate(databasePlatform.getDataSource());
-        this.jdbcTemplate.setFetchSize(1000);
+        this.jdbcTemplate.setQueryTimeout(sessionContext.getInt(JDBC_QUERY_TIMEOUT, 10));
+        this.jdbcTemplate.setFetchSize(sessionContext.getInt(JDBC_FETCH_SIZE, 1000));
         this.queryTemplates = queryTemplates;
         this.tagHelper = tagHelper;
     }

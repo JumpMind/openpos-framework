@@ -19,6 +19,7 @@
  */
 package org.jumpmind.pos.core.flow;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -421,6 +422,26 @@ public class StateManager implements IStateManager {
                 showScreen(lastDialog);
             }
         }
+
+        Class<?> clazz = getCurrentState().getClass();
+
+        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnRefresh.class, true, true);
+
+        if( !methods.isEmpty()) {
+            methods.forEach( m -> {
+                m.setAccessible(true);
+                try {
+                    m.invoke(getCurrentState());
+                } catch (Exception ex) {
+                    if (errorHandler != null) {
+                        errorHandler.handleError(this, ex);
+                    } else {
+                        throw new FlowException("Failed to invoke method " + m, ex);
+                    }
+                }
+            });
+        }
+
     }
 
     // Could come from a UI or a running state..

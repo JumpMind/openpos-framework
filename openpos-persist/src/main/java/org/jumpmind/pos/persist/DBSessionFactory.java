@@ -24,6 +24,7 @@ import org.jumpmind.pos.persist.impl.QueryTemplates;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.persist.model.TagModel;
+import org.jumpmind.properties.TypedProperties;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
@@ -35,11 +36,11 @@ public class DBSessionFactory {
     Map<String, QueryTemplate> queryTemplates;
     Map<String, DmlTemplate> dmlTemplates;
     IDatabasePlatform databasePlatform;
-    Map<String, String> sessionContext;
+    TypedProperties sessionContext;
     List<Class<?>> modelClazzes;
     TagHelper tagHelper;
 
-    public void init(IDatabasePlatform databasePlatform, Map<String, String> sessionContext, List<Class<?>> entities, TagHelper tagHelper) {
+    public void init(IDatabasePlatform databasePlatform, TypedProperties sessionContext, List<Class<?>> entities, TagHelper tagHelper) {
 
         QueryTemplates queryTemplates = getQueryTemplates(sessionContext.get("module.tablePrefix"));
         DmlTemplates dmlTemplates = getDmlTemplates(sessionContext.get("module.tablePrefix"));
@@ -49,7 +50,7 @@ public class DBSessionFactory {
 
     public void init(
             IDatabasePlatform databasePlatform,
-            Map<String, String> sessionContext,
+            TypedProperties sessionContext,
             List<Class<?>> entities,
             QueryTemplates queryTemplatesObject,
             DmlTemplates dmlTemplates,

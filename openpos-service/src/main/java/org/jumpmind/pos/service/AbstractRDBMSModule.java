@@ -238,11 +238,13 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
             List<Class<?>> tableClasses = getClassesForPackageAndAnnotation(packageName, TableDef.class);
 
-            Map<String, String> sessionContext = new HashMap<>();
+            TypedProperties sessionContext = new TypedProperties();
 
             sessionContext.put("module.tablePrefix", getTablePrefix());
             sessionContext.put("CREATE_BY", "openpos-" + getName());
             sessionContext.put("LAST_UPDATE_BY", "openpos-" + getName());
+            sessionContext.put(DBSession.JDBC_FETCH_SIZE, env.getProperty(DBSession.JDBC_FETCH_SIZE));
+            sessionContext.put(DBSession.JDBC_QUERY_TIMEOUT, env.getProperty(DBSession.JDBC_QUERY_TIMEOUT));
 
             sessionFactory.init(databasePlatform(), sessionContext, tableClasses, tagHelper);
 

@@ -1,5 +1,5 @@
-import { Component, Input} from '@angular/core';
-import { OpenposMediaService } from '../../../core/services/openpos-media.service';
+import { Component, Input } from '@angular/core';
+import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openpos-media.service';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -9,18 +9,19 @@ import { Observable } from 'rxjs';
 })
 export class OverFlowListComponent {
 
-    @Input() numberItemsToShow: Observable<number> = this.mediaService.mediaObservableFromMap(new Map([
-        ['xs', 3],
-        ['sm', 3],
-        ['md', 4],
-        ['lg', 6],
-        ['xl', 6]
-      ]));
+    @Input() numberItemsToShow: Observable<number> = this.mediaService.observe(new Map([
+        [MediaBreakpoints.MOBILE_PORTRAIT, 3],
+        [MediaBreakpoints.MOBILE_LANDSCAPE, 3],
+        [MediaBreakpoints.TABLET_PORTRAIT, 4],
+        [MediaBreakpoints.TABLET_LANDSCAPE, 4],
+        [MediaBreakpoints.DESKTOP_PORTRAIT, 6],
+        [MediaBreakpoints.DESKTOP_LANDSCAPE, 6]
+    ]));
 
     @Input() items: any[];
 
     shownItems: any[];
     overflowItems: any[];
 
-    constructor(private mediaService: OpenposMediaService) {}
+    constructor(private mediaService: OpenposMediaService) { }
 }

@@ -44,7 +44,10 @@ public class MessageService implements IMessageService {
 
     @Value("${openpos.screens.jsonIncludeNulls:true}")
     boolean jsonIncludeNulls = true;
-    
+
+    @Value("${openpos.general.websocket.sendBufferSizeLimit:80000}")
+    int websocketSendBufferLimit;
+
     @Autowired(required=false)
     List<IActionListener> actionListeners;
 
@@ -107,7 +110,11 @@ public class MessageService implements IMessageService {
             StringBuilder topic = new StringBuilder(128);
             topic.append("/topic/app/").append(appId).append("/node/").append(deviceId);
             byte[] json = messageToJson(message).getBytes("UTF-8");
-            this.template.send(topic.toString(), MessageBuilder.withPayload(json).build());
+            if( json.length <= websocketSendBufferLimit ){
+                this.template.send(topic.toString(), MessageBuilder.withPayload(json).build());
+            } else {
+                throw new RuntimeException("Message length of " + json.length + " exceeds websocket send buffer limit of " + websocketSendBufferLimit);
+            }
         } catch (RuntimeException ex) {
             throw ex;
         } catch (Exception ex) {

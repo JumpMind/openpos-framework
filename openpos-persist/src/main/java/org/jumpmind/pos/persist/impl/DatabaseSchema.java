@@ -256,8 +256,8 @@ public class DatabaseSchema {
                     for (Field field : fields) {
                         field.setAccessible(true);
                         Column column = createColumn(field);
-                        createIndex(field, column, indices);
                         if (column != null && (includeAllFields || column.isPrimaryKey())) {
+                            createIndex(field, column, indices);
                             if (isPrimaryKey(field)) {
                                 meta.addEntityIdField(field.getName(), field);
                                 pkColumns.add(0, column);

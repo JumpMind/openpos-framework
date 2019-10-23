@@ -48,8 +48,8 @@ public class PersistTestUtil {
         return new TypedProperties(props);
     }
     
-    public static Map<String, String> getSessionContext() {
-        Map<String, String> sessionContext = new HashMap<>();
+    public static TypedProperties getSessionContext() {
+        TypedProperties sessionContext = new TypedProperties();
         sessionContext.put("module.tablePrefix", "car");
         sessionContext.put("CREATE_BY", "unit-test");
         sessionContext.put("LAST_UPDATE_BY", "unit-test");
