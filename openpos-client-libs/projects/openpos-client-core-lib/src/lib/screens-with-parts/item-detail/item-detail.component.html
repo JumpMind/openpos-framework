@@ -3,7 +3,11 @@
     <app-sausage-links waffle-drawer-content></app-sausage-links>
     <div waffle-body class="body">
         <h1>{{screen.itemName}}</h1>
-        <img class="item-image" [src]="screen.imageUrls[0] | imageUrl">
+        <app-carousel class="carousel">
+            <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
+                <img class="item-image" [src]="image | imageUrl">
+            </ng-template>
+        </app-carousel>
         <app-display-property *ngFor="let prop of screen.itemProperties" [property]="prop"></app-display-property>
     </div>
 </app-waffle>
