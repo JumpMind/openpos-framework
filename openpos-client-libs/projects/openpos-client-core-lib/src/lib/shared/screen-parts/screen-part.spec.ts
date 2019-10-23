@@ -42,7 +42,7 @@ describe('ScreenPart', () => {
         TestBed.configureTestingModule({
             declarations: [ TestPartComponent ],
             providers: [
-                { provide: OpenposMediaService, useValue: jasmine.createSpyObj('OpenposMediaService', ['mediaObservableFromMap'])},
+                { provide: OpenposMediaService, useValue: jasmine.createSpyObj('OpenposMediaService', ['observe', 'mediaObservableFromMap'])},
                 { provide: SessionService, useValue: jasmine.createSpyObj('SessionService', ['sendMessage'])},
                 { provide: MessageProvider, useValue: messageProviderSpy },
                 { provide: ActionService, useValue: actionServiceSpy }
