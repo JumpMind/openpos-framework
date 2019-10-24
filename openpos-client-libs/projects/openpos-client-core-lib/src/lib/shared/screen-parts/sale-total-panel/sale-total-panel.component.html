@@ -37,9 +37,9 @@
         </button>
         <div *ngIf="screenData.customer" responsive-class class="sale-total-customer-label" fxLayout="column" fxLayoutAlign="center center"
             fxLayoutGap="8px">
-            <img [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon">
-            <div class="muted-color">{{screenData.customer.name}}</div>
-            <div class="muted-color">{{screenData.customer.label}}: {{screenData.customer.id}}</div>
+            <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon">
+            <div *ngIf="screenData.customer.name" class="muted-color">{{screenData.customer.name}}</div>
+            <div *ngIf="screenData.customer.label && screenData.customer.id" class="muted-color">{{screenData.customer.label}}: {{screenData.customer.id}}</div>
         </div>
 
         <button responsive-class mat-button *ngIf="!screenData.readOnly && screenData.checkoutButton"
