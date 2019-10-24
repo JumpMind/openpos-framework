@@ -14,9 +14,9 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
     private String headerText;
     private String headerIcon;
     private ActionItem backButton;
+    private ActionItem skipButton = new ActionItem("key:selfcheckout:button.skip", "Skip", false);
     private boolean showScan;
     private boolean showAdmin;
-    private boolean showSkip;
     private boolean showLanguageSelector = false;
 
     public String getDeviceId() {
@@ -59,6 +59,14 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
         this.backButton = backButton;
     }
 
+    public ActionItem getSkipButton() {
+        return skipButton;
+    }
+
+    public void setSkipButton(ActionItem skipButton) {
+        this.skipButton = skipButton;
+    }
+
     public boolean isShowScan() {
         return showScan;
     }
@@ -75,12 +83,8 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
         this.showAdmin = showAdmin;
     }
 
-    public boolean isShowSkip() {
-        return showSkip;
-    }
-
     public void setShowSkip(boolean showSkip) {
-        this.showSkip = showSkip;
+        this.skipButton.setEnabled(showSkip);
     }
 
     public boolean isShowLanguageSelector() {

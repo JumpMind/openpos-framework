@@ -75,7 +75,7 @@ export class SellScreenUtils {
         statusBar.backButton = screen.backButton;
         statusBar.showAdmin = screen.template.statusBar.showAdmin;
         statusBar.showScan = screen.template.statusBar.showScan;
-        statusBar.showSkip = screen.template.statusBar.showSkip;
+        statusBar.skipButton = screen.template.statusBar.skipButton;
         statusBar.showLanguageSelector = screen.template.statusBar.showLanguageSelector;
         statusBar.scanSomethingData = screen.template.scan;
         return statusBar;

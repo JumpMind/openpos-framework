@@ -5,12 +5,12 @@ import { IActionItem } from '../../../../core/interfaces/action-item.interface';
  */
 export interface IStatusBar {
     backButton: IActionItem;
+    skipButton: IActionItem;
     operatorText: String;
     logoutButton: IActionItem;
     workstationId: String;
     showScan: boolean;
     showAdmin: boolean;
-    showSkip: boolean;
     showLanguageSelector: boolean;
     enableHomeAction: boolean;
 }

@@ -5,7 +5,7 @@ import { IScan } from '../../screens-deprecated/templates/sell-template/sell/sca
 export class SelfCheckoutStatusBarData {
     showScan: boolean;
     backButton: IActionItem;
-    showSkip: boolean;
+    skipButton: IActionItem;
     showAdmin: boolean;
     showLanguageSelector: boolean;
     scanSomethingData: IScan;

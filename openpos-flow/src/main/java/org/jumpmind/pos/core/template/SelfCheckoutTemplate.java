@@ -1,5 +1,7 @@
 package org.jumpmind.pos.core.template;
 
+import org.jumpmind.pos.core.screen.ActionItem;
+
 public class SelfCheckoutTemplate extends AbstractTemplate {
 
     private static final long serialVersionUID = 1L;
@@ -43,6 +45,10 @@ public class SelfCheckoutTemplate extends AbstractTemplate {
     
     public Scan getScan() {
         return scan;
+    }
+    
+    public void setShowSkip(boolean showSkip) {
+        statusBar.put("skipButton", new ActionItem("key:selfcheckout:button.skip", "Skip", showSkip));
     }
 
 }
