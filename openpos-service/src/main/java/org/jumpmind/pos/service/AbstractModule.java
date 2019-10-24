@@ -54,6 +54,7 @@ import org.jumpmind.security.SecurityServiceFactory;
 import org.jumpmind.symmetric.io.data.DbExport;
 import org.jumpmind.symmetric.io.data.DbExport.Compatible;
 import org.jumpmind.symmetric.io.data.DbExport.Format;
+import org.jumpmind.util.AbstractVersion;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,6 +104,19 @@ abstract public class AbstractModule extends AbstractServiceFactory implements I
     protected DBSessionFactory sessionFactory;
     
     static Server h2Server;
+
+    public String getVersion() {
+        String version = new AbstractVersion() {
+            @Override
+            protected String getArtifactName() {
+                return getArtifactName();
+            }
+        }.version();
+        if (version.equals("development")) {
+            version = "0.0.4";
+        }
+        return version;
+    }
 
     protected void setupH2Server() {
         if ("true".equals(env.getProperty("db.h2.startServer"))) {
