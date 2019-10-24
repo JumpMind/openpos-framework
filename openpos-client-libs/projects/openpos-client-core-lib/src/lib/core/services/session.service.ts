@@ -511,6 +511,14 @@ export class SessionService implements IMessageHandler<any> {
                 const menuItem = action as IActionItem;
                 confirm = menuItem.confirmationDialog;
                 actionString = menuItem.action;
+
+                // If action item is disabled, don't send the action
+                // Note: don't merge this into master
+                if (!menuItem.enabled) {
+                    this.log.info('Not sending action because it was disabled');
+                    return;
+                }
+
                 // check to see if we are an IURLMenuItem
                 if (menuItem.hasOwnProperty('url')) {
                     const urlMenuItem = menuItem as IUrlMenuItem;
