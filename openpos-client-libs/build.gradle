@@ -16,6 +16,9 @@ node {
     version = '10.5.0'
     npmVersion = '6.1.0'
     download = downloadNode.toBoolean()
+    if (project.hasProperty('nodeDistUrl')) {
+      distBaseUrl = nodeDistUrl
+    }
     println """
       **************************************************************************************************
         Using native node & npm? ${!download}.  Set downloadNode to true in gradle.properties 
