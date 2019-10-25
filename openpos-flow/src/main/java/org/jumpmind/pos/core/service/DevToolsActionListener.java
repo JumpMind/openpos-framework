@@ -18,6 +18,8 @@ import org.jumpmind.pos.core.flow.ScopeValue;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.javapos.SimulatedScannerService;
+import org.jumpmind.pos.core.model.OpenposBarcodeType;
+import org.jumpmind.pos.core.model.ScanData;
 import org.jumpmind.pos.core.screen.ScopeField;
 import org.jumpmind.pos.core.screen.ScreenType;
 import org.jumpmind.pos.server.model.Action;
@@ -64,6 +66,11 @@ public class DevToolsActionListener implements IActionListener {
             if (service != null) {
                 service.setScanData(((String)action.getData()).getBytes());
                 service.getCallbacks().fireDataEvent(new DataEvent(this, 1));
+            } else {
+                ScanData scanData = new ScanData();
+                scanData.setData(action.getData());
+                scanData.setType(OpenposBarcodeType.CODE128);
+                stateManager.doAction(new Action("Scan", scanData));
             }
         } else if (action.getName().contains("DevTools::Load")) {
             String saveName = action.getName().substring(16);
