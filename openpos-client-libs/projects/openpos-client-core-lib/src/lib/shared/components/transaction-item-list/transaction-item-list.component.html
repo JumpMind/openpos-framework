@@ -1,6 +1,6 @@
 <div class="transaction-prompt" fxLayoutAlign="start center">
     <div fxLayoutAlign="start center" *ngIf="selectedItems && selectedItems.length > 0; else transactionMenuElse" class="page-content-card">
-         <app-kebab-label-button  class="selected-color" [keyBinding]="transactionMenu.keybind" *ngIf="!readOnly && selectedItems.length > 0" [menuItems]="multiSelectedMenuItems" [color]="'selected-color'"
+         <app-kebab-label-button [keyBinding]="transactionMenu.keybind" *ngIf="!readOnly && selectedItems.length > 0" [menuItems]="multiSelectedMenuItems" [color]="'selected-color'"
             (menuItemClick)="onItemActionsMultiMenulick($event, selectedItemIndexes, selectedItems)" [label]="menuItemLabel()"></app-kebab-label-button>
         <span *ngIf="keybindsEnabled() && transactionMenu.keybind && !readOnly && selectedItems.length > 0 && multiSelectedMenuItems && multiSelectedMenuItems.length > 0" class="muted-color text-sm">{{transactionMenu.keybind}}</span>
     </div>
