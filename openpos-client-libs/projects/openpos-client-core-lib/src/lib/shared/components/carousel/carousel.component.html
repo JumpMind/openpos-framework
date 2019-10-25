@@ -1,16 +1,16 @@
 <section class="carousel">
     <app-icon-button *ngIf="items.length > 1 && backwardEnabled()" class="left-arrow" 
         [iconName]="'Back'" 
-        iconClass="lg"
+        [iconClass]="carouselSize"
         (buttonClick)="moveBackward()"
         (swiperight)="moveBackward()">
     </app-icon-button>
-    <div aria-label="Carousel Item" class="item">
+    <div [@moveInOut]="index" aria-label="Carousel Item" class="item" [ngClass]="[carouselSize, carouselItemClass]">
         <ng-container *ngTemplateOutlet="currentItem"></ng-container>
     </div>
     <app-icon-button *ngIf="items.length > 1 && forwardEnabled()" class="right-arrow"
         [iconName]="'Forward'" 
-        iconClass="lg"
+        [iconClass]="carouselSize"
         (buttonClick)="moveForward()"
         (swipeleft)="moveForward()">
     </app-icon-button>

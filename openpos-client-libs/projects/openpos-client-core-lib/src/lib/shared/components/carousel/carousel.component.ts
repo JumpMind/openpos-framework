@@ -1,11 +1,64 @@
-import { Component, ContentChildren, QueryList, TemplateRef, AfterContentInit } from '@angular/core';
+import { Component, ContentChildren, QueryList, TemplateRef, AfterContentInit, Input } from '@angular/core';
+import { trigger, style, animate, transition, query, group} from '@angular/animations';
 
 @Component({
     selector: 'app-carousel',
     templateUrl: './carousel.component.html',
-    styleUrls: ['./carousel.component.scss']
+    styleUrls: ['./carousel.component.scss'],
+    animations: [
+        trigger('moveInOut', [
+            transition(':increment', group([
+                style({
+                    position: 'relative'
+                }),
+                query(':enter, :leave', [
+                    style({
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%'
+                    })
+                ]),
+                query(':enter', [
+                  style({ left: '-100%'})
+                ]),
+                group([
+                  query(':leave', [
+                    animate('800ms ease-out', style({ left: '100%'}))
+                  ]),
+                  query(':enter', [
+                    animate('800ms ease-out', style({ left: '0%'}))
+                  ])
+                ]),
+            ])),
+            transition(':decrement', group([
+                style({
+                    position: 'relative'
+                }),
+                query(':enter, :leave', [
+                    style({
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        width: '100%'
+                    })
+                ]),
+                query(':enter', [
+                    style({ left: '100%'})
+                ]),
+                query(':enter', [
+                  animate('800ms ease-out', style({ left: '0%'}))
+                ]),
+                query(':leave', [
+                  animate('800ms ease-out', style({ left: '-100%' }))
+                ])
+            ]))
+        ])
+    ]
 })
 export class CarouselComponent implements AfterContentInit {
+    @Input() carouselSize = 'lg';
+    @Input() carouselItemClass;
 
     @ContentChildren('carouselItem') items: QueryList<TemplateRef<any>>;
     currentItem: TemplateRef<any>;

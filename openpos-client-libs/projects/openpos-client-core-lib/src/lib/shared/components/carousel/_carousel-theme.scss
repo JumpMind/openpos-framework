@@ -3,13 +3,33 @@
 
     app-carousel{
         app-icon-button{
-        position: relative;
-        color: transparent;
+            position: relative;
+            color: transparent;
             &:hover{
                 background-color: rgba(0,0,0,0.3);
                 color: white;
             } 
         }
+
+        .item >* {
+            width: 100%;
+        }
+
+        .item.sm {
+            width: 100px;
+            height: 100px; 
+        }
+
+        .item.md {
+            width: 200px;
+            height: 200px;
+        }
+
+        .item.lg {
+            width: 300px;
+            height: 300px;
+        }
+
     }
 
     .dot.active {

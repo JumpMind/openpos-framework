@@ -127,6 +127,7 @@ import { SaleTotalPanelComponent } from './screen-parts/sale-total-panel/sale-to
 import { ResponsiveClassDirective } from './directives/responsive-class.directive';
 import { BaconDrawerComponent } from './screen-parts/bacon-strip/bacon-drawer/bacon-drawer.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -286,7 +287,8 @@ const pipes = [
         CommonModule,
         MaterialModule,
         MatKeyboardModule,
-        TextMaskModule
+        TextMaskModule,
+        BrowserAnimationsModule
     ],
     exports: [
         FormsModule,
