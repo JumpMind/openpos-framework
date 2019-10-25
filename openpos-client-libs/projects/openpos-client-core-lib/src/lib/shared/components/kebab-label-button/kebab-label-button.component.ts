@@ -11,6 +11,9 @@ export class KebabLabelButtonComponent extends KebabButtonComponent {
     @Input()
     label: string;
 
+    @Input()
+    color: string;
+
     public onMenuItemClick($event) {
         this.menuItemClick.emit($event);
     }
