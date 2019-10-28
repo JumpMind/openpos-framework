@@ -127,6 +127,7 @@ import { SaleTotalPanelComponent } from './screen-parts/sale-total-panel/sale-to
 import { ResponsiveClassDirective } from './directives/responsive-class.directive';
 import { BaconDrawerComponent } from './screen-parts/bacon-strip/bacon-drawer/bacon-drawer.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
+import { MobileTotalsPartComponent } from './screen-parts/mobile-totals-part/mobile-totals-part.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -146,7 +147,8 @@ const screenParts = [
     SaleItemCardListComponent,
     BannerComponent,
     NotificationsComponent,
-    SaleTotalPanelComponent
+    SaleTotalPanelComponent,
+    MobileTotalsPartComponent
 ];
 
 const components = [

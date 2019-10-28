@@ -3,6 +3,11 @@
 .item-card {
     margin: 0px;
     margin-bottom: 16px;
+
+    &.mobile {
+        margin-bottom: 8px;
+        padding: 8px 16px;
+    }
 }
 
 .item-card-image {

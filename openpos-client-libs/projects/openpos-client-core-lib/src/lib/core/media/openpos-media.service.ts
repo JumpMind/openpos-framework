@@ -61,7 +61,6 @@ export class OpenposMediaService {
                'desktop-landscape': '(min-width: 1280px) and (orientation: landscape)'
     */
     private updateBreakpoints(message: any) {
-        console.log(this._breakpointToName);
         for (const configName of Object.keys(message)) {
             if (configName.startsWith('breakpoints')) {
                 const breakpointName = configName.replace('breakpoints\.', '');

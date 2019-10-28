@@ -1,6 +1,6 @@
 <app-bacon-strip class="sale-bacon-strip">
     <div class="common-background sale-outer">
-        <div class="sale-body">
+        <div *ngIf="!(isMobile | async)" class="sale-body">
             <div class="sale-items-outer">
                 <app-scan-or-search class="scan-or-search mat-elevation-z1" [defaultAction]="screen.checkoutButton">
                 </app-scan-or-search>
@@ -11,5 +11,13 @@
             </div>
             <app-sale-total-panel class="sale-total-background"></app-sale-total-panel>
         </div>
+        <div *ngIf="(isMobile | async)" class="sale-body-mobile">
+            <app-scan-or-search class="scan-or-search-mobile mat-elevation-z1" [defaultAction]="screen.checkoutButton">
+            </app-scan-or-search>
+
+            <app-sale-item-card-list #scrollList class="sale-list-background-mobile"></app-sale-item-card-list>
+        </div>
+
+        <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>
     </div>
 </app-bacon-strip>

@@ -1,0 +1,19 @@
+@mixin mobile-totals-part-theme($theme) {
+
+    $primary: map-get($theme, primary);
+    $contrast: mat-color($primary, default-contrast);
+
+    .mobile-totals-top {
+        color: #666;
+        border-top: 2px solid #666;
+    }
+
+    .mobile-totals-bottom {
+        background-color: #666;
+    }
+
+    .mobile-grand-total {
+        color: $contrast;
+    }
+
+}
