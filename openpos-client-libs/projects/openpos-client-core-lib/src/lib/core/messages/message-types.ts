@@ -6,4 +6,6 @@ export class MessageTypes {
     static TOAST = 'Toast';
     static SCREEN = 'Screen';
     static CONFIG_CHANGED = 'ConfigChanged';
+    static DATA = "UIData";
+    static CONNECTED = 'Connected'
 }

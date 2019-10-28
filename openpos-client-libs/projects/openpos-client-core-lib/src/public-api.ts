@@ -67,6 +67,8 @@ export * from './lib/core/interfaces/total.interface';
 export * from './lib/core/interfaces/transaction-summary.interface';
 export * from './lib/core/actions/url-menu-item.interface';
 export * from './lib/core/interfaces/validator.enum';
+export * from './lib/core/messages/message-types';
+export * from './lib/core/messages/ui-data-message';
 
 export * from './lib/core/oldplugins/barcode-scanner.plugin';
 export * from './lib/core/oldplugins/cordova-device-plugin';
@@ -108,6 +110,12 @@ export * from './lib/core/services/validators.service';
 export * from './lib/core/services/location.service';
 export * from './lib/core/personalization/client-url.service';
 export * from './lib/core/focus/focus.service';
+export * from './lib/core/ui-data-message/ui-data-message.service';
+export * from './lib/core/messages/action-message';
+export * from './lib/core/messages/message';
+export * from './lib/core/messages/ui-data-message';
+export * from './lib/core/messages/ui-message';
+export * from './lib/core/messages/message';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';

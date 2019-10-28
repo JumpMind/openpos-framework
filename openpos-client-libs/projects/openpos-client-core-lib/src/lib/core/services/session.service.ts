@@ -55,7 +55,7 @@ export class CancelLoadingMessage implements ILoading {
 }
 
 export class ConnectedMessage {
-    type = 'Connected';
+    type = MessageTypes.CONNECTED;
 }
 
 @Injectable({
