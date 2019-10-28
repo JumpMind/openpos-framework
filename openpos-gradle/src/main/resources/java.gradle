@@ -1,3 +1,5 @@
+import java.text.SimpleDateFormat
+
 group = 'org.jumpmind.pos'
 
 apply plugin: 'eclipse'
@@ -54,6 +56,16 @@ repositories {
         mavenCentral()
         url symmetricMavenUrl 
     } 
+}
+
+jar {
+    manifest {
+        attributes("Implementation-Title": project.name,
+                "Implementation-Version": project.hasProperty('version') ? version : '0.0',
+                "Project-Artifact": project.name,
+                "Build-Version": project.hasProperty('version') ? version : '0.0',
+                "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()))
+    }
 }
 
 idea {
