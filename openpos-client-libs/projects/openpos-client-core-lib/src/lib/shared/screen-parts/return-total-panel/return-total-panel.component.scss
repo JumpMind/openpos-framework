@@ -1,0 +1,85 @@
+@import "../../../styles/mixins/typography";
+
+:host {
+    display: grid;
+}
+
+.return-total-border-button {
+    @extend %text-lg;
+    width: 100%;
+    margin-top: 16px;
+}
+
+.return-total-loyalty-button {
+    width: 100%;
+}
+
+.return-total-loyalty-icon {
+    max-width: 100%;
+    max-height: 5em;
+}
+
+.return-total-loyalty-button-icon {
+    padding: 0px 8px;
+    max-width: 100%;
+    max-height: 50px;
+}
+
+.return-total-subtotal {
+    text-align: center;
+
+    .return-total-subtotal-title {
+        @extend %text-sm;
+        padding-bottom: 8px;
+    }
+
+    .return-total-subtotal-amount {
+        @extend %text-lg;
+    }
+}
+
+.return-total-total {
+    text-align: center;
+    border-top-style: solid;
+    border-top-width: 1px;
+
+    .return-total-total-title {
+        @extend %text-lg;
+        padding-top: 16px;
+        padding-bottom: 8px;
+    }
+
+    .return-total-total-amount {
+        @extend %text-xl;
+    }
+}
+
+.return-total-background {
+    display: grid;
+    align-self: stretch;
+    justify-self: stretch;
+    margin: 0px;
+    padding-top: 16px;
+    padding-bottom: 16px;
+    overflow-y: auto;
+}
+
+.return-total-content {
+    display: grid;
+    grid-row-gap: 32px;
+    padding-left: 24px;
+    padding-right: 24px;
+}
+
+.return-total-buttons {
+    display: grid;
+    align-self: end;
+}
+
+.return-total-customer-label {
+    @extend %text-sm;
+    display: grid;
+    grid-row-gap:8px;
+    text-align: center;
+    justify-self:center;
+}
