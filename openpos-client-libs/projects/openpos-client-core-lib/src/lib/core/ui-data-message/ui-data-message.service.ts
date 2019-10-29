@@ -23,8 +23,7 @@ export class UIDataMessageService {
           this.dataMessages.clear();
       });
 
-    this.sessionService.getMessages(MessageTypes.DATA).pipe(
-    ).subscribe( (message: UIDataMessage<any>) => {
+    this.sessionService.getMessages(MessageTypes.DATA).subscribe( (message: UIDataMessage<any>) => {
         if(message.seriesId === -1){
             // -1 signals stale data that no longer exists on the server so clean up.
             this.dataMessages.get(message.dataType).complete();

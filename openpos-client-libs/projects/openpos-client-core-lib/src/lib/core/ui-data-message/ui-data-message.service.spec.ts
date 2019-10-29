@@ -1,139 +1,100 @@
-import {fakeAsync, TestBed} from '@angular/core/testing';
-import {getTestScheduler} from 'jasmine-marbles';
-import {Subject} from 'rxjs';
+import {TestBed} from '@angular/core/testing';
+import {cold, getTestScheduler} from 'jasmine-marbles';
 import {UIDataMessage} from '../messages/ui-data-message';
-import {OpenposMessage} from '../messages/message';
-import {ConnectedMessage, SessionService} from '../services/session.service';
+import {MessageTypes} from '../messages/message-types';
+import {SessionService} from '../services/session.service';
 
 import { UIDataMessageService } from './ui-data-message.service';
 
 describe('UIDataMessageService', () => {
 
-  let sessionService: jasmine.SpyObj<SessionService>;
+    let subscribe;
+    let input;
+    let results;
 
-  let fakeMessages: Subject<OpenposMessage>;
-  let itemSearchResultsService: UIDataMessageService
-  beforeEach(() => {
-    TestBed.resetTestingModule();
-      fakeMessages = new Subject<UIDataMessage<string[]>>();
-    const sessionSpy = jasmine.createSpyObj('SessionService', ['getMessages']);
+    beforeEach( () => {
+        const sessionSpy = jasmine.createSpyObj('SessionService', ['getMessages']);
+        TestBed.configureTestingModule({
+            providers: [
+                UIDataMessageService,
+                {provide: SessionService, useValue: sessionSpy},
+            ]
+        });
+        TestBed.get(SessionService).getMessages.and.callFake( type => type === MessageTypes.DATA ? input : subscribe );
+        subscribe = cold( 's');
+        results = [];
 
-    TestBed.configureTestingModule({
-      providers: [
-          UIDataMessageService,
-          { provide: SessionService, useValue: sessionSpy },
-      ]
     });
 
-    sessionService = TestBed.get(SessionService);
-    sessionService.getMessages.and.callFake(() => fakeMessages);
-    itemSearchResultsService = TestBed.get(UIDataMessageService);
+    function subscribeToSut() {
+        let sut = TestBed.get(UIDataMessageService);
 
-  });
+        getTestScheduler().flush();
 
-  it('should be created', () => {
-    const service: UIDataMessageService = TestBed.get(UIDataMessageService);
-    expect(service).toBeTruthy();
-  });
+        sut.getData$('ItemSearchResults').subscribe( v => {
+            results.push(...v);
+        });
+    }
 
-  it( 'should accumulate messages with matching series id', fakeAsync(() => {
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-          '123',
-          '321'
-      ]));
+    it('should accumulate messages with matching series id', () => {
 
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-        '456',
-        '654'
-      ]));
+        let values = {  x: new UIDataMessage<string[]>('ItemSearchResults', 1, ['123', '321']),
+            y: new UIDataMessage<string[]>('ItemSearchResults', 1, ['456', '654']),
+            z: new UIDataMessage<string[]>('ItemSearchResults', 1, ['789', '987']),
+            a: ['123', '321', '456', '654', '789', '987']
+        };
 
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-        '789',
-        '987'
-      ]));
+        input = cold('-x-y-z--|', values);
 
-      let results: string[];
+        subscribeToSut();
 
-      itemSearchResultsService.getData$('ItemSearchResults').subscribe( r => {
-        results = r;
-      });
+        expect(results).toEqual(values.a);
+    });
 
-      getTestScheduler().flush();
+    it( 'should drop old results if series changes', () => {
 
-      expect(results.length).toBe(6);
+        let values = {  x: new UIDataMessage<string[]>('ItemSearchResults', 1, ['123', '321', '678']),
+            y: new UIDataMessage<string[]>('ItemSearchResults', 1, ['456']),
+            z: new UIDataMessage<string[]>('ItemSearchResults', 2, ['789', '987']),
+            a: ['789', '987']
+        };
 
-  }));
+        input = cold('-x-y-z--|', values);
 
-  it( 'should drop old results if series changes', fakeAsync( () => {
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-          '123',
-          '456'
-      ]));
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-          '456',
-          '654'
-      ]));
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 2, [
-          '789',
-          '987'
-      ]));
+        subscribeToSut();
 
-      let results: string[];
+        expect(results).toEqual(values.a);
+    });
 
-      itemSearchResultsService.getData$('ItemSearchResults').subscribe( r => {
-          results = r;
-      });
+    it( 'should remove listener if series is -1', () => {
+        let values = {  x: new UIDataMessage<string[]>('ItemSearchResults', 1, ['123', '321']),
+            y: new UIDataMessage<string[]>('ItemSearchResults', -1, []),
+            z: new UIDataMessage<string[]>('ItemSearchResults', 1, ['789', '987']),
+            a: ['789', '987']
+        };
 
-      getTestScheduler().flush();
+        input = cold('-x-y-z--|', values);
 
-      expect(results.length).toBe(2);
-  }));
+        subscribeToSut();
 
-  it( 'should remove listener if series is -1', fakeAsync( () => {
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-          '123',
-          '321'
-      ]));
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', -1, []));
+        expect(results).toEqual(values.a);
+    });
 
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-          '789',
-          '987'
-      ]));
+    it( 'should delete cache on session connect', ()=> {
 
-      let results: string[];
+        let values = {  x: new UIDataMessage<string[]>('ItemSearchResults', 1, ['123', '321']),
+            y: new UIDataMessage<string[]>('ItemSearchResults', 1, ['456', '654']),
+            z: new UIDataMessage<string[]>('ItemSearchResults', 1, ['789', '987']),
+            a: ['789', '987']
+        };
 
-      itemSearchResultsService.getData$('ItemSearchResults').subscribe( r => {
-          results = r;
-      });
+        input = cold('-x-y-z--|', values);
+        subscribe = cold( '----s');
 
-      getTestScheduler().flush();
+        subscribeToSut();
 
-      expect(results.length).toBe(2);
-  }));
+        expect(results).toEqual(values.a);
 
-  it( 'should delete cache on session connect', fakeAsync( ()=> {
+    });
 
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-          '123',
-          '321'
-      ]));
-      fakeMessages.next(new ConnectedMessage());
-
-      fakeMessages.next(new UIDataMessage( 'ItemSearchResults', 1, [
-          '789',
-          '987'
-      ]));
-
-      let results: string[];
-
-      itemSearchResultsService.getData$('ItemSearchResults').subscribe( r => {
-          results = r;
-      });
-
-      getTestScheduler().flush();
-
-      expect(results.length).toBe(2);
-
-  }));
 });
