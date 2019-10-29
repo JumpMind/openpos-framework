@@ -14,7 +14,7 @@ export class SubscribeToSessionTask implements IStartupTask {
     order = 600;
 
     private connectionTimeoutSubscr: Subscription;
-    
+
     constructor(
         protected session: SessionService,
         protected router: Router,
@@ -84,7 +84,7 @@ export class SubscribeToSessionTask implements IStartupTask {
                 (err) => {
                     this.connectionTimeoutSubscr.unsubscribe();
                     result.next(false);
-                    result.complete()
+                    result.complete();
                 },
                 () => {
                     this.connectionTimeoutSubscr.unsubscribe();
