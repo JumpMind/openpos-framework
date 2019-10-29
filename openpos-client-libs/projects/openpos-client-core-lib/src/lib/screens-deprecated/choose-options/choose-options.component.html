@@ -36,7 +36,7 @@
     <ng-template ngSwitchCase="OptionForm">
         <mat-card fxFlex class="page-content-card">
             <mat-card-content>
-                <app-dynamic-form-control [screenForm]="selectedOption.form" [submitButton]="{title: 'Next', action:selectedOption.value, icon:'keyboard_arrow_right'}" ></app-dynamic-form-control>
+                <app-dynamic-form-control [screenForm]="selectedOption.form" [submitButton]="{title: 'Next', action:selectedOption.value, icon:'keyboard_arrow_right', enabled:true}" ></app-dynamic-form-control>
             </mat-card-content>
           </mat-card>
      </ng-template>
