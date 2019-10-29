@@ -128,6 +128,7 @@ import { ResponsiveClassDirective } from './directives/responsive-class.directiv
 import { BaconDrawerComponent } from './screen-parts/bacon-strip/bacon-drawer/bacon-drawer.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReturnTotalPanelComponent } from './screen-parts/return-total-panel/return-total-panel.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -147,7 +148,8 @@ const screenParts = [
     SaleItemCardListComponent,
     BannerComponent,
     NotificationsComponent,
-    SaleTotalPanelComponent
+    SaleTotalPanelComponent,
+    ReturnTotalPanelComponent
 ];
 
 const components = [
