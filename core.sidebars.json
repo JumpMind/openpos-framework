@@ -29,6 +29,9 @@
     "Personalization": [
         "personalization"
     ],
+	"UI Data Message": [
+		"ui-data-message"
+	],
     "Icons": [
         "available-icons"
     ],
