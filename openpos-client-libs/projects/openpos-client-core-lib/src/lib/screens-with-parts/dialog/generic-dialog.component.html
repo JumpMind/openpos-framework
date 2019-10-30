@@ -13,12 +13,12 @@
     </mat-dialog-content>
     <mat-dialog-actions fxLayoutAlign="end">
         <button *ngFor="let m of otherButtons; let i = index" [id]="'button-' + i" mat-raised-button (click)="doAction(m)"
-            color="primary-inverse" [disabled]="!m.enabled" [actionItem]="m">
+            color="primary-inverse" [disabled]="!m.enabled" [actionItem]="m" responsive-class class="generic-dialog-button">
             {{m.title}}
             <span *ngIf="m.keybind && m.keybind !== 'Escape' && m.keybind !== 'Enter'" class="muted-color">({{m.keybind}})</span>
         </button>
         <button *ngIf="primaryButton" mat-raised-button (click)="doAction(primaryButton)" color="primary" id="primaryButton"
-            cdkFocusInitial [actionItem]="primaryButton">
+            cdkFocusInitial [actionItem]="primaryButton" responsive-class class="generic-dialog-button">
             {{primaryButton.title}}
         </button>
     </mat-dialog-actions>
