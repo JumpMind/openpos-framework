@@ -1,11 +1,11 @@
 <mat-card class="item-card">
     <mat-card-content class="item-content">
-        <img responsive-class *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image">
+        <img responsive-class class="item-card-image" *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" [ngClass]="{'collapsed': !expanded}">
         <div class="left-side">
             <div *ngIf="item.description" responsive-class class="item-card-title">
                 {{item.description}}
             </div>
-            <div responsive-class class="item-card-details" *ngIf="item.additionalLabels">
+            <div responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
                 <div *ngFor="let additionalLabel of item.additionalLabels" class="muted-color">
                     {{additionalLabel.label}}: {{additionalLabel.value}}
                 </div>
@@ -21,7 +21,7 @@
                 </app-currency-text>
             </div>
             <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'"></app-icon>
-            <div class="menu-items" *ngIf="!isReadOnly && item.menuItems">
+            <div class="menu-items" *ngIf="!isReadOnly && item.menuItems && expanded">
                 <app-kebab-label-button *ngIf="item.menuItems.length > 1; else elseBlock"
                     [menuItems]="item.menuItems" [label]="item.optionsLabel"
                     (menuItemClick)="doItemAction($event, item.index)" class="primary item-kebab-label">
