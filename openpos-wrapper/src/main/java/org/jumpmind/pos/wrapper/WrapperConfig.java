@@ -167,9 +167,12 @@ public class WrapperConfig {
         }        
         cmdList.add("-Xmx" + maxMem);
         
-        cmdList.add("-cp");
-        cmdList.add(getClassPath());
-
+        String cpath = getClassPath();
+        if (cpath != null && ! cpath.trim().isEmpty()) {
+            cmdList.add("-cp");
+            cmdList.add(cpath);
+        }
+        
         List<String> javaAdditional = getListProperty(prop, "wrapper.java.additional");
         cmdList.addAll(javaAdditional);
         
