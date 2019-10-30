@@ -15,7 +15,9 @@
             <app-scan-or-search class="scan-or-search-mobile mat-elevation-z1" [defaultAction]="screen.checkoutButton">
             </app-scan-or-search>
 
-            <app-sale-item-card-list #scrollList class="sale-list-background-mobile"></app-sale-item-card-list>
+            <app-mobile-loyalty-part class="sale-loyalty-mobile"></app-mobile-loyalty-part>
+
+            <app-mobile-sale-item-list class="sale-list-background-mobile"></app-mobile-sale-item-list>
         </div>
 
         <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>

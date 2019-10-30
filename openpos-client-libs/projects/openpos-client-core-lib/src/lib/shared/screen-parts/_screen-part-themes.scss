@@ -5,6 +5,7 @@
 @import './banner/banner-theme';
 @import './notifications/notifications-theme';
 @import './mobile-totals-part/mobile-totals-part-theme';
+@import './mobile-loyalty-part/mobile-loyalty-part-theme';
 
 @mixin screen-part-themes($theme){
     @include bacon-strip-theme($theme);
@@ -13,4 +14,5 @@
     @include banner-theme($theme);
     @include notification-theme($theme);
     @include mobile-totals-part-theme($theme);
+    @include mobile-loyalty-part-theme($theme);
 }

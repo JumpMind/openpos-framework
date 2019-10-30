@@ -1,0 +1,15 @@
+<button *ngIf="!screenData.customer && screenData.mobileLoyaltyButton" mat-raised-button class="mobile-loyalty-button"
+    (click)="doAction(screenData.mobileLoyaltyButton)">
+    <span>{{screenData.mobileLoyaltyButton.title}}</span>
+    <app-icon [iconName]="screenData.mobileLoyaltyButton.icon"></app-icon>
+</button>
+
+<mat-card *ngIf="screenData.customer" class="mobile-loyalty-customer-outer">
+    <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="mobile-loyalty-image">
+    <div responsive-class *ngIf="screenData.customer.name" class="mobile-loyalty-name">
+        {{screenData.customer.name}}
+    </div>
+    <div responsive-class *ngIf="screenData.customer.label && screenData.customer.id" class="mobile-loyalty-id">
+        {{screenData.customer.label}}: {{screenData.customer.id}}
+    </div>
+</mat-card>

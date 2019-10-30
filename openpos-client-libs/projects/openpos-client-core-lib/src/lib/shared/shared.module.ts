@@ -128,6 +128,9 @@ import { ResponsiveClassDirective } from './directives/responsive-class.directiv
 import { BaconDrawerComponent } from './screen-parts/bacon-strip/bacon-drawer/bacon-drawer.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { MobileTotalsPartComponent } from './screen-parts/mobile-totals-part/mobile-totals-part.component';
+import { MobileLoyaltyPartComponent } from './screen-parts/mobile-loyalty-part/mobile-loyalty-part.component';
+import { MobileSaleItemListComponent } from './screen-parts/mobile-sale-item-list/mobile-sale-item-list.component';
+import { MobileItemComponent } from './components/mobile-item/mobile-item.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -148,7 +151,9 @@ const screenParts = [
     BannerComponent,
     NotificationsComponent,
     SaleTotalPanelComponent,
-    MobileTotalsPartComponent
+    MobileTotalsPartComponent,
+    MobileLoyaltyPartComponent,
+    MobileSaleItemListComponent
 ];
 
 const components = [
@@ -214,7 +219,8 @@ const components = [
     TaskListComponent,
     RoundedInputComponent,
     MobileFooterComponent,
-    CarouselComponent
+    CarouselComponent,
+    MobileItemComponent
 ];
 
 const directives = [
