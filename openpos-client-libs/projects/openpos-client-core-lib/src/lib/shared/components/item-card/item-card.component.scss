@@ -41,6 +41,9 @@
 .item-card-details {
     @extend %text-sm;
     align-self: end;
+    list-style-type: none;
+    padding: unset;
+    margin: unset;
     >*{
         margin-top: 4px;
     }

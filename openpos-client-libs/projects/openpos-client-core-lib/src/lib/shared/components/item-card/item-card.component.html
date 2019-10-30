@@ -5,21 +5,21 @@
             <div *ngIf="item.description" responsive-class class="item-card-title">
                 {{item.description}}
             </div>
-            <div responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
-                <div *ngFor="let additionalLabel of item.additionalLabels" class="muted-color">
+            <ul responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
+                <li *ngFor="let additionalLabel of item.additionalLabels" class="muted-color">
                     {{additionalLabel.label}}: {{additionalLabel.value}}
-                </div>
-            </div>
+                </li>
+            </ul>
         </div>
         <div class="right-side">
-            <div class="price">
+            <section class="price">
                 <app-currency-text responsive-class class="item-card-price"
                     [amountText]="item.amount">
                 </app-currency-text>
                 <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
                     class="muted-color item-card-original" [amountText]="item.sellingPrice">
                 </app-currency-text>
-            </div>
+            </section>
             <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'"></app-icon>
             <div class="menu-items" *ngIf="!isReadOnly && item.menuItems && expanded">
                 <app-kebab-label-button *ngIf="item.menuItems.length > 1; else elseBlock"
