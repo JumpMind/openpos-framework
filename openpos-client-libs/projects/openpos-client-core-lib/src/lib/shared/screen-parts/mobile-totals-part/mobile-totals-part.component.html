@@ -1,6 +1,6 @@
 <div class="mobile-totals-outer">
     <div class="mobile-totals-top">
-        <div *ngFor="let total of screenData.totals">
+        <div *ngFor="let total of screenData.totals; index as i" [ngClass]="{'mobile-totals-border' : i != screenData.totals.length - 1}" class="mobile-total">
             <div responsive-class class="mobile-total-name">{{total.name}}</div>
             <div responsive-class class="mobile-total-amount">
                 <app-currency-text [amountText]="total.amount"></app-currency-text>

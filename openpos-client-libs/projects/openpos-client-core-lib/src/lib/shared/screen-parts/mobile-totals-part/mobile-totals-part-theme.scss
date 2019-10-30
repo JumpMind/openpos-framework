@@ -5,7 +5,10 @@
 
     .mobile-totals-top {
         color: #666;
-        border-top: 2px solid #666;
+    }
+
+    .mobile-totals-border {
+        border-right: 2px dashed #666;
     }
 
     .mobile-totals-bottom {

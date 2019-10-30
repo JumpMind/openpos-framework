@@ -12,6 +12,10 @@
     padding: 8px;
 }
 
+.mobile-total {
+    flex: 1 1 auto;
+}
+
 .mobile-total-name {
     @extend %text-sm;
     text-align: center;
