@@ -57,6 +57,7 @@ import { ServerLogger } from './logging/server-logger.service';
 import { ElectronLogger } from './logging/electron-logger';
 import { CLIENTCONTEXT } from './client-context/client-context-provider.interface';
 import { TimeZoneContext } from './client-context/time-zone-context';
+import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -132,6 +133,7 @@ export class CoreModule {
                 private injector: Injector,
                 logger: ConsoleIntercepter,
                 toastService: ToastService,
+                uiDataService: UIDataMessageService,
                 keyProvider: KeyPressProvider) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');
         AppInjector.Instance = this.injector;

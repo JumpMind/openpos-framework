@@ -37,11 +37,13 @@ import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
+import org.jumpmind.pos.core.service.UIDataMessageProviderService;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.DialogProperties;
 import org.jumpmind.pos.core.service.IScreenService;
 import org.jumpmind.pos.core.service.spring.DeviceScope;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
@@ -92,6 +94,9 @@ public class StateManager implements IStateManager {
 
     @Autowired
     private IMessageService messageService;
+
+    @Autowired
+    private UIDataMessageProviderService uiDataMessageProviderService;
 
     @Autowired
     private IClientConfigSelector clientConfigSelector;
@@ -403,6 +408,10 @@ public class StateManager implements IStateManager {
 
     @Override
     public void refreshScreen() {
+
+        Map<String, UIDataMessageProvider> dataProviders = applicationState.getDataMessageProviderMap();
+        uiDataMessageProviderService.resetProviders(applicationState);
+
         /*
          * Hang onto the dialog since showing the last screen first will clear
          * the last dialog from the screen service
@@ -411,7 +420,7 @@ public class StateManager implements IStateManager {
         UIMessage lastScreen = screenService.getLastPreInterceptedScreen(applicationState.getAppId(), applicationState.getDeviceId());
         if (lastScreen != null) {
             lastScreen.put("refreshAlways", true);
-            showScreen(lastScreen);
+            showScreen(lastScreen, dataProviders);
         }
         if (lastDialog != null) {
             // Don't save a dialog if it is closable, otherwise it gets shown on
@@ -419,7 +428,7 @@ public class StateManager implements IStateManager {
             DialogProperties properties = (DialogProperties) lastDialog.get("dialogProperties");
             if (properties == null || !properties.isCloseable()) {
                 lastDialog.put("refreshAlways", true);
-                showScreen(lastDialog);
+                showScreen(lastDialog, dataProviders);
             }
         }
 
@@ -752,6 +761,7 @@ public class StateManager implements IStateManager {
         refreshDeviceScope();
     }
 
+
     public void setInitialFlowConfig(FlowConfig initialFlowConfig) {
         this.initialFlowConfig = initialFlowConfig;
     }
@@ -768,9 +778,9 @@ public class StateManager implements IStateManager {
         screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
     }
 
-    @SuppressWarnings("unchecked")
+
     @Override
-    public void showScreen(UIMessage screen) {
+    public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider> dataMessageProviderMap) {
         keepAlive();
 
         if (applicationState.getCurrentContext() == null) {
@@ -791,8 +801,13 @@ public class StateManager implements IStateManager {
             sessionTimeoutAction = null;
         }
 
-        screenService.showScreen(applicationState.getAppId(), applicationState.getDeviceId(), screen);
+        screenService.showScreen(applicationState.getAppId(), applicationState.getDeviceId(), screen, dataMessageProviderMap);
+    }
 
+    @SuppressWarnings("unchecked")
+    @Override
+    public void showScreen(UIMessage screen) {
+        showScreen(screen, null);
     }
 
     @Override

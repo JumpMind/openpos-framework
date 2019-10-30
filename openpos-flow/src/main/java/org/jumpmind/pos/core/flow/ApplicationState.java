@@ -22,10 +22,12 @@ package org.jumpmind.pos.core.flow;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.Map;
 
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 
 /**
  * Responsible for housing all true state data for a node. That is, it should be
@@ -45,6 +47,8 @@ public class ApplicationState {
     private UIMessage lastDialog;
     private UIMessage lastPreInterceptedScreen;
     private UIMessage lastPreInterceptedDialog;
+
+    private Map<String, UIDataMessageProvider> dataMessageProviderMap;
 
     public Scope getScope() {
         return scope;
@@ -120,6 +124,14 @@ public class ApplicationState {
     
     public UIMessage getLastPreInterceptedDialog() {
         return lastPreInterceptedDialog;
+    }
+
+    public Map<String, UIDataMessageProvider> getDataMessageProviderMap() {
+        return dataMessageProviderMap;
+    }
+
+    public void setDataMessageProviderMap(Map<String, UIDataMessageProvider> dataMessageProviderMap) {
+        this.dataMessageProviderMap = dataMessageProviderMap;
     }
 
     public Object getScopeValue(ScopeType scopeType, String name) {

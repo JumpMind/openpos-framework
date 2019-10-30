@@ -1,70 +1,61 @@
 @import "../../../styles/mixins/typography";
 
-.sale-total-checkout-button {
-    @extend %text-lg;
-    margin-top: 16px;
-    width: 100%;
+:host {
+    display: grid;
 }
 
-.sale-total-border-button {
+.return-total-border-button {
     @extend %text-lg;
     width: 100%;
     margin-top: 16px;
 }
 
-.sale-total-loyalty-icon {
+.return-total-loyalty-button {
+    width: 100%;
+}
+
+.return-total-loyalty-icon {
     max-width: 100%;
     max-height: 5em;
 }
 
-.sale-total-loyalty-button {
-    width: 100%;
-}
-
-.sale-total-loyalty-button-icon {
+.return-total-loyalty-button-icon {
     padding: 0px 8px;
     max-width: 100%;
     max-height: 50px;
 }
 
-.sale-total-promo-button {
-    @extend %text-sm;
-    width: 100%;
-    text-align: left;
-    padding: 0px;
-}
-
-.sale-total-subtotal {
+.return-total-subtotal {
     text-align: center;
 
-    .sale-total-subtotal-title {
+    .return-total-subtotal-title {
         @extend %text-sm;
         padding-bottom: 8px;
     }
 
-    .sale-total-subtotal-amount {
+    .return-total-subtotal-amount {
         @extend %text-lg;
     }
 }
 
-.sale-total-total {
+.return-total-total {
     text-align: center;
     border-top-style: solid;
     border-top-width: 1px;
 
-    .sale-total-total-title {
+    .return-total-total-title {
         @extend %text-lg;
         padding-top: 16px;
         padding-bottom: 8px;
     }
 
-    .sale-total-total-amount {
+    .return-total-total-amount {
         @extend %text-xl;
     }
 }
 
-.sale-total-background {
-    height: 100%;
+.return-total-background {
+    display: grid;
     align-self: stretch;
     justify-self: stretch;
     margin: 0px;
@@ -73,13 +64,22 @@
     overflow-y: auto;
 }
 
-.sale-total-content {
-    width: 100%;
+.return-total-content {
+    display: grid;
+    grid-row-gap: 32px;
     padding-left: 24px;
     padding-right: 24px;
 }
 
-.sale-total-customer-label {
+.return-total-buttons {
+    display: grid;
+    align-self: end;
+}
+
+.return-total-customer-label {
     @extend %text-sm;
+    display: grid;
+    grid-row-gap:8px;
     text-align: center;
+    justify-self:center;
 }

@@ -1,12 +1,19 @@
 package org.jumpmind.pos.core.ui;
 
+import lombok.*;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.util.model.Message;
 
-public class UIDataMessage extends Message {
+@Getter
+@Setter
+@Builder
+@AllArgsConstructor
+public class UIDataMessage<T> extends Message {
     private static final long serialVersionUID = 1L;
 
     private String dataType;
+    private int seriesId;
+    private T data;
 
     public UIDataMessage(String dataType) {
         this();
@@ -17,11 +24,8 @@ public class UIDataMessage extends Message {
         setType(MessageType.UIData);
     }
 
-    public String getDataType() {
-        return dataType;
-    }
-
-    public void setDataType(String dataType) {
-        this.dataType = dataType;
+    @Override
+    public String getType() {
+        return MessageType.UIData;
     }
 }

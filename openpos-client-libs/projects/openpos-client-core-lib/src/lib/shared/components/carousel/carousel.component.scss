@@ -12,20 +12,25 @@
 
 .item {
     grid-area: 1/1/1/1;
+    position: relative;
+    overflow: hidden;
 }
 
 .left-arrow {
     grid-area: 1/1/1/1;
     justify-self:start;
+    z-index: 100;
 }
 
 .right-arrow {
     grid-area: 1/1/1/1;
     justify-self:end;
+    z-index: 100;
 }
 
 .carousel-nav-dots {
     grid-area: 2/1/2/1;
+    margin-top: 5px;
 }
 
 .dot {

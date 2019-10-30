@@ -131,6 +131,8 @@ import { MobileTotalsPartComponent } from './screen-parts/mobile-totals-part/mob
 import { MobileLoyaltyPartComponent } from './screen-parts/mobile-loyalty-part/mobile-loyalty-part.component';
 import { MobileSaleItemListComponent } from './screen-parts/mobile-sale-item-list/mobile-sale-item-list.component';
 import { MobileItemComponent } from './components/mobile-item/mobile-item.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ReturnTotalPanelComponent } from './screen-parts/return-total-panel/return-total-panel.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -153,7 +155,8 @@ const screenParts = [
     SaleTotalPanelComponent,
     MobileTotalsPartComponent,
     MobileLoyaltyPartComponent,
-    MobileSaleItemListComponent
+    MobileSaleItemListComponent,
+    ReturnTotalPanelComponent
 ];
 
 const components = [
@@ -294,7 +297,8 @@ const pipes = [
         CommonModule,
         MaterialModule,
         MatKeyboardModule,
-        TextMaskModule
+        TextMaskModule,
+        BrowserAnimationsModule
     ],
     exports: [
         FormsModule,

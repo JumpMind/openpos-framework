@@ -53,7 +53,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     @Lazy
     private DBSession dbSession;
 
-    @Value("${openpos.installationId}")
+    @Value("${openpos.installationId:'not set'}")
     String installationId;
 
     @Autowired

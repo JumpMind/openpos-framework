@@ -3,9 +3,9 @@
     <app-sausage-links waffle-drawer-content></app-sausage-links>
     <div waffle-body class="body">
         <h1>{{screen.itemName}}</h1>
-        <app-carousel class="carousel">
+        <app-carousel class="carousel" [carouselItemClass]="'rounded-edge'">
             <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
-                <img class="item-image" [src]="image | imageUrl">
+                <img  [src]="image | imageUrl">
             </ng-template>
         </app-carousel>
         <app-display-property *ngFor="let prop of screen.itemProperties" [property]="prop"></app-display-property>

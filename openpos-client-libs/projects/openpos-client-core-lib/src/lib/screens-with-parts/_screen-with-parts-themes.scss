@@ -4,6 +4,7 @@
 @import './return/return-theme';
 @import './prompt-with-info/prompt-with-info-screen-theme';
 @import './tender/tender-theme';
+@import './item-detail/item-detail-theme';
 
 @mixin screen-with-parts-themes($theme){
     @include sale-theme($theme);
@@ -11,4 +12,5 @@
     @include choose-options-screen-dialog-theme($theme);
     @include prompt-with-info-screen-theme($theme);
     @include tender-theme($theme);
+    @include item-detail-theme($theme);
 }

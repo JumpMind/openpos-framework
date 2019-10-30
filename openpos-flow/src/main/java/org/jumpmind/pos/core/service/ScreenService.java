@@ -11,9 +11,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletResponse;
@@ -32,10 +30,8 @@ import org.jumpmind.pos.core.flow.SessionTimer;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.IDynamicListField;
 import org.jumpmind.pos.core.model.IFormElement;
-import org.jumpmind.pos.core.ui.DialogProperties;
-import org.jumpmind.pos.core.ui.IHasForm;
-import org.jumpmind.pos.core.ui.Toast;
-import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.*;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.core.util.LogFormatter;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
@@ -81,6 +77,9 @@ public class ScreenService implements IScreenService, IActionListener {
 
     @Autowired
     IMessageService messageService;
+
+    @Autowired
+    UIDataMessageProviderService uiDataMessageProviderService;
 
     @Autowired
     ApplicationContext applicationContext;
@@ -195,8 +194,10 @@ public class ScreenService implements IScreenService, IActionListener {
     public void actionOccured(String appId, String deviceId, Action action) {
         logger.trace("actionOccurred -> appId: {}, deviceId: {}, action: {}", appId, deviceId, action != null ? action.getName() : null);
         IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+
         if (stateManager != null) {
             try {
+
                 stateManagerContainer.setCurrentStateManager(stateManager);
                 if (SessionTimer.ACTION_KEEP_ALIVE.equals(action.getName())) {
                     stateManager.keepAlive();
@@ -205,6 +206,8 @@ public class ScreenService implements IScreenService, IActionListener {
                     logger.info("Received Refresh action from {}", deviceId);
                     showScreen(appId, deviceId, getLastScreen(appId, deviceId));
                     showScreen(appId, deviceId, lastDialog);
+                } else if ( uiDataMessageProviderService.handleAction(action, stateManager.getApplicationState())){
+                    logger.info("Action handled by UIMessageDataProvider from {}\n{}", deviceId, logFormatter.toJsonString(action));
                 } else {
 
                     deserializeForm(stateManager.getApplicationState(), action);
@@ -294,6 +297,11 @@ public class ScreenService implements IScreenService, IActionListener {
 
     @Override
     public void showScreen(String appId, String deviceId, UIMessage screen) {
+        showScreen(appId, deviceId, screen, null);
+    }
+
+    @Override
+    public void showScreen(String appId, String deviceId, UIMessage screen, Map<String, UIDataMessageProvider> uiDataMessageProviders) {
         IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
         if (screen != null && stateManager != null) {
             ApplicationState applicationState = stateManager.getApplicationState();
@@ -319,6 +327,7 @@ public class ScreenService implements IScreenService, IActionListener {
                 logger.warn("Not sending screen because a session is attached that is not compatible");
 
             } else {
+                uiDataMessageProviderService.updateProviders(applicationState, uiDataMessageProviders);
                 messageService.sendMessage(appId, deviceId, screen);
             }
 

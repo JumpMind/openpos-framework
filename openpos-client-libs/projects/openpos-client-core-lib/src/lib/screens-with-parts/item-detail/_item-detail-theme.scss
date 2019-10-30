@@ -1,0 +1,5 @@
+@mixin item-detail-theme($theme) {
+    .rounded-edge {
+        border-radius: 16px;
+    }
+}
