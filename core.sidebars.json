@@ -43,7 +43,8 @@
         "client-context"
     ],
     "UI Components": [
-        "task-list"
+        "task-list",
+		"infinite-scroll"
     ],
 	"Styles": [
 		"styles"

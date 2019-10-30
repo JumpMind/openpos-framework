@@ -128,6 +128,7 @@ import { ResponsiveClassDirective } from './directives/responsive-class.directiv
 import { BaconDrawerComponent } from './screen-parts/bacon-strip/bacon-drawer/bacon-drawer.component';
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InfinateScrollComponent } from './components/infinate-scroll/infinate-scroll.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -213,7 +214,8 @@ const components = [
     TaskListComponent,
     RoundedInputComponent,
     MobileFooterComponent,
-    CarouselComponent
+    CarouselComponent,
+    InfinateScrollComponent
 ];
 
 const directives = [
