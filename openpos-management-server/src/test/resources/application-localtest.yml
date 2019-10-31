@@ -19,3 +19,19 @@ logging:
     org.jumpmind: DEBUG
     org.jumpmind.pos.management: TRACE
     
+    
+---
+spring:
+  profiles: prod
+  
+openpos:
+  managementServer:
+    testProperty1: prod-value
+    
+---
+spring:
+  profiles: dev
+
+openpos:
+  managementServer:
+    testProperty1: dev-value
