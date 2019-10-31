@@ -8,11 +8,11 @@ import {UIDataMessageService} from '../../../core/ui-data-message/ui-data-messag
  * bottom of the loaded data it will reach out to the server for more data.
  */
 @Component({
-  selector: 'app-infinate-scroll',
-  templateUrl: './infinate-scroll.component.html',
-  styleUrls: ['./infinate-scroll.component.scss']
+  selector: 'app-infinite-scroll',
+  templateUrl: './infinite-scroll.component.html',
+  styleUrls: ['./infinite-scroll.component.scss']
 })
-export class InfinateScrollComponent<T> implements OnInit {
+export class InfiniteScrollComponent<T> implements OnInit {
 
   /**
    * Key to use to fetch the data from the server
@@ -27,10 +27,11 @@ export class InfinateScrollComponent<T> implements OnInit {
   itemHeightPx: number;
 
   /**
-   * How close to the bottom of the current dataset do we get before loading more.
+   * How how many items do we want to make sure to have pre-loaded out of view. When the non-viewable items drops below
+   * the buffer we fetch more
    */
   @Input()
-  dataLoadBuffer: number;
+  dataLoadBuffer: number = 1;
 
   /**
    * Template to apply to each item
@@ -51,6 +52,19 @@ export class InfinateScrollComponent<T> implements OnInit {
   virtualScrollMaxBufferPx: number;
 
   /**
+   * Class to apply to each item
+   */
+  @Input()
+  itemClass: string;
+
+  /**
+   * Class to apply to the list element
+   */
+  @Input()
+  listClass: string;
+
+
+  /**
    * Optionally provide a track by function to improve performance of updating the list
    * This method should return the value to use to uniquely identify an element.
    */
@@ -69,7 +83,7 @@ export class InfinateScrollComponent<T> implements OnInit {
   }
 
   indexChange(){
-    if(this.scrollViewPort.measureScrollOffset('bottom') < this.dataLoadBuffer) {
+    if(this.scrollViewPort.measureScrollOffset('bottom') < this.dataLoadBuffer * this.itemHeightPx) {
       this.dataMessageService.requestMoreData(this.dataKey);
     }
   }
