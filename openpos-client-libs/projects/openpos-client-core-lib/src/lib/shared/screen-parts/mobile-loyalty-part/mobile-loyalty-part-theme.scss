@@ -5,16 +5,21 @@
 
     $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
+    $dark: map-get($mat-grey, 600);
 
     .mobile-loyalty-button {
         background-color: white;
     }
 
+    .mobile-loyalty-button-text {
+        color: $dark;
+    }
+
     .mobile-loyalty-name {
-        color: #666;
+        color: $dark;
     }
 
     .mobile-loyalty-id {
-        color: #666;
+        color: $dark;
     }
 }
