@@ -16,28 +16,41 @@ import java.util.List;
 @AssignKeyBindings
 public class ReturnUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
-    public static final String ITEM_TOTAL_NAME = "itemTotal";
+
+    private String prompt;
 
     private List<SellItem> items = new ArrayList<>();
-    private List<SellItem> selectedItems = new ArrayList<>();
-    private int[] selectedItemIndexes = new int[0];
-    private List<TransactionReceipt> receipts = new ArrayList<>();
-    private ActionItem removeReceiptAction;
-    private String transactionMenuPrompt;
-    private ActionItemGroup transactionMenu = new ActionItemGroup();
-    private List<ActionItem> multiSelectedMenuItems = new ArrayList<ActionItem>();
-    private String itemActionName = "Item";
-    private List<Total> totals = new ArrayList<>();
-    private DisplayProperty grandTotal;
-    private String customerName;
-    private String noCustomerText;
+
+    private List<Total> totals;
+    private Total grandTotal;
+
+    private ActionItem checkoutButton;
+    private ActionItem loyaltyButton;
+    private ActionItem receiptsButton;
+
+    private String itemCount;
+    private boolean transactionActive = false;
+
+    private UICustomer customer;
+
     private boolean locationEnabled;
     private String locationOverridePrompt;
-    private ActionItem checkoutButton;
-    private String itemCount;
+
+    private String backgroundImage;
+
+    private boolean enableCollapsibleItems = true;
 
     public ReturnUIMessage() {
         this.setScreenType(UIMessageType.RETURN);
+        this.setId("returns");
+    }
+
+    public String getPrompt() {
+        return prompt;
+    }
+
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
     }
 
     public List<SellItem> getItems() {
@@ -46,66 +59,6 @@ public class ReturnUIMessage extends UIMessage {
 
     public void setItems(List<SellItem> items) {
         this.items = items;
-    }
-
-    public List<SellItem> getSelectedItems() {
-        return selectedItems;
-    }
-
-    public void setSelectedItems(List<SellItem> selectedItems) {
-        this.selectedItems = selectedItems;
-    }
-
-    public int[] getSelectedItemIndexes() {
-        return selectedItemIndexes;
-    }
-
-    public void setSelectedItemIndexes(int[] selectedItemIndexes) {
-        this.selectedItemIndexes = selectedItemIndexes;
-    }
-
-    public List<TransactionReceipt> getReceipts() {
-        return receipts;
-    }
-
-    public void setReceipts(List<TransactionReceipt> receipts) {
-        this.receipts = receipts;
-    }
-
-    public ActionItem getRemoveReceiptAction() {
-        return removeReceiptAction;
-    }
-
-    public void setRemoveReceiptAction(ActionItem removeReceiptAction) {
-        this.removeReceiptAction = removeReceiptAction;
-    }
-
-    public void addReceipt(TransactionReceipt receipt) {
-        this.receipts.add(receipt);
-    }
-
-    public String getTransactionMenuPrompt() {
-        return transactionMenuPrompt;
-    }
-
-    public void setTransactionMenuPrompt(String transactionMenuPrompt) {
-        this.transactionMenuPrompt = transactionMenuPrompt;
-    }
-
-    public ActionItemGroup getTransactionMenu() {
-        return transactionMenu;
-    }
-
-    public void setTransactionMenu(ActionItemGroup transactionMenu) {
-        this.transactionMenu = transactionMenu;
-    }
-
-    public String getItemActionName() {
-        return itemActionName;
-    }
-
-    public void setItemActionName(String itemActionName) {
-        this.itemActionName = itemActionName;
     }
 
     public List<Total> getTotals() {
@@ -117,58 +70,70 @@ public class ReturnUIMessage extends UIMessage {
     }
 
     public void addTotal(String name, String amount) {
-        this.totals.add(new Total(name, amount));
+        if (totals == null) {
+            totals = new ArrayList<>();
+        }
+        totals.add(new Total(name, amount));
     }
 
-    public void addTotal(Total total) {
-        this.totals.add(total);
-    }
-
-    public DisplayProperty getGrandTotal() {
+    public Total getGrandTotal() {
         return grandTotal;
     }
 
-    public void setGrandTotal(DisplayProperty grandTotal) {
+    public void setGrandTotal(Total grandTotal) {
         this.grandTotal = grandTotal;
     }
 
-    public void setItemTotal(String total) {
-        Total itemTotal = this.getItemTotal();
-        if (itemTotal == null) {
-            this.totals.add(new Total(ITEM_TOTAL_NAME, total, Total.TotalType.Quantity));
-        } else {
-            itemTotal.setAmount(total);
-        }
+    public void setGrandTotal(String name, String amount) {
+        this.grandTotal = new Total(name, amount);
     }
 
-    @JsonIgnore
-    public Total getItemTotal() {
-        return this.totals.stream().filter(t -> t.getType() == Total.TotalType.Quantity && ITEM_TOTAL_NAME.equalsIgnoreCase(t.getName()))
-                .findFirst().orElse(null);
+    public ActionItem getCheckoutButton() {
+        return checkoutButton;
     }
 
-    public List<ActionItem> getMultiSelectedMenuItems() {
-        return multiSelectedMenuItems;
+    public void setCheckoutButton(ActionItem checkoutButton) {
+        this.checkoutButton = checkoutButton;
     }
 
-    public void setMultiSelectedMenuItems(List<ActionItem> multiSelectedMenuItems) {
-        this.multiSelectedMenuItems = multiSelectedMenuItems;
+    public ActionItem getLoyaltyButton() {
+        return loyaltyButton;
     }
 
-    public String getCustomerName() {
-        return customerName;
+    public void setLoyaltyButton(ActionItem loyaltyButton) {
+        this.loyaltyButton = loyaltyButton;
     }
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
+    public ActionItem getReceiptsButton() {
+        return receiptsButton;
     }
 
-    public String getNoCustomerText() {
-        return noCustomerText;
+    public void setReceiptsButton(ActionItem receiptsButton) {
+        this.receiptsButton = receiptsButton;
     }
 
-    public void setNoCustomerText(String noCustomerText) {
-        this.noCustomerText = noCustomerText;
+    public String getItemCount() {
+        return itemCount;
+    }
+
+    public void setItemCount(String itemCount) {
+        this.itemCount = itemCount;
+    }
+
+    public void setTransactionActive(boolean isTransactionActive) {
+        this.transactionActive = isTransactionActive;
+    }
+
+    public boolean isTransactionActive() {
+        return transactionActive;
+    }
+
+    public UICustomer getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(UICustomer customer) {
+        this.customer = customer;
     }
 
     public boolean isLocationEnabled() {
@@ -187,19 +152,20 @@ public class ReturnUIMessage extends UIMessage {
         this.locationOverridePrompt = locationOverridePrompt;
     }
 
-    public ActionItem getCheckoutButton() {
-        return checkoutButton;
+    public String getBackgroundImage() {
+        return backgroundImage;
     }
 
-    public void setCheckoutButton(ActionItem checkoutButton) {
-        this.checkoutButton = checkoutButton;
+    public void setBackgroundImage(String backgroundImage) {
+        this.backgroundImage = backgroundImage;
     }
 
-    public String getItemCount() {
-        return itemCount;
+    public boolean isEnableCollapsibleItems() {
+        return enableCollapsibleItems;
     }
 
-    public void setItemCount(String itemCount) {
-        this.itemCount = itemCount;
+    public void setEnableCollapsibleItems(boolean enableCollapsibleItems) {
+        this.enableCollapsibleItems = enableCollapsibleItems;
     }
+
 }

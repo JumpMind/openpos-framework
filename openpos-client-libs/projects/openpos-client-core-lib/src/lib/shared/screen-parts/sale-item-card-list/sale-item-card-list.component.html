@@ -1,7 +1,13 @@
-<app-item-card *ngFor="let i of screenData.items" [item]="i" [isReadOnly]="screenData.readOnly"></app-item-card>
+<app-item-card *ngFor="let item of screenData.items; index as i" 
+[item]="item" 
+[isReadOnly]="screenData.readOnly" 
+[expanded]="isItemExpanded(i)" 
+(click)="updateExpandedIndex(i)" 
+[ngClass]="{'hover': screenData.enableCollapsibleItems}">
+</app-item-card>
 
 <div *ngIf="screenData.items.length == 0 && !screenData.readOnly" class="sale-item-prompt-outer">
     <div responsive-class class="sale-item-list-prompt">{{screenData.prompt}}</div>
     <div responsive-class class="sale-item-list-instructions">{{screenData.instructions}}</div>
-    <img [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
+    <img *ngIf="screenData.backgroundImage" [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
 </div>

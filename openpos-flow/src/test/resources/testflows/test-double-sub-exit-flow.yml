@@ -1,6 +1,6 @@
 ---
 TestDoubleSubstateExitFlow:
-  - OrderDetailState:
+  - OrderDetailsState:
       BagPromptRequired: {subflow: AddBagsFlow, ReturnAction: NoBagsAdded}
 
 AddBagsFlow: 

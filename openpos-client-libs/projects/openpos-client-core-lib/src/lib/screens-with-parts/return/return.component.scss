@@ -1,23 +1,32 @@
-.scan-or-search{
-    margin: 16px 24px;
-}
-
-.drawer-content{
-    padding: 8px;
-}
-
-.return-content{
+.return-bacon-strip {
     height: 100%;
-    display: flex;
-    padding: 0px 24px 8px 24px;
 }
 
-.sale-content{
-    width: 100%;
-    display: flex;
-    flex-direction: column;
+.return-outer {
+    height: 100%;
+    display: grid;
+    grid-template-rows: 1fr;
 }
 
-.receipts{
-    flex: 1 0 auto;
+.return-body {
+    padding: 16px;
+    display: grid;
+    grid-template-columns: 1fr 25%;
+    overflow-y: auto;
+}
+
+.return-items-outer {
+    padding-right: 16px;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    overflow-y: auto;
+}
+
+.scan-or-search{
+    margin-bottom: 16px;
+}
+
+.return-list-background {
+    overflow-y: auto;
+    margin-bottom: 8px;
 }

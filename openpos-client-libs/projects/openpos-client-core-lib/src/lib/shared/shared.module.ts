@@ -129,6 +129,7 @@ import { BaconDrawerComponent } from './screen-parts/bacon-strip/bacon-drawer/ba
 import { CarouselComponent } from './components/carousel/carousel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InfiniteScrollComponent } from './components/infinate-scroll/infinite-scroll.component';
+import { ReturnTotalPanelComponent } from './screen-parts/return-total-panel/return-total-panel.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -148,7 +149,8 @@ const screenParts = [
     SaleItemCardListComponent,
     BannerComponent,
     NotificationsComponent,
-    SaleTotalPanelComponent
+    SaleTotalPanelComponent,
+    ReturnTotalPanelComponent
 ];
 
 const components = [
