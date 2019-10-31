@@ -130,6 +130,7 @@ import { CarouselComponent } from './components/carousel/carousel.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { InfiniteScrollComponent } from './components/infinate-scroll/infinite-scroll.component';
 import { ReturnTotalPanelComponent } from './screen-parts/return-total-panel/return-total-panel.component';
+import { ImageComponent } from './components/image/image.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -217,7 +218,8 @@ const components = [
     RoundedInputComponent,
     MobileFooterComponent,
     CarouselComponent,
-    InfiniteScrollComponent
+    InfiniteScrollComponent,
+    ImageComponent
 ];
 
 const directives = [
