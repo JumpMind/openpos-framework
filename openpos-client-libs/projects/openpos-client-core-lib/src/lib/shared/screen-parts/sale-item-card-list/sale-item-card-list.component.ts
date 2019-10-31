@@ -14,11 +14,25 @@ import { ScreenPartComponent } from '../screen-part';
 })
 export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardListInterface> {
 
+  expandedIndex = 0;
+
   constructor(injector: Injector) {
     super(injector);
   }
 
   screenDataUpdated() {
+    this.expandedIndex = this.screenData.items.length - 1;
+  }
+
+  isItemExpanded(index: number): boolean {
+    if (this.screenData.enableCollapsibleItems) {
+      return index === this.expandedIndex;
+    }
+    return true;
+  }
+
+  updateExpandedIndex(index: number) {
+    this.expandedIndex = index;
   }
 
 }

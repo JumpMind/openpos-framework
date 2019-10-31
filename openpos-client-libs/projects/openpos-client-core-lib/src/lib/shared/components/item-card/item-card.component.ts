@@ -14,6 +14,7 @@ export class ItemCardComponent {
 
   @Input() item: ISellItem;
   @Input() isReadOnly = false;
+  @Input() expanded = true;
 
   constructor(public actionService: ActionService, public session: SessionService) { }
 
