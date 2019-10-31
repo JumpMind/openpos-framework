@@ -30,7 +30,8 @@
         "personalization"
     ],
 	"UI Data Message": [
-		"ui-data-message"
+        "ui-data-message",
+        "carousel"
 	],
     "Icons": [
         "available-icons"
