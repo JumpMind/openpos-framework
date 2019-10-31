@@ -2,21 +2,27 @@
 
     $primary: map-get($theme, primary);
     $contrast: mat-color($primary, default-contrast);
+    $background: map-get($mat-grey, 200);
+    $dark: map-get($mat-grey, 600);
 
     .mobile-totals-top {
-        color: #666;
+        color: $dark;
     }
 
     .mobile-totals-border {
-        border-right: 2px dashed #666;
+        border-right: 2px dashed $dark;
     }
 
     .mobile-totals-bottom {
-        background-color: #666;
+        background-color: $dark;
     }
 
     .mobile-grand-total {
         color: $contrast;
+    }
+
+    .mobile-checkout-button:disabled {
+        background-color: $background;
     }
 
 }

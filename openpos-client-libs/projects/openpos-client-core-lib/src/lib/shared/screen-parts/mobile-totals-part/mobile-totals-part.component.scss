@@ -38,6 +38,7 @@
     justify-content: center;
     display: flex;
     flex-direction: column;
+    flex: 1 1 auto;
 }
 
 .mobile-grand-total-name {
@@ -52,4 +53,6 @@
 
 .mobile-checkout-button {
     @extend %text-lg;
+    flex: 1 1 auto;
+    margin-right: 4px;
 }
