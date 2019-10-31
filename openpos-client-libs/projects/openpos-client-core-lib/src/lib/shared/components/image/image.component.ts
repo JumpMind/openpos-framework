@@ -1,6 +1,9 @@
 import {Component, Input } from '@angular/core';
 import {ImageService} from '../../../core/services/image.service';
 
+/**
+ * A wrapper around an `<img>` element that will run the URLs through the image service and swap in an alternate image if the primary results in an error.
+ */
 @Component({
   selector: 'app-image',
   templateUrl: './image.component.html',
@@ -8,12 +11,21 @@ import {ImageService} from '../../../core/services/image.service';
 })
 export class ImageComponent {
 
+  /**
+   * URL for the primary image
+   */
   @Input()
   imageUrl: string;
 
+  /**
+   * URL for the alternate image
+   */
   @Input()
   altImageUrl: string;
 
+  /**
+   * Alternate text if neither image works
+   */
   @Input()
   altText: string;
 
