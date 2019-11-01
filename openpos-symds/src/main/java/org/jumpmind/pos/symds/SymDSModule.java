@@ -92,7 +92,7 @@ public class SymDSModule extends AbstractModule {
             properties.put(ParameterConstants.SYNC_URL, syncUrl);
         }
 
-        serverEngine = new ServerSymmetricEngine(getDataSource(), applicationContext, properties, true, holder);
+        serverEngine = new ServerSymmetricEngine(getDataSource(), applicationContext, properties, false, holder);
         serverEngine.getExtensionService().addExtensionPoint(new DatabaseWriterFilterAdapter() {
             @Override
             public void batchCommitted(DataContext context) {
