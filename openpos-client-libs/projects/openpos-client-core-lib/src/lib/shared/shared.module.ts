@@ -132,6 +132,7 @@ import { MobileLoyaltyPartComponent } from './screen-parts/mobile-loyalty-part/m
 import { MobileSaleItemListComponent } from './screen-parts/mobile-sale-item-list/mobile-sale-item-list.component';
 import { MobileItemComponent } from './components/mobile-item/mobile-item.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { InfiniteScrollComponent } from './components/infinate-scroll/infinite-scroll.component';
 import { ReturnTotalPanelComponent } from './screen-parts/return-total-panel/return-total-panel.component';
 
 const screenParts = [
@@ -223,7 +224,8 @@ const components = [
     RoundedInputComponent,
     MobileFooterComponent,
     CarouselComponent,
-    MobileItemComponent
+    MobileItemComponent,
+    InfiniteScrollComponent
 ];
 
 const directives = [

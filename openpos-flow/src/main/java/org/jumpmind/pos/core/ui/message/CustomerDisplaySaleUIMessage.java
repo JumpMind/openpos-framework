@@ -21,6 +21,8 @@ public class CustomerDisplaySaleUIMessage extends UIMessage {
 
     private UICustomer customer;
 
+    private boolean enableCollapsibleItems = true;
+
     public CustomerDisplaySaleUIMessage() {
         this.setScreenType(UIMessageType.CUSTOMER_DISPLAY_SALE);
         this.setId("customerdisplay-sale");
@@ -75,6 +77,14 @@ public class CustomerDisplaySaleUIMessage extends UIMessage {
 
     public void setCustomer(UICustomer customer) {
         this.customer = customer;
+    }
+
+    public boolean isEnableCollapsibleItems() {
+        return enableCollapsibleItems;
+    }
+
+    public void setEnableCollapsibleItems(boolean enableCollapsibleItems) {
+        this.enableCollapsibleItems = enableCollapsibleItems;
     }
 
 }

@@ -33,6 +33,8 @@ public class SelfCheckoutSaleUIMessage extends UIMessage {
 
     private String backgroundImage;
 
+    private boolean enableCollapsibleItems;
+
     public SelfCheckoutSaleUIMessage() {
         this.setScreenType(UIMessageType.SELF_CHECKOUT_SALE);
         this.setId("selfcheckout-sale");
@@ -145,4 +147,13 @@ public class SelfCheckoutSaleUIMessage extends UIMessage {
     public void setBackgroundImage(String backgroundImage) {
         this.backgroundImage = backgroundImage;
     }
+
+    public boolean isEnableCollapsibleItems() {
+        return enableCollapsibleItems;
+    }
+
+    public void setEnableCollapsibleItems(boolean enableCollapsibleItems) {
+        this.enableCollapsibleItems = enableCollapsibleItems;
+    }
+
 }

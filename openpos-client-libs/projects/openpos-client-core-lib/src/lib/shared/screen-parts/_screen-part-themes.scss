@@ -7,6 +7,7 @@
 @import './mobile-totals-part/mobile-totals-part-theme';
 @import './mobile-loyalty-part/mobile-loyalty-part-theme';
 @import './mobile-sale-item-list/mobile-sale-item-list-theme';
+@import './sale-item-card-list/sale-item-card-list-theme';
 
 @mixin screen-part-themes($theme) {
     @include bacon-strip-theme($theme);
@@ -17,4 +18,5 @@
     @include mobile-totals-part-theme($theme);
     @include mobile-loyalty-part-theme($theme);
     @include mobile-sale-item-list-theme($theme);
+    @include sale-item-card-list-theme($theme);
 }
