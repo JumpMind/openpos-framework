@@ -81,3 +81,5 @@ openpos-client-libs/openpos-client-libs.iml
 openpos-client-personalize/openpos-client-personalize.iml
 openpos-test-server/test-server/test-server.iml
 **/coverage/
+openpos-symds/nu-symds.iml
+openpos-symds/openpos-symds.iml

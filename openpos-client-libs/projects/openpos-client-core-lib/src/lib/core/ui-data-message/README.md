@@ -53,3 +53,13 @@ When you are ready to pull the next chunk from the server call `requestMoreData`
 ```typescript
 this.resultsService.requestMoreData(this.screen.searchResultsDataKey);
 ```
+
+Example template usage.
+
+```html
+<ul>
+    <li *ngFor="let result of results$ | async; trackBy: resultsTrackFn">
+        ...
+    </li>
+</ul>
+```
