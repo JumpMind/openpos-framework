@@ -1,18 +1,101 @@
-.receipt-div {
-    margin: 16px;
-    margin-top: 6px;
-    margin-left: 8px;
+@import "../../../styles/mixins/typography";
+
+:host {
+    display: grid;
+}
+
+.receipt-card {
+    display: grid;
     padding: 10px;
     background-color: white;
-}
+    
+    .receipt-icon {
+        max-width: 100%;
+        max-height: 2em;
+        justify-self: center;
+        padding-bottom: 10px;
+    }
 
-.transaction-header {
-    font-weight: bold;
-    font-size: 16px;
-    padding-bottom: 4px;
-}
+    .web-order {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: center;
+        margin-bottom: 5px;
+        @extend %text-sm;
+        >* {
+            padding: 2px;
+        }
+    }
 
-.web-order {
-    align-items: center;
-    margin-bottom: 10px;
+    .transaction-info {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+
+        .transaction-info-labels {
+            display:grid;
+            @extend %text-sm;
+        }
+        
+        .transaction-info-values {
+            display: grid;
+            text-align: end;
+            @extend %text-sm;
+        }
+    }
+
+    .receipt-lines {
+        display: grid;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        >* {
+            margin-top:3px;
+            margin-bottom:3px;
+        }
+        .full-length-bar {
+            height: 4px;
+            width: 100%;
+        }
+        
+        .portion-length-bar-75{
+            height: 4px;
+            width: 75%;
+        }
+        
+        .portion-length-bar-85{
+            height: 4px;
+            width: 85%;
+        }
+    }
+
+    .transaction-totals{
+        display: grid;
+
+        .totals-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            @extend %text-sm;
+        }
+        
+        .totals-info-labels {
+            display:grid;
+        }
+        
+        .totals-info-values {
+            display: grid;
+            text-align: end;
+        }
+        
+        .total-price {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            @extend %text-md;
+        }
+    }
+
+    .remove-button {
+        display:grid;
+        justify-items:end;
+        padding-top:10px;
+        padding-right:15px;
+    }
 }

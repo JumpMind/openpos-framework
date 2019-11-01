@@ -1,5 +1,7 @@
 package org.jumpmind.pos.core.ui.data;
 
+import org.jumpmind.pos.core.model.Total;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +17,10 @@ public class TransactionReceipt implements Serializable {
     private List<TransactionReceiptLine> transactionInfoSection;
 
     private List<TransactionReceiptLine> totalsInfoSection;
+
+    private Total transactionTotal;
+
+    private String icon;
 
     public long getTransactionNumber() {
         return transactionNumber;
@@ -62,4 +68,19 @@ public class TransactionReceipt implements Serializable {
         this.totalsInfoSection.add(line);
     }
 
+    public Total getTransactionTotal() {
+        return transactionTotal;
+    }
+
+    public void setTransactionTotal(Total transactionTotal) {
+        this.transactionTotal = transactionTotal;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
 }

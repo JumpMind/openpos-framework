@@ -1,40 +1,48 @@
-<div class="serrated-edge receipt-div" [ngClass]="{'mat-elevation-z4':hover, 'mat-elevation-z1':!hover}">
+<div class="receipt-card" [ngClass]="{'mat-elevation-z4':hover, 'mat-elevation-z1':!hover}">
 
-    <div *ngIf="receipt.webOrderId" class="muted-color web-order" fxLayout="row" fxLayoutGap="5px">
-        <mat-icon class="material-icons">computer</mat-icon>
-        <span>Web Order</span>
+    <img *ngIf="receipt.icon" [src]="receipt.icon | imageUrl" class="receipt-icon">
+
+    <div *ngIf="receipt.webOrderId" responsive-class class="muted-color web-order">
+        <app-icon iconName="computer" iconClass="material-icons sm"></app-icon>
+        <kbd>Web Order</kbd>
+    </div>
+    
+    <section class="transaction-info">
+        <div responsive-class class="transaction-info-labels">
+            <strong><kbd>Transaction:</kbd></strong>
+            <kbd *ngIf="receipt.webOrderId">Order #:</kbd>
+            <kbd *ngFor="let line of receipt.transactionInfoSection">{{line.label}}</kbd>
+        </div>
+        <div responsive-class class="transaction-info-values">
+            <strong><kbd>#{{receipt.transactionNumber}}</kbd></strong>
+            <kbd *ngIf="receipt && receipt.webOrderId"> {{receipt.webOrderId}}</kbd>
+            <kbd *ngFor="let line of receipt.transactionInfoSection">{{line.value}}</kbd>
+        </div>
+    </section>
+
+    <div class="receipt-lines">
+        <div class="portion-length-bar-75 grey-background"></div>
+        <div class="full-length-bar grey-background"></div>
+        <div class="portion-length-bar-85 grey-background"></div>
     </div>
 
-    <div fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="4px">
-        <div fxFlex>
-            <div class="transaction-header">Transaction:</div>
-            <div *ngIf="receipt.webOrderId">Order #:</div>
-            <div *ngFor="let line of receipt.transactionInfoSection">{{line.label}}</div>
-        </div>
-        <div fxFlex style="text-align: end;">
-            <div *ngIf="receipt" class="transaction-header">#{{receipt.transactionNumber}}</div>
-            <div *ngIf="receipt && receipt.webOrderId"> {{receipt.webOrderId}}</div>
-            <div *ngFor="let line of receipt.transactionInfoSection">{{line.value}}</div>
-        </div>
-    </div>
+    <section class="transaction-totals">
+        <aside responsive-class class="totals-info">
+            <kbd class="totals-info-labels" *ngFor="let line of receipt.totalsInfoSection">{{line.label}}</kbd>
+            <kbd class="totals-info-values" *ngFor="let line of receipt.totalsInfoSection">{{line.value}}</kbd>
+        </aside>
+        <aside responsive-class class="total-price">
+            <strong class="totals-info-labels"><kbd>{{receipt.transactionTotal.name}}</kbd></strong>
+            <strong class="totals-info-values">
+                <kbd><app-currency-text [amountText]="receipt.transactionTotal.amount"></app-currency-text></kbd>
+            </strong>
+        </aside>
+    </section>
 
-    <div fxLayoutAlign="end">
-        <mat-icon class="material-icons muted-color mat-48" style="margin-right: -6px;">format_align_right</mat-icon>
-    </div>
-
-    <div fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="4px">
-        <div fxFlex>
-            <div *ngFor="let line of receipt.totalsInfoSection">{{line.label}}</div>
-        </div>
-        <div fxFlex style="text-align: end;">
-            <div *ngFor="let line of receipt.totalsInfoSection">{{line.value}}</div>
-        </div>
-    </div>
-
-    <div *ngIf="receipt && removeReceiptAction" fxLayoutAlign="end">
-        <button fxFlex mat-icon-button (click)="actionService.doAction(removeReceiptAction, receipt.transactionNumber);$event.stopPropagation()" color="primary">
+    <div class="remove-button" *ngIf="receipt && removeReceiptAction">
+        <button mat-icon-button (click)="actionService.doAction(removeReceiptAction, receipt.transactionNumber);$event.stopPropagation()" color="primary">
+            {{removeReceiptAction.title}}
             <app-icon [iconClass]="'material-icons'" [iconName]="removeReceiptAction.icon"></app-icon>
-            <span>{{removeReceiptAction.title}}</span>
         </button>
     </div>
 </div>
