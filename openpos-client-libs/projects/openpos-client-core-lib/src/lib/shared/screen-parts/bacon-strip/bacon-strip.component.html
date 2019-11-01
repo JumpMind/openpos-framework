@@ -12,6 +12,7 @@
                     class="header-icon" 
                     [iconName]="screenData.headerIcon"></app-icon>
         <span class="header-text">{{screenData.headerText}}</span>
+        <app-icon-button *ngIf="helpTextService.isAvailable() | async" iconName="help" (click)="helpTextService.toggle()"></app-icon-button>
     </div>
     <div class="operator" *ngIf="!(isMobile$ | async)">
         <mat-icon *ngIf="screenData.operatorText" class="material-icons" style="vertical-align: middle;">lock_open</mat-icon>{{operatorInfo}}

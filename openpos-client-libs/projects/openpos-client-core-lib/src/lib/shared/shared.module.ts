@@ -122,6 +122,8 @@ import { SystemStatusComponent } from './screen-parts/system-status/system-statu
 import { BannerComponent } from './screen-parts/banner/banner.component';
 import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab-label-button.component';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { HelpTextPageWrapperComponent } from './components/help-text-page-wrapper/help-text-page-wrapper.component';
+import { OpenposAppHelpContainerComponent } from './components/openpos-app-help-container/openpos-app-help-container.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -200,7 +202,9 @@ const components = [
     ToggleButtonComponent,
     LanguageSelectorComponent,
     LocationDetailsComponent,
-    LocationOverrideDialogComponent
+    LocationOverrideDialogComponent,
+    HelpTextPageWrapperComponent,
+    OpenposAppHelpContainerComponent
 ];
 
 const directives = [
@@ -258,7 +262,8 @@ const pipes = [
         DatePartChooserDialogComponent,
         LocationOverrideDialogComponent,
         NavListComponent,
-        SystemStatusDialogComponent
+        SystemStatusDialogComponent,
+        HelpTextPageWrapperComponent
     ],
     imports: [
         FormsModule,

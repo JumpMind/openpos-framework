@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { Component } from '@angular/core';
 import { MessageProvider } from '../../providers/message.provider';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
+import { HelpTextService } from '../../../core/help-text/help-text.service';
 
 @ScreenPart({
     name: 'baconStrip'})
@@ -17,7 +18,7 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     isMobile$: Observable<boolean>;
     operatorInfo: string;
 
-    constructor( mediaService: OpenposMediaService, messageProvider: MessageProvider) {
+    constructor( mediaService: OpenposMediaService, messageProvider: MessageProvider, public helpTextService: HelpTextService) {
         super(messageProvider);
         const mobileMap = new Map([
             ['xs', true],
@@ -26,7 +27,7 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
             ['lg', false],
             ['xl', false]
         ]);
-        this.isMobile$ = mediaService.mediaObservableFromMap(mobileMap);
+        this.isMobile$ = mediaService.mediaObservableFromMap(mobileMap);;
     }
 
     screenDataUpdated() {

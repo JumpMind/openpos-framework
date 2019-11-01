@@ -17,7 +17,7 @@ import { ComponentType } from '@angular/cdk/overlay/';
 import { IStatusBarControl } from '../../../core/interfaces/status-bar-control.interface';
 import { SessionService } from '../../../core/services/session.service';
 import { TrainingOverlayService } from '../../../core/services/training-overlay.service';
-
+import { HelpTextService } from '../../../core/help-text/help-text.service';
 
 export const STATUS_BAR_STATUS_CONTROL_COMPONENT = new InjectionToken<ComponentType<IStatusBarControl>>('StatusBarStatusControlComponent');
 @Component({
@@ -47,7 +47,8 @@ export class StatusBarComponent implements IStatusBarControl, AfterViewInit, OnI
     constructor(
         public session: SessionService, public snackBar: MatSnackBar, private trainingService: TrainingOverlayService,
         @Inject(STATUS_BAR_STATUS_CONTROL_COMPONENT) private statusBarStatusCtrlType: ComponentType<IStatusBarControl>,
-        private componentFactoryResolver: ComponentFactoryResolver) {
+        private componentFactoryResolver: ComponentFactoryResolver,
+        public helpTextService: HelpTextService) {
     }
 
     ngOnInit(): void {

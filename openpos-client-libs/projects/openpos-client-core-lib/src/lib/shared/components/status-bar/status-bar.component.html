@@ -6,6 +6,7 @@
         </button>
         <app-icon *ngIf="data.screenIcon" [iconName]="data.screenIcon" class="material-icons"></app-icon>
 		<span class="text-sm">&nbsp;{{data.screenName}}</span>
+		<app-icon-button *ngIf="helpTextService.isAvailable() | async" iconName="help" (click)="helpTextService.toggle()"></app-icon-button>
 	</span>
 	
 	<div *ngIf="data.screenType==='Home'" class="home-screen-logo" (click)="onHome()"></div>

@@ -11,6 +11,7 @@ import { StatusBarData } from '../../../../shared/components/status-bar/status-b
 import { OpenposMediaService } from '../../../../core/services/openpos-media.service';
 import { IActionItem } from '../../../../core/interfaces/action-item.interface';
 import { NavListComponent } from '../../../../shared/components/nav-list/nav-list.component';
+import { HelpTextService } from '../../../../core/help-text/help-text.service';
 
 /**
  * @ignore
@@ -36,7 +37,7 @@ export class SellComponent extends AbstractTemplate<any> {
 
   public drawerMode: Observable<string>;
 
-  constructor(private mediaService: OpenposMediaService, protected dialog: MatDialog) {
+  constructor(private mediaService: OpenposMediaService, protected dialog: MatDialog, public helpTextService: HelpTextService) {
     super();
   }
 

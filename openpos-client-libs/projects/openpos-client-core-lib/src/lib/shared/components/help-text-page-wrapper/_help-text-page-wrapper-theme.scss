@@ -1,0 +1,10 @@
+
+@mixin help-text-page-wrapper-theme($theme){
+    $background: map-get($theme, background);
+
+    @debug "testing : #{mat-color($background, background)}";
+
+    mat-sidenav-container {
+        background-color: mat-color($background, background);
+    }
+}

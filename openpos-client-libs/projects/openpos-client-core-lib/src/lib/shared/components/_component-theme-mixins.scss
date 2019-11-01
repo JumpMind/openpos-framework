@@ -11,6 +11,7 @@
 @import './toggle-button/toggle-button-theme';
 @import './overflow-list/overflow-list-theme';
 @import './kebab-menu/kebab-menu-theme';
+@import './help-text-page-wrapper/help-text-page-wrapper-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -26,4 +27,5 @@
     @include toggle-button-theme($theme);
     @include overflow-list-theme($theme);
     @include kebab-menu-theme($theme);
+    @include help-text-page-wrapper-theme($theme);
 }
