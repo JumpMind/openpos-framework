@@ -1,25 +1,28 @@
 <app-bacon-strip class="return-bacon-strip">
     <div class="common-background return-outer">
         <div class="return-body">
-            <div class="receipts" *ngIf="receipts && receipts.length > 0">
-                <div class="receipts-label" responsiveClass>
-                    {{receipts.length}} Linked Receipt(s)
+            <section class="receipts" *ngIf="receipts && receipts.length > 0">
+                <div class="receipts-content">
+                    <strong class="receipts-label muted-color" responsiveClass>
+                            {{receipts.length}} Linked Receipt(s)
+                    </strong>
+                    <div style="overflow-y: auto;">
+                        <app-receipt-card *ngFor="let receipt of receipts"
+                            class="receipt"
+                            [receipt]="receipt" 
+                            [removeReceiptAction]="removeReceiptAction" 
+                            (click)="onReceiptClick(receipt)">
+                        </app-receipt-card>
+                    </div>
                 </div>
-                <div style="overflow-y: auto;">
-                    <app-receipt-card *ngFor="let receipt of receipts"
-                        class="receipt"
-                        [receipt]="receipt" 
-                        [removeReceiptAction]="removeReceiptAction" 
-                        (click)="onReceiptClick(receipt)">
-                    </app-receipt-card>
-                </div>
-            </div>
+                <div class="vertical-divider grey-background"></div>
+            </section>
             <div class="return-items-outer">
                 <app-scan-or-search class="scan-or-search mat-elevation-z1" [defaultAction]="screen.checkoutButton"></app-scan-or-search>
                 <app-sale-item-card-list #scrollList class="return-list-background"></app-sale-item-card-list>
                 <app-status-strip></app-status-strip>
             </div>
-            <app-return-total-panel></app-return-total-panel>
+            <app-sale-total-panel></app-sale-total-panel>
         </div>
     </div>
 </app-bacon-strip>
