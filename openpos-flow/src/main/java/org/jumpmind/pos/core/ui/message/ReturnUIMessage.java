@@ -40,6 +40,8 @@ public class ReturnUIMessage extends UIMessage {
 
     private String backgroundImage;
 
+    private boolean enableCollapsibleItems = true;
+
     public ReturnUIMessage() {
         this.setScreenType(UIMessageType.RETURN);
         this.setId("returns");
@@ -53,10 +55,13 @@ public class ReturnUIMessage extends UIMessage {
         this.prompt = prompt;
     }
 
-    private List<SellItem> items = new ArrayList<>();
+    public List<SellItem> getItems() {
+        return items;
+    }
 
-    private List<Total> totals;
-    private Total grandTotal;
+    public void setItems(List<SellItem> items) {
+        this.items = items;
+    }
 
     public List<Total> getTotals() {
         return totals;
@@ -170,6 +175,14 @@ public class ReturnUIMessage extends UIMessage {
 
     public void setBackgroundImage(String backgroundImage) {
         this.backgroundImage = backgroundImage;
+    }
+
+    public boolean isEnableCollapsibleItems() {
+        return enableCollapsibleItems;
+    }
+
+    public void setEnableCollapsibleItems(boolean enableCollapsibleItems) {
+        this.enableCollapsibleItems = enableCollapsibleItems;
     }
 
 }
