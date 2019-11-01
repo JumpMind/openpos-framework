@@ -28,13 +28,11 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     @ViewChild('scrollList') private scrollList: ElementRef;
     public size = -1;
     initialized = false;    // listData: Observable<ISelectableListData<ISellItem>>;
-    selectedItems: ISellItem[] = new Array<ISellItem>();
     individualMenuClicked = false;
 
     public overFlowListSize: Observable<number>;
 
     public items: ISellItem[];
-    public amountTotals: ITotal[];
     public itemTotal: number;
     public receipts: ITransactionReceipt[];
     public removeReceiptAction: IActionItem;
@@ -45,18 +43,9 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     }
 
     buildScreen() {
-        this.selectedItems =
-          this.screen.items.filter(item => this.screen.selectedItems.find(selectedItem => item.index === selectedItem.index));
-
         this.items = this.screen.items;
-        this.amountTotals = this.screen.totals ? (this.screen.totals as ITotal[]).filter(t => t.type === TotalType.Amount) : null;
-        const screenItemTotal =
-          this.screen.totals ? (this.screen.totals as ITotal[]).find(t => t.type === TotalType.Quantity && t.name === 'itemTotal') : null;
-        this.itemTotal = screenItemTotal ? Number(screenItemTotal.amount) : this.items.length;
         this.receipts = this.screen.receipts;
         this.removeReceiptAction = this.screen.removeReceiptAction;
-        this.screen.customerName = this.screen.customerName != null && this.screen.customerName.length > 10 ?
-            this.screen.customerName.substring(0, 10) + '...' : this.screen.customerName;
         this.dialog.closeAll();
     }
 
@@ -86,60 +75,10 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
         this.initialized = true;
     }
 
-    returnButtonDisabled(): boolean {
-        return !this.items || this.items.length === 0;
-    }
-
-    openItemDialog(item: ISellItem) {
-        this.individualMenuClicked = true;
-        this.openItemsDialog([item]);
-    }
-
-    openItemsDialog(items: ISellItem[]) {
-        let optionItems = [];
-        if (items.length > 1) {
-            optionItems = this.screen.multiSelectedMenuItems;
-        } else {
-            optionItems = items[0].menuItems;
-        }
-        const dialogRef = this.dialog.open(NavListComponent, {
-            width: '70%',
-            data: {
-                optionItems,
-                payload: this.getIndexes(items),
-                disableClose: false,
-                autoFocus: false
-            }
-        });
-
-        dialogRef.afterClosed().subscribe(result => {
-            console.info('The dialog was closed');
-        });
-    }
-
-    public getIndexes(items: ISellItem[]): number[] {
-        const indexes = [];
-        items.forEach(item => indexes.push(item.index));
-        return indexes;
-    }
-
     public onReceiptClick(event: any) {
         if (this.receipts) {
             const index = this.receipts.indexOf(event);
             this.doAction('TransactionDetails', index);
-        }
-    }
-
-    public onItemListChange(event: number[]): void {
-        const items = this.screen.items.filter(item => event.includes(item.index));
-        this.doAction('SelectedItemsChanged', items);
-    }
-
-    public onMenuAction(event: any) {
-        if (event.menuItem && event.payload) {
-            this.doAction(event.menuItem, event.payload);
-        } else {
-            this.doAction(event);
         }
     }
 
