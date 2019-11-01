@@ -121,13 +121,18 @@ task release() {
     }
     doLast {
         def versionParts = version.split('\\.')
-        def lastPart = versionParts[versionParts.length-1] as int
+        def lastPart = versionParts[versionParts.length-1]
+        def identifier = ''
+        if (lastPart.contains('-')) {
+           identifier = '-' + lastPart.split('-')[1];
+           lastPart = lastPart.split('-')[0] as int;
+        }
         lastPart++
         version = ''
         for(int i=0; i < versionParts.length-1; i++) {
             version = version + versionParts[i] + '.'
         }
-        version = version + lastPart + '-SNAPSHOT'
+        version = version + lastPart + identifier + '-SNAPSHOT'
         updateGradlePropertiesVersion(version)
         tasks.setPackageJsonVersionToSnapshot.args[2] = version
         tasks.setPackageJsonVersionToSnapshot.execute()
