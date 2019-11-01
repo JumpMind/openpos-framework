@@ -1,7 +1,6 @@
-import {CdkVirtualScrollViewport} from '@angular/cdk/scrolling';
-import {Component, Input, ViewChild, OnInit, TemplateRef, TrackByFunction} from '@angular/core';
-import {Observable} from 'rxjs';
+import {Component, Input, OnInit, TemplateRef} from '@angular/core';
 import {UIDataMessageService} from '../../../core/ui-data-message/ui-data-message.service';
+import {InfiniteScrollDatasource} from './infinite-scroll-datasource';
 
 /**
  * This component uses the UIDataMessageService to implement 'Infinite Scroll'. When the viewable area gets close to the
@@ -64,28 +63,11 @@ export class InfiniteScrollComponent<T> implements OnInit {
   listClass: string;
 
 
-  /**
-   * Optionally provide a track by function to improve performance of updating the list
-   * This method should return the value to use to uniquely identify an element.
-   */
-  @Input()
-  itemTrackByFunction : TrackByFunction<T> = ( index: number, item: T ) => {};
-
-  @ViewChild(CdkVirtualScrollViewport)
-  scrollViewPort: CdkVirtualScrollViewport;
-
-  items$: Observable<T[]>;
+  dataSource: InfiniteScrollDatasource<T>;
 
   constructor( private dataMessageService: UIDataMessageService ) { }
 
   ngOnInit(): void {
-    this.items$ = this.dataMessageService.getData$(this.dataKey);
+    this.dataSource = new InfiniteScrollDatasource<T>(this.dataMessageService.getData$(this.dataKey), () => this.dataMessageService.requestMoreData(this.dataKey), this.dataLoadBuffer);
   }
-
-  indexChange(){
-    if(this.scrollViewPort.measureScrollOffset('bottom') < this.dataLoadBuffer * this.itemHeightPx) {
-      this.dataMessageService.requestMoreData(this.dataKey);
-    }
-  }
-
 }
