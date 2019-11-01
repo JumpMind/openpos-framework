@@ -58,7 +58,7 @@ import { trigger, style, animate, transition, query, group} from '@angular/anima
 })
 export class CarouselComponent implements AfterContentInit {
     @Input() carouselSize = 'lg';
-    @Input() carouselItemClass;
+    @Input() carouselItemClass: string;
 
     @ContentChildren('carouselItem') items: QueryList<TemplateRef<any>>;
     currentItem: TemplateRef<any>;

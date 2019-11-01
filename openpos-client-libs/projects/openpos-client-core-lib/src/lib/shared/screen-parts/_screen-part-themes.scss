@@ -4,6 +4,7 @@
 @import './choose-options-part/choose-options-part-theme';
 @import './banner/banner-theme';
 @import './notifications/notifications-theme';
+@import './sale-item-card-list/sale-item-card-list-theme';
 
 @mixin screen-part-themes($theme){
     @include bacon-strip-theme($theme);
@@ -11,4 +12,5 @@
     @include choose-options-part-theme($theme);
     @include banner-theme($theme);
     @include notification-theme($theme);
+    @include sale-item-card-list-theme($theme);
 }

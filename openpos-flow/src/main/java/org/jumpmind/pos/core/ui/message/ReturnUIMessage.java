@@ -53,13 +53,10 @@ public class ReturnUIMessage extends UIMessage {
         this.prompt = prompt;
     }
 
-    public List<SellItem> getItems() {
-        return items;
-    }
+    private List<SellItem> items = new ArrayList<>();
 
-    public void setItems(List<SellItem> items) {
-        this.items = items;
-    }
+    private List<Total> totals;
+    private Total grandTotal;
 
     public List<Total> getTotals() {
         return totals;

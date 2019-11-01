@@ -1,0 +1,11 @@
+<cdk-virtual-scroll-viewport
+        [itemSize]="itemHeightPx"
+        [minBufferPx]="virtualScrollMinBufferPx"
+        [maxBufferPx]="virtualScrollMaxBufferPx"
+        (scrolledIndexChange)="indexChange()">
+  <ul [ngClass]="listClass">
+    <li *cdkVirtualFor="let item of items$; trackBy: itemTrackByFunction" responsive-class [ngClass]="itemClass">
+      <ng-container *ngTemplateOutlet="itemTemplate; context: item"></ng-container>
+    </li>
+  </ul>
+</cdk-virtual-scroll-viewport>

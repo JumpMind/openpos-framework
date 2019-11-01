@@ -1,9 +1,15 @@
 package org.jumpmind.pos.core.service;
 
 import org.jumpmind.pos.core.ui.Toast;
+import org.jumpmind.pos.core.ui.UIDataMessage;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
+
+import java.util.Map;
 
 public interface IScreenService {
+
+    public void showScreen(String appId, String nodeId, UIMessage screen, Map<String, UIDataMessageProvider> dataMessageProvider);
 
     public void showScreen(String appId, String nodeId, UIMessage screen);
 

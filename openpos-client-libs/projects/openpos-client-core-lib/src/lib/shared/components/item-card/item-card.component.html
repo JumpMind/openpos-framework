@@ -1,45 +1,39 @@
-<mat-card class="item-card">
-    <mat-card-content>
-        <img *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image"
-            responsive-class>
-        <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="16px" style="padding-left: 16px">
-            <div fxFlex="1 1 auto" fxLayout="column">
-                <div fxFlex="1 1 auto">
-                    <div *ngIf="item.description" responsive-class class="item-card-title">
-                        {{item.description}}
-                    </div>
-                    <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
-                        class="item-card-discount" [amountText]="item.amount"></app-currency-text>
-                    <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
-                        class="muted-color item-card-original" [amountText]="item.sellingPrice">
-                    </app-currency-text>
-                </div>
-                <div responsive-class class="item-card-details" *ngIf="item.additionalLabels">
-                    <div *ngFor="let additionalLabel of item.additionalLabels" class="muted-color"
-                        style="margin-top: 4px">{{additionalLabel.label}}: {{additionalLabel.value}}</div>
-                </div>
+<mat-card class="item-card" [ngClass]="{'mat-elevation-z5':hover, 'mat-elevation-z1':!hover}">
+    <mat-card-content class="item-content">
+        <img responsive-class class="item-card-image" *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" [ngClass]="{'collapsed': !expanded}">
+        <div class="left-side">
+            <div *ngIf="item.description" responsive-class class="item-card-title">
+                {{item.description}}
             </div>
-            <div fxFlex="0 0 auto" fxLayout="column">
-                <app-currency-text fxFlex="1 1 auto" responsive-class class="item-card-price"
+            <ul responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
+                <li *ngFor="let additionalLabel of item.additionalLabels" class="muted-color">
+                    {{additionalLabel.label}}: {{additionalLabel.value}}
+                </li>
+            </ul>
+        </div>
+        <div class="right-side">
+            <section class="price">
+                <app-currency-text responsive-class class="item-card-price"
                     [amountText]="item.amount">
                 </app-currency-text>
-                <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'">
-                </app-icon>
-                <div *ngIf="!isReadOnly && item.menuItems" fxLayout="row" fxLayoutAlign="end">
-                    <app-kebab-label-button *ngIf="item.menuItems.length > 1; else elseBlock"
-                        [menuItems]="item.menuItems" [label]="item.optionsLabel"
-                        (menuItemClick)="doItemAction($event, item.index)" class="primary item-kebab-label">
-                    </app-kebab-label-button>
-
-                    <ng-template #elseBlock>
-                        <button mat-button responsive-class color="primary" *ngFor="let m of item.menuItems"
-                            class="item-card-button" (click)="doItemAction(m, item.index)"
-                            [disabled]="!isMenuItemEnabled(m)">
-                            <span [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
-                            <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
-                        </button>
-                    </ng-template>
-                </div>
+                <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
+                    class="muted-color item-card-original" [amountText]="item.sellingPrice">
+                </app-currency-text>
+            </section>
+            <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'"></app-icon>
+            <div class="menu-items" *ngIf="!isReadOnly && item.menuItems && expanded">
+                <app-kebab-label-button *ngIf="item.menuItems.length > 1; else elseBlock"
+                    [menuItems]="item.menuItems" [label]="item.optionsLabel"
+                    (menuItemClick)="doItemAction($event, item.index)" class="primary item-kebab-label">
+                </app-kebab-label-button>
+                <ng-template #elseBlock>
+                    <button mat-button responsive-class *ngFor="let m of item.menuItems"
+                        class="item-card-button primary" (click)="doItemAction(m, item.index)"
+                        [disabled]="!isMenuItemEnabled(m)">
+                        <span [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
+                        <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
+                    </button>
+                </ng-template>
             </div>
         </div>
     </mat-card-content>

@@ -5,8 +5,16 @@
     margin-bottom: 16px;
 }
 
+.item-content {
+    display:grid;
+    grid-template-columns: auto 1fr auto;
+    width:100%;
+    height:100%
+}
+
 .item-card-image {
     height: 275px;
+    padding-right:16px;
 
     &.tablet {
         height: 150px;
@@ -17,9 +25,39 @@
     }
 }
 
+.item-card-image.collapsed {
+    height: 50px;
+}
+
+.left-side {
+    display:grid;
+    height: 100%;
+}
+
 .item-card-title {
     @extend %text-md;
-    padding-bottom: 8px;
+}
+
+.item-card-details {
+    @extend %text-sm;
+    align-self: end;
+    list-style-type: none;
+    padding: unset;
+    margin: unset;
+    >*{
+        margin-top: 4px;
+    }
+}
+
+.right-side {
+    display:grid;
+    height: 100%;
+}
+
+.price {
+    display:grid;
+    grid-template-rows: auto 1fr;
+    justify-self: end;
 }
 
 .item-card-price {
@@ -28,26 +66,25 @@
     text-align: right;
 }
 
-.item-card-discount {
-    @extend %text-sm;
-}
-
 .item-card-original {
     @extend %text-sm;
     text-decoration: line-through;
+    text-align: right;
 }
 
-.item-card-details {
-    @extend %text-sm;
-}
-
-.item-card-button {
-    @extend %text-md;
-    width: 130px;
+.menu-items {
+    justify-self:end;
+    align-self: end;
 }
 
 ::ng-deep .item-kebab-label {
     button {
         padding: 0px;
     }
+}
+
+.item-card-button {
+    @extend %text-md;
+    font-weight: normal;
+    padding: 0px;
 }

@@ -5,7 +5,7 @@ import org.jumpmind.pos.core.ui.UIDataMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SelectionListUIDataMessage extends UIDataMessage {
+public class SelectionListUIDataMessage extends UIDataMessage<SelectionListItem[]> {
 
     private Map<Integer , SelectionListItem> items;
     private Map<Integer, SelectionListItem> disabledItems;
