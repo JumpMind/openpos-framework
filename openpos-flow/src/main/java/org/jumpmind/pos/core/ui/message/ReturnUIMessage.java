@@ -24,9 +24,11 @@ public class ReturnUIMessage extends UIMessage {
     private List<Total> totals;
     private Total grandTotal;
 
+    private List<TransactionReceipt> receipts = new ArrayList<>();
+
     private ActionItem checkoutButton;
     private ActionItem loyaltyButton;
-    private ActionItem receiptsButton;
+    private ActionItem removeReceiptAction;
 
     private String itemCount;
     private boolean transactionActive = false;
@@ -86,6 +88,21 @@ public class ReturnUIMessage extends UIMessage {
         this.grandTotal = new Total(name, amount);
     }
 
+    public List<TransactionReceipt> getReceipts() {
+        return receipts;
+    }
+
+    public void setReceipts(List<TransactionReceipt> receipts) {
+        this.receipts = receipts;
+    }
+
+    public void addReceipt(TransactionReceipt receipt) {
+        if(this.receipts == null) {
+            this.receipts = new ArrayList<>();
+        }
+        this.receipts.add(receipt);
+    }
+
     public ActionItem getCheckoutButton() {
         return checkoutButton;
     }
@@ -102,12 +119,12 @@ public class ReturnUIMessage extends UIMessage {
         this.loyaltyButton = loyaltyButton;
     }
 
-    public ActionItem getReceiptsButton() {
-        return receiptsButton;
+    public ActionItem getRemoveReceiptAction() {
+        return  removeReceiptAction;
     }
 
-    public void setReceiptsButton(ActionItem receiptsButton) {
-        this.receiptsButton = receiptsButton;
+    public void setRemoveReceiptAction(ActionItem removeReceiptAction) {
+        this.removeReceiptAction = removeReceiptAction;
     }
 
     public String getItemCount() {
