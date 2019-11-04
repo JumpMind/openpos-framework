@@ -1,0 +1,21 @@
+<div class="mobile-totals-outer">
+    <div class="mobile-totals-top">
+        <div *ngFor="let total of screenData.totals; index as i" [ngClass]="{'mobile-totals-border' : i != screenData.totals.length - 1}" class="mobile-total">
+            <div responsive-class class="mobile-total-name">{{total.name}}</div>
+            <div responsive-class class="mobile-total-amount">
+                <app-currency-text [amountText]="total.amount"></app-currency-text>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-totals-bottom">
+        <div *ngIf="screenData.grandTotal" responsive-class class="mobile-grand-total">
+            <div responsive-class class="mobile-grand-total-name">{{screenData.grandTotal.name}}</div>
+            <div responsive-class class="mobile-grand-total-amount">
+                <app-currency-text [amountText]="screenData.grandTotal.amount"></app-currency-text>
+            </div>
+        </div>
+        <button responsive-class mat-button *ngIf="!screenData.readOnly && screenData.checkoutButton"
+            [disabled]="!screenData.items || screenData.items.length == 0" (click)="doAction(screenData.checkoutButton)"
+            class="common-primary-button mobile-checkout-button">{{screenData.checkoutButton.title}}</button>
+    </div>
+</div>

@@ -4,13 +4,19 @@
 @import './choose-options-part/choose-options-part-theme';
 @import './banner/banner-theme';
 @import './notifications/notifications-theme';
+@import './mobile-totals-part/mobile-totals-part-theme';
+@import './mobile-loyalty-part/mobile-loyalty-part-theme';
+@import './mobile-sale-item-list/mobile-sale-item-list-theme';
 @import './sale-item-card-list/sale-item-card-list-theme';
 
-@mixin screen-part-themes($theme){
+@mixin screen-part-themes($theme) {
     @include bacon-strip-theme($theme);
     @include scan-or-search-theme($theme);
     @include choose-options-part-theme($theme);
     @include banner-theme($theme);
     @include notification-theme($theme);
+    @include mobile-totals-part-theme($theme);
+    @include mobile-loyalty-part-theme($theme);
+    @include mobile-sale-item-list-theme($theme);
     @include sale-item-card-list-theme($theme);
 }

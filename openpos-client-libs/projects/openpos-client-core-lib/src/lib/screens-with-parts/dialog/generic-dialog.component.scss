@@ -1,0 +1,10 @@
+@import '../../styles/mixins/typography';
+
+.generic-dialog-button {
+    @extend %text-lg;
+    padding: 8px 0px;
+
+    &.mobile {
+        padding: 8px 0px;
+    }
+}

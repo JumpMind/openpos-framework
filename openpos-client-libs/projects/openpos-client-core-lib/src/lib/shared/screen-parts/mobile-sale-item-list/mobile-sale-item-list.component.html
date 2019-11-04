@@ -1,0 +1,10 @@
+<mat-card #scrollList *ngIf="screenData.items && screenData.items.length > 0" class="sale-mobile-items-outer">
+    <app-mobile-item *ngFor="let item of screenData.items; index as i" [item]="item"
+        [ngClass]="{'mobile-item-border' : i != screenData.items.length - 1}"></app-mobile-item>
+</mat-card>
+
+<div *ngIf="screenData.items.length == 0" class="sale-item-prompt-outer">
+    <div responsive-class class="sale-item-list-prompt">{{screenData.prompt}}</div>
+    <div responsive-class class="sale-item-list-instructions">{{screenData.instructions}}</div>
+    <img [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
+</div>

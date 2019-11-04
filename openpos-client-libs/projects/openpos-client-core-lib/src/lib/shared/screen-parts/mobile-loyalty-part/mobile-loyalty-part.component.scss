@@ -1,0 +1,62 @@
+@import '../../../styles/mixins/typography';
+
+::ng-deep .mobile-loyalty-button {
+    width: 100%;
+    padding: 8px 16px;
+
+    .mat-button-wrapper {
+        grid-template-columns: 50% 50%;
+        display: grid;
+        margin: 0px;
+    }
+}
+
+.mobile-loyalty-button-image {
+    max-height: 32px;
+    max-width: 100%;
+    align-self: center;
+    justify-self: start;
+}
+
+.mobile-loyalty-button-wrapper {
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-self: end;
+}
+
+.mobile-loyalty-button-text {
+    @extend %text-md;
+    justify-self: end;
+    align-self: center;
+    padding-right: 4px;
+}
+
+.mobile-loyalty-button-icon {
+    justify-self: end;
+    align-self: center;
+}
+
+.mobile-loyalty-customer-outer {
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+    display: grid;
+    margin: 0px;
+    padding: 8px 16px;
+}
+
+.mobile-loyalty-image {
+    max-height: 32px;
+    max-width: 100%;
+    grid-row-end: span 2;
+    align-self: center;
+}
+
+.mobile-loyalty-name {
+    @extend %text-md;
+    justify-self: end;
+}
+
+.mobile-loyalty-id {
+    @extend %text-sm;
+    justify-self: end;
+}

@@ -40,13 +40,4 @@
             }
         }
     }
-
-    .mat-dialog-actions {
-        padding: 16px 0px;
-
-        .mat-raised-button {
-            @extend %text-lg;
-            @extend .common-button-padding;
-        }
-    }
 }

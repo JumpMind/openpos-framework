@@ -1,0 +1,25 @@
+@mixin mobile-loyalty-part-theme($theme) {
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $dark: map-get($mat-grey, 600);
+
+    .mobile-loyalty-button {
+        background-color: white;
+    }
+
+    .mobile-loyalty-button-text {
+        color: $dark;
+    }
+
+    .mobile-loyalty-name {
+        color: $dark;
+    }
+
+    .mobile-loyalty-id {
+        color: $dark;
+    }
+}

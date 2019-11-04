@@ -1,0 +1,19 @@
+<button *ngIf="!screenData.customer && screenData.mobileLoyaltyButton" mat-raised-button class="mobile-loyalty-button"
+    (click)="doAction(screenData.mobileLoyaltyButton)">
+    <img *ngIf="screenData.mobileLoyaltyButton.icon" [src]="screenData.mobileLoyaltyButton.icon | imageUrl"
+        class="mobile-loyalty-button-image">
+    <div class="mobile-loyalty-button-wrapper">
+        <span responsive-class class="mobile-loyalty-button-text">{{screenData.mobileLoyaltyButton.title}}</span>
+        <app-icon class="mobile-loyalty-button-icon" [iconName]="'Increment'" [iconClass]="'primary'"></app-icon>
+    </div>
+</button>
+
+<mat-card *ngIf="screenData.customer" class="mobile-loyalty-customer-outer">
+    <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="mobile-loyalty-image">
+    <div responsive-class *ngIf="screenData.customer.name" class="mobile-loyalty-name">
+        {{screenData.customer.name}}
+    </div>
+    <div responsive-class *ngIf="screenData.customer.label && screenData.customer.id" class="mobile-loyalty-id">
+        {{screenData.customer.label}}: {{screenData.customer.id}}
+    </div>
+</mat-card>

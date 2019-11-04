@@ -1,0 +1,58 @@
+@import "../../../styles/mixins/typography";
+
+.mobile-totals-outer {
+    margin: 0px;
+    padding: 0px;
+}
+
+.mobile-totals-top {
+    display: flex;
+    flex-direction: row;
+    place-content: space-around;
+    padding: 8px;
+}
+
+.mobile-total {
+    flex: 1 1 auto;
+}
+
+.mobile-total-name {
+    @extend %text-sm;
+    text-align: center;
+}
+
+.mobile-total-amount {
+    @extend %text-md;
+    text-align: center;
+}
+
+.mobile-totals-bottom {
+    width: 100%;
+    padding: 4px 0px;
+    display: flex;
+    flex-direction: row;
+    place-content: space-around;
+}
+
+.mobile-grand-total {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+}
+
+.mobile-grand-total-name {
+    @extend %text-sm;
+    text-align: center;
+}
+
+.mobile-grand-total-amount {
+    @extend %text-lg;
+    text-align: center;
+}
+
+.mobile-checkout-button {
+    @extend %text-lg;
+    flex: 1 1 auto;
+    margin-right: 4px;
+}

@@ -23,6 +23,7 @@ public class SaleUIMessage extends UIMessage {
     private ActionItem checkoutButton;
     private ActionItem logoutButton;
     private ActionItem loyaltyButton;
+    private ActionItem mobileLoyaltyButton;
     private ActionItem promoButton;
 
     private String itemCount;
@@ -91,6 +92,14 @@ public class SaleUIMessage extends UIMessage {
 
     public void setLoyaltyButton(ActionItem loyaltyButton) {
         this.loyaltyButton = loyaltyButton;
+    }
+
+    public ActionItem getMobileLoyaltyButton() {
+        return mobileLoyaltyButton;
+    }
+
+    public void setMobileLoyaltyButton(ActionItem mobileLoyaltyButton) {
+        this.mobileLoyaltyButton = mobileLoyaltyButton;
     }
 
     public boolean isLocationEnabled() {

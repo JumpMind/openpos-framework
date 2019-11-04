@@ -4,6 +4,16 @@
     margin: 0px;
     margin-bottom: 16px;
 
+    &.mobile {
+        margin-bottom: 8px;
+        padding: 8px 16px;
+    }
+}
+
+.item-card-image {
+    height: 275px;
+    padding-right:16px;
+
     .item-content {
         display:grid;
         grid-template-columns: auto 1fr auto;

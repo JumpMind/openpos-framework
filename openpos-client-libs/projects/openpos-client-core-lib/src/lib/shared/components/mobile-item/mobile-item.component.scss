@@ -1,0 +1,53 @@
+@import "../../../styles/mixins/typography";
+
+.mobile-item-outer {
+    padding: 8px 0px;
+    margin: 0px 16px;
+}
+
+.item-card-image {
+    height: 275px;
+
+    &.tablet {
+        height: 150px;
+    }
+
+    &.mobile {
+        height: 50px;
+    }
+}
+
+.item-card-title {
+    @extend %text-md;
+    padding-bottom: 8px;
+}
+
+.item-card-price {
+    @extend %text-lg;
+    font-weight: bold;
+    text-align: right;
+}
+
+.item-card-discount {
+    @extend %text-sm;
+}
+
+.item-card-original {
+    @extend %text-sm;
+    text-decoration: line-through;
+}
+
+.item-card-details {
+    @extend %text-sm;
+}
+
+.item-card-button {
+    @extend %text-md;
+    width: 130px;
+}
+
+::ng-deep .item-kebab-label {
+    button {
+        padding: 0px;
+    }
+}

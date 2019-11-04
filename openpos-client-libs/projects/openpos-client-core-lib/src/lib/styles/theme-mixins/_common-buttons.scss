@@ -9,10 +9,16 @@
 
     .common-button-padding {
         padding: 16px;
+        &.mobile {
+            padding: 8px;
+        }
     }
 
     .common-primary-button {
         padding: 16px;
+        &.mobile {
+            padding: 8px;
+        }
         color: $contrast;
         background-color: $app-primary;
     }
