@@ -1,6 +1,5 @@
-import {Directive, ElementRef, Inject, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
+import {Directive, ElementRef, Inject, InjectionToken, Input, OnDestroy, OnInit, Renderer2} from '@angular/core';
 import {Subscription} from 'rxjs';
-import {DEFAULT_RESPONSIVE_MAP} from '../../core/default-responsive-map';
 import {OpenposMediaService} from '../../core/media/openpos-media.service';
 
 @Directive({
@@ -8,6 +7,8 @@ import {OpenposMediaService} from '../../core/media/openpos-media.service';
 })
 export class ResponsiveGridDirective implements OnInit, OnDestroy {
     private theMap: Map<string, string> = new Map;
+
+    private breakpointToClassName = new Map([['xs', 'mobile'],['sm', 'mobile'],['md', 'tablet'],['lg', 'desktop'],['xl', 'desktop']]);
 
     @Input('opAreas')
     set areas( value: string){
@@ -31,9 +32,7 @@ export class ResponsiveGridDirective implements OnInit, OnDestroy {
 
     private subscription: Subscription;
 
-    constructor( @Inject(DEFAULT_RESPONSIVE_MAP)
-                 private breakpointToClassName: Map<string,string>,
-                 private mediaService: OpenposMediaService,
+    constructor(private mediaService: OpenposMediaService,
                  private el: ElementRef,
                  private renderer: Renderer2){
     }
