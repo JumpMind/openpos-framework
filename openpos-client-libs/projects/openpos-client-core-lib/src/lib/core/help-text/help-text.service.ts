@@ -3,7 +3,6 @@ import { BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import { IMessageHandler } from '../interfaces/message-handler.interface';
 import { SessionService } from '../services/session.service';
 import { map, distinctUntilChanged } from 'rxjs/operators';
-import { OpenposMediaService } from '../services/openpos-media.service';
 
 @Injectable({
     providedIn: 'root',
@@ -15,9 +14,8 @@ export class HelpTextService implements IMessageHandler<any> {
     private initialized$: BehaviorSubject<boolean>;
     private available$: Observable<boolean>;
     private showSideNav$: Observable<boolean>;
-    private drawerMode$: Observable<string>;
 
-    constructor(private sessionService: SessionService, private mediaService: OpenposMediaService) {
+    constructor(private sessionService: SessionService) {
         this.opened$ = new BehaviorSubject<boolean>(false);
         this.text$ = new BehaviorSubject<string>(null);
         this.initialized$ = new BehaviorSubject<boolean>(false);
@@ -25,18 +23,6 @@ export class HelpTextService implements IMessageHandler<any> {
         this.available$ = combineLatest(this.hasText$, this.initialized$, (one, two) => one && two);
         this.showSideNav$ = combineLatest(this.hasText$, this.opened$, (one, two) => one && two);
     }
-
-    private initializeDrawerMediaSizeHandling() {
-        const modeMap = new Map([
-            ['xs', 'over'],
-            ['sm', 'side'],
-            ['md', 'side'],
-            ['lg', 'side'],
-            ['xl', 'side']
-          ]);
-    
-        this.drawerMode$ = this.mediaService.mediaObservableFromMap(modeMap);
-      }
 
     handle(message: any) {
         if (!!message.helpText && !!message.helpText.text) {
@@ -49,7 +35,6 @@ export class HelpTextService implements IMessageHandler<any> {
 
     public initialize() {
         this.sessionService.registerMessageHandler(this, 'Screen');
-        this.initializeDrawerMediaSizeHandling();
         this.initialized$.next(true);
     }
 
@@ -79,9 +64,5 @@ export class HelpTextService implements IMessageHandler<any> {
 
     public isSideNavViewable() : Observable<boolean> {
         return this.showSideNav$;
-    }
-
-    public getDrawerMode() : Observable<string> {
-        return this.drawerMode$;
     }
 }

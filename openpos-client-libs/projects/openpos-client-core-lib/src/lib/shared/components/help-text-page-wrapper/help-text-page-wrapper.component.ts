@@ -1,8 +1,9 @@
-import { Component, ViewChild, AfterViewInit, Renderer2, Input, OnDestroy, OnInit, ElementRef } from "@angular/core";
-import { MatSidenavContainer } from "@angular/material";
-import { Subscription } from "rxjs";
-import { HelpTextService } from "../../../core/help-text/help-text.service";
-import { ConfigurationService } from "../../../core/services/configuration.service";
+import { Component, ViewChild, AfterViewInit, Renderer2, Input, OnDestroy, OnInit, ElementRef } from '@angular/core';
+import { MatSidenavContainer } from '@angular/material';
+import { Subscription, Observable } from 'rxjs';
+import { HelpTextService } from '../../../core/help-text/help-text.service';
+import { ConfigurationService } from '../../../core/services/configuration.service';
+import { OpenposMediaService } from '../../../core/services/openpos-media.service';
 
 @Component({
     selector: 'app-help-text-page-wrapper',
@@ -22,15 +23,28 @@ export class HelpTextPageWrapperComponent implements OnInit, AfterViewInit, OnDe
 
     private currentTheme: string;
 
+    private drawerMode$: Observable<string>;
+
     private subscription = new Subscription();
 
     constructor(private helpTextService: HelpTextService, 
         private configurationService: ConfigurationService,
-        private renderer: Renderer2) {
+        private renderer: Renderer2,
+        private mediaService: OpenposMediaService) {
     }
 
     ngOnInit() {
         this.helpTextService.initialize();
+
+        const modeMap = new Map([
+            ['xs', 'over'],
+            ['sm', 'side'],
+            ['md', 'side'],
+            ['lg', 'side'],
+            ['xl', 'side']
+          ]);
+    
+        this.drawerMode$ = this.mediaService.mediaObservableFromMap(modeMap);
     }
 
     ngAfterViewInit() {
@@ -70,6 +84,6 @@ export class HelpTextPageWrapperComponent implements OnInit, AfterViewInit, OnDe
     }
 
     getDrawerMode() {
-        return this.helpTextService.getDrawerMode();
+        return this.drawerMode$;
     }
 }

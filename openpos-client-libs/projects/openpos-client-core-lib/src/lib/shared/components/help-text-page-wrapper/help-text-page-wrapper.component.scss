@@ -9,6 +9,9 @@
     margin-left: 24px;
     height: 100%;
     word-break: break-word;
+    &.xs {
+        width: auto;
+    }
     .help-controls {
         margin: 10px 0;
         &.end {
