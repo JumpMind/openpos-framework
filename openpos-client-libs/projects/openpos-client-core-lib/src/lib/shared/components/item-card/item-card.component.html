@@ -5,6 +5,14 @@
             <div *ngIf="item.description" responsive-class class="item-card-title">
                 {{item.description}}
             </div>
+            <section class="return-info warn" *ngIf="item.returnItemLabels && expanded">
+                <app-icon iconName="receipt"></app-icon>
+                <ul responsive-class class="return-info-text">
+                    <li *ngFor="let returnItemLabel of item.returnItemLabels">
+                        {{returnItemLabel.label}} {{returnItemLabel.value}}
+                    </li>
+                </ul>
+            </section>
             <ul responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
                 <li *ngFor="let additionalLabel of item.additionalLabels" class="muted-color">
                     {{additionalLabel.label}}: {{additionalLabel.value}}
@@ -13,7 +21,7 @@
         </div>
         <div class="right-side">
             <section class="price">
-                <app-currency-text responsive-class class="item-card-price"
+                <app-currency-text responsive-class class="item-card-price" [ngClass]="{'warn': item.returnItemLabels}"
                     [amountText]="item.amount">
                 </app-currency-text>
                 <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
