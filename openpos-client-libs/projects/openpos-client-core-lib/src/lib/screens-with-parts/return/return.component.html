@@ -1,6 +1,6 @@
 <app-bacon-strip class="return-bacon-strip">
     <div class="common-background return-outer">
-        <div class="return-body">
+        <div *ngIf="!(isMobile | async)" class="return-body">
             <section class="receipts" *ngIf="receipts && receipts.length > 0">
                 <div class="receipts-content">
                     <strong class="receipts-label muted-color" responsiveClass>
@@ -24,5 +24,14 @@
             </div>
             <app-sale-total-panel></app-sale-total-panel>
         </div>
+        <div *ngIf="(isMobile | async)" class="return-body-mobile">
+            <app-scan-or-search class="scan-or-search-mobile mat-elevation-z1" [defaultAction]="screen.checkoutButton">
+            </app-scan-or-search>
+    
+            <app-mobile-loyalty-part class="return-loyalty-mobile"></app-mobile-loyalty-part>
+    
+            <app-mobile-sale-item-list class="return-list-background-mobile"></app-mobile-sale-item-list>
+        </div>
+        <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>
     </div>
 </app-bacon-strip>
