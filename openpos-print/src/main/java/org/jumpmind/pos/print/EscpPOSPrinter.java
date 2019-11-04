@@ -4,6 +4,8 @@ import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
 import org.apache.commons.io.IOUtils;
+import jpos.services.POSPrinterService19;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import javax.imageio.ImageIO;

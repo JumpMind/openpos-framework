@@ -1,0 +1,69 @@
+openpos:
+  managementServer:
+    mainWorkDirPath: ./build/test-work
+    devicePattern: \d{5}-\d{3}
+    defaultDeviceProcessConfig:
+      initializationScript: file:/Users/jason/projects/biglots/newpos/openpos-biglots-server/app/DeviceWorkDirInitializer.groovy
+      processLogFilePath: logs/process.log
+      reuseProcessPortEnabled: true
+      executableConfig:
+        #executablePath: ${openpos.managementServer.mainWorkDirPath}\$deviceId\openpos_$deviceId.exe
+        arguments:
+          - start
+        shutdownExecutablePath: ${openpos.managementServer.mainWorkDirPath}\$deviceId\openpos_$deviceId.exe
+        shutdownCommandArguments:
+          - stop
+          
+      javaExecutableConfig:
+        # Full path to Java executable that will be used to launch a device process. 
+        javaExecutablePath: ${java.home}
+        
+        processRemoteDebugPort: AUTO
+        classpathEntries:
+          - /Users/jason/projects/biglots/newpos/openpos-biglots-server/build/libs/openpos-server.jar
+          # Enables resolution of register.properties and log4j.xml
+          - '.'
+  #      executableJarPath: /Users/jason/projects/biglots/newpos/openpos-biglots-server/build/libs/openpos-server.jar
+        mainClass: org.springframework.boot.loader.PropertiesLauncher 
+        #com.biglots.openpos.app.OpenPOSServer
+        additionalJavaArguments:
+          - -Xrs
+          - -XX:+UseParallelGC
+          - -Xms256m
+          - -Xmx512m
+          - -Djasypt.encryptor.password=e5279b73-4109-4695-b3aa-c107144939c9
+          - -Djasypt.encryptor.algorithm=PBEWithMD5AndTripleDES
+          # production value
+          # - -Dsca.config.location=/pos-register/work
+          # dev value
+          - -Dsca.config.location=./pos-register/work
+          - -Dopenpos.translate.orpos.headless.working.dir=.
+          - -Dopenpos.translate.external.process.enabled=false
+          - -Dbiglots.openpos.managedMode=true
+          # production value
+          # - -Dloader.path="%BASE%\headless\,C:\OpenPOS,C:\Program Files (x86)\EPSON\JavaPOS\lib\,C:\Program Files\NCR\NCR JavaPOS\jpos1132.jar,C:\Program Files\NCR\NCR JavaPOS\NCRJavaPOS313.jar,C:\Program Files\NCR\NCR JavaPOS\NCRJavaPOSClasses.jar,C:\Program Files\NCR\Retail\,C:\OpenPOS\lib\symbol.jpos.scanner-1.9.1.jar,C:\OpenPOS\lib\xercesImpl-2.9.1.jar"
+          # production value
+          # - -Djava.library.path="%BASE%\lib;C:\Program Files\NCR\NCR JavaPOS\;C:\Program Files\NCR\OPOS\;C:\Program Files\NCR\Retail\;C:\Program Files\NCR\Retail Controls\;"
+          # dev value
+          - -DloginUrl=http://hnwvd-market01.cns.com:8090/store-inventory/login
+          # dev value
+          - -Dspring.profiles.active=dvlp
+          # For debugging
+          # - -Dlog4j.debug
+          # dev value --- spring property that adds extra paths to classpath
+          # - -Dloader.path=.
+          # dev only.  Allows location of store.properties
+          - -Dstore.properties.file=/Users/jason/projects/biglots/newpos/openpos-biglots-server/src/test/resources/store.properties
+          
+          #- -Dopenpos.translate.orpos.headless.working.dir=headless
+          #- -DDEV_MODE=false
+          #- -Djava.security.auth.login.config=/Users/jason/projects/biglots/newpos/pos-register/app/jaas.conf
+          #- -Djava.security.manager
+          #- -Djava.security.policy=/Users/jason/projects/biglots/newpos/pos-register/app/java.policy
+          #- -Djasypt.encryptor.password=e5279b73-4109-4695-b3aa-c107144939c9
+          #- -Djasypt.encryptor.algorithm=PBEWithMD5AndTripleDES
+          #- -DloginUrl=http://hnwvd-market01.cns.com:8090/store-inventory/login
+          #- -Dspring.profiles.active=dvlp
+          #- -Dbiglots.openpos.managedMode=true
+        processPort: AUTO
+    

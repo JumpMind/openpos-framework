@@ -1,7 +1,7 @@
 package org.jumpmind.pos.util;
 
 import java.net.InetAddress;
-
+import java.nio.charset.Charset;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
@@ -38,7 +38,7 @@ public final class AppUtils {
 
                 if (StringUtils.isBlank(hostName)) {
                     try {
-                        hostName = IOUtils.toString(Runtime.getRuntime().exec("hostname").getInputStream());
+                        hostName = IOUtils.toString(Runtime.getRuntime().exec("hostname").getInputStream(), Charset.defaultCharset());
                     } catch (Exception ex) {}
                 }
                 

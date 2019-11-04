@@ -7,7 +7,8 @@
         "openpos-server-core",
         "openpos-service",
         "openpos-persist",
-        "openpos-util"
+        "openpos-util",
+        "openpos-management-server"
     ],
     "Scanner Framework": [
         "scanners",
@@ -24,7 +25,8 @@
         "actions"
     ],
     "Client Services": [
-        "focus"
+        "focus",
+        "discovery"
     ],
     "Personalization": [
         "personalization"
@@ -45,7 +47,8 @@
     ],
     "UI Components": [
         "task-list",
-		"infinite-scroll"
+	`	"infinite-scroll",
+		"image"
     ],
 	"Styles": [
 		"styles"

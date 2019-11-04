@@ -25,12 +25,10 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FilenameFilter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.jumpmind.pos.wrapper.jna.WinsvcEx;
+import static java.util.Arrays.*;
 
 public class WrapperConfig {
 
@@ -169,9 +167,12 @@ public class WrapperConfig {
         }        
         cmdList.add("-Xmx" + maxMem);
         
-        cmdList.add("-cp");
-        cmdList.add(getClassPath());
-
+        String cpath = getClassPath();
+        if (cpath != null && ! cpath.trim().isEmpty()) {
+            cmdList.add("-cp");
+            cmdList.add(cpath);
+        }
+        
         List<String> javaAdditional = getListProperty(prop, "wrapper.java.additional");
         cmdList.addAll(javaAdditional);
         
@@ -187,21 +188,13 @@ public class WrapperConfig {
     }
 
     public String getClassPath() {
-        String version = System.getProperty("java.version");
-        boolean expandWildcard = version != null && version.startsWith("1.5");
-
         List<String> cp = getListProperty(prop, "wrapper.java.classpath");
         StringBuilder sb = new StringBuilder(cp.size());
         for (int i = 0; i < cp.size(); i++) {
             if (i > 0) {
                 sb.append(File.pathSeparator);
             }
-            String classPath = cp.get(i);
-            if (expandWildcard) {
-                classPath = expandWildcard(classPath);
-            } else {
-                classPath = classPath.replaceAll("\\*\\.jar", "*");
-            }
+            String classPath = expandWildcard(cp.get(i));
             sb.append(classPath);
         }
         return sb.toString();
@@ -212,17 +205,14 @@ public class WrapperConfig {
         if (index != -1) {
             String dirName = classPath.substring(0, index);
             File dir = new File(dirName);
-            File[] files = dir.listFiles(new FilenameFilter() {
-                public boolean accept(File dir, String name) {
-                    return name.endsWith(".jar") || name.endsWith(".JAR");
-                }
-            });
+            List<File> files = asList(dir.listFiles((directory, name) -> name.endsWith(".jar") || name.endsWith(".JAR")));
+            files.sort((f1, f2) -> f1.getName().compareTo(f2.getName()));
             StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < files.length; i++) {
+            for (int i = 0; i < files.size(); i++) {
                 if (i > 0) {
                     sb.append(File.pathSeparator);
                 }
-                sb.append(dirName).append(files[i].getName());
+                sb.append(dirName).append(files.get(i).getName());
             }
             classPath = sb.toString();
         }

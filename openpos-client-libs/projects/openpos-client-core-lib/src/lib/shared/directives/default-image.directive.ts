@@ -1,5 +1,5 @@
 import { Directive, HostListener, Input, HostBinding, Inject, forwardRef } from '@angular/core';
-import { PersonalizationService } from '../../core/personalization/personalization.service';
+import { DiscoveryService } from '../../core/discovery/discovery.service';
 
 
 @Directive({
@@ -10,7 +10,7 @@ export class DefaultImageDirective {
     @HostBinding('src') src: string;
     @Input() default: string;
 
-    constructor(@Inject(forwardRef(() => PersonalizationService))private personalization: PersonalizationService) {
+    constructor(@Inject(forwardRef(() => DiscoveryService))private discovery: DiscoveryService) {
 
     }
     @HostListener('error')
@@ -19,7 +19,7 @@ export class DefaultImageDirective {
     }
 
     private makeUrl(imgPath: string): string {
-        return `${this.personalization.getServerBaseURL()}/img/${imgPath}`;
+        return `${this.discovery.getServerBaseURL()}/img/${imgPath}`;
     }
 
 }

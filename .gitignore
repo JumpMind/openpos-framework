@@ -83,3 +83,4 @@ openpos-test-server/test-server/test-server.iml
 **/coverage/
 openpos-symds/nu-symds.iml
 openpos-symds/openpos-symds.iml
+openpos-management-server/openpos-management-server.iml

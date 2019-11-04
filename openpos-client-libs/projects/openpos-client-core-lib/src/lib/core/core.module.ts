@@ -1,4 +1,3 @@
-import {DEFAULT_RESPONSIVE_MAP} from './default-responsive-map';
 import {ConsoleScannerPlugin} from './platform-plugins/scanners/console-scanner/console-scanner.plugin';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
@@ -123,8 +122,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         KeyPressProvider,
         { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
         { provide: LOGGERS, useExisting: ElectronLogger, multi: true },
-        { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true },
-        { provide: DEFAULT_RESPONSIVE_MAP, useValue: new Map([['xs', 'mobile'],['sm', 'mobile'],['md', 'tablet'],['lg', 'desktop'],['xl', 'desktop']])}
+        { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true }
     ]
 })
 export class CoreModule {

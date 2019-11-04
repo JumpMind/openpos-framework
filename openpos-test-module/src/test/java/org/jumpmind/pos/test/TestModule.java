@@ -28,7 +28,7 @@ public class TestModule extends AbstractRDBMSModule {
     public String getName() {
         return NAME;
     }
-    
+
     public void setDynamicVersion(String dynamicVersion) {
         this.dynamicVersion = dynamicVersion;
     }
@@ -50,8 +50,8 @@ public class TestModule extends AbstractRDBMSModule {
 
     @Override
     @Bean(name = NAME + "TxManager")
-    protected PlatformTransactionManager txManager() {
-        return super.txManager();
+    public PlatformTransactionManager getPlatformTransactionManager() {
+        return super.getPlatformTransactionManager();
     }
 
     @Override
@@ -63,8 +63,8 @@ public class TestModule extends AbstractRDBMSModule {
 
     @Override
     @Bean(name = NAME + "DataSource")
-    protected DataSource dataSource() {
-        return super.dataSource();
+    public DataSource getDataSource() {
+        return super.getDataSource();
     }
 
     @Override
@@ -75,8 +75,8 @@ public class TestModule extends AbstractRDBMSModule {
 
     @Override
     @Bean(name = NAME + "Session")
-    protected DBSession session() {
-        return super.session();
+    public DBSession getDBSession() {
+        return super.getDBSession();
     }
 
 }

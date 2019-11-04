@@ -21,6 +21,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.remoting.RemoteAccessException;
 import org.springframework.remoting.rmi.RmiProxyFactoryBean;
+import org.springframework.util.CollectionUtils;
 
 public abstract class AbstractLegacyStartupService implements ILegacyStartupService {
     private final static Logger logger = LoggerFactory.getLogger(AbstractLegacyStartupService.class);
@@ -82,27 +83,51 @@ public abstract class AbstractLegacyStartupService implements ILegacyStartupServ
 
     @Override
     public void startPreviouslyStarted() {
-        File workingDir = new File(this.getAppWorkingDir());
-        logger.info("The application working directory is set to {}", workingDir.getAbsolutePath());
-        workingDir.mkdirs();
-        if (workingDir.exists()) {
-            File[] files = workingDir.listFiles();
+        // Allow for the case when running under OpenPOS Management Server where 
+        // the app working dir is the device working dir 
+        File appWorkDir = new File(this.getAppWorkingDir());
+        try {
+            appWorkDir = appWorkDir.getCanonicalFile();
+        } catch (IOException ex) {
+            appWorkDir = appWorkDir.getAbsoluteFile();
+        }
+        logger.info("The application working directory is set to {}", appWorkDir.getAbsolutePath());
+        appWorkDir.mkdirs();
+        List<File> deviceWorkingDirs = new ArrayList<>();
+        if (appWorkDir.exists()) {
+            if (Pattern.matches("\\d{5}-\\d{3}[\\\\/]*\\.?$", appWorkDir.getName())) {
+                deviceWorkingDirs.add(appWorkDir);
+            }
+        }
+        
+        if (CollectionUtils.isEmpty(deviceWorkingDirs)) {
+            // This is for the case when running the app standalone without the
+            // OpenPOS Management Server
+            File[] files = appWorkDir.listFiles();
             for (File file : files) {
                 if (file.isDirectory() && Pattern.matches("\\d{5}-\\d{3}", file.getName())) {
                     if (file.list().length > 0) {
-                        String storeId = file.getName().substring(0, 5);
-                        String workstationId = file.getName().substring(6);
-                        if (this.isExternalProcessEnabled()) {
-                            startExternal(file, storeId, workstationId);
-                        } else {
-                            startInternal(file, storeId, workstationId);
-                        }
+                        deviceWorkingDirs.add(file);
                     } else {
                         logger.warn("Found directory that has no children files.  Not starting for {}", file.getName());
                     }
                 }
             }
-        } 
+        }
+        
+        if (! CollectionUtils.isEmpty(deviceWorkingDirs)) {
+            deviceWorkingDirs.forEach( deviceWorkingDir -> { 
+                String storeId = deviceWorkingDir.getName().substring(0, 5);
+                String workstationId = deviceWorkingDir.getName().substring(6);
+                if (this.isExternalProcessEnabled()) {
+                    startExternal(deviceWorkingDir, storeId, workstationId);
+                } else {
+                    startInternal(deviceWorkingDir, storeId, workstationId);
+                }
+            });
+        } else {
+            logger.info("No existing device working dirs found, so device services will not be started at this time.");
+        }
     }
 
     protected void terminate(String nodeId) {
@@ -302,36 +327,36 @@ public abstract class AbstractLegacyStartupService implements ILegacyStartupServ
         return "org.springframework.boot.loader.JarLauncher";
     }
 
-    protected void startInternal(File file, String storeId, String workstationId) {
+    protected void startInternal(File deviceWorkingDir, String storeId, String workstationId) {
         /**
          * Can only have one internal process
          */
         if (translationManagers.size() == 0) {
-            file.mkdirs();
+            deviceWorkingDir.mkdirs();
             String userDir = System.getProperty("user.dir");
-            String currentNodeDirParentName = file.getParentFile().getName();
+            String currentDeviceDirParentName = deviceWorkingDir.getParentFile().getName();
             File appWorkingDir = new File(this.getAppWorkingDir());
             String appDirName = appWorkingDir.getName();
             try {
-                currentNodeDirParentName = file.getParentFile().getCanonicalFile().getName();
+                currentDeviceDirParentName = deviceWorkingDir.getParentFile().getCanonicalFile().getName();
                 appDirName = appWorkingDir.getCanonicalFile().getName();
             } catch (IOException ex) {
                 logger.warn("", ex);
             }
-            if (currentNodeDirParentName.equals(appDirName)) {
-                logger.info("Starting internal process for store: {}, workstation: {} in working dir: {}", storeId, workstationId, userDir);
-                generateStoreProperties(userDir, storeId, workstationId);
-                initOtherHeadlessConfiguration(userDir, storeId, workstationId);
-                this.startHeadless();
-                translationManagers.put(file.getName(), this.createTranslationManagerServer());
-            } else {
-                logger.warn(
-                        "Could not start the internal process for store: {}, workstation: {} because the node working directory needs to be: {}",
-                        storeId, workstationId, this.getAppWorkingDir() + "/" + file.getName());
+            if (! currentDeviceDirParentName.equals(appDirName)) {
+                logger.warn("If you are running the legacy device process standalone and not as a managed OpenPOS process, "
+                        + "the device working directory should be {}. Otherwise, if you are running as a managed OpenPOS process, "
+                        + "please ignore this warning.", this.getAppWorkingDir() + "/" + deviceWorkingDir.getName());
             }
+            
+            logger.info("Starting internal process for store: {}, workstation: {} in working dir: {}", storeId, workstationId, userDir);
+            generateStoreProperties(userDir, storeId, workstationId);
+            initOtherHeadlessConfiguration(userDir, storeId, workstationId);
+            this.startHeadless();
+            translationManagers.put(deviceWorkingDir.getName(), this.createTranslationManagerServer());
         } else {
-            logger.warn("Can only have one translation manager.  Registering {} under {}", file.getName(), translationManagers.keySet().iterator().next());
-            translationManagers.put(file.getName(), translationManagers.values().iterator().next());
+            logger.warn("Can only have one translation manager.  Registering {} under {}", deviceWorkingDir.getName(), translationManagers.keySet().iterator().next());
+            translationManagers.put(deviceWorkingDir.getName(), translationManagers.values().iterator().next());
         }
     }
     

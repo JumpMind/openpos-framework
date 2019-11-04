@@ -5,4 +5,5 @@ export interface PersonalizationResponse {
     message?: string;
     devicePattern?: string;
     parameters?: PersonalizationParameter[];
+    openposManagementServer?: boolean;
 }

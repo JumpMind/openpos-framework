@@ -69,7 +69,7 @@ export class UIDataMessageService {
                   acc.data.push(...curr.data);
                   return acc;
               }
-
+              console.log(`New Series for ${curr.dataType}`)
               // If this data is not part of our series throw away the old accumulation and start a new accumulation
               return curr;
           }),

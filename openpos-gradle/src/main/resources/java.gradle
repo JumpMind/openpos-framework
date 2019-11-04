@@ -62,9 +62,9 @@ repositories {
 jar {
     manifest {
         attributes("Implementation-Title": project.name,
-                "Implementation-Version": project.hasProperty('version') ? version : '0.0',
+                "Implementation-Version": project.hasProperty('version') && version ? version : '0.0',
                 "Project-Artifact": project.name,
-                "Build-Version": project.hasProperty('version') ? version : '0.0',
+                "Build-Version": project.hasProperty('version') && version ? version : '0.0',
                 "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()))
     }
 }
@@ -95,10 +95,12 @@ eclipse {
                 //                 id = 'org.eclipse.ui.ide.multiFilter'
                 //                 arguments = '1.0-projectRelativePath-matches-false-false-bin'
                 //               }
+                /*
                 matcher {
                     id = 'org.eclipse.ui.ide.multiFilter'
                     arguments = '1.0-projectRelativePath-matches-false-false-build'
                 }
+                */
                 matcher {
                     id = 'org.eclipse.ui.ide.multiFilter'
                     arguments = '1.0-name-matches-false-false-*.class'

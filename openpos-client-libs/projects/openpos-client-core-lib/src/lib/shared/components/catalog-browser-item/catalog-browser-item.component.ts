@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, Inject, forwardRef } from '@angular/core';
 import { Subject } from 'rxjs';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
+import { DiscoveryService } from '../../../core/discovery/discovery.service';
 import { IUrlMenuItem } from '../../../core/actions/url-menu-item.interface';
-import { PersonalizationService } from '../../../core/personalization/personalization.service';
 
 @Component({
     selector: 'app-catalog-browser-item',
@@ -23,7 +23,7 @@ export class CatalogBrowserItemComponent implements OnInit {
 
     // @ViewChild('itemImg') itemImage: Element;
 
-    constructor(@Inject(forwardRef(() => PersonalizationService))private personalization: PersonalizationService) {
+    constructor(@Inject(forwardRef(() => DiscoveryService))private discovery: DiscoveryService) {
     }
 
     ngOnInit(): void {
@@ -32,7 +32,7 @@ export class CatalogBrowserItemComponent implements OnInit {
         if (this.loadFailImgSrc) {
             this._loadFailImgSrcUrl = this.loadFailImgSrc;
             if (! this.loadFailImgSrc.startsWith('http')) {
-                this._loadFailImgSrcUrl = `${this.personalization.getServerBaseURL()}/${this.loadFailImgSrc}`;
+                this._loadFailImgSrcUrl = `${this.discovery.getServerBaseURL()}/${this.loadFailImgSrc}`;
             }
         }
 

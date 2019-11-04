@@ -1,0 +1,4 @@
+rootProject.name = 'openpos-management-server'
+
+// Adds Maven BOM (Bill of Materials) support, used by Spring Boot plugin
+enableFeaturePreview('IMPROVED_POM_SUPPORT')

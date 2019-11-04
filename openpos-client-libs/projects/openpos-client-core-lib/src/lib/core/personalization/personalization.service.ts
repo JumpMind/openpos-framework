@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { PersonalizationResponse } from './personalization-response.interface';
 import { Observable, BehaviorSubject } from 'rxjs';
 
@@ -7,6 +7,7 @@ import { Observable, BehaviorSubject } from 'rxjs';
     providedIn: 'root',
 })
 export class PersonalizationService {
+    static readonly OPENPOS_MANAGED_SERVER_PROPERTY = 'managedServer';
 
     private serverBaseUrl: string;
     private serverBaseUrl$ = new BehaviorSubject<string>(this.getServerBaseURL());
@@ -108,6 +109,10 @@ export class PersonalizationService {
         }
         url = url + '/api/websocket';
         return url;
+    }
+
+    public isManagedServer(): boolean {
+        return 'true' === localStorage.getItem(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY);
     }
 
     public isSslEnabled(): boolean {
