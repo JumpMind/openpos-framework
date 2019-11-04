@@ -30,6 +30,7 @@ public class SellItem extends DefaultItem {
     private boolean isQuantityChangeable;
     private boolean isOrderItem = false;
     private List<AdditionalLabel> additionalLabels = new ArrayList<>();
+    private List<AdditionalLabel> returnItemLabels;
     private String imageUrl;
     private String optionsLabel;
 
@@ -211,6 +212,21 @@ public class SellItem extends DefaultItem {
 
     public void addAdditionalLabel(String label, String value) {
         this.additionalLabels.add(new AdditionalLabel(label, value));
+    }
+
+    public List<AdditionalLabel> getReturnItemLabels() {
+        return returnItemLabels;
+    }
+
+    public void setReturnItemLabels(List<AdditionalLabel> returnItemLabels) {
+        this.returnItemLabels = returnItemLabels;
+    }
+
+    public void addReturnItemLabel(String label, String value) {
+        if(this.returnItemLabels == null) {
+            this.returnItemLabels = new ArrayList<>();
+        }
+        this.returnItemLabels.add(new AdditionalLabel(label, value));
     }
 
     public String getImageUrl() {
