@@ -1,5 +1,7 @@
 package org.jumpmind.pos.management;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -29,10 +31,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class OpenposLoadProdPropertiesTest {
     @Value("${openpos.managementServer.testProperty1}")
     String testProperty;
+
+    // This property is intentionally not defined in the prod profile
+    @Value("${openpos.managementServer.testProperty2Encrypted:#{null}}")
+    String testPropertyEncrypted;
     
     @Test
     public void checkProdProperty() {
         assertThat(testProperty).isEqualTo("prod-value");
     }
+    
+    @Test
+    public void checkNonExistentEncryptedProperty() {
+        assertThat(testPropertyEncrypted).isNull();
+    }
+    
+    @BeforeClass
+    public static void beforeClass() {
+        System.setProperty("jasypt.encryptor.password", EncryptionTestConstants.ENCRYPTOR_PASSWORD);
+        System.setProperty("jasypt.encryptor.algorithm", EncryptionTestConstants.ENCYPTION_ALGORITHM);
+    }
+    
+    @AfterClass
+    public static void afterClass() {
+        System.setProperty("jasypt.encryptor.password", "");
+        System.setProperty("jasypt.encryptor.algorithm", "");
+    }
+    
     
 }
