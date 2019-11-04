@@ -27,7 +27,7 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
             ['lg', false],
             ['xl', false]
         ]);
-        this.isMobile$ = mediaService.mediaObservableFromMap(mobileMap);;
+        this.isMobile$ = mediaService.mediaObservableFromMap(mobileMap);
     }
 
     screenDataUpdated() {
