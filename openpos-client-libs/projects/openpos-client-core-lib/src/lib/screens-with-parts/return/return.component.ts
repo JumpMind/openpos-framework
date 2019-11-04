@@ -11,6 +11,7 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { ITransactionReceipt } from '../../shared/components/receipt-card/transaction-receipt.interface';
+import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 
 /**
  * @ignore
@@ -25,6 +26,8 @@ import { ITransactionReceipt } from '../../shared/components/receipt-card/transa
 })
 export class ReturnComponent extends PosScreen<any> implements AfterViewInit, AfterViewChecked, OnInit {
 
+    isMobile: Observable<boolean>;
+
     @ViewChild('scrollList') private scrollList: ElementRef;
     public size = -1;
     initialized = false;    // listData: Observable<ISelectableListData<ISellItem>>;
@@ -37,9 +40,16 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     public receipts: ITransactionReceipt[];
     public removeReceiptAction: IActionItem;
 
-    constructor(
-        private observableMedia: ObservableMedia, protected dialog: MatDialog, injector: Injector) {
+    constructor(private observableMedia: ObservableMedia, protected dialog: MatDialog, injector: Injector,  media: OpenposMediaService) {
         super(injector);
+        this.isMobile = media.observe(new Map([
+            [MediaBreakpoints.MOBILE_PORTRAIT, true],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, false],
+            [MediaBreakpoints.TABLET_PORTRAIT, true],
+            [MediaBreakpoints.TABLET_LANDSCAPE, false],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
+        ]));
     }
 
     buildScreen() {
