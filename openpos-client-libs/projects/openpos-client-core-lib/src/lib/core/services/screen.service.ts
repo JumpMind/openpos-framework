@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { SessionService } from './session.service';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
+import { DiscoveryService } from '../discovery/discovery.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,9 +13,10 @@ export class ScreenService {
 
     static screens = new Map<string, Type<IScreen>>();
 
-    constructor(    private componentFactoryResolver: ComponentFactoryResolver, private http: HttpClient,
-                    private personalization: PersonalizationService,
-                    private session: SessionService) { }
+    constructor(private componentFactoryResolver: ComponentFactoryResolver, private http: HttpClient,
+        private personalization: PersonalizationService,
+        private session: SessionService,
+        private discovery: DiscoveryService) { }
 
     public addScreen(name: string, type: Type<IScreen>): void {
         if (type === null) {
@@ -50,7 +52,7 @@ export class ScreenService {
     }
 
     public getFieldValues(fieldId: string, searchTerm?: string): Observable<any> {
-        const url: string = this.personalization.getApiServerBaseURL() + '/app/'
+        const url: string = this.discovery.getApiServerBaseURL() + '/app/'
             + this.session.getAppId() + '/node/'
             + this.personalization.getDeviceId() + '/control/'
             + fieldId;

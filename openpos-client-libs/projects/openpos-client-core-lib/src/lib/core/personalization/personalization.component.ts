@@ -5,6 +5,9 @@ import { PersonalizationService } from './personalization.service';
 import { PersonalizationResponse } from './personalization-response.interface';
 import { ClientUrlService } from './client-url.service';
 import { MatDialog } from '@angular/material';
+import { DiscoveryService } from '../discovery/discovery.service';
+import { DiscoveryStatus } from '../discovery/discovery-status.enum';
+import { DiscoveryResponse } from '../discovery/discovery-response.interface';
 
 @Component({
     selector: 'app-personalization',
@@ -13,9 +16,13 @@ import { MatDialog } from '@angular/material';
 export class PersonalizationComponent implements IScreen, OnInit {
 
     navigateExternal = false;
+    openposMgmtServerPresent = false;
+    discoveryStatus: DiscoveryStatus;
+    discoveryResponse: DiscoveryResponse;
 
     firstFormGroup: FormGroup;
     secondFormGroup: FormGroup;
+    thirdFormGroup: FormGroup;
     lastFormGroup: FormGroup;
     clientResponse: any;
     serverResponse: PersonalizationResponse;
@@ -25,6 +32,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
     constructor(
         private formBuilder: FormBuilder, private clientUrlService: ClientUrlService,
         private personalizationService: PersonalizationService,
+        private discoveryService: DiscoveryService,
         private matDialog: MatDialog
     ) { }
 
@@ -51,23 +59,37 @@ export class PersonalizationComponent implements IScreen, OnInit {
                 sslEnabled: ['']
             }, { asyncValidator: this.serverValidator });
 
+            this.updateThirdFormGroup();
             this.updateLastFormGroup();
         }
     }
 
-    updateLastFormGroup() {
+    updateThirdFormGroup() {
         let devicePattern = '[a-zA-Z0-9\-]+';
-        if (this.serverResponse && this.serverResponse.devicePattern) {
-            devicePattern = this.serverResponse.devicePattern;
+        this.openposMgmtServerPresent = false;
+        if (this.serverResponse) {
+            if (this.serverResponse.devicePattern) {
+                devicePattern = this.serverResponse.devicePattern;
+            }
+            this.openposMgmtServerPresent = !!this.serverResponse.openposManagementServer;
         }
+
         const formGroup = {
             deviceId: ['', [Validators.required, , Validators.pattern(devicePattern)]]
         };
 
+        this.thirdFormGroup = this.formBuilder.group(formGroup);
+    }
+
+    updateLastFormGroup() {
+        const formGroup = {
+        };
         if (this.serverResponse) {
             const validator = [Validators.required, , Validators.pattern('[a-zA-Z0-9]+')];
-            for (const prop of this.serverResponse.parameters) {
-                formGroup[prop.property] = [prop.defaultValue, validator];
+            if (this.serverResponse.parameters) {
+                for (const prop of this.serverResponse.parameters) {
+                    formGroup[prop.property] = [prop.defaultValue, validator];
+                }
             }
         }
 
@@ -84,7 +106,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
         const serverPort = this.secondFormGroup.get('serverPort').value;
         const serverSslEnabled = this.secondFormGroup.get('sslEnabled').value;
 
-        const deviceId = this.lastFormGroup.get('deviceId').value;
+        const deviceId = this.thirdFormGroup.get('deviceId').value;
 
         const personalizationProperties = new Map<string, string>();
         if (this.serverResponse && this.serverResponse.parameters) {
@@ -104,8 +126,78 @@ export class PersonalizationComponent implements IScreen, OnInit {
                 personalizationProperties.set(parameter.property, this.lastFormGroup.get(parameter.property).value);
             }
         }
-        this.personalizationService.personalize(this.secondFormGroup.get('serverName').value, this.secondFormGroup.get('serverPort').value,
-            this.lastFormGroup.get('deviceId').value, personalizationProperties, this.secondFormGroup.get('sslEnabled').value);
+
+        let server = this.secondFormGroup.get('serverName').value;
+        let port = this.secondFormGroup.get('serverPort').value;
+        if (this.openposMgmtServerPresent && this.discoveryResponse && this.discoveryResponse.success) {
+            personalizationProperties.set(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY, 'true');
+        }
+
+        this.personalizationService.personalize(
+            server, 
+            port,
+            this.thirdFormGroup.get('deviceId').value, 
+            personalizationProperties, 
+            this.secondFormGroup.get('sslEnabled').value
+        );
+    }
+
+    public discoveryBack() {
+        this.discoveryResponse = null;
+        this.discoveryStatus = null;
+    }
+
+    isDiscoveryCompleted(): boolean {
+        return this.discoveryStatus === DiscoveryStatus.Completed;
+    }
+    isDiscoveryInProgress(): boolean {
+        return this.discoveryStatus === DiscoveryStatus.InProgress
+    }
+    public discoveryCompleted() {
+        this.discoveryStatus = DiscoveryStatus.Completed;
+    }
+
+    public getDiscoveryResponseErrorMessage(): string {
+        return (typeof this.discoveryResponse.message === 'string') ? 
+            this.discoveryResponse.message : 
+            JSON.stringify(this.discoveryResponse.message);
+    }
+
+    public async discover() {
+        if (this.openposMgmtServerPresent) {
+            this.discoveryStatus = DiscoveryStatus.InProgress;
+
+            this.discoveryResponse = await this.discoveryService.discoverDeviceProcess({
+                server: this.secondFormGroup.get('serverName').value,
+                port: this.secondFormGroup.get('serverPort').value, 
+                deviceId: this.thirdFormGroup.get('deviceId').value,
+                sslEnabled: this.secondFormGroup.get('sslEnabled').value,
+                maxWaitMillis: 90000
+            });
+            if (this.discoveryResponse && this.discoveryResponse.success) {
+                this.serverResponse = await this.personalizationService.requestPersonalization(
+                    this.discoveryResponse.host, 
+                    this.discoveryResponse.port,
+                    this.secondFormGroup.get('sslEnabled').value
+                );
+                if (this.serverResponse.success) {
+                    this.updateLastFormGroup();
+                    this.discoveryStatus = DiscoveryStatus.Completed;
+                } else {
+                    this.discoveryStatus = DiscoveryStatus.Failed;
+                    this.discoveryResponse.success = false;
+                    this.discoveryResponse.message = `Personalization request failed with error: ${this.serverResponse.message}`;
+                    console.warn(this.discoveryResponse.message);
+                }
+            } else {
+                this.discoveryStatus = DiscoveryStatus.Failed;
+            }
+        } else {
+            // If we haven't connected to an openpos mgmt server, we'll
+            // already have the personalization properties config and can
+            // now display them.
+            this.updateLastFormGroup();
+        }
     }
 
     public personalize() {
@@ -142,6 +234,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
         });
     }
 
+
     serverValidator = async (control: AbstractControl) => {
         clearTimeout(this.serverTimeout);
         const serverName = control.get('serverName').value;
@@ -152,6 +245,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
             this.serverTimeout = setTimeout(async () => {
                 this.serverResponse = await this.personalizationService.requestPersonalization(serverName, serverPort, sslEnabled);
                 if (this.serverResponse.success) {
+                    this.updateThirdFormGroup();
                     this.updateLastFormGroup();
                     resolve(null);
                 } else {

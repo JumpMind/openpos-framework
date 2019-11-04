@@ -6,11 +6,14 @@ import { PersonalizationService } from '../personalization/personalization.servi
 import { CordovaService } from './cordova.service';
 import { Subscription } from 'rxjs';
 import { FileChunkReader } from './../../shared/utils/filechunkreader';
+import { DiscoveryService } from '../discovery/discovery.service';
 @Injectable({
     providedIn: 'root',
   })
 export class FileUploadService {
-    constructor(private cordovaService: CordovaService, private personalization: PersonalizationService, private httpClient: HttpClient) {
+    constructor(private cordovaService: CordovaService,
+                private personalization: PersonalizationService, private httpClient: HttpClient,
+                private discovery: DiscoveryService) {
     }
 
     public async uploadLocalDeviceFileToServer(context: string, filename: string, contentType: string, filepath: string):
@@ -128,7 +131,7 @@ export class FileUploadService {
     }
 
     protected getUploadServiceUrl(): string {
-        const url = `${this.personalization.getServerBaseURL()}/fileupload/uploadToNode`;
+        const url = `${this.discovery.getServerBaseURL()}/fileupload/uploadToNode`;
         return url;
     }
 

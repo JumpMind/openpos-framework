@@ -92,7 +92,7 @@ public class SymDSModule extends AbstractRDBMSModule {
             properties.put(ParameterConstants.SYNC_URL, syncUrl);
         }
 
-        serverEngine = new ServerSymmetricEngine(dataSource(), applicationContext, properties, true, holder);
+        serverEngine = new ServerSymmetricEngine(getDataSource(), applicationContext, properties, false, holder);
         serverEngine.getExtensionService().addExtensionPoint(new DatabaseWriterFilterAdapter() {
             @Override
             public void batchCommitted(DataContext context) {
@@ -204,8 +204,8 @@ public class SymDSModule extends AbstractRDBMSModule {
 
     @Override
     @Bean(name = NAME + "TxManager")
-    protected PlatformTransactionManager txManager() {
-        return super.txManager();
+    public PlatformTransactionManager getPlatformTransactionManager() {
+        return super.getPlatformTransactionManager();
     }
 
     @Override
@@ -217,8 +217,8 @@ public class SymDSModule extends AbstractRDBMSModule {
 
     @Override
     @Bean(name = NAME + "DataSource")
-    protected DataSource dataSource() {
-        return super.dataSource();
+    public DataSource getDataSource() {
+        return super.getDataSource();
     }
 
     @Override
@@ -229,8 +229,8 @@ public class SymDSModule extends AbstractRDBMSModule {
 
     @Override
     @Bean(name = NAME + "Session")
-    protected DBSession session() {
-        return super.session();
+    public DBSession getDBSession() {
+        return super.getDBSession();
     }
 
     static class MonitorFilter extends DatabaseWriterFilterAdapter implements IDatabaseWriterErrorHandler {

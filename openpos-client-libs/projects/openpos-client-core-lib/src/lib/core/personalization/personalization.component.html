@@ -58,27 +58,54 @@
                 </div>
             </form>
         </mat-step>
-        <mat-step [stepControl]="lastFormGroup">
-            <form *ngIf="lastFormGroup" [formGroup]="lastFormGroup">
+        <mat-step [stepControl]="thirdFormGroup">
+            <form *ngIf="thirdFormGroup" [formGroup]="thirdFormGroup">
                 <ng-template matStepLabel>Enter device information</ng-template>
                 <mat-form-field>
                     <input matInput placeholder="Device ID" formControlName="deviceId" required novalidate
                         pattern="[a-zA-Z0-9\-]+">
                 </mat-form-field>
+                <div class="warn"
+                    *ngIf="thirdFormGroup.get('deviceId').errors && thirdFormGroup.get('deviceId').errors.pattern">
+                    The Device ID must match openpos.ui.personalization.devicePattern
+                </div>
+                <div>
+                    <button mat-button matStepperPrevious>Back</button>
+                    <button mat-button matStepperNext color='primary'>Next</button>
+                </div>
+            </form>                        
+        </mat-step>
 
+        <mat-step *ngIf="openposMgmtServerPresent" [completed]="isDiscoveryCompleted()">
+            <ng-template matStepLabel>Server discovery</ng-template>
+            <div *ngIf="! isDiscoveryInProgress() && ! discoveryResponse">
+                Press <span style="font-style: italic">Discover</span> to attempt server discovery for device '{{thirdFormGroup.get('deviceId').value}}'
+            </div>
+            <div *ngIf="isDiscoveryInProgress() && ! discoveryResponse">
+                Discovering server for device '{{thirdFormGroup.get('deviceId').value}}', please wait...
+            </div>
+            <div *ngIf="! isDiscoveryInProgress() && discoveryResponse && ! discoveryResponse.success" class="warn">
+                Discovery failed. Reason: {{getDiscoveryResponseErrorMessage()}}
+            </div>
+            <div *ngIf="! isDiscoveryInProgress() && discoveryResponse?.success">
+                Server discovered at {{discoveryResponse.host}}:{{discoveryResponse.port}}. Press Next.
+            </div>
+            <div>
+                <button mat-button matStepperPrevious (click)="discoveryBack()">Back</button>
+                <button *ngIf="! discoveryResponse" mat-button matStepperNext color='primary' 
+                    [disabled]="isDiscoveryInProgress()" (click)="discover()">Discover</button>
+                <button *ngIf="discoveryResponse?.success" mat-button matStepperNext color='primary'>Next</button>
+            </div>
+        </mat-step>
+
+        <mat-step [stepControl]="lastFormGroup">
+            <ng-template matStepLabel>Additional configuration</ng-template>
+            <form *ngIf="lastFormGroup" [formGroup]="lastFormGroup">
                 <ng-container *ngIf="serverResponse && serverResponse.parameters">
                     <mat-form-field *ngFor="let prop of serverResponse.parameters">
                         <input matInput placeholder="{{prop.label}}" formControlName="{{prop.property}}" required
                             novalidate pattern="[a-zA-Z0-9]*">
                     </mat-form-field>
-                </ng-container>
-
-                <div class="warn"
-                    *ngIf="lastFormGroup.get('deviceId').errors && lastFormGroup.get('deviceId').errors.pattern">
-                    The Device ID must match openpos.ui.personalization.devicePattern
-                </div>
-
-                <ng-container *ngIf="serverResponse && serverResponse.parameters">
                     <ng-container *ngFor="let prop of serverResponse.parameters">
                         <div class="warn"
                             *ngIf="lastFormGroup.get(prop.property).errors && lastFormGroup.get(prop.property).errors.pattern">
@@ -86,6 +113,7 @@
                         </div>
                     </ng-container>
                 </ng-container>
+        
                 <div>
                     <button mat-button matStepperPrevious>Back</button>
                     <button mat-button matStepperNext color='primary'>Next</button>

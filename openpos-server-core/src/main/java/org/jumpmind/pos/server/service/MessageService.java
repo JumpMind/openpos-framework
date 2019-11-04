@@ -60,14 +60,14 @@ public class MessageService implements IMessageService {
             mapper.setSerializationInclusion(Include.NON_NULL);
         }
     }
-
+    
     @RequestMapping(method = RequestMethod.GET, value = "ping", produces="application/json")
     @ResponseBody
     public String ping() {
         logger.info("Received a ping request");
         return "{ \"pong\": \"true\" }";
     }
-    
+
     @RequestMapping(method = RequestMethod.GET, value = "personalize", produces = "application/json")
     @ResponseBody
     public String personalize() {

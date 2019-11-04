@@ -139,21 +139,18 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         }
     }
 
-    protected PlatformTransactionManager txManager() {
+
+    @Override
+    public PlatformTransactionManager getPlatformTransactionManager() {
         if (txManager == null) {
-            this.txManager = new DataSourceTransactionManager(dataSource());
+            this.txManager = new DataSourceTransactionManager(getDataSource());
         }
         return txManager;
     }
 
-    @Override
-    public PlatformTransactionManager getPlatformTransactionManager() {
-        return txManager();
-    }
-
     protected IDatabasePlatform databasePlatform() {
         if (databasePlatform == null) {
-            databasePlatform = JdbcDatabasePlatformFactory.createNewPlatformInstance(dataSource(), new SqlTemplateSettings(), false, false);
+            databasePlatform = JdbcDatabasePlatformFactory.createNewPlatformInstance(getDataSource(), new SqlTemplateSettings(), false, false);
         }
         return databasePlatform;
     }
@@ -180,7 +177,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         return env.getProperty(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName());
     }
 
-    protected DataSource dataSource() {
+    @Override
+    public DataSource getDataSource() {
         if (dataSource == null) {
             setupH2Server();
             if (this.dataSourceBeanName != null) {
@@ -223,11 +221,6 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         return dataSource;
     }
 
-    @Override
-    public DataSource getDataSource() {
-        return dataSource();
-    }
-
     protected DBSessionFactory sessionFactory() {
         if (sessionFactory == null) {
             Driver.register(null); // Load openpos driver wrapper.
@@ -246,7 +239,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             sessionContext.put(DBSession.JDBC_FETCH_SIZE, env.getProperty(DBSession.JDBC_FETCH_SIZE));
             sessionContext.put(DBSession.JDBC_QUERY_TIMEOUT, env.getProperty(DBSession.JDBC_QUERY_TIMEOUT));
 
-            sessionFactory.init(databasePlatform(), sessionContext, tableClasses, tagHelper);
+            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tagHelper);
 
         }
 
@@ -255,7 +248,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public void initialize() {
-        updateDataModel(session());
+        updateDataModel(getDBSession());
     }
 
     public void exportData(String format, String dir, boolean includeModuleTables) {
@@ -289,7 +282,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         log.info("The previous version of {} was {} and the current version is {}", getName(), fromVersion, getVersion());
 
         DatabaseScriptContainer scripts = new DatabaseScriptContainer(String.format("%s/sql/%s", getName(), sqlScriptProfile),
-                databasePlatform());
+                getDatabasePlatform());
 
         IDBSchemaListener schemaListener = getDbSchemaListener();
 
@@ -307,18 +300,14 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         String path = "/" + getName() + "-schema.xml";
         URL resource = getClass().getResource(path);
         if (resource != null) {
-            ConfigDatabaseUpgrader databaseUpgrade = new ConfigDatabaseUpgrader(path, databasePlatform(), true, "");
+            ConfigDatabaseUpgrader databaseUpgrade = new ConfigDatabaseUpgrader(path, getDatabasePlatform(), true, "");
             databaseUpgrade.upgrade();
         }
     }
 
-    protected DBSession session() {
-        return sessionFactory().createDbSession();
-    }
-
     @Override
     public DBSession getDBSession() {
-        return session();
+        return sessionFactory().createDbSession();
     }
 
     protected IDBSchemaListener getDbSchemaListener() {

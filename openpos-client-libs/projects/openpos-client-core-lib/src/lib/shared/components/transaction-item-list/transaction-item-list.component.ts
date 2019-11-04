@@ -61,6 +61,10 @@ export class TransactionItemListComponent implements AfterViewChecked {
     }
   }
 
+  public menuItemLabel() : string {
+    return `${this.selectedItems.length} Item${this.selectedItems.length === 1 ? '' : 's'}  Selected`;
+  }
+
   ngAfterViewChecked() {
     if (this.listConfig && this.listConfig.totalNumberOfItems && this.size !== this.listConfig.totalNumberOfItems) {
       this.scrollToBottom();

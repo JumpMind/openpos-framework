@@ -1,0 +1,201 @@
+openpos:
+  managementServer:
+    # Main working directory for the OpenPOS Management Server.  Child OpenPOS
+    # device processes will each have their own working dirs that will be subdirs
+    # of this dir.
+    mainWorkDirPath: ./openpos_work
+    
+    
+    clientConnect:
+      # If specified, will override the default host name as calculated by 
+      # org.jumpmind.pos.util.NetworkUtils#getNetworkHostname()
+      # This hostname value is used for return in the clientConnect URLs.
+      hostname:
+      webServiceBaseUrlTemplate: http://$host:$port
+      secureWebServiceBaseUrlTemplate: https://$host:$port
+      webSocketBaseUrlTemplate: ws://$host:$port/api/websocket
+      secureWebSocketBaseUrlTemplate: wss://$host:$port/api/websocket
+      
+    # This should be the same value as found in the application properties
+    # for the managed OpenPOS process as defined by property
+    # openpos.ui.personalization.devicePattern
+    devicePattern:
+    # URL template for the Status webservice of the child OpenPOS device processes.
+    # The port number will be different for each child process.    
+    statusUrlTemplate: http://localhost:%d/status
+
+    # Maximum time to wait for a Status webservice call to a child OpenPOS device
+    # process to return
+    statusMaxWaitMillis: 1000 
+
+    # Amount of time to check the status of child OpenPOS device process in order to
+    # confirm status and also evict dead Device Process entries 
+    # (i.e., having status of StartupFailed) from it's cache
+    # statusCheckPeriodMillis: 2500
+    
+    # Amount of time in milliseconds that a Device Process which failed to start up
+    # will be retained in the Management Server's internal cache before it is
+    # kicked out. If startup fails for the process, it cannot be started again 
+    # until after this quiet period.
+    failedStartupProcessRetentionPeriodMillis: 30000
+    
+# TODO:    lazyDeviceProcessLaunch: true
+# processTrackingFilename: .openpos_processes
+    defaultDeviceProcessConfig:
+      # appId should only be populated for selectorDeviceProcessConfigs
+      # in order to support different Device Process configurations per
+      # application
+      appId:
+      # Uses Spring Resource loading mechanism to locate a Groovy script file to 
+      # execute when the working directory for the device process is first created. 
+      # This allows for any initialization code to be run before the device process 
+      # is launched for the first time. An example of how to use it would be to 
+      # create a script to copy configuration files into the device working directory.
+      #
+      # Variables that will be available to the script are as follows:
+      #   deviceId:   A String that is identifier of the device
+      #   workingDir: A File object that is the working directory of the device
+      #   config:     A OpenposManagementServerConfig object which contains the
+      #                 property values from this yaml file or their overrides.
+      #   log:        A logger refernce for logging messages in the OpenposManagementServer 
+      #                 log
+      #  
+      # Example value: file:c:/scripts/DeviceProcessInitialize.groovy
+      initializationScript:
+    
+      # Maximum time a client request to start a child OpenPOS device process will
+      # but put on hold while waiting for the process to finish starting.
+      startMaxWaitMillis: 45000
+  
+      # The name for the logfile that will be created in the working directory for
+      # the device process.  stderr and stdout for the process is redirected into
+      # this file.
+      processLogFilePath: logs/process.log
+  
+      # When the processPort is PROVIDED and this is set to true, the inital port 
+      # number allocated will be retained and re-used for subsequent device process restarts.
+      reuseProcessPortEnabled: false
+
+      # Amount of time in millisecs that the management server will retain a NotRunning
+      # (unresponsive) Device Process in its internal cache.
+      deadProcessRetentionPeriodMillis: 120000
+      
+      # Either an executableConfig or a javaExecutableConfig section should be
+      # populated, but not both. If both are populated, executableConfig will
+      # be chosen.  If executablePath is empty, then the javaExectuableConfig will
+      # be used.
+      executableConfig:
+        # Full path to the executable to launch, not including arguments. Any
+        # occurrences of the string '$deviceId' in the path will be replaced with 
+        # the Device ID. 
+        executablePath:
+        # The list of arguments to pass to the executable.
+        arguments: []
+        
+        # The Spring Boot server.port value to assign to the launched process. If 
+        # only one process, this can just be an integer.  If launching multiple 
+        # processes, this can be:
+        #   AUTO
+        #       Which indicates that a port number should be automatically and randomly 
+        #       allocated between the values of 1024 and 65535
+        #   range-1,range-2,...,range-n
+        #       Which is a comma separated list of integer port number values OR 
+        #       ranges that will restrict the pool of port numbers that will be attempted to
+        #       be assigned to the process.
+        #   PROVIDED
+        #       Indicates the port number will be provided by the initializationScript
+        #       and supplied through an output binding variable named 'processPort'. 
+        #       If the processPort variable is found in the binding, its value
+        #       will be used in the statusUrlTemplate and other url template values 
+        #       such as webServiceBaseUrlTemplate, etc.
+        processPort:
+        
+        # When a value is set, the management server will run this command upon
+        # shutdown in order to kill the Device process instead of attempting to 
+        # kill the process specified by executablePath. Any occurrences of the 
+        # string '$deviceId' in the path will be replaced with the Device ID. 
+        shutdownExecutablePath:
+        # This list of arguments to pass to the shutdown executable.
+        shutdownCommandArguments: []
+        
+      javaExecutableConfig:
+        # Full path to Java executable that will be used to launch a device process.
+        # Can be a full path such as C:\Program Files\Java\jdk1.8.0_65\bin\java or
+        # a spring EL expression such as ${java.home}.  If the path is a directory
+        # and not the actual location of the java executable, the system will
+        # look for a java executable in the given directory and if it is not
+        # found, it will finally look for a java exectuable in a subdirectory of 
+        # the given directory named 'bin'. 
+        javaExecutablePath: ${java.home}
+        
+        # Sequence of classpath entries to pass to the launched device process.
+        classpathEntries:
+  #        - '.'
+  
+        # Optional sequence of additional Java command line parameters.  You can 
+        # use this for parameters such as min and max memory, system properties, remote
+        # debug settings, etc. E.g.,
+        #  - -Xms1024m
+        #  - -Xmx2048m
+        additionalJavaArguments:
+        
+        # The path to an executable jar file to launch and bind to a given device id.
+        executableJarPath:
+        
+        # If executableJarPath is not specified, then this should specify a 
+        # Java class with a main method to launch and bind to a given device id.
+        # This should be a Spring Boot @SpringBootApplication.
+        mainClass:
+        
+        
+        # The Spring Boot server.port value to assign to the launched process. If 
+        # only one process, this can just be an integer.  If launching multiple 
+        # processes, this can be:
+        #   AUTO
+        #       Which indicates that a port number should be automatically and randomly 
+        #       allocated between the values of 1024 and 65535
+        #   range-1,range-2,...,range-n
+        #       Which is a comma separated list of integer port number values OR 
+        #       ranges that will restrict the pool of port numbers that will be attempted to
+        #       be assigned to the process.
+        #   PROVIDED
+        #       Indicates the port number will be provided by the initializationScript
+        #       and supplied through an output binding variable named 'processPort'. 
+        #       If the processPort variable is found in the binding, its value
+        #       will be used in the statusUrlTemplate and other url template values 
+        #       such as webServiceBaseUrlTemplate, etc.
+        processPort: AUTO
+        
+        # This is the argument that will be appended to the Java process command line
+        # to set the port number of the launched Spring Boot Java process. The %d
+        # parameter in this string will be replaced by the port number
+        processPortArgTemplate: -Dserver.port=%d
+        
+        # Optional sequence of arguments to pass to the processMainClass.  E.g., 
+        # - arg1
+        # - arg2
+        processArguments:
+        
+        
+        # Like the processPort parameter, this can be an integer, range of
+        # values, list of integer values, or AUTO to use for assigning to the JVM process for
+        # purposes of remote debugging. If empty/blank, then remote debugging will
+        # not be enabled.
+        javaRemoteDebugPort:
+  
+        # If processRemoteDebugPort has one or more values, this is the string
+        # that will be appended onto the Java process command line to set the 
+        # debug port.  The %d parameter in this string will be replaced by the debug 
+        # port number.
+        javaRemoteDebugArgTemplate: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%d
+    
+    selectorDeviceProcessConfigs: []
+        # Devices associated with this appId will be mapped to this 
+        # this device process configuration
+        # appId: '.*'
+        # Remainder of options are the same as defaultDeviceProcessConfig
+      
+logging:
+  level:
+    org.jumpmind: INFO
+    
