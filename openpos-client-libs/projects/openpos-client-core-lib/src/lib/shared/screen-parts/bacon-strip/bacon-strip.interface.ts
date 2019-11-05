@@ -1,4 +1,5 @@
 import { IActionItem } from '../../../core/actions/action-item.interface';
+import { SearchExpandInputInterface } from '../../components/search-expand-input/search-expand-input.interface';
 
 export interface BaconStripInterface {
     deviceId: string;
@@ -7,4 +8,5 @@ export interface BaconStripInterface {
     headerIcon: string;
     logo: string;
     actions: IActionItem[];
+    searchBar: SearchExpandInputInterface;
 }
