@@ -4,6 +4,8 @@ import { ScreenPartComponent } from '../screen-part';
 import { Component, ViewChild, Injector } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { HelpTextService } from '../../../core/help-text/help-text.service';
+import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openpos-media.service';
+import { Observable } from 'rxjs';
 
 @ScreenPart({
     name: 'baconStrip'
@@ -21,9 +23,20 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     @ViewChild(MatSidenav)
     baconDrawer: MatSidenav;
 
+    isMobile: Observable<boolean>;
+
     searchExpanded = false;
-    constructor(injector: Injector, public helpTextService: HelpTextService) {
+    constructor(injector: Injector, public helpTextService: HelpTextService, private media: OpenposMediaService) {
         super(injector);
+
+        this.isMobile = media.observe(new Map([
+            [MediaBreakpoints.MOBILE_PORTRAIT, true],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, true],
+            [MediaBreakpoints.TABLET_PORTRAIT, true],
+            [MediaBreakpoints.TABLET_LANDSCAPE, false],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
+        ]));
     }
 
     screenDataUpdated() {
