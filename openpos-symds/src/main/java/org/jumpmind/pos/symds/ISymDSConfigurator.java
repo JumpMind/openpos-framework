@@ -8,5 +8,6 @@ public interface ISymDSConfigurator {
 
     public void beforeCreate(Properties properties);
     public void beforeStart(ISymmetricEngine engine);
+    public String getWebContext();
 
 }

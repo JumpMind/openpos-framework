@@ -185,7 +185,7 @@ public class SymDSModule extends AbstractModule {
 
     @Bean
     public ServletRegistrationBean<SymmetricServlet> symServlet() {
-        ServletRegistrationBean<SymmetricServlet> bean = new ServletRegistrationBean<>(new SymmetricServlet(), "/symds/*");
+        ServletRegistrationBean<SymmetricServlet> bean = new ServletRegistrationBean<>(new SymmetricServlet(), configurators.get(configurators.size()-1).getWebContext());
         bean.setLoadOnStartup(1);
         return bean;
     }

@@ -49,4 +49,9 @@ public class DefaultSymDSConfigurator implements ISymDSConfigurator {
     public void beforeStart(ISymmetricEngine engine) {
 
     }
+
+    @Override
+    public String getWebContext() {
+        return "/symds/*";
+    }
 }
