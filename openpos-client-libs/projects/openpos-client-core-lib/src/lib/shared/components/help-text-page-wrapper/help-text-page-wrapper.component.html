@@ -1,0 +1,15 @@
+<div #helpPageWrapperContainer class="help-page-wrapper-container">
+    <mat-sidenav-container #sidenavContainer >
+        <mat-sidenav #sideNav class="side-nav" #instructions [mode]="getDrawerMode() | async" [position]="position">
+            <div *ngIf="getText() | async as text" class="help-container" klass.xs="xs">
+                <div class="help-controls" [ngClass]="position">
+                    <app-icon-button (click)="close()" iconName="Close"></app-icon-button>
+                </div>
+                <div class="help-text" [innerHtml]= "text | markdownFormatter"></div>
+            </div>
+        </mat-sidenav>
+        <mat-sidenav-content #sidenavContent class="sidenav-content">
+            <ng-content></ng-content>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>

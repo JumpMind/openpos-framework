@@ -16,6 +16,7 @@
 @import './rounded-input/rounded-input-theme';
 @import './mobile-footer/mobile-footer-theme';
 @import './carousel/carousel-theme';
+@import './help-text-page-wrapper/help-text-page-wrapper-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -36,4 +37,5 @@
     @include rounded-input-theme($theme);
     @include mobile-footer-theme($theme);
     @include carousel-theme($theme);
+    @include help-text-page-wrapper-theme($theme);
 }

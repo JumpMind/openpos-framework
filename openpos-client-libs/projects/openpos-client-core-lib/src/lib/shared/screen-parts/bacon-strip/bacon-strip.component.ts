@@ -1,8 +1,9 @@
 import { MatSidenav } from '@angular/material/sidenav';
 import { BaconStripInterface } from './bacon-strip.interface';
 import { ScreenPartComponent } from '../screen-part';
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Injector } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
+import { HelpTextService } from '../../../core/help-text/help-text.service';
 
 @ScreenPart({
     name: 'baconStrip'
@@ -21,6 +22,9 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     baconDrawer: MatSidenav;
 
     searchExpanded = false;
+    constructor(injector: Injector, public helpTextService: HelpTextService) {
+        super(injector);
+    }
 
     screenDataUpdated() {
         if (this.screenData.actions && this.screenData.actions.length == 1) {

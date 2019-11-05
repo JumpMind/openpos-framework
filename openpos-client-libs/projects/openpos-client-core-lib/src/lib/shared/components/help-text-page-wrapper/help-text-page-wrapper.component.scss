@@ -1,0 +1,28 @@
+.sidenav-content {
+    height: 100vh;
+}
+
+.help-container {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 24px;
+    height: 100%;
+    word-break: break-word;
+    &.xs {
+        width: auto;
+    }
+    .help-controls {
+        margin: 10px 0;
+        &.end {
+            align-self: flex-end;
+        }
+        &.start {
+            align-self: flex-start;
+        }
+    }
+    .help-text {
+        height: 100%;
+        overflow-y: scroll;
+    }
+}

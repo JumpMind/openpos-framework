@@ -3,6 +3,8 @@
         <app-icon-button *ngIf="iconButtonName" [iconName]="iconButtonName" iconClass="md"
             (buttonClick)="buttonClick()"></app-icon-button>
         <span>{{screenData.headerText}}</span>
+        <app-icon-button *ngIf="helpTextService.isAvailable() | async" iconName="help"
+            (click)="helpTextService.toggle()"></app-icon-button>
         <app-search-expand-input *ngIf="screenData.searchBar" [searchData]="screenData.searchBar"
             (expanded)="onSearchExpand($event)"></app-search-expand-input>
     </div>

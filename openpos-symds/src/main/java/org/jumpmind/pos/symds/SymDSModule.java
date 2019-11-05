@@ -69,28 +69,15 @@ public class SymDSModule extends AbstractRDBMSModule {
     @Autowired
     Environment env;
 
+    @Autowired
+    List<ISymDSConfigurator> configurators;
+
     @Override
     public void initialize() {
         SymmetricEngineHolder holder = new SymmetricEngineHolder();
         Properties properties = new Properties();
-        properties.put(ParameterConstants.DATA_LOADER_IGNORE_MISSING_TABLES, true);
-        properties.put(ParameterConstants.TRIGGER_CREATE_BEFORE_INITIAL_LOAD, "false");
-        String nodeGroupId = env.getProperty("openpos.symmetric.nodeGroupId");
-        if (isNotBlank(nodeGroupId)) {
-            properties.put(ParameterConstants.NODE_GROUP_ID, nodeGroupId);
-            properties.put(ParameterConstants.ENGINE_NAME, nodeGroupId);
-        }
 
-        properties.put(ParameterConstants.EXTERNAL_ID, trim(installationId));
-        String registrationUrl = env.getProperty("openpos.symmetric.registrationUrl");
-        if (isNotBlank(registrationUrl)) {
-            properties.put(ParameterConstants.REGISTRATION_URL, registrationUrl);
-        }
-
-        String syncUrl = env.getProperty("openpos.symmetric.syncUrl");
-        if (isNotBlank(syncUrl)) {
-            properties.put(ParameterConstants.SYNC_URL, syncUrl);
-        }
+        configurators.forEach(c->c.beforeCreate(properties));
 
         serverEngine = new ServerSymmetricEngine(getDataSource(), applicationContext, properties, false, holder);
         serverEngine.getExtensionService().addExtensionPoint(new DatabaseWriterFilterAdapter() {
@@ -105,10 +92,11 @@ public class SymDSModule extends AbstractRDBMSModule {
                 }
             }
         });
-        holder.getEngines().put(nodeGroupId, serverEngine);
+        holder.getEngines().put(properties.getProperty(ParameterConstants.EXTERNAL_ID), serverEngine);
         holder.setAutoStart(false);
         context.setAttribute(WebConstants.ATTR_ENGINE_HOLDER, holder);
 
+        configurators.forEach(c->c.beforeStart(serverEngine));
         serverEngine.setupDatabase(false);
 
         super.initialize();
