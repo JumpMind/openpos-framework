@@ -7,4 +7,5 @@ export interface MobileSaleItemListInterface extends IAbstractScreen {
     prompt: string;
     instructions: string;
     backgroundImage: string;
+    enableCollapsibleItems: boolean;
 }

@@ -8,7 +8,6 @@ export class MoneyFormatter implements IFormatter {
 
     private keyFilter = /[0-9\ | \.]/;
     private euRegex = /,\d\d$/;
-    private unformatEuRegex = /,\d+$/;
 
     constructor(public localeService: LocaleService) { }
 
@@ -54,10 +53,6 @@ export class MoneyFormatter implements IFormatter {
     }
 
     unFormatValue(value: string): string {
-        let decimalChar = '.';
-        if (this.unformatEuRegex.test(value.toString())) {
-            decimalChar = ',';
-        }
         let n = value.replace(/[^(\d)]/g, '');
 
         let i = 0;
@@ -69,7 +64,7 @@ export class MoneyFormatter implements IFormatter {
             if (i === 0 || i === 2) { // blank if we're at '00' which should be possible backspace from 0.00
                 return '';
             } else {
-                return `0${decimalChar}00`;
+                return `0.00`;
             }
         }
 
@@ -79,16 +74,16 @@ export class MoneyFormatter implements IFormatter {
             const dec = n.slice(n.length - 2, n.length);
             const whole = n.slice(0, n.length - 2);
 
-            return `${whole}${decimalChar}${dec}`;
+            return `${whole}.${dec}`;
         }
 
         if (n.length === 1) {
-            return `0${decimalChar}0${n}`;
+            return `0.0${n}`;
         } else if (n.length === 0) {
             return '';
         }
 
-        return `0${decimalChar}${n}`;
+        return `0.${n}`;
     }
 
     allowKey(key: string, newValue: string): boolean {

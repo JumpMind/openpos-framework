@@ -1,29 +1,38 @@
 <div responsive-class class="mobile-item-outer">
-    <img *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image"
-        responsive-class>
-    <div fxFlex="1 1 auto" fxLayout="row" fxLayoutAlign="stretch" fxLayoutGap="16px" style="padding-left: 16px">
-        <div fxFlex="1 1 auto" fxLayout="column">
-            <div fxFlex="1 1 auto">
-                <div *ngIf="item.description" responsive-class class="item-card-title">
-                    {{item.description}}
-                </div>
-                <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class class="item-card-discount"
-                    [amountText]="item.amount"></app-currency-text>
+    <div class="item-content">
+        <img *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image"
+        [ngClass]="{'collapsed': !expanded}" responsive-class>
+        <div class="left-side">
+            <div *ngIf="item.description" responsive-class class="item-card-title">
+                {{item.description}}
+            </div>
+            <section class="return-info warn" *ngIf="item.returnItemLabels && expanded">
+                <app-icon [iconName]="item.isOrderItem ? 'computer': 'receipt'"></app-icon>
+                <ul responsive-class class="return-info-text">
+                    <li *ngFor="let returnItemLabel of item.returnItemLabels">
+                        {{returnItemLabel.label}} {{returnItemLabel.value}}
+                    </li>
+                </ul>
+            </section>
+            <ul responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
+                <li *ngFor="let additionalLabel of item.additionalLabels" class="muted-color" style="margin-top: 4px">
+                    {{additionalLabel.label}}: {{additionalLabel.value}}
+                </li>
+            </ul>
+        </div>
+        <div class="right-side">
+            <section class="price">
+                <app-currency-text responsive-class class="item-card-price" [ngClass]="{'warn': item.returnItemLabels}"
+                    [amountText]="item.amount">
+                </app-currency-text>
                 <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
                     class="muted-color item-card-original" [amountText]="item.sellingPrice">
                 </app-currency-text>
-            </div>
-            <div responsive-class class="item-card-details" *ngIf="item.additionalLabels">
-                <div *ngFor="let additionalLabel of item.additionalLabels" class="muted-color" style="margin-top: 4px">
-                    {{additionalLabel.label}}: {{additionalLabel.value}}</div>
-            </div>
-        </div>
-        <div fxFlex="0 0 auto" fxLayout="column">
-            <app-currency-text fxFlex="1 1 auto" responsive-class class="item-card-price" [amountText]="item.amount">
-            </app-currency-text>
-            <app-icon *ngIf="item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'">
-            </app-icon>
-            <div *ngIf="item.menuItems" fxLayout="row" fxLayoutAlign="end">
+            </section>
+
+            <app-icon *ngIf="item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'"></app-icon>
+            
+            <div *ngIf="item.menuItems && expanded" class="menu-items">
                 <app-kebab-button [menuItems]="item.menuItems" (menuItemClick)="doItemAction($event, item.index)"
                     class="primary item-kebab-label">
                 </app-kebab-button>

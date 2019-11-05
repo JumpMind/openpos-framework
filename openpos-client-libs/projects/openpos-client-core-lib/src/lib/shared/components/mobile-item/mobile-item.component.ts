@@ -13,6 +13,7 @@ import { ActionService } from '../../../core/actions/action.service';
 export class MobileItemComponent {
 
     @Input() item: ISellItem;
+    @Input() expanded = true;
 
     constructor(public actionService: ActionService, public session: SessionService) { }
 

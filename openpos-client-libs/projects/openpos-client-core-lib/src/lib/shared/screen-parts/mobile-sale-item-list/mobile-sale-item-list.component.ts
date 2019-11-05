@@ -16,8 +16,10 @@ export class MobileSaleItemListComponent extends ScreenPartComponent<MobileSaleI
 
     @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
     size = -1;
+    expandedIndex = 0;
 
     screenDataUpdated() {
+        this.expandedIndex = this.screenData.items.length - 1;
     }
 
     ngAfterViewChecked() {
@@ -36,6 +38,17 @@ export class MobileSaleItemListComponent extends ScreenPartComponent<MobileSaleI
         try {
             this.scrollList.nativeElement.scrollTop = this.scrollList.nativeElement.scrollHeight;
         } catch (err) { }
+    }
+
+    isItemExpanded(index: number): boolean {
+        if (this.screenData.enableCollapsibleItems) {
+          return index === this.expandedIndex;
+        }
+        return true;
+    }
+
+    updateExpandedIndex(index: number) {
+        this.expandedIndex = index;
     }
 
 }
