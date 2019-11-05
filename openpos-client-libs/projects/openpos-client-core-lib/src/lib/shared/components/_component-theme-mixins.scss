@@ -17,6 +17,7 @@
 @import './mobile-footer/mobile-footer-theme';
 @import './carousel/carousel-theme';
 @import './help-text-page-wrapper/help-text-page-wrapper-theme';
+@import './search-expand-input/search-expand-input-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -38,4 +39,5 @@
     @include mobile-footer-theme($theme);
     @include carousel-theme($theme);
     @include help-text-page-wrapper-theme($theme);
+    @include search-expand-input-theme($theme);
 }

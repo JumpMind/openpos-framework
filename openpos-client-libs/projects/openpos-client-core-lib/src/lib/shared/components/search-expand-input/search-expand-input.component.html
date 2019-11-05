@@ -3,7 +3,7 @@
         [iconName]="searchData.scanIcon" class="search-expand-icon" [ngClass]="{'search-expand-icon-selected' : open}"
         (click)="onSelected()"></app-icon>
 
-    <input #input matInput class="search-expand-input" [ngClass]="{'search-expand-input-selected' : open}"
+    <input responsive-class matInput class="search-expand-input" [ngClass]="{'search-expand-input-selected' : open}"
         (keyup.enter)="onEnter()" [(ngModel)]="barcode" [placeholder]="searchData.searchText"
         [attr.minlength]="searchData.scanMinLength" [attr.maxlength]="searchData.scanMaxLength"
         [formatterName]="searchData.inputType" (disabled)="!open" (focusout)="onFocusOut()">

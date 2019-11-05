@@ -1,11 +1,12 @@
+@import '../../../styles/mixins/typography';
+
 .search-expand-outer {
     display: grid;
     grid-template-columns: auto 1fr;
 }
 
 .search-expand-icon {
-    background-color: white;
-    border: 1px solid black;
+    border-width: 1px;
     border-radius: 8px;
     transition: all 0.25s;
     transition-delay: .25s;
@@ -19,6 +20,7 @@
 }
 
 .search-expand-input {
+    @extend %text-md;
     width: 0px;
     margin: 0px;
     padding: 0px;
@@ -30,8 +32,10 @@
 .search-expand-input-selected {
     width: 100%;
     margin-left: -1px;
-    border: 1px solid black;
     border-left-width: 0px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
 }
