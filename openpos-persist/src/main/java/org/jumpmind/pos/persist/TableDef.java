@@ -30,4 +30,9 @@ import java.lang.annotation.Target;
 public @interface TableDef {
     String name();
     String description() default "";
+
+    /**
+     * Set to true if the super class has an @TableDef that should be ignored for this module
+     */
+    boolean overrideSuperClass() default false;
 }

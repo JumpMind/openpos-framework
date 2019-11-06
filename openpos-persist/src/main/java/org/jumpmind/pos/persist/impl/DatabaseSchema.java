@@ -237,10 +237,11 @@ public class DatabaseSchema {
         List<ModelClassMetaData> list = new ArrayList<>();
 
         Class<?> entityClass = clazz;
+        boolean overridden = false;
         while (entityClass != null && entityClass != Object.class) {
             TableDef tblAnnotation = entityClass.getAnnotation(TableDef.class);
-            if (tblAnnotation != null) {
-
+            if (tblAnnotation != null && !overridden) {
+                overridden = tblAnnotation.overrideSuperClass();
                 ModelClassMetaData meta = new ModelClassMetaData();
                 meta.setClazz(entityClass);
                 Table dbTable = new Table();
