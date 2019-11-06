@@ -40,8 +40,14 @@
     }
 
     &.mobile {
+        min-height: 40px;
+
         img {
             display: none;
         }
+    }
+
+    .bacon-strip-search {
+        padding-left: 8px;
     }
 }
