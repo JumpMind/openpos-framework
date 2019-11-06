@@ -9,7 +9,6 @@ import { SelfCheckoutFormComponent } from './self-checkout-form/self-checkout-fo
 import { SelfCheckoutPromptComponent } from './self-checkout-prompt/self-checkout-prompt.component';
 import { SelfCheckoutMenuComponent } from './screen-parts/self-checkout-menu/self-checkout-menu.component';
 import { SelfCheckoutTenderComponent } from './self-checkout-tender/self-checkout-tender.component';
-import { SelfCheckoutOptionsPartComponent } from './screen-parts/self-checkout-options-part/self-checkout-options-part.component';
 import { SelfCheckoutSaleComponent } from './self-checkout-sale/self-checkout-sale.component';
 import { SelfCheckoutPromptPartComponent } from './screen-parts/self-checkout-prompt-part/self-checkout-prompt-part.component';
 
@@ -31,7 +30,6 @@ const components = [
 
 const screenParts = [
     SelfCheckoutMenuComponent,
-    SelfCheckoutOptionsPartComponent,
     SelfCheckoutPromptPartComponent
 ];
 

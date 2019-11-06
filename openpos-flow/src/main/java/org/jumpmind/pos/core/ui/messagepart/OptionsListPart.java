@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.jumpmind.pos.core.ui.ActionItem;
 
-public class SelfCheckoutOptionsPart implements Serializable {
+public class OptionsListPart implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

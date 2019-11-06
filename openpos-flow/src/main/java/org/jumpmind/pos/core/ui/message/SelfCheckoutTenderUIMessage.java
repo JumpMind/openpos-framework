@@ -5,7 +5,7 @@ import java.util.List;
 import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.messagepart.SelfCheckoutMenuPart;
-import org.jumpmind.pos.core.ui.messagepart.SelfCheckoutOptionsPart;
+import org.jumpmind.pos.core.ui.messagepart.OptionsListPart;
 
 public class SelfCheckoutTenderUIMessage extends UIMessage {
 
@@ -21,7 +21,7 @@ public class SelfCheckoutTenderUIMessage extends UIMessage {
 
     private List<Total> amounts;
 
-    private SelfCheckoutOptionsPart selfCheckoutOptionsPart;
+    private OptionsListPart optionsList;
 
     private String imageUrl;
 
@@ -69,12 +69,12 @@ public class SelfCheckoutTenderUIMessage extends UIMessage {
         this.amounts = amounts;
     }
 
-    public SelfCheckoutOptionsPart getSelfCheckoutOptionsPart() {
-        return selfCheckoutOptionsPart;
+    public OptionsListPart getOptionsList() {
+        return optionsList;
     }
 
-    public void setSelfCheckoutOptionsPart(SelfCheckoutOptionsPart selfCheckoutOptionsPart) {
-        this.selfCheckoutOptionsPart = selfCheckoutOptionsPart;
+    public void setOptionsList(OptionsListPart optionsList) {
+        this.optionsList = optionsList;
     }
 
     public String getImageUrl() {

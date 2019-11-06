@@ -1,7 +1,5 @@
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
-// tslint:disable-next-line:max-line-length
-import { SelfCheckoutOptionsPartInterface } from '../../self-checkout/screen-parts/self-checkout-options-part/self-checkout-options-part.interface';
-
+import { OptionsListInterface } from '../../shared/screen-parts/options-list/options-list.interface';
 
 
 export interface CustomerDisplayOptionsInterface extends IAbstractScreen {
@@ -9,5 +7,5 @@ export interface CustomerDisplayOptionsInterface extends IAbstractScreen {
     prompt: string;
     icon: string;
     imageUrl: string;
-    selfCheckoutOptionsPart: SelfCheckoutOptionsPartInterface;
+    selfCheckoutOptionsPart: OptionsListInterface;
 }

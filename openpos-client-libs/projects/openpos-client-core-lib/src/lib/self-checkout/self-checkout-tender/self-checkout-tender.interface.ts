@@ -1,6 +1,6 @@
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { ITotal } from '../../core/interfaces/total.interface';
-import { SelfCheckoutOptionsPartInterface } from '../screen-parts/self-checkout-options-part/self-checkout-options-part.interface';
+import { OptionsListInterface } from '../../shared/screen-parts/options-list/options-list.interface';
 
 
 export interface SelfCheckoutTenderInterface extends IAbstractScreen {
@@ -9,5 +9,5 @@ export interface SelfCheckoutTenderInterface extends IAbstractScreen {
     amountDue: ITotal;
     amounts: ITotal[];
     imageUrl: string;
-    selfCheckoutOptionsPart: SelfCheckoutOptionsPartInterface;
+    selfCheckoutOptionsPart: OptionsListInterface;
 }

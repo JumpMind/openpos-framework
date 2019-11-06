@@ -35,9 +35,9 @@
             {{screen.prompt}}
         </div>
 
-        <app-self-checkout-options-part *ngIf="screen.selfCheckoutOptionsPart" responsive-class
+        <app-options-list *ngIf="screen.selfCheckoutOptionsPart" responsive-class
             class="self-checkout-tender-options">
-        </app-self-checkout-options-part>
+        </app-options-list>
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-payment-auth-image">
 

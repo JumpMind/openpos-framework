@@ -2,7 +2,7 @@ package org.jumpmind.pos.core.ui.message;
 
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.messagepart.SelfCheckoutMenuPart;
-import org.jumpmind.pos.core.ui.messagepart.SelfCheckoutOptionsPart;
+import org.jumpmind.pos.core.ui.messagepart.OptionsListPart;
 
 public class SelfCheckoutOptionsUIMessage extends UIMessage {
 
@@ -14,7 +14,7 @@ public class SelfCheckoutOptionsUIMessage extends UIMessage {
 
     private String prompt;
 
-    private SelfCheckoutOptionsPart selfCheckoutOptionsPart;
+    private OptionsListPart optionsList;
 
     private String imageUrl;
 
@@ -48,12 +48,12 @@ public class SelfCheckoutOptionsUIMessage extends UIMessage {
         this.prompt = prompt;
     }
 
-    public SelfCheckoutOptionsPart getSelfCheckoutOptionsPart() {
-        return selfCheckoutOptionsPart;
+    public OptionsListPart getOptionsList() {
+        return optionsList;
     }
 
-    public void setSelfCheckoutOptionsPart(SelfCheckoutOptionsPart selfCheckoutOptionsPart) {
-        this.selfCheckoutOptionsPart = selfCheckoutOptionsPart;
+    public void setOptionsList(OptionsListPart optionsList) {
+        this.optionsList = optionsList;
     }
 
     public String getImageUrl() {
