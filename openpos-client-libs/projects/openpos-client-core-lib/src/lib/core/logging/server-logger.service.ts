@@ -72,27 +72,57 @@ export class ServerLogger implements ILogger, OnDestroy {
         this.subscriptions.unsubscribe();
     }
 
+    private makeCircularRefReplacer = () => {
+        const seen = new WeakSet();
+        return (key, value) => {
+          if (typeof value === 'object' && value !== null) {
+            if (seen.has(value)) {
+              return;
+            }
+            seen.add(value);
+          }
+          return value;
+        };
+    }
+
+    // Stringifys given message and handles any circular object references,
+    // preventing the JSON.stringify circular reference error
+    private cleanse(message: any): string {
+        let cleansed = message;
+        if (message && typeof message === 'object') {
+            try {
+                cleansed = JSON.stringify(message, this.makeCircularRefReplacer());
+            } catch (e) {
+                cleansed = `Failed to convert object to a string for logging. Reason: ` +
+                    `${e && e.hasOwnProperty('message') ? e.message : '?'}`;
+            }
+        }
+
+        return cleansed;
+    }
+
     log( message: string ) {
-        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.log, Date.now() , message));
+        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.log, Date.now() , this.cleanse(message)));
     }
 
     info( message: string ) {
-        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.info, Date.now() , message));
+        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.info, Date.now() , this.cleanse(message)));
     }
     error( message: string ) {
-        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.error, Date.now() , message));
+        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.error, Date.now() , this.cleanse(message)));
     }
     warn( message: string ) {
-        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.warn, Date.now() , message));
+        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.warn, Date.now() , this.cleanse(message)));
     }
     debug( message: string ) {
-        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.debug, Date.now() , message));
+        this.logEntrySubject.next(new ServerLogEntry(LogMethodType.debug, Date.now() , this.cleanse(message)));
     }
 
     private shipLogs( entries: ServerLogEntry[] ) {
         if ( !entries || entries.length < 1 ) {
             return;
         }
+
         this.http.post(this.loggerEndpointUrl, entries).pipe(
             catchError( error => {
                 // If we fail to send to the server dump them out to the console.
