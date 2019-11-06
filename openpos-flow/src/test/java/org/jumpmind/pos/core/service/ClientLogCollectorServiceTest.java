@@ -74,7 +74,7 @@ public class ClientLogCollectorServiceTest {
     public void dateFormatTest() throws Exception {
         Logger oldLogger = clientLogCollector.logger;
         TestingBufferAppender appender = new TestingBufferAppender();
-        appender.setLayout(new PatternLayout("%X{timestamp} [%X{deviceId}] %p [%t] %m%n")); 
+        appender.setLayout(new PatternLayout("%X{timestamp} [%X{deviceId}] %p %m%n")); 
         appender.setThreshold(Level.ALL);
         appender.setImmediateFlush(true);
         org.apache.log4j.Logger.getLogger(ClientLogCollectorService.class).addAppender(appender);
@@ -93,7 +93,7 @@ public class ClientLogCollectorServiceTest {
             };
             
             clientLogCollector.clientLogs("foo", "111-22222", Arrays.asList(entries));
-            String expectedLogOutput = String.format("%s [111-22222] INFO [main] Message 1~%s%s [111-22222] DEBUG [main] Message 2%s", 
+            String expectedLogOutput = String.format("%s [111-22222] INFO Message 1~%s%s [111-22222] DEBUG Message 2%s", 
                     expectedDateStr, System.getProperty("line.separator"), 
                     expectedDateStr, System.getProperty("line.separator")
             );
