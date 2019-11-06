@@ -25,6 +25,7 @@ import { SignatureCaptureComponent } from './signature-capture/signature-capture
 import { DynamicFormDialogComponent } from './dynamic-form-dialog/dynamic-form-dialog.component';
 import { DynamicFormComponent } from './dynamic-form-dialog/dynamic-form.component';
 import { ScanInputDialogComponent } from './scan-input-dialog/scan-input-dialog.component';
+import { MobileReturnReceiptsSheetComponent } from './return/mobile-return-receipts-sheet/mobile-return-receipts-sheet.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -33,6 +34,7 @@ const screens = [
     PromptWithInfoScreenComponent,
     HomeComponent,
     ReturnComponent,
+    MobileReturnReceiptsSheetComponent,
     DataTableComponent,
     AutoCompleteAddressComponent,
     SaleComponent,
