@@ -120,6 +120,7 @@ export * from './lib/core/messages/message';
 export * from './lib/core/messages/ui-data-message';
 export * from './lib/core/messages/ui-message';
 export * from './lib/core/messages/message';
+export * from './lib/core/help-text/help-text.service';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';
@@ -228,6 +229,7 @@ export * from './lib/shared/components/training-dialog/training-overlay-ref';
 export * from './lib/shared/components/training-dialog/training-token';
 export * from './lib/shared/components/training-dialog/training-wrapper.component';
 export * from './lib/shared/components/transaction-item-list/transaction-item-list.component';
+export * from './lib/shared/components/help-text-page-wrapper/help-text-page-wrapper.component';
 
 export * from './lib/shared/decorators/screen-component.decorator';
 export * from './lib/shared/decorators/dialog-component.decorator';

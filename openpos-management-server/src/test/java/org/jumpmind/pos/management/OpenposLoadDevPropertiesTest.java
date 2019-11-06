@@ -1,5 +1,7 @@
 package org.jumpmind.pos.management;
 
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,9 +32,29 @@ public class OpenposLoadDevPropertiesTest {
     @Value("${openpos.managementServer.testProperty1}")
     String testProperty;
     
+    @Value("${openpos.managementServer.testProperty2Encrypted}")
+    String testPropertyEncrypted;
+    
+    @BeforeClass
+    public static void beforeClass() {
+        System.setProperty("jasypt.encryptor.password", EncryptionTestConstants.ENCRYPTOR_PASSWORD);
+        System.setProperty("jasypt.encryptor.algorithm", EncryptionTestConstants.ENCYPTION_ALGORITHM);
+    }
+    
+    @AfterClass
+    public static void afterClass() {
+        System.setProperty("jasypt.encryptor.password", "");
+        System.setProperty("jasypt.encryptor.algorithm", "");
+    }
+    
     @Test
     public void checkDevProperty() {
         assertThat(testProperty).isEqualTo("dev-value");
+    }
+    
+    @Test
+    public void checkEncryptedProperty() {
+        assertThat(testPropertyEncrypted).isEqualTo("changeit");
     }
     
 }

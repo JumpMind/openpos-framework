@@ -47,8 +47,8 @@
     ],
     "UI Components": [
         "task-list",
-	`	"infinite-scroll",
-		"image"
+	"infinite-scroll",
+	"image"
     ],
 	"Styles": [
 		"styles"

@@ -57,6 +57,7 @@ import { ElectronLogger } from './logging/electron-logger';
 import { CLIENTCONTEXT } from './client-context/client-context-provider.interface';
 import { TimeZoneContext } from './client-context/time-zone-context';
 import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
+import { HelpTextService } from './help-text/help-text.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -122,6 +123,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         KeyPressProvider,
         { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
         { provide: LOGGERS, useExisting: ElectronLogger, multi: true },
+        HelpTextService,
         { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true }
     ]
 })

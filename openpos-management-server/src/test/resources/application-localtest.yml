@@ -35,3 +35,23 @@ spring:
 openpos:
   managementServer:
     testProperty1: dev-value
+    # Unencrypted value is 'changeit', encryption password is found in EncryptWithJasyptTest
+    testProperty2Encrypted: ENC(o9hSFApvTtCqn4nz3LK/yi7aoK6aJTvw)
+    
+---
+spring:
+  profiles: ssl
+
+trustStore: test-keystore.p12
+trustStorePassword: changeit
+
+server:
+  ssl:
+# Command to generate keystore: 
+#   keytool -genkeypair -alias test-keystore -keyalg RSA -keysize 2048 -storetype PKCS12 -keystore test-keystore.p12 -validity 7000 -ext "SAN:c=DNS:localhost,IP:127.0.0.1"   
+    key-password: ENC(o9hSFApvTtCqn4nz3LK/yi7aoK6aJTvw)  #password is 'changeit', but encrypted with jasypt using encryption password found in EncryptWithJasyptTest
+    key-store: classpath:test-keystore.p12
+    key-store-type: PKCS12
+    key-store-password: ENC(o9hSFApvTtCqn4nz3LK/yi7aoK6aJTvw)
+    key-alias: test-keystore   
+  

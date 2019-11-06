@@ -1,0 +1,41 @@
+@import '../../../styles/mixins/typography';
+
+.search-expand-outer {
+    display: grid;
+    grid-template-columns: auto 1fr;
+}
+
+.search-expand-icon {
+    border-width: 1px;
+    border-radius: 8px;
+    transition: all 0.25s;
+    transition-delay: .25s;
+}
+
+.search-expand-icon-selected {
+    border-right-width: 0px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    transition-delay: 0s;
+}
+
+.search-expand-input {
+    @extend %text-md;
+    width: 0px;
+    margin: 0px;
+    padding: 0px;
+    border-width: 0px;
+    -webkit-transition: width 0.25s ease-in-out;
+    transition: width 0.25s ease-in-out;
+}
+
+.search-expand-input-selected {
+    width: 100%;
+    margin-left: -1px;
+    border-left-width: 0px;
+    border-right-width: 1px;
+    border-top-width: 1px;
+    border-bottom-width: 1px;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}

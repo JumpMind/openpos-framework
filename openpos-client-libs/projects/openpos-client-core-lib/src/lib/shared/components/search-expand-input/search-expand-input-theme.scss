@@ -1,0 +1,25 @@
+@mixin search-expand-input-theme($theme) {
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+    $dark: map-get($mat-grey, 600);
+
+    .search-expand-icon {
+        border-style: solid;
+        border-color: $dark;
+        background-color: white;
+    }
+
+    .search-expand-input {
+        color: mat-color($foreground, text);
+        background-color: white;
+    }
+
+    .search-expand-input-selected {
+        border-style: solid;
+        border-color: $dark;
+    }
+}
