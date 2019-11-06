@@ -17,7 +17,7 @@ import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_URL;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_USER;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_VALIDATION_QUERY;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
-
+import static org.apache.commons.lang3.StringUtils.*;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -127,7 +127,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     protected void setupH2Server() {
         if ("true".equals(env.getProperty("db.h2.startServer"))) {
-            String configDbUrl = env.getProperty(DB_POOL_URL, "jdbc:h2:mem:config");
+            String configDbUrl = getDbProperties(DB_POOL_URL, "jdbc:h2:mem:config");
             if (h2Server == null && configDbUrl.contains("h2:tcp")) {
                 try {
                     h2Server = Server.createTcpServer("-tcpPort", env.getProperty("db.h2.port", "1973"));
@@ -167,14 +167,23 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         return this.securityService;
     }
 
+    protected String getDbProperties(String propertyName, String defaultValue) {
+        final String CANNOT_BE_THIS = "CANNOT BE THIS";
+        String value = env.getProperty(String.format("%s.%s", getName(), propertyName), CANNOT_BE_THIS);
+        if (CANNOT_BE_THIS.equals(value)) {
+            value = env.getProperty(propertyName, defaultValue);
+        }
+        return value;
+    }
+
     @Override
     public String getDriver() {
-        return env.getProperty(DB_POOL_DRIVER, "org.h2.Driver");
+        return getDbProperties(DB_POOL_DRIVER, "org.h2.Driver");
     }
 
     @Override
     public String getURL() {
-        return env.getProperty(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName());
+        return getDbProperties(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName());
     }
 
     @Override
@@ -196,20 +205,20 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                 TypedProperties properties = new TypedProperties();
                 properties.put(DB_POOL_DRIVER, getDriver());
                 properties.put(DB_POOL_URL, getURL());
-                properties.put(DB_POOL_USER, env.getProperty(DB_POOL_USER));
-                properties.put(DB_POOL_PASSWORD, env.getProperty(DB_POOL_PASSWORD));
-                properties.put(DB_POOL_INITIAL_SIZE, env.getProperty(DB_POOL_INITIAL_SIZE, "5"));
-                properties.put(DB_POOL_MAX_ACTIVE, env.getProperty(DB_POOL_MAX_ACTIVE, "5"));
-                properties.put(DB_POOL_MAX_IDLE, env.getProperty(DB_POOL_MAX_IDLE, "5"));
-                properties.put(DB_POOL_MIN_IDLE, env.getProperty(DB_POOL_MIN_IDLE, "5"));
-                properties.put(DB_POOL_MAX_WAIT, env.getProperty(DB_POOL_MAX_WAIT, "30000"));
-                properties.put(DB_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS, env.getProperty(DB_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS, "120000"));
-                properties.put(DB_POOL_VALIDATION_QUERY, env.getProperty(DB_POOL_VALIDATION_QUERY));
-                properties.put(DB_POOL_TEST_ON_BORROW, env.getProperty(DB_POOL_TEST_ON_BORROW, "false"));
-                properties.put(DB_POOL_TEST_ON_RETURN, env.getProperty(DB_POOL_TEST_ON_RETURN, "false"));
-                properties.put(DB_POOL_TEST_WHILE_IDLE, env.getProperty(DB_POOL_TEST_WHILE_IDLE, "true"));
-                properties.put(DB_POOL_INIT_SQL, env.getProperty(DB_POOL_INIT_SQL));
-                properties.put(DB_POOL_CONNECTION_PROPERTIES, env.getProperty(DB_POOL_CONNECTION_PROPERTIES));
+                properties.put(DB_POOL_USER, getDbProperties(DB_POOL_USER, null));
+                properties.put(DB_POOL_PASSWORD, getDbProperties(DB_POOL_PASSWORD, null));
+                properties.put(DB_POOL_INITIAL_SIZE, getDbProperties(DB_POOL_INITIAL_SIZE, "5"));
+                properties.put(DB_POOL_MAX_ACTIVE, getDbProperties(DB_POOL_MAX_ACTIVE, "5"));
+                properties.put(DB_POOL_MAX_IDLE, getDbProperties(DB_POOL_MAX_IDLE, "5"));
+                properties.put(DB_POOL_MIN_IDLE, getDbProperties(DB_POOL_MIN_IDLE, "5"));
+                properties.put(DB_POOL_MAX_WAIT, getDbProperties(DB_POOL_MAX_WAIT, "30000"));
+                properties.put(DB_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS, getDbProperties(DB_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS, "120000"));
+                properties.put(DB_POOL_VALIDATION_QUERY, getDbProperties(DB_POOL_VALIDATION_QUERY, null));
+                properties.put(DB_POOL_TEST_ON_BORROW, getDbProperties(DB_POOL_TEST_ON_BORROW, "false"));
+                properties.put(DB_POOL_TEST_ON_RETURN, getDbProperties(DB_POOL_TEST_ON_RETURN, "false"));
+                properties.put(DB_POOL_TEST_WHILE_IDLE, getDbProperties(DB_POOL_TEST_WHILE_IDLE, "true"));
+                properties.put(DB_POOL_INIT_SQL, getDbProperties(DB_POOL_INIT_SQL, null));
+                properties.put(DB_POOL_CONNECTION_PROPERTIES, getDbProperties(DB_POOL_CONNECTION_PROPERTIES, null));
                 log.info(String.format(
                         "About to initialize the '%s' module datasource using the following driver:"
                                 + " '%s' and the following url: '%s' and the following user: '%s'",
