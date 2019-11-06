@@ -32,6 +32,12 @@
     
             <app-mobile-sale-item-list class="return-list-background-mobile"></app-mobile-sale-item-list>
         </div>
-        <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>
+        <app-mobile-totals-part *ngIf="(isMobile | async)" (swipeup)="openSheet()" responsive-class></app-mobile-totals-part>
+        <div *ngIf="(isMobile | async) && receipts && receipts.length > 0" class="receipts-mobile-swipe-up-container dark-background" (swipeup)="openSheet()" responsive-class> 
+            <strong class="receipts-label-mobile contrast-color">
+                <app-icon iconName="double_arrow" iconClass="double-arrow md"></app-icon>
+                {{receipts.length}} Linked Receipt(s)
+            </strong>
+        </div>
     </div>
 </app-bacon-strip>

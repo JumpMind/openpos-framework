@@ -1,3 +1,4 @@
+import { MatDialog, MatBottomSheet } from '@angular/material';
 import { Component, ViewChild, AfterViewInit, OnInit, AfterViewChecked, ElementRef, Injector, OnDestroy } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Observable, Subscription } from 'rxjs';
@@ -14,6 +15,7 @@ import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
 import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
+import { MobileReturnReceiptsSheetComponent } from './mobile-return-receipts-sheet/mobile-return-receipts-sheet.component';
 
 /**
  * @ignore
@@ -116,6 +118,22 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewChecked,
             const index = this.receipts.indexOf(event);
             this.doAction('TransactionDetails', index);
         }
+    }
+
+    openSheet(): void {
+        console.log('Entering openSheet()');
+        const ref = this.bottomSheet.open( MobileReturnReceiptsSheetComponent,
+            {data: this.screen, panelClass: 'sheet'});
+        this.subscriptions.add(new Subscription( () => ref.dismiss()));
+        this.subscriptions.add(ref.afterDismissed().subscribe( item => {
+            if (item !== undefined && item !== null) {
+                if (typeof item === 'object') {
+                    this.doAction(this.removeReceiptAction, item.transactionNumber);
+                } else if (typeof item === 'number') {
+                    this.doAction('TransactionDetails', item);
+                }
+            }
+        }));
     }
 
 }
