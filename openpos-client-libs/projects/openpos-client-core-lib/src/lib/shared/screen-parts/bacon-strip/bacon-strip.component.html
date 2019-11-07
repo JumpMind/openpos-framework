@@ -3,7 +3,6 @@
         <app-icon-button *ngIf="iconButtonName" [iconName]="iconButtonName" iconClass="md"
             (buttonClick)="buttonClick()"></app-icon-button>
 
-        <app-icon *ngIf="!(isMobile | async) && screenData.headerIcon" [iconName]="screenData.headerIcon"></app-icon>
         <span>{{screenData.headerText}}</span>
 
         <app-icon-button *ngIf="helpTextService.isAvailable() | async" iconName="help"
@@ -16,8 +15,7 @@
         <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
     </div>
     <div *ngIf="!searchExpanded" class="rightside">
-        <app-icon *ngIf="!(isMobile | async) && screenData.operatorText" iconName="lock_open" iconClass="md"></app-icon>
-        <span>{{operatorInfo}}</span>
+        {{operatorInfo}}
     </div>
 </div>
 <mat-sidenav-container>
