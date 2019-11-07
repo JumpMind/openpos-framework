@@ -1,32 +1,30 @@
 <div class="common-background self-checkout-outer self-checkout-tender-outer">
     <app-self-checkout-menu></app-self-checkout-menu>
 
-    <div class="self-checkout-body self-checkout-tender-body" fxLayout="column" fxLayoutAlign="center center"
-        fxLayoutGap="32px">
+    <div class="self-checkout-body">
 
-        <div fxFlex></div>
-
-        <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && amountDue"
-            class="common-border-color self-checkout-payment-amount-outer">
-            <div responsive-class class="self-checkout-payment-title">{{amountTitle}}</div>
-            <div responsive-class class="self-checkout-payment-amount-due">
-                <app-currency-text [amountText]="amountDue"></app-currency-text>
+        <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && screen.amountDue"
+            class="common-border-color self-checkout-amount-due-outer">
+            <div responsive-class class="self-checkout-amount-due-title">{{screen.amountDue.name}}</div>
+            <div responsive-class class="self-checkout-amount-due">
+                <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
             </div>
         </div>
 
-        <div *ngIf="screen.amounts && screen.amounts.length > 1 && amountDue" fxLayout="column" fxLayoutGap="32px">
-            <div *ngFor="let amount of screen.amounts" fxLayout="row" fxLayoutAlign="start start" responsive-class
-                class="self-checkout-payment-amounts">
-                <div fxFlex="1 1 100%">{{amount.name}}</div>
-                <div>
+        <div *ngIf="screen.amounts && screen.amounts.length > 1 && screen.amountDue" responsive-class
+            class="self-checkout-amounts-outer">
+            <div *ngFor="let amount of screen.amounts" responsive-class
+                class="self-checkout-amount-row self-checkout-amount-outer">
+                <div class="self-checkout-amount-name">{{amount.name}}</div>
+                <div class="self-checkout-amount">
                     <app-currency-text [amountText]="amount.amount"></app-currency-text>
                 </div>
             </div>
-            <div fxLayout="row" fxLayoutAlign="start start" responsive-class
-                class="common-border-color self-checkout-payment-remaining-balance">
-                <div fxFlex="1 1 100%">{{amountTitle}}</div>
-                <div>
-                    <app-currency-text [amountText]="amountDue"></app-currency-text>
+            <div responsive-class
+                class="common-border-color self-checkout-amount-row self-checkout-remaining-balance-outer">
+                <div class="self-checkout-remaining-balance-name">{{screen.amountDue.name}}</div>
+                <div class="self-checkout-remaining-balance">
+                    <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
                 </div>
             </div>
         </div>
@@ -41,6 +39,5 @@
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-payment-auth-image">
 
-        <div fxFlex></div>
     </div>
 </div>

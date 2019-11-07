@@ -1,6 +1,14 @@
 @import "../../styles/mixins/typography";
 
+.self-checkout-body {
+    display: grid;
+    grid-auto-flow: row;
+    align-content: center;
+    row-gap: 32px;
+}
+
 .self-checkout-tender-options {
+    justify-self: center;
     width: 50%;
 
     &.mobile {
@@ -12,41 +20,80 @@
     }
 }
 
-.self-checkout-payment-amount-outer {
+.self-checkout-amount-due-outer {
     padding: 32px;
     border-bottom-width: 2px;
     border-bottom-style: solid;
+    justify-self: center;
 }
 
-.self-checkout-payment-amounts {
-    @extend %text-md;
-}
-
-.self-checkout-payment-title {
+.self-checkout-amount-due-title {
     @extend %text-lg;
     text-align: center;
 }
 
-.self-checkout-payment-amount-due {
+.self-checkout-amount-due {
     @extend %text-xl;
     font-weight: bold;
     text-align: center;
 }
 
-.self-checkout-payment-instructions {
-    @extend %text-md;
-    text-align: center;
-    color: gray;
+.self-checkout-amounts-outer {
+    justify-self: center;
+    width: 25%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 75%;
+    }
 }
 
-.self-checkout-payment-remaining-balance {
+.self-checkout-amount-outer {
+    @extend %text-md;
+}
+
+.self-checkout-amount-row {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 16px;
+}
+
+.self-checkout-amount {
+    justify-self: end;
+}
+
+.self-checkout-remaining-balance {
+    justify-self: end;
+}
+
+.self-checkout-payment-instructions {
+    @extend %text-md;
+    justify-self: center;
+    text-align: center;
+    max-width: 50%;
+
+    &.mobile {
+        max-width: 75%;
+    }
+
+    &.tablet {
+        max-width: 75%;
+    }
+}
+
+.self-checkout-remaining-balance-outer {
     @extend %text-md;
     font-weight: bold;
     border-top-width: 2px;
     border-top-style: solid;
-    padding-top: 32px;
+    padding-top: 16px;
+    margin-top: 16px;
 }
 
 .self-checkout-payment-auth-image {
     max-width: 50%;
+    justify-self: center;
 }
