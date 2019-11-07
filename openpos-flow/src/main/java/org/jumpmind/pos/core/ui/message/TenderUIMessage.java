@@ -1,29 +1,28 @@
 package org.jumpmind.pos.core.ui.message;
 
-import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.model.Form;
+import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.IHasForm;
-import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
-import org.jumpmind.pos.core.ui.data.TenderItem;
+import org.jumpmind.pos.core.ui.messagepart.OptionsListPart;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @AssignKeyBindings
 public class TenderUIMessage extends UIMessage implements IHasForm {
-    private String instructions;
-    private Form form;
-    private DisplayProperty balanceDue;
-    private List<String> tenderTypeActionNames;
-    private String completedTenderListLabel;
-    private List<TenderItem> tenderItems;
-    private List<ActionItem> tenderItemActions;
-    private String noCompletedTendersMessage;
-    private String noCompletedTendersIcon;
+    private static final long serialVersionUID = 1L;
 
-    public TenderUIMessage(){
+    private Form form;
+    private String title;
+    private String prompt;
+    private Total amountDue;
+    private List<Total> amounts;
+    private OptionsListPart optionsList;
+    private String imageUrl;
+
+    public TenderUIMessage() {
         setScreenType(UIMessageType.TENDER);
     }
 
@@ -37,91 +36,59 @@ public class TenderUIMessage extends UIMessage implements IHasForm {
         return form;
     }
 
-    public String getInstructions() {
-        return instructions;
+    public String getTitle() {
+        return title;
     }
 
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public DisplayProperty getBalanceDue() {
-        return balanceDue;
+    public String getPrompt() {
+        return prompt;
     }
 
-    public void setBalanceDue(DisplayProperty balanceDue) {
-        this.balanceDue = balanceDue;
+    public void setPrompt(String prompt) {
+        this.prompt = prompt;
     }
 
-    public String getCompletedTenderListLabel() {
-        return completedTenderListLabel;
+    public Total getAmountDue() {
+        return amountDue;
     }
 
-    public void setCompletedTenderListLabel(String completedTenderListLabel) {
-        this.completedTenderListLabel = completedTenderListLabel;
+    public void setAmountDue(Total amountDue) {
+        this.amountDue = amountDue;
     }
 
-    public List<TenderItem> getTenderItems() {
-        return tenderItems;
+    public List<Total> getAmounts() {
+        return amounts;
     }
 
-    public void setTenderItems(List<TenderItem> tenderItems) {
-        this.tenderItems = tenderItems;
+    public void setAmounts(List<Total> amounts) {
+        this.amounts = amounts;
     }
 
-    public void addTenderItem(String typeName, String amount) {
-        if( tenderItems == null ) {
-            tenderItems = new ArrayList<>();
+    public void addAmount(Total amount) {
+        if (this.amounts == null) {
+            this.amounts = new ArrayList<>();
         }
-
-        tenderItems.add(new TenderItem(typeName, amount));
+        this.amounts.add(amount);
     }
 
-    public List<ActionItem> getTenderItemActions() {
-        return tenderItemActions;
+    public OptionsListPart getOptionsList() {
+        return optionsList;
     }
 
-    public void setTenderItemActions(List<ActionItem> tenderItemActions) {
-        this.tenderItemActions = tenderItemActions;
+    public void setOptionsList(OptionsListPart optionsList) {
+        this.optionsList = optionsList;
     }
 
-    public void addTenderItemAction(ActionItem tenderItemAction) {
-        if( tenderItemActions == null ){
-            tenderItemActions = new ArrayList<>();
-        }
-
-        tenderItemActions.add(tenderItemAction);
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public String getNoCompletedTendersMessage() {
-        return noCompletedTendersMessage;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
-    public void setNoCompletedTendersMessage(String noCompletedTendersMessage) {
-        this.noCompletedTendersMessage = noCompletedTendersMessage;
-    }
-
-    public List<String> getTenderTypeActionNames() {
-        return tenderTypeActionNames;
-    }
-
-    public void setTenderTypeActionNames(List<String> tenderTypeActionNames) {
-        this.tenderTypeActionNames = tenderTypeActionNames;
-    }
-
-    public void addTenderTypeActionName(String tenderTypeActionName) {
-        if(this.tenderTypeActionNames == null){
-            this.tenderTypeActionNames = new ArrayList<>();
-        }
-
-        this.tenderTypeActionNames.add(tenderTypeActionName);
-    }
-
-    public String getNoCompletedTendersIcon() {
-        return noCompletedTendersIcon;
-    }
-
-    public void setNoCompletedTendersIcon(String noCompletedTendersIcon) {
-        this.noCompletedTendersIcon = noCompletedTendersIcon;
-    }
 }

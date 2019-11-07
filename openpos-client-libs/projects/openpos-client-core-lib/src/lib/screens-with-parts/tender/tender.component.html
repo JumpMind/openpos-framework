@@ -1,51 +1,41 @@
-<app-form [form]="form">
-<app-waffle>
-    <app-bacon-strip waffle-header></app-bacon-strip>
-    <app-sausage-links waffle-drawer-content></app-sausage-links>
-    <div waffle-title class="text-md">
-        {{screen.instructions}}
-    </div>
-    <div waffle-body gdAreas=   "balance tenderAmount |
-                                 tendersLabel tendersLabel |
-                                 tenders tenders"
-                     gdColumns= "1fr 1fr"
-                     gdRows= "auto auto 1fr">
-            <mat-card class="balance-due" gdArea="balance">
-                <mat-card-title class="text-sm">
-                    {{screen.balanceDue.label}}
-                </mat-card-title>
-                <mat-card-content class="text-xl">
-                    {{screen.balanceDue.value | valueFormatter:'money'}}
-                </mat-card-content>
-            </mat-card>
-    
-            <mat-card class="tender-amount" gdArea="tenderAmount">
-                    <app-dynamic-form-field [formGroup]="form" [formField]="screen.form.formElements[0]"></app-dynamic-form-field>
-            </mat-card>
-            <div class="tenders-label" gdArea="tendersLabel" *ngIf="!!screen.tenderItems">
-                    {{screen.completedTenderListLabel}}
+<div class="common-background tender-outer">
+    <app-bacon-strip></app-bacon-strip>
+
+    <div class="tender-body">
+
+        <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && screen.amountDue"
+            class="common-border-color tender-amount-due-outer">
+            <div responsive-class class="tender-amount-due-title">{{screen.amountDue.name}}</div>
+            <div responsive-class class="tender-amount-due">
+                <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
             </div>
-            <mat-card gdArea="tenders" class="tenders-container serrated-edge">
-                <mat-card-content class="tenders">
-                    <div class="tender-item" *ngFor="let item of screen.tenderItems; index as i;"
-                        gdAreas="type . amount button"
-                        gdColumns="auto 1fr auto auto">
-                        <div gdArea="type">{{item.typeName}}</div>
-                        <div gdArea="amount">{{item.amount | valueFormatter:'money'}}</div>
-                        <app-kebab-button gdArea="button" *ngIf="!!screen.tenderItemActions" 
-                            [menuItems]="screen.tenderItemActions"
-                            (menuItemClick)="doAction($event, i)"></app-kebab-button>
-                    </div>
-                    <div *ngIf="!screen.tenderItems || screen.tenderItems.length == 0" class="no-tenders">
-                        <app-icon [iconName]="screen.noCompletedTendersIcon" iconClass="mat-128"></app-icon>
-                        {{screen.noCompletedTendersMessage}}
-                    </div>
-                </mat-card-content>
-            </mat-card>
-        
+        </div>
+
+        <div *ngIf="screen.amounts && screen.amounts.length > 1 && screen.amountDue" responsive-class
+            class="tender-amounts-outer">
+            <div *ngFor="let amount of screen.amounts" responsive-class class="tender-amount-row tender-amount-outer">
+                <div class="tender-amount-name">{{amount.name}}</div>
+                <div class="tender-amount">
+                    <app-currency-text [amountText]="amount.amount"></app-currency-text>
+                </div>
+            </div>
+            <div responsive-class class="common-border-color tender-amount-row tender-remaining-balance-outer">
+                <div class="tender-remaining-balance-name">{{screen.amountDue.name}}</div>
+                <div class="tender-remaining-balance">
+                    <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="screen.prompt" responsive-class class="tender-payment-instructions">
+            {{screen.prompt}}
+        </div>
+
+        <app-options-list *ngIf="screen.optionsList" (optionClick)="doAction($event)" responsive-class
+            class="tender-options">
+        </app-options-list>
+
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="tender-payment-auth-image">
+
     </div>
-    <div waffle-footer>
-        <app-status-strip ></app-status-strip>
-    </div>
-</app-waffle>
-</app-form>
+</div>

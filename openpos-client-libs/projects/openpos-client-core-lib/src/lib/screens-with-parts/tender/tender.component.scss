@@ -1,39 +1,108 @@
-[waffle-title]{
-    margin-left:32px;
-    margin-top:16px;
-}
+@import "../../styles/mixins/typography";
 
-[waffle-body]{
+.tender-outer {
     height: 100%;
-}
-
-[waffle-footer]{
-    margin-left:32px;
-    margin-bottom:8px
-}
-
-.tenders-label{
-    margin-left:32px;
-}
-
-.balance-due{
-    text-align: center;
-}
-
-.no-tenders{
-    text-align: center;
-}
-
-.tenders{
-    overflow-y: scroll;
-}
-
-.tenders-container{
     display: flex;
     flex-direction: column;
-    min-height: 50%;
 }
 
-.tender-item{
-    align-items: center;
+.tender-body {
+    padding: 16px 16px;
+    flex: 1 1 100%;
+    overflow-y: auto;
+    display: grid;
+    grid-auto-flow: row;
+    align-content: center;
+    row-gap: 32px;
+}
+
+.tender-options {
+    justify-self: center;
+    width: 50%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 75%;
+    }
+}
+
+.tender-amount-due-outer {
+    padding: 32px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    justify-self: center;
+}
+
+.tender-amount-due-title {
+    @extend %text-lg;
+    text-align: center;
+}
+
+.tender-amount-due {
+    @extend %text-xl;
+    font-weight: bold;
+    text-align: center;
+}
+
+.tender-amounts-outer {
+    justify-self: center;
+    width: 25%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 75%;
+    }
+}
+
+.tender-amount-outer {
+    @extend %text-md;
+}
+
+.tender-amount-row {
+    display: grid;
+    grid-template-columns: auto auto;
+    column-gap: 16px;
+}
+
+.tender-amount {
+    justify-self: end;
+}
+
+.tender-remaining-balance {
+    justify-self: end;
+}
+
+.tender-payment-instructions {
+    @extend %text-md;
+    justify-self: center;
+    text-align: center;
+    max-width: 50%;
+
+    &.mobile {
+        max-width: 75%;
+    }
+
+    &.tablet {
+        max-width: 75%;
+    }
+}
+
+.tender-remaining-balance-outer {
+    @extend %text-md;
+    font-weight: bold;
+    border-top-width: 2px;
+    border-top-style: solid;
+    padding-top: 16px;
+    margin-top: 16px;
+}
+
+.tender-payment-auth-image {
+    max-width: 50%;
+    justify-self: center;
 }
