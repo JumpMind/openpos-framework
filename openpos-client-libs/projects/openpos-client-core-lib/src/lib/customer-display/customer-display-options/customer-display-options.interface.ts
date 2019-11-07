@@ -7,5 +7,5 @@ export interface CustomerDisplayOptionsInterface extends IAbstractScreen {
     prompt: string;
     icon: string;
     imageUrl: string;
-    selfCheckoutOptionsPart: OptionsListInterface;
+    optionsList: OptionsListInterface;
 }

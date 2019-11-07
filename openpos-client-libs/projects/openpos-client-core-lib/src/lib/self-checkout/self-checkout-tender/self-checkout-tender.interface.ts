@@ -9,5 +9,5 @@ export interface SelfCheckoutTenderInterface extends IAbstractScreen {
     amountDue: ITotal;
     amounts: ITotal[];
     imageUrl: string;
-    selfCheckoutOptionsPart: OptionsListInterface;
+    optionsList: OptionsListInterface;
 }

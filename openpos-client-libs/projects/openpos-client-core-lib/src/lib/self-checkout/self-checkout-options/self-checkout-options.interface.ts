@@ -7,5 +7,5 @@ export interface SelfCheckoutOptionsInterface extends IAbstractScreen {
     prompt: string;
     icon: string;
     imageUrl: string;
-    selfCheckoutOptionsPart: OptionsListInterface;
+    optionsList: OptionsListInterface;
 }

@@ -16,7 +16,7 @@
             {{screen.prompt}}
         </div>
 
-        <app-options-list responsive-class class="self-checkout-options"></app-options-list>
+        <app-options-list (optionClick)="doAction($event)" responsive-class class="self-checkout-options"></app-options-list>
 
     </div>
 </div>

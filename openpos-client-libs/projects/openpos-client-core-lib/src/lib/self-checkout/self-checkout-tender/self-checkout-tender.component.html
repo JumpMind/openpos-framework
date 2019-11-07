@@ -35,7 +35,7 @@
             {{screen.prompt}}
         </div>
 
-        <app-options-list *ngIf="screen.selfCheckoutOptionsPart" responsive-class
+        <app-options-list *ngIf="screen.optionsList" (optionClick)="doAction($event)" responsive-class
             class="self-checkout-tender-options">
         </app-options-list>
 

@@ -1,40 +1,51 @@
 @import "../../../styles/mixins/typography";
 
 .options-list-item {
-    padding: 16px !important;
-    margin: 8px;
-    height: unset !important;
+    width: 100%;
+    padding: 16px;
+    margin: 8px 0px;
     background-color: white;
     white-space: normal;
 
     &.tablet {
         padding: 12px !important;
+        margin: 4px 0px;
     }
 
     &.mobile {
         padding: 4px !important;
+        margin: 4px 0px;
     }
 }
 
-.mat-list-item {
-    // Fix weird overflow in list items
-    width: unset !important;
-}
+::ng-deep .options-list-item {
+    column-gap: 16px;
 
-::ng-deep .mat-list-item-content {
-    grid-template-columns: 25% 75%;
-    display: grid !important;
+    .mat-button-wrapper {
+        grid-template-columns: 64px 1fr 64px;
+        display: grid !important;
+    }
+
+    &.mobile {
+        .mat-button-wrapper {
+            grid-template-columns: auto 1fr;
+            display: grid !important;
+        }
+    }
 }
 
 .options-list-line {
     @extend %text-lg;
     text-align: center;
     align-self: center;
-    justify-self: start;
-    padding-left: 15%;
+
+    &.mobile {
+        text-align: start;
+        justify-self: start;
+    }
 }
 
-.self-checkout-options-list-icon {
+.options-list-icon {
     align-self: center;
     justify-self: end;
 }
