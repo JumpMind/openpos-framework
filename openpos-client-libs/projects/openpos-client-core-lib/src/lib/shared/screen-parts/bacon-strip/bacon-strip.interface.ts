@@ -5,7 +5,6 @@ export interface BaconStripInterface {
     deviceId: string;
     operatorText: string;
     headerText: string;
-    headerIcon: string;
     logo: string;
     actions: IActionItem[];
     searchBar: SearchExpandInputInterface;
