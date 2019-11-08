@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -244,15 +245,36 @@ public class DBSessionQueryTest {
         Query<CarStats> modelCounts = new Query<CarStats>()
                 .named("carCountByModel")
                 .result(CarStats.class);
-        
+
         List<CarStats> carStats = db.query(modelCounts, "Hyundai", 100);
-        
+
         assertEquals(3, carStats.size());
-        
+
         assertEquals("Accent", carStats.get(0).getModel());
         assertEquals("Elantra", carStats.get(1).getModel());
         assertEquals("Santa Fe", carStats.get(2).getModel());
     }
+
+    @Test
+    public void testWhereInStatement() {
+        DBSession db = sessionFactory.createDbSession();
+        Query<CarStats> modelCounts = new Query<CarStats>()
+                .named("carCountByModelWithIn")
+                .result(CarStats.class);
+
+        List<String> makes = new ArrayList<>();
+        makes.add("Hyundai");
+        makes.add("Honda");
+        List<CarStats> carStats = db.query(modelCounts, makes, 100);
+
+        assertEquals(3, carStats.size());
+
+        assertEquals("Accent", carStats.get(0).getModel());
+        assertEquals("Elantra", carStats.get(1).getModel());
+        assertEquals("Santa Fe", carStats.get(2).getModel());
+    }
+
+
     
     @Test
     public void testCarSearchYaml() {

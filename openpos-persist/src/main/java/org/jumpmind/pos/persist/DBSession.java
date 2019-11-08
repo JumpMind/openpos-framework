@@ -40,6 +40,7 @@ import org.jumpmind.pos.util.model.ITypeCode;
 import org.jumpmind.util.LinkedCaseInsensitiveMap;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 
 public class DBSession {
 
@@ -47,7 +48,7 @@ public class DBSession {
 
     private DatabaseSchema databaseSchema;
     private IDatabasePlatform databasePlatform;
-    private JdbcTemplate jdbcTemplate;
+    private NamedParameterJdbcTemplate jdbcTemplate;
     private Map<String, String> sessionContext;
     private Map<String, QueryTemplate> queryTemplates;
     private Map<String, DmlTemplate> dmlTemplates;
@@ -61,8 +62,9 @@ public class DBSession {
         this.databaseSchema = databaseSchema;
         this.databasePlatform = databasePlatform;
         this.sessionContext = sessionContext;
-        this.jdbcTemplate = new JdbcTemplate(databasePlatform.getDataSource());
-        this.jdbcTemplate.setFetchSize(1000);
+        JdbcTemplate baseTemplate = new JdbcTemplate(databasePlatform.getDataSource());
+        baseTemplate.setFetchSize(1000);
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(baseTemplate);
         this.queryTemplates = queryTemplates;
         this.tagHelper = tagHelper;
     }
@@ -200,14 +202,14 @@ public class DBSession {
     public int executeDml(String namedDml, Object... params) {
         DmlTemplate template = dmlTemplates.get(namedDml);
         if (template != null && isNotBlank(template.getDml())) {
-            return jdbcTemplate.update(template.getDml(), params);
+            return jdbcTemplate.getJdbcOperations().update(template.getDml(), params);
         } else {
             throw new PersistException("Could not find dml named: " + namedDml);
         }
     }
 
     public int executeSql(String sql, Object... params) {
-        return jdbcTemplate.update(sql, params);
+        return jdbcTemplate.getJdbcOperations().update(sql, params);
     }
 
     public <T> List<T> query(Query<T> query) {
@@ -219,7 +221,7 @@ public class DBSession {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> query(Query<T> query, String singleParam, int maxResults) {
+    public <T> List<T> query(Query<T> query, Object singleParam, int maxResults) {
         QueryTemplate queryTemplate = getQueryTemplate(query);
         try {
             SqlStatement sqlStatement = queryTemplate.generateSQL(query, singleParam);
@@ -384,7 +386,7 @@ public class DBSession {
         Object[] values = statement.getValueArray(model.getColumnNamesToValues());
         int[] types = statement.getTypes();
 
-        return jdbcTemplate.update(sql, values, types);
+        return jdbcTemplate.getJdbcOperations().update(sql, values, types);
     }
 
     protected List<Table> getValidatedTables(AbstractModel entity) {
@@ -406,7 +408,7 @@ public class DBSession {
     @SuppressWarnings("unchecked")
     protected <T> List<T> queryInternal(Class<T> resultClass, SqlStatement statement, int maxResutls) throws Exception {
         List<T> objects = new ArrayList<T>();
-        List<Row> rows = jdbcTemplate.query(statement.getSql(), new DefaultMapper(), statement.getValues().toArray());
+        List<Row> rows = jdbcTemplate.query(statement.getSql(), statement.getParameters(), new DefaultMapper());
 
         for (int j = 0; j < rows.size() && j < maxResutls; j++) {
             Row row = rows.get(j);
