@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { PersonalizationResponse } from './personalization-response.interface';
 import { Observable, BehaviorSubject } from 'rxjs';
 
@@ -8,11 +8,9 @@ import { Observable, BehaviorSubject } from 'rxjs';
 })
 export class PersonalizationService {
     static readonly OPENPOS_MANAGED_SERVER_PROPERTY = 'managedServer';
+    private baseUrlAttributeChanged$ = new BehaviorSubject<boolean>(false);
+    private appIdChanged$ = new BehaviorSubject<boolean>(false);
 
-    private serverBaseUrl: string;
-    private serverBaseUrl$ = new BehaviorSubject<string>(this.getServerBaseURL());
-    private apiServerBaseUrl$ = new BehaviorSubject<string>(this.getApiServerBaseURL());
-    private deviceAppApiServerBaseUrl$ = new BehaviorSubject<string>(this.getDeviceAppApiServerBaseUrl());
     private personalizationProperties$ = new BehaviorSubject<Map<string, string>>(this.getPersonalizationProperties());
     private appId: string;
 
@@ -35,10 +33,7 @@ export class PersonalizationService {
             this.setSslEnabled(false);
         }
 
-        this.updateServerBaseUrl();
-        this.serverBaseUrl$.next(this.serverBaseUrl);
-        this.apiServerBaseUrl$.next(this.getApiServerBaseURL());
-        this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
+        this.baseUrlAttributeChanged$.next(true);
     }
 
     private setPersonalizationProperties(personalizationProperties?: Map<string, string>) {
@@ -94,21 +89,16 @@ export class PersonalizationService {
         return map;
     }
 
-    public getPersonalizationProperties$(): Observable<Map<string, string>> {
-        return this.personalizationProperties$;
+    public getAppIdChanged$(): Observable<boolean> {
+        return this.appIdChanged$;
     }
 
-    public getWebsocketUrl(): string {
-        let protocol = 'ws://';
-        if (this.isSslEnabled()) {
-            protocol = 'wss://';
-        }
-        let url: string = protocol + this.getServerName();
-        if (this.getServerPort()) {
-            url = url + ':' + this.getServerPort();
-        }
-        url = url + '/api/websocket';
-        return url;
+    public getBaseUrlAttributeChanged$(): Observable<boolean> {
+        return this.baseUrlAttributeChanged$;
+    }
+
+    public getPersonalizationProperties$(): Observable<Map<string, string>> {
+        return this.personalizationProperties$;
     }
 
     public isManagedServer(): boolean {
@@ -133,8 +123,6 @@ export class PersonalizationService {
 
     private setServerPort(port: string) {
         localStorage.setItem('serverPort', port);
-
-        this.updateServerBaseUrl();
     }
 
     public getServerPort(): string {
@@ -150,8 +138,11 @@ export class PersonalizationService {
     }
 
     public setAppId(id: string) {
+        const appIdChanged = id !== this.appId;
         this.appId = id;
-        this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
+        if (appIdChanged) {
+            this.appIdChanged$.next(true);
+        }
     }
 
     public getAppId(): string {
@@ -168,39 +159,6 @@ export class PersonalizationService {
         } else {
             return false;
         }
-    }
-
-    public getServerBaseURL(): string {
-        if (!this.serverBaseUrl) {
-            this.updateServerBaseUrl();
-        }
-        return this.serverBaseUrl;
-    }
-
-    private updateServerBaseUrl() {
-        const protocol = this.isSslEnabled() ? 'https' : 'http';
-        this.serverBaseUrl = `${protocol}://${this.getServerName()}${this.getServerPort() ? `:${this.getServerPort()}` : ''}`;
-        console.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
-    }
-
-    public getServerBaseURL$(): Observable<string> {
-        return this.serverBaseUrl$;
-    }
-
-    public getApiServerBaseURL(): string {
-        return `${this.getServerBaseURL()}/api`;
-    }
-
-    public getApiServerBaseUrl$(): Observable<string> {
-        return this.apiServerBaseUrl$;
-    }
-
-    private getDeviceAppApiServerBaseUrl(): string {
-        return `${this.getApiServerBaseURL()}/appId/${this.getAppId()}/deviceId/${this.getDeviceId()}`;
-    }
-
-    public getDeviceAppApiServerBaseUrl$(): Observable<string> {
-        return this.deviceAppApiServerBaseUrl$;
     }
 
     public async requestPersonalization(serverName: string, serverPort: string, sslEnabled: boolean): Promise<PersonalizationResponse> {

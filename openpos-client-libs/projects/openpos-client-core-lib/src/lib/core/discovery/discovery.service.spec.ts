@@ -15,7 +15,9 @@ describe('SessionService', () => {
 
     beforeEach(() => {
         const personalizationSpy = jasmine.createSpyObj('PersonalizationService',
-            ['getDeviceId', 'isManagedServer', 'getPersonalizationProperties', 'isSslEnabled', 'getServerName', 'getServerPort']);
+            ['getDeviceId', 'isManagedServer', 'getPersonalizationProperties',
+             'isSslEnabled', 'getServerName', 'getServerPort', 'getBaseUrlAttributeChanged$',
+             'getAppIdChanged$', 'getAppId']);
         const spyHttpClient = jasmine.createSpyObj('HttpClient', ['get']);
 
         TestBed.configureTestingModule({
@@ -31,15 +33,20 @@ describe('SessionService', () => {
 
         AppInjector.Instance = TestBed.get(Injector);
         personalizationServiceSpy = TestBed.get(PersonalizationService);
-        httpClientSpy = TestBed.get(HttpClient);
-        discoveryService = TestBed.get(DiscoveryService);
-
         personalizationServiceSpy.getServerName.and.returnValue('server');
         personalizationServiceSpy.getServerPort.and.returnValue(6140);
+        personalizationServiceSpy.getAppId.and.returnValue('pos');
         personalizationServiceSpy.isSslEnabled.and.returnValue(false);
         personalizationServiceSpy.isManagedServer.and.returnValue(false);
         personalizationServiceSpy.getPersonalizationProperties.and.returnValue(null);
         personalizationServiceSpy.getDeviceId.and.returnValue('00000-000');
+        personalizationServiceSpy.getAppIdChanged$.and.returnValue(of(null));
+        personalizationServiceSpy.getBaseUrlAttributeChanged$.and.returnValue(of(null));
+
+        httpClientSpy = TestBed.get(HttpClient);
+        discoveryService = TestBed.get(DiscoveryService);
+
+
     });
 
     describe('clearCachedUrls', () => {

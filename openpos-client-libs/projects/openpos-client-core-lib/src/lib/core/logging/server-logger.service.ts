@@ -1,7 +1,6 @@
 import { ILogger } from './logger.interface';
 import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { PersonalizationService } from '../personalization/personalization.service';
 import { ServerLogEntry } from './server-log-entry';
 import { LogMethodType } from './log-method-type.enum';
 import { Subject, of, Subscription } from 'rxjs';
@@ -9,6 +8,7 @@ import { bufferTime, filter, catchError } from 'rxjs/operators';
 import { ConsoleInterceptorBypassService } from './console-interceptor-bypass.service';
 import { ConfigurationService } from '../services/configuration.service';
 import { ServerLoggerConfiguration } from './server-logger-configuration';
+import { DiscoveryService } from '../discovery/discovery.service';
 
 @Injectable({
     providedIn: 'root'
@@ -24,7 +24,7 @@ export class ServerLogger implements ILogger, OnDestroy {
 
     constructor(
         private http: HttpClient,
-        personalizationService: PersonalizationService,
+        discoveryService: DiscoveryService,
         private consoleInterceptorBypass: ConsoleInterceptorBypassService,
         configurationService: ConfigurationService ) {
 
@@ -42,7 +42,7 @@ export class ServerLogger implements ILogger, OnDestroy {
 
         // Subscribe for updates to the server base url for APIs
         this.subscriptions.add(
-            personalizationService.getDeviceAppApiServerBaseUrl$()
+            discoveryService.getDeviceAppApiServerBaseUrl$()
             .subscribe( url => this.loggerEndpointUrl = `${url}/clientlogs`));
 
         // Go ahead and start the logging buffer

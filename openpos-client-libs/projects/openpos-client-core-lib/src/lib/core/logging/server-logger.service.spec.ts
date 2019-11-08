@@ -1,7 +1,7 @@
 import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { ServerLogger } from './server-logger.service';
-import { PersonalizationService } from '../personalization/personalization.service';
+import { DiscoveryService } from '../discovery/discovery.service';
 import { of, Subject } from 'rxjs';
 import { ConsoleInterceptorBypassService } from './console-interceptor-bypass.service';
 import { ServerLogEntry } from './server-log-entry';
@@ -11,11 +11,11 @@ import { ServerLoggerConfiguration } from './server-logger-configuration';
 describe('ServerLoggerService', () => {
     let serverLogger: ServerLogger;
     let httpTestingController: HttpTestingController;
-    let personalizationService: jasmine.SpyObj<PersonalizationService>;
+    let discoveryService: jasmine.SpyObj<DiscoveryService>;
     let configurationService: jasmine.SpyObj<ConfigurationService>;
     let consoleInterceptorBypassService: jasmine.SpyObj<ConsoleInterceptorBypassService>;
     let configSubject: Subject<ServerLoggerConfiguration>;
-    const personalizationSpy = jasmine.createSpyObj('PersonalizationService', ['getDeviceAppApiServerBaseUrl$']);
+    const discoverySpy = jasmine.createSpyObj('DiscoveryService', ['getDeviceAppApiServerBaseUrl$']);
     const configurationSpy = jasmine.createSpyObj('ConfigurationService', ['getConfiguration']);
     const consoleInterceptorBypassServiceSpy =
     jasmine.createSpyObj('ConsoleInterceptorBypassService', ['log', 'error', 'info', 'warn', 'debug']);
@@ -25,16 +25,16 @@ describe('ServerLoggerService', () => {
             imports: [ HttpClientTestingModule ],
             providers: [
                 ServerLogger,
-                { provide: PersonalizationService, useValue: personalizationSpy },
+                { provide: DiscoveryService, useValue: discoverySpy },
                 { provide: ConfigurationService, useValue: configurationSpy },
                 { provide: ConsoleInterceptorBypassService, useValue: consoleInterceptorBypassServiceSpy}
             ]
         });
         httpTestingController = TestBed.get(HttpTestingController);
-        personalizationService = TestBed.get(PersonalizationService);
+        discoveryService = TestBed.get(DiscoveryService);
         configurationService = TestBed.get(ConfigurationService);
         consoleInterceptorBypassService = TestBed.get(ConsoleInterceptorBypassService);
-        personalizationService.getDeviceAppApiServerBaseUrl$.and.returnValue(of('/test/api'));
+        discoveryService.getDeviceAppApiServerBaseUrl$.and.returnValue(of('/test/api'));
         configSubject = new Subject<ServerLoggerConfiguration>();
         configurationService.getConfiguration.and.returnValue(configSubject);
         serverLogger = TestBed.get(ServerLogger);

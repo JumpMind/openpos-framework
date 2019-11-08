@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonalizationService } from '../personalization/personalization.service';
 import { DiscoveryResponse } from './discovery-response.interface';
-import { timeout, catchError, map } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { timeout, catchError } from 'rxjs/operators';
+import { of, BehaviorSubject, Observable } from 'rxjs';
 import { DiscoveryParams } from './discovery-params.interface';
 
 @Injectable({
@@ -13,9 +13,22 @@ export class DiscoveryService {
 
     private serverBaseUrl: string;
     private websocketUrl: string;
+    private serverBaseUrl$ = new BehaviorSubject<string>(null);
+    private apiServerBaseUrl$ = new BehaviorSubject<string>(null);
+    private deviceAppApiServerBaseUrl$ = new BehaviorSubject<string>(null);
 
     constructor(protected personalization: PersonalizationService,
                 private http: HttpClient) {
+        personalization.getBaseUrlAttributeChanged$().subscribe((changed) => {
+            if (changed) {
+                this.updateServerBaseUrl();
+            }
+        });
+        personalization.getAppIdChanged$().subscribe((changed) => {
+            if (changed) {
+                this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
+            }
+        });
     }
 
     public clearCachedUrls() {
@@ -104,13 +117,36 @@ export class DiscoveryService {
             if (this.personalization.isManagedServer()) {
                 console.debug(`serverBaseURL isn't set yet for the managed server`);
             } else {
-                const protocol = this.personalization.isSslEnabled() ? 'https' : 'http';
-                this.serverBaseUrl = `${protocol}://${this.personalization.getServerName()}` +
-                    `${this.personalization.getServerPort() ? `:${this.personalization.getServerPort()}` : ''}`;
-                console.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
+                this.updateServerBaseUrl();
             }
         }
         return this.serverBaseUrl;
+    }
+
+    private updateServerBaseUrl() {
+        const protocol = this.personalization.isSslEnabled() ? 'https' : 'http';
+        this.serverBaseUrl = `${protocol}://${this.personalization.getServerName()}` +
+            `${this.personalization.getServerPort() ? `:${this.personalization.getServerPort()}` : ''}`;
+        console.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
+        this.serverBaseUrl$.next(this.getServerBaseURL());
+        this.apiServerBaseUrl$.next(this.getApiServerBaseURL());
+        this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
+    }
+
+    public getServerBaseURL$(): Observable<string> {
+        return this.serverBaseUrl$;
+    }
+
+    public getApiServerBaseUrl$(): Observable<string> {
+        return this.apiServerBaseUrl$;
+    }
+
+    private getDeviceAppApiServerBaseUrl(): string {
+        return `${this.getApiServerBaseURL()}/appId/${this.personalization.getAppId()}/deviceId/${this.personalization.getDeviceId()}`;
+    }
+
+    public getDeviceAppApiServerBaseUrl$(): Observable<string> {
+        return this.deviceAppApiServerBaseUrl$;
     }
 
     public getApiServerBaseURL(): string {
