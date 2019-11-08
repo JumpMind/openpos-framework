@@ -319,7 +319,7 @@ public class ModelWrapper {
         if (field != null) {
             return field;
         }  else {
-            throw new PersistException("Could not find field named " + fieldName + " on model " + this);
+            throw new PersistException("Could not find field named " + fieldName + " on model " + modelMetaData);
         }
     }
 

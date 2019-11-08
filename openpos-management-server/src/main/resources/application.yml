@@ -57,7 +57,7 @@ openpos:
       #   workingDir: A File object that is the working directory of the device
       #   config:     A OpenposManagementServerConfig object which contains the
       #                 property values from this yaml file or their overrides.
-      #   log:        A logger refernce for logging messages in the OpenposManagementServer 
+      #   log:        A logger reference for logging messages in the OpenposManagementServer 
       #                 log
       #  
       # Example value: file:c:/scripts/DeviceProcessInitialize.groovy

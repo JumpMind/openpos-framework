@@ -14,6 +14,14 @@ queries:
     - model = ${model}
   orderBy: model_year, make, model
 -
+  name: carCountByModelWithIn
+  select: >
+    select count(*) as count, model
+    from car_car
+    where make in (${make})
+    group by model
+    order by model
+-
   name: carCountByModel
   select: > 
     select count(*) as count, model 

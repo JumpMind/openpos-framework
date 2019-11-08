@@ -1,13 +1,16 @@
 package org.jumpmind.pos.persist;
 
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
+
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SqlStatement {
     
     private String sql;
-    private List<Object> values = new ArrayList<>();
-    private List<Integer> types = new ArrayList<>();
+    private MapSqlParameterSource parameters;
+    //private List<Integer> types = new ArrayList<>();
     
     public String getSql() {
         return sql;
@@ -15,17 +18,17 @@ public class SqlStatement {
     public void setSql(String sql) {
         this.sql = sql;
     }
-    public List<Object> getValues() {
-        return values;
+
+    public MapSqlParameterSource getParameters() {
+        if (this.parameters == null) {
+            this.parameters = new MapSqlParameterSource();
+        }
+        return this.parameters;
     }
-    public void setValues(List<Object> values) {
-        this.values = values;
+
+    public void setParameters(Map<String,Object> params) {
+        this.parameters = new MapSqlParameterSource(params);
     }
-    public List<Integer> getTypes() {
-        return types;
-    }
-    public void setTypes(List<Integer> types) {
-        this.types = types;
-    }
+
 
 }
