@@ -30,4 +30,9 @@ public class ModelMetaData {
     public void init() {
         systemInfoField = FieldUtils.getField(modelClassMetaData.get(modelClassMetaData.size()-1).getClass(), "systemInfo", true);
     }
+
+    @Override
+    public String toString() {
+        return modelClassMetaData.toString();
+    }
 }
