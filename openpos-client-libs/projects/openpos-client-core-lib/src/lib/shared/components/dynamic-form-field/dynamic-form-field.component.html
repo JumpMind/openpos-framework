@@ -7,7 +7,7 @@
     </mat-button-toggle-group>
 
     <ng-container *ngIf="formField.elementType==='Input' && ! isSpecialCaseInput()">
-        <mat-form-field style="width:100%" [ngSwitch]="formField.inputType">
+        <mat-form-field responsive-class style="width:100%" [ngSwitch]="formField.inputType">
             <app-icon *ngIf="formField.iconName" matPrefix iconName="{{formField.iconName}}" iconClass="material-icons"></app-icon>
             <mat-hint *ngIf="formField.hintText">{{formField.hintText}}</mat-hint>
             <input *ngSwitchDefault matInput cdkFocusInitial id="{{formField.id}}" [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
