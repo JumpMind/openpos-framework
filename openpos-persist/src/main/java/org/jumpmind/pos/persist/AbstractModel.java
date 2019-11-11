@@ -13,18 +13,18 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    @ColumnDef(required=true,
+    @ColumnDef(required=true, defaultValue = "CURRENT_TIMESTAMP",
             description="Timestamp when this entry was created.")
     private Date createTime = new Date();
 
-    @ColumnDef(required=true, size="50",
+    @ColumnDef(required=true, size="50", defaultValue = "system",
             description="The user who last updated this entry.")    
     private String createBy;
 
-    @ColumnDef(description="Timestamp when a user last updated this entry.")
+    @ColumnDef(defaultValue = "CURRENT_TIMESTAMP", description="Timestamp when a user last updated this entry.")
     private Date lastUpdateTime = new Date();
 
-    @ColumnDef(required=true, size="50",
+    @ColumnDef(required=true, size="50", defaultValue = "system",
             description="The user who last updated this entry.")    
     private String lastUpdateBy;
     

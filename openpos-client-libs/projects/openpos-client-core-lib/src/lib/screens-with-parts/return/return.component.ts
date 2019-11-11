@@ -1,7 +1,7 @@
-import { MatDialog } from '@angular/material';
-import { Component, ViewChild, AfterViewInit, OnInit, AfterViewChecked, ElementRef, Injector } from '@angular/core';
+import { MatDialog, MatBottomSheet } from '@angular/material';
+import { Component, ViewChild, AfterViewInit, OnInit, AfterViewChecked, ElementRef, Injector, OnDestroy } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { NavListComponent } from '../../shared/components/nav-list/nav-list.component';
 import { PosScreen } from '../pos-screen/pos-screen.component';
@@ -11,6 +11,11 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { ITransactionReceipt } from '../../shared/components/receipt-card/transaction-receipt.interface';
+import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
+import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
+import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
+import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
+import { MobileReturnReceiptsSheetComponent } from './mobile-return-receipts-sheet/mobile-return-receipts-sheet.component';
 
 /**
  * @ignore
@@ -23,11 +28,12 @@ import { ITransactionReceipt } from '../../shared/components/receipt-card/transa
     templateUrl: './return.component.html',
     styleUrls: ['./return.component.scss']
 })
-export class ReturnComponent extends PosScreen<any> implements AfterViewInit, AfterViewChecked, OnInit {
+export class ReturnComponent extends PosScreen<any> implements AfterViewChecked, OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
+
+    isMobile: Observable<boolean>;
 
     @ViewChild('scrollList') private scrollList: ElementRef;
     public size = -1;
-    initialized = false;    // listData: Observable<ISelectableListData<ISellItem>>;
     individualMenuClicked = false;
 
     public overFlowListSize: Observable<number>;
@@ -37,9 +43,19 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     public receipts: ITransactionReceipt[];
     public removeReceiptAction: IActionItem;
 
-    constructor(
-        private observableMedia: ObservableMedia, protected dialog: MatDialog, injector: Injector) {
+    private scanServiceSubscription: Subscription;
+
+    constructor(private scannerService: ScannerService, protected dialog: MatDialog, injector: Injector,
+                media: OpenposMediaService, private bottomSheet: MatBottomSheet ) {
         super(injector);
+        this.isMobile = media.observe(new Map([
+            [MediaBreakpoints.MOBILE_PORTRAIT, true],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, false],
+            [MediaBreakpoints.TABLET_PORTRAIT, true],
+            [MediaBreakpoints.TABLET_LANDSCAPE, false],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
+        ]));
     }
 
     buildScreen() {
@@ -49,31 +65,53 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
         this.dialog.closeAll();
     }
 
+    ngAfterViewChecked() {
+        if (this.items && this.size !== this.items.length) {
+            this.scrollToBottom();
+            this.size = this.items.length;
+        }
+    }
+
     ngOnInit(): void {
-        const sizeMap = new Map([
-            ['xs', 3],
-            ['sm', 3],
-            ['md', 4],
-            ['lg', 5],
-            ['xl', 5]
-        ]);
-
-        let startSize = 3;
-        sizeMap.forEach((size, mqAlias) => {
-            if (this.observableMedia.isActive(mqAlias)) {
-                startSize = size;
-            }
-        });
-        this.overFlowListSize = this.observableMedia.asObservable().pipe(map(
-            change => {
-                return sizeMap.get(change.mqAlias);
-            }
-        ), startWith(startSize));
+        this.scrollToBottom();
+        this.registerScanner();
     }
 
-    ngAfterViewInit(): void {
-        this.initialized = true;
+    onBecomingActive() {
+        this.registerScanner();
     }
+
+    onLeavingActive() {
+        this.unregisterScanner();
+    }
+
+    ngOnDestroy(): void {
+        this.unregisterScanner();
+        this.scannerService.stopScanning();
+        super.ngOnDestroy();
+    }
+
+    scrollToBottom(): void {
+        try {
+            this.scrollList.nativeElement.scrollTop = this.scrollList.nativeElement.scrollHeight;
+        } catch (err) { }
+    }
+
+    private registerScanner() {
+        if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
+            this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
+                this.doAction({ action: 'Scan' }, scanData);
+            });
+        }
+    }
+
+    private unregisterScanner() {
+        if (this.scanServiceSubscription !== null) {
+            this.scanServiceSubscription.unsubscribe();
+            this.scanServiceSubscription = null;
+        }
+    }
+
 
     public onReceiptClick(event: any) {
         if (this.receipts) {
@@ -82,17 +120,20 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
         }
     }
 
-    ngAfterViewChecked() {
-        if (this.items && this.size !== this.items.length) {
-            this.scrollToBottom();
-            this.size = this.items.length;
-        }
-    }
-
-    scrollToBottom(): void {
-        try {
-            this.scrollList.nativeElement.scrollTop = this.scrollList.nativeElement.scrollHeight;
-        } catch (err) { }
+    openSheet(): void {
+        console.log('Entering openSheet()');
+        const ref = this.bottomSheet.open( MobileReturnReceiptsSheetComponent,
+            {data: this.screen, panelClass: 'sheet'});
+        this.subscriptions.add(new Subscription( () => ref.dismiss()));
+        this.subscriptions.add(ref.afterDismissed().subscribe( item => {
+            if (item !== undefined && item !== null) {
+                if (typeof item === 'object') {
+                    this.doAction(this.removeReceiptAction, item.transactionNumber);
+                } else if (typeof item === 'number') {
+                    this.doAction('TransactionDetails', item);
+                }
+            }
+        }));
     }
 
 }

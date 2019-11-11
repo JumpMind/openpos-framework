@@ -34,6 +34,13 @@ Here is an example using Log4J
     </appender>
 ```
 
+The `timestamp` output to the client log can optionally be formatted by providing a value in the server configuration for the `openpos.clientLogCollector.timestampFormat` property. Here is an example configuration:
+```yaml
+openpos:
+  clientLogCollector:
+    timestampFormat: yyyy-MM-dd HH:mm:ss,SSS
+```
+
 ## Providing additional loggers
 
 Additional loggers can be provided by implementing [ILogger](logger.interface) and provide it using the token `LOGGERS` token.

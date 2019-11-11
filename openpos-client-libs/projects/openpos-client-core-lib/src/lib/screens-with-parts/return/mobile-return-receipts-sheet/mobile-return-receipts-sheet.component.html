@@ -1,0 +1,15 @@
+<section class="receipts-content dark-background" (swipedown)="closeSheet()" responsive-class>
+        <strong class="receipts-label contrast-color">
+                <app-icon iconName="double_arrow" iconClass="double-arrow md"></app-icon>
+                {{receipts.length}} Linked Receipt(s)
+        </strong>
+        <div class="receipt-cards common-background">
+                <app-receipt-card *ngFor="let receipt of receipts"
+                    class="receipt"
+                    [receipt]="receipt" 
+                    [removeReceiptAction]="removeReceiptAction" 
+                    (removeButtonClick)="onReceiptRemove(receipt)"
+                    (click)="onReceiptClick(receipt)">
+                </app-receipt-card>
+        </div>
+</section>

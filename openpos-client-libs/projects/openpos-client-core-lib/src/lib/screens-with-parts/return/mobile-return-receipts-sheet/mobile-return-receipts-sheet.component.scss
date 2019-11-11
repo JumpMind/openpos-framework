@@ -1,0 +1,28 @@
+@import "../../../styles/mixins/typography";
+
+.receipts-content{
+    display:grid;
+    grid-template-rows: auto 1fr;
+    height:100%;
+
+    .receipts-label {
+        margin:8px;
+        text-align: center;
+        @extend %text-sm;
+
+        .double-arrow {
+            display:inline-grid;
+            transform: rotate(90deg);
+        }
+    }
+
+    .receipt-cards {
+        min-height:100px;
+        overflow-y: auto;
+        .receipt {
+           margin:8px;
+        }
+    }
+
+
+}

@@ -1,6 +1,6 @@
 <app-bacon-strip class="return-bacon-strip">
     <div class="common-background return-outer">
-        <div class="return-body">
+        <div *ngIf="!(isMobile | async)" class="return-body">
             <section class="receipts" *ngIf="receipts && receipts.length > 0">
                 <div class="receipts-content">
                     <strong class="receipts-label muted-color" responsiveClass>
@@ -23,6 +23,17 @@
                 <app-status-strip></app-status-strip>
             </div>
             <app-sale-total-panel></app-sale-total-panel>
+        </div>
+        <div *ngIf="(isMobile | async)" class="return-body-mobile">
+            <app-mobile-loyalty-part class="return-loyalty-mobile"></app-mobile-loyalty-part>
+            <app-mobile-sale-item-list class="return-list-background-mobile"></app-mobile-sale-item-list>
+        </div>
+        <app-mobile-totals-part *ngIf="(isMobile | async)" (swipeup)="openSheet()" responsive-class></app-mobile-totals-part>
+        <div *ngIf="(isMobile | async) && receipts && receipts.length > 0" class="receipts-mobile-swipe-up-container dark-background" (swipeup)="openSheet()" responsive-class> 
+            <strong class="receipts-label-mobile contrast-color">
+                <app-icon iconName="double_arrow" iconClass="double-arrow md"></app-icon>
+                {{receipts.length}} Linked Receipt(s)
+            </strong>
         </div>
     </div>
 </app-bacon-strip>

@@ -44,10 +44,10 @@ import org.jumpmind.properties.TypedProperties;
 import org.jumpmind.util.LinkedCaseInsensitiveMap;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.jdbc.core.ArgumentPreparedStatementSetter;
-import org.springframework.jdbc.core.ArgumentTypePreparedStatementSetter;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCallback;
+import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
+import org.springframework.jdbc.core.namedparam.ParsedSql;
 
 public class DBSession {
 
@@ -58,8 +58,8 @@ public class DBSession {
 
     private DatabaseSchema databaseSchema;
     private IDatabasePlatform databasePlatform;
-    private JdbcTemplate jdbcTemplate;
     private TypedProperties sessionContext;
+    private NamedParameterJdbcTemplate jdbcTemplate;
     private Map<String, QueryTemplate> queryTemplates;
     private Map<String, DmlTemplate> dmlTemplates;
     private TagHelper tagHelper;
@@ -72,9 +72,10 @@ public class DBSession {
         this.databaseSchema = databaseSchema;
         this.databasePlatform = databasePlatform;
         this.sessionContext = sessionContext;
-        this.jdbcTemplate = new JdbcTemplate(databasePlatform.getDataSource());
-        this.jdbcTemplate.setQueryTimeout(sessionContext.getInt(JDBC_QUERY_TIMEOUT, 10));
-        this.jdbcTemplate.setFetchSize(sessionContext.getInt(JDBC_FETCH_SIZE, 1000));
+        JdbcTemplate baseTemplate = new JdbcTemplate(databasePlatform.getDataSource());
+        baseTemplate.setQueryTimeout(sessionContext.getInt(JDBC_QUERY_TIMEOUT, 10));
+        baseTemplate.setFetchSize(sessionContext.getInt(JDBC_FETCH_SIZE, 1000));
+        this.jdbcTemplate = new NamedParameterJdbcTemplate(baseTemplate);
         this.queryTemplates = queryTemplates;
         this.tagHelper = tagHelper;
     }
@@ -212,14 +213,14 @@ public class DBSession {
     public int executeDml(String namedDml, Object... params) {
         DmlTemplate template = dmlTemplates.get(namedDml);
         if (template != null && isNotBlank(template.getDml())) {
-            return jdbcTemplate.update(template.getDml(), params);
+            return jdbcTemplate.getJdbcOperations().update(template.getDml(), params);
         } else {
             throw new PersistException("Could not find dml named: " + namedDml);
         }
     }
 
     public int executeSql(String sql, Object... params) {
-        return jdbcTemplate.update(sql, params);
+        return jdbcTemplate.getJdbcOperations().update(sql, params);
     }
 
     public <T> List<T> query(Query<T> query) {
@@ -231,7 +232,7 @@ public class DBSession {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> List<T> query(Query<T> query, String singleParam, int maxResults) {
+    public <T> List<T> query(Query<T> query, Object singleParam, int maxResults) {
         QueryTemplate queryTemplate = getQueryTemplate(query);
         try {
             SqlStatement sqlStatement = queryTemplate.generateSQL(query, singleParam);
@@ -396,7 +397,7 @@ public class DBSession {
         Object[] values = statement.getValueArray(model.getColumnNamesToValues());
         int[] types = statement.getTypes();
 
-        return jdbcTemplate.update(sql, values, types);
+        return jdbcTemplate.getJdbcOperations().update(sql, values, types);
     }
 
     protected List<Table> getValidatedTables(AbstractModel entity) {
@@ -418,7 +419,12 @@ public class DBSession {
     @SuppressWarnings("unchecked")
     protected <T> List<T> queryInternal(Class<T> resultClass, SqlStatement statement, int maxResults) throws Exception {
         List<T> objects = new ArrayList<T>();
-        List<Row> rows = jdbcTemplate.execute(statement.getSql(), new PreparedStatementCallback<List<Row>>() {
+        ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(statement.getSql());
+        String sqlToUse = NamedParameterUtils.substituteNamedParameters(parsedSql, statement.getParameters());
+        List<SqlParameter> declaredParameters = NamedParameterUtils.buildSqlParameterList(parsedSql, statement.getParameters());
+        Object[] args = NamedParameterUtils.buildValueArray(parsedSql, statement.getParameters(), declaredParameters);
+        PreparedStatementCreator psc = new PreparedStatementCreatorFactory(sqlToUse, declaredParameters).newPreparedStatementCreator(args);
+        List<Row> rows = jdbcTemplate.getJdbcOperations().execute(psc, new PreparedStatementCallback<List<Row>>() {
             @Override
             public List<Row> doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
                 Connection con = ps.getConnection();
@@ -428,8 +434,8 @@ public class DBSession {
                 try {
                     ps.setFetchSize(maxResults);
                     ps.setMaxRows(maxResults);
+                    // jumped through all these hoops just to set auto commit to false for postgres
                     con.setAutoCommit(false);
-                    new ArgumentPreparedStatementSetter(statement.getValues().toArray()).setValues(ps);
                     ResultSet rs = ps.executeQuery();
                     int rowCount = 0;
                     while (rs.next() && rowCount < maxResults) {
@@ -445,7 +451,6 @@ public class DBSession {
                 }
             }
         });
-
         for (int j = 0; j < rows.size(); j++) {
             Row row = rows.get(j);
             T object = null;

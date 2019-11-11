@@ -2,8 +2,18 @@
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
+    
+    $contrast: mat-color(map-get($theme,primary), default-contrast);
+    $dark: map-get($mat-grey, 600);
 
     $foreground: map-get($theme, foreground );
     $background: map-get($theme, background );
 
+    .dark-background {
+        background-color: $dark;
+    }
+
+    .contrast-color {
+        color: $contrast;
+    }
 }

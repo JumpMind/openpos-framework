@@ -19,9 +19,9 @@ public class QueryTemplateTest {
         params.put("antique", true);
 
         SqlStatement sql = template.generateSQL(new Query<CarModel>().result(CarModel.class), params);
-        assertNotNull(sql.getValues());
-        assertEquals(1, sql.getValues().size());
-        assertEquals(1, sql.getValues().get(0));
+        assertNotNull(sql.getParameters());
+        assertEquals(1, sql.getParameters().getValues().size());
+        assertEquals(1, sql.getParameters().getValue("antique"));
     }
 
     @Test
@@ -33,9 +33,9 @@ public class QueryTemplateTest {
         params.put("antique", false);
 
         SqlStatement sql = template.generateSQL(new Query<CarModel>().result(CarModel.class), params);
-        assertNotNull(sql.getValues());
-        assertEquals(1, sql.getValues().size());
-        assertEquals(0, sql.getValues().get(0));
+        assertNotNull(sql.getParameters());
+        assertEquals(1, sql.getParameters().getValues().size());
+        assertEquals(0, sql.getParameters().getValue("antique"));
     }
 
 

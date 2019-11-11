@@ -39,7 +39,7 @@ steps:
   displayName: gradle release
   inputs:
     workingDirectory: 'openpos-assemble'
-    options: '-PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranch) -PdeployUser=$(deployUser) -PdeployPassword=$(deployPassword) -PdeployUploadUrl=$(deployUploadUrl) -PpersonalAccessToken=$(personalAccessToken) -PreleaseBuildEnabled=true'
+    options: '-PdownloadNode=true -PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranch) -PdeployUser=$(deployUser) -PdeployPassword=$(deployPassword) -PdeployUploadUrl=$(deployUploadUrl) -PpersonalAccessToken=$(personalAccessToken) -PreleaseBuildEnabled=true'
     gradleWrapperFile: 'openpos-assemble/gradlew'
     gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'

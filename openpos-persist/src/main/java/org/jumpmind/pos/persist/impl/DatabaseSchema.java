@@ -237,10 +237,11 @@ public class DatabaseSchema {
         List<ModelClassMetaData> list = new ArrayList<>();
 
         Class<?> entityClass = clazz;
+        boolean ignoreSuperClasses = false;
         while (entityClass != null && entityClass != Object.class) {
             TableDef tblAnnotation = entityClass.getAnnotation(TableDef.class);
-            if (tblAnnotation != null) {
-
+            if (tblAnnotation != null && !ignoreSuperClasses) {
+                ignoreSuperClasses = tblAnnotation.ignoreSuperTableDef();
                 ModelClassMetaData meta = new ModelClassMetaData();
                 meta.setClazz(entityClass);
                 Table dbTable = new Table();
@@ -268,7 +269,7 @@ public class DatabaseSchema {
                         }
                     }
                     currentClass = currentClass.getSuperclass();
-                    includeAllFields = currentClass != null && currentClass.getAnnotation(TableDef.class) == null;
+                    includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
                 }
 
                 for (Column column : pkColumns) {

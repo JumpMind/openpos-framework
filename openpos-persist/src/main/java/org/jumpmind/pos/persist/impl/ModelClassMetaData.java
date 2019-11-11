@@ -53,4 +53,9 @@ public class ModelClassMetaData {
     public void addEntityField(String name, Field field) {
         entityFields.put(name, field);
     }
+
+    @Override
+    public String toString() {
+        return clazz.getName();
+    }
 }
