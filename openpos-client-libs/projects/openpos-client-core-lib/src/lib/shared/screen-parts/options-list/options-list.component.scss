@@ -8,12 +8,12 @@
     white-space: normal;
 
     &.tablet {
-        padding: 12px !important;
+        padding: 12px;
         margin: 4px 0px;
     }
 
     &.mobile {
-        padding: 4px !important;
+        padding: 12px;
         margin: 4px 0px;
     }
 }
@@ -30,6 +30,7 @@
         .mat-button-wrapper {
             grid-template-columns: auto 1fr;
             display: grid !important;
+            column-gap: 4px;
         }
     }
 }
