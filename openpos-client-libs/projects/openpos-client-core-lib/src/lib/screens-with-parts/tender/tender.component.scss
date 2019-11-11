@@ -14,6 +14,14 @@
     grid-auto-flow: row;
     align-content: center;
     row-gap: 32px;
+
+    &.mobile {
+        row-gap: 8px;
+    }
+
+    &.tablet {
+        row-gap: 16px;
+    }
 }
 
 .tender-options {
@@ -30,15 +38,33 @@
 }
 
 .tender-amount-due-outer {
-    padding: 32px;
+    padding: 16px 0px;
     border-bottom-width: 2px;
     border-bottom-style: solid;
     justify-self: center;
+    width: 25%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 50%;
+    }
 }
 
 .tender-amount-due-title {
     @extend %text-lg;
     text-align: center;
+    padding-bottom: 8px;
+
+    &.mobile {
+        padding-bottom: 4px;
+    }
+
+    &.tablet {
+        padding-bottom: 4px;
+    }
 }
 
 .tender-amount-due {
@@ -49,14 +75,14 @@
 
 .tender-amounts-outer {
     justify-self: center;
-    width: 25%;
+    width: 50%;
 
     &.mobile {
         width: 75%;
     }
 
     &.tablet {
-        width: 75%;
+        width: 50%;
     }
 }
 
@@ -78,6 +104,21 @@
     justify-self: end;
 }
 
+.tender-form-part {
+    @extend %text-lg;
+    justify-self: center;
+    padding-top: 8px;
+    width: 25%;
+
+    &.mobile {
+        width: 75%;
+    }
+
+    &.tablet {
+        width: 50%;
+    }
+}
+
 .tender-payment-instructions {
     @extend %text-md;
     justify-self: center;
@@ -89,7 +130,7 @@
     }
 
     &.tablet {
-        max-width: 75%;
+        max-width: 50%;
     }
 }
 
@@ -104,5 +145,6 @@
 
 .tender-payment-auth-image {
     max-width: 50%;
+    max-height: 50%;
     justify-self: center;
 }

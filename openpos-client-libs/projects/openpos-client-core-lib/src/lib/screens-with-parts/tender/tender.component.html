@@ -1,9 +1,9 @@
 <div class="common-background tender-outer">
     <app-bacon-strip></app-bacon-strip>
 
-    <div class="tender-body">
+    <div responsive-class class="tender-body">
 
-        <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && screen.amountDue"
+        <div *ngIf="(!screen.amounts || screen.amounts.length === 0) && screen.amountDue" responsive-class
             class="common-border-color tender-amount-due-outer">
             <div responsive-class class="tender-amount-due-title">{{screen.amountDue.name}}</div>
             <div responsive-class class="tender-amount-due">
@@ -11,7 +11,7 @@
             </div>
         </div>
 
-        <div *ngIf="screen.amounts && screen.amounts.length > 1 && screen.amountDue" responsive-class
+        <div *ngIf="screen.amounts && screen.amounts.length > 0 && screen.amountDue" responsive-class
             class="tender-amounts-outer">
             <div *ngFor="let amount of screen.amounts" responsive-class class="tender-amount-row tender-amount-outer">
                 <div class="tender-amount-name">{{amount.name}}</div>
@@ -26,6 +26,9 @@
                 </div>
             </div>
         </div>
+
+        <app-dynamic-form-part *ngIf="screen.form" [formName]="'form'" [alternateSubmitActions]="alternateSubmitActions"
+            responsive-class class="tender-form-part"></app-dynamic-form-part>
 
         <div *ngIf="screen.prompt" responsive-class class="tender-payment-instructions">
             {{screen.prompt}}

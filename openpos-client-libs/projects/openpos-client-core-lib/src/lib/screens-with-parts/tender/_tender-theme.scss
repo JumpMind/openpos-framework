@@ -12,6 +12,12 @@
         .tender-payment-instructions {
             color: mat-color($foreground, secondary-text)
         }
-    }
 
+        .tender-form-part {
+            .mat-form-field {
+                @extend %text-lg;
+                text-align: center;
+            }
+        }
+    }
 }

@@ -14,13 +14,32 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
     styleUrls: ['./tender.component.scss']
 })
 export class TenderComponent extends PosScreen<TenderScreenInterface> {
-    form: FormGroup;
 
-    constructor( private formBuilder: FormBuilder, injector: Injector ) {
+    alternateSubmitActions: string[] = [];
+
+    constructor(private formBuilder: FormBuilder, injector: Injector) {
         super(injector);
     }
 
     buildScreen() {
+        // Register form data with possible actions
+        if (this.screen.optionsList) {
+            if (this.screen.optionsList.options) {
+                this.screen.optionsList.options.forEach(value => {
+                    this.alternateSubmitActions.push(value.action);
+                });
+            }
+            if (this.screen.optionsList.additionalButtons) {
+                this.screen.optionsList.additionalButtons.forEach(value => {
+                    this.alternateSubmitActions.push(value.action);
+                });
+            }
+            if (this.screen.optionsList.linkButtons) {
+                this.screen.optionsList.linkButtons.forEach(value => {
+                    this.alternateSubmitActions.push(value.action);
+                });
+            }
+        }
     }
 
 }
