@@ -1,8 +1,8 @@
-import { Component, Input, OnInit, ElementRef, Renderer2, OnChanges } from '@angular/core';
-import {MediaService} from '@angular/flex-layout';
+import { Component, Input, OnInit, ElementRef, Renderer2, OnChanges, SimpleChanges } from '@angular/core';
 import { IconService } from '../../../core/services/icon.service';
 import { Observable } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
+import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openpos-media.service';
 
 @Component({
     selector: 'app-icon',
@@ -15,41 +15,58 @@ export class IconComponent implements OnInit, OnChanges {
     @Input()
     iconName: string;
 
-    private lastIcon: string;
-    @Input() iconClass;
+    @Input() iconClass !: string;
 
     parser = new DOMParser();
     icon: Observable<SafeHtml>;
 
-    constructor(private iconService: IconService, private elementRef: ElementRef, private renderer: Renderer2, private media: MediaService) {
-        media.subscribe( () => this.renderIcon() );
+    isMobile: Observable<boolean>;
+
+    constructor(
+        private iconService: IconService, private elementRef: ElementRef,
+        private renderer: Renderer2, media: OpenposMediaService) {
+        this.isMobile = media.observe(new Map([
+            [MediaBreakpoints.MOBILE_PORTRAIT, true],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, true],
+            [MediaBreakpoints.TABLET_PORTRAIT, false],
+            [MediaBreakpoints.TABLET_LANDSCAPE, false],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
+        ]));
+
+        this.isMobile.subscribe(mobile => {
+            if (mobile) {
+                this.renderer.addClass(this.elementRef.nativeElement, 'mobile');
+            } else {
+                this.renderer.removeClass(this.elementRef.nativeElement, 'mobile');
+            }
+        });
     }
 
     ngOnInit(): void {
-        this.renderIcon();
+        this.renderIcon(null);
     }
 
-    ngOnChanges(): void {
+    ngOnChanges(changes: SimpleChanges): void {
 
         if (!this.iconClass) {
             this.iconClass = 'mat-24';
-        } else if(this.iconClass === 'none') {
+        } else if (this.iconClass === 'none') {
             this.iconClass = null;
         } else if (!this.iconClass.includes('mat-')) {
             this.iconClass += ' mat-24';
         }
 
-        this.renderIcon();
+        this.renderIcon(changes.iconClass.previousValue);
     }
 
-    private renderIcon() {
+    private renderIcon(previousClasses: string) {
         this.icon = this.iconService.getIconHtml(this.iconName);
+        if (previousClasses) {
+            previousClasses.split(' ').forEach(e => this.renderer.removeClass(this.elementRef.nativeElement, e));
+        }
         if (this.iconClass) {
             this.iconClass.split(' ').forEach(e => this.renderer.addClass(this.elementRef.nativeElement, e));
-            if( this.media.isActive('lt-md')) {
-                this.renderer.addClass(this.elementRef.nativeElement, 'mobile')
-            }
-
         }
     }
 }
