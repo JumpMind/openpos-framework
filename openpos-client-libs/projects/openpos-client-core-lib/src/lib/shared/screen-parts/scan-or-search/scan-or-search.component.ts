@@ -30,7 +30,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     private scanServiceSubscription: Subscription;
 
     constructor(public devices: DeviceService, injector: Injector,
-        mediaService: OpenposMediaService, private scannerService: ScannerService) {
+                mediaService: OpenposMediaService, private scannerService: ScannerService) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
