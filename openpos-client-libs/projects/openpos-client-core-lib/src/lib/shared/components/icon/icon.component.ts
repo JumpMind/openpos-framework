@@ -57,7 +57,7 @@ export class IconComponent implements OnInit, OnChanges {
             this.iconClass += ' mat-24';
         }
 
-        this.renderIcon(changes.iconClass.previousValue);
+        this.renderIcon(changes.iconClass ? changes.iconClass.previousValue : null);
     }
 
     private renderIcon(previousClasses: string) {
