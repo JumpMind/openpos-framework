@@ -39,6 +39,7 @@ import org.jumpmind.pos.core.flow.TestStates.SubStateFlowScopePropogation2;
 import org.jumpmind.pos.core.flow.TestStates.SubStateReturnsWithTransitionState;
 import org.jumpmind.pos.core.flow.TestStates.TestScopesState;
 import org.jumpmind.pos.core.flow.TestStates.TransitionInterceptionState;
+import org.jumpmind.pos.core.flow.TestStates.StateWithHandlerForTerminatingAction;
 import org.jumpmind.pos.core.flow.config.FlowBuilder;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.service.ScreenService;
@@ -108,6 +109,9 @@ public class StateManagerTest {
         FlowConfig multiReturnActionSubFlow = new FlowConfig();
         multiReturnActionSubFlow.setInitialState(FlowBuilder.addState(MultiReturnActionInitialState.class).build());
 
+        FlowConfig terminatingActionHandlerSubFlow = new FlowConfig();
+        terminatingActionHandlerSubFlow.setInitialState(FlowBuilder.addState(StateWithHandlerForTerminatingAction.class).withTransition("TerminatingAction", CompleteState.class).build());
+
         FlowConfig config = new FlowConfig();
         config.setInitialState(FlowBuilder.addState(HomeState.class).withTransition("Sell", SellState.class)
                 .withSubTransition("ToSubState1", SubStateReturnsWithTransitionState.class, "FromSubStateToAnotherState")
@@ -124,6 +128,7 @@ public class StateManagerTest {
                 .withTransition("TestExceptionOnArriveAction", ExceptionOnArriveState.class)
                 .withTransition("TestExceptionOnDepartAction", ExceptionOnDepartState.class)
                 .withTransition("GoToExceptionInActionHandlerState", ExceptionInActionHandlerState.class)
+                .withSubTransition( "ToSubFlowWithActionActionHandlerForTerminatingState", terminatingActionHandlerSubFlow)
                 .build()
         );
         config.add(FlowBuilder.addState(ExceptionInActionHandlerState.class).withTransition("ThrowsExceptionAction", HomeState.class).build());
@@ -720,5 +725,12 @@ public class StateManagerTest {
         assertEquals(RuntimeException.class, exArgument.getValue().getCause().getCause().getClass());
         assertTrue(exArgument.getValue().getCause().getCause().getMessage().contains("error in action handler"));
     }
-    
+
+    @Test
+    public void testSubflowWithHandlerForTerminatingAction() {
+        stateManager.init("pos", "100-1");
+        stateManager.doAction("ToSubFlowWithActionActionHandlerForTerminatingState");
+        stateManager.doAction("TerminatingAction");
+        assertTrue(stateManager.getScopeValue("actionHandlerCalled"));
+    }
 }

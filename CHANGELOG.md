@@ -4,6 +4,14 @@
 
 |       | Name   | Labels | Author | Time |
 |-------|--------|--------|--------|------|
+  | [#416](https://github.com/JumpMind/openpos-framework/pull/416) | Fix bug with ignoreSuperTableDef during query |  |Chris Henson|2019-11-12 13:30:10|
+  | [#417](https://github.com/JumpMind/openpos-framework/pull/417) | bug fix and test for actionhandler not working if it is also a terminating action |  |Dan Kaste|2019-11-12 18:41:28|
+
+## 0.6.1 
+Released on: 2019-11-12 18:10:22
+
+|       | Name   | Labels | Author | Time |
+|-------|--------|--------|--------|------|
   | [#211](https://github.com/JumpMind/openpos-framework/pull/211) | Introduce a pluggable logging framework uses console methods as it&#39;s api |  |Dan Kaste|2019-08-26 14:44:05|
   | [#214](https://github.com/JumpMind/openpos-framework/pull/214) | Add support for disabling the language icons on language selector |  |maxwellpettit|2019-08-19 17:21:56|
   | [#215](https://github.com/JumpMind/openpos-framework/pull/215) | Build openpos-client-personalize via gradle |  |Chris Henson|2019-08-19 17:40:27|
@@ -79,6 +87,7 @@
   | [#336](https://github.com/JumpMind/openpos-framework/pull/336) | Added a new openpos.general category to group parameters that didn&#39;t previously have a home |  |Chris Henson|2019-10-07 21:34:59|
   | [#337](https://github.com/JumpMind/openpos-framework/pull/337) | Move jsonIncludeNulls to a different section of configuration |  |Chris Henson|2019-10-08 12:09:18|
   | [#338](https://github.com/JumpMind/openpos-framework/pull/338) | Feature/customer display |  |Klementina S. Chirico|2019-10-08 16:53:52|
+  | [#339](https://github.com/JumpMind/openpos-framework/pull/339) | Updating sale interface and exporting selectable-list-data interface … |  |stevencarley|2019-10-09 13:56:54|
   | [#340](https://github.com/JumpMind/openpos-framework/pull/340) | Since the selectedItem/selectedItems is being updated every time scre… |  |Klementina S. Chirico|2019-10-09 21:10:45|
   | [#341](https://github.com/JumpMind/openpos-framework/issues/341) | If a message comes in right after a dialog message the dialog&#39;s screen parts fail to initialize with screenData because the dialog content replays the last message and not the dialog message it was expecting to repay.  Results in an undefined screenData. |  |Dan Kaste|2019-10-15 12:28:05|
   | [#342](https://github.com/JumpMind/openpos-framework/pull/342) | Feature/responsive class on self checkout options part |  |Klementina S. Chirico|2019-10-10 14:49:53|
@@ -88,7 +97,9 @@
   | [#347](https://github.com/JumpMind/openpos-framework/pull/347) | Feature/customer display updates |  |Klementina S. Chirico|2019-10-12 01:27:05|
   | [#348](https://github.com/JumpMind/openpos-framework/pull/348) | Fix bug #341 |  |Dan Kaste|2019-10-15 12:28:05|
   | [#349](https://github.com/JumpMind/openpos-framework/pull/349) | Feature/personalization classes |  |Dan Kaste|2019-10-15 19:44:31|
+  | [#351](https://github.com/JumpMind/openpos-framework/pull/351) | Add configuration for setting websocket limit and handle errors gracefully |  |Dan Kaste|2019-10-17 18:01:33|
   | [#352](https://github.com/JumpMind/openpos-framework/pull/352) | Feature/new sale screen |  |maxwellpettit|2019-10-17 20:28:25|
+  | [#354](https://github.com/JumpMind/openpos-framework/pull/354) | Add OpenPOS Management Server |  |Jason Mihalick|2019-10-23 15:14:49|
   | [#355](https://github.com/JumpMind/openpos-framework/issues/355) | allow the jdbc query timeout to be configured in the persistence layer.  might need a couple different categories of timeouts (ie user facing versus back end processes) |  |Chris Henson|2019-10-22 18:24:45|
   | [#356](https://github.com/JumpMind/openpos-framework/pull/356) | Bacon Strip updates |  |Dan Kaste|2019-10-21 19:15:45|
   | [#359](https://github.com/JumpMind/openpos-framework/pull/359) | Make the query timeout and the fetch size configurable via yaml or properties.  Fix #355 |  |Chris Henson|2019-10-22 18:24:45|
@@ -97,22 +108,39 @@
   | [#362](https://github.com/JumpMind/openpos-framework/pull/362) | If a superclass with @TableDef defined has an @IndexDef defined we attempt to create the index on the subclass |  |Chris Henson|2019-10-23 14:09:52|
   | [#363](https://github.com/JumpMind/openpos-framework/pull/363) | Feature/item carousel |  |Klementina S. Chirico|2019-10-23 21:06:46|
   | [#365](https://github.com/JumpMind/openpos-framework/pull/365) | check that customer.icon, customer.label, customer.id exists before d… |  |Klementina S. Chirico|2019-10-24 14:52:49|
+  | [#366](https://github.com/JumpMind/openpos-framework/pull/366) | Block disabled actions in session service |  |maxwellpettit|2019-10-24 16:29:00|
+  | [#367](https://github.com/JumpMind/openpos-framework/pull/367) | Populate skip button from actionItem to translate text |  |maxwellpettit|2019-10-24 17:28:08|
+  | [#368](https://github.com/JumpMind/openpos-framework/pull/368) | Backport changes to support nu-commerce 0.4.  These change do not affect pure openpos applications |  |Chris Henson|2019-10-24 20:24:31|
+  | [#369](https://github.com/JumpMind/openpos-framework/pull/369) | Expanding clickable area of transaction menu when items are selected |  |stevencarley|2019-10-25 13:37:32|
+  | [#370](https://github.com/JumpMind/openpos-framework/pull/370) | Fix misaligned attribute name scanActionName -&gt; scanAction |  |Jason Mihalick|2019-10-25 16:12:19|
   | [#371](https://github.com/JumpMind/openpos-framework/pull/371) | add animation to carousel component to slide items left and right |  |Klementina S. Chirico|2019-10-25 16:50:05|
+  | [#372](https://github.com/JumpMind/openpos-framework/pull/372) | Support use of DevTools Scan tool when running as non-legacy deployment |  |Jason Mihalick|2019-10-25 16:51:31|
+  | [#373](https://github.com/JumpMind/openpos-framework/pull/373) | When downloadNode=true allow download location to be modified |  |Chris Henson|2019-10-25 18:33:09|
+  | [#374](https://github.com/JumpMind/openpos-framework/pull/374) | Account for -SNAPSHOT in version.  Cherry picked from master |  |Chris Henson|2019-10-28 13:29:15|
+  | [#377](https://github.com/JumpMind/openpos-framework/pull/377) | Set choose options submit button enabled so action doesn&#39;t get blocked |  |maxwellpettit|2019-10-29 13:49:34maxwellpettit|2019-10-29 13:48:32|
+  | [#378](https://github.com/JumpMind/openpos-framework/pull/378) | Always expand wildcard classpath variables and order classpath alphab… | [bug] |Chris Henson|2019-10-29 18:02:31|
+  | [#379](https://github.com/JumpMind/openpos-framework/pull/379) | Fix failure from retailer build complaining about version being null |  |Jason Mihalick|2019-10-29 18:51:42|
   | [#380](https://github.com/JumpMind/openpos-framework/pull/380) | Add support for sending data to the client in chucks apart from the screen |  |Dan Kaste|2019-10-29 20:06:34|
   | [#381](https://github.com/JumpMind/openpos-framework/pull/381) | Feature/update return component |  |Klementina S. Chirico|2019-10-30 15:00:25|
+  | [#382](https://github.com/JumpMind/openpos-framework/pull/382) | Allow there to be an empty classpath and remove the -cp switch |  |Jason Mihalick|2019-10-31 13:50:31|
   | [#383](https://github.com/JumpMind/openpos-framework/pull/383) | Feature/collapsable sale item cards |  |Klementina S. Chirico|2019-10-31 14:02:58|
   | [#384](https://github.com/JumpMind/openpos-framework/pull/384) | Feature/mobile sale |  |maxwellpettit|2019-11-04 16:41:08|
+  | [#385](https://github.com/JumpMind/openpos-framework/pull/385) | Add tests to ensure assumed behavior of spring.include.profiles |  |Jason Mihalick|2019-10-31 13:51:15|
   | [#386](https://github.com/JumpMind/openpos-framework/pull/386) | Feature/document carousel |  |Klementina S. Chirico|2019-10-31 15:36:58|
   | [#387](https://github.com/JumpMind/openpos-framework/pull/387) | Feature/infinite scroll |  |Dan Kaste|2019-10-31 19:08:51|
   | [#388](https://github.com/JumpMind/openpos-framework/pull/388) | Move the SymDS module to openpos-framework and upgrade SymmetricDS to the latest 3.9 version |  |Chris Henson|2019-10-31 18:36:33|
   | [#389](https://github.com/JumpMind/openpos-framework/pull/389) | Feature/image |  |Dan Kaste|2019-11-01 20:12:41|
   | [#390](https://github.com/JumpMind/openpos-framework/pull/390) | Feature/item card more subtle hover |  |Klementina S. Chirico|2019-11-01 13:20:28|
+  | [#391](https://github.com/JumpMind/openpos-framework/pull/391) | Do not register symds in static map because that causes symmetric-jmx to be loaded which is incompatible with the current version of spring |  |Chris Henson|2019-11-01 13:54:38|
   | [#392](https://github.com/JumpMind/openpos-framework/pull/392) | fix bug with using templates inside of a virtual scroll |  |Dan Kaste|2019-11-01 20:12:23|
   | [#393](https://github.com/JumpMind/openpos-framework/pull/393) | For some reason the injection of the responsive map doesn&#39;t happen soon enough in the media service and results in errors | [bug] |Chris Henson|2019-11-04 14:21:12|
+  | [#394](https://github.com/JumpMind/openpos-framework/pull/394) | Feature/help text |  |stevencarley|2019-11-04 15:24:03|
   | [#395](https://github.com/JumpMind/openpos-framework/pull/395) | Feature/update return component |  |Klementina S. Chirico|2019-11-04 17:30:52|
   | [#397](https://github.com/JumpMind/openpos-framework/pull/397) | Feature/updates and include returns info mobile items |  |Klementina S. Chirico|2019-11-05 13:07:32|
-  | [#400](https://github.com/JumpMind/openpos-framework/pull/400) | Allow the symds web context to be overridden |  |Chris Henson|2019-11-05 21:19:17Chris Henson|2019-11-05 21:17:00|
+  | [#399](https://github.com/JumpMind/openpos-framework/pull/399) | Allow retailer to customize how SymmetricDS gets initialized |  |Chris Henson|2019-11-05 19:44:18|
+  | [#400](https://github.com/JumpMind/openpos-framework/pull/400) | Allow the symds web context to be overridden |  |Chris Henson|2019-11-05 21:19:42Chris Henson|2019-11-05 21:19:17Chris Henson|2019-11-05 21:17:00|
   | [#401](https://github.com/JumpMind/openpos-framework/pull/401) | Feature/expanding search |  |maxwellpettit|2019-11-06 15:20:02|
+  | [#402](https://github.com/JumpMind/openpos-framework/pull/402) | Allow a module&#39;s database connection to be overridden to a different datasource than the default | [architecture, enhancement] |Chris Henson|2019-11-06 17:23:12|
   | [#403](https://github.com/JumpMind/openpos-framework/pull/403) | Fix ServerLogger to allow logging of objects with circular refs |  |Jason Mihalick|2019-11-06 19:37:40|
   | [#404](https://github.com/JumpMind/openpos-framework/pull/404) | Provide a way to configure the timestamp format used in client logging |  |Jason Mihalick|2019-11-06 19:38:07|
   | [#405](https://github.com/JumpMind/openpos-framework/pull/405) | Feature/returns mobile |  |Klementina S. Chirico|2019-11-06 20:15:46|
@@ -126,27 +154,6 @@ Released on: 2019-11-11 13:54:11
 
 |       | Name   | Labels | Author | Time |
 |-------|--------|--------|--------|------|
-  | [#339](https://github.com/JumpMind/openpos-framework/pull/339) | Updating sale interface and exporting selectable-list-data interface … |  |stevencarley|2019-10-09 13:56:54|
-  | [#351](https://github.com/JumpMind/openpos-framework/pull/351) | Add configuration for setting websocket limit and handle errors gracefully |  |Dan Kaste|2019-10-17 18:01:33|
-  | [#354](https://github.com/JumpMind/openpos-framework/pull/354) | Add OpenPOS Management Server |  |Jason Mihalick|2019-10-23 15:14:49|
-  | [#366](https://github.com/JumpMind/openpos-framework/pull/366) | Block disabled actions in session service |  |maxwellpettit|2019-10-24 16:29:00|
-  | [#367](https://github.com/JumpMind/openpos-framework/pull/367) | Populate skip button from actionItem to translate text |  |maxwellpettit|2019-10-24 17:28:08|
-  | [#368](https://github.com/JumpMind/openpos-framework/pull/368) | Backport changes to support nu-commerce 0.4.  These change do not affect pure openpos applications |  |Chris Henson|2019-10-24 20:24:31|
-  | [#369](https://github.com/JumpMind/openpos-framework/pull/369) | Expanding clickable area of transaction menu when items are selected |  |stevencarley|2019-10-25 13:37:32|
-  | [#370](https://github.com/JumpMind/openpos-framework/pull/370) | Fix misaligned attribute name scanActionName -&gt; scanAction |  |Jason Mihalick|2019-10-25 16:12:19|
-  | [#372](https://github.com/JumpMind/openpos-framework/pull/372) | Support use of DevTools Scan tool when running as non-legacy deployment |  |Jason Mihalick|2019-10-25 16:51:31|
-  | [#373](https://github.com/JumpMind/openpos-framework/pull/373) | When downloadNode=true allow download location to be modified |  |Chris Henson|2019-10-25 18:33:09|
-  | [#374](https://github.com/JumpMind/openpos-framework/pull/374) | Account for -SNAPSHOT in version.  Cherry picked from master |  |Chris Henson|2019-10-28 13:29:15|
-  | [#377](https://github.com/JumpMind/openpos-framework/pull/377) | Set choose options submit button enabled so action doesn&#39;t get blocked |  |maxwellpettit|2019-10-29 13:49:34maxwellpettit|2019-10-29 13:48:32|
-  | [#378](https://github.com/JumpMind/openpos-framework/pull/378) | Always expand wildcard classpath variables and order classpath alphab… | [bug] |Chris Henson|2019-10-29 18:02:31|
-  | [#379](https://github.com/JumpMind/openpos-framework/pull/379) | Fix failure from retailer build complaining about version being null |  |Jason Mihalick|2019-10-29 18:51:42|
-  | [#382](https://github.com/JumpMind/openpos-framework/pull/382) | Allow there to be an empty classpath and remove the -cp switch |  |Jason Mihalick|2019-10-31 13:50:31|
-  | [#385](https://github.com/JumpMind/openpos-framework/pull/385) | Add tests to ensure assumed behavior of spring.include.profiles |  |Jason Mihalick|2019-10-31 13:51:15|
-  | [#391](https://github.com/JumpMind/openpos-framework/pull/391) | Do not register symds in static map because that causes symmetric-jmx to be loaded which is incompatible with the current version of spring |  |Chris Henson|2019-11-01 13:54:38|
-  | [#394](https://github.com/JumpMind/openpos-framework/pull/394) | Feature/help text |  |stevencarley|2019-11-04 15:24:03|
-  | [#399](https://github.com/JumpMind/openpos-framework/pull/399) | Allow retailer to customize how SymmetricDS gets initialized |  |Chris Henson|2019-11-05 19:44:18|
-  | [#400](https://github.com/JumpMind/openpos-framework/pull/400) | Allow the symds web context to be overridden |  |Chris Henson|2019-11-05 21:19:42|
-  | [#402](https://github.com/JumpMind/openpos-framework/pull/402) | Allow a module&#39;s database connection to be overridden to a different datasource than the default | [architecture, enhancement] |Chris Henson|2019-11-06 17:23:12|
   | [#407](https://github.com/JumpMind/openpos-framework/pull/407) | Add a setting to ignore @TableDef annotations in the super classes |  |Chris Henson|2019-11-06 21:01:13|
   | [#409](https://github.com/JumpMind/openpos-framework/pull/409) | Allow an optional startup class to be executed before app is started |  |Jason Mihalick|2019-11-07 21:59:29|
   | [#411](https://github.com/JumpMind/openpos-framework/pull/411) | @TableDef.ignoreSuperTableDef still needs to include super @ColumnDefs |  |Chris Henson|2019-11-08 13:13:26|
@@ -248,6 +255,7 @@ Released on: 2019-09-04 18:24:49
 |       | Name   | Labels | Author | Time |
 |-------|--------|--------|--------|------|
   | [#244](https://github.com/JumpMind/openpos-framework/pull/244) | Bugfix/selectable item list default select on disabled |  |Klementina S. Chirico|2019-09-04 18:21:48|
+
 
 ## 0.4.2 
 Released on: 2019-08-28 15:15:09

@@ -11,7 +11,7 @@ import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-a
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
 
 @ScreenPart({
-    name: 'scan'
+    name: 'scanOrSearch'
 })
 @Component({
     selector: 'app-scan-or-search',
@@ -30,7 +30,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     private scanServiceSubscription: Subscription;
 
     constructor(public devices: DeviceService, injector: Injector,
-        mediaService: OpenposMediaService, private scannerService: ScannerService) {
+                mediaService: OpenposMediaService, private scannerService: ScannerService) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],

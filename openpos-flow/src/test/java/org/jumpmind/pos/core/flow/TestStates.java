@@ -514,5 +514,20 @@ public class TestStates {
             throw new RuntimeException("error in action handler");
         }
     }
+
+    public static class StateWithHandlerForTerminatingAction {
+
+        @Out(scope = ScopeType.Conversation)
+        public boolean actionHandlerCalled = false;
+
+        @In(scope = ScopeType.Device)
+        public IStateManager stateManager;
+
+        @ActionHandler
+        public void onTerminatingAction(Action action) {
+            actionHandlerCalled = true;
+            stateManager.doAction(action);
+        }
+    }
     
 }

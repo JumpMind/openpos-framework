@@ -138,6 +138,7 @@ import { SearchExpandInputComponent } from './components/search-expand-input/sea
 import { HelpTextPageWrapperComponent } from './components/help-text-page-wrapper/help-text-page-wrapper.component';
 import { OpenposAppHelpContainerComponent } from './components/openpos-app-help-container/openpos-app-help-container.component';
 import { OptionsListComponent } from './screen-parts/options-list/options-list.component';
+import { ScanPartComponent } from './screen-parts/scan-part/scan-part.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -162,6 +163,7 @@ const screenParts = [
     MobileLoyaltyPartComponent,
     MobileSaleItemListComponent,
     OptionsListComponent,
+    ScanPartComponent
 ];
 
 const components = [
