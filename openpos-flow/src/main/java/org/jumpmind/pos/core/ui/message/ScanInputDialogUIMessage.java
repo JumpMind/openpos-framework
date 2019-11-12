@@ -5,13 +5,13 @@ import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IconType;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.messagepart.DialogHeaderPart;
-import org.jumpmind.pos.core.ui.messagepart.ScanPart;
+import org.jumpmind.pos.core.ui.messagepart.ScanOrSearchPart;
 
 public class ScanInputDialogUIMessage extends UIMessage {
 
     private static final long serialVersionUID = 1L;
 
-    private ScanPart scan;
+    private ScanOrSearchPart scan;
 
     private DialogHeaderPart dialogHeader;
 
@@ -23,11 +23,11 @@ public class ScanInputDialogUIMessage extends UIMessage {
         this.dialogHeader.setBackButton(new ActionItem("CloseDialog", "", IconType.Close));
     }
 
-    public ScanPart getScan() {
+    public ScanOrSearchPart getScan() {
         return scan;
     }
 
-    public void setScan(ScanPart scan) {
+    public void setScan(ScanOrSearchPart scan) {
         this.scan = scan;
     }
 

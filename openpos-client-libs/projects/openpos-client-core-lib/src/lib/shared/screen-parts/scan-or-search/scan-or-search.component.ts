@@ -11,7 +11,7 @@ import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-a
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
 
 @ScreenPart({
-    name: 'scan'
+    name: 'scanOrSearch'
 })
 @Component({
     selector: 'app-scan-or-search',

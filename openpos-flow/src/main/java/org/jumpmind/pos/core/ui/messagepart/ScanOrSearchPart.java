@@ -5,7 +5,7 @@ import org.jumpmind.pos.core.ui.IconType;
 
 import java.io.Serializable;
 
-public class ScanPart implements Serializable{
+public class ScanOrSearchPart implements Serializable{
     private static final long serialVersionUID = 1L;
 
     public enum ScanType {
