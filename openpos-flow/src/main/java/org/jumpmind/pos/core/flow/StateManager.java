@@ -495,9 +495,7 @@ public class StateManager implements IStateManager {
             FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
             StateConfig stateConfig = applicationState.findStateConfig(flowConfig);
 
-            if (handleTerminatingState(action, stateConfig)) {
-                return;
-            }
+
 
             validateStateConfig(applicationState.getCurrentContext().getState(), stateConfig);
 
@@ -509,6 +507,8 @@ public class StateManager implements IStateManager {
             // Execute state specific action handlers
             if (actionHandler.canHandleAction(applicationState.getCurrentContext().getState(), action)) {
                 handleAction(action);
+            } else if (handleTerminatingState(action, stateConfig)) {
+                return;
             } else if (transitionStateClass != null) {
                 // Execute state transition
                 transitionToState(action, transitionStateClass);
