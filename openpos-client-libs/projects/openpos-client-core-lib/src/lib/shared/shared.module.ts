@@ -137,6 +137,7 @@ import { ImageComponent } from './components/image/image.component';
 import { SearchExpandInputComponent } from './components/search-expand-input/search-expand-input.component';
 import { HelpTextPageWrapperComponent } from './components/help-text-page-wrapper/help-text-page-wrapper.component';
 import { OpenposAppHelpContainerComponent } from './components/openpos-app-help-container/openpos-app-help-container.component';
+import { ScanPartComponent } from './screen-parts/scan-part/scan-part.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -160,6 +161,7 @@ const screenParts = [
     MobileTotalsPartComponent,
     MobileLoyaltyPartComponent,
     MobileSaleItemListComponent,
+    ScanPartComponent
 ];
 
 const components = [
