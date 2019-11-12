@@ -16,6 +16,8 @@ public class OptionsListPart implements Serializable {
 
     private List<ActionItem> linkButtons;
 
+    private ActionItem overflowButton;
+
     public List<ActionItem> getOptions() {
         return options;
     }
@@ -45,6 +47,14 @@ public class OptionsListPart implements Serializable {
 
     public void setLinkButtons(List<ActionItem> linkButtons) {
         this.linkButtons = linkButtons;
+    }
+
+    public ActionItem getOverflowButton() {
+        return overflowButton;
+    }
+
+    public void setOverflowButton(ActionItem overflowButton) {
+        this.overflowButton = overflowButton;
     }
 
 }

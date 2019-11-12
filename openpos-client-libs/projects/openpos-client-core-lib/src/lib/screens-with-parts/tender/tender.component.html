@@ -35,7 +35,7 @@
         </div>
 
         <app-options-list *ngIf="screen.optionsList" (optionClick)="doAction($event)" responsive-class
-            class="tender-options">
+            class="tender-options" listSize="3">
         </app-options-list>
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="tender-payment-auth-image">
