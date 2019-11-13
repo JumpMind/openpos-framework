@@ -28,8 +28,12 @@
 
     <section class="transaction-totals">
         <aside responsive-class class="totals-info">
-            <kbd class="totals-info-labels" *ngFor="let line of receipt.totalsInfoSection">{{line.label}}</kbd>
-            <kbd class="totals-info-values" *ngFor="let line of receipt.totalsInfoSection">{{line.value}}</kbd>
+            <div class="totals-info-labels">
+                <kbd *ngFor="let line of receipt.totalsInfoSection">{{line.label}}</kbd>
+            </div>
+            <div class="totals-info-values">
+                <kbd *ngFor="let line of receipt.totalsInfoSection">{{line.value}}</kbd>
+            </div>
         </aside>
         <aside responsive-class class="total-price">
             <strong class="totals-info-labels"><kbd>{{receipt.transactionTotal.name}}</kbd></strong>
