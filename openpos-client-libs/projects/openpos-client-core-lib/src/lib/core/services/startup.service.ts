@@ -6,6 +6,7 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { map, catchError } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ComponentType } from '@angular/cdk/overlay/index';
+import { StartupTaskData } from '../startup/startup-task-data';
 
 export const STARTUP_TASKS = new InjectionToken<IStartupTask[]>('Startup Tasks');
 export const STARTUP_FAILED_TASK = new InjectionToken<IStartupTask>('Startup Failed Task');
@@ -23,6 +24,7 @@ export class StartupService implements CanActivate {
 
     private allMessages = [];
     private startupDialogRef: MatDialogRef<any>;
+    private startupRouteUrl: string;
 
     constructor(
         @Optional() @Inject(STARTUP_TASKS) tasks: Array<IStartupTask>,
@@ -41,6 +43,10 @@ export class StartupService implements CanActivate {
     }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
+        // Save off the url so that it can be used if startup fails and the user does a 'Retry'.
+        // If we don't save it, the route will have changed to the startup failed route.
+        this.startupRouteUrl = location.href;
+
         // The reality is that we will probably always have atleast 2 tasks (personalize and subscribe to stomp)
         // But to be safe we will check first
         if ( this.dedupedTasks.size < 1 ) {
@@ -140,9 +146,11 @@ export class StartupService implements CanActivate {
             startupFailedRef.afterClosed().subscribe( () => {
                 if (startupFailedCompInst) {
                     if (startupFailedCompInst.appReloadOnCloseEnabled) {
+                        location.href = this.startupRouteUrl;
                         location.reload();
                     }
                 } else {
+                    location.href = this.startupRouteUrl;
                     location.reload();
                 }
             });
