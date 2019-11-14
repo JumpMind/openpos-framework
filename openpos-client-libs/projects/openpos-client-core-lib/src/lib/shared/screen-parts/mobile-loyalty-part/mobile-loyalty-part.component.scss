@@ -5,7 +5,7 @@
     padding: 8px 16px;
 
     .mat-button-wrapper {
-        grid-template-columns: 50% 50%;
+        grid-template-columns: 30% 70%;
         display: grid;
         margin: 0px;
     }
@@ -29,6 +29,9 @@
     justify-self: end;
     align-self: center;
     padding-right: 4px;
+    text-align: end;
+    line-height: normal;
+    white-space: normal;
 }
 
 .mobile-loyalty-button-icon {
