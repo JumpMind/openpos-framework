@@ -36,13 +36,24 @@
 }
 
 .options-list-line {
-    @extend %text-lg;
     text-align: center;
     align-self: center;
 
     &.mobile {
         text-align: start;
         justify-self: start;
+    }
+
+    &.sm {
+        @extend %text-sm;
+    }
+
+    &.md {
+        @extend %text-md;
+    }
+
+    &.lg {
+        @extend %text-lg;
     }
 }
 

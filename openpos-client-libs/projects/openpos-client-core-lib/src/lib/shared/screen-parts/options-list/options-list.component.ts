@@ -26,6 +26,9 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     @Input()
     listSize = -1;
 
+    @Input()
+    optionListSizeClass = 'lg';
+
     options: IActionItem[] = [];
     overflowOptions: IActionItem[] = [];
 
