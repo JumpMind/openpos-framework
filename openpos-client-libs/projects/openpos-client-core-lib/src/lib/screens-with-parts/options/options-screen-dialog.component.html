@@ -1,0 +1,10 @@
+<div class="options-outer">
+    <app-dialog-header></app-dialog-header>
+    <div class="options-body">
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="options-image">
+        <app-instructions *ngIf="screen.prompt" class="text-center" [instructions]="screen.prompt" [instructionsSize]="'text-sm'"></app-instructions>
+        <app-options-list [optionListSizeClass]="'md'" (optionClick)="doAction($event)"></app-options-list>
+        <app-scan-part></app-scan-part>
+    </div>
+</div>
+
