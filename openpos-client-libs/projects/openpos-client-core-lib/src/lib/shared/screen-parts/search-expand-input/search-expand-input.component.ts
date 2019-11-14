@@ -54,6 +54,7 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
     }
 
     ngOnInit(): void {
+        super.ngOnInit();
         this.registerScanner();
     }
 
