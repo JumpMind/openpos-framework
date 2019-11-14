@@ -122,7 +122,7 @@ public class StateManager implements IStateManager {
     private final AtomicInteger activeCalls = new AtomicInteger(0);
     private final AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
     private final AtomicLong lastActionTimeInMs = new AtomicLong(0);
-    private final AtomicLong lastShowScreenTimeIntMs = new AtomicLong(0);
+    private final AtomicLong lastShowTimeIntMs = new AtomicLong(0);
     private final AtomicReference<Thread> activeThread = new AtomicReference<>();
 
     public void init(String appId, String nodeId) {
@@ -411,7 +411,7 @@ public class StateManager implements IStateManager {
 
     @Override
     public boolean isAtRest() {
-        return (activeCalls.get() == 0 || transitionRestFlag.get()) && lastShowScreenTimeIntMs.longValue() > lastActionTimeInMs.longValue();
+        return (activeCalls.get() == 0 || transitionRestFlag.get()) && lastShowTimeIntMs.longValue() > lastActionTimeInMs.longValue();
     }
 
     @Override
@@ -726,6 +726,8 @@ public class StateManager implements IStateManager {
         }
 
         screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
+
+        lastShowTimeIntMs.set(System.currentTimeMillis());
     }
 
     @SuppressWarnings("unchecked")
@@ -753,7 +755,7 @@ public class StateManager implements IStateManager {
 
         screenService.showScreen(applicationState.getAppId(), applicationState.getDeviceId(), screen);
 
-        lastShowScreenTimeIntMs.set(System.currentTimeMillis());
+        lastShowTimeIntMs.set(System.currentTimeMillis());
 
     }
 
