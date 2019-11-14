@@ -416,11 +416,18 @@ public class StateManager implements IStateManager {
 
     @Override
     public void doAction(Action action) {
-        if (activeCalls.get() == 0 || activeThread.get() == null || activeThread.get().equals(Thread.currentThread())) {
-            lastInteractionTime.set(new Date());
-            activeCalls.incrementAndGet();
-            markAsBusy();
+        boolean alreadyBusy = false;
+        synchronized (this) {
+            if (activeCalls.get() == 0 || activeThread.get() == null || activeThread.get().equals(Thread.currentThread())) {
+                lastInteractionTime.set(new Date());
+                activeCalls.incrementAndGet();
+                markAsBusy();
+            } else {
+                alreadyBusy = true;
+            }
+        }
 
+        if (!alreadyBusy) {
             try {
                 // Global action handler takes precedence over all actions (for now)
                 Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
