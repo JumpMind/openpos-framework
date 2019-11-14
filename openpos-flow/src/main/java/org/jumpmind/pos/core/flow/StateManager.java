@@ -405,6 +405,7 @@ public class StateManager implements IStateManager {
         lastInteractionTime.set(new Date());
     }
 
+    @Override
     public boolean isAtRest() {
         return activeCalls.get() == 0 || transitionRestFlag.get();
     }

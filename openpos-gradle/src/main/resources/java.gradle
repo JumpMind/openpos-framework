@@ -74,6 +74,8 @@ idea {
         testResourceDirs = []
         testSourceDirs = [ file('src/test/java')]
         resourceDirs += file('src/test/resources')
+        excludeDirs += file('bin')
+        excludeDirs += file('build')
         downloadJavadoc = true
         downloadSources = true
     }
