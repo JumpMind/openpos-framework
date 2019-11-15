@@ -30,6 +30,15 @@
             height: 300px;
         }
 
+        .item.xl{
+            width: 400px;
+            height: 400px;
+            &.mobile{
+                width: 300px;
+                height: 300px;
+            }
+        }
+
     }
 
     .dot.active {

@@ -5,7 +5,7 @@
         (buttonClick)="moveBackward()"
         (swiperight)="moveBackward()">
     </app-icon-button>
-    <div [@moveInOut]="index" aria-label="Carousel Item" class="item" [ngClass]="[carouselSize, carouselItemClass]">
+    <div [@moveInOut]="index" aria-label="Carousel Item" responsive-class class="item" [ngClass]="[carouselSize, carouselItemClass]">
         <ng-container *ngTemplateOutlet="currentItem"></ng-container>
     </div>
     <app-icon-button *ngIf="items.length > 1 && forwardEnabled()" class="right-arrow"
