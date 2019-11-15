@@ -1,17 +1,15 @@
 <ng-template [ngIf]="this.screenData.type.toLowerCase() !== 'dialog'" [ngIfElse]="dialogForm">
     <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
-        <div class="common-border prompt-part-outer">
+        <app-content-card>
             <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText"
                 [responseType]="screenData.responseType" [promptIcon]="screenData.promptIcon"
                 [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
                 [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
                 [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
-                [readOnly]="!screenData.editable"></app-prompt-input>
-            
+                [readOnly]="!screenData.editable">
+            </app-prompt-input>
             <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
-            
             <ng-content select="[optionsScreen]"></ng-content>
-
             <div *ngIf="screenData.otherActions || screenData.actionButton" class="prompt-buttons">
                 <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
                         <span responsive-class>{{menuItem.title}}</span>
@@ -23,13 +21,13 @@
                         [iconName]="screenData.actionButton.icon"></app-icon>
                 </app-primary-button>
             </div>
-        </div>
+        </app-content-card>
     </form>
 </ng-template>
 
 <ng-template #dialogForm>
     <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
-        <div class="common-border prompt-part-outer">
+        <app-content-card>
             <mat-dialog-content style="flex: 1 1 auto;">
                 <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
                     [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
@@ -55,6 +53,6 @@
                     <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
                 </app-primary-button>
             </mat-dialog-actions>
-        </div>
+        </app-content-card>
     </form>
 </ng-template>

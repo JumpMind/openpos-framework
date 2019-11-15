@@ -1,10 +1,16 @@
 @import "../../../styles/mixins/typography";
 
-.prompt-part-outer {
-    background-color: white;
-    padding: 48px;
-}
 .prompt-buttons {
     display: flex;
     place-content: stretch flex-end;
+}
+
+.mat-dialog-actions {
+    padding: 0;
+    margin: 0;
+}
+
+.mat-dialog-content {
+    padding: 0;
+    margin: 0;
 }
