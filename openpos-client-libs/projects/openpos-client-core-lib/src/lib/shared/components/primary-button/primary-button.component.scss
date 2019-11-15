@@ -1,4 +1,28 @@
+@import "../../../styles/mixins/typography";
+
 button{
-  padding-top: 8px;
-  padding-bottom: 8px;
+  @extend %text-md;
+  padding: 8px;
+  min-width: 150px;
+  margin-left: 4px;
+
+  &.desktop-portrait {
+    @extend %text-lg;
+    padding: 16px;
+    min-width: 100px;
+  }
+
+  &.tablet-portrait {
+    min-width: 100px;
+  }
+
+  &.mobile-landscape {
+    @extend %text-sm;
+    min-width: 75px;
+  }
+
+  &.mobile-portrait {
+    @extend %text-sm;
+    min-width: 75px;
+  }
 }

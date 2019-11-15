@@ -1,7 +1,11 @@
 @mixin primary-button-theme($theme) {
-    $disabled: map-get($theme, disabled );
-
-    .disabled{
-        background-color: $disabled;
+    $primary: mat-color(map-get($theme, primary));
+    
+    app-primary-button {
+        button {
+            border-color: $primary;
+            border-style: solid;
+            border-width: 2px;
+        }
     }
 }
