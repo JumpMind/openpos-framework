@@ -141,6 +141,7 @@ import { OptionsListComponent } from './screen-parts/options-list/options-list.c
 import { ScanPartComponent } from './screen-parts/scan-part/scan-part.component';
 import { InstructionsComponent } from './components/instructions/instructions.component';
 import { TitleComponent } from './components/title/title.component';
+import { ContentCardComponent } from './components/content-card/content-card.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -239,7 +240,8 @@ const components = [
     HelpTextPageWrapperComponent,
     OpenposAppHelpContainerComponent,
     InstructionsComponent,
-    TitleComponent
+    TitleComponent,
+    ContentCardComponent
 ];
 
 const directives = [

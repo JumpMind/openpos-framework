@@ -1,0 +1,13 @@
+@mixin content-card-theme($theme) {
+    $border: map-get(map-get($theme, foreground), border);
+    $card: map-get(map-get($theme, background), card);
+
+    app-content-card {
+        section{
+            background-color: $card;
+            border-color: $border;
+            border-style: solid;
+            border-width: 2px;
+        }
+    }
+}
