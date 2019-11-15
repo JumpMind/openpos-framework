@@ -45,6 +45,7 @@ public class PromptUIMessage extends UIMessage {
     private boolean scanEnabled;
     private BigDecimal min;
     private BigDecimal max;
+    private String imageUrl;
 
     public PromptUIMessage() {
         this.setScreenType(UIMessageType.PROMPT);
@@ -198,6 +199,14 @@ public class PromptUIMessage extends UIMessage {
 
     public void setScanEnabled(boolean scanEnabled) {
         this.scanEnabled = scanEnabled;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public void setKeyboardPreference(KeyboardType keyboardPreference) {

@@ -1,4 +1,7 @@
-<div fxLayout="column" fxFlexFill>
+<div class="prompt-outer">
     <app-dialog-header></app-dialog-header>
-    <app-prompt-form-part style="flex: 1 1 auto; display: flex; flex-direction: column;"></app-prompt-form-part>
+    <div class="prompt-body">
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="prompt-image">
+        <app-prompt-form-part></app-prompt-form-part>
+    </div>
 </div>

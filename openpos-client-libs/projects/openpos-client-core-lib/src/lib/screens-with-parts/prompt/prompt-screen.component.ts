@@ -8,7 +8,8 @@ import { PromptInterface } from './prompt.interface';
 })
 @Component({
     selector: 'app-prompt-screen',
-    templateUrl: './prompt-screen.component.html'
+    templateUrl: './prompt-screen.component.html',
+    styleUrls: ['./prompt-screen.component.scss']
 })
 export class PromptScreenComponent extends PosScreen<PromptInterface> {
     buildScreen() {
