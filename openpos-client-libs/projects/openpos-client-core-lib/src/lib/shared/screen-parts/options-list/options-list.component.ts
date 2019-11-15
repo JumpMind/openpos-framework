@@ -62,7 +62,11 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     }
 
     onOptionClick(actionItem: IActionItem): void {
-        this.optionClick.emit(actionItem);
+        if( this.optionClick.observers.length > 0 ) {
+            this.optionClick.emit(actionItem);
+        } else {
+            this.doAction(actionItem);
+        }
     }
 
     public openKebabMenu() {
