@@ -85,8 +85,10 @@ $xx-large-space: 2rem;
 // Sets margin for the page (between header and footer)
 %page-element {
   margin-top: $large-space;
+  margin-bottom: $large-space;
   &.mobile{
     margin-top: $large-space/$mobile-factor;
+    margin-bottom: $large-space/$mobile-factor;
   }
 }
 
