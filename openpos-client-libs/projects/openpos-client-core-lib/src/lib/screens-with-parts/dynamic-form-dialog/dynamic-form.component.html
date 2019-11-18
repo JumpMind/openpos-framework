@@ -1,6 +1,14 @@
-<app-waffle>
-    <app-bacon-strip waffle-header></app-bacon-strip>
-    <div *ngIf="screen.instructions" waffle-title>{{screen.instructions}}</div>
-    <app-dynamic-form-part waffle-body [formName]="'form'" [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions"></app-dynamic-form-part>
-    <app-scan-part></app-scan-part>
-</app-waffle>
+<div class="form-outer">
+    <app-bacon-strip></app-bacon-strip>
+    <app-progress-bar-part></app-progress-bar-part>
+    
+    <div class="form-body">
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="form-image">
+        <app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions" [instructionsSize]="'md'"></app-instructions>
+        <app-content-card>
+            <app-dynamic-form-part [formName]="'form'"
+                [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
+            </app-dynamic-form-part>
+        </app-content-card>
+    </div>
+</div>
