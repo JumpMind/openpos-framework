@@ -9,4 +9,5 @@ public final class MessagePartConstants {
     public static final String SausageLinks="sausageLinks";
     public static final String Notifications="notifications";
     public static final String Banner="banner";
+    public static final String ProgressBar = "progressBar";
 }
