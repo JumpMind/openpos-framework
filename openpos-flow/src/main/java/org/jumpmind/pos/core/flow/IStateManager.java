@@ -63,6 +63,7 @@ public interface IStateManager {
     public void registerPersonalizationProperties(Map<String, String> personalizationProperties);
     public Injector getInjector();
     public boolean isAtRest();
+    public void markAsBusy();
     public void sendConfigurationChangedMessage();
     public void setClientContext(Map<String,String> context);
     public Map<String, String> getClientContext();

@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -132,6 +133,9 @@ public class StateManager implements IStateManager {
 
     private final AtomicInteger activeCalls = new AtomicInteger(0);
     private final AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
+    private final AtomicLong lastActionTimeInMs = new AtomicLong(0);
+    private final AtomicLong lastShowTimeIntMs = new AtomicLong(0);
+    private final AtomicReference<Thread> activeThread = new AtomicReference<>();
 
     public void init(String appId, String nodeId) {
 
@@ -470,70 +474,84 @@ public class StateManager implements IStateManager {
         lastInteractionTime.set(new Date());
     }
 
+    @Override
     public boolean isAtRest() {
         return activeCalls.get() == 0 || transitionRestFlag.get();
     }
 
     @Override
     public void doAction(Action action) {
-        lastInteractionTime.set(new Date());
-        activeCalls.incrementAndGet();
 
-        try {
-            // Global action handler takes precedence over all actions (for now)
-            Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
-            if (globalActionHandler != null) {
-                callGlobalActionHandler(action, globalActionHandler);
-                return;
-            }
-
-            if (applicationState.getCurrentTransition() != null) {
-                applicationState.getCurrentTransition().handleAction(action);
-                return;
-            }
-
-            FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
-            StateConfig stateConfig = applicationState.findStateConfig(flowConfig);
-
-
-
-            validateStateConfig(applicationState.getCurrentContext().getState(), stateConfig);
-
-            Class<? extends Object> transitionStateClass = stateConfig.getActionToStateMapping().get(action.getName());
-            Class<? extends Object> globalTransitionStateClass = flowConfig.getActionToStateMapping().get(action.getName());
-            SubTransition subStateConfig = stateConfig.getActionToSubStateMapping().get(action.getName());
-            SubTransition globalSubStateConfig = flowConfig.getActionToSubStateMapping().get(action.getName());
-
-            // Execute state specific action handlers
-            if (actionHandler.canHandleAction(applicationState.getCurrentContext().getState(), action)) {
-                handleAction(action);
-            } else if (handleTerminatingState(action, stateConfig)) {
-                return;
-            } else if (transitionStateClass != null) {
-                // Execute state transition
-                transitionToState(action, transitionStateClass);
-            } else if (subStateConfig != null) {
-                // Execute sub-state transition
-                transitionToSubState(action, subStateConfig);
-            } else if (actionHandler.canHandleAnyAction(applicationState.getCurrentContext().getState(), action)) {
-                // Execute action handler for onAnyAction
-                actionHandler.handleAnyAction(this, applicationState.getCurrentContext().getState(), action);
-            } else if (globalTransitionStateClass != null) {
-                // Execute global state transition
-                handleGlobalStateTransition(action, globalTransitionStateClass);
-            } else if (globalSubStateConfig != null) {
-                // Execute global sub-state transition
-                transitionToSubState(action, globalSubStateConfig);
+        boolean alreadyBusy = false;
+        synchronized (this) {
+            if (activeCalls.get() == 0 || activeThread.get() == null || activeThread.get().equals(Thread.currentThread()) || transitionRestFlag.get()) {
+                lastInteractionTime.set(new Date());
+                activeCalls.incrementAndGet();
+                markAsBusy();
             } else {
-                throw new FlowException(String.format(
-                        "Unexpected action \"%s\". Either no @ActionHandler %s.on%s() method found, or no withTransition(\"%s\"...) defined in the flow config.",
-                        action.getName(), applicationState.getCurrentContext().getState().getClass().getName(), action.getName(),
-                        action.getName()));
+                alreadyBusy = true;
             }
-        } catch (Throwable ex) {
-            handleOrRaiseException(ex);
-        } finally {
-            activeCalls.decrementAndGet();
+        }
+
+        if (!alreadyBusy) {
+            try {
+                // Global action handler takes precedence over all actions (for now)
+                Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
+                if (globalActionHandler != null) {
+                    callGlobalActionHandler(action, globalActionHandler);
+                    return;
+                }
+
+                if (applicationState.getCurrentTransition() != null) {
+                    applicationState.getCurrentTransition().handleAction(action);
+                    return;
+                }
+
+                FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
+                StateConfig stateConfig = applicationState.findStateConfig(flowConfig);
+
+
+
+                validateStateConfig(applicationState.getCurrentContext().getState(), stateConfig);
+
+                Class<? extends Object> transitionStateClass = stateConfig.getActionToStateMapping().get(action.getName());
+                Class<? extends Object> globalTransitionStateClass = flowConfig.getActionToStateMapping().get(action.getName());
+                SubTransition subStateConfig = stateConfig.getActionToSubStateMapping().get(action.getName());
+                SubTransition globalSubStateConfig = flowConfig.getActionToSubStateMapping().get(action.getName());
+
+                // Execute state specific action handlers
+                if (actionHandler.canHandleAction(applicationState.getCurrentContext().getState(), action)) {
+                    handleAction(action);
+                } else if (handleTerminatingState(action, stateConfig)) {
+                    return;
+                } else if (transitionStateClass != null) {
+                    // Execute state transition
+                    transitionToState(action, transitionStateClass);
+                } else if (subStateConfig != null) {
+                    // Execute sub-state transition
+                    transitionToSubState(action, subStateConfig);
+                } else if (actionHandler.canHandleAnyAction(applicationState.getCurrentContext().getState(), action)) {
+                    // Execute action handler for onAnyAction
+                    actionHandler.handleAnyAction(this, applicationState.getCurrentContext().getState(), action);
+                } else if (globalTransitionStateClass != null) {
+                    // Execute global state transition
+                    handleGlobalStateTransition(action, globalTransitionStateClass);
+                } else if (globalSubStateConfig != null) {
+                    // Execute global sub-state transition
+                    transitionToSubState(action, globalSubStateConfig);
+                } else {
+                    throw new FlowException(String.format(
+                            "Unexpected action \"%s\". Either no @ActionHandler %s.on%s() method found, or no withTransition(\"%s\"...) defined in the flow config.",
+                            action.getName(), applicationState.getCurrentContext().getState().getClass().getName(), action.getName(),
+                            action.getName()));
+                }
+            } catch (Throwable ex) {
+                handleOrRaiseException(ex);
+            } finally {
+                activeCalls.decrementAndGet();
+            }
+        } else {
+            log.warn("Discarding unexpected action " + action.getName() + " because there are " + activeCalls.get() + " active calls on the " + activeThread.get().getName() + " thread");
         }
     }
 
@@ -729,6 +747,12 @@ public class StateManager implements IStateManager {
     }
 
     @Override
+    public void markAsBusy() {
+        lastActionTimeInMs.set(System.currentTimeMillis());
+        activeThread.set(Thread.currentThread());
+    }
+
+    @Override
     public void endConversation() {
         applicationState.getScope().clearConversationScope();
         clearScopeOnStates(ScopeType.Conversation);
@@ -776,6 +800,8 @@ public class StateManager implements IStateManager {
         }
 
         screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
+
+        lastShowTimeIntMs.set(System.currentTimeMillis());
     }
 
 
@@ -802,6 +828,8 @@ public class StateManager implements IStateManager {
         }
 
         screenService.showScreen(applicationState.getAppId(), applicationState.getDeviceId(), screen, dataMessageProviderMap);
+
+        lastShowTimeIntMs.set(System.currentTimeMillis());
     }
 
     @SuppressWarnings("unchecked")

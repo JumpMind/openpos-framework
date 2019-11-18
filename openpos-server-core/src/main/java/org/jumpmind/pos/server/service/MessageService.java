@@ -45,7 +45,7 @@ public class MessageService implements IMessageService {
     @Value("${openpos.screens.jsonIncludeNulls:true}")
     boolean jsonIncludeNulls = true;
 
-    @Value("${openpos.general.websocket.sendBufferSizeLimit:80000}")
+    @Value("${openpos.general.websocket.sendBufferSizeLimit:1000000}")
     int websocketSendBufferLimit;
 
     @Autowired(required=false)

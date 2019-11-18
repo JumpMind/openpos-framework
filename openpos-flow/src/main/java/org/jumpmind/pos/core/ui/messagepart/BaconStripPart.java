@@ -11,7 +11,6 @@ import lombok.NoArgsConstructor;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasBackButton;
 import org.jumpmind.pos.core.ui.IconType;
-import org.jumpmind.pos.core.ui.data.SearchBar;
 
 @Data
 @Builder
@@ -25,7 +24,6 @@ public class BaconStripPart implements IHasBackButton, Serializable {
     private String headerText;
     private String logo;
     private List<ActionItem> actions;
-    private SearchBar searchBar;
 
     @Override
     public void setBackButton(ActionItem button) {
