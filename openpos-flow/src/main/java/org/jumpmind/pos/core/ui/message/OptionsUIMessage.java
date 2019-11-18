@@ -10,8 +10,6 @@ public class OptionsUIMessage extends UIMessage {
 
     private String prompt;
 
-    private OptionsListPart optionsList;
-
     private String imageUrl;
 
     public OptionsUIMessage() {
@@ -32,14 +30,6 @@ public class OptionsUIMessage extends UIMessage {
 
     public void setPrompt(String prompt) {
         this.prompt = prompt;
-    }
-
-    public OptionsListPart getOptionsList() {
-        return optionsList;
-    }
-
-    public void setOptionsList(OptionsListPart optionsList) {
-        this.optionsList = optionsList;
     }
 
     public String getImageUrl() {
