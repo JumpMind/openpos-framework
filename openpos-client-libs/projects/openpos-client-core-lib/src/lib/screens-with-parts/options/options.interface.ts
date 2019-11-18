@@ -5,5 +5,4 @@ export interface OptionsInterface extends IAbstractScreen {
     title: string;
     prompt: string;
     imageUrl: string;
-    optionsList: OptionsListInterface;
 }
