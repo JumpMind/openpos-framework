@@ -1,11 +1,19 @@
-:not(:host-context(.prompt)) mat-card {
-    margin:2px; 
-    padding-left:2px;
+.mat-card-actions {
+    padding: 0;
+    margin: 0;
 }
 
-:host-context(.prompt) mat-card {
-    .mat-card-content {
-        font-size:20px;
-        justify-content: center;
-    }
+.mat-card-content {
+    padding: 0;
+    margin: 0;
+}
+
+.mat-dialog-actions {
+    padding: 0;
+    margin: 0;
+}
+
+.mat-dialog-content {
+    padding: 0;
+    margin: 0;
 }
