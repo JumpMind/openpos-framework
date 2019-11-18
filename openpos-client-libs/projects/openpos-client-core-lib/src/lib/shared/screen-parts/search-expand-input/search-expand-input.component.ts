@@ -1,5 +1,4 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, Injector, ViewChild } from '@angular/core';
-import { SearchExpandInputInterface } from './search-expand-input.interface';
 import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { Observable, Subscription } from 'rxjs';
@@ -8,22 +7,26 @@ import { DeviceService } from '../../../core/services/device.service';
 import { ScannerService } from '../../../core/platform-plugins/scanners/scanner.service';
 import { MediaBreakpoints, OpenposMediaService } from '../../../core/media/openpos-media.service';
 import { MatInput } from '@angular/material';
-import { ActionService } from '../../../core/actions/action.service';
+import { ScreenPart } from '../../decorators/screen-part.decorator';
+import { ScreenPartComponent } from '../screen-part';
+import { ScanOrSearchInterface } from '../scan-or-search/scan-or-search.interface';
 
 
+@ScreenPart({
+    name: 'scanOrSearch'
+})
 @Component({
     selector: 'app-search-expand-input',
     templateUrl: './search-expand-input.component.html',
     styleUrls: ['./search-expand-input.component.scss']
 })
-export class SearchExpandInputComponent implements
+export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearchInterface> implements
     OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
 
     public barcode: string;
     isMobile$: Observable<boolean>;
 
     @Input() defaultAction: IActionItem;
-    @Input() searchData: SearchExpandInputInterface;
     @Output() expanded: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     private scanServiceSubscription: Subscription;
@@ -32,8 +35,9 @@ export class SearchExpandInputComponent implements
     public open = false;
 
     constructor(
-        public devices: DeviceService, mediaService: OpenposMediaService,
-        private scannerService: ScannerService, private actionService: ActionService) {
+        private injector: Injector, public devices: DeviceService, mediaService: OpenposMediaService,
+        private scannerService: ScannerService) {
+        super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
             [MediaBreakpoints.MOBILE_LANDSCAPE, true],
@@ -45,7 +49,11 @@ export class SearchExpandInputComponent implements
         this.isMobile$ = mediaService.observe(mobileMap);
     }
 
+    screenDataUpdated() {
+    }
+
     ngOnInit(): void {
+        super.ngOnInit();
         this.registerScanner();
     }
 
@@ -65,7 +73,7 @@ export class SearchExpandInputComponent implements
     private registerScanner() {
         if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
-                this.actionService.doAction({ action: this.searchData.scanActionName }, scanData);
+                this.actionService.doAction({ action: this.screenData.scanActionName }, scanData);
             });
         }
     }
@@ -78,8 +86,8 @@ export class SearchExpandInputComponent implements
     }
 
     public onEnter(): void {
-        if (this.barcode && this.barcode.trim().length >= this.searchData.scanMinLength) {
-            this.actionService.doAction({ action: this.searchData.keyedActionName }, this.barcode);
+        if (this.barcode && this.barcode.trim().length >= this.screenData.scanMinLength) {
+            this.actionService.doAction({ action: this.screenData.keyedActionName }, this.barcode);
             this.barcode = '';
         } else if (this.defaultAction && this.defaultAction.enabled) {
             this.actionService.doAction(this.defaultAction);

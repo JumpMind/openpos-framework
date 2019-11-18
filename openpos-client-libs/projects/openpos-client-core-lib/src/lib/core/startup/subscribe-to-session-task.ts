@@ -6,6 +6,7 @@ import { Router } from '@angular/router';
 import { StartupTaskData } from './startup-task-data';
 import { StartupTaskNames } from './startup-task-names';
 import { takeUntil, map, filter } from 'rxjs/operators';
+import { Configuration } from '../../configuration/configuration';
 
 @Injectable()
 export class SubscribeToSessionTask implements IStartupTask {
@@ -50,7 +51,7 @@ export class SubscribeToSessionTask implements IStartupTask {
                             map(x => '')
                         )
                     ).pipe(filter(x => x !== '')),
-                    this.confirmConnection().pipe(map(success => {
+                    this.confirmConnection(Configuration.confirmConnectionTimeoutMillis).pipe(map(success => {
                         if (success) { return 'Connection established'; }
                         else { throw new Error(`A connection to the server could not be established.`); }
                     }))

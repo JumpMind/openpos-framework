@@ -1,12 +1,17 @@
 package org.jumpmind.pos.util;
 
 import java.lang.reflect.Field;
+import java.text.ParseException;
+import java.util.Date;
 
-import org.apache.commons.beanutils.BeanUtils;
+import lombok.extern.slf4j.Slf4j;
+import static org.apache.commons.beanutils.BeanUtils.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import static java.lang.String.*;
+import org.apache.commons.lang3.time.DateUtils;
 
+@Slf4j
 public class ReflectUtils {
 
     static final Logger log = LoggerFactory.getLogger(ReflectUtils.class);
@@ -21,7 +26,7 @@ public class ReflectUtils {
                 return;
             } catch (Exception ex) {
                 try {
-                    BeanUtils.copyProperty(target, field.getName(), value);
+                    copyProperty(target, field.getName(), value);
                     return;
                 } catch (Exception ex2) {
                     throw ex;
@@ -42,8 +47,22 @@ public class ReflectUtils {
             return Enum.valueOf((Class<Enum>) field.getType(), value.toString());
         }
 
+        if (field.getType().equals(Date.class)) {
+            if (value instanceof Number) {
+                value = value.toString();
+            }
+
+            if (value instanceof String) {
+                try {
+                    value = DateUtils.parseDate((String) value, "yyyyMMdd", "yyyyMMdd hh:mm:ss");
+                } catch (ParseException e) {
+                    throw new ReflectionException("Failed to parse this string " + value + " to a date value.  You might need to add a new date pattern to the list", e);
+                }
+            }
+        }
+
         if ((field.getType().equals(Boolean.class) || field.getType().equals(boolean.class))
-            && (value instanceof Number)    ) {
+                && (value instanceof Number)    ) {
             Number number = (Number) value;
             if (number.intValue() != 0) {
                 return Boolean.TRUE;

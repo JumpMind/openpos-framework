@@ -1,5 +1,8 @@
 :host {
     border-radius: 4px;
+    display:grid;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto;
 }
 
 .scan-button {
@@ -14,7 +17,6 @@
 
 .scan-input {
     font-size: 24px;
-    height: 55px;
     margin: 0px;
     padding: 4px;
     border-width: 0px;
@@ -22,7 +24,6 @@
 
 .scan-input-xs {
     font-size: 16px;
-    height: 35px;
     margin: 0px;
     padding: 4px;
 }
