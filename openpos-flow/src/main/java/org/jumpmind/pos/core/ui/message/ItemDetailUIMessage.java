@@ -8,6 +8,7 @@ import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AssignKeyBindings
@@ -21,6 +22,13 @@ public class ItemDetailUIMessage extends UIMessage {
     private String summary;
     private List<String> imageUrls;
     private List<DisplayProperty> itemProperties;
+
+    public void addItemProperty(DisplayProperty property){
+        if(itemProperties == null){
+            itemProperties = new ArrayList<>();
+        }
+        itemProperties.add(property);
+    }
 
     @Override
     public String getScreenType(){ return UIMessageType.ITEM_DETAIL; }
