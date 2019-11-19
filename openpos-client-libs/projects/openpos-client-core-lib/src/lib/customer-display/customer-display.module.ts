@@ -4,16 +4,12 @@ import { ScreenService } from '../core/services/screen.service';
 import { DialogService } from '../core/services/dialog.service';
 import { CustomerDisplayHomeComponent } from './customer-display-home/customer-display-home.component';
 import { CustomerDisplaySaleComponent } from './customer-display-sale/customer-display-sale.component';
-import { CustomerDisplayOptionsComponent } from './customer-display-options/customer-display-options.component';
 import { SelfCheckoutModule } from '../self-checkout/self-checkout.module';
-import { CustomerDisplayPromptComponent } from './customer-display-prompt/customer-display-prompt.component';
 import { CustomerDisplayFormComponent } from './customer-display-form/customer-display-form.component';
 
 const screens = [
     CustomerDisplayHomeComponent,
     CustomerDisplaySaleComponent,
-    CustomerDisplayOptionsComponent,
-    CustomerDisplayPromptComponent,
     CustomerDisplayFormComponent
 ];
 
