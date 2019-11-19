@@ -1,5 +1,15 @@
 @import "../../../styles/mixins/typography";
 
+.content {
+    padding: 24px;
+    &.mobile {
+        padding: 8px;
+    }
+    &.tablet {
+        padding: 16px;
+    }
+}
+
 .prompt-buttons {
     display: flex;
     place-content: stretch flex-end;
