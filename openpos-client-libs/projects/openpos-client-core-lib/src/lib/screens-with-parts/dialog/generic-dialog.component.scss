@@ -1,10 +1,32 @@
-@import '../../styles/mixins/typography';
+@import '../../styles/variables/spacing';
 
-.generic-dialog-button {
-    @extend %text-lg;
-    padding: 8px 0px;
+.dialog-outer{
+    display:grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+    height: 100%;
 
-    &.mobile {
-        padding: 8px 0px;
+    .dialog-body {
+        display: grid;
+        justify-self: center;
+        align-content: center;
+        width:100%;
+        @extend %page-spaced-content; 
+
+        .buttons {
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: end;
+        }
     }
+}
+
+.mat-dialog-actions {
+    padding: 0;
+    margin: 0;
+}
+
+.mat-dialog-content {
+    padding: 0;
+    margin: 0;
 }
