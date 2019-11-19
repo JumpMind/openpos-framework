@@ -18,6 +18,7 @@
         align-content: center;
         width: 75%;
         overflow-y: auto;
+        min-height: 100px;
         @extend %page-element;
         @extend %page-spaced-content; 
 

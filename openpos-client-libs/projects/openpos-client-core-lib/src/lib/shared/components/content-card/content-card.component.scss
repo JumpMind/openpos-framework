@@ -1,9 +1,11 @@
 @import "../../../styles/variables/spacing";
 :host{
     display: grid;
+    min-height: 100px;
 }
 
 section {
     @extend %sub-element;
     display: block;
+    overflow-y: auto;
 }
