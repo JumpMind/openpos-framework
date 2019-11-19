@@ -3,7 +3,7 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 
 @ScreenComponent({
-    name: 'AutoCompleteAddressComponent'
+    name: 'AutoCompleteAddress'
 })
 @Component({
   selector: 'app-auto-complete-address',

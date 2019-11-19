@@ -1,5 +1,11 @@
 .auto-complete-address-form {
-    padding: 48px;
+    padding: 24px;
+    &.mobile {
+        padding: 8px;
+    }
+    &.tablet {
+        padding: 16px;
+    }
 }
 
 .address-city-state {

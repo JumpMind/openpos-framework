@@ -1,4 +1,4 @@
-<form [formGroup]="form" class="auto-complete-address-form">
+<form [formGroup]="form" class="auto-complete-address-form" responsive-class>
     <ng-container *ngFor="let field of nonAddressFields">
         <ng-container *ngIf="field === streetAddress">
             <app-dynamic-form-field *ngIf="streetAddress" autoCompleteAddress [formGroup]="form"
@@ -41,10 +41,10 @@
     </mat-error>
 
     <div class="auto-complete-address-buttons">
-        <button *ngIf="submitButton" mat-button type="submit" (click)="submitForm()"
+        <app-primary-button *ngIf="submitButton" (click)="submitForm()"
             [disabled]="!form.valid" [actionItem]="submitButton" (actionClick)="submitForm()">
             <span>{{submitButton.title}}</span>
             <app-icon [iconName]="submitButton.icon" [iconClass]="'material-icons'"></app-icon>
-        </button>
+        </app-primary-button>
     </div>
 </form>
