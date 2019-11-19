@@ -1,69 +1,11 @@
 @import "../../../styles/mixins/typography";
 
-.options-list-item {
-    width: 100%;
-    padding: 16px;
-    margin: 8px 0px;
-    background-color: white;
-    white-space: normal;
-
-    &.tablet {
-        padding: 12px;
-        margin: 4px 0px;
-    }
-
-    &.mobile {
-        padding: 12px;
-        margin: 4px 0px;
-    }
-}
-
-::ng-deep .options-list-item {
-    column-gap: 16px;
-
-    .mat-button-wrapper {
-        grid-template-columns: 64px 1fr 64px;
-        display: grid !important;
-    }
-
-    &.mobile {
-        .mat-button-wrapper {
-            grid-template-columns: auto 1fr;
-            display: grid !important;
-            column-gap: 4px;
-        }
-    }
-}
-
-.options-list-line {
-    text-align: center;
-    align-self: center;
-
-    &.mobile {
-        text-align: start;
-        justify-self: start;
-    }
-
-    &.sm {
-        @extend %text-sm;
-    }
-
-    &.md {
-        @extend %text-md;
-    }
-
-    &.lg {
-        @extend %text-lg;
-    }
-}
-
-.options-list-icon {
-    align-self: center;
-    justify-self: end;
-}
-
 .options-buttons {
     padding-bottom: 64px;
+
+    .additional-options-buttons {
+        @extend %text-md;
+    }
 
     span {
         padding: 32px;
@@ -72,12 +14,8 @@
 
 .options-link-buttons {
     margin: 32px 0px;
-}
 
-.options-link-button {
-    @extend %text-md;
-}
-
-.additional-options-buttons {
-    @extend %text-md;
+    .options-link-button {
+        @extend %text-md;
+    }
 }

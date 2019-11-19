@@ -9,19 +9,19 @@
     </div>
 
     <div *ngIf="options && options.length > 0">
-        <button mat-button class="common-border options-list-item" *ngFor="let o of options" (click)="onOptionClick(o)" responsive-class>
-            <app-icon [iconName]="o.icon"
-                [iconClass]="optionListSizeClass"
-                class="options-list-icon primary"></app-icon>
-            <span responsive-class class="options-list-line" [class.muted-color]="!o.enabled" [ngClass]="optionListSizeClass">{{o.title}}</span>
-        </button>
-        <button *ngIf="overflowOptions && overflowOptions.length > 0 && screenData.overflowButton" mat-button
-            class="common-border options-list-item" (click)="openKebabMenu()" responsive-class>
-            <app-icon [iconName]="screenData.overflowButton.icon"
-                [iconClass]="optionListSizeClass"
-                class="options-list-icon primary"></app-icon>
-            <span responsive-class class="options-list-line" [ngClass]="optionListSizeClass">{{screenData.overflowButton.title}}</span>
-        </button>
+        <app-option-button *ngFor="let o of options" 
+            [disabled]="!o.enabled"
+            [optionTitle]="o.title" 
+            [optionIcon]="o.icon" 
+            [optionSize]="optionListSizeClass"
+            (click)="onOptionClick(o)">
+        </app-option-button>
+        <app-option-button *ngIf="overflowOptions && overflowOptions.length > 0 && screenData.overflowButton"
+            [optionTitle]="screenData.overflowButton.title"
+            [optionIcon]="screenData.overflowButton.icon"
+            [optionSize]="optionListSizeClass"
+            (click)="openKebabMenu()">
+        </app-option-button>
     </div>
 
     <div *ngIf="screenData && screenData.linkButtons" class="options-link-buttons">
