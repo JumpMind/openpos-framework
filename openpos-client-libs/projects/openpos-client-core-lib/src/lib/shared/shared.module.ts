@@ -142,6 +142,7 @@ import { ScanPartComponent } from './screen-parts/scan-part/scan-part.component'
 import { InstructionsComponent } from './components/instructions/instructions.component';
 import { TitleComponent } from './components/title/title.component';
 import { ContentCardComponent } from './components/content-card/content-card.component';
+import { OptionButtonComponent } from './components/option-button/option-button.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -241,7 +242,8 @@ const components = [
     OpenposAppHelpContainerComponent,
     InstructionsComponent,
     TitleComponent,
-    ContentCardComponent
+    ContentCardComponent,
+    OptionButtonComponent
 ];
 
 const directives = [

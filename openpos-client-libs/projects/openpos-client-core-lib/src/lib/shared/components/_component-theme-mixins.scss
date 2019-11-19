@@ -21,6 +21,7 @@
 @import './primary-button/primary-button-theme';
 @import './secondary-button/secondary-button-theme';
 @import './content-card/content-card-theme';
+@import './option-button/option-button-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -46,4 +47,5 @@
     @include primary-button-theme($theme);
     @include secondary-button-theme($theme);
     @include content-card-theme($theme);
+    @include option-button-theme($theme);
 }
