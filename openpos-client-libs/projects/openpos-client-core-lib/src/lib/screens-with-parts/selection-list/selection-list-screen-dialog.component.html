@@ -1,6 +1,6 @@
 <div class="selection-list-outer">
     <app-dialog-header></app-dialog-header>
-    <div class="selection-list-body">
+    <div class="selection-list-body" responsive-class>
         <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
         <app-content-card>
             <mat-dialog-content>

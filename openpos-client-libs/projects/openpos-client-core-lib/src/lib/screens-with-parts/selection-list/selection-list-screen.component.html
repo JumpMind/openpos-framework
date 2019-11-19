@@ -1,7 +1,7 @@
 <div class="selection-list-outer">
     <app-bacon-strip></app-bacon-strip>
     <app-scan-or-search *ngIf="screen.showScan" class="scan-or-search mat-elevation-z1"></app-scan-or-search>
-    <div class="selection-list-body">
+    <div class="selection-list-body" responsive-class>
         <app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions" [instructionsSize]="'text-md'"></app-instructions>
         <app-content-card>
             <div class="content">
