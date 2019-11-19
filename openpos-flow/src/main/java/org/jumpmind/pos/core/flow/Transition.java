@@ -69,6 +69,8 @@ public class Transition {
         executeCurrentStep();
         
         waitForEverybody();
+
+        stateManager.markAsBusy();
     }
 
     private void waitForEverybody() {

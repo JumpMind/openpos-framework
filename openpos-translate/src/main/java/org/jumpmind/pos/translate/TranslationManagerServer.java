@@ -240,6 +240,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                     if (newTranslator != null) {
                         newTranslator.setPosSessionInfo(posSessionInfo);
                         stateManager.performInjections(newTranslator);
+                        stateManager.markAsBusy();
                     }
                     if (newTranslator instanceof AbstractUIMessageTranslator<?>) {
                         AbstractUIMessageTranslator<?> messageTranslator = (AbstractUIMessageTranslator) newTranslator;
