@@ -31,5 +31,4 @@ public final class UIMessageType {
     public static String SCAN_INPUT_DIALOG = "ScanInputDialog";
     public static String CUSTOMER_DISPLAY_HOME = "CustomerDisplayHome";
     public static String CUSTOMER_DISPLAY_SALE = "CustomerDisplaySale";
-    public static String CUSTOMER_DISPLAY_FORM = "CustomerDisplayForm";
 }
