@@ -486,20 +486,22 @@ public class StateManager implements IStateManager {
         activeThread.set(Thread.currentThread());
     }
 
-    private boolean notBusy() {
+    private boolean notBusy(Action action) {
         boolean notBusy = true;
         synchronized (this) {
             if (isAtRest() ||
                     (activeThread.get() == null ||
                     activeThread.get().equals(Thread.currentThread()))) {
-                logger.info("State manager is NOT busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
-                        activeCalls.get(), Thread.currentThread().getName(), activeThread.get().getName(), lastShowTimeInMs.get()-lastActionTimeInMs.get());
+                Thread active = activeThread.get();
+                log.info("Action received: {}, State manager is NOT busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
+                        action.getName(),
+                        activeCalls.get(), Thread.currentThread().getName(), active != null ? active.getName() : null, lastShowTimeInMs.get()-lastActionTimeInMs.get());
                 lastInteractionTime.set(new Date());
                 activeCalls.incrementAndGet();
                 markAsBusy();
             } else {
-                logger.info("State manager is busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
-                        activeCalls.get(), Thread.currentThread().getName(), activeThread.get().getName(), lastShowTimeInMs.get()-lastActionTimeInMs.get());
+                log.info("Action received: {}, State manager is busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
+                        action.getName(), activeCalls.get(), Thread.currentThread().getName(), activeThread.get().getName(), lastShowTimeInMs.get()-lastActionTimeInMs.get());
                 notBusy = false;
             }
         }
@@ -508,7 +510,7 @@ public class StateManager implements IStateManager {
 
     @Override
     public void doAction(Action action) {
-        if (notBusy()) {
+        if (notBusy(action)) {
             try {
                 // Global action handler takes precedence over all actions (for now)
                 Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
@@ -566,7 +568,7 @@ public class StateManager implements IStateManager {
                 activeCalls.decrementAndGet();
             }
         } else {
-            logger.warn("Discarding unexpected action " + action.getName());
+            log.warn("Discarding unexpected action " + action.getName());
         }
     }
 
