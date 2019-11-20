@@ -12,9 +12,17 @@ dependencies {
     compile "org.springframework:spring-context:$springVersion"
     compile "com.h2database:h2:${h2databaseVersion}"
     compile group: 'org.springframework.data', name: 'spring-data-commons', version: '2.1.5.RELEASE'     
-    compile "org.jumpmind.symmetric:symmetric-jdbc:$symmetricVersion"
-    compile "org.jumpmind.symmetric:symmetric-db:$symmetricVersion"
-    compile "org.jumpmind.symmetric:symmetric-io:$symmetricVersion"
-    compile "org.jumpmind.symmetric:symmetric-util:$symmetricVersion"
+    compile ("org.jumpmind.symmetric:symmetric-jdbc:$symmetricVersion") {
+             exclude group: 'org.slf4j', module: 'slf4j-api'
+             exclude group: 'org.slf4j', module: 'jul-to-slf4j'
+             exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
+             exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
+    compile ("org.jumpmind.symmetric:symmetric-io:$symmetricVersion") {
+             exclude group: 'org.slf4j', module: 'slf4j-api'
+             exclude group: 'org.slf4j', module: 'jul-to-slf4j'
+             exclude group: 'org.slf4j', module: 'jcl-over-slf4j'
+             exclude group: 'org.slf4j', module: 'slf4j-log4j12'
+    }
     runtime "com.microsoft.sqlserver:mssql-jdbc:7.0.0.jre8"
 }
