@@ -1,7 +1,64 @@
-.carousel {
-    margin-bottom: 16px;
+@import "../../styles/mixins/typography";
+@import "../../styles/variables/spacing";
+
+
+:host{
+    height: 100%;
+    display: grid;
 }
 
-.body{
-    padding: 16px;
+h1{
+    grid-area: title;
+    @extend %text-lg;
+    font-weight: normal;
+    margin: 0;
+}
+
+p{
+    grid-area: summary;
+    @extend %text-md;
+    font-weight: normal;
+    margin: 0;
+}
+
+.item-card{
+    display: grid;
+    @extend %sub-element-container;
+    @extend %page-gutter;
+    @extend %page-element;
+    width: 75%;
+    align-self: center;
+    justify-self: center;
+    grid-template: "image title" auto
+                    "image summary" auto
+                    "image properties" 1fr
+                    "actions actions" auto/ auto 1fr;
+    &.mobile,
+    &.tablet-portrait{
+        grid-template: "title" auto
+                        "image" auto
+                        "summary" auto
+                        "properties" auto
+                        "actions" auto/auto;
+        width: 100%;
+        align-self: start;
+    }
+}
+
+app-options-list {
+    grid-area: actions;
+}
+
+.carousel {
+    grid-area: image;
+    justify-self: center;
+}
+
+.properties {
+    grid-area: properties;
+    align-self: end;
+    list-style-type: none;
+    padding-inline-start: 0;
+    @extend %text-md;
+
 }
