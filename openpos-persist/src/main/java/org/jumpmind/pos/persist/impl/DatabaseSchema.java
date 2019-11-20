@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import lombok.Delegate;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
@@ -253,49 +254,53 @@ public class DatabaseSchema {
                 Class<?> currentClass = entityClass;
                 boolean includeAllFields = true;
                 while (currentClass != null && currentClass != Object.class) {
-                    Field[] fields = currentClass.getDeclaredFields();
-                    for (Field field : fields) {
-                        field.setAccessible(true);
-                        Column column = createColumn(field);
-                        if (column != null && (includeAllFields || column.isPrimaryKey())) {
-                            createIndex(field, column, indices);
-                            if (isPrimaryKey(field)) {
-                                meta.addEntityIdField(field.getName(), field);
-                                pkColumns.add(0, column);
-                            } else {
-                                columns.add(column);
-                            }
-                            meta.addEntityField(field.getName(), field);
-                        }
-                    }
+                    createClassFieldsMetadata(currentClass, meta,includeAllFields,columns,pkColumns,indices);
                     currentClass = currentClass.getSuperclass();
                     includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
                 }
-
                 for (Column column : pkColumns) {
                     dbTable.addColumn(column);
                 }
-
                 for (Column column : columns) {
                     dbTable.addColumn(column);
                 }
-
                 for (IIndex index : indices.values()) {
                     dbTable.addIndex(index);
                 }
-
                 meta.setTable(dbTable);
                 modelClassValidator.validate(meta);
                 list.add(meta);
-
             }
             entityClass = entityClass.getSuperclass();
         }
-
         ModelMetaData metaData = new ModelMetaData();
         metaData.setModelClassMetaData(list);
         metaData.init();
         return metaData;
+    }
+
+    private static void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
+        boolean includeAllFields, List<Column> columns, List<Column> pkColumns, Map<String, IIndex> indices) {
+
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            Column column = createColumn(field);
+            if (column != null && (includeAllFields || column.isPrimaryKey())) {
+                createIndex(field, column, indices);
+                if (isPrimaryKey(field)) {
+                    metaData.addEntityIdField(field.getName(), field);
+                    pkColumns.add(column);
+                } else {
+                    columns.add(column);
+                }
+                metaData.addEntityField(field.getName(), field);
+            }
+            CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
+            if (compositeDefAnnotation != null) {
+                createClassFieldsMetadata(field.getType(),metaData,includeAllFields,columns,pkColumns,indices);
+            }
+        }
     }
 
     private static void createIndex(Field field, Column column, Map<String, IIndex> indices) {

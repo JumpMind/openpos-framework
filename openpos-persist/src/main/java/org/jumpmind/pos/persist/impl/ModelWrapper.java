@@ -3,6 +3,7 @@ package org.jumpmind.pos.persist.impl;
 import java.beans.PropertyDescriptor;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
@@ -22,6 +23,7 @@ import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.ColumnDef;
+import org.jumpmind.pos.persist.CompositeDef;
 import org.jumpmind.pos.persist.PersistException;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 import org.jumpmind.pos.persist.model.TagModel;
@@ -132,22 +134,32 @@ public class ModelWrapper {
     }    
     
     protected LinkedHashMap<String, Column> mapFieldsToColumns(Class<?> resultClass) {
-        LinkedHashMap<String, Column> fieldsToColumns = new LinkedHashMap<String, Column>();
-        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(resultClass);
-        
+
+        fieldsToColumns = new LinkedHashMap<String, Column>();
+        buildFieldColumnMap(fieldsToColumns, resultClass);
+        fieldsToColumns = orderColumns(fieldsToColumns);
+        return fieldsToColumns;
+    }
+
+    protected void buildFieldColumnMap(LinkedHashMap<String, Column> fieldColumnMap, Class<?> clazz) {
+
+        Field[] fields = clazz.getDeclaredFields();
         for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
             Table table = classMetaData.getTable();
-            for (int i = 0; i < propertyDescriptors.length; i++) {
-                String propName = propertyDescriptors[i].getName();
-                Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(propName));
-                if (column != null) {
-                    fieldsToColumns.put(propName, column);
-                    
+            for (int i = 0; i < fields.length; i++) {
+                Field field = fields[i];
+                String fieldName = fields[i].getName();
+                if (field.getAnnotation(CompositeDef.class) != null) {
+                    buildFieldColumnMap(fieldColumnMap, field.getType());
+                } else {
+                    Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(fieldName));
+                    if (column != null) {
+                        fieldsToColumns.put(fieldName, column);
+
+                    }
                 }
             }
-            
-//            if (resultClass.isAssignableFrom(ITaggedModel.class)) {
-            if (ITaggedModel.class.isAssignableFrom(resultClass)) {
+            if (ITaggedModel.class.isAssignableFrom(clazz)) {
                 Column[] columns = table.getColumns();
                 for (Column column : columns) {
                     if (column.getName().toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
@@ -156,12 +168,8 @@ public class ModelWrapper {
                 }
             }
         }
-        
-        fieldsToColumns = orderColumns(fieldsToColumns);
-        
-        return fieldsToColumns;
     }
-    
+
     protected LinkedHashMap<String, Column> orderColumns(LinkedHashMap<String, Column> argFieldsToColumns) {
         LinkedHashMap<String, Column> orderedFieldsToColumns = new LinkedHashMap<>();
         
@@ -197,13 +205,13 @@ public class ModelWrapper {
 
                 if (fieldName.toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
                     String tagValue = ((ITaggedModel) model).getTagValue(fieldName.substring(TagModel.TAG_PREFIX.length()));
-//                    if (StringUtils.isEmpty(tagValue)) {
-//                        throw new PersistException("Tag value for tag \"" + fieldName + "\" cannot be empty. Available tags were: "+ ((ITaggedModel) model).getTags() + " on model " + model); 
-//                    }
                     columnNamesToObjectValues.put(fieldName, tagValue);
                 } else {
                     Column column = fieldsToColumns.get(fieldName);
-                    Object value = PropertyUtils.getProperty(model, fieldName);
+                    //TODO: problems here
+                    Object value = getFieldValue(model,fieldName, model);
+                    //Object value = PropertyUtils.getProperty(model, fieldName);
+
                     if (value instanceof Money) {
                         handleMoneyField(columnNamesToObjectValues, fieldName, column, (Money)value);    
                     } else if (value instanceof ITypeCode) {
@@ -219,7 +227,34 @@ public class ModelWrapper {
                     "Failed to getObjectValuesByColumnName on model " + model + " fieldsToColumns: " + fieldsToColumns, ex);
         }
     }    
-    
+
+    protected Object getFieldValue(Object modelClass, String fieldName, Object clazzInstance) {
+        Object fieldValue=null;
+        Class<?> clazz = modelClass.getClass();
+        try {
+            Field field = clazz.getDeclaredField(fieldName);
+            if (field != null) {
+                fieldValue = PropertyUtils.getProperty(model, fieldName);
+            }
+        } catch (NoSuchMethodException | NoSuchFieldException |
+                IllegalAccessException | InvocationTargetException ex) {
+
+            Field[] fields = clazz.getDeclaredFields();
+            for (Field field : fields) {
+                CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
+                if (compositeDefAnnotation != null) {
+                    try {
+                        fieldValue = getFieldValue(PropertyUtils.getProperty(modelClass, field.getName()), fieldName, field);
+                        break;
+                    } catch (Exception e) {
+                        log.error(String.format("Unable to get field value %s from class %s",fieldName,modelClass.getClass().getName()));
+                    }
+                }
+            }
+        }
+        return fieldValue;
+    }
+
     @SuppressWarnings("unchecked")
     public void setValue(String fieldName, Object value) {
         Field field = getField(fieldName);
