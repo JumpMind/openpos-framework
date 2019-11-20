@@ -2,8 +2,8 @@
     <app-dialog-header></app-dialog-header>
     <div class="return-trans-details-body" responsive-class>
         <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
-        <mat-dialog-content>
-            <app-content-card>
+        <app-content-card>
+            <mat-dialog-content>
                 <div class="dialog-content">
                     <app-selectable-item-list [listData]="listData" [configuration]="listConfig" 
                         (selectedItemChange)="onItemChange($event)">
@@ -12,8 +12,8 @@
                         </ng-template>
                     </app-selectable-item-list>
                 </div>
-            </app-content-card>
-        </mat-dialog-content>
+            </mat-dialog-content>
+        </app-content-card>
         <mat-dialog-actions class="buttons">
             <app-primary-button cdkFocusInitial [disabled]="index<0"
                 [actionItem]="selectionButton" (actionClick)="doMenuItemAction(selectionButton)" (click)="doMenuItemAction(selectionButton)">
