@@ -13,9 +13,8 @@ export class InfiniteScrollDatasource<T> extends DataSource<T> {
         super();
         this.moreData = moreData;
         this.subscription.add(data.subscribe( d => {
-            if(d && d.length > 0){
-                this.dataLoaded.next(true);
-            }
+
+            this.dataLoaded.next(d && d.length > 0);
 
             this.data = d;
             this.dataStream.next(this.data);
