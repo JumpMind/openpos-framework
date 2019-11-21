@@ -1,6 +1,6 @@
 @mixin secondary-button-theme($theme) {
     $border: map-get(map-get($theme, foreground), border);
-    $disabled-border: map-get(map-get($theme, foreground), disabled-button);
+    $disabled-border: map-get(map-get($theme, foreground), disabled-text);
 
     app-secondary-button {
         button {

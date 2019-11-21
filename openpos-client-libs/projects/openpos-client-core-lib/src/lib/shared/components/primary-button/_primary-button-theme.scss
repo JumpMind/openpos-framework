@@ -1,6 +1,6 @@
 @mixin primary-button-theme($theme) {
     $primary: mat-color(map-get($theme, primary));
-    $disabled-border: map-get(map-get($theme, foreground), disabled-button);
+    $disabled-border: map-get(map-get($theme, foreground), disabled-text);
 
     app-primary-button {
         button {
