@@ -47,6 +47,7 @@ import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
@@ -559,6 +560,8 @@ public class StateManagerTest {
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
 
+    // TODO: temp ignore this to see if it is the culprit for the hanging build
+    @Ignore
     @Test(expected = FlowException.class)
     public void testStackOverflow() {
         stateManager.init("pos", "100-1");
