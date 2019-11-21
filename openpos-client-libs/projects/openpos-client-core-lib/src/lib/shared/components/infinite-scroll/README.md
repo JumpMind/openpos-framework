@@ -8,6 +8,7 @@ Property | Description
 `@Input() itemHeightPx: number` | How tall is the template when rendered. Needs to be fixed so we can calculate when to load more items.
 `@Input() dataLoadBuffer: number` | How how many items do we want to make sure to have pre-loaded out of view. When the non-viewable items drops below the buffer we fetch more
 `@Input() itemTemplate: TemplateRef<T>` | Template to apply to each item. Each item is added to the template context scope as the $implicit. See example below.
+`@Input() noItemsTemplate:  TemplateRef<T>` | Template to use when there are no items.
 `@Input() virtualScrollMinBufferPx: number` | How close to the edge of the rendered content do let the viewable area get before starting to render more.
 `@Input() virtualScrollMaxBufferPx: number` | How far away from the edge of the viewable area do we render content.
 `@Input() itemClass: string` | Class to add to each item. This class will need to be global and not just scope to your component. 

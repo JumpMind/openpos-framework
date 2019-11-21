@@ -4,6 +4,7 @@ import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 export class InfiniteScrollDatasource<T> extends DataSource<T> {
 
     data = [];
+    dataLoaded = new BehaviorSubject<boolean>(false);
     private subscription = new Subscription();
     private dataStream = new BehaviorSubject<(T | undefined)[]>([]);
     private readonly moreData: () => void;
@@ -12,6 +13,10 @@ export class InfiniteScrollDatasource<T> extends DataSource<T> {
         super();
         this.moreData = moreData;
         this.subscription.add(data.subscribe( d => {
+            if(d && d.length > 0){
+                this.dataLoaded.next(true);
+            }
+
             this.data = d;
             this.dataStream.next(this.data);
         }));

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, TemplateRef} from '@angular/core';
+import {Component, ElementRef, Input, OnInit, Renderer2, TemplateRef} from '@angular/core';
 import {UIDataMessageService} from '../../../core/ui-data-message/ui-data-message.service';
 import {InfiniteScrollDatasource} from './infinite-scroll-datasource';
 
@@ -39,6 +39,12 @@ export class InfiniteScrollComponent<T> implements OnInit {
   itemTemplate: TemplateRef<T>;
 
   /**
+   * Template to use when there are no items
+    */
+  @Input()
+  noItemsTemplate: TemplateRef<T>;
+
+  /**
    * How close to the edge of the rendered content do let the viewable area get before starting to render more.
    */
   @Input()
@@ -65,9 +71,18 @@ export class InfiniteScrollComponent<T> implements OnInit {
 
   dataSource: InfiniteScrollDatasource<T>;
 
-  constructor( private dataMessageService: UIDataMessageService ) { }
+  constructor( private dataMessageService: UIDataMessageService, private el: ElementRef, private renderer: Renderer2 ) {
+
+  }
 
   ngOnInit(): void {
     this.dataSource = new InfiniteScrollDatasource<T>(this.dataMessageService.getData$(this.dataKey), () => this.dataMessageService.requestMoreData(this.dataKey), this.dataLoadBuffer);
+    this.dataSource.dataLoaded.subscribe( loaded => {
+      if( loaded ){
+        this.renderer.addClass(this.el.nativeElement, 'data-loaded');
+      } else {
+        this.renderer.removeClass(this.el.nativeElement, 'data-loaded');
+      }
+    })
   }
 }

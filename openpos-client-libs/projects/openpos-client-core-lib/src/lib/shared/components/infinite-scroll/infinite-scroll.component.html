@@ -1,4 +1,5 @@
 <cdk-virtual-scroll-viewport
+        *ngIf="(dataSource.dataLoaded | async)"
         [itemSize]="itemHeightPx"
         [maxBufferPx]="virtualScrollMaxBufferPx"
         [minBufferPx]="virtualScrollMinBufferPx">
@@ -9,3 +10,6 @@
     </li>
   </ul>
 </cdk-virtual-scroll-viewport>
+<ng-container *ngIf="!(dataSource.dataLoaded | async) && noItemsTemplate">
+  <ng-container *ngTemplateOutlet="noItemsTemplate"></ng-container>
+</ng-container>
