@@ -60,6 +60,16 @@
         display: grid;
         align-self: end;
 
+        .button {
+            display: grid;
+            justify-content: center;
+            width:100%;
+            padding:8px;
+            &.mobile {
+                padding: 0;
+            }
+        }
+
         .sale-total-loyalty-button {
             width: 100%;
 
@@ -83,16 +93,9 @@
             }
         } 
 
-        .sale-total-checkout-button {
-            @extend %text-lg;
+        .sale-total-button {
             margin-top: 16px;
             width: 100%;
-        }
-
-        .sale-total-border-button {
-            @extend %text-lg;
-            width: 100%;
-            margin-top: 16px;
         }
     }
 }
