@@ -1,6 +1,6 @@
-<h1 mat-dialog-title>
+<mat-card-title>
     Please select an option to continue
-</h1>
+</mat-card-title>
 <mat-dialog-content appArrowTab class="buttons">
     <app-option-button appArrowTabItem *ngFor="let o of data.menuItems"
         [disabled]="!o.enabled"
