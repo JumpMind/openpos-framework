@@ -4,11 +4,9 @@
     
     <div class="form-body">
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="form-image">
-        <app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions" [instructionsSize]="'md'"></app-instructions>
-        <app-content-card>
-            <app-dynamic-form-part [formName]="'form'"
-                [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
-            </app-dynamic-form-part>
-        </app-content-card>
+        <app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions" [instructionsSize]="'text-md'"></app-instructions>
+        <app-dynamic-form-part [formName]="'form'"
+            [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
+        </app-dynamic-form-part>
     </div>
 </div>
