@@ -1,18 +1,32 @@
 @import "../../../styles/mixins/typography";
+@import "../../../styles/variables/spacing";
 
-.content {
-    padding: 24px;
-    &.mobile {
-        padding: 8px;
-    }
-    &.tablet {
-        padding: 16px;
-    }
-}
+.form-part-body {
+    display: grid;
+    justify-self: center;
+    align-content: center;
+    width:100%;
+    @extend %page-spaced-content; 
 
-.prompt-buttons {
-    display: flex;
-    place-content: stretch flex-end;
+    .content {
+        padding: 24px;
+        &.mobile {
+            padding: 8px;
+        }
+        &.tablet {
+            padding: 16px;
+        }
+    }
+
+    .prompt-buttons {
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: end;
+        grid-column-gap: 8px;
+        &.mobile {
+            grid-column-gap: 4px;
+        }
+    }
 }
 
 .mat-dialog-actions {

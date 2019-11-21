@@ -1,37 +1,40 @@
 <ng-template [ngIf]="this.screenData.type.toLowerCase() !== 'dialog'" [ngIfElse]="dialogForm">
     <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
-        <app-content-card>
-            <div class="content" responsive-class>
-                <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText"
-                    [responseType]="screenData.responseType" [promptIcon]="screenData.promptIcon"
-                    [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
-                    [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
-                    [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
-                    [readOnly]="!screenData.editable">
-                </app-prompt-input>
-                <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
-                <ng-content select="[optionsScreen]"></ng-content>
-                <div *ngIf="screenData.otherActions || screenData.actionButton" class="prompt-buttons">
-                    <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
-                            <span responsive-class>{{menuItem.title}}</span>
-                            <app-icon *ngIf="menuItem.icon" [iconClass]="'mat-24 material-icons'" [iconName]="menuItem.icon"></app-icon>
-                    </app-secondary-button>
-                    <app-primary-button (click)="onFormSubmit()">
-                        <span responsive-class>{{screenData.actionButton.title}}</span>
-                        <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'mat-24 material-icons'"
-                            [iconName]="screenData.actionButton.icon"></app-icon>
-                    </app-primary-button>
+        <div responsive-class class="form-part-body">
+            <app-content-card>
+                <div class="content">
+                    <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText"
+                        [responseType]="screenData.responseType" [promptIcon]="screenData.promptIcon"
+                        [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
+                        [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
+                        [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
+                        [readOnly]="!screenData.editable">
+                    </app-prompt-input>
+                    <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
+                    <ng-content select="[optionsScreen]"></ng-content>
                 </div>
+            </app-content-card>
+
+            <div *ngIf="screenData.otherActions || screenData.actionButton" class="prompt-buttons">
+                <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
+                        <span responsive-class>{{menuItem.title}}</span>
+                        <app-icon *ngIf="menuItem.icon" [iconClass]="'mat-24 material-icons'" [iconName]="menuItem.icon"></app-icon>
+                </app-secondary-button>
+                <app-primary-button (click)="onFormSubmit()">
+                    <span responsive-class>{{screenData.actionButton.title}}</span>
+                    <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'mat-24 material-icons'"
+                        [iconName]="screenData.actionButton.icon"></app-icon>
+                </app-primary-button>
             </div>
-        </app-content-card>
+        </div>
     </form>
 </ng-template>
 
 <ng-template #dialogForm>
-    <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
-        <app-content-card>
-            <div class="content" responsive-class>
-                <mat-dialog-content style="flex: 1 1 auto;">
+    <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup" class="form">
+        <div responsive-class class="form-part-body">
+            <app-content-card>
+                <mat-dialog-content class="content">
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
                         [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
                         [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
@@ -40,23 +43,24 @@
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
                     <ng-content select="[optionsDialog]"></ng-content>
                 </mat-dialog-content>
-                <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" fxLayoutAlign="space-between">
-                    <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
-                        <span>{{menuItem.title}}</span>
-                        <app-icon *ngIf="menuItem.icon" [iconClass]="'material-icons'" [iconName]="menuItem.icon"></app-icon>
-                    </app-secondary-button>
-                    <app-primary-button>
-                        <span>{{screenData.actionButton.title}}</span>
-                        <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
-                    </app-primary-button>
-                </mat-dialog-actions>
-                <mat-dialog-actions *ngIf="(!screenData.otherActions || screenData.otherActions && screenData.otherActions.length == 0) && screenData.actionButton" align="end">
-                    <app-primary-button>
-                        <span>{{screenData.actionButton.title}}</span>
-                        <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
-                    </app-primary-button>
-                </mat-dialog-actions>
-            </div>
-        </app-content-card>
+            </app-content-card>
+
+            <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" class="prompt-buttons">
+                <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
+                    <span>{{menuItem.title}}</span>
+                    <app-icon *ngIf="menuItem.icon" [iconClass]="'material-icons'" [iconName]="menuItem.icon"></app-icon>
+                </app-secondary-button>
+                <app-primary-button>
+                    <span>{{screenData.actionButton.title}}</span>
+                    <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
+                </app-primary-button>
+            </mat-dialog-actions>
+            <mat-dialog-actions *ngIf="(!screenData.otherActions || screenData.otherActions && screenData.otherActions.length == 0) && screenData.actionButton" align="end">
+                <app-primary-button>
+                    <span>{{screenData.actionButton.title}}</span>
+                    <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'material-icons'" [iconName]="screenData.actionButton.icon"></app-icon>
+                </app-primary-button>
+            </mat-dialog-actions>
+        </div>
     </form>
 </ng-template>
