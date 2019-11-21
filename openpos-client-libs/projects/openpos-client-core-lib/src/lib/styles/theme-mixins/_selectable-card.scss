@@ -1,6 +1,6 @@
 @mixin selectable-card($theme){
 
     .selectable.selected{
-        border: solid 2px mat-color(map-get($theme, selected));
+        background-color: mat-color(map-get($theme, selected), lighter)
     }
 }
