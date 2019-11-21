@@ -70,7 +70,6 @@ public class Transition {
         
         waitForEverybody();
 
-        stateManager.markAsBusy();
     }
 
     private void waitForEverybody() {

@@ -284,6 +284,8 @@ public class StateManager implements IStateManager {
 
         TransitionResult transitionResult = executeTransition(applicationState.getCurrentContext(), newState, action);
         if (transitionResult == TransitionResult.PROCEED) {
+            markAsBusy();
+
             boolean exitSubState = resumeSuspendedState != null;
             String returnActionName = null;
             if (exitSubState) {
