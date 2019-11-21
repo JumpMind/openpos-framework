@@ -477,7 +477,7 @@ public class StateManager implements IStateManager {
     @Override
     public boolean isAtRest() {
         return (activeCalls.get() == 0 || transitionRestFlag.get()) &&
-                lastShowTimeInMs.longValue() > lastActionTimeInMs.longValue();
+                lastShowTimeInMs.longValue() >= lastActionTimeInMs.longValue();
     }
 
     @Override
