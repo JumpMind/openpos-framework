@@ -65,7 +65,7 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     }
 
     onOptionClick(actionItem: IActionItem): void {
-        if( this.optionClick.observers.length > 0 ) {
+        if ( this.optionClick.observers.length > 0 ) {
             this.optionClick.emit(actionItem);
         } else {
             this.doAction(actionItem);
