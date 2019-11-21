@@ -1,85 +1,101 @@
 @import "../../../styles/mixins/typography";
 
-.sale-total-checkout-button {
-    @extend %text-lg;
-    margin-top: 16px;
-    width: 100%;
-}
-
-.sale-total-border-button {
-    @extend %text-lg;
-    width: 100%;
-    margin-top: 16px;
-}
-
-.sale-total-loyalty-icon {
-    max-width: 100%;
-    max-height: 5em;
-}
-
-.sale-total-loyalty-button {
-    width: 100%;
-}
-
-.sale-total-loyalty-button-icon {
-    padding: 0px 8px;
-    max-width: 100%;
-    max-height: 50px;
-}
-
-.sale-total-promo-button {
-    @extend %text-sm;
-    width: 100%;
-    text-align: left;
-    padding: 0px;
-}
-
-.sale-total-subtotal {
-    text-align: center;
-
-    .sale-total-subtotal-title {
-        @extend %text-sm;
-        padding-bottom: 8px;
-    }
-
-    .sale-total-subtotal-amount {
-        @extend %text-lg;
-    }
-}
-
-.sale-total-total {
-    text-align: center;
-    border-top-style: solid;
-    border-top-width: 1px;
-
-    .sale-total-total-title {
-        @extend %text-lg;
-        padding-top: 16px;
-        padding-bottom: 8px;
-    }
-
-    .sale-total-total-amount {
-        @extend %text-xl;
-    }
+:host {
+    display: grid;
 }
 
 .sale-total-background {
-    height: 100%;
+    display: grid;
     align-self: stretch;
     justify-self: stretch;
     margin: 0px;
     padding-top: 16px;
     padding-bottom: 16px;
     overflow-y: auto;
-}
 
-.sale-total-content {
-    width: 100%;
-    padding-left: 24px;
-    padding-right: 24px;
-}
+    .sale-total-content {
+        display: grid;
+        grid-row-gap: 32px;
+        padding-left: 24px;
+        padding-right: 24px;
 
-.sale-total-customer-label {
-    @extend %text-sm;
-    text-align: center;
+        .sale-total-subtotal {
+            text-align: center;
+        
+            .sale-total-subtotal-title {
+                @extend %text-sm;
+                padding-bottom: 8px;
+            }
+        
+            .sale-total-subtotal-amount {
+                @extend %text-lg;
+            }
+        }
+
+        .sale-total-total {
+            text-align: center;
+            border-top-style: solid;
+            border-top-width: 1px;
+        
+            .sale-total-total-title {
+                @extend %text-lg;
+                padding-top: 16px;
+                padding-bottom: 8px;
+            }
+        
+            .sale-total-total-amount {
+                @extend %text-xl;
+            }
+        }
+
+        .sale-total-promo-button {
+            @extend %text-sm;
+            width: 100%;
+            text-align: left;
+            padding: 0px;
+        }
+    }
+
+    .sale-total-buttons {
+        display: grid;
+        align-self: end;
+
+        .button {
+            display: grid;
+            justify-content: center;
+            width:100%;
+            padding:8px;
+            &.mobile {
+                padding: 0;
+            }
+        }
+
+        .sale-total-loyalty-button {
+            width: 100%;
+
+            .sale-total-loyalty-button-icon {
+                padding: 0px 8px;
+                max-width: 100%;
+                max-height: 50px;
+            }
+        }
+
+        .sale-total-customer-label {
+            @extend %text-sm;
+            display: grid;
+            grid-row-gap:8px;
+            text-align: center;
+            justify-self:center;
+
+            .sale-total-loyalty-icon {
+                max-width: 100%;
+                max-height: 5em;
+            }
+        } 
+
+        .sale-total-button {
+            margin-top: 16px;
+            width: 100%;
+        }
+    }
 }

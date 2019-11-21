@@ -139,6 +139,10 @@ import { HelpTextPageWrapperComponent } from './components/help-text-page-wrappe
 import { OpenposAppHelpContainerComponent } from './components/openpos-app-help-container/openpos-app-help-container.component';
 import { OptionsListComponent } from './screen-parts/options-list/options-list.component';
 import { ScanPartComponent } from './screen-parts/scan-part/scan-part.component';
+import { InstructionsComponent } from './components/instructions/instructions.component';
+import { TitleComponent } from './components/title/title.component';
+import { ContentCardComponent } from './components/content-card/content-card.component';
+import { OptionButtonComponent } from './components/option-button/option-button.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -235,7 +239,11 @@ const components = [
     InfiniteScrollComponent,
     ImageComponent,
     HelpTextPageWrapperComponent,
-    OpenposAppHelpContainerComponent
+    OpenposAppHelpContainerComponent,
+    InstructionsComponent,
+    TitleComponent,
+    ContentCardComponent,
+    OptionButtonComponent
 ];
 
 const directives = [

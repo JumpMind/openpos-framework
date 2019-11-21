@@ -1,59 +1,54 @@
-<mat-card class="sale-total-background" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="16px">
-
-    <div fxFlex="1 1 auto" fxLayout="column" fxLayoutAlign="start stretch" fxLayoutGap="32px"
-        class="sale-total-content">
-
-        <div *ngFor="let total of screenData.totals" fxFlex="1 1 auto" class="sale-total-subtotal">
+<mat-card class="sale-total-background">
+    <div class="sale-total-content">
+        <div *ngFor="let total of screenData.totals" class="sale-total-subtotal">
             <div responsive-class class="primary sale-total-subtotal-title">{{total.name}}</div>
             <div responsive-class class="sale-total-subtotal-amount">
                 <app-currency-text [amountText]="total.amount"></app-currency-text>
             </div>
         </div>
-        <div *ngIf="screenData.grandTotal" fxFlex="1 1 auto" class="common-border-color sale-total-total">
+        <div *ngIf="screenData.grandTotal" class="common-border-color sale-total-total">
             <div responsive-class class="primary sale-total-total-title">{{screenData.grandTotal.name}}
             </div>
             <div responsive-class class="sale-total-total-amount">
                 <app-currency-text [amountText]="screenData.grandTotal.amount"></app-currency-text>
             </div>
         </div>
-        <button responsive-class mat-button *ngIf="screenData.promoButton" (click)="doMenuItemAction(screenData.promoButton)"
-            class="sale-total-promo-button">
-            <span fxFlex="1 1 auto">{{screenData.promoButton.title}}</span>
+        <button responsive-class mat-button *ngIf="screenData.promoButton" (click)="doMenuItemAction(screenData.promoButton)" class="sale-total-promo-button">
+            <span>{{screenData.promoButton.title}}</span>
             <app-icon [iconName]="screenData.promoButton.icon" [iconClass]="'primary mat-24'"></app-icon>
         </button>
     </div>
 
-    <div fxFlex="2 1 auto"></div>
-
-    <div>
-        <button responsive-class mat-button *ngIf="!screenData.readOnly && !screenData.customer && screenData.loyaltyButton"
+    <div class="sale-total-buttons">
+        <app-secondary-button responsive-class *ngIf="!screenData.readOnly && !screenData.customer && screenData.loyaltyButton"
             (click)="doMenuItemAction(screenData.loyaltyButton)"
-            class="common-button-padding common-border-button sale-total-loyalty-button text-md">
-            <span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
-
-            <img [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
-
-            <span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
-        </button>
-        <div *ngIf="screenData.customer" responsive-class class="sale-total-customer-label" fxLayout="column" fxLayoutAlign="center center"
-            fxLayoutGap="8px">
+             class="sale-total-loyalty-button">
+             <div class="button">
+                <span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
+                <img [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
+                <span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
+             </div>
+        </app-secondary-button>
+        <div *ngIf="screenData.customer" responsive-class class="sale-total-customer-label">
             <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon">
             <div *ngIf="screenData.customer.name" class="muted-color">{{screenData.customer.name}}</div>
             <div *ngIf="screenData.customer.label && screenData.customer.id" class="muted-color">{{screenData.customer.label}}: {{screenData.customer.id}}</div>
         </div>
 
-        <button responsive-class mat-button *ngIf="!screenData.readOnly && screenData.checkoutButton"
+        <app-primary-button responsive-class *ngIf="!screenData.readOnly && screenData.checkoutButton"
             [disabled]="!screenData.items || screenData.items.length == 0"
             (click)="doMenuItemAction(screenData.checkoutButton)"
-            class="common-primary-button sale-total-checkout-button">{{screenData.checkoutButton.title}}</button>
-        <button responsive-class mat-button *ngIf="!screenData.readOnly && screenData.logoutButton"
+            class="sale-total-button">
+            <span class="button">{{screenData.checkoutButton.title}}</span>
+        </app-primary-button>
+        <app-secondary-button responsive-class *ngIf="!screenData.readOnly && screenData.logoutButton"
             (click)="doMenuItemAction(screenData.logoutButton)"
-            class="common-border-button sale-total-border-button">
-            <span>
+            class="sale-total-button">
+            <span class="button">
                 <app-icon *ngIf="screenData.logoutButton.icon" [iconName]="screenData.logoutButton.icon">
                 </app-icon>
                 {{screenData.logoutButton.title}}
             </span>
-        </button>
+        </app-secondary-button>
     </div>
 </mat-card>

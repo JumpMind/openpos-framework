@@ -18,18 +18,12 @@
 }
 
 .options-title {
-    @extend %text-xl;
-    font-weight: bold;
     margin-top: 0px;
     margin-bottom: 64px;
-    align-self: center;
 }
 
 .options-prompt {
-    @extend %text-lg;
     max-width: 400px;
     margin-top: 32px;
     margin-bottom: 32px;
-    align-self: center;
-    color: gray;
 }

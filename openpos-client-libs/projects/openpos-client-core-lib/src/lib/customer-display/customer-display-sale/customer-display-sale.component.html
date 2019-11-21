@@ -1,7 +1,15 @@
 <app-bacon-strip></app-bacon-strip>
-    
-<div class="customer-display-sale-body">
-    <app-sale-item-card-list #scrollList class="customer-display-list-background"></app-sale-item-card-list>
-    
-    <app-sale-total-panel class="customer-display-total-background"></app-sale-total-panel>
+
+<div class="customer-display-sale-outer">
+    <div *ngIf="!(isMobile | async)" class="customer-display-sale-body">
+        <div class="customer-display-sale-items-outer">
+            <app-sale-item-card-list #scrollList class="customer-display-list-background"></app-sale-item-card-list>
+        </div>
+        <app-sale-total-panel></app-sale-total-panel>
+    </div>
+    <div *ngIf="(isMobile | async)" class="customer-display-sale-body-mobile">
+        <app-mobile-loyalty-part class="customer-display-sale-loyalty-mobile"></app-mobile-loyalty-part>
+        <app-mobile-sale-item-list class="customer-display-sale-list-background-mobile"></app-mobile-sale-item-list>
+    </div>
+    <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>
 </div>

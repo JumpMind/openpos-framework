@@ -1,0 +1,22 @@
+@import "../../styles/variables/spacing";
+
+.options-outer {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+    
+    .options-body {
+        overflow-y: auto;
+        display: grid;
+        justify-self: center;
+        align-content: center;
+        width:100%;
+        @extend %page-spaced-content; 
+    
+        .options-image {
+            max-height: 4em;
+            justify-self: center;
+        }
+    }
+}

@@ -4,55 +4,53 @@
 
 .sale-bacon-strip {
     height: 100%;
-}
 
-.sale-outer {
-    height: 100%;
-    display: grid;
-    grid-template-rows: 1fr;
-}
+    .sale-outer {
+        height: 100%;
+        display: grid;
+        grid-template-rows: 1fr;
+        min-height:100px;
 
-.sale-body {
-    padding: 16px;
-    display: grid;
-    grid-template-columns: 1fr 25%;
-    overflow-y: auto;
-}
+        .sale-body {
+            padding: 16px;
+            display: grid;
+            grid-template-columns: 1fr 25%;
+            overflow-y: auto;
 
-.sale-items-outer {
-    padding-right: 16px;
-    display: grid;
-    grid-template-rows: auto 1fr auto;
-    overflow-y: auto;
-}
+            .sale-items-outer {
+                padding-right: 16px;
+                display: grid;
+                grid-template-rows: auto 1fr auto;
+                overflow-y: auto;
 
-.scan-or-search {
-    margin-bottom: 16px;
-}
+                .scan-or-search {
+                    margin-bottom: 16px;
+                }
+                
+                .sale-list-background {
+                    overflow-y: auto;
+                    margin-bottom: 8px;
+                }
+            }
+            
+        }
 
-.sale-list-background {
-    overflow-y: auto;
-    margin-bottom: 8px;
-}
+        .sale-body-mobile {
+            padding-top: 8px;
+            padding-right: 8px;
+            padding-left: 8px;
+            overflow-y: auto;
+            display: grid;
+            grid-template-rows: auto auto 1fr;
 
-.sale-body-mobile {
-    padding-top: 8px;
-    padding-right: 8px;
-    padding-left: 8px;
-    overflow-y: auto;
-    display: grid;
-    grid-template-rows: auto auto 1fr;
-}
-
-.scan-or-search-mobile {
-    margin-bottom: 8px;
-}
-
-.sale-loyalty-mobile {
-    margin-bottom: 8px;
-}
-
-.sale-list-background-mobile {
-    padding-bottom: 4px;
-    overflow-y: auto;
+            .sale-loyalty-mobile {
+                margin-bottom: 8px;
+            }
+            
+            .sale-list-background-mobile {
+                padding-bottom: 4px;
+                overflow-y: auto;
+            }
+        }
+    }
 }

@@ -1,8 +1,0 @@
-@mixin openpos-background($theme) {
-
-    $background: map-get($mat-grey, 200);
-
-    .common-background {
-        background-color: $background;
-    }
-}

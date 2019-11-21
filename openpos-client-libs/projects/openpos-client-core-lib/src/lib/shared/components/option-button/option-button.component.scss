@@ -1,0 +1,63 @@
+@import "../../../styles/mixins/typography";
+
+.option-item {
+    width: 100%;
+    padding: 16px;
+    margin: 8px 0px;
+    white-space: normal;
+
+    &.tablet {
+        padding: 12px;
+        margin: 4px 0px;
+    }
+
+    &.mobile {
+        padding: 12px;
+        margin: 4px 0px;
+    }
+
+    .option-icon {
+        align-self: center;
+    }
+
+    .option-line {
+        text-align: center;
+        align-self: center;
+    
+        &.mobile {
+            text-align: start;
+            justify-self: start;
+        }
+    
+        &.sm {
+            @extend %text-sm;
+        }
+    
+        &.md {
+            @extend %text-md;
+        }
+    
+        &.lg {
+            @extend %text-lg;
+        }
+    }
+}
+
+
+::ng-deep .option-item {
+    column-gap: 16px;
+
+    .mat-button-wrapper {
+        grid-template-columns: 64px 1fr 64px;
+        display: grid !important;
+    }
+
+    &.mobile {
+        .mat-button-wrapper {
+            grid-template-columns: auto 1fr;
+            display: grid !important;
+            column-gap: 4px;
+        }
+    }
+}
+

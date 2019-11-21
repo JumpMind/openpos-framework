@@ -18,6 +18,8 @@ public class DynamicFormUIMessage extends UIMessage implements IHasForm {
 
     private List<String> alternateSubmitActions = new ArrayList<String>();
 
+    private String imageUrl;
+
     public DynamicFormUIMessage() {
         setScreenType(UIMessageType.DYNAMIC_FORM);
     }
@@ -58,5 +60,13 @@ public class DynamicFormUIMessage extends UIMessage implements IHasForm {
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

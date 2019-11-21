@@ -12,7 +12,8 @@ import { PromptFormPartComponent } from '../../shared/screen-parts/prompt-form-p
 })
 @Component({
     selector: 'app-prompt-with-options-screen',
-    templateUrl: './prompt-with-options-screen.component.html'
+    templateUrl: './prompt-with-options-screen.component.html',
+    styleUrls: ['./prompt-with-options-screen.component.scss']
 })
 export class PromptWithOptionsScreenComponent extends PosScreen<PromptWithOptionsInterface> {
 

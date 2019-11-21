@@ -69,6 +69,7 @@ public class Transition {
         executeCurrentStep();
         
         waitForEverybody();
+
     }
 
     private void waitForEverybody() {

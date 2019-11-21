@@ -1,0 +1,54 @@
+@import "../../styles/variables/spacing";
+
+.selection-list-outer {
+    display:grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+
+    .selection-list-body {
+        display: grid;
+        justify-self: center;
+        align-content: center;
+        width:100%;
+        @extend %page-spaced-content; 
+
+        .dialog-content {
+            overflow: auto;
+
+            .item-card-image {
+                height: 275px;
+                margin-right:10px;
+            }
+            
+            .item-property-label {
+                font-weight: bold;
+            }
+            
+            .item-property-line {
+                margin-top:5px;
+                margin-bottom:5px;
+            }
+        }
+
+        .buttons {
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: end;
+            grid-column-gap: 8px;
+            &.mobile {
+                grid-column-gap: 4px;
+            }
+        }
+    }
+}
+
+.mat-dialog-actions {
+    padding: 0;
+    margin: 0;
+}
+
+.mat-dialog-content {
+    padding: 0;
+    margin: 0;
+}

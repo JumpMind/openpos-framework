@@ -1,0 +1,16 @@
+@mixin option-button-theme($theme) {
+    $border: map-get(map-get($theme, foreground), border);
+    $disabled-border: map-get(map-get($theme, foreground), disabled-button);
+
+    app-option-button {
+        button {
+            border-color: $border;
+            border-style: solid;
+            border-width: 2px;
+            &[disabled] {
+                border-color: $disabled-border;
+            }
+        }
+    }
+
+}
