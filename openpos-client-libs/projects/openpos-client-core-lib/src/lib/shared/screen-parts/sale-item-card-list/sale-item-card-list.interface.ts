@@ -5,7 +5,6 @@ export interface SaleItemCardListInterface extends IAbstractScreen {
     items: ISellItem[];
     readOnly: boolean;
     prompt: string;
-    instructions: string;
     backgroundImage: string;
     enableCollapsibleItems: boolean;
 }

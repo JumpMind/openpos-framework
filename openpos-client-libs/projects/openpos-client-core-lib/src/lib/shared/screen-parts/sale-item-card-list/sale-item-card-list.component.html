@@ -7,7 +7,6 @@
 </app-item-card>
 
 <div *ngIf="screenData.items.length == 0 && !screenData.readOnly" class="sale-item-prompt-outer">
-    <div responsive-class class="sale-item-list-prompt">{{screenData.prompt}}</div>
-    <div responsive-class class="sale-item-list-instructions">{{screenData.instructions}}</div>
+    <app-instructions [instructions]="screenData.prompt" [instructionsSize]="'text-xl'" class="sale-item-list-prompt"></app-instructions>
     <img *ngIf="screenData.backgroundImage" [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
 </div>
