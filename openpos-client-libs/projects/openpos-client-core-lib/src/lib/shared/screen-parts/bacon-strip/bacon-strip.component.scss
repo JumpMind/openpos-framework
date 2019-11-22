@@ -1,5 +1,6 @@
 @import "../../../styles/variables/spacing";
 @import "../../../styles/mixins/typography";
+@import "../../../styles/variables/text-helpers";
 
 :host {
     display: grid;
@@ -17,10 +18,15 @@
 
     .leftside {
         grid-template-columns: auto auto 1fr;
+
+        span {
+            @include ellipsed-text();
+        }
     }
 
     .leftside-expanded {
-        grid-column-end: span 3;
+        grid-column-end: span 2;
+        grid-template-columns: auto fit-content(25%) 1fr;
     }
 
     .rightside {
@@ -41,10 +47,11 @@
 
     &.mobile {
         min-height: 40px;
+        grid-template-columns: 1fr auto;
+    }
 
-        img {
-            display: none;
-        }
+    &.tablet-portrait {
+        grid-template-columns: 1fr auto;
     }
 
     .bacon-strip-search {
