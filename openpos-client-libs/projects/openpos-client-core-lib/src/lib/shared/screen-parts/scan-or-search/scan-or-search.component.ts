@@ -1,5 +1,15 @@
 import { IActionItem } from '../../../core/actions/action-item.interface';
-import { Component, Input, Output, EventEmitter, OnInit, OnDestroy, Injector } from '@angular/core';
+import {
+    Component,
+    Input,
+    Output,
+    EventEmitter,
+    OnInit,
+    OnDestroy,
+    Injector,
+    ElementRef,
+    Renderer2
+} from '@angular/core';
 import { ScreenPartComponent } from '../screen-part';
 import { ScanOrSearchInterface } from './scan-or-search.interface';
 import { DeviceService } from '../../../core/services/device.service';
@@ -25,11 +35,14 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     isMobile$: Observable<boolean>;
 
     @Input() defaultAction: IActionItem;
+
+    @Input() focusInitial: boolean = true;
+
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
     private scanServiceSubscription: Subscription;
 
-    constructor(public devices: DeviceService, injector: Injector,
+    constructor(public devices: DeviceService, injector: Injector, private el: ElementRef, private renderer: Renderer2,
                 mediaService: OpenposMediaService, private scannerService: ScannerService) {
         super(injector);
         const mobileMap = new Map([
@@ -46,6 +59,11 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     ngOnInit(): void {
         super.ngOnInit();
         this.registerScanner();
+        if( this.focusInitial ) {
+            this.renderer.addClass( this.el.nativeElement, 'focusInitial');
+        } else {
+            this.renderer.removeClass(this.el.nativeElement, 'focusInitial');
+        }
     }
 
     onBecomingActive() {

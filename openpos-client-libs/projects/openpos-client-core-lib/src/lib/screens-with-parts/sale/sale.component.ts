@@ -12,6 +12,8 @@ import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
+import { Configuration } from './../../configuration/configuration';
+
 
 @ScreenComponent({
     name: 'Sale'
@@ -29,6 +31,8 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
     totals: ITotal[];
 
     @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
+
+    Configuration = Configuration;
 
     initialized = false;
 
