@@ -1,9 +1,10 @@
 <button fxFlex="1 0 auto"
-    mat-raised-button
-    color=primary
+    responsive-class
+    mat-flat-button
     [disabled]="disabled"
     (click)="clickFn()"
     [type]="type"
+    color="primary"
 >
     <ng-content></ng-content>
 </button>

@@ -3,9 +3,7 @@ app-icon {
 }
 
 .buttons{
-    flex-direction: column;
-    box-sizing: border-box;
-    display: flex;
+    display: grid;
 }
 
 .menu-item {

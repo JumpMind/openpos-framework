@@ -1,36 +1,36 @@
-.drawer-content{
-    padding: 8px;
-}
+@import "../../../styles/variables/spacing";
 
-.outer {
+.return-trans-details-outer {
+    display:grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
     height: 100%;
+
+    .return-trans-details-body {
+        display: grid;
+        justify-self: center;
+        align-content: center;
+        width:100%;
+        @extend %page-spaced-content; 
+
+        .dialog-content {
+            overflow: auto;
+        }
+
+        .buttons {
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: end;
+        }
+    }
 }
 
-.selection-list-card {
-    height: 100%;
-    padding:10px;
+.mat-dialog-actions {
+    padding: 0;
+    margin: 0;
 }
 
-.item-card-image {
-    height: 275px;
-    margin-right:10px;
-}
-
-.item-title {
-    font-weight: bold;
-}
-
-.item-property-label {
-    font-weight: bold;
-}
-
-.item-property-line {
-    margin-top:5px;
-    margin-bottom:5px;
-}
-
-.dialog-content {
-    padding:15px;
-    margin:0px;
-    overflow: auto;
+.mat-dialog-content {
+    padding: 0;
+    margin: 0;
 }

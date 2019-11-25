@@ -8,7 +8,7 @@ import { DialogComponent } from '../../shared/decorators/dialog-component.decora
 @Component({
     selector: 'app-selection-list-screen-dialog',
     templateUrl: './selection-list-screen-dialog.component.html',
-    styleUrls: ['./selection-list-screen.component.scss']
+    styleUrls: ['./selection-list-screen-dialog.component.scss']
 })
 export class SelectionListScreenDialogComponent extends SelectionListScreenComponent {
 }

@@ -1,0 +1,9 @@
+<div class="options-outer">
+    <app-bacon-strip></app-bacon-strip>
+    <div class="options-body">
+        <app-title *ngIf="screen.title" class="text-center" [title]="screen.title"></app-title>
+        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="options-image">
+        <app-instructions *ngIf="screen.prompt" class="text-center" [instructions]="screen.prompt"></app-instructions>
+        <app-options-list (optionClick)="doAction($event)"></app-options-list>
+    </div>
+</div>

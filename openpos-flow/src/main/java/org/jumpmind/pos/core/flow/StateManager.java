@@ -284,6 +284,8 @@ public class StateManager implements IStateManager {
 
         TransitionResult transitionResult = executeTransition(applicationState.getCurrentContext(), newState, action);
         if (transitionResult == TransitionResult.PROCEED) {
+            markAsBusy();
+
             boolean exitSubState = resumeSuspendedState != null;
             String returnActionName = null;
             if (exitSubState) {
@@ -477,7 +479,7 @@ public class StateManager implements IStateManager {
     @Override
     public boolean isAtRest() {
         return (activeCalls.get() == 0 || transitionRestFlag.get()) &&
-                lastShowTimeInMs.longValue() > lastActionTimeInMs.longValue();
+                lastShowTimeInMs.longValue() >= lastActionTimeInMs.longValue();
     }
 
     @Override

@@ -10,6 +10,7 @@ public final class UIMessageType {
     public static String PROMPT_WITH_INFO = "PromptWithInfo";
     public static String HOME = "Home";
     public static String CHOOSE_OPTIONS = "ChooseOptions";
+    public static String OPTIONS = "Options";
     public static String SELF_CHECKOUT_HOME = "SelfCheckoutHome";
     public static String SELF_CHECKOUT_SALE = "SelfCheckoutSale";
     public static String SELF_CHECKOUT_FORM = "SelfCheckoutForm";
@@ -30,7 +31,4 @@ public final class UIMessageType {
     public static String SCAN_INPUT_DIALOG = "ScanInputDialog";
     public static String CUSTOMER_DISPLAY_HOME = "CustomerDisplayHome";
     public static String CUSTOMER_DISPLAY_SALE = "CustomerDisplaySale";
-    public static String CUSTOMER_DISPLAY_OPTIONS = "CustomerDisplayOptions";
-    public static String CUSTOMER_DISPLAY_PROMPT = "CustomerDisplayPrompt";
-    public static String CUSTOMER_DISPLAY_FORM = "CustomerDisplayForm";
 }

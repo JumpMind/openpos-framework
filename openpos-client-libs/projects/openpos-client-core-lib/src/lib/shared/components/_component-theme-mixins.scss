@@ -17,6 +17,11 @@
 @import './mobile-footer/mobile-footer-theme';
 @import './carousel/carousel-theme';
 @import './help-text-page-wrapper/help-text-page-wrapper-theme';
+@import './instructions/instructions-theme';
+@import './primary-button/primary-button-theme';
+@import './secondary-button/secondary-button-theme';
+@import './content-card/content-card-theme';
+@import './option-button/option-button-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -38,4 +43,9 @@
     @include mobile-footer-theme($theme);
     @include carousel-theme($theme);
     @include help-text-page-wrapper-theme($theme);
+    @include instructions-theme($theme);
+    @include primary-button-theme($theme);
+    @include secondary-button-theme($theme);
+    @include content-card-theme($theme);
+    @include option-button-theme($theme);
 }

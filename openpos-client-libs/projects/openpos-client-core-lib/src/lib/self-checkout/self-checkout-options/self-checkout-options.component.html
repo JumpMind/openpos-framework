@@ -1,22 +1,13 @@
-<div class="common-background self-checkout-outer self-checkout-options-outer">
+<div class="self-checkout-outer self-checkout-options-outer">
     <app-self-checkout-menu></app-self-checkout-menu>
 
     <div class="self-checkout-body self-checkout-options-body" fxLayout="column" fxLayoutAlign="center center">
-
         <div *ngIf="screen.icon" fxFlex="0 0 auto" fxLayoutAlign="center center">
             <app-icon [iconName]="screen.icon" class="options-icon"></app-icon>
         </div>
-        <div *ngIf="screen.title" responsive-class fxFlex="0 0 auto" class="options-title">
-            {{screen.title}}
-        </div>
-
+        <app-title *ngIf="screen.title" class="text-center options-title" [title]="screen.title" [titleSize]="'text-xl'"></app-title>
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-options-image">
-
-        <div *ngIf="screen.prompt" responsive-class fxFlex="0 0 auto" class="text-center options-prompt">
-            {{screen.prompt}}
-        </div>
-
+        <app-instructions *ngIf="screen.prompt" class="text-center options-prompt" [instructions]="screen.prompt" [instructionsSize]="'text-lg'"></app-instructions>
         <app-options-list (optionClick)="doAction($event)" responsive-class class="self-checkout-options"></app-options-list>
-
     </div>
 </div>

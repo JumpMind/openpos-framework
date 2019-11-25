@@ -8,7 +8,8 @@ import { PromptWithOptionsScreenComponent } from './prompt-with-options-screen.c
 })
 @Component({
     selector: 'app-prompt-with-options-screen-dialog',
-    templateUrl: './prompt-with-options-screen-dialog.component.html'
+    templateUrl: './prompt-with-options-screen-dialog.component.html',
+    styleUrls: ['./prompt-with-options-screen-dialog.component.scss']
 })
 export class PromptWithOptionsScreenDialogComponent extends PromptWithOptionsScreenComponent {
 }

@@ -7,7 +7,8 @@ import { Component } from '@angular/core';
 })
 @Component({
     selector: 'app-prompt-screen-dialog',
-    templateUrl: './prompt-screen-dialog.component.html'
+    templateUrl: './prompt-screen-dialog.component.html',
+    styleUrls: ['./prompt-screen-dialog.component.scss']
 })
 export class PromptScreenDialogComponent extends PromptScreenComponent {
 }

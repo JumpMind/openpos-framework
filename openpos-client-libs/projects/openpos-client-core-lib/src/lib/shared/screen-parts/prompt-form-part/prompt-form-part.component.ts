@@ -7,7 +7,8 @@ import { PromptFormPartInterface } from './prompt-form-part.interface';
 
 @Component({
     selector: 'app-prompt-form-part',
-    templateUrl: './prompt-form-part.component.html'
+    templateUrl: './prompt-form-part.component.html',
+    styleUrls: ['./prompt-form-part.component.scss']
 })
 export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartInterface> implements AfterViewInit, OnInit {
 

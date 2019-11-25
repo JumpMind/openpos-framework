@@ -4,4 +4,5 @@ export interface DynamicFormInterface extends IAbstractScreen {
     instructions: string;
     submitButton: IActionItem;
     alternateSubmitActions: string[];
+    imageUrl: string;
 }

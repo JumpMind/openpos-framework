@@ -1,11 +1,16 @@
 package org.jumpmind.pos.persist.impl;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Reader;
+import java.sql.*;
 
+import org.apache.commons.io.IOUtils;
+import org.jumpmind.db.model.TypeMap;
+import org.jumpmind.db.platform.postgresql.PostgresLobHandler;
 import org.jumpmind.db.sql.JdbcSqlTemplate;
 import org.jumpmind.db.sql.Row;
+import org.jumpmind.db.sql.SqlException;
 import org.springframework.jdbc.core.RowMapper;
 
 public class DefaultMapper implements RowMapper<Row> {
@@ -23,10 +28,89 @@ public class DefaultMapper implements RowMapper<Row> {
 
         Row mapOfColValues = new Row(rsColumnCount);
         for (int i = 1; i <= rsColumnCount; i++) {
-            String key = JdbcSqlTemplate.lookupColumnName(rsMetaData, i);
-            Object obj = JdbcSqlTemplate.getResultSetValue(rs, rsMetaData, i, false);
+            String key = lookupColumnName(rsMetaData, i);
+            Object obj = getResultSetValue(rs, rsMetaData, i, false);
             mapOfColValues.put(key, obj);
         }
         return mapOfColValues;
     }
+
+    private final String lookupColumnName(ResultSetMetaData resultSetMetaData, int columnIndex)
+            throws SQLException {
+        String name = resultSetMetaData.getColumnLabel(columnIndex);
+        if (name == null || name.length() < 1) {
+            name = resultSetMetaData.getColumnName(columnIndex);
+        }
+        return name;
+    }
+
+    public static Object getResultSetValue(ResultSet rs, ResultSetMetaData metaData, int index, boolean readStringsAsBytes) throws SQLException {
+        if (metaData == null) {
+            metaData = rs.getMetaData();
+        }
+        Object obj = null;
+        int jdbcType = metaData.getColumnType(index);
+        String jdbcTypeName = metaData.getColumnTypeName(index);
+        if (readStringsAsBytes && TypeMap.isTextType(jdbcType)) {
+            byte[] bytes = rs.getBytes(index);
+            if (bytes != null) {
+                obj = new String(bytes);
+            }
+        } else {
+            obj = rs.getObject(index);
+        }
+        String className = null;
+        if (obj != null) {
+            className = obj.getClass().getName();
+        }
+        if (obj instanceof Blob) {
+            Blob blob = (Blob) obj;
+            InputStream is = blob.getBinaryStream();
+            try {
+                obj = IOUtils.toByteArray(is);
+            } catch (IOException e) {
+                throw new SqlException(e);
+            } finally {
+                IOUtils.closeQuietly(is);
+            }
+        } else if (obj instanceof Clob) {
+            Clob clob = (Clob) obj;
+            Reader reader = clob.getCharacterStream();
+            try {
+                obj = IOUtils.toString(reader);
+            } catch (IOException e) {
+                throw new SqlException(e);
+            } finally {
+                IOUtils.closeQuietly(reader);
+            }
+        } else if (className != null && ("oracle.sql.TIMESTAMP".equals(className))) {
+            obj = rs.getTimestamp(index);
+        } else if (className != null && "oracle.sql.TIMESTAMPTZ".equals(className)) {
+            obj = rs.getString(index);
+        } else if (className != null && "oracle.sql.TIMESTAMPLTZ".equals(className)) {
+            obj = rs.getString(index);
+        } else if (className != null && className.startsWith("oracle.sql.DATE")) {
+            String metaDataClassName = metaData.getColumnClassName(index);
+            if ("java.sql.Timestamp".equals(metaDataClassName)
+                    || "oracle.sql.TIMESTAMP".equals(metaDataClassName)) {
+                obj = rs.getTimestamp(index);
+            } else {
+                obj = rs.getDate(index);
+            }
+        } else if (obj instanceof java.sql.Date) {
+            String metaDataClassName = metaData.getColumnClassName(index);
+            if ("java.sql.Timestamp".equals(metaDataClassName)) {
+                obj = rs.getTimestamp(index);
+            }
+        } else if (obj instanceof Timestamp) {
+            String typeName = metaData.getColumnTypeName(index);
+            if (typeName != null && typeName.equals("timestamptz")) {
+                obj = rs.getString(index);
+            }
+        }  else if (jdbcTypeName != null && "oid".equals(jdbcTypeName)) {
+            obj = PostgresLobHandler.getLoColumnAsBytes(rs, index);
+        }
+        return obj;
+    }
+
 }
