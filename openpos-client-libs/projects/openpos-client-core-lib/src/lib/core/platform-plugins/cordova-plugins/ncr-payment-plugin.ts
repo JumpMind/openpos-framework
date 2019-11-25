@@ -57,14 +57,14 @@ export class NCRPaymentPlugin implements IPlatformPlugin {
     }
 
     handleSuccess(message: any, response: string) {
-        const responseMessage = new ActionMessage('response', { messageId: message.messageId, payload: response, success: true });
+        const responseMessage = new ActionMessage('response', true,{ messageId: message.messageId, payload: response, success: true });
         responseMessage.type = MessageTypes.PROXY;
         this.sessionService.sendMessage(responseMessage);
         console.log('SUCCESSFUL RESPONSE: ' + response);
     }
 
     handleError(message: any, response: string) {
-        const responseMessage = new ActionMessage('response', { messageId: message.messageId, payload: response, success: false });
+        const responseMessage = new ActionMessage('response', true, { messageId: message.messageId, payload: response, success: false });
         responseMessage.type = MessageTypes.PROXY;
         this.sessionService.sendMessage(responseMessage);
         console.log('ERROR RESPONSE: ' + response);

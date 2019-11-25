@@ -52,7 +52,7 @@ export class UIDataMessageService {
   }
 
   public requestMoreData(key: string){
-      this.sessionService.sendMessage(new ActionMessage(key));
+      this.sessionService.sendMessage(new ActionMessage(key, true));
   }
 
   private createDataListener( dataType: string){
