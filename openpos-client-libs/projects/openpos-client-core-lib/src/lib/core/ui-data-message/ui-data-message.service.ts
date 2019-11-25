@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { map, scan} from 'rxjs/operators';
-import {ReplaySubject, Subject} from 'rxjs';
+import {ReplaySubject, Subject, Observable} from 'rxjs';
 import {ActionMessage} from '../messages/action-message';
 import {MessageTypes} from '../messages/message-types';
 import {UIDataMessage} from '../messages/ui-data-message';
@@ -43,7 +43,7 @@ export class UIDataMessageService {
     } );
   }
 
-  public getData$(key: string){
+  public getData$(key: string): Observable<any[]> {
       if(!this.accumulatedResultsMap.has(key)){
           //If we don't have any data for this key yet, add an entry and start listening
           this.createDataListener(key);
