@@ -1,8 +1,16 @@
 :host {
     border-radius: 4px;
     display:grid;
-    grid-template-columns: auto 1fr;
+    grid-template-columns: 0px auto 1fr;
     grid-template-rows: auto;
+    &.focusInitial{
+        grid-template-columns: auto 1fr;
+    }
+}
+
+.hidden {
+    height: 0;
+    width: 0;
 }
 
 .scan-button {
