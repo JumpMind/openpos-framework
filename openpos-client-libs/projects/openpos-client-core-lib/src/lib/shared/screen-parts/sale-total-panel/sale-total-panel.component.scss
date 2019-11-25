@@ -21,12 +21,12 @@
 
         .sale-total-subtotal {
             text-align: center;
-        
+
             .sale-total-subtotal-title {
                 @extend %text-sm;
                 padding-bottom: 8px;
             }
-        
+
             .sale-total-subtotal-amount {
                 @extend %text-lg;
             }
@@ -36,13 +36,13 @@
             text-align: center;
             border-top-style: solid;
             border-top-width: 1px;
-        
+
             .sale-total-total-title {
                 @extend %text-lg;
                 padding-top: 16px;
                 padding-bottom: 8px;
             }
-        
+
             .sale-total-total-amount {
                 @extend %text-xl;
             }
@@ -60,19 +60,7 @@
         display: grid;
         align-self: end;
 
-        .button {
-            display: grid;
-            justify-content: center;
-            width:100%;
-            padding:8px;
-            &.mobile {
-                padding: 0;
-            }
-        }
-
         .sale-total-loyalty-button {
-            width: 100%;
-
             .sale-total-loyalty-button-icon {
                 padding: 0px 8px;
                 max-width: 100%;
@@ -83,15 +71,15 @@
         .sale-total-customer-label {
             @extend %text-sm;
             display: grid;
-            grid-row-gap:8px;
+            grid-row-gap: 8px;
             text-align: center;
-            justify-self:center;
+            justify-self: center;
 
             .sale-total-loyalty-icon {
                 max-width: 100%;
                 max-height: 5em;
             }
-        } 
+        }
 
         .sale-total-button {
             margin-top: 16px;
