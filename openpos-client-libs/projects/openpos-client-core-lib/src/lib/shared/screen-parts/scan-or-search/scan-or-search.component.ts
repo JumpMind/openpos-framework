@@ -65,7 +65,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     private registerScanner() {
         if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
-                this.doAction({ action: this.screenData.scanActionName }, scanData);
+                this.doAction(this.screenData.scanAction, scanData);
             });
         }
     }
@@ -82,7 +82,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     public onEnter(): void {
         if (this.barcode && this.barcode.trim().length >= this.screenData.scanMinLength) {
-            this.doAction({ action: this.screenData.keyedActionName }, this.barcode);
+            this.doAction(this.screenData.keyedAction, this.barcode);
             this.barcode = '';
         } else if (this.defaultAction && this.defaultAction.enabled) {
             this.doAction(this.defaultAction);
