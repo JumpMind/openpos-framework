@@ -3,7 +3,9 @@ package org.jumpmind.pos.core.service;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.IMessageInterceptor;
 import org.jumpmind.pos.core.ui.UIDataMessage;
+import org.jumpmind.pos.core.ui.data.IHasObservableUIDataMessageProviderProperty;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProviderPropertyChangeEvent;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.*;
 
 @Component
-public class UIDataMessageProviderService {
+public class UIDataMessageProviderService implements PropertyChangeListener {
 
     @Autowired
     IMessageService messageService;
@@ -26,6 +30,9 @@ public class UIDataMessageProviderService {
         if(uiDataMessageProviders != null) {
             uiDataMessageProviders.forEach((key, provider) -> {
                 provider.setProviderKey(key);
+                if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                    ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
+                }
             });
         }
         if( applicationState.getDataMessageProviderMap() != null ){
@@ -56,7 +63,6 @@ public class UIDataMessageProviderService {
             //If they are all new initialize them all
             applicationState.setDataMessageProviderMap(uiDataMessageProviders);
             uiDataMessageProviders.forEach( (key, provider) -> {
-
                 sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
             });
         }
@@ -109,5 +115,16 @@ public class UIDataMessageProviderService {
 
         messageService.sendMessage(appId, deviceId, message);
     }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt instanceof UIDataMessageProviderPropertyChangeEvent) {
+            UIDataMessageProvider uiDataMessageProvider = (UIDataMessageProvider) evt.getSource();
+            sendDataMessage(((UIDataMessageProviderPropertyChangeEvent) evt).getAppId(),
+                    ((UIDataMessageProviderPropertyChangeEvent) evt).getDeviceId(),
+                    uiDataMessageProvider.getNextDataChunk(),
+                    uiDataMessageProvider.getProviderKey(),
+                    uiDataMessageProvider.getSeriesId());
+        }
     }
 }
