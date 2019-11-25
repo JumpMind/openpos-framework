@@ -1,0 +1,23 @@
+@mixin tender-part-theme($theme) {
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+    $border: map-get($mat-grey, 800);
+
+    app-tender-part {
+
+        .tender-form-part {
+            .mat-form-field {
+                @extend %text-lg;
+                text-align: center;
+            }
+        }
+
+        .tender-border-color {
+            $border-color: $border;
+        }
+    }
+
+}

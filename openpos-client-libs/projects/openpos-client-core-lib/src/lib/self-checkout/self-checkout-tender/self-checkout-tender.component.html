@@ -1,43 +1,7 @@
 <div class="self-checkout-outer self-checkout-tender-outer">
     <app-self-checkout-menu></app-self-checkout-menu>
 
-    <div class="self-checkout-body">
-
-        <div *ngIf="(!screen.amounts || screen.amounts.length <= 1) && screen.amountDue"
-            class="common-border-color self-checkout-amount-due-outer">
-            <div responsive-class class="self-checkout-amount-due-title">{{screen.amountDue.name}}</div>
-            <div responsive-class class="self-checkout-amount-due">
-                <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
-            </div>
-        </div>
-
-        <div *ngIf="screen.amounts && screen.amounts.length > 1 && screen.amountDue" responsive-class
-            class="self-checkout-amounts-outer">
-            <div *ngFor="let amount of screen.amounts" responsive-class
-                class="self-checkout-amount-row self-checkout-amount-outer">
-                <div class="self-checkout-amount-name">{{amount.name}}</div>
-                <div class="self-checkout-amount">
-                    <app-currency-text [amountText]="amount.amount"></app-currency-text>
-                </div>
-            </div>
-            <div responsive-class
-                class="common-border-color self-checkout-amount-row self-checkout-remaining-balance-outer">
-                <div class="self-checkout-remaining-balance-name">{{screen.amountDue.name}}</div>
-                <div class="self-checkout-remaining-balance">
-                    <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
-                </div>
-            </div>
-        </div>
-
-        <div *ngIf="screen.prompt" responsive-class class="self-checkout-payment-instructions">
-            {{screen.prompt}}
-        </div>
-
-        <app-options-list *ngIf="screen.optionsList" (optionClick)="doAction($event)" responsive-class
-            class="self-checkout-tender-options">
-        </app-options-list>
-
-        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-payment-auth-image">
-
+    <div responsive-class class="self-checkout-body self-checkout-tender-body">
+        <app-tender-part responsive-class></app-tender-part>
     </div>
 </div>
