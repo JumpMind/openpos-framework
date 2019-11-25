@@ -41,12 +41,15 @@ public class SchemaDelegateTest {
         assertEquals(pkColumns[0].getName(),"WARRANTY_ID");
         assertEquals(pkColumns[1].getName(),"EFFECTIVE_START_DATE");
         Column[] nonPKColumns = table.getNonPrimaryKeyColumns();
-        assertEquals(nonPKColumns.length,9);
+        assertEquals(nonPKColumns.length,11);
         assertEquals(nonPKColumns[0].getName(),"TERM_IN_MONTHS");
         assertEquals(nonPKColumns[1].getName(),"EFFECTIVE_END_DATE");
-        assertEquals(nonPKColumns[2].getName(),"RETAIL_PRICE");
-        assertEquals(nonPKColumns[3].getName(),"COST");
-        assertEquals(nonPKColumns[4].getName(),"VIN");
+        assertEquals(nonPKColumns[2].getName(),"ISO_CURRENCY_CODE");
+        assertEquals(nonPKColumns[3].getName(),"RETAIL_PRICE");
+        assertEquals(nonPKColumns[4].getName(),"COST");
+        assertEquals(nonPKColumns[5].getName(),"VIN");
+        assertEquals(nonPKColumns[6].getName(),"CROSS_REF_FIELD");
+
 
     }
 
@@ -58,9 +61,10 @@ public class SchemaDelegateTest {
             warranty.setVin("VINABC123");
             warranty.setWarrantyId("WARRANTY_1234");
             ServiceDefn serviceDefn = new ServiceDefn();
+            serviceDefn.setIsoCurrencyCode("USD");
             serviceDefn.setCost(Money.parse("USD 23.87"));
             serviceDefn.setEffectiveStartDate("20191119");
-            serviceDefn.setRetailPrice(new BigDecimal(7.77));
+            serviceDefn.setRetailPrice(Money.parse("USD 7.77"));
             warranty.setServiceDefn(serviceDefn);
             db.save(warranty);
     }

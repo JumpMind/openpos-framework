@@ -18,12 +18,12 @@ public class ServiceDefn {
     String effectiveEndDate;
 
     @ColumnDef
-    BigDecimal retailPrice;
+    String isoCurrencyCode;
+
+    @ColumnDef(crossReference = "isoCurrencyCode")
+    Money retailPrice;
 
     @ColumnDef(crossReference = "isoCurrencyCode")
     Money cost;
-
-    @ColumnDef
-    String isoCurrencyCode;
 
 }
