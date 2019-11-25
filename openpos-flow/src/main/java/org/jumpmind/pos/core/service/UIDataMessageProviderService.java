@@ -23,6 +23,11 @@ public class UIDataMessageProviderService {
     ApplicationContext applicationContext;
 
     public void updateProviders(ApplicationState applicationState, Map<String, UIDataMessageProvider> uiDataMessageProviders){
+        if(uiDataMessageProviders != null) {
+            uiDataMessageProviders.forEach((key, provider) -> {
+                provider.setProviderKey(key);
+            });
+        }
         if( applicationState.getDataMessageProviderMap() != null ){
             //clean up old providers
             List<String> keysToRemove = new ArrayList<>();
