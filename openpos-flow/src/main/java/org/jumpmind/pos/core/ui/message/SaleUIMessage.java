@@ -14,8 +14,7 @@ public class SaleUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
     private String prompt;
-
-    private List<SellItem> items = new ArrayList<>();
+    private String providerKey;
 
     private List<Total> totals;
     private Total grandTotal;
@@ -43,12 +42,12 @@ public class SaleUIMessage extends UIMessage {
         this.setId("sale");
     }
 
-    public List<SellItem> getItems() {
-        return items;
+    public String getProviderKey() {
+        return providerKey;
     }
 
-    public void setItems(List<SellItem> items) {
-        this.items = items;
+    public void setProviderKey(String providerKey) {
+        this.providerKey = providerKey;
     }
 
     public List<Total> getTotals() {
