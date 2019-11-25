@@ -3,6 +3,7 @@ package org.jumpmind.pos.persist.cars;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Delegate;
+import org.joda.money.Money;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.CompositeDef;
@@ -25,5 +26,8 @@ public class CarExtendedWarrantyServiceModel extends AbstractModel {
 
     @ColumnDef
     String vin;
+
+    @ColumnDef(crossReference = "isoCurrencyCode")
+    Money crossRefField;
 
 }

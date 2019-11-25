@@ -29,4 +29,5 @@ import java.sql.Types;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
 public @interface CompositeDef {
+    String prefix() default "";
 }

@@ -1,8 +1,11 @@
 package org.jumpmind.pos.persist;
 
+import org.joda.money.Money;
 import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.pos.persist.cars.*;
+import org.jumpmind.pos.persist.impl.ModelClassMetaData;
+import org.jumpmind.pos.persist.impl.ModelValidator;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -55,7 +58,7 @@ public class SchemaDelegateTest {
             warranty.setVin("VINABC123");
             warranty.setWarrantyId("WARRANTY_1234");
             ServiceDefn serviceDefn = new ServiceDefn();
-            serviceDefn.setCost(new BigDecimal(1.23));
+            serviceDefn.setCost(Money.parse("USD 23.87"));
             serviceDefn.setEffectiveStartDate("20191119");
             serviceDefn.setRetailPrice(new BigDecimal(7.77));
             warranty.setServiceDefn(serviceDefn);
@@ -68,5 +71,12 @@ public class SchemaDelegateTest {
         this.testDelegatePersist();
         List<CarExtendedWarrantyServiceModel> warranties = db.findAll(CarExtendedWarrantyServiceModel.class,10);
         assertEquals(warranties.size(),1);
+    }
+
+    @Test
+    public void testDelegateModelValidation() {
+        ModelClassMetaData meta = new ModelClassMetaData();
+        meta.setClazz(CarExtendedWarrantyServiceModel.class);
+        ModelValidator.validate(meta);
     }
 }

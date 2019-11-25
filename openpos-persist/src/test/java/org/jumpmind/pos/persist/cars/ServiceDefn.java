@@ -2,6 +2,7 @@ package org.jumpmind.pos.persist.cars;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.joda.money.Money;
 import org.jumpmind.pos.persist.ColumnDef;
 
 import java.math.BigDecimal;
@@ -19,7 +20,10 @@ public class ServiceDefn {
     @ColumnDef
     BigDecimal retailPrice;
 
+    @ColumnDef(crossReference = "isoCurrencyCode")
+    Money cost;
+
     @ColumnDef
-    BigDecimal cost;
+    String isoCurrencyCode;
 
 }
