@@ -1,4 +1,4 @@
-<app-item-card *ngFor="let item of screenData.items; index as i" 
+<app-item-card *ngFor="let item of (items | async); index as i" 
 [item]="item" 
 [isReadOnly]="screenData.readOnly" 
 [expanded]="isItemExpanded(i)" 
@@ -6,7 +6,7 @@
 (click)="updateExpandedIndex(i)" >
 </app-item-card>
 
-<div *ngIf="screenData.items.length == 0 && !screenData.readOnly" class="sale-item-prompt-outer">
+<div *ngIf="(items | async)?.length === 0 && !screenData.readOnly" class="sale-item-prompt-outer">
     <app-instructions [instructions]="screenData.prompt" [instructionsSize]="'text-xl'" class="sale-item-list-prompt"></app-instructions>
     <img *ngIf="screenData.backgroundImage" [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
 </div>
