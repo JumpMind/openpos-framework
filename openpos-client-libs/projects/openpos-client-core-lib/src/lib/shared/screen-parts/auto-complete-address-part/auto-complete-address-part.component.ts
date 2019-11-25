@@ -1,8 +1,7 @@
-import { ViewChildren, AfterViewInit, Input, QueryList, ViewChild, Component, Injector } from '@angular/core';
-import { FormGroup, AbstractControl } from '@angular/forms';
+import { ViewChildren, Input, QueryList, ViewChild, Component, Injector } from '@angular/core';
+import { FormGroup } from '@angular/forms';
 import { ScreenPartComponent } from '../screen-part';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { MessageProvider } from '../../providers/message.provider';
 import { FormBuilder } from '../../../core/services/form-builder.service';
 import { DynamicFormFieldComponent } from '../../components/dynamic-form-field/dynamic-form-field.component';
 import { ShowErrorsComponent } from '../../components/show-errors/show-errors.component';
@@ -20,7 +19,7 @@ import { IActionItem } from '../../../core/actions/action-item.interface';
     templateUrl: './auto-complete-address-part.component.html',
     styleUrls: ['./auto-complete-address-part.component.scss']
 })
-export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm> implements AfterViewInit {
+export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm> {
 
     @ViewChildren(DynamicFormFieldComponent) children: QueryList<DynamicFormFieldComponent>;
     @ViewChild('formErrors') formErrors: ShowErrorsComponent;
@@ -132,61 +131,19 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
         }
     }
 
-
-    ngAfterViewInit() {
-        // Delays less than 1 sec do not work correctly.
-        this.display(1000);
-    }
-
-    public display(delay: number) {
-        const nonReadonlyChildren = this.children.filter(child => {
-            return child.isReadOnly() === false;
-        });
-
-        if (nonReadonlyChildren.length > 0) {
-            setTimeout(() => nonReadonlyChildren[0].focus(), delay);
-        }
-    }
-
     submitForm() {
-        if (this.form.valid) {
-            this.formBuilder.buildFormPayload(this.form, this.screenData);
-            this.doAction(this.submitButton, this.screenData);
-        } else {
-            // Set focus on the first invalid field found
-            const invalidFieldKey = Object.keys(this.form.controls).find(key => {
-                const ctrl: AbstractControl = this.form.get(key);
-                return ctrl.invalid && ctrl.dirty;
-            });
-            if (invalidFieldKey) {
-                const invalidField = this.children.find(f => f.controlName === invalidFieldKey).field;
-                if (invalidField) {
-                    const invalidElement = document.getElementById(invalidFieldKey);
-                    if (invalidElement) {
-                        invalidElement.scrollIntoView();
-                    } else {
-                        invalidField.focus();
-                    }
-                }
-            } else {
-                if (this.formErrors.shouldShowErrors()) {
-                    const formErrorList = this.formErrors.listOfErrors();
-                    if (formErrorList && formErrorList.length > 0) {
-                        document.getElementById('formErrorsWrapper').scrollIntoView();
-                    }
-                }
-            }
-        }
+        this.formBuilder.buildFormPayload(this.form, this.screenData);
+        this.doAction(this.submitButton, this.screenData);
     }
 
     onFieldChanged(formElement: IFormElement) {
         if (formElement.valueChangedAction) {
             this.formBuilder.buildFormPayload(this.form, this.screenData);
-            this.doAction({action: formElement.valueChangedAction, doNotBlockForResponse: true}, this.screenData);
+            this.doAction({ action: formElement.valueChangedAction, doNotBlockForResponse: true }, this.screenData);
         }
     }
 
     onButtonClick(formElement: IFormElement) {
-        this.doAction({ action: formElement.action, confirmationDialog: formElement.confirmationDialog}, null );
+        this.doAction({ action: formElement.action, confirmationDialog: formElement.confirmationDialog }, null);
     }
 }
