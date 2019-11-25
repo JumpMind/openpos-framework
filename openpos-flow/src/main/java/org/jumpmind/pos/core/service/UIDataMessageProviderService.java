@@ -30,9 +30,6 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
         if(uiDataMessageProviders != null) {
             uiDataMessageProviders.forEach((key, provider) -> {
                 provider.setProviderKey(key);
-                if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
-                    ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
-                }
             });
         }
         if( applicationState.getDataMessageProviderMap() != null ){
@@ -45,13 +42,25 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
                     keysToRemove.add(key);
                 }
             });
-
-            keysToRemove.forEach( key -> applicationState.getDataMessageProviderMap().remove(key));
+            keysToRemove.forEach( key -> {
+                UIDataMessageProvider provider = applicationState.getDataMessageProviderMap().get(key);
+                if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                    ((IHasObservableUIDataMessageProviderProperty)provider).removePropertyChangeListener(this);
+                }
+                applicationState.getDataMessageProviderMap().remove(key);
+            });
 
             if( uiDataMessageProviders != null ){
                 uiDataMessageProviders.forEach( (key, provider) -> {
-                    if(!applicationState.getDataMessageProviderMap().containsKey(key) || provider.isNewSeries()){
+                    boolean inMap = applicationState.getDataMessageProviderMap().containsKey(key);
+                    if(!inMap) {
+                        if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                            ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
+                        }
+                    }
+                    if(!inMap || provider.isNewSeries()){
                         provider.setSeriesId( provider.getSeriesId() + 1);
+                        provider.setNewSeries(false);
                         //If it is a new provider add it and initialize it
                         applicationState.getDataMessageProviderMap().put(key, provider);
                         sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
@@ -63,6 +72,9 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
             //If they are all new initialize them all
             applicationState.setDataMessageProviderMap(uiDataMessageProviders);
             uiDataMessageProviders.forEach( (key, provider) -> {
+                if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                    ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
+                }
                 sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
             });
         }
