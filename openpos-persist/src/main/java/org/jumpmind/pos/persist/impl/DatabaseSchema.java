@@ -287,7 +287,7 @@ public class DatabaseSchema {
             field.setAccessible(true);
             Column column = createColumn(field);
             if (column != null && (includeAllFields || column.isPrimaryKey())) {
-                createIndex(field, column, indices);
+                createIndex(field, column, indices, metaData.getIdxPrefix());
                 if (isPrimaryKey(field)) {
                     metaData.addEntityIdField(field.getName(), field);
                     pkColumns.add(column);
@@ -298,15 +298,16 @@ public class DatabaseSchema {
             }
             CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
             if (compositeDefAnnotation != null) {
+                metaData.setIdxPrefix(compositeDefAnnotation.prefix());
                 createClassFieldsMetadata(field.getType(),metaData,includeAllFields,columns,pkColumns,indices);
             }
         }
     }
 
-    private static void createIndex(Field field, Column column, Map<String, IIndex> indices) {
+    private static void createIndex(Field field, Column column, Map<String, IIndex> indices, String idxPrefix) {
         IndexDef colAnnotation = field.getAnnotation(IndexDef.class);
         if (colAnnotation != null) {
-            String indexName = colAnnotation.name();
+            String indexName = idxPrefix + "_" + colAnnotation.name();
             boolean unique = colAnnotation.unique();
             indexName += (unique ? "_unq" : "");
             IIndex index = indices.get(indexName);

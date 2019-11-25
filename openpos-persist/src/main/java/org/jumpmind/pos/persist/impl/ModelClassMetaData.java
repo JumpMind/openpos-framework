@@ -12,6 +12,7 @@ public class ModelClassMetaData {
 
     private Table table;
     private Class<?> clazz;
+    private String idxPrefix;
     private Map<String, Field> entityIdFields = new HashMap<>();
     private Map<String, Field> entityFields = new HashMap<>();
     
@@ -53,6 +54,10 @@ public class ModelClassMetaData {
     public void addEntityField(String name, Field field) {
         entityFields.put(name, field);
     }
+
+    public String getIdxPrefix() {return idxPrefix;}
+
+    public void setIdxPrefix(String idxPrefix) { this.idxPrefix = idxPrefix; }
 
     @Override
     public String toString() {
