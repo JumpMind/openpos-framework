@@ -1,15 +1,11 @@
 <div class="form-outer">
 	<app-bacon-strip></app-bacon-strip>
 	<app-progress-bar-part></app-progress-bar-part>
-		
+
 	<div class="form-body">
 		<img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="form-image">
-		<app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions" [instructionsSize]="'md'"></app-instructions>
-		<app-content-card>
-			<app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
-				[alternateSubmitActions]="screen.alternateSubmitActions">
-			</app-auto-complete-address-part>
-		</app-content-card>
+		<app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
+			[alternateSubmitActions]="screen.alternateSubmitActions">
+		</app-auto-complete-address-part>
 	</div>
 </div>
-	

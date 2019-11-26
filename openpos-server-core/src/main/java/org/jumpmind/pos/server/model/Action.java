@@ -22,20 +22,27 @@ package org.jumpmind.pos.server.model;
 
 import java.io.Serializable;
 
+import lombok.Data;
+import lombok.ToString;
 import org.jumpmind.pos.util.DefaultObjectMapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+@ToString(onlyExplicitlyIncluded = true)
+@Data
 public class Action implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     
     public static final Action ACTION_TIMEOUT = new Action("Timeout");
-    
+
+    @ToString.Include
     private String name;
     private Object data;
     private String type;
     private String requiredPermissionId;
+    @ToString.Include
+    private boolean doNotBlockForResponse;
     private transient Action causedBy; // Used when renaming an action during a substate return.
     
     static ObjectMapper mapper = DefaultObjectMapper.build();
@@ -52,63 +59,22 @@ public class Action implements Serializable, Cloneable {
         this(actionName, data, null);
     }
     
-    public static <T> T convertActionData(Object actionData, Class<T> convertToInstanceOf) {
-        return mapper.convertValue(actionData, convertToInstanceOf);
-    }
-    
     public Action(String actionName, Object data, String requiredPermissionId) {
         this.name = actionName;
         this.data = data;
         this.requiredPermissionId = requiredPermissionId;
     }
-    
-    public String getName() {
-        return name;
-    }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @SuppressWarnings("unchecked")
     public <T> T getData() {
-        return (T)data;
+        return (T) data;
     }
 
-    public void setData(Object data) {
-        this.data = data;
+    public static <T> T convertActionData(Object actionData, Class<T> convertToInstanceOf) {
+        return mapper.convertValue(actionData, convertToInstanceOf);
     }
-    
+
     public String toDataString() {
         return data != null ? data.toString() : null;
     }
 
-    public Action getCausedBy() {
-        return causedBy;
-    }
-
-    public void setCausedBy(Action causedBy) {
-        this.causedBy = causedBy;
-    }
-    
-    public void setType(String type) {
-        this.type = type;
-    }
-    
-    public String getType() {
-        return type;
-    }
-    
-    public String getRequiredPermissionId() {
-        return requiredPermissionId;
-    }
-    
-    public void setRequiredPermissionId(String requiredPermissionId) {
-        this.requiredPermissionId = requiredPermissionId;
-    }
-
-    @Override
-    public String toString() {
-        return "Action [name=" + name + "]";
-    }
 }

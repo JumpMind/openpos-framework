@@ -2,43 +2,6 @@
     <app-bacon-strip></app-bacon-strip>
 
     <div responsive-class class="tender-body">
-
-        <div *ngIf="(!screen.amounts || screen.amounts.length === 0) && screen.amountDue" responsive-class
-            class="common-border-color tender-amount-due-outer">
-            <div responsive-class class="tender-amount-due-title">{{screen.amountDue.name}}</div>
-            <div responsive-class class="tender-amount-due">
-                <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
-            </div>
-        </div>
-
-        <div *ngIf="screen.amounts && screen.amounts.length > 0 && screen.amountDue" responsive-class
-            class="tender-amounts-outer">
-            <div *ngFor="let amount of screen.amounts" responsive-class class="tender-amount-row tender-amount-outer">
-                <div class="tender-amount-name">{{amount.name}}</div>
-                <div class="tender-amount">
-                    <app-currency-text [amountText]="amount.amount"></app-currency-text>
-                </div>
-            </div>
-            <div responsive-class class="common-border-color tender-amount-row tender-remaining-balance-outer">
-                <div class="tender-remaining-balance-name">{{screen.amountDue.name}}</div>
-                <div class="tender-remaining-balance">
-                    <app-currency-text [amountText]="screen.amountDue.amount"></app-currency-text>
-                </div>
-            </div>
-        </div>
-
-        <app-dynamic-form-part *ngIf="screen.form" [formName]="'form'" [alternateSubmitActions]="alternateSubmitActions"
-            responsive-class class="tender-form-part"></app-dynamic-form-part>
-
-        <div *ngIf="screen.prompt" responsive-class class="tender-payment-instructions">
-            {{screen.prompt}}
-        </div>
-
-        <app-options-list *ngIf="screen.optionsList" (optionClick)="doAction($event)" responsive-class
-            class="tender-options" listSize="3">
-        </app-options-list>
-
-        <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="tender-payment-auth-image">
-
+        <app-tender-part responsive-class></app-tender-part>
     </div>
 </div>

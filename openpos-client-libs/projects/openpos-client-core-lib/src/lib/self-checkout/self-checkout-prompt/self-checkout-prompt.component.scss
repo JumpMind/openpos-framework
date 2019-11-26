@@ -1,10 +1,21 @@
+.self-checkout-prompt-body {
+    display: grid;
+    align-content: center;
+}
+
 .self-checkout-prompt-image {
     padding: 24px 0px;
     max-width: 50%;
+    justify-self: center;
 }
 
 .self-checkout-prompt-card {
+    justify-self: center;
     width: 50%;
+
+    &.desktop-portrait {
+        width: 75%;
+    }
 
     &.mobile {
         width: 75%;

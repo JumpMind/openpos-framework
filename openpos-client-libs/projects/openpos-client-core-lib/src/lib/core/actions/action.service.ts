@@ -57,7 +57,7 @@ export class ActionService {
                 }
             }
 
-            this.messageProvider.sendMessage( new ActionMessage(actionItem.action, payload));
+            this.messageProvider.sendMessage( new ActionMessage(actionItem.action, actionItem.doNotBlockForResponse, payload));
             if ( !actionItem.doNotBlockForResponse ) {
                 this.blockActions = true;
                 this.queueLoading();

@@ -161,7 +161,7 @@ export class DeviceService implements IMessageHandler<any> {
                             if (response instanceof Scan && source && !response.source) {
                                 response.source = source;
                             }
-                            this.session.sendMessage( new ActionMessage('Scan', response));
+                            this.session.sendMessage( new ActionMessage('Scan', true, response));
                         }
                         this.cameraScanInProgress = false;
                     },

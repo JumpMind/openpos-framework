@@ -491,9 +491,9 @@ public class StateManager implements IStateManager {
     private boolean notBusy(Action action) {
         boolean notBusy = true;
         synchronized (this) {
-            if (isAtRest() ||
-                    (activeThread.get() == null ||
-                    activeThread.get().equals(Thread.currentThread()))) {
+            if (isAtRest() || action.isDoNotBlockForResponse() ||
+                    activeThread.get() == null ||
+                    activeThread.get().equals(Thread.currentThread())) {
                 Thread active = activeThread.get();
                 log.info("Action received: {}, State manager is NOT busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
                         action.getName(),

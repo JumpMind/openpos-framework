@@ -12,7 +12,7 @@
     $foreground: map-get($theme, foreground );
 
     app-bacon-strip{
-        .container{
+        >.container{
             background-color: $app-primary;
             color: $app-primary-contrast;
         }

@@ -14,16 +14,7 @@ import { PosScreen } from '../../screens-with-parts/pos-screen/pos-screen.compon
 })
 export class SelfCheckoutTenderComponent extends PosScreen<SelfCheckoutTenderInterface> {
 
-    public currentView: string;
-    public selectedOption: IOptionItem;
-    public optionItems: IOptionItem[];
-    public amountTitle = 'Amount Due';
-    public amountDue = '0.00';
-
     buildScreen() {
-        if (this.screen.amountDue) {
-            this.amountTitle = this.screen.amountDue.name;
-            this.amountDue = this.screen.amountDue.amount;
-        }
     }
+
 }

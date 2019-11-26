@@ -10,7 +10,6 @@ import { SelfCheckoutPromptComponent } from './self-checkout-prompt/self-checkou
 import { SelfCheckoutMenuComponent } from './screen-parts/self-checkout-menu/self-checkout-menu.component';
 import { SelfCheckoutTenderComponent } from './self-checkout-tender/self-checkout-tender.component';
 import { SelfCheckoutSaleComponent } from './self-checkout-sale/self-checkout-sale.component';
-import { SelfCheckoutPromptPartComponent } from './screen-parts/self-checkout-prompt-part/self-checkout-prompt-part.component';
 
 
 const screens = [
@@ -30,7 +29,6 @@ const components = [
 
 const screenParts = [
     SelfCheckoutMenuComponent,
-    SelfCheckoutPromptPartComponent
 ];
 
 @NgModule({

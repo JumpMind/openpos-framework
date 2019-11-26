@@ -1,13 +1,9 @@
 @import 'fab-toggle-button';
 @import 'selectable-card';
 @import 'snack-bar';
-@import 'borders';
-@import 'common-buttons';
 
 @mixin component-theme-mixins($theme){
     @include fab-toggle-button($theme);
     @include selectable-card($theme);
     @include openpos-snack-bar($theme);
-    @include openpos-borders($theme);
-    @include openpos-common-buttons($theme);
 }
