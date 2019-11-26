@@ -37,7 +37,7 @@
         </div>
 
         <app-primary-button responsive-class *ngIf="!screenData.readOnly && screenData.checkoutButton"
-            [disabled]="!screenData.items || screenData.items.length == 0"
+            [disabled]="!screenData.checkoutButton.enabled"
             (click)="doMenuItemAction(screenData.checkoutButton)" class="sale-total-button">
             {{screenData.checkoutButton.title}}
         </app-primary-button>
