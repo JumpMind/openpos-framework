@@ -136,6 +136,10 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         if(evt instanceof UIDataMessageProviderPropertyChangeEvent) {
             UIDataMessageProvider uiDataMessageProvider = (UIDataMessageProvider) evt.getSource();
+            if(uiDataMessageProvider.isNewSeries()) {
+                uiDataMessageProvider.setSeriesId( uiDataMessageProvider.getSeriesId() + 1);
+                uiDataMessageProvider.setNewSeries(false);
+            }
             sendDataMessage(((UIDataMessageProviderPropertyChangeEvent) evt).getAppId(),
                     ((UIDataMessageProviderPropertyChangeEvent) evt).getDeviceId(),
                     uiDataMessageProvider.getNextDataChunk(),
