@@ -49,8 +49,6 @@ public class SchemaDelegateTest {
         assertEquals(nonPKColumns[4].getName(),"COST");
         assertEquals(nonPKColumns[5].getName(),"VIN");
         assertEquals(nonPKColumns[6].getName(),"CROSS_REF_FIELD");
-
-
     }
 
     @Test

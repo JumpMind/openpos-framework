@@ -28,6 +28,7 @@ import org.jumpmind.pos.persist.PersistException;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 import org.jumpmind.pos.persist.model.TagModel;
 import org.jumpmind.pos.util.ReflectUtils;
+import org.jumpmind.pos.util.ReflectionException;
 import org.jumpmind.pos.util.model.ITypeCode;
 
 public class ModelWrapper {
@@ -209,7 +210,7 @@ public class ModelWrapper {
                 } else {
                     Column column = fieldsToColumns.get(fieldName);
                     //TODO: problems here
-                    Object value = getFieldValue(model,fieldName, model);
+                    Object value = getFieldValue(model,fieldName);
                     //Object value = PropertyUtils.getProperty(model, fieldName);
 
                     if (value instanceof Money) {
@@ -228,7 +229,7 @@ public class ModelWrapper {
         }
     }    
 
-    protected Object getFieldValue(Object modelClass, String fieldName, Object clazzInstance) {
+    protected Object getFieldValue(Object modelClass, String fieldName) {
         Object fieldValue=null;
         Class<?> clazz = modelClass.getClass();
         try {
@@ -244,7 +245,9 @@ public class ModelWrapper {
                 CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
                 if (compositeDefAnnotation != null) {
                     try {
-                        fieldValue = getFieldValue(PropertyUtils.getProperty(modelClass, field.getName()), fieldName, field);
+                        //modelClass.getClass().getDeclaredField(field.getName())
+                        fieldValue = getFieldValue(
+                                PropertyUtils.getProperty(model, field.getName()), fieldName);
                         break;
                     } catch (Exception e) {
                         log.error(String.format("Unable to get field value %s from class %s",fieldName,modelClass.getClass().getName()));
@@ -257,13 +260,13 @@ public class ModelWrapper {
 
     @SuppressWarnings("unchecked")
     public void setValue(String fieldName, Object value) {
-        Field field = getField(fieldName);
+        FieldMetaData fieldMetaData = getFieldMetaData(fieldName);
         
         try {            
-            if (field.getType().isAssignableFrom(Money.class)
+            if (fieldMetaData.getField().getType().isAssignableFrom(Money.class)
                     && value != null) {
                 Field xRefField = getXRefForField(fieldName);
-                String modelCurrencyCode = (String)xRefField.get(model);
+                String modelCurrencyCode = (String)getFieldValue(model,xRefField.getName());
                 if (StringUtils.isEmpty(modelCurrencyCode)) {
                     throw new PersistException("Money field " + fieldName + " cannot be loaded because crossReference= " + getXrefName(fieldName)
                     + " does not have a value. Model: " + model); 
@@ -272,11 +275,10 @@ public class ModelWrapper {
                 BigDecimal decimalValue = (BigDecimal)value;
                 decimalValue = decimalValue.setScale(currency.getDecimalPlaces());
                 value = Money.of(currency, decimalValue);
-            } else if (ITypeCode.class.isAssignableFrom(field.getType())) {
-                value = ITypeCode.make((Class<ITypeCode>)field.getType(), value != null ? value.toString() : null);
+            } else if (ITypeCode.class.isAssignableFrom(fieldMetaData.getField().getType())) {
+                value = ITypeCode.make((Class<ITypeCode>)fieldMetaData.getField().getType(), value != null ? value.toString() : null);
             }
-
-            ReflectUtils.setProperty(field, model, value);
+            setFieldValue(fieldMetaData,value);
         } catch (Exception ex) {
             if (ex instanceof PersistException) {
                 throw (PersistException)ex;
@@ -285,7 +287,30 @@ public class ModelWrapper {
             }
         }
     }
-    
+
+    private void setFieldValue(FieldMetaData fieldMetaData, Object value) throws Exception {
+        Class<?> clazz = fieldMetaData.getClazz();
+        if (clazz.isInstance(model)) {
+            ReflectUtils.setProperty(fieldMetaData.getField(), model, value);
+        } else {
+            Field[] fields = model.getClass().getDeclaredFields();
+            for (Field field : fields) {
+                CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
+                if (compositeDefAnnotation != null) {
+                    if (field.getType() == fieldMetaData.getClazz()) {
+                        Object fieldValue = getFieldValue(model, field.getName());
+                        if (fieldValue == null) {
+                            ReflectUtils.setProperty(field, model, fieldMetaData.getClazz().newInstance());
+                            fieldValue = getFieldValue(model, field.getName());
+                        }
+                        ReflectUtils.setProperty(fieldMetaData.getField(), fieldValue, value);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     protected BigDecimal handleMoneyField(LinkedHashMap<String, Object> columnNamesToObjectValues, 
             String fieldName, Column moneyDecimalColumn, Money value) {
         if (value != null) {
@@ -296,7 +321,7 @@ public class ModelWrapper {
             
             try {
                 ColumnDef xRefColumnDef = xRefField.getDeclaredAnnotation(ColumnDef.class);
-                String modelCurrencyCode = (String)xRefField.get(model);
+                String modelCurrencyCode = (String)getFieldValue(model,xRefField.getName());
                 if (StringUtils.isEmpty(modelCurrencyCode)) {
                     xRefField.set(model, isoCurrencyCode);
                 } else if (!StringUtils.equals(isoCurrencyCode, modelCurrencyCode)) {
@@ -345,7 +370,7 @@ public class ModelWrapper {
     public Field getField(String fieldName) {
         Field field = null;
         for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
-            field = classMetaData.getField(fieldName);
+            field = classMetaData.getFieldMetaData(fieldName).getField();
             if (field != null) {
                 break;
             }
@@ -353,6 +378,21 @@ public class ModelWrapper {
         
         if (field != null) {
             return field;
+        }  else {
+            throw new PersistException("Could not find field named " + fieldName + " on model " + modelMetaData);
+        }
+    }
+
+    public FieldMetaData getFieldMetaData(String fieldName) {
+        FieldMetaData fieldMetaData = null;
+        for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
+            fieldMetaData = classMetaData.getFieldMetaData(fieldName);
+            if (fieldMetaData != null) {
+                break;
+            }
+        }
+        if (fieldMetaData != null) {
+            return fieldMetaData;
         }  else {
             throw new PersistException("Could not find field named " + fieldName + " on model " + modelMetaData);
         }

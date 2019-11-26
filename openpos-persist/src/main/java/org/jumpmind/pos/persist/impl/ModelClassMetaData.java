@@ -13,8 +13,8 @@ public class ModelClassMetaData {
     private Table table;
     private Class<?> clazz;
     private String idxPrefix;
-    private Map<String, Field> entityIdFields = new HashMap<>();
-    private Map<String, Field> entityFields = new HashMap<>();
+    private Map<String, FieldMetaData> entityIdFieldMetaDatas = new HashMap<>();
+    private Map<String, FieldMetaData> entityFieldMetaDatas = new HashMap<>();
     
     public ModelClassMetaData() {
     }
@@ -27,16 +27,16 @@ public class ModelClassMetaData {
         this.table = table;
     }
 
-    public Map<String, Field> getEntityIdFields() {
-        return entityIdFields;
+    public Map<String, FieldMetaData> getEntityIdFieldMetaDatas() {
+        return entityFieldMetaDatas;
     }
     
-    public Field getField(String name) {
-        return entityFields.get(name);
+    public FieldMetaData getFieldMetaData(String name) {
+        return entityFieldMetaDatas.get(name);
     }
 
-    public Map<String, Field> getEntityFields() {
-        return entityFields;
+    public Map<String, FieldMetaData> getEntityFieldMetaDatas() {
+        return entityFieldMetaDatas;
     }
     
     public Class<?> getClazz() {
@@ -47,12 +47,12 @@ public class ModelClassMetaData {
         this.clazz = clazz;
     }
 
-    public void addEntityIdField(String name, Field field) {
-        entityIdFields.put(name, field);
+    public void addEntityIdFieldMetadata(String name, FieldMetaData fieldMetaData) {
+        entityIdFieldMetaDatas.put(name, fieldMetaData);
     }
 
-    public void addEntityField(String name, Field field) {
-        entityFields.put(name, field);
+    public void addEntityFieldMetaData(String name, FieldMetaData fieldMetaData) {
+        entityFieldMetaDatas.put(name, fieldMetaData);
     }
 
     public String getIdxPrefix() {return idxPrefix;}
