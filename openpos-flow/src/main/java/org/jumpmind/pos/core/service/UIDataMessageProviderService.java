@@ -53,18 +53,15 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
             if( uiDataMessageProviders != null ){
                 uiDataMessageProviders.forEach( (key, provider) -> {
                     boolean inMap = applicationState.getDataMessageProviderMap().containsKey(key);
-                    if(!inMap) {
-                        if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                    if(!inMap || provider.isNewSeries()) {
+                        if(!inMap && provider instanceof IHasObservableUIDataMessageProviderProperty) {
                             ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
                         }
-                        //If it is a new provider add it and initialize it
-                        applicationState.getDataMessageProviderMap().put(key, provider);
-                        sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
-                    }
-                    if(provider.isNewSeries()) {
-                        provider.setSeriesId( provider.getSeriesId() + 1);
-                        provider.setNewSeries(false);
-                        //If it is a new series add it and initialize it
+                        if(provider.isNewSeries()) {
+                            provider.setSeriesId( provider.getSeriesId() + 1);
+                            provider.setNewSeries(false);
+                        }
+                        //If it is a new provider or series add it and initialize it
                         applicationState.getDataMessageProviderMap().put(key, provider);
                         sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
                     }
