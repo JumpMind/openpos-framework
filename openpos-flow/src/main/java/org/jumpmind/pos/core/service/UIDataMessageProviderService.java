@@ -76,6 +76,9 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
             applicationState.setDataMessageProviderMap(uiDataMessageProviders);
             uiDataMessageProviders.forEach( (key, provider) -> {
                 if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                    //remove this listener first in case it is coming through here on a screen refresh
+                    // instead of initially, in which case, the listener was already added previously
+                    ((IHasObservableUIDataMessageProviderProperty)provider).removePropertyChangeListener(this);
                     ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
                 }
                 sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
