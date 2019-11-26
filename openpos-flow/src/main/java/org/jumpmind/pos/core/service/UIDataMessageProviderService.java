@@ -39,6 +39,7 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
                 if( uiDataMessageProviders == null || !uiDataMessageProviders.containsKey(key)){
                     //If the provider is not in the new map send a message to clean it up on the client
                     sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), null, key, -1 );
+                    applicationState.getDataMessageProviderMap().get(key).reset();
                     keysToRemove.add(key);
                 }
             });
