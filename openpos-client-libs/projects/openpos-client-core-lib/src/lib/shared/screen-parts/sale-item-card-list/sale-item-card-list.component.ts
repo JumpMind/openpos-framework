@@ -26,8 +26,12 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
   screenDataUpdated() {
     this.items = this.dataMessageService.getData$(this.screenData.providerKey);
-    this.items.forEach(i => this.expandedIndex = this.expandedIndex++);
-    this.scrollToBottom();
+    this.items.subscribe(() => {
+      this.items.forEach(i => {
+        this.expandedIndex = i.length - 1;
+      });
+      this.scrollToBottom();
+    });
   }
 
   scrollToBottom(): void {
