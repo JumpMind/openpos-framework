@@ -14,7 +14,9 @@ import java.lang.annotation.Target;
  * an OpenPOS {@code UIMessage}. A Spring BeanDefinition will be created for the
  * translator class and instances of the translator will be available from the
  * Spring application context as long as {@link TranslatorService#registerTranslatorBeans(String, org.springframework.context.ApplicationContext)
- * is invoked early in the application startup.
+ * is invoked early in the application startup. Translator beans should not be
+ * annotated as Spring {@literal @}Component or {@literal @}Service beans, since 
+ * that is implied by annotating the bean with {@literal @}Translator.
  *
  */
 @Documented
