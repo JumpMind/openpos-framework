@@ -26,6 +26,10 @@ export class MobileSaleItemListComponent extends ScreenPartComponent<MobileSaleI
         super(injector);
     }
 
+    itemsTrackByFn(index, item: ISellItem) {
+        return item.index;
+    }
+
     screenDataUpdated() {
         this.items = this.dataMessageService.getData$(this.screenData.providerKey);
         this.items.subscribe(() => {
