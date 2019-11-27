@@ -28,7 +28,7 @@ public class ModelClassMetaData {
     }
 
     public Map<String, FieldMetaData> getEntityIdFieldMetaDatas() {
-        return entityFieldMetaDatas;
+        return entityIdFieldMetaDatas;
     }
     
     public FieldMetaData getFieldMetaData(String name) {

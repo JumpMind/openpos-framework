@@ -209,9 +209,7 @@ public class ModelWrapper {
                     columnNamesToObjectValues.put(fieldName, tagValue);
                 } else {
                     Column column = fieldsToColumns.get(fieldName);
-                    //TODO: problems here
                     Object value = getFieldValue(model,fieldName);
-                    //Object value = PropertyUtils.getProperty(model, fieldName);
 
                     if (value instanceof Money) {
                         handleMoneyField(columnNamesToObjectValues, fieldName, column, (Money)value);    

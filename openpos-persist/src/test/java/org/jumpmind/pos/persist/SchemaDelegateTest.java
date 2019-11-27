@@ -15,7 +15,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -68,17 +70,55 @@ public class SchemaDelegateTest {
     }
 
     @Test
-    public void testDelegateSelect() {
-        DBSession db = sessionFactory.createDbSession();
-        this.testDelegatePersist();
-        List<CarExtendedWarrantyServiceModel> warranties = db.findAll(CarExtendedWarrantyServiceModel.class,10);
-        assertEquals(warranties.size(),1);
-    }
-
-    @Test
     public void testDelegateModelValidation() {
         ModelClassMetaData meta = new ModelClassMetaData();
         meta.setClazz(CarExtendedWarrantyServiceModel.class);
         ModelValidator.validate(meta);
+    }
+
+    @Test
+    public void testDelegateFindAll() {
+        DBSession db = sessionFactory.createDbSession();
+        this.testDelegatePersist();
+        List<CarExtendedWarrantyServiceModel> warranties = db.findAll(CarExtendedWarrantyServiceModel.class,10);
+        assertEquals(warranties.size(),1);
+        assertEquals(warranties.get(0).getVin(),"VINABC123");
+        assertEquals(warranties.get(0).getWarrantyId(),"WARRANTY_1234");
+        assertEquals(warranties.get(0).getIsoCurrencyCode(),"USD");
+        assertEquals(warranties.get(0).getCost(),Money.parse("USD 23.87"));
+        assertEquals(warranties.get(0).getEffectiveStartDate(),"20191119");
+        assertEquals(warranties.get(0).getRetailPrice(),Money.parse("USD 7.77"));
+    }
+
+    @Test
+    public void testDelagateFindByFields() {
+        DBSession db = sessionFactory.createDbSession();
+        this.testDelegatePersist();
+        Map<String, Object> parms = new HashMap<String, Object>();
+        parms.put("vin","VINABC123");
+        List<CarExtendedWarrantyServiceModel> warranties = db.findByFields(CarExtendedWarrantyServiceModel.class,parms,10);
+        assertEquals(warranties.size(),1);
+        assertEquals(warranties.get(0).getVin(),"VINABC123");
+        assertEquals(warranties.get(0).getWarrantyId(),"WARRANTY_1234");
+        assertEquals(warranties.get(0).getIsoCurrencyCode(),"USD");
+        assertEquals(warranties.get(0).getCost(),Money.parse("USD 23.87"));
+        assertEquals(warranties.get(0).getEffectiveStartDate(),"20191119");
+        assertEquals(warranties.get(0).getRetailPrice(),Money.parse("USD 7.77"));
+    }
+
+    @Test
+    public void testDelagateFindByNaturalId() {
+        DBSession db = sessionFactory.createDbSession();
+        this.testDelegatePersist();
+        Map<String, Object> parms = new HashMap<String, Object>();
+        parms.put("vin","VINABC123");
+        List<CarExtendedWarrantyServiceModel> warranties = db.findByFields(CarExtendedWarrantyServiceModel.class,parms,10);
+        assertEquals(warranties.size(),1);
+        assertEquals(warranties.get(0).getVin(),"VINABC123");
+        assertEquals(warranties.get(0).getWarrantyId(),"WARRANTY_1234");
+        assertEquals(warranties.get(0).getIsoCurrencyCode(),"USD");
+        assertEquals(warranties.get(0).getCost(),Money.parse("USD 23.87"));
+        assertEquals(warranties.get(0).getEffectiveStartDate(),"20191119");
+        assertEquals(warranties.get(0).getRetailPrice(),Money.parse("USD 7.77"));
     }
 }
