@@ -27,6 +27,7 @@ public abstract class AbstractLegacyDialogUIMessageTranslator extends AbstractLe
 
     protected void buildMainContent() {
         super.buildMainContent();
+        screen.setId(this.legacyScreen.getDialogResourceId());
         ILegacyAssignmentSpec assignmentSpec = this.getLegacyAssignmentSpec();
         logger.trace("The work panel bean spec name was {}", assignmentSpec.getBeanSpecName());
 
