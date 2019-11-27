@@ -2,6 +2,7 @@ import { Component, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@ang
 import { MobileSaleItemListInterface } from './mobile-sale-item-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
+import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 
 
 @ScreenPart({
@@ -17,6 +18,10 @@ export class MobileSaleItemListComponent extends ScreenPartComponent<MobileSaleI
     @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
     size = -1;
     expandedIndex = 0;
+
+    itemsTrackByFn(index, item: ISellItem) {
+        return item.index;
+    }
 
     screenDataUpdated() {
         this.expandedIndex = this.screenData.items.length - 1;

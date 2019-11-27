@@ -1,4 +1,4 @@
-<app-item-card *ngFor="let item of screenData.items; index as i" 
+<app-item-card *ngFor="let item of screenData.items; index as i; trackBy: itemsTrackByFn " 
 [item]="item" 
 [isReadOnly]="screenData.readOnly" 
 [expanded]="isItemExpanded(i)" 

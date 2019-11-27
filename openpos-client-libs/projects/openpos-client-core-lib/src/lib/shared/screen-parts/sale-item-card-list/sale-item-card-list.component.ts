@@ -2,6 +2,7 @@ import { Component, Injector } from '@angular/core';
 import { SaleItemCardListInterface } from './sale-item-card-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
+import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 
 
 @ScreenPart({
@@ -18,6 +19,10 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
   constructor(injector: Injector) {
     super(injector);
+  }
+
+  itemsTrackByFn(index, item: ISellItem) {
+    return item.index;
   }
 
   screenDataUpdated() {
