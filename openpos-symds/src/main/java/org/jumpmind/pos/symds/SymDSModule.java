@@ -97,7 +97,7 @@ public class SymDSModule extends AbstractRDBMSModule {
         context.setAttribute(WebConstants.ATTR_ENGINE_HOLDER, holder);
 
         configurators.forEach(c->c.beforeStart(serverEngine));
-        serverEngine.setupDatabase(false);
+        serverEngine.setup();
 
         super.initialize();
     }
