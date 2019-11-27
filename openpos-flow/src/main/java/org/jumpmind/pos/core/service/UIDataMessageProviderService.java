@@ -61,7 +61,11 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
                     ((IHasObservableUIDataMessageProviderProperty)provider).removePropertyChangeListener(this);
                     ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
                 }
-                sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
+                if(provider.isNewSeries()) {
+                    provider.setSeriesId( provider.getSeriesId() + 1);
+                    provider.setNewSeries(false);
+                }
+                sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId());
             });
         }
     }
