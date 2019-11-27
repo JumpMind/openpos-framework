@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.flow;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.event.OnEvent;
@@ -44,11 +45,9 @@ public class EventBroadcaster {
                     OnEvent onEvent = method.getAnnotation(OnEvent.class);
                     if (onEvent.receiveEventsFromSelf() || !event.getSource().equals(AppEvent.createSourceString(stateManager.getAppId(), stateManager.getDeviceId()))) {
                         if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
-                            stateManager.markAsBusy();
                             method.setAccessible(true);
                             method.invoke(object, event);
                         } else if (method.getParameters() == null || method.getParameters().length == 0) {
-                            stateManager.markAsBusy();
                             method.setAccessible(true);
                             method.invoke(object);
                         }
