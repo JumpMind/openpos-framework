@@ -44,9 +44,11 @@ public class EventBroadcaster {
                     OnEvent onEvent = method.getAnnotation(OnEvent.class);
                     if (onEvent.receiveEventsFromSelf() || !event.getSource().equals(AppEvent.createSourceString(stateManager.getAppId(), stateManager.getDeviceId()))) {
                         if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
+                            stateManager.markAsBusy();
                             method.setAccessible(true);
                             method.invoke(object, event);
                         } else if (method.getParameters() == null || method.getParameters().length == 0) {
+                            stateManager.markAsBusy();
                             method.setAccessible(true);
                             method.invoke(object);
                         }
