@@ -296,6 +296,8 @@ export * from './lib/shared/components/training-dialog/training-token';
 export * from './lib/shared/components/training-dialog/training-wrapper.component';
 export * from './lib/shared/components/transaction-item-list/transaction-item-list.component';
 export * from './lib/shared/components/help-text-page-wrapper/help-text-page-wrapper.component';
+export * from './lib/shared/components/toggle-button-group/toggle-group.component';
+export * from './lib/shared/components/toggle-button/toggle-button.component';
 
 export * from './lib/shared/decorators/screen-component.decorator';
 export * from './lib/shared/decorators/dialog-component.decorator';

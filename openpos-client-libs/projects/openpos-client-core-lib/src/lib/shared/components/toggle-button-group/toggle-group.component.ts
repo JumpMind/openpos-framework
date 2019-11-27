@@ -1,4 +1,4 @@
-import { Component, ContentChildren, QueryList, AfterViewInit, Input, Output, EventEmitter, DoCheck, OnDestroy } from '@angular/core';
+import { Component, ContentChildren, QueryList, AfterViewInit, Input, Output, EventEmitter, DoCheck, OnDestroy, OnChanges, SimpleChange, SimpleChanges } from '@angular/core';
 import { ToggleButtonComponent } from '../toggle-button/toggle-button.component';
 import { Subscription } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Subscription } from 'rxjs';
   templateUrl: './toggle-group.component.html',
   styleUrls: ['./toggle-group.component.scss']
 })
-export class ToggleGroupComponent implements AfterViewInit, DoCheck, OnDestroy {
+export class ToggleGroupComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input()
   value: any;
 
@@ -38,21 +38,21 @@ export class ToggleGroupComponent implements AfterViewInit, DoCheck, OnDestroy {
     });
   }
 
-  ngDoCheck(): void {
+  ngOnChanges(changes: SimpleChanges): void {
     if (!this.toggleButtons) { return; }
     this.toggleButtons.forEach( button => {
-      if ( button.value === this.value ) {
-        button.setSelected(true);
-      } else {
-        button.setSelected(false);
+      if (button.value === this.value && !button.selected) {
+          button.selected = true;
+      } else if (button.value !== this.value && !!button.selected) {
+          button.selected = false;
       }
     });
   }
 
   onToggleChange( source: ToggleButtonComponent, value: any) {
     if ( source.selected ) {
+      this.toggleButtons.filter(button => button.value !== source.value && !!button.selected).forEach(button => button.selected = false);
       this.valueChange.emit(value);
-      this.toggleButtons.filter(button => button.value !== source.value).forEach(button => button.setSelected(false));
     } else if (this.toggleButtons.filter(button => button.selected === true).length < 1) {
       this.valueChange.emit(null);
     }
