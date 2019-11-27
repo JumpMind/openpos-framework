@@ -33,24 +33,6 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
             });
         }
         if( applicationState.getDataMessageProviderMap() != null ){
-            //clean up old providers
-            List<String> keysToRemove = new ArrayList<>();
-            applicationState.getDataMessageProviderMap().keySet().forEach( key -> {
-                if( uiDataMessageProviders == null || !uiDataMessageProviders.containsKey(key)){
-                    //If the provider is not in the new map send a message to clean it up on the client
-                    sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), null, key, -1 );
-                    applicationState.getDataMessageProviderMap().get(key).reset();
-                    keysToRemove.add(key);
-                }
-            });
-            keysToRemove.forEach( key -> {
-                UIDataMessageProvider provider = applicationState.getDataMessageProviderMap().get(key);
-                if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
-                    ((IHasObservableUIDataMessageProviderProperty)provider).removePropertyChangeListener(this);
-                }
-                applicationState.getDataMessageProviderMap().remove(key);
-            });
-
             if( uiDataMessageProviders != null ){
                 uiDataMessageProviders.forEach( (key, provider) -> {
                     boolean inMap = applicationState.getDataMessageProviderMap().containsKey(key);
