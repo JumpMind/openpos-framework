@@ -7,6 +7,7 @@ import org.apache.http.ssl.SSLContextBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,8 @@ public class OpenposManagementServerSSLTest {
     public void contextLoads() throws Exception {
         assertThat(discoveryController).isNotNull();
     }
-    
+
+    @Ignore
     @Test
     public void testPingOverSSL() throws RestClientException, Exception {
         ResponseEntity<String> response = restTemplate().getForEntity("https://localhost:" + port + "/ping", String.class);

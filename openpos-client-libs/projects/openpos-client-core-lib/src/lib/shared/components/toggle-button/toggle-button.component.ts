@@ -11,7 +11,17 @@ export class ToggleButtonComponent {
     value: string;
 
     @Input()
-    selected: boolean;
+    get selected() : boolean {
+        return this._selected;
+    }
+
+    set selected(value: boolean) {
+        this._selected = value;
+        this.toggleSelectedCssClass(value);
+        this.selectedChange.emit(value);
+    }
+
+    private _selected: boolean;
 
     @Input()
     allowUncheck = true;
@@ -34,22 +44,18 @@ export class ToggleButtonComponent {
             return;
         }
 
-        this.setSelected(!this.selected);
+        this.selected = !this.selected;
         this.change.emit(new ToggleChange(this, this.value));
-
     }
 
-    setSelected(value: boolean) {
-        this.selected = value;
+    private toggleSelectedCssClass(value: boolean) {
         if (!!value) {
             this.renderer.addClass(this.button._elementRef.nativeElement, 'selected');
         }
         else {
             this.renderer.removeClass(this.button._elementRef.nativeElement, 'selected');
         }
-        this.selectedChange.emit(this.selected);
     }
-
 }
 
 export class ToggleChange {

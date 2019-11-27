@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.flow;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.event.OnEvent;

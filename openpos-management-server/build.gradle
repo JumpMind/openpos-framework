@@ -1,69 +1,17 @@
-plugins {
-    // Apply the java plugin to add support for Java
-    id 'java'
-    
-    id 'org.springframework.boot' version '2.1.3.RELEASE'
-    id 'io.spring.dependency-management' version '1.0.8.RELEASE'
-}
-repositories {
-    jcenter()
-    mavenCentral()
-}
-
-
 apply from: '../openpos-gradle/src/main/resources/java.gradle'
-
-configurations {
-    all {
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
-        exclude group: 'org.springframework.boot', module: 'spring-boot-starter-tomcat'
-        
-    }
-}
+apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
+apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {
-    // Fixes warnings in eclipse
-    compile "org.springframework.boot:spring-boot-configuration-processor"
-    
-    compile project(":openpos-util")
-    
-    implementation("org.springframework.boot:spring-boot-dependencies:$springBootVersion") {
-    }
-    implementation('org.springframework.boot:spring-boot-starter-web') {
-    }
-    implementation('org.springframework.boot:spring-boot-starter-jetty') {
-    }
-    
-    implementation("org.codehaus.groovy:groovy:$groovyVersion")
-    implementation("org.codehaus.groovy:groovy-jsr223:$groovyVersion")
-    implementation("org.codehaus.groovy:groovy-ant:$groovyVersion")
-    // Handles decryption of values in application.yaml/properties
-    implementation("com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2")
-    
-    testImplementation ('org.springframework.boot:spring-boot-starter-test')  {
-    }
+    compile project(":openpos-symds")
+    compile("com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2")
+    compile("org.codehaus.groovy:groovy:$groovyVersion")
+    compile("org.codehaus.groovy:groovy-jsr223:$groovyVersion")
+    compile("org.codehaus.groovy:groovy-ant:$groovyVersion")
 }
 
 test {
     filter {
         includeTestsMatching 'org.jumpmind.pos.management.*'
     }
-}
-
-// To launch local:
-// java -Dloader.path=./src/test/resources -Dspring.profiles.active=bltest -jar build/libs/openpos-management-server.jar
-bootJar {
-    mainClassName = 'org.jumpmind.pos.management.OpenposManagementServer'
-    manifest {
-        attributes 'Main-Class': 'org.springframework.boot.loader.PropertiesLauncher'
-    }
-}
-
-task bootRunRetailer(type: org.springframework.boot.gradle.tasks.run.BootRun) {
-    doFirst() {
-        main = bootJar.mainClassName
-        classpath = sourceSets.main.runtimeClasspath
-        systemProperty 'spring.profiles.active', 'bltest'
-    }
-
 }
