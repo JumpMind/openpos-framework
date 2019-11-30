@@ -145,17 +145,25 @@ public class ModelWrapper {
     protected void buildFieldColumnMap(LinkedHashMap<String, Column> fieldColumnMap, Class<?> clazz) {
 
         Field[] fields = clazz.getDeclaredFields();
+        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(clazz);
         for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
             Table table = classMetaData.getTable();
-            for (int i = 0; i < fields.length; i++) {
-                Field field = fields[i];
-                String fieldName = fields[i].getName();
-                if (field.getAnnotation(CompositeDef.class) != null) {
+            //for (int i = 0; i < fields.length; i++) {
+            for (int i = 0; i < propertyDescriptors.length; i++) {
+                //Field field = fields[i];
+                //String fieldName = fields[i].getName();
+                String propName = propertyDescriptors[i].getName();
+                Field field = null;
+                try {
+                    field = clazz.getDeclaredField(propName);
+                } catch (NoSuchFieldException ex) {
+                }
+                if (field != null && field.getAnnotation(CompositeDef.class) != null) {
                     buildFieldColumnMap(fieldColumnMap, field.getType());
                 } else {
-                    Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(fieldName));
+                    Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(propName));
                     if (column != null) {
-                        fieldsToColumns.put(fieldName, column);
+                        fieldsToColumns.put(propName, column);
 
                     }
                 }
@@ -231,9 +239,9 @@ public class ModelWrapper {
         Object fieldValue=null;
         Class<?> clazz = modelClass.getClass();
         try {
-            Field field = clazz.getDeclaredField(fieldName);
-            if (field != null) {
-                fieldValue = PropertyUtils.getProperty(model, fieldName);
+            fieldValue = PropertyUtils.getProperty(model, fieldName);
+            if (fieldValue == null) {
+                Field field = clazz.getDeclaredField(fieldName);
             }
         } catch (NoSuchMethodException | NoSuchFieldException |
                 IllegalAccessException | InvocationTargetException ex) {
@@ -368,9 +376,12 @@ public class ModelWrapper {
     public Field getField(String fieldName) {
         Field field = null;
         for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
-            field = classMetaData.getFieldMetaData(fieldName).getField();
-            if (field != null) {
-                break;
+            FieldMetaData fieldMetadata = classMetaData.getFieldMetaData(fieldName);
+            if (fieldMetadata != null) {
+                field = classMetaData.getFieldMetaData(fieldName).getField();
+                if (field != null) {
+                    break;
+                }
             }
         }
         
