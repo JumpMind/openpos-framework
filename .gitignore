@@ -84,3 +84,4 @@ openpos-test-server/test-server/test-server.iml
 openpos-symds/nu-symds.iml
 openpos-symds/openpos-symds.iml
 openpos-management-server/openpos-management-server.iml
+openpos-management-server/conf/instance.uuid

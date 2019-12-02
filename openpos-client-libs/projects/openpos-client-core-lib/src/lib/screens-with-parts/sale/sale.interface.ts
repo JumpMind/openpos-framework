@@ -13,5 +13,5 @@ export interface SaleInterface extends IAbstractScreen {
     locationEnabled: boolean;
     locationOverridePrompt: string;
     checkoutButton: IActionItem;
-    items: ISellItem[];
+    providerKey: string;
 }

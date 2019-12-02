@@ -4,16 +4,18 @@
         <app-progress-bar-part></app-progress-bar-part>
     </div>
 
-    <div responsive-class class="self-checkout-body self-checkout-form-body" fxLayout="column" fxLayoutAlign="center center">
+    <div responsive-class class="self-checkout-body self-checkout-form-body" fxLayout="column"
+        fxLayoutAlign="center center">
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-form-image">
 
-        <div responsive-class class="common-border self-checkout-form-part-outer">
+        <div responsive-class class="self-checkout-form-part-outer">
             <app-auto-complete-address-part *ngIf="screen.autoComplete" [formName]="'form'"
                 [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
             </app-auto-complete-address-part>
-            <app-dynamic-form-part class="self-checkout-form-part" *ngIf="!screen.autoComplete" [formName]="'form'" [submitButton]="screen.submitButton"
-                [alternateSubmitActions]="screen.alternateSubmitActions"></app-dynamic-form-part>
+            <app-dynamic-form-part class="self-checkout-form-part" *ngIf="!screen.autoComplete" [formName]="'form'"
+                [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
+            </app-dynamic-form-part>
         </div>
     </div>
 </div>

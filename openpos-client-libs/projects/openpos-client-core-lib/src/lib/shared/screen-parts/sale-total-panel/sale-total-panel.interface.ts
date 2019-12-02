@@ -1,11 +1,8 @@
 import { IAbstractScreen } from '../../../core/interfaces/abstract-screen.interface';
 import { ITotal } from '../../../core/interfaces/total.interface';
 import { IActionItem } from '../../../core/actions/action-item.interface';
-import { ISellItem } from '../../../core/interfaces/sell-item.interface';
-import { IActionItemGroup } from '../../../core/actions/action-item-group.interface';
 
 export interface SaleTotalPanelInterface extends IAbstractScreen {
-    items: ISellItem[];
     totals: ITotal[];
     grandTotal: ITotal;
     checkoutButton: IActionItem;

@@ -3,7 +3,9 @@ package org.jumpmind.pos.core.service;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.IMessageInterceptor;
 import org.jumpmind.pos.core.ui.UIDataMessage;
+import org.jumpmind.pos.core.ui.data.IHasObservableUIDataMessageProviderProperty;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProviderPropertyChangeEvent;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,10 +13,12 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.core.ResolvableType;
 import org.springframework.stereotype.Component;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.*;
 
 @Component
-public class UIDataMessageProviderService {
+public class UIDataMessageProviderService implements PropertyChangeListener {
 
     @Autowired
     IMessageService messageService;
@@ -23,26 +27,26 @@ public class UIDataMessageProviderService {
     ApplicationContext applicationContext;
 
     public void updateProviders(ApplicationState applicationState, Map<String, UIDataMessageProvider> uiDataMessageProviders){
-        if( applicationState.getDataMessageProviderMap() != null ){
-            //clean up old providers
-            List<String> keysToRemove = new ArrayList<>();
-            applicationState.getDataMessageProviderMap().keySet().forEach( key -> {
-                if( uiDataMessageProviders == null || !uiDataMessageProviders.containsKey(key)){
-                    //If the provider is not in the new map send a message to clean it up on the client
-                    sendDataMessage(applicationState, null, key, -1 );
-                    keysToRemove.add(key);
-                }
+        if(uiDataMessageProviders != null) {
+            uiDataMessageProviders.forEach((key, provider) -> {
+                provider.setProviderKey(key);
             });
-
-            keysToRemove.forEach( key -> applicationState.getDataMessageProviderMap().remove(key));
-
+        }
+        if( applicationState.getDataMessageProviderMap() != null ){
             if( uiDataMessageProviders != null ){
                 uiDataMessageProviders.forEach( (key, provider) -> {
-                    if(!applicationState.getDataMessageProviderMap().containsKey(key) || provider.isNewSeries()){
-                        provider.setSeriesId( provider.getSeriesId() + 1);
-                        //If it is a new provider add it and initialize it
+                    boolean inMap = applicationState.getDataMessageProviderMap().containsKey(key);
+                    if(!inMap || provider.isNewSeries()) {
+                        if(!inMap && provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                            ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
+                        }
+                        if(provider.isNewSeries()) {
+                            provider.setSeriesId( provider.getSeriesId() + 1);
+                            provider.setNewSeries(false);
+                        }
+                        //If it is a new provider or series add it and initialize it
                         applicationState.getDataMessageProviderMap().put(key, provider);
-                        sendDataMessage(applicationState, provider.getNextDataChunk(), key, provider.getSeriesId() );
+                        sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId() );
                     }
                 });
             }
@@ -51,8 +55,17 @@ public class UIDataMessageProviderService {
             //If they are all new initialize them all
             applicationState.setDataMessageProviderMap(uiDataMessageProviders);
             uiDataMessageProviders.forEach( (key, provider) -> {
-                sendDataMessage(applicationState, provider.getNextDataChunk(), key, provider.getSeriesId() );
-
+                if(provider instanceof IHasObservableUIDataMessageProviderProperty) {
+                    //remove this listener first in case it is coming through here on a screen refresh
+                    // instead of initially, in which case, the listener was already added previously
+                    ((IHasObservableUIDataMessageProviderProperty)provider).removePropertyChangeListener(this);
+                    ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
+                }
+                if(provider.isNewSeries()) {
+                    provider.setSeriesId( provider.getSeriesId() + 1);
+                    provider.setNewSeries(false);
+                }
+                sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId());
             });
         }
     }
@@ -69,7 +82,7 @@ public class UIDataMessageProviderService {
         }
 
         UIDataMessageProvider uiDataMessageProvider = dataMessageProviderMap.get(providerKey.get());
-        sendDataMessage(applicationState, uiDataMessageProvider.getNextDataChunk(), providerKey.get(), uiDataMessageProvider.getSeriesId() );
+        sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), uiDataMessageProvider.getNextDataChunk(), providerKey.get(), uiDataMessageProvider.getSeriesId() );
 
         return true;
     }
@@ -80,10 +93,11 @@ public class UIDataMessageProviderService {
                 provider.reset();
             });
         }
+
         applicationState.setDataMessageProviderMap(null);
     }
 
-    private void sendDataMessage(ApplicationState applicationState, List<Object> data, String dataType, int series ) {
+    private void sendDataMessage(String appId, String deviceId, List<Object> data, String dataType, int series ) {
 
         String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, UIDataMessage.class));
         UIDataMessage message = UIDataMessage.builder()
@@ -96,14 +110,27 @@ public class UIDataMessageProviderService {
             for (String beanName: screenInterceptorBeanNames) {
                 @SuppressWarnings("unchecked")
                 IMessageInterceptor<UIDataMessage> screenInterceptor =  (IMessageInterceptor<UIDataMessage>) applicationContext.getBean(beanName);
-                screenInterceptor.intercept(applicationState.getAppId(), applicationState.getDeviceId(), message);
+                screenInterceptor.intercept(appId, deviceId, message);
 
             }
         }
 
-        messageService.sendMessage( applicationState.getAppId(),
-                applicationState.getDeviceId(),
-                message
-        );
+        messageService.sendMessage(appId, deviceId, message);
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if(evt instanceof UIDataMessageProviderPropertyChangeEvent) {
+            UIDataMessageProvider uiDataMessageProvider = (UIDataMessageProvider) evt.getSource();
+            if(uiDataMessageProvider.isNewSeries()) {
+                uiDataMessageProvider.setSeriesId( uiDataMessageProvider.getSeriesId() + 1);
+                uiDataMessageProvider.setNewSeries(false);
+            }
+            sendDataMessage(((UIDataMessageProviderPropertyChangeEvent) evt).getAppId(),
+                    ((UIDataMessageProviderPropertyChangeEvent) evt).getDeviceId(),
+                    uiDataMessageProvider.getNextDataChunk(),
+                    uiDataMessageProvider.getProviderKey(),
+                    uiDataMessageProvider.getSeriesId());
+        }
     }
 }

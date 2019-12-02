@@ -12,6 +12,8 @@ import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
+import { Configuration } from './../../configuration/configuration';
+
 
 @ScreenComponent({
     name: 'Sale'
@@ -22,18 +24,15 @@ import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-
     styleUrls: ['./sale.component.scss']
 })
 export class SaleComponent extends PosScreen<SaleInterface> implements
-    OnInit, OnDestroy, OnBecomingActive, OnLeavingActive, AfterViewChecked {
+    OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
 
     isMobile: Observable<boolean>;
 
     totals: ITotal[];
 
-    @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
+    Configuration = Configuration;
 
     initialized = false;
-
-    public items: ISellItem[];
-    public size = -1;
 
     private scanServiceSubscription: Subscription;
 
@@ -55,7 +54,6 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
         this.screen.customerName = this.screen.customerName != null && this.screen.customerName.length > 10 ?
             this.screen.customerName.substring(0, 10) + '...' : this.screen.customerName;
         this.dialog.closeAll();
-        this.items = this.screen.items;
     }
 
     onEnter(value: string) {
@@ -68,21 +66,7 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
         }
     }
 
-    ngAfterViewChecked() {
-        if (this.items && this.size !== this.items.length) {
-            this.scrollToBottom();
-            this.size = this.items.length;
-        }
-    }
-
-    scrollToBottom(): void {
-        try {
-            this.scrollList.nativeElement.scrollTop = this.scrollList.nativeElement.scrollHeight;
-        } catch (err) { }
-    }
-
     ngOnInit(): void {
-        this.scrollToBottom();
         this.registerScanner();
     }
 

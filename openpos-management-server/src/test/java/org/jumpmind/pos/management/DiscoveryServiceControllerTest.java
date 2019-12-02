@@ -1,5 +1,6 @@
 package org.jumpmind.pos.management;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,7 @@ public class DiscoveryServiceControllerTest {
     public void setUp() throws Exception {
     }
 
+    @Ignore
     @Test
     public void testEmptyDeviceId() throws Exception {
         mockMvc.perform(get("/discover"))

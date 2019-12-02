@@ -1,7 +1,10 @@
-import { Component, ElementRef, ViewChild, AfterViewChecked, OnInit } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, Injector } from '@angular/core';
 import { MobileSaleItemListInterface } from './mobile-sale-item-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
+import { Observable } from 'rxjs';
+import { ISellItem } from '../../../core/interfaces/sell-item.interface';
+import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-message.service';
 
 
 @ScreenPart({
@@ -12,21 +15,29 @@ import { ScreenPartComponent } from '../screen-part';
     templateUrl: './mobile-sale-item-list.component.html',
     styleUrls: ['./mobile-sale-item-list.component.scss']
 })
-export class MobileSaleItemListComponent extends ScreenPartComponent<MobileSaleItemListInterface> implements OnInit, AfterViewChecked {
+export class MobileSaleItemListComponent extends ScreenPartComponent<MobileSaleItemListInterface> implements OnInit {
 
     @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
     size = -1;
+    items: Observable<ISellItem[]>;
     expandedIndex = 0;
 
-    screenDataUpdated() {
-        this.expandedIndex = this.screenData.items.length - 1;
+    constructor(injector: Injector, private dataMessageService: UIDataMessageService) {
+        super(injector);
     }
 
-    ngAfterViewChecked() {
-        if (this.screenData.items && this.size !== this.screenData.items.length) {
-            this.scrollToBottom();
-            this.size = this.screenData.items.length;
-        }
+    itemsTrackByFn(index, item: ISellItem) {
+        return item.index;
+    }
+
+    screenDataUpdated() {
+        this.items = this.dataMessageService.getData$(this.screenData.providerKey);
+        this.items.subscribe(() => {
+          this.items.forEach(i => {
+            this.expandedIndex = i.length - 1;
+          });
+          this.scrollToBottom();
+        });
     }
 
     ngOnInit(): void {

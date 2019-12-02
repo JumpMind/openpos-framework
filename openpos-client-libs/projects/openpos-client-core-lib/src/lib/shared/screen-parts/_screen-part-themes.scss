@@ -9,6 +9,8 @@
 @import './mobile-sale-item-list/mobile-sale-item-list-theme';
 @import './sale-item-card-list/sale-item-card-list-theme';
 @import './search-expand-input/search-expand-input-theme';
+@import './sale-total-panel/sale-total-panel-theme';
+@import './tender-part/tender-part-theme';
 
 @mixin screen-part-themes($theme) {
     @include bacon-strip-theme($theme);
@@ -21,4 +23,6 @@
     @include mobile-sale-item-list-theme($theme);
     @include sale-item-card-list-theme($theme);
     @include search-expand-input-theme($theme);
+    @include sale-total-panel-theme($theme);
+    @include tender-part-theme($theme);
 }

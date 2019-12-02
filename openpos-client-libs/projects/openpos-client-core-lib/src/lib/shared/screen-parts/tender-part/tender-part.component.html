@@ -1,0 +1,35 @@
+<div *ngIf="(!screenData.amounts || screenData.amounts.length === 0) && screenData.amountDue" responsive-class
+    class="tender-border-color tender-amount-due-outer">
+    <div responsive-class class="tender-amount-due-title">{{screenData.amountDue.name}}</div>
+    <div responsive-class class="tender-amount-due">
+        <app-currency-text [amountText]="screenData.amountDue.amount"></app-currency-text>
+    </div>
+</div>
+
+<div *ngIf="screenData.amounts && screenData.amounts.length > 0 && screenData.amountDue" responsive-class
+    class="tender-amounts-outer">
+    <div *ngFor="let amount of screenData.amounts" responsive-class class="tender-amount-row tender-amount-outer">
+        <div class="tender-amount-name">{{amount.name}}</div>
+        <div class="tender-amount">
+            <app-currency-text [amountText]="amount.amount"></app-currency-text>
+        </div>
+    </div>
+    <div responsive-class class="tender-border-color tender-amount-row tender-remaining-balance-outer">
+        <div class="tender-remaining-balance-name">{{screenData.amountDue.name}}</div>
+        <div class="tender-remaining-balance">
+            <app-currency-text [amountText]="screenData.amountDue.amount"></app-currency-text>
+        </div>
+    </div>
+</div>
+
+<app-dynamic-form-part *ngIf="screenData.form" [formName]="'form'" [alternateSubmitActions]="alternateSubmitActions"
+    responsive-class class="tender-form-part"></app-dynamic-form-part>
+
+<app-instructions *ngIf="screenData.prompt" class="tender-payment-instructions" [instructions]="screenData.prompt">
+</app-instructions>
+
+<app-options-list *ngIf="screenData.optionsList" (optionClick)="doAction($event)" responsive-class
+    class="tender-options" listSize="3">
+</app-options-list>
+
+<img *ngIf="screenData.imageUrl" [src]="screenData.imageUrl | imageUrl" class="tender-payment-auth-image">

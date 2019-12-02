@@ -26,7 +26,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
 import org.jumpmind.pos.core.service.IScreenService;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
+import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -117,8 +119,8 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     private List<ITransitionStep> createTransitionSteps() {
         List<ITransitionStep> steps = new ArrayList<>();
         String[] names = applicationContext.getBeanNamesForType(ITransitionStep.class);
-        for(String name: names) {
-            steps.add((ITransitionStep)applicationContext.getBean(name));
+        for (String name : names) {
+            steps.add((ITransitionStep) applicationContext.getBean(name));
         }
 
         Collections.sort(steps, (o1, o2) -> {
@@ -176,12 +178,30 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
         for (Map<String, StateManager> map : new ArrayList<>(stateManagersByAppIdByNodeId.values())) {
             for (StateManager stateManager : new ArrayList<>(map.values())) {
                 try {
-                    setCurrentStateManager(stateManager);
-                    stateManager.onEvent(event);
+                    if (process(stateManager, event)) {
+                        setCurrentStateManager(stateManager);
+                        stateManager.onEvent(event);
+                    }
                 } finally {
                     setCurrentStateManager(null);
                 }
             }
+        }
+    }
+
+    /**
+     * Only process AppEvents that are from other state managers.  Wait to process the event until the current StateManager is idle.
+     */
+    private boolean process(IStateManager stateManager, Event event) {
+        if (event instanceof AppEvent) {
+            AppEvent appEvent = (AppEvent) event;
+            if (!appEvent.getAppId().equals(stateManager.getAppId()) || !appEvent.getDeviceId().equals(stateManager.getDeviceId())) {
+                stateManager.markAsBusy();
+                return true;
+            }
+            return false;
+        } else {
+            return true;
         }
     }
 }

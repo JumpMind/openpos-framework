@@ -1,14 +1,11 @@
 package org.jumpmind.pos.core.ui.message;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.ui.ActionItemGroup;
-import org.jumpmind.pos.core.ui.data.SellItem;
-import org.jumpmind.pos.core.ui.data.TransactionReceipt;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.SellItem;
+import org.jumpmind.pos.core.ui.data.TransactionReceipt;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,8 +15,7 @@ public class ReturnUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
     private String prompt;
-
-    private List<SellItem> items = new ArrayList<>();
+    private String providerKey;
 
     private List<Total> totals;
     private Total grandTotal;
@@ -55,12 +51,12 @@ public class ReturnUIMessage extends UIMessage {
         this.prompt = prompt;
     }
 
-    public List<SellItem> getItems() {
-        return items;
+    public String getProviderKey() {
+        return providerKey;
     }
 
-    public void setItems(List<SellItem> items) {
-        this.items = items;
+    public void setProviderKey(String providerKey) {
+        this.providerKey = providerKey;
     }
 
     public List<Total> getTotals() {

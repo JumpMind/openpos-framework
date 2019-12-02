@@ -2,6 +2,7 @@ import { IAbstractScreen } from '../../../core/interfaces/abstract-screen.interf
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 
 export interface SaleItemCardListInterface extends IAbstractScreen {
+    providerKey: string;
     items: ISellItem[];
     readOnly: boolean;
     prompt: string;

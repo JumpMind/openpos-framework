@@ -28,17 +28,15 @@ import { MobileReturnReceiptsSheetComponent } from './mobile-return-receipts-she
     templateUrl: './return.component.html',
     styleUrls: ['./return.component.scss']
 })
-export class ReturnComponent extends PosScreen<any> implements AfterViewChecked, OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
+export class ReturnComponent extends PosScreen<any> implements OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
 
     isMobile: Observable<boolean>;
 
-    @ViewChild('scrollList') private scrollList: ElementRef;
     public size = -1;
     individualMenuClicked = false;
 
     public overFlowListSize: Observable<number>;
 
-    public items: ISellItem[];
     public itemTotal: number;
     public receipts: ITransactionReceipt[];
     public removeReceiptAction: IActionItem;
@@ -59,21 +57,12 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewChecked,
     }
 
     buildScreen() {
-        this.items = this.screen.items;
         this.receipts = this.screen.receipts;
         this.removeReceiptAction = this.screen.removeReceiptAction;
         this.dialog.closeAll();
     }
 
-    ngAfterViewChecked() {
-        if (this.items && this.size !== this.items.length) {
-            this.scrollToBottom();
-            this.size = this.items.length;
-        }
-    }
-
     ngOnInit(): void {
-        this.scrollToBottom();
         this.registerScanner();
     }
 
@@ -91,12 +80,6 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewChecked,
         super.ngOnDestroy();
     }
 
-    scrollToBottom(): void {
-        try {
-            this.scrollList.nativeElement.scrollTop = this.scrollList.nativeElement.scrollHeight;
-        } catch (err) { }
-    }
-
     private registerScanner() {
         if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
@@ -111,7 +94,6 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewChecked,
             this.scanServiceSubscription = null;
         }
     }
-
 
     public onReceiptClick(event: any) {
         if (this.receipts) {

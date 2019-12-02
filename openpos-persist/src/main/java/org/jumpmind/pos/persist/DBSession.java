@@ -22,6 +22,7 @@ import java.util.Set;
 
 import javax.sql.DataSource;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -49,9 +50,8 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
 import org.springframework.jdbc.core.namedparam.ParsedSql;
 
+@Slf4j
 public class DBSession {
-
-    private static final Logger log = Logger.getLogger(DBSession.class);
 
     public static final String JDBC_QUERY_TIMEOUT = "openpos.jdbc.queryTimeoutSec";
     public static final String JDBC_FETCH_SIZE = "openpos.jdbc.fetchSize";
@@ -367,7 +367,7 @@ public class DBSession {
                 try {
                     insert(model, table);
                 } catch (DuplicateKeyException ex) {
-                    log.debug("Insert of entity failed, failing over to an update. " + argModel, ex);
+                    log.info("Insert of entity failed, failing over to an update: " + argModel);
                     int updateCount = update(model, table);
                     if (updateCount < 1) {
                         throw new PersistException("Failed to perform an insert or update on entity. Do the DB primary key and unique fields "
@@ -401,6 +401,41 @@ public class DBSession {
         int[] types = statement.getTypes();
 
         return jdbcTemplate.getJdbcOperations().update(sql, values, types);
+    }
+
+    public void batchInsert(List<? extends AbstractModel> models) {
+        if (models.size() > 0) {
+            AbstractModel exampleModel = models.get(0);
+
+            ModelWrapper model = new ModelWrapper(exampleModel, databaseSchema.getModelMetaData(exampleModel.getClass()));
+            setMaintenanceValues(model);
+            setTagValues(model);
+            model.load();
+
+            List<Table> tables = getValidatedTables(exampleModel);
+            for (Table table : tables) {
+                boolean[] nullKeyValues = model.getNullKeys();
+                List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
+                DmlStatement statement = databasePlatform.createDmlStatement(DmlType.INSERT, table.getCatalog(), table.getSchema(), table.getName(),
+                        primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
+                String sql = statement.getSql();
+                Object[] values = statement.getValueArray(model.getColumnNamesToValues());
+                jdbcTemplate.getJdbcOperations().batchUpdate(sql, getValueArray(statement, models));
+            }
+        }
+    }
+
+    private List<Object[]> getValueArray(DmlStatement statement, List<? extends AbstractModel> models) {
+        List<Object[]> values = new ArrayList<>(models.size());
+        final ModelMetaData meta = databaseSchema.getModelMetaData(models.get(0).getClass());
+        models.forEach(m->{
+            ModelWrapper model = new ModelWrapper(m, meta);
+            setMaintenanceValues(model);
+            setTagValues(model);
+            model.load();
+            values.add(statement.getValueArray(model.getColumnNamesToValues()));
+        });
+        return values;
     }
 
     protected List<Table> getValidatedTables(AbstractModel entity) {

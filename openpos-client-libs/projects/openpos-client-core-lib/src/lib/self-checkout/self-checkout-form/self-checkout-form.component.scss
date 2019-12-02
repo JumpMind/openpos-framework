@@ -4,8 +4,11 @@
 }
 
 .self-checkout-form-part-outer {
-    background-color: white;
     width: 50%;
+
+    &.desktop-portrait {
+        width: 75%;
+    }
 
     &.mobile {
         width: 75%;
@@ -13,11 +16,5 @@
 
     &.tablet {
         width: 75%;
-    }
-}
-
-::ng-deep .self-checkout-form-part {
-    form {
-        padding: 48px;
     }
 }

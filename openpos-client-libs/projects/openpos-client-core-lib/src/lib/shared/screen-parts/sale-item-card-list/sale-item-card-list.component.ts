@@ -1,7 +1,10 @@
-import { Component, Injector } from '@angular/core';
+import { Component, Injector, ElementRef } from '@angular/core';
 import { SaleItemCardListInterface } from './sale-item-card-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
+import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-message.service';
+import { Observable } from 'rxjs';
+import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 
 
 @ScreenPart({
@@ -14,14 +17,31 @@ import { ScreenPartComponent } from '../screen-part';
 })
 export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardListInterface> {
 
-  expandedIndex = 0;
+  expandedIndex = -1;
+  items: Observable<ISellItem[]>;
 
-  constructor(injector: Injector) {
+  constructor(injector: Injector, private dataMessageService: UIDataMessageService, private elementRef: ElementRef) {
     super(injector);
   }
 
+  itemsTrackByFn(index, item: ISellItem) {
+    return item.index;
+  }
+
   screenDataUpdated() {
-    this.expandedIndex = this.screenData.items.length - 1;
+    this.items = this.dataMessageService.getData$(this.screenData.providerKey);
+    this.items.subscribe(() => {
+      this.items.forEach(i => {
+        this.expandedIndex = i.length - 1;
+      });
+      this.scrollToBottom();
+    });
+  }
+
+  scrollToBottom(): void {
+    try {
+        this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
+    } catch (err) { }
   }
 
   isItemExpanded(index: number): boolean {

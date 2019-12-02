@@ -1,6 +1,14 @@
 .self-checkout-sale-body {
     display: grid;
     grid-template-columns: 1fr 25%;
+
+    &.desktop-portrait {
+        grid-template-columns: 1fr 30%;
+    }
+
+    &.tablet-portrait {
+        grid-template-columns: 1fr 30%;
+    }
 }
 
 .self-checkout-list-background {

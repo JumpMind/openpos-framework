@@ -1,9 +1,15 @@
 package org.jumpmind.pos.management;
 
 import java.lang.reflect.Method;
+import java.util.concurrent.TimeUnit;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootApplication
 @EnableScheduling
 @Slf4j
+@ComponentScan(basePackages = {"org.jumpmind.pos"})
 public class OpenposManagementServer {
     public static String STARTUP_INIT_CLASS_PROPERTY = "openpos.managementServer.startup.initClass";
     
@@ -40,5 +47,17 @@ public class OpenposManagementServer {
                 throw new OpenposManagementException(msg, ex);
             }
         }
+    }
+
+    @Bean
+    CacheManager cacheManager() {
+        CaffeineCacheManager manager = new CaffeineCacheManager();
+        manager.setCaffeine(caffeineCacheBuilder());
+        return manager;
+    }
+
+    Caffeine<Object, Object> caffeineCacheBuilder() {
+        return Caffeine.newBuilder()
+                .expireAfterWrite(30, TimeUnit.MINUTES);
     }
 }

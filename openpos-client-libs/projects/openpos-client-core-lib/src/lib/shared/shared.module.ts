@@ -143,8 +143,10 @@ import { InstructionsComponent } from './components/instructions/instructions.co
 import { TitleComponent } from './components/title/title.component';
 import { ContentCardComponent } from './components/content-card/content-card.component';
 import { OptionButtonComponent } from './components/option-button/option-button.component';
+import { TenderPartComponent } from './screen-parts/tender-part/tender-part.component';
 
 const screenParts = [
+    TenderPartComponent,
     ChooseOptionsPartComponent,
     StatusStripComponent,
     SausageLinksComponent,

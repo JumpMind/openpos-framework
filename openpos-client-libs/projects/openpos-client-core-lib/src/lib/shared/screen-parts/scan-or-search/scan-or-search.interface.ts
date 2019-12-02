@@ -1,11 +1,12 @@
 import { FieldInputType } from '../../../core/interfaces/field-input-type.enum';
 import { ScanType } from './scan-type.enum';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 
 export interface ScanOrSearchInterface {
     scanMinLength: number;
     scanMaxLength: number;
-    scanActionName: string;
-    keyedActionName: string;
+    scanAction: IActionItem;
+    keyedAction: IActionItem;
     scanSomethingText: string;
     autoFocusOnScan: boolean;
     inputType: FieldInputType;

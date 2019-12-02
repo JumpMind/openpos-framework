@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.ui.messagepart;
 
 import org.jumpmind.pos.core.model.FieldInputType;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IconType;
 
 import java.io.Serializable;
@@ -16,8 +17,8 @@ public class ScanOrSearchPart implements Serializable{
     private Integer scanMaxLength = 22;
     private ScanType scanType;
     private String scanIcon = IconType.Barcode;
-    private String scanActionName = "Scan";
-    private String keyedActionName = "Scan";
+    private ActionItem scanAction = new ActionItem("Scan");
+    private ActionItem keyedAction = new ActionItem("Scan");
     private String scanSomethingText = "Scan/Key Something";
     private boolean autoFocusOnScan = false;
     private FieldInputType inputType = FieldInputType.WordText;
@@ -46,12 +47,12 @@ public class ScanOrSearchPart implements Serializable{
         this.scanType = scanType;
     }
 
-    public String getScanActionName() {
-        return scanActionName;
+    public ActionItem getScanAction() {
+        return scanAction;
     }
 
-    public void setScanActionName(String scanActionName) {
-        this.scanActionName = scanActionName;
+    public void setScanAction(ActionItem scanAction) {
+        this.scanAction = scanAction;
     }
 
     public String getScanSomethingText() {
@@ -86,11 +87,11 @@ public class ScanOrSearchPart implements Serializable{
         this.scanIcon = scanIcon;
     }
 
-    public void setKeyedActionName(String keyedActionName) {
-        this.keyedActionName = keyedActionName;
+    public void setKeyedAction(ActionItem keyedAction) {
+        this.keyedAction = keyedAction;
     }
 
-    public String getKeyedActionName() {
-        return this.keyedActionName;
+    public ActionItem getKeyedAction() {
+        return this.keyedAction;
     }
 }

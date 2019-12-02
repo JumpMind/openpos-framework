@@ -20,11 +20,6 @@
                 margin-right: 8px;
             }
         }
-
-        .mat-button {
-            @extend %text-lg;
-            @extend .common-primary-button;
-        }
     }
 
     .self-checkout-prompt-body {
