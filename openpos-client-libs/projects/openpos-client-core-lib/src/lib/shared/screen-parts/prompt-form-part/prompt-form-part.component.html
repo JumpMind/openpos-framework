@@ -11,7 +11,9 @@
                         [readOnly]="!screenData.editable">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
-                    <ng-content select="[optionsScreen]"></ng-content>
+                    <div #optionsRef>
+                        <ng-content select="[optionsScreen]"></ng-content>
+                    </div>
                 </div>
             </app-content-card>
 
@@ -41,7 +43,9 @@
                         [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
-                    <ng-content select="[optionsDialog]"></ng-content>
+                    <div #optionsRef>
+                        <ng-content select="[optionsDialog]"></ng-content>
+                    </div>
                 </mat-dialog-content>
             </app-content-card>
 

@@ -1,5 +1,5 @@
 import { ScreenPartComponent } from '../screen-part';
-import { AfterViewInit, Component, OnInit, ViewChild, Input, Injector } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, Injector } from '@angular/core';
 import { Validators, FormControl, FormGroup, ValidatorFn } from '@angular/forms';
 import { ValidatorsService } from '../../../core/services/validators.service';
 import { IActionItem } from '../../../core/actions/action-item.interface';
@@ -11,6 +11,8 @@ import { PromptFormPartInterface } from './prompt-form-part.interface';
     styleUrls: ['./prompt-form-part.component.scss']
 })
 export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartInterface> implements AfterViewInit, OnInit {
+
+    @ViewChild('optionsRef') options;
 
     promptFormGroup: FormGroup;
     initialized = false;
@@ -77,7 +79,7 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
     }
 
     onFormSubmit(): void {
-        if (this.promptFormGroup.valid) {
+        if (this.promptFormGroup.valid && this.options.nativeElement.children.length === 0) {
             const payload = this.promptFormGroup.value[this.inputControlName];
             if (this.screenData.actionButton) {
                 this.doAction({action: this.screenData.actionButton.action}, payload);
