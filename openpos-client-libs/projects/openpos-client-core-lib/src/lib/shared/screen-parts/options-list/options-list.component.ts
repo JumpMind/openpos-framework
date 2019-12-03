@@ -81,7 +81,8 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
                     disableClose: false,
                     autoFocus: false,
                     restoreFocus: false
-                }
+                },
+                autoFocus: false
             });
 
             dialogRef.afterClosed().subscribe(result => {
