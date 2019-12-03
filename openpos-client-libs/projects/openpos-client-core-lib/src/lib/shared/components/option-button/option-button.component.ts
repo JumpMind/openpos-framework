@@ -7,6 +7,7 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
   })
 export class OptionButtonComponent {
     @Input() disabled = false;
+    @Input() selected = false;
     @Input() inputType: string;
     @Input() optionTitle: string;
     @Input() optionIcon: string;
