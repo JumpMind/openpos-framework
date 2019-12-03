@@ -65,18 +65,11 @@ public class ModelValidator {
                     }
                 }
                 if (!StringUtils.isEmpty(columnAnnotation.crossReference())) {
-                    Field crossReferenceField = null;
-                    try {
-                        crossReferenceField = modelClass.getDeclaredField(columnAnnotation.crossReference());
-                    } catch (NoSuchFieldException ex) {
-                        for (Class<?> clazz : compositeDefClasses) {
-                            try {
-                                crossReferenceField = getCrossReferenceField(clazz, columnAnnotation);
-                            } catch (NoSuchFieldException ex2) {
-                            }
-                        }
+                    FieldMetaData xRefFieldMeta = meta.getEntityFieldMetaDatas().get(columnAnnotation.crossReference());
+                    if (xRefFieldMeta == null) {
+                        xRefFieldMeta = meta.getEntityIdFieldMetaDatas().get(columnAnnotation.crossReference());
                     }
-                    if (crossReferenceField == null) {
+                    if (xRefFieldMeta == null) {
                         throw new PersistException("No matching field found for ColumnDef crossReference=\"" + columnAnnotation.crossReference() + 
                                 "\" see the \"" + field.getName() + "\" field on model " + modelClass);
                     }
