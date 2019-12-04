@@ -4,7 +4,7 @@
         <app-prompt-form-part>
             <div optionsDialog appArrowTab class="options">   
                 <button *ngFor="let o of optionItems; let i = index" 
-                    [attr.cdkFocusInitial]="0 == i ? '' : null"
+                    type="button"
                     mat-button 
                     appArrowTabItem 
                     (click)="onOptionSelected(o.value)"
