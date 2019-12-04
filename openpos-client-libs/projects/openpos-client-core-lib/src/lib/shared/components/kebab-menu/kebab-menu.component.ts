@@ -2,6 +2,7 @@ import { Component, Inject, OnDestroy, ViewChildren, QueryList, ElementRef } fro
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { KeyPressProvider } from '../../providers/keypress.provider';
+import { Configuration } from '../../../configuration/configuration';
 
 @Component({
   selector: 'app-kebab-menu',
@@ -11,14 +12,14 @@ import { KeyPressProvider } from '../../providers/keypress.provider';
 export class KebabMenuComponent implements OnDestroy {
 
   @ViewChildren('menuItem', {read: ElementRef}) private menuItems: QueryList<ElementRef>;
-  selectedIndex = 0;
+  selectedIndex = -1;
   private menuItemSubscription: Subscription;
 
   constructor( @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<KebabMenuComponent>,
                protected keyPresses: KeyPressProvider) {
     this.menuItemSubscription = this.keyPresses.subscribe( 'ArrowDown', 1, (event: KeyboardEvent) => {
       // ignore repeats and check configuration
-      if ( event.repeat || event.type !== 'keydown') {
+      if ( event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
         return;
       }
       if ( event.type === 'keydown') {
@@ -29,7 +30,7 @@ export class KebabMenuComponent implements OnDestroy {
     this.menuItemSubscription.add(
       this.keyPresses.subscribe( 'ArrowUp', 1, (event: KeyboardEvent) => {
         // ignore repeats and check configuration
-        if ( event.repeat || event.type !== 'keydown') {
+        if ( event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
           return;
         }
         if ( event.type === 'keydown') {
@@ -40,7 +41,7 @@ export class KebabMenuComponent implements OnDestroy {
 
     this.menuItemSubscription.add(
       this.keyPresses.subscribe('Tab', 1, (event: KeyboardEvent) => {
-        if (event.repeat || event.type !== 'keydown') {
+        if (event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
           return;
         }
         if ( event.type === 'keydown') {
@@ -52,7 +53,7 @@ export class KebabMenuComponent implements OnDestroy {
 
     this.menuItemSubscription.add(
       this.keyPresses.subscribe('Enter', 1, (event: KeyboardEvent) => {
-        if (event.repeat || event.type !== 'keydown') {
+        if (event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
           return;
         }
         if ( event.type === 'keydown') {
@@ -90,7 +91,6 @@ export class KebabMenuComponent implements OnDestroy {
     if ( this.menuItems && newIndex >= 0 && newIndex < this.menuItems.length && this.menuItems.toArray()[newIndex]) {
         this.selectedIndex = newIndex;
     }
-
   }
 
   selectMenuItem() {
