@@ -1,7 +1,8 @@
-<div *ngFor="let item of screenData.actions"
+<div *ngFor="let item of screenData.actions; let i = index"
      mat-ripple
      responsive-class
      class="button"
+     [class.selected]="i === selectedIndex"
      (click)="buttonClick(item)">
   <app-icon [iconName]="item.icon" iconClass="md"></app-icon>
   <span>{{item.title}}</span>
