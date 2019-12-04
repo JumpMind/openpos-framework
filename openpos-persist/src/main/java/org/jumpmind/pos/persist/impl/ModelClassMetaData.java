@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
 
 public class ModelClassMetaData {
@@ -15,6 +16,7 @@ public class ModelClassMetaData {
     private String idxPrefix;
     private Map<String, FieldMetaData> entityIdFieldMetaDatas = new HashMap<>();
     private Map<String, FieldMetaData> entityFieldMetaDatas = new HashMap<>();
+    private List<Column> primaryKeyColumns = new ArrayList<Column>();
     
     public ModelClassMetaData() {
     }
@@ -22,6 +24,8 @@ public class ModelClassMetaData {
     public Table getTable() {
         return table;
     }
+
+    public List<Column> getPrimaryKeyColumns() { return primaryKeyColumns; }
 
     public void setTable(Table table) {
         this.table = table;
@@ -38,7 +42,7 @@ public class ModelClassMetaData {
     public Map<String, FieldMetaData> getEntityFieldMetaDatas() {
         return entityFieldMetaDatas;
     }
-    
+
     public Class<?> getClazz() {
         return clazz;
     }
@@ -53,6 +57,10 @@ public class ModelClassMetaData {
 
     public void addEntityFieldMetaData(String name, FieldMetaData fieldMetaData) {
         entityFieldMetaDatas.put(name, fieldMetaData);
+    }
+
+    public void addPrimaryKeyColumn(Column column) {
+        primaryKeyColumns.add(column);
     }
 
     public String getIdxPrefix() {return idxPrefix;}

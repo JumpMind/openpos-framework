@@ -234,7 +234,7 @@ public class DatabaseSchema {
         }
     }
 
-    public static ModelMetaData createMetaData(Class<?> clazz) {
+    public ModelMetaData createMetaData(Class<?> clazz) {
         List<ModelClassMetaData> list = new ArrayList<>();
 
         Class<?> entityClass = clazz;
@@ -279,7 +279,7 @@ public class DatabaseSchema {
         return metaData;
     }
 
-    private static void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
+    private void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
         boolean includeAllFields, List<Column> columns, List<Column> pkColumns, Map<String, IIndex> indices) {
 
         Field[] fields = clazz.getDeclaredFields();
@@ -289,12 +289,13 @@ public class DatabaseSchema {
             if (column != null && (includeAllFields || column.isPrimaryKey())) {
                 createIndex(field, column, indices, metaData.getIdxPrefix());
                 if (isPrimaryKey(field)) {
-                    metaData.addEntityIdFieldMetadata(field.getName(), new FieldMetaData(clazz,field));
+                    metaData.addEntityIdFieldMetadata(field.getName(), new FieldMetaData(clazz,field,column));
+                    metaData.addPrimaryKeyColumn(column);
                     pkColumns.add(column);
                 } else {
                     columns.add(column);
                 }
-                metaData.addEntityFieldMetaData(field.getName(), new FieldMetaData(clazz,field));
+                metaData.addEntityFieldMetaData(field.getName(), new FieldMetaData(clazz,field,column));
             }
             CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
             if (compositeDefAnnotation != null) {
@@ -331,16 +332,16 @@ public class DatabaseSchema {
         return false;
     }
 
-    protected static Column createColumn(Field field) {
+    protected Column createColumn(Field field) {
         Column dbCol = null;
         ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
         if (colAnnotation != null) {
             dbCol = new Column();
 
             if (!StringUtils.isEmpty(colAnnotation.name())) {
-                dbCol.setName(colAnnotation.name());
+                dbCol.setName(platform.alterCaseToMatchDatabaseDefaultCase(colAnnotation.name()));
             } else {
-                dbCol.setName(camelToSnakeCase(field.getName()));
+                dbCol.setName(platform.alterCaseToMatchDatabaseDefaultCase(camelToSnakeCase(field.getName())));
             }
 
             dbCol.setDescription(colAnnotation.description());

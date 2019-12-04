@@ -40,10 +40,9 @@ public class ModelWrapper {
     private AbstractModel model;
     
     private Map<String, Object> systemData;
-    
+
     private LinkedHashMap<String, Column> fieldsToColumns;
     private LinkedHashMap<String, Object> columnNamesToValues;
-    private List<Column> primaryKeyColumns;
     
     @SuppressWarnings("unchecked")
     public ModelWrapper(AbstractModel model, ModelMetaData modelMetaData) {
@@ -65,7 +64,6 @@ public class ModelWrapper {
     
     public void load() {
         fieldsToColumns = mapFieldsToColumns(model.getClass());
-        primaryKeyColumns = getPrimaryKeyColumns();
         columnNamesToValues = mapColumnNamesToValues();        
     }
     
@@ -144,35 +142,14 @@ public class ModelWrapper {
 
     protected void buildFieldColumnMap(LinkedHashMap<String, Column> fieldColumnMap, Class<?> clazz) {
 
-        Field[] fields = clazz.getDeclaredFields();
-        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(clazz);
         for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
-            Table table = classMetaData.getTable();
-            //for (int i = 0; i < fields.length; i++) {
-            for (int i = 0; i < propertyDescriptors.length; i++) {
-                //Field field = fields[i];
-                //String fieldName = fields[i].getName();
-                String propName = propertyDescriptors[i].getName();
-                Field field = null;
-                try {
-                    field = clazz.getDeclaredField(propName);
-                } catch (NoSuchFieldException ex) {
-                }
-                if (field != null && field.getAnnotation(CompositeDef.class) != null) {
-                    buildFieldColumnMap(fieldColumnMap, field.getType());
-                } else {
-                    Column column = table.getColumnWithName(DatabaseSchema.camelToSnakeCase(propName));
-                    if (column != null) {
-                        fieldsToColumns.put(propName, column);
-
-                    }
-                }
-            }
+            Map<String, FieldMetaData> fieldMetaDatas = classMetaData.getEntityFieldMetaDatas();
+            fieldMetaDatas.forEach((k,v)->fieldColumnMap.put(v.getField().getName(),v.getColumn()));
             if (ITaggedModel.class.isAssignableFrom(clazz)) {
-                Column[] columns = table.getColumns();
+                Column[] columns = classMetaData.getTable().getColumns();
                 for (Column column : columns) {
                     if (column.getName().toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
-                        fieldsToColumns.put(column.getName(), column);
+                        fieldColumnMap.put(column.getName(), column);
                     }
                 }
             }
@@ -413,19 +390,13 @@ public class ModelWrapper {
     }
 
     public List<Column> getPrimaryKeyColumns() {
-        List<Column> keys = new ArrayList<Column>(1);
-        for (Column column : fieldsToColumns.values()) {
-            if (column.isPrimaryKey()) {
-                keys.add(column);
-            }
-        }
-        return keys;
+        return modelMetaData.getModelClassMetaData().get(0).getPrimaryKeyColumns();
     }
     
     public boolean[] getNullKeys() {
-        boolean[] nullKeyValues = new boolean[primaryKeyColumns.size()];
+        boolean[] nullKeyValues = new boolean[getPrimaryKeyColumns().size()];
         int i = 0;
-        for (Column column : primaryKeyColumns) {
+        for (Column column : getPrimaryKeyColumns()) {
             nullKeyValues[i++] = columnNamesToValues.get(column.getName()) == null;
         }        
         return nullKeyValues;
@@ -453,7 +424,6 @@ public class ModelWrapper {
 
     public Column[] getColumns(Table table) {
         List<Column> columns = new ArrayList<>();
-        
         for (Column modelColumn : fieldsToColumns.values()) {
             for (Column tableColumn : table.getColumns()) {                
                 if (modelColumn.equals(tableColumn)) {
