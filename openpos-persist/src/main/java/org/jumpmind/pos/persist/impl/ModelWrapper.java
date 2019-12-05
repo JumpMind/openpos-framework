@@ -292,7 +292,10 @@ public class ModelWrapper {
                 ColumnDef xRefColumnDef = xRefField.getDeclaredAnnotation(ColumnDef.class);
                 String modelCurrencyCode = (String)getFieldValue(model,xRefField.getName());
                 if (StringUtils.isEmpty(modelCurrencyCode)) {
-                    xRefField.set(model, isoCurrencyCode);
+                    try {
+                        xRefField.set(model, isoCurrencyCode);
+                    } catch(Exception ex) {
+                    }
                 } else if (!StringUtils.equals(isoCurrencyCode, modelCurrencyCode)) {
                     throw new PersistException("Money field " + fieldName + " has a crossReference= " + getXrefName(fieldName)
                             + " currency field, but the currency code does not match. Currency code on Money: " 
