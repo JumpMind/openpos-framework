@@ -18,7 +18,14 @@ export class ArrowTabDirective implements OnDestroy {
             if ( event.repeat || event.type !== 'keydown' ) {
                 return;
             }
-            const index = this.buttons.toArray().map(v => v.nativeElement).indexOf(document.activeElement);
+
+            let index = -1;
+            const activeButton = this.buttons.toArray().filter(v =>
+                v.nativeElement === document.activeElement || v.nativeElement.contains(document.activeElement));
+            if (activeButton && activeButton.length > 0) {
+                index = this.buttons.toArray().indexOf(activeButton[0]);
+            }
+
             let newIndex = index - 1;
             while (newIndex > 0 && this.buttons.toArray()[newIndex].nativeElement.disabled) {
                 newIndex--;
@@ -26,13 +33,21 @@ export class ArrowTabDirective implements OnDestroy {
             if ( newIndex >= 0) {
                 this.buttons.toArray()[newIndex].nativeElement.focus();
             }
+
         });
 
         this._subscription.add( keyPresses.subscribe( 'ArrowDown', 1, (event: KeyboardEvent) => {
             if ( event.repeat || event.type !== 'keydown' ) {
                 return;
             }
-            const index = this.buttons.toArray().map(v => v.nativeElement).indexOf(document.activeElement);
+
+            let index = -1;
+            const activeButton = this.buttons.toArray().filter(v =>
+                v.nativeElement === document.activeElement || v.nativeElement.contains(document.activeElement));
+            if (activeButton && activeButton.length > 0) {
+                index = this.buttons.toArray().indexOf(activeButton[0]);
+            }
+
             let newIndex = index + 1;
             while (newIndex < this.buttons.length - 1 && this.buttons.toArray()[newIndex].nativeElement.disabled) {
                 newIndex++;
