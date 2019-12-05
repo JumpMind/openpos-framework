@@ -15,6 +15,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import lombok.Delegate;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
@@ -233,7 +234,7 @@ public class DatabaseSchema {
         }
     }
 
-    public static ModelMetaData createMetaData(Class<?> clazz) {
+    public ModelMetaData createMetaData(Class<?> clazz) {
         List<ModelClassMetaData> list = new ArrayList<>();
 
         Class<?> entityClass = clazz;
@@ -253,55 +254,61 @@ public class DatabaseSchema {
                 Class<?> currentClass = entityClass;
                 boolean includeAllFields = true;
                 while (currentClass != null && currentClass != Object.class) {
-                    Field[] fields = currentClass.getDeclaredFields();
-                    for (Field field : fields) {
-                        field.setAccessible(true);
-                        Column column = createColumn(field);
-                        if (column != null && (includeAllFields || column.isPrimaryKey())) {
-                            createIndex(field, column, indices);
-                            if (isPrimaryKey(field)) {
-                                meta.addEntityIdField(field.getName(), field);
-                                pkColumns.add(0, column);
-                            } else {
-                                columns.add(column);
-                            }
-                            meta.addEntityField(field.getName(), field);
-                        }
-                    }
+                    createClassFieldsMetadata(currentClass, meta,includeAllFields,columns,pkColumns,indices);
                     currentClass = currentClass.getSuperclass();
                     includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
                 }
-
                 for (Column column : pkColumns) {
                     dbTable.addColumn(column);
                 }
-
                 for (Column column : columns) {
                     dbTable.addColumn(column);
                 }
-
                 for (IIndex index : indices.values()) {
                     dbTable.addIndex(index);
                 }
-
                 meta.setTable(dbTable);
                 modelClassValidator.validate(meta);
                 list.add(meta);
-
             }
             entityClass = entityClass.getSuperclass();
         }
-
         ModelMetaData metaData = new ModelMetaData();
         metaData.setModelClassMetaData(list);
         metaData.init();
         return metaData;
     }
 
-    private static void createIndex(Field field, Column column, Map<String, IIndex> indices) {
+    private void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
+        boolean includeAllFields, List<Column> columns, List<Column> pkColumns, Map<String, IIndex> indices) {
+
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            Column column = createColumn(field);
+            if (column != null && (includeAllFields || column.isPrimaryKey())) {
+                createIndex(field, column, indices, metaData.getIdxPrefix());
+                if (isPrimaryKey(field)) {
+                    metaData.addEntityIdFieldMetadata(field.getName(), new FieldMetaData(clazz,field,column));
+                    metaData.addPrimaryKeyColumn(column);
+                    pkColumns.add(column);
+                } else {
+                    columns.add(column);
+                }
+                metaData.addEntityFieldMetaData(field.getName(), new FieldMetaData(clazz,field,column));
+            }
+            CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
+            if (compositeDefAnnotation != null) {
+                metaData.setIdxPrefix(compositeDefAnnotation.prefix());
+                createClassFieldsMetadata(field.getType(),metaData,includeAllFields,columns,pkColumns,indices);
+            }
+        }
+    }
+
+    private static void createIndex(Field field, Column column, Map<String, IIndex> indices, String idxPrefix) {
         IndexDef colAnnotation = field.getAnnotation(IndexDef.class);
         if (colAnnotation != null) {
-            String indexName = colAnnotation.name();
+            String indexName = idxPrefix + "_" + colAnnotation.name();
             boolean unique = colAnnotation.unique();
             indexName += (unique ? "_unq" : "");
             IIndex index = indices.get(indexName);
@@ -325,16 +332,16 @@ public class DatabaseSchema {
         return false;
     }
 
-    protected static Column createColumn(Field field) {
+    protected Column createColumn(Field field) {
         Column dbCol = null;
         ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
         if (colAnnotation != null) {
             dbCol = new Column();
 
             if (!StringUtils.isEmpty(colAnnotation.name())) {
-                dbCol.setName(colAnnotation.name());
+                dbCol.setName(platform.alterCaseToMatchDatabaseDefaultCase(colAnnotation.name()));
             } else {
-                dbCol.setName(camelToSnakeCase(field.getName()));
+                dbCol.setName(platform.alterCaseToMatchDatabaseDefaultCase(camelToSnakeCase(field.getName())));
             }
 
             dbCol.setDescription(colAnnotation.description());
@@ -370,8 +377,9 @@ public class DatabaseSchema {
     public Map<String, String> getEntityIdColumnsToFields(Class<?> entityClass) {
         @SuppressWarnings({ "rawtypes", "unchecked" })
         Map<String, String> entityIdColumnsToFields = new CaseInsensitiveMap();
-        List<Field> fields = getEntityIdFields(entityClass);
-        for (Field field : fields) {
+        List<FieldMetaData> fields = getEntityIdFields(entityClass);
+        for (FieldMetaData fieldMetaData : fields) {
+            Field field = fieldMetaData.getField();
             ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
             if (colAnnotation != null) {
                 String columnName = null;
@@ -390,17 +398,17 @@ public class DatabaseSchema {
     public Map<String, String> getColumnsToEntityFields(Class<?> entityClass) {
         @SuppressWarnings({ "rawtypes", "unchecked" })
         Map<String, String> entityIdColumnsToFields = new CaseInsensitiveMap();
-        List<Field> fields = getEntityFields(entityClass);
-        for (Field field : fields) {
-            org.jumpmind.pos.persist.ColumnDef colAnnotation = field.getAnnotation(org.jumpmind.pos.persist.ColumnDef.class);
+        List<FieldMetaData> fields = getEntityFields(entityClass);
+        for (FieldMetaData field : fields) {
+            org.jumpmind.pos.persist.ColumnDef colAnnotation = field.getField().getAnnotation(org.jumpmind.pos.persist.ColumnDef.class);
             if (colAnnotation != null) {
                 String columnName = null;
                 if (!StringUtils.isEmpty(colAnnotation.name())) {
                     columnName = colAnnotation.name();
                 } else {
-                    columnName = camelToSnakeCase(field.getName());
+                    columnName = camelToSnakeCase(field.getField().getName());
                 }
-                entityIdColumnsToFields.put(columnName, field.getName());
+                entityIdColumnsToFields.put(columnName, field.getField().getName());
             }
         }
 
@@ -410,32 +418,32 @@ public class DatabaseSchema {
     public Map<String, String> getEntityFieldsToColumns(Class<?> entityClass) {
         @SuppressWarnings({ "rawtypes", "unchecked" })
         Map<String, String> entityFieldsToColumns = new CaseInsensitiveMap();
-        List<Field> fields = getEntityFields(entityClass);
-        for (Field field : fields) {
-            org.jumpmind.pos.persist.ColumnDef colAnnotation = field.getAnnotation(org.jumpmind.pos.persist.ColumnDef.class);
+        List<FieldMetaData> fields = getEntityFields(entityClass);
+        for (FieldMetaData field : fields) {
+            org.jumpmind.pos.persist.ColumnDef colAnnotation = field.getField().getAnnotation(org.jumpmind.pos.persist.ColumnDef.class);
             if (colAnnotation != null) {
                 String columnName = null;
                 if (!StringUtils.isEmpty(colAnnotation.name())) {
                     columnName = colAnnotation.name();
                 } else {
-                    columnName = camelToSnakeCase(field.getName());
+                    columnName = camelToSnakeCase(field.getField().getName());
                 }
-                entityFieldsToColumns.put(field.getName(), columnName);
+                entityFieldsToColumns.put(field.getField().getName(), columnName);
             }
         }
         return entityFieldsToColumns;
     }
 
-    protected List<Field> getEntityIdFields(Class<?> entityClass) {
+    protected List<FieldMetaData> getEntityIdFields(Class<?> entityClass) {
         ModelMetaData modelMetaData = classToModelMetaData.get(entityClass);
         ModelClassMetaData meta = modelMetaData != null ? modelMetaData.getModelClassMetaData().get(0) : null;
-        return meta != null ? new ArrayList(meta.getEntityIdFields().values()) : Collections.emptyList();
+        return meta != null ? new ArrayList(meta.getEntityIdFieldMetaDatas().values()) : Collections.emptyList();
     }
 
-    protected List<Field> getEntityFields(Class<?> entityClass) {
+    protected List<FieldMetaData> getEntityFields(Class<?> entityClass) {
         ModelMetaData modelMetaData = classToModelMetaData.get(entityClass);
         ModelClassMetaData meta = modelMetaData != null ? modelMetaData.getModelClassMetaData().get(0) : null;
-        return meta != null ?  new ArrayList(meta.getEntityFields().values()) : Collections.emptyList();
+        return meta != null ?  new ArrayList(meta.getEntityFieldMetaDatas().values()) : Collections.emptyList();
     }
 
     protected static String getDefaultSize(Field field, Column column) {
@@ -476,18 +484,6 @@ public class DatabaseSchema {
         return classToModelMetaData.get(modelClass);
     }
 
-    // public ModelClassMetaData getModelMetaData(Class<?> entityClass, Table
-    // table) {
-    // List<ModelClassMetaData> metas =
-    // for (ModelClassMetaData meta : metas) {
-    // if (meta.getTable().equals(table)) {
-    // return meta;
-    // }
-    // }
-    //
-    // return null;
-    // }
-
     private static int getDefaultType(Field field) {
         if (field.getType().isAssignableFrom(String.class) || field.getType().isEnum() || ITypeCode.class.isAssignableFrom(field.getType())) {
             return Types.VARCHAR;
@@ -523,6 +519,4 @@ public class DatabaseSchema {
 
         return buff.toString().toLowerCase();
     }
-
-
 }
