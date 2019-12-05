@@ -2,7 +2,7 @@ import { SessionService } from '../services/session.service';
 import { HelpTextService } from './help-text.service';
 import { TestBed } from '@angular/core/testing';
 import { BehaviorSubject } from 'rxjs';
-import { HelpText } from 'openpos-client-core-lib/lib/core/interfaces/help-text.interface';
+import { HelpText } from '../interfaces/help-text.interface';
 
 describe('HelpTextService', () => {
 
