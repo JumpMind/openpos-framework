@@ -1,15 +1,18 @@
 package org.jumpmind.pos.translate;
 
 import java.io.Serializable;
+import java.util.Map;
 import java.util.Properties;
 
 import org.jumpmind.pos.core.device.IDeviceMessageDispatcher;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 
 public interface ITranslationManagerSubscriber extends IDeviceMessageDispatcher, Serializable {
 
     public void showScreen(UIMessage screen);
+    public void showScreen(UIMessage screen, Map<String,UIDataMessageProvider<?>> dataMessageProviderMap);
 
     public void doAction(Action action);
     

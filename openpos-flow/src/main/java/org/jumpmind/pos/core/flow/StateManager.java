@@ -415,7 +415,7 @@ public class StateManager implements IStateManager {
     @Override
     public void refreshScreen() {
 
-        Map<String, UIDataMessageProvider> dataProviders = applicationState.getDataMessageProviderMap();
+        Map<String, UIDataMessageProvider<?>> dataProviders = applicationState.getDataMessageProviderMap();
         uiDataMessageProviderService.resetProviders(applicationState);
 
         /*
@@ -819,7 +819,7 @@ public class StateManager implements IStateManager {
 
 
     @Override
-    public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider> dataMessageProviderMap) {
+    public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap) {
         keepAlive();
 
         if (applicationState.getCurrentContext() == null) {
