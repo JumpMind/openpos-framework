@@ -222,8 +222,7 @@ public class ModelWrapper {
             fieldValue = PropertyUtils.getProperty(model, fieldName);
         } catch (NoSuchMethodException |
                 IllegalAccessException | InvocationTargetException ex) {
-            log.warn("blah");
-            //throw new PersistException("Failed to getFieldValue on " + model + "fieldName " + fieldName);
+            throw new PersistException("Failed to getFieldValue on " + model + "fieldName " + fieldName);
         }
         return fieldValue;
     }
