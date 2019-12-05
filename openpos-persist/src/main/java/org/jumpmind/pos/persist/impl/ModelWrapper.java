@@ -292,18 +292,12 @@ public class ModelWrapper {
                 ColumnDef xRefColumnDef = xRefField.getDeclaredAnnotation(ColumnDef.class);
                 String modelCurrencyCode = (String)getFieldValue(model,xRefField.getName());
                 if (StringUtils.isEmpty(modelCurrencyCode)) {
-                    //TODO: CLEAN THIS CRAP UP
-                    try {
-                        xRefField.set(model, isoCurrencyCode);
-                    } catch(Exception ex) {
-
-                    }
+                    xRefField.set(model, isoCurrencyCode);
                 } else if (!StringUtils.equals(isoCurrencyCode, modelCurrencyCode)) {
                     throw new PersistException("Money field " + fieldName + " has a crossReference= " + getXrefName(fieldName)
                             + " currency field, but the currency code does not match. Currency code on Money: " 
                             + isoCurrencyCode + " currency code on model " + modelCurrencyCode + ". Model: " + model);                
                 }
-                
                 columnNamesToObjectValues.put(moneyDecimalColumn.getName(), decimal);
                 columnNamesToObjectValues.put(xRefColumnDef.name() != null ? xRefColumnDef.name() : 
                     DatabaseSchema.camelToSnakeCase(xRefField.getName()), isoCurrencyCode);
@@ -311,7 +305,6 @@ public class ModelWrapper {
                 throw new PersistException("Failed to set money field " + fieldName  
                         + " on model " + model);                
             }
-            
             return decimal;
         } else {
             return null;
@@ -319,7 +312,6 @@ public class ModelWrapper {
     }
     
     protected String getXrefName(String fieldName) {
-
         Field field = getField(fieldName);
         ColumnDef mainColumnDef = field.getDeclaredAnnotation(ColumnDef.class);
         String crossReference = mainColumnDef.crossReference();
@@ -418,7 +410,6 @@ public class ModelWrapper {
                 }
             }
         }
-        
         return columns.toArray(new Column[columns.size()]);
     }
 }
