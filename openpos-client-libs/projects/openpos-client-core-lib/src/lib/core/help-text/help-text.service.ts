@@ -3,13 +3,15 @@ import { BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import { IMessageHandler } from '../interfaces/message-handler.interface';
 import { SessionService } from '../services/session.service';
 import { map, distinctUntilChanged } from 'rxjs/operators';
+import { HelpText } from '../interfaces/help-text.interface';
 
 @Injectable({
     providedIn: 'root',
   })
 export class HelpTextService implements IMessageHandler<any> {
     private opened$: BehaviorSubject<boolean>;
-    private text$: BehaviorSubject<string>;
+    private text$: BehaviorSubject<HelpText>;
+    private title$: BehaviorSubject<string>;
     private hasText$: Observable<boolean>;
     private initialized$: BehaviorSubject<boolean>;
     private available$: Observable<boolean>;
@@ -17,7 +19,7 @@ export class HelpTextService implements IMessageHandler<any> {
 
     constructor(private sessionService: SessionService) {
         this.opened$ = new BehaviorSubject<boolean>(false);
-        this.text$ = new BehaviorSubject<string>(null);
+        this.text$ = new BehaviorSubject<HelpText>(null);
         this.initialized$ = new BehaviorSubject<boolean>(false);
         this.hasText$ = this.text$.pipe(map(text => !!text));
         this.available$ = combineLatest(this.hasText$, this.initialized$, (one, two) => one && two);
@@ -26,7 +28,7 @@ export class HelpTextService implements IMessageHandler<any> {
 
     handle(message: any) {
         if (!!message.helpText && !!message.helpText.text) {
-            this.text$.next(message.helpText.text);
+            this.text$.next(message.helpText);
         }
         else if (message.screenType !== 'NoOp') {
             this.text$.next(null);
@@ -54,7 +56,7 @@ export class HelpTextService implements IMessageHandler<any> {
         return this.opened$;
     }
 
-    public getText() : Observable<string> {
+    public getHelpText() : Observable<HelpText> {
         return this.text$.pipe(distinctUntilChanged());
     }
 

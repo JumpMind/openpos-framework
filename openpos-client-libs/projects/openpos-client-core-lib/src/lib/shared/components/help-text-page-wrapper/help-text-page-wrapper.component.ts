@@ -71,8 +71,8 @@ export class HelpTextPageWrapperComponent implements OnInit, AfterViewInit, OnDe
         this.currentTheme = theme;
     }
 
-    getText() {
-        return this.helpTextService.getText();
+    getHelpText() {
+        return this.helpTextService.getHelpText();
     }
 
     close() {
