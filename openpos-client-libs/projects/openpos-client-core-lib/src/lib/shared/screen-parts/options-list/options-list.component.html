@@ -8,17 +8,19 @@
         </button>
     </div>
 
-    <div *ngIf="options && options.length > 0">
+    <div *ngIf="options && options.length > 0" appArrowTab>
         <app-option-button *ngFor="let o of options; let i = index" 
+            appArrowTabItem
+            [attr.tabindex]="i"
             [disabled]="!o.enabled"
-            [selected]="i === selectedIndex"
             [optionTitle]="o.title" 
             [optionIcon]="o.icon" 
             [optionSize]="optionListSizeClass"
             (click)="onOptionClick(o)">
         </app-option-button>
         <app-option-button *ngIf="overflowOptions && overflowOptions.length > 0 && screenData.overflowButton"
-            [selected]="overflowSelected"
+            appArrowTabItem
+            [attr.tabindex]="options.length"
             [optionTitle]="screenData.overflowButton.title"
             [optionIcon]="screenData.overflowButton.icon"
             [optionSize]="optionListSizeClass"
