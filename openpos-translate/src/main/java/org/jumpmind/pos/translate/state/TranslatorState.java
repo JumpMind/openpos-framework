@@ -3,6 +3,7 @@ package org.jumpmind.pos.translate.state;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -21,6 +22,7 @@ import org.jumpmind.pos.core.flow.ScopeType;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.service.IDeviceService;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.translate.ITranslationManager;
 import org.jumpmind.pos.translate.ITranslationManagerSubscriber;
@@ -82,6 +84,11 @@ public class TranslatorState {
                 @Override
                 public void showScreen(UIMessage screen) {
                     stateManager.showScreen(screen);
+                }
+                
+                @Override
+                public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap) {
+                    stateManager.showScreen(screen, dataMessageProviderMap);
                 }
 
                 @Override
@@ -171,6 +178,7 @@ public class TranslatorState {
                     }
                     return response;
                 }
+
             };
             translationManager.setTranslationManagerSubscriber(subscriber);
             return true;

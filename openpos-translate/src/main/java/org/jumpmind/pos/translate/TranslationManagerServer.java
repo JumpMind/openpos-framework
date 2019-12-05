@@ -13,6 +13,7 @@ import org.jumpmind.pos.core.flow.StateManagerContainer;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.POSSessionInfo;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.IUIDataMessageProviderContainer;
 import org.jumpmind.pos.core.ui.message.NoOpUIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.translate.InteractionMacro.AbortMacro;
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-@Component
+@Component("translationManager")
 public class TranslationManagerServer implements ITranslationManager, IDeviceMessageDispatcher {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
@@ -247,7 +248,6 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
 
                     if (newTranslator != null) {
                         newTranslator.setPosSessionInfo(posSessionInfo);
-                        stateManager.performInjections(newTranslator);
                         stateManager.markAsBusy();
                     }
                     if (newTranslator instanceof AbstractUIMessageTranslator<?>) {
@@ -256,7 +256,11 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                         if(message.getId() == null){
                             message.setId(legacyScreen.getSpecName());
                         }
-                        subscriber.showScreen(message);
+                        subscriber.showScreen(
+                            message, 
+                            newTranslator instanceof IUIDataMessageProviderContainer ? 
+                            ((IUIDataMessageProviderContainer) newTranslator).getDataMessageProviderMap() : null
+                        );
                         screenShown = true;
                     }
 
