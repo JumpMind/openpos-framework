@@ -2,12 +2,20 @@ package org.jumpmind.pos.translate;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.core.ModeConstants;
+import org.jumpmind.pos.core.flow.IStateManager;
+import org.jumpmind.pos.core.flow.In;
+import org.jumpmind.pos.core.flow.ScopeType;
+import org.jumpmind.pos.core.flow.StateManagerContainer;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.message.DynamicFormUIMessage;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.util.*;
+
+import javax.annotation.PostConstruct;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
@@ -32,16 +40,45 @@ public abstract class AbstractLegacyUIMessageTranslator<T extends UIMessage> ext
 
     private boolean cancelAsBack;
 
+    @Autowired
+    protected ApplicationContext appContext;
+
+    @Autowired
+    protected StateManagerContainer stateManagerContainer;
+
+    @In(scope = ScopeType.Device)
+    protected IStateManager stateManager;
+
     public AbstractLegacyUIMessageTranslator(ILegacyScreen legacyScreen, Class<T> screenClass) {
-        super(legacyScreen, screenClass);
+        this(legacyScreen, screenClass, null);
     }
 
+    public AbstractLegacyUIMessageTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, Properties properties) {
+        super(legacyScreen, screenClass);
+        this.properties = properties;
+    }
+
+    /**
+     * @deprecated Since Openpos 0.7, Translators have access to the Spring context
+     * and the StateManager via injection.  This makes it no longer necessary to 
+     * pass in the appId as an argument.
+     */
+    @Deprecated
     public AbstractLegacyUIMessageTranslator(ILegacyScreen legacyScreen, Class<T> screenClass, String appId, Properties properties) {
         super(legacyScreen, screenClass);
         this.appId = appId;
         this.properties = properties;
     }
 
+    @PostConstruct
+    private void init() {
+        this.appId = this.stateManager.getAppId();
+    }
+
+    public String getAppId() {
+        return this.appId;
+    }
+    
     protected boolean isPOS() {
         return ModeConstants.POS.equals(appId);
     }
