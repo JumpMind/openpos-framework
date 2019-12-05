@@ -11,9 +11,6 @@
             &[disabled] {
                 border-color: $disabled-border;
             }
-            &.selected {
-                background-color: $focused-color;
-            }
         }
     }
 }

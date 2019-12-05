@@ -1,11 +1,11 @@
 <button responsive-class
+    #button
     mat-flat-button
     [disabled]="disabled"
     (click)="clickFn()"
     [type]="inputType"
     color=primary-inverse
     class="option-item"
-    [class.selected]="selected"
 >
     <app-icon [iconName]="optionIcon"
         [iconClass]="optionSize"
