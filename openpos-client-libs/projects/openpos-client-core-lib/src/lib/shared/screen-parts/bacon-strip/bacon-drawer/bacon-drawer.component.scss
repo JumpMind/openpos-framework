@@ -2,11 +2,17 @@
 @import "../../../../styles/mixins/typography";
 
 .button{
-  @extend %clickable-sub-element;
   display: grid;
+  width: 100%;
+  @extend %clickable-sub-element;
+}
+
+.button-content {
   grid-template-columns: auto 1fr auto;
+  width: 100%;
   align-items: center;
-  @extend %clickable-spaced-content;
+  justify-items: left;
   @extend %text-md;
+  @extend %clickable-spaced-content;
 }
 

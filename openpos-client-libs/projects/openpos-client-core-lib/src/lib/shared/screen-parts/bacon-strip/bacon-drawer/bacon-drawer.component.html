@@ -1,9 +1,13 @@
-<div *ngFor="let item of screenData.actions; let i = index"
-     mat-ripple
-     responsive-class
-     class="button"
-     [class.selected]="i === selectedIndex"
-     (click)="buttonClick(item)">
-  <app-icon [iconName]="item.icon" iconClass="md"></app-icon>
-  <span>{{item.title}}</span>
-</div>
+<aside appArrowTab>
+  <button *ngFor="let item of screenData.actions; let i = index"
+    appArrowTabItem
+    mat-button
+    responsive-class
+    class="button"
+    (click)="buttonClick(item)">
+    <div responsive-class class="button-content">
+      <app-icon [iconName]="item.icon" iconClass="md"></app-icon>
+      <span>{{item.title}}</span>
+    </div>
+  </button>
+</aside>

@@ -27,9 +27,6 @@
       &:hover{
         background-color: map_get($background, hover);
       }
-      &.selected {
-        background-color:  map-get($background, focused-button);
-      }
     }
   }
 }
