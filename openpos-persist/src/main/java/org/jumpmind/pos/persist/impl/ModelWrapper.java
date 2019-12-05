@@ -61,12 +61,15 @@ public class ModelWrapper {
             systemData = new HashMap<>();
         } 
     }
-    
+
     public void load() {
         fieldsToColumns = mapFieldsToColumns(model.getClass());
-        columnNamesToValues = mapColumnNamesToValues();        
     }
-    
+
+    public void loadValues() {
+        columnNamesToValues = mapColumnNamesToValues();
+    }
+
     public void put(String key, Object value) {
         systemData.put(key, value);
     }
@@ -217,26 +220,10 @@ public class ModelWrapper {
         Class<?> clazz = modelClass.getClass();
         try {
             fieldValue = PropertyUtils.getProperty(model, fieldName);
-            if (fieldValue == null) {
-                Field field = clazz.getDeclaredField(fieldName);
-            }
-        } catch (NoSuchMethodException | NoSuchFieldException |
+        } catch (NoSuchMethodException |
                 IllegalAccessException | InvocationTargetException ex) {
-
-            Field[] fields = clazz.getDeclaredFields();
-            for (Field field : fields) {
-                CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
-                if (compositeDefAnnotation != null) {
-                    try {
-                        //modelClass.getClass().getDeclaredField(field.getName())
-                        fieldValue = getFieldValue(
-                                PropertyUtils.getProperty(model, field.getName()), fieldName);
-                        break;
-                    } catch (Exception e) {
-                        log.error(String.format("Unable to get field value %s from class %s",fieldName,modelClass.getClass().getName()));
-                    }
-                }
-            }
+            log.warn("blah");
+            //throw new PersistException("Failed to getFieldValue on " + model + "fieldName " + fieldName);
         }
         return fieldValue;
     }
