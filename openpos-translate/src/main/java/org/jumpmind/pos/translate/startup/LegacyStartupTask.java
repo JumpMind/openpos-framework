@@ -16,6 +16,6 @@ public class LegacyStartupTask extends AbstractStartupTask {
 
     @Override
     protected void doTask() throws Exception {
-        legacyStartupService.startPreviouslyStarted();
+        legacyStartupService.start();
     }
 }
