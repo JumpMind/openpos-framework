@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.screeninterceptor;
 
+import java.text.MessageFormat;
 import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.regex.Matcher;
@@ -16,6 +17,25 @@ public abstract class AbstractResourceLookupPropertyStrategy<T extends Message> 
 	@Autowired
 	IResourceLookupService lookupService;
 	
+	/**
+	 * If the given {@code property} parameter starts with a '{', this method assumes
+	 * that the {@code property} argument is a JSON string built by the {@link ResourceLookupStringBuilder}.
+	 * Any optional parameters and/or indexed arguments in the deserialized {@code property} argument (of type {@code ResourceLookupStringBuilder})
+	 * are then substituted with their values (which are also provided via the deserialized {@code ResourceLookupStringBuilder}).
+	 * <br/><br/>
+	 * For example, a {@code property} value of:
+	 * <pre>
+	 *     {"key":"some.property","group":"pos","parameters":{"variable1":"value1"},"indexedArgs":["abc"]}
+	 * </pre>
+	 * 
+	 * Would result in a lookup being done for the property named {@code some.property} in the locale specific version of the
+	 * {@code pos_<locale>.properties} (where {@code <locale>} could be 'en', for example). If
+     * <pre>
+     *     some.property=String with {0} and {{variable1}}
+     * </pre>
+     * then the value returned would be {@code String with abc and value1}
+     * 
+	 */
 	@Override
 	public Object doStrategy(String appId, String deviceId, Object property, Class<?> clazz, T message, Map<String, Object> screenContext) {
 		if( String.class.equals(clazz)) {
@@ -29,6 +49,10 @@ public abstract class AbstractResourceLookupPropertyStrategy<T extends Message> 
 					String newValue = originalValue;
 					if(lookupObject.getParameters() != null) {
 						newValue = lookupObject.getParameters().keySet().stream().reduce( newValue, (acc, key) -> acc.replace("{{" + key + "}}", lookupObject.getParameters().get(key)));
+					} 
+					if (lookupObject.getIndexedArgs() != null) {
+					    MessageFormat fmt = new MessageFormat(newValue);
+					    newValue = fmt.format(lookupObject.getIndexedArgs());
 					}
 					
 					// Also check for references to properties that are defined within

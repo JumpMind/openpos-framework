@@ -85,7 +85,33 @@ public class ResourceLookupScreenPropertyStrategyTest {
         // lookup service to be used to resolve value of 'variable1'
         String json = new ResourceLookupStringBuilder("some.property").toJson();
         
-        Object result = this.testedStrategy.doStrategy("pos", "12345-11", json, String.class, null, null);
+        this.testedStrategy.doStrategy("pos", "12345-11", json, String.class, null, null);
+    }
+    
+    @Test
+    public void testVariableSubstitutionWithIndexedArg() {
+        when(lookupService.getString("pos", "12345-11", "common", "some.property")).thenReturn("String with {0}");
+        String json = new ResourceLookupStringBuilder("some.property").addIndexedArg("a random value").toJson();
+        String result = this.testedStrategy.doStrategy("pos", "12345-11", json, String.class, null, null).toString();
+        assertEquals(result, "String with a random value");
+    }
+
+    @Test
+    public void testVariableSubstitutionWithMultipleIndexedArgs() {
+        when(lookupService.getString("pos", "12345-11", "common", "some.property")).thenReturn("String with {0} and {1}");
+        String json = new ResourceLookupStringBuilder("some.property").addIndexedArgs("b", "c").toJson();
+        String result = this.testedStrategy.doStrategy("pos", "12345-11", json, String.class, null, null).toString();
+        assertEquals(result, "String with b and c");
+    }
+
+    @Test
+    public void testVariableSubstitutionWithIndexedAndNamedArgs() {
+        when(lookupService.getString("pos", "12345-11", "common", "some.property")).thenReturn("String with {0} and {1} and {{variable1}}");
+        when(lookupService.getString("pos", "12345-11", "common", "variable1")).thenReturn("value1");
+
+        String json = new ResourceLookupStringBuilder("some.property").addParameter("variable1", "value1").addIndexedArgs("b", "c").toJson();
+        String result = this.testedStrategy.doStrategy("pos", "12345-11", json, String.class, null, null).toString();
+        assertEquals(result, "String with b and c and value1");
     }
     
 }
