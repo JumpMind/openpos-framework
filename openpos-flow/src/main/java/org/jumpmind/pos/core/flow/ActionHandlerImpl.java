@@ -94,4 +94,12 @@ public class ActionHandlerImpl {
     public void setBeforeActionService(IBeforeActionService beforeActionService) {
         this.beforeActionService = beforeActionService;
     }
+
+    public ActionHandlerHelper getActionHandlerHelper() {
+        return helper;
+    }
+
+    public void setActionHandlerHelper(ActionHandlerHelper actionHandlerHelper) {
+        this.helper = actionHandlerHelper;
+    }
 }

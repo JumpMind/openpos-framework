@@ -56,6 +56,7 @@ public class BeforeActionStateLifeCycleServiceIT {
         TestUtil.setField(stateManager, "localeMessageFactory", localeMessageFactory);
         
         ActionHandlerImpl actionHandler = new ActionHandlerImpl();
+        actionHandler.setActionHandlerHelper(new ActionHandlerHelper());
         actionHandler.setBeforeActionService(new BeforeActionStateLifecycleService());
         
         stateManager.setInitialFlowConfig(config);
