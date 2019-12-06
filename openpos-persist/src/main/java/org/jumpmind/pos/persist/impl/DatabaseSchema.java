@@ -156,7 +156,7 @@ public class DatabaseSchema {
         Set<Table> tables = new TreeSet<>();
         for (Class<?> entityClass : entityClasses) {
             //List<ModelClassMetaData> metas = createMetaDatas(entityClass);
-            ModelMetaData modelMetaData = createMetaData(entityClass);
+            ModelMetaData modelMetaData = createMetaData(entityClass, platform);
             classToModelMetaData.put(entityClass, modelMetaData);
             for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
                 validateTable(tablePrefix, meta.getTable());
@@ -183,7 +183,7 @@ public class DatabaseSchema {
             }
             Field[] fields = extensionClass.getDeclaredFields();
             for (Field field : fields) {
-                meta.getTable().addColumn(createColumn(field));
+                meta.getTable().addColumn(createColumn(field, platform));
             }
         }
     }
@@ -230,13 +230,16 @@ public class DatabaseSchema {
     protected void extendTable(Table dbTable, Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            dbTable.addColumn(createColumn(field));
+            dbTable.addColumn(createColumn(field, platform));
         }
     }
 
-    public ModelMetaData createMetaData(Class<?> clazz) {
-        List<ModelClassMetaData> list = new ArrayList<>();
+    public static ModelMetaData createMetaData(Class<?> clazz) {
+        return createMetaData(clazz, null);
+    }
 
+    public static ModelMetaData createMetaData(Class<?> clazz, IDatabasePlatform databasePlatform) {
+        List<ModelClassMetaData> list = new ArrayList<>();
         Class<?> entityClass = clazz;
         boolean ignoreSuperClasses = false;
         while (entityClass != null && entityClass != Object.class) {
@@ -254,7 +257,7 @@ public class DatabaseSchema {
                 Class<?> currentClass = entityClass;
                 boolean includeAllFields = true;
                 while (currentClass != null && currentClass != Object.class) {
-                    createClassFieldsMetadata(currentClass, meta,includeAllFields,columns,pkColumns,indices);
+                    createClassFieldsMetadata(currentClass, meta,includeAllFields,columns,pkColumns,indices, databasePlatform);
                     currentClass = currentClass.getSuperclass();
                     includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
                 }
@@ -279,13 +282,13 @@ public class DatabaseSchema {
         return metaData;
     }
 
-    private void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
-        boolean includeAllFields, List<Column> columns, List<Column> pkColumns, Map<String, IIndex> indices) {
+    private static void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
+        boolean includeAllFields, List<Column> columns, List<Column> pkColumns, Map<String, IIndex> indices, IDatabasePlatform platform) {
 
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            Column column = createColumn(field);
+            Column column = createColumn(field, platform);
             if (column != null && (includeAllFields || column.isPrimaryKey())) {
                 createIndex(field, column, indices, metaData.getIdxPrefix());
                 if (isPrimaryKey(field)) {
@@ -300,7 +303,7 @@ public class DatabaseSchema {
             CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
             if (compositeDefAnnotation != null) {
                 metaData.setIdxPrefix(compositeDefAnnotation.prefix());
-                createClassFieldsMetadata(field.getType(),metaData,includeAllFields,columns,pkColumns,indices);
+                createClassFieldsMetadata(field.getType(),metaData,includeAllFields,columns,pkColumns,indices, platform);
             }
         }
     }
@@ -332,16 +335,23 @@ public class DatabaseSchema {
         return false;
     }
 
-    protected Column createColumn(Field field) {
+    private static String alterCaseToMatchDatabaseDefaultCase(String name, IDatabasePlatform platform) {
+        if (platform != null) {
+            name = platform.alterCaseToMatchDatabaseDefaultCase(name);
+        }
+        return name;
+    }
+
+    private static Column createColumn(Field field, IDatabasePlatform platform) {
         Column dbCol = null;
         ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
         if (colAnnotation != null) {
             dbCol = new Column();
 
             if (!StringUtils.isEmpty(colAnnotation.name())) {
-                dbCol.setName(platform.alterCaseToMatchDatabaseDefaultCase(colAnnotation.name()));
+                dbCol.setName(alterCaseToMatchDatabaseDefaultCase(colAnnotation.name(), platform));
             } else {
-                dbCol.setName(platform.alterCaseToMatchDatabaseDefaultCase(camelToSnakeCase(field.getName())));
+                dbCol.setName(alterCaseToMatchDatabaseDefaultCase(camelToSnakeCase(field.getName()), platform));
             }
 
             dbCol.setDescription(colAnnotation.description());
