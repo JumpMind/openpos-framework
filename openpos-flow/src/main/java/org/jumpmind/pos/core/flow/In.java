@@ -12,6 +12,6 @@ import java.lang.annotation.Target;
 public @interface In {
     public String name() default "";
     public boolean autoCreate() default false;
-    public boolean required() default true;
+    public boolean required() default false;
     public ScopeType scope();
 }

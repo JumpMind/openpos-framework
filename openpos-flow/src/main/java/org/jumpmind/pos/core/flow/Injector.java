@@ -246,7 +246,7 @@ public class Injector {
             buff.append(reportScope("DEVICE SCOPE", scope.getDeviceScope()));
             buff.append(reportScope("SESSION SCOPE", scope.getSessionScope()));
             buff.append(reportScope("CONVERSATION SCOPE", scope.getConversationScope()));
-            buff.append(reportScope("FLOW SCOPE", currentContext.getFlowScope()));
+            buff.append(reportScope("FLOW SCOPE", currentContext != null ? currentContext.getFlowScope() : null));
         } catch (Exception ex) {
             logger.warn("Exception while generating scope report", ex);
         }
