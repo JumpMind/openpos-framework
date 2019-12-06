@@ -2,21 +2,28 @@ package org.jumpmind.pos.persist.impl;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
+import org.jumpmind.db.model.Column;
+import org.jumpmind.db.model.IIndex;
 import org.jumpmind.pos.persist.ColumnDef;
+import org.jumpmind.pos.persist.CompositeDef;
 import org.jumpmind.pos.persist.PersistException;
 
 public class ModelValidator {
 
-    public void validate(ModelClassMetaData meta) {
+    public static void validate(ModelClassMetaData meta) {
         checkOrphanedFields(meta);
         checkCrossRefFields(meta);
     }
 
-    protected void checkOrphanedFields(ModelClassMetaData meta) {
+    protected static void checkOrphanedFields(ModelClassMetaData meta) {
 
+        List<Class<?>> compositeDefClasses;
         Class<?> modelClass = meta.getClazz();
 
         for (Field field : modelClass.getDeclaredFields()) {
@@ -44,11 +51,10 @@ public class ModelValidator {
         }
     }
 
-    protected void checkCrossRefFields(ModelClassMetaData meta) {
+    protected static void checkCrossRefFields(ModelClassMetaData meta) {
         Class<?> modelClass = meta.getClazz();
-
-        for (Field field : modelClass.getDeclaredFields()) {        
-
+        List<Class<?>> compositeDefClasses = getCompositeDefClasses(modelClass);
+        for (Field field : modelClass.getDeclaredFields()) {
             ColumnDef columnAnnotation = field.getAnnotation(ColumnDef.class);
             if (columnAnnotation != null) {
                 if (field.getType().isAssignableFrom(Money.class)) {
@@ -58,20 +64,35 @@ public class ModelValidator {
                                 + "such as @ColumnDef(crossReference=\"isoCurrencyCode\"). see " + field.getName() + " on model " + modelClass  );
                     }
                 }
-                
                 if (!StringUtils.isEmpty(columnAnnotation.crossReference())) {
-                    Field crossReferenceField = null;
-                    try {
-                        crossReferenceField = modelClass.getDeclaredField(columnAnnotation.crossReference());
-                    } catch (NoSuchFieldException e) {
+                    FieldMetaData xRefFieldMeta = meta.getEntityFieldMetaDatas().get(columnAnnotation.crossReference());
+                    if (xRefFieldMeta == null) {
+                        xRefFieldMeta = meta.getEntityIdFieldMetaDatas().get(columnAnnotation.crossReference());
                     }
-                    if (crossReferenceField == null) {
+                    if (xRefFieldMeta == null) {
                         throw new PersistException("No matching field found for ColumnDef crossReference=\"" + columnAnnotation.crossReference() + 
                                 "\" see the \"" + field.getName() + "\" field on model " + modelClass);
                     }
                 }
             }
         }    
+    }
+
+    private static Field getCrossReferenceField(Class<?> modelClass, ColumnDef columnAnnotation) throws NoSuchFieldException{
+            return modelClass.getDeclaredField(columnAnnotation.crossReference());
+    }
+
+    private static List<Class<?>> getCompositeDefClasses(Class<?> clazz) {
+        ArrayList<Class<?>> compositeDefClasses = new ArrayList<Class<?>>();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
+            if (compositeDefAnnotation != null) {
+                compositeDefClasses.add(field.getType());
+                getCompositeDefClasses(field.getType());
+            }
+        }
+        return compositeDefClasses;
     }
 }
     

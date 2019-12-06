@@ -1,6 +1,10 @@
 package org.jumpmind.pos.translate.state;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -9,10 +13,16 @@ import java.util.stream.StreamSupport;
 import org.jumpmind.pos.core.device.DefaultDeviceResponse;
 import org.jumpmind.pos.core.device.IDeviceRequest;
 import org.jumpmind.pos.core.device.IDeviceResponse;
-import org.jumpmind.pos.core.flow.*;
+import org.jumpmind.pos.core.flow.ActionHandler;
+import org.jumpmind.pos.core.flow.IStateManager;
+import org.jumpmind.pos.core.flow.In;
+import org.jumpmind.pos.core.flow.OnArrive;
+import org.jumpmind.pos.core.flow.Out;
+import org.jumpmind.pos.core.flow.ScopeType;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.service.IDeviceService;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.translate.ITranslationManager;
 import org.jumpmind.pos.translate.ITranslationManagerSubscriber;
@@ -25,14 +35,14 @@ import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 
-public class TranslatorState implements IState {
+public class TranslatorState {
 
     final protected Logger logger = LoggerFactory.getLogger(getClass());
 
     @In(scope=ScopeType.Device)
     protected IStateManager stateManager;
 
-    @In(scope=ScopeType.Device, required=false)
+    @In(scope=ScopeType.Device, required=false, autoCreate = true)
     @Out(scope=ScopeType.Device)
     protected ITranslationManager translationManager;
 
@@ -44,18 +54,16 @@ public class TranslatorState implements IState {
     protected IDeviceService deviceService;
 
     @Autowired
-    protected Environment env;   
+    protected Environment env;       
     
     @Autowired
     ApplicationContext applicationContext;    
 
-    @Override
+    @OnArrive
     public void arrive(Action action) {
         if (subscribe(action)) {
-            translationManager.setStateManager(stateManager);
             translationManager.showActiveScreen();
         } else {
-            translationManager.setStateManager(stateManager);
             translationManager.doAction(subscriber.getAppId(), action, new Form());
         }
     }
@@ -66,13 +74,7 @@ public class TranslatorState implements IState {
 
     protected boolean subscribe(Action action) {
         if (subscriber == null || (action != null && "restart".equalsIgnoreCase(action.getName()))) {
-            
-            this.translationManager = applicationContext.getBean(ITranslationManager.class);  
-            if (this.translationManager == null) {
-                throw new IllegalStateException("When using a translation state, we expect an implementation of "
-                        + ITranslationManager.class.getSimpleName() + " to be bound at the prototype scope");
-            }
-            
+        	this.translationManager.setStateManager(stateManager);
             logger.info("Creating new translation manager subscriber");
             
             this.subscriber = new ITranslationManagerSubscriber() {
@@ -82,6 +84,11 @@ public class TranslatorState implements IState {
                 @Override
                 public void showScreen(UIMessage screen) {
                     stateManager.showScreen(screen);
+                }
+                
+                @Override
+                public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap) {
+                    stateManager.showScreen(screen, dataMessageProviderMap);
                 }
 
                 @Override
@@ -171,6 +178,7 @@ public class TranslatorState implements IState {
                     }
                     return response;
                 }
+
             };
             translationManager.setTranslationManagerSubscriber(subscriber);
             return true;

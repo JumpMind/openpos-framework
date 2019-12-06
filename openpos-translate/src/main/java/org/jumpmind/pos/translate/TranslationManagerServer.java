@@ -9,9 +9,11 @@ import org.jumpmind.pos.core.device.IDeviceMessageDispatcher;
 import org.jumpmind.pos.core.device.IDeviceRequest;
 import org.jumpmind.pos.core.device.IDeviceResponse;
 import org.jumpmind.pos.core.flow.IStateManager;
+import org.jumpmind.pos.core.flow.StateManagerContainer;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.POSSessionInfo;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.IUIDataMessageProviderContainer;
 import org.jumpmind.pos.core.ui.message.NoOpUIMessage;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.translate.InteractionMacro.AbortMacro;
@@ -22,18 +24,26 @@ import org.jumpmind.pos.translate.InteractionMacro.SendLetter;
 import org.jumpmind.pos.translate.InteractionMacro.WaitForScreen;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
+@Component("translationManager")
 public class TranslationManagerServer implements ITranslationManager, IDeviceMessageDispatcher {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
+    
+    @Autowired
+    private ITranslatorFactory translatorFactory;
+
+    @Autowired
+    private ILegacyScreenInterceptor screenInterceptor;
+    
+    @Autowired
+    private StateManagerContainer stateManagerContainer;
 
     private Class<?> subsystemClass;
 
     private ILegacySubsystem legacySubsystem;
-
-    private ITranslatorFactory translatorFactory;
-
-    private ILegacyScreenInterceptor screenInterceptor;
 
     private InteractionMacro activeMacro;
 
@@ -48,17 +58,15 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
     private boolean lastScreenTrainingMode = false;
     
     private IStateManager stateManager;
-
-    public TranslationManagerServer(ILegacyScreenInterceptor interceptor, ITranslatorFactory translatorFactory,
-            Class<?> subsystemClass) {
-        this.subsystemClass = subsystemClass;
-        this.posSessionInfo = new POSSessionInfo();
-        this.screenInterceptor = interceptor;
-        this.translatorFactory = translatorFactory;
-    }
-
+        
     @Override
-    public void ping() {
+    public void init(Class<?> subsystemClass) {
+    	this.subsystemClass = subsystemClass;
+    }
+    
+    @Override
+    public void setStateManager(IStateManager stateManager) {
+    	this.stateManager = stateManager;    	
     }
 
     @Override
@@ -221,6 +229,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
 
     protected boolean translateAndShow(ILegacyScreen legacyScreen) {
         boolean screenShown = false;
+        this.stateManagerContainer.setCurrentStateManager(stateManager);
         for (ITranslationManagerSubscriber subscriber : this.subscriberByAppId.values()) {
             if (legacyScreen != null && subscriber.isInTranslateState()) {
                 ITranslator lastTranslator = this.lastTranslatorByAppId.get(subscriber.getAppId());
@@ -239,16 +248,19 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
 
                     if (newTranslator != null) {
                         newTranslator.setPosSessionInfo(posSessionInfo);
-                        stateManager.performInjections(newTranslator);
                         stateManager.markAsBusy();
                     }
                     if (newTranslator instanceof AbstractUIMessageTranslator<?>) {
-                        AbstractUIMessageTranslator<?> messageTranslator = (AbstractUIMessageTranslator) newTranslator;
+                        AbstractUIMessageTranslator<?> messageTranslator = (AbstractUIMessageTranslator<?>) newTranslator;
                         UIMessage message = messageTranslator.build();
                         if(message.getId() == null){
                             message.setId(legacyScreen.getSpecName());
                         }
-                        subscriber.showScreen(message);
+                        subscriber.showScreen(
+                            message, 
+                            newTranslator instanceof IUIDataMessageProviderContainer ? 
+                            ((IUIDataMessageProviderContainer) newTranslator).getDataMessageProviderMap() : null
+                        );
                         screenShown = true;
                     }
 
@@ -319,11 +331,6 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
         }
 
         return response;
-    }
-    
-    @Override
-    public void setStateManager(IStateManager stateManager) {
-        this.stateManager = stateManager;
     }
 
 }

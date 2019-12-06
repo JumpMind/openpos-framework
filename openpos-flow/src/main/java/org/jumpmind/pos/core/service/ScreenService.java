@@ -301,7 +301,7 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public void showScreen(String appId, String deviceId, UIMessage screen, Map<String, UIDataMessageProvider> uiDataMessageProviders) {
+    public void showScreen(String appId, String deviceId, UIMessage screen, Map<String, UIDataMessageProvider<?>> uiDataMessageProviders) {
         IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
         if (screen != null && stateManager != null) {
             ApplicationState applicationState = stateManager.getApplicationState();

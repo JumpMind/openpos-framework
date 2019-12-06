@@ -48,7 +48,7 @@ public class ApplicationState {
     private UIMessage lastPreInterceptedScreen;
     private UIMessage lastPreInterceptedDialog;
 
-    private Map<String, UIDataMessageProvider> dataMessageProviderMap;
+    private Map<String, UIDataMessageProvider<?>> dataMessageProviderMap;
 
     public Scope getScope() {
         return scope;
@@ -126,11 +126,11 @@ public class ApplicationState {
         return lastPreInterceptedDialog;
     }
 
-    public Map<String, UIDataMessageProvider> getDataMessageProviderMap() {
+    public Map<String, UIDataMessageProvider<?>> getDataMessageProviderMap() {
         return dataMessageProviderMap;
     }
 
-    public void setDataMessageProviderMap(Map<String, UIDataMessageProvider> dataMessageProviderMap) {
+    public void setDataMessageProviderMap(Map<String, UIDataMessageProvider<?>> dataMessageProviderMap) {
         this.dataMessageProviderMap = dataMessageProviderMap;
     }
 

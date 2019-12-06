@@ -359,8 +359,8 @@ public class DBSession {
 
         setMaintenanceValues(model);
         setTagValues(model);
-
         model.load();
+        model.loadValues();
 
         for (Table table : tables) {
             if (model.isNew()) {
@@ -411,6 +411,7 @@ public class DBSession {
             setMaintenanceValues(model);
             setTagValues(model);
             model.load();
+            model.loadValues();
 
             List<Table> tables = getValidatedTables(exampleModel);
             for (Table table : tables) {

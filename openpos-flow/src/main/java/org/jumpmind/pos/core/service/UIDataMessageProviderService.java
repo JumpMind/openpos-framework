@@ -26,7 +26,7 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
     @Autowired
     ApplicationContext applicationContext;
 
-    public void updateProviders(ApplicationState applicationState, Map<String, UIDataMessageProvider> uiDataMessageProviders){
+    public void updateProviders(ApplicationState applicationState, Map<String, UIDataMessageProvider<?>> uiDataMessageProviders){
         if(uiDataMessageProviders != null) {
             uiDataMessageProviders.forEach((key, provider) -> {
                 provider.setProviderKey(key);
@@ -71,7 +71,7 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
     }
 
     public boolean handleAction(Action action, ApplicationState applicationState){
-        Map<String, UIDataMessageProvider> dataMessageProviderMap = applicationState.getDataMessageProviderMap();
+        Map<String, UIDataMessageProvider<?>> dataMessageProviderMap = applicationState.getDataMessageProviderMap();
         Optional<String> providerKey = null;
         if(dataMessageProviderMap != null){
             providerKey = dataMessageProviderMap.keySet().stream().filter(key -> action.getName().contains(key)).findFirst();
@@ -97,7 +97,7 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
         applicationState.setDataMessageProviderMap(null);
     }
 
-    private void sendDataMessage(String appId, String deviceId, List<Object> data, String dataType, int series ) {
+    private void sendDataMessage(String appId, String deviceId, List<?> data, String dataType, int series ) {
 
         String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, UIDataMessage.class));
         UIDataMessage message = UIDataMessage.builder()

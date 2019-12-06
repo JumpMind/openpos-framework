@@ -87,6 +87,18 @@ public class Scope {
         }
     }
 
+    public ScopeType getScopeType(String name) {
+        if (getScopeValue(ScopeType.Device, name) != null) {
+            return ScopeType.Device;
+        } else if (getScopeValue(ScopeType.Session, name) != null) {
+            return ScopeType.Session;
+        } else if (getScopeValue(ScopeType.Conversation, name) != null) {
+            return ScopeType.Conversation;
+        } else {
+            return null;
+        }
+    }
+    
     public void setScopeValue(ScopeType scopeType, String name, Object value) {
         switch (scopeType) {
             case Device:

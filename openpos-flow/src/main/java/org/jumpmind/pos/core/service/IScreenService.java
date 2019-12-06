@@ -9,7 +9,7 @@ import java.util.Map;
 
 public interface IScreenService {
 
-    public void showScreen(String appId, String nodeId, UIMessage screen, Map<String, UIDataMessageProvider> dataMessageProvider);
+    public void showScreen(String appId, String nodeId, UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProvider);
 
     public void showScreen(String appId, String nodeId, UIMessage screen);
 
