@@ -45,7 +45,10 @@ public class ActionHandlerHelper {
         method.setAccessible(true);
         List<Object> arguments = new ArrayList<Object>();
         try {
+            int i = 0;
             for (Class<?> type : method.getParameterTypes()) {
+                i++;
+                logger.trace("Processing parameter {} of type: {}", i, type.getSimpleName());
                 if (type.isAssignableFrom(Action.class)) {
                     arguments.add(action);
                 } else if (action.getData() != null && type.isAssignableFrom(action.getData().getClass())) {
@@ -55,7 +58,7 @@ public class ActionHandlerHelper {
                         // Assumes otherArgs doesn't have any duplicated types and that
                         // no two arguments in otherArgs could both be assigned to
                         // the current type
-                        arguments.add(Arrays.stream(otherArgs).filter(o -> type.isAssignableFrom(o.getClass())).findFirst().orElse(null));
+                        arguments.add(Arrays.stream(otherArgs).filter(o -> o != null && type.isAssignableFrom(o.getClass())).findFirst().orElse(null));
                     } else {
                         arguments.add(null);
                     }
