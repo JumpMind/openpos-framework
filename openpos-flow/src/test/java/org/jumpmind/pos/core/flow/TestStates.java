@@ -215,7 +215,7 @@ public class TestStates {
 
     public static class InjectionFailedState implements IState {
 
-        @In(scope = ScopeType.Device)
+        @In(scope = ScopeType.Device, required = true)
         private String failedInjection;
 
         @Override
