@@ -40,6 +40,9 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
     
     @Autowired
     private StateManagerContainer stateManagerContainer;
+    
+    @Autowired
+    private TranslatorService translatorService;
 
     private Class<?> subsystemClass;
 
@@ -88,7 +91,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
         ITranslator lastTranslator = this.lastTranslatorByAppId.get(appId);
         logger.debug("lastTranslator = {}", lastTranslator);
         if (lastTranslator != null) {
-            lastTranslator.handleAction(subscriberByAppId.get(appId), this, action, formResults);
+            translatorService.executeAction(lastTranslator, stateManager, subscriberByAppId.get(appId), this, action, formResults);
         } else {
             sendAction(action.getName());
         }
