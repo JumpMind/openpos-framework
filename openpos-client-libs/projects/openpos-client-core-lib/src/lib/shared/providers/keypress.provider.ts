@@ -47,7 +47,7 @@ export class KeyPressProvider implements OnDestroy {
         return subscriptionOutput;
     }
 
-    isSubscribedToKey(key: string): boolean {
+    keyHasSubscribers(key: string): boolean {
         return this.subscribers.has(key);
     }
 
