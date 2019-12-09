@@ -7,6 +7,7 @@ dependencies {
          exclude group: 'org.slf4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'
          exclude group: 'org.springframework'
+         exclude group: 'net.java.dev.jna'
     }
     compile project(":openpos-service")
     testCompile project(path: ':openpos-util', configuration: 'testArtifacts')

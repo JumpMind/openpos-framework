@@ -17,11 +17,13 @@ dependencies {
          exclude group: 'org.slf4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'
          exclude group: 'org.springframework'
+         exclude group: 'net.java.dev.jna'
     }
     compile ("org.jumpmind.symmetric:symmetric-io:$symmetricVersion") {
          exclude group: 'org.slf4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'
          exclude group: 'org.springframework'
+         exclude group: 'net.java.dev.jna'
     }
     runtime "com.microsoft.sqlserver:mssql-jdbc:7.0.0.jre8"
 }

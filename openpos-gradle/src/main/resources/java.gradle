@@ -22,7 +22,7 @@ tasks.withType(JavaCompile) {
 }
 
 ext {
-    jnaVersion = '4.1.0'
+    jnaVersion = '4.5.0'
     springfoxSwaggerVersion='2.9.2'
     javaposVersion='1.14.2'
     slf4jVersion='1.7.25'
