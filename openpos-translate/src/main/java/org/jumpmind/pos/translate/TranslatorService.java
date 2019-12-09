@@ -8,6 +8,9 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.jumpmind.pos.core.flow.IStateManager;
+import org.jumpmind.pos.core.model.Form;
+import org.jumpmind.pos.server.model.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +38,9 @@ public class TranslatorService {
 
     @Autowired
     protected ApplicationContext appContext;
+    
+    @Autowired
+    protected ITranslatorActionExecutor actionExecutor;
     
     /**
      * Fetches a translator bean from the Spring application context.
@@ -86,6 +92,17 @@ public class TranslatorService {
         } else {
             logger.error("Translator not found with id '{}'", id);
             return translator;
+        }
+    }
+
+    
+    public void executeAction(Object translator, IStateManager stateManager, ITranslationManagerSubscriber subscriber, TranslationManagerServer server, Action action, Form form) {
+        if (actionExecutor.canExecute(translator, action)) {
+            actionExecutor.executeAction(translator, stateManager, action, new Object[] {subscriber, server, form});
+        } else if (translator instanceof ITranslator){
+            ((ITranslator) translator).handleAction(subscriber, server, action, form);
+        } else {
+            logger.warn("No suitable action handler found for action '{}' in translator {}", action.getName(), translator.getClass().getSimpleName());
         }
     }
     

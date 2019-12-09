@@ -29,6 +29,7 @@ public class SellItem extends DefaultItem {
     private boolean isGiftReceipt = false;
     private boolean isQuantityChangeable;
     private boolean isOrderItem = false;
+    private boolean showSellingPrice = false;
     private List<AdditionalLabel> additionalLabels = new ArrayList<>();
     private List<AdditionalLabel> returnItemLabels;
     private String imageUrl;
@@ -169,6 +170,14 @@ public class SellItem extends DefaultItem {
 
     public void setQuantityChangeable(boolean isQuantityChangeable) {
         this.isQuantityChangeable = isQuantityChangeable;
+    }
+
+    public boolean isShowSellingPrice() {
+        return showSellingPrice;
+    }
+
+    public void setShowSellingPrice(boolean showSellingPrice) {
+        this.showSellingPrice = showSellingPrice;
     }
 
     /**

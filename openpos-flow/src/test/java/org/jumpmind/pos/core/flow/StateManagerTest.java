@@ -165,6 +165,7 @@ public class StateManagerTest {
         stateManager.setInitialFlowConfig(config);
         ActionHandlerImpl actionHandler = new ActionHandlerImpl();
         TestUtil.setField(actionHandler, "beforeActionService" , new BeforeActionStateLifecycleService());
+        TestUtil.setField(actionHandler, "helper", new ActionHandlerHelper());
         TestUtil.setField(stateManager, "actionHandler", actionHandler);
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());

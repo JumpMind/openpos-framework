@@ -127,6 +127,10 @@ public class ResourceLookupStringBuilder implements Serializable{
         return new ResourceLookupStringBuilder(key, group).toJson();
     }
     
+    public static String toJson(String key, String group, String...args) {
+        return new ResourceLookupStringBuilder(key, group).addIndexedArgs(args).toJson();
+    }
+    
 	public String toJson() {
 		try {
 			return DefaultObjectMapper.build().writeValueAsString(this);
