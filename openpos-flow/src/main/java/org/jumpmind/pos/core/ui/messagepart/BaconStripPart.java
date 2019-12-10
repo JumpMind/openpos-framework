@@ -14,6 +14,7 @@ public class BaconStripPart implements IHasBackButton, Serializable {
     private String headerText;
     private String headerIcon;
     private ActionItem backButton;
+    private String deviceIdCss;
 
     public String getDeviceId() {
         return deviceId;
@@ -53,5 +54,13 @@ public class BaconStripPart implements IHasBackButton, Serializable {
 
     public void setBackButton(ActionItem backButton) {
         this.backButton = backButton;
+    }
+
+    public String getDeviceIdCss() {
+        return deviceIdCss;
+    }
+
+    public void setDeviceIdCss(String deviceIdCss) {
+        this.deviceIdCss = deviceIdCss;
     }
 }

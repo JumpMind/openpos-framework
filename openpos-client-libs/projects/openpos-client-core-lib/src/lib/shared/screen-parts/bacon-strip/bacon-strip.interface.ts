@@ -7,4 +7,5 @@ export interface BaconStripInterface {
     headerText: string;
     headerIcon: string;
     backButton: IActionItem;
+    deviceIdCss: string;
 }

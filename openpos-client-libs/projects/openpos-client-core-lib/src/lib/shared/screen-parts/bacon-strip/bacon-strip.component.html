@@ -16,5 +16,6 @@
     </div>
     <div class="operator" *ngIf="!(isMobile$ | async)">
         <mat-icon *ngIf="screenData.operatorText" class="material-icons" style="vertical-align: middle;">lock_open</mat-icon>{{operatorInfo}}
+        <span [ngClass]="screenData.deviceIdCss">{{screenData.deviceId}}</span>
     </div>
 </div>
