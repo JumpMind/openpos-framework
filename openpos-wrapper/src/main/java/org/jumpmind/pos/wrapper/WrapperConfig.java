@@ -205,16 +205,18 @@ public class WrapperConfig {
         if (index != -1) {
             String dirName = classPath.substring(0, index);
             File dir = new File(dirName);
-            List<File> files = asList(dir.listFiles((directory, name) -> name.endsWith(".jar") || name.endsWith(".JAR")));
-            files.sort((f1, f2) -> f1.getName().compareTo(f2.getName()));
-            StringBuilder sb = new StringBuilder();
-            for (int i = 0; i < files.size(); i++) {
-                if (i > 0) {
-                    sb.append(File.pathSeparator);
+            if (dir.isDirectory()) {
+                List<File> files = asList(dir.listFiles((directory, name) -> name.endsWith(".jar") || name.endsWith(".JAR")));
+                files.sort((f1, f2) -> f1.getName().compareTo(f2.getName()));
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < files.size(); i++) {
+                    if (i > 0) {
+                        sb.append(File.pathSeparator);
+                    }
+                    sb.append(dirName).append(files.get(i).getName());
                 }
-                sb.append(dirName).append(files.get(i).getName());
+                classPath = sb.toString();
             }
-            classPath = sb.toString();
         }
         return classPath;
     }
