@@ -16,6 +16,9 @@
     </div>
     <div class="operator" *ngIf="!(isMobile$ | async)">
         <mat-icon *ngIf="screenData.operatorText" class="material-icons" style="vertical-align: middle;">lock_open</mat-icon>{{operatorInfo}}
-        <span [ngClass]="screenData.deviceIdCss">{{screenData.deviceId}}</span>
+        <span [ngClass]="{ 'till-status-normal' : screenData.tillStatusType === TillStatusType.Normal,
+                           'till-status-above-maximum' : screenData.tillStatusType === TillStatusType.AboveMaximum,
+                           'till-status-below-minimum' : screenData.tillStatusType === TillStatusType.BelowMinimum }">
+            {{screenData.deviceId}}</span>
     </div>
 </div>

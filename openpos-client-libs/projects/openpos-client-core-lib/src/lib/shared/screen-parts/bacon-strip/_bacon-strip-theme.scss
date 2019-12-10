@@ -3,6 +3,7 @@
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
+    $app-success: mat-color(map-get($theme, success));
 
     $foreground: map-get($theme, foreground );
 
@@ -23,6 +24,14 @@
             .mat-select-arrow,
             .mat-form-field.mat-focused .mat-select-arrow {
                 color: inherit;
+            }
+
+            .till-status-above-maximum {
+                color: $app-success;
+            }
+
+            .till-status-below-minimum {
+                color: $app-warn;
             }
         }
     }
