@@ -1,4 +1,4 @@
-import { Component, Injector, ElementRef } from '@angular/core';
+import { Component, Injector, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
 import { SaleItemCardListInterface } from './sale-item-card-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
@@ -17,13 +17,14 @@ import { Configuration } from '../../../configuration/configuration';
   templateUrl: './sale-item-card-list.component.html',
   styleUrls: ['./sale-item-card-list.component.scss']
 })
-export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardListInterface> {
+export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardListInterface> implements AfterViewInit {
 
   expandedIndex = -1;
   numItems = 0;
   items: Observable<ISellItem[]>;
+  @ViewChildren('items', {read: ElementRef }) private itemsRef: QueryList<ElementRef>;
 
-  constructor(injector: Injector, private dataMessageService: UIDataMessageService, private elementRef: ElementRef,
+  constructor(injector: Injector, private dataMessageService: UIDataMessageService,
               protected keyPresses: KeyPressProvider) {
     super(injector);
     this.subscriptions.add(
@@ -49,6 +50,7 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
         }
       })
     );
+
   }
 
   itemsTrackByFn(index, item: ISellItem) {
@@ -62,14 +64,18 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
         this.numItems = i.length;
         this.expandedIndex = i.length - 1;
       });
-      this.scrollToBottom();
+      this.scrollToView(this.expandedIndex);
     });
   }
 
-  scrollToBottom(): void {
-    try {
-        this.elementRef.nativeElement.scrollTop = this.elementRef.nativeElement.scrollHeight;
-    } catch (err) { }
+  ngAfterViewInit() {
+    this.scrollToView(this.expandedIndex);
+  }
+
+  scrollToView(index: number): void {
+    if (this.itemsRef) {
+      this.itemsRef.toArray()[index].nativeElement.scrollIntoView({block: 'center'});
+    }
   }
 
   isItemExpanded(index: number): boolean {
@@ -81,6 +87,7 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
   updateExpandedIndex(index: number) {
     this.expandedIndex = index;
+    this.scrollToView(this.expandedIndex);
   }
 
   handleArrowKey(event: KeyboardEvent) {
