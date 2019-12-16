@@ -63,5 +63,6 @@ public interface IStateManager {
     public boolean isAtRest();
     public void markAsBusy();
     public void sendConfigurationChangedMessage();
+    public long getLastActionTimeInMs();
     
 }
