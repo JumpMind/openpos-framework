@@ -1,5 +1,8 @@
 package org.jumpmind.pos.util.event;
 
+import lombok.ToString;
+
+@ToString
 public class AppEvent extends Event {
 
     String deviceId;
@@ -30,4 +33,5 @@ public class AppEvent extends Event {
     public static String createSourceString(String appId, String deviceId) {
         return appId + "/" + deviceId;
     }
+
 }

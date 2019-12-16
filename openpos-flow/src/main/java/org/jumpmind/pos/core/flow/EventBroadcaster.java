@@ -19,15 +19,16 @@ public class EventBroadcaster {
         this.stateManager = stateManager;
     }
 
-    public void postEventToObject(Class clazz, Event event) {
-        postEventToObject(clazz, null, event);
+    public boolean postEventToObject(Class clazz, Event event) {
+        return postEventToObject(clazz, null, event);
     }
 
-    public void postEventToObject(Object object, Event event) {
-        postEventToObject(object.getClass(), object, event);
+    public boolean postEventToObject(Object object, Event event) {
+        return postEventToObject(object.getClass(), object, event);
     }
 
-    public void postEventToObject(Class clazz, Object object, Event event) {
+    public boolean postEventToObject(Class clazz, Object object, Event event) {
+        boolean foundMethod = false;
         List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnEvent.class, true, true);
         if (methods != null && !methods.isEmpty()) {
             if (object == null) {
@@ -44,13 +45,11 @@ public class EventBroadcaster {
                 try {
                     OnEvent onEvent = method.getAnnotation(OnEvent.class);
                     if (onEvent.receiveEventsFromSelf() || !event.getSource().equals(AppEvent.createSourceString(stateManager.getAppId(), stateManager.getDeviceId()))) {
+                        method.setAccessible(true);
+                        foundMethod = true;
                         if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
-                            stateManager.markAsBusy();
-                            method.setAccessible(true);
                             method.invoke(object, event);
                         } else if (method.getParameters() == null || method.getParameters().length == 0) {
-                            stateManager.markAsBusy();
-                            method.setAccessible(true);
                             method.invoke(object);
                         }
                     }
@@ -59,5 +58,6 @@ public class EventBroadcaster {
                 }
             }
         }
+        return foundMethod;
     }
 }
