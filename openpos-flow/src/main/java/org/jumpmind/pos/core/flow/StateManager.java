@@ -572,6 +572,9 @@ public class StateManager implements IStateManager {
                 handleOrRaiseException(ex);
             } finally {
                 activeCalls.decrementAndGet();
+                if (action.isDoNotBlockForResponse()) {
+                    lastShowTimeInMs.set(System.currentTimeMillis());
+                }
             }
         } else {
             log.warn("Discarding unexpected action " + action.getName());
