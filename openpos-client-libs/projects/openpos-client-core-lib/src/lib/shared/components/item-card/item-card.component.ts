@@ -1,4 +1,4 @@
-import { Component, Input, HostListener, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, HostListener, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 import { SessionService } from '../../../core/services/session.service';
 import { IActionItem } from '../../../core/actions/action-item.interface';
@@ -15,7 +15,7 @@ import { KebabLabelButtonComponent } from '../kebab-label-button/kebab-label-but
   templateUrl: './item-card.component.html',
   styleUrls: ['./item-card.component.scss']
 })
-export class ItemCardComponent {
+export class ItemCardComponent implements OnDestroy {
 
   @Input() item: ISellItem;
   @Input() isReadOnly = false;
@@ -59,6 +59,12 @@ export class ItemCardComponent {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    if (this.buttonSubscription) {
+      this.buttonSubscription.unsubscribe();
+    }
   }
 
   public doItemAction(action: IActionItem, payload: number) {
