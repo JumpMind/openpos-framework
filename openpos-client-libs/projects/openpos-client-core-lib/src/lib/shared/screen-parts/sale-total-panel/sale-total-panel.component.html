@@ -30,6 +30,14 @@
             <span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
             <span *ngIf="keybindsEnabled(screenData.loyaltyButton)" class="muted-color">{{screenData.loyaltyButton.keybind}}</span>
         </app-secondary-button>
+        <app-secondary-button responsive-class *ngIf="screenData.helpButton"
+            [actionItem]="screenData.helpButton" (actionClick)="doMenuItemAction(screenData.helpButton)"
+            (click)="doMenuItemAction(screenData.helpButton)" class="sale-total-button">
+            <app-icon *ngIf="screenData.helpButton.icon" [iconName]="screenData.helpButton.icon">
+            </app-icon>
+            <span *ngIf="screenData.helpButton.icon && screenData.helpButton.title">&nbsp;</span>{{screenData.helpButton.title}}
+            <span *ngIf="keybindsEnabled(screenData.helpButton)" class="muted-color">{{screenData.helpButton.keybind}}</span>
+        </app-secondary-button>
         <div *ngIf="screenData.customer" responsive-class class="sale-total-customer-label">
             <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl"
                 class="sale-total-loyalty-icon">
@@ -50,7 +58,7 @@
             (click)="doMenuItemAction(screenData.logoutButton)" class="sale-total-button">
             <app-icon *ngIf="screenData.logoutButton.icon" [iconName]="screenData.logoutButton.icon">
             </app-icon>
-            {{screenData.logoutButton.title}}
+            <span *ngIf="screenData.logoutButton.icon && screenData.logoutButton.title">&nbsp;</span>{{screenData.logoutButton.title}}
             <span *ngIf="keybindsEnabled(screenData.logoutButton)" class="muted-color">{{screenData.logoutButton.keybind}}</span>
         </app-secondary-button>
     </div>
