@@ -172,6 +172,11 @@ public class TranslatorState implements IState {
                     }
                     return response;
                 }
+
+                @Override
+                public void markAsBusy() {
+                    stateManager.markAsBusy();
+                }
             };
             translationManager.setTranslationManagerSubscriber(subscriber);
             return true;

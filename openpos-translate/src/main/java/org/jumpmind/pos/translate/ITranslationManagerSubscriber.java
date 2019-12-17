@@ -24,4 +24,5 @@ public interface ITranslationManagerSubscriber extends IDeviceMessageDispatcher,
     public void addClientConfigurationTag(String tag);
     public void removeClientConfigurationTag(String tag);
 
+    public void markAsBusy();
 }
