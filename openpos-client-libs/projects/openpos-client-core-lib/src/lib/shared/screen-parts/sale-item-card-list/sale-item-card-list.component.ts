@@ -74,7 +74,10 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
   scrollToView(index: number): void {
     if (this.itemsRef) {
-      this.itemsRef.toArray()[index].nativeElement.scrollIntoView({block: 'center'});
+        const itemsRefArray = this.itemsRef.toArray();
+        if (itemsRefArray && index >= 0 && index < itemsRefArray.length) {
+            itemsRefArray[index].nativeElement.scrollIntoView({block: 'center'});
+        }
     }
   }
 
