@@ -16,11 +16,9 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.h2.tools.RunScript;
 import org.joda.money.Money;
 import org.jumpmind.db.model.Column;
