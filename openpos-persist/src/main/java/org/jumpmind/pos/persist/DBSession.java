@@ -11,17 +11,12 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -213,6 +208,10 @@ public class DBSession {
     public int executeDml(String namedDml, Object... params) {
         DmlTemplate template = dmlTemplates.get(namedDml);
         if (template != null && isNotBlank(template.getDml())) {
+            params = Arrays.stream(params).
+                    map(p -> p instanceof Boolean ? (((Boolean) p ? 1 : 0)) : p).
+                    collect(Collectors.toList()).
+                    toArray(new Object[params.length]);
             return jdbcTemplate.getJdbcOperations().update(template.getDml(), params);
         } else {
             throw new PersistException("Could not find dml named: " + namedDml);
@@ -429,7 +428,7 @@ public class DBSession {
     private List<Object[]> getValueArray(DmlStatement statement, List<? extends AbstractModel> models) {
         List<Object[]> values = new ArrayList<>(models.size());
         final ModelMetaData meta = databaseSchema.getModelMetaData(models.get(0).getClass());
-        models.forEach(m->{
+        models.forEach(m -> {
             ModelWrapper model = new ModelWrapper(m, meta);
             setMaintenanceValues(model);
             setTagValues(model);
