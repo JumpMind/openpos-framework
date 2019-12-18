@@ -12,6 +12,8 @@
         [class.muted-color]="disabled"
         [class.primary]="!disabled"
         class="option-icon"></app-icon>
-    <span responsive-class class="option-line" [class.muted-color]="disabled" [ngClass]="optionSize">{{optionTitle}}</span>
-    <ng-content></ng-content>
+    <div class="option-content">
+        <span responsive-class class="option-line" [class.muted-color]="disabled" [ngClass]="optionSize">{{optionTitle}}</span>
+        <ng-content></ng-content>
+    </div>
 </button>
