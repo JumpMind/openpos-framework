@@ -11,7 +11,7 @@
    cdkFocusInitial
     class="scan-input"
     ngClass.xs="scan-input-xs"
-    [keyboardLayout]="'Numeric'"
+    [keyboardLayout]="keyboardLayout"
     (keyup.enter)="onEnter()"
     [(ngModel)]="barcode"
     (ngModelChange)="onValueChange($event)"

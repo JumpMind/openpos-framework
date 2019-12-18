@@ -22,6 +22,7 @@ public class ScanOrSearchPart implements Serializable{
     private String scanSomethingText = "Scan/Key Something";
     private boolean autoFocusOnScan = false;
     private FieldInputType inputType = FieldInputType.WordText;
+    private String keyboardLayout;
     
     public Integer getScanMinLength() {
         return scanMinLength;
@@ -93,5 +94,13 @@ public class ScanOrSearchPart implements Serializable{
 
     public ActionItem getKeyedAction() {
         return this.keyedAction;
+    }
+
+    public String getKeyboardLayout() {
+        return keyboardLayout;
+    }
+
+    public void setKeyboardLayout(String keyboardLayout) {
+        this.keyboardLayout = keyboardLayout;
     }
 }
