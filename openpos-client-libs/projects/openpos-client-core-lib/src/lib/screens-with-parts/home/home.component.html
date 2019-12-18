@@ -24,20 +24,22 @@
         <app-notifications *ngIf="!!screen['notifications']" class="notifications"></app-notifications>
     </div>
 
-    <mat-card *ngIf="(isMobile | async) && screen.menuItems.length > 0" class="menu-list">
-        <mat-nav-list>
-            <mat-list-item *ngFor="let menuItem of screen.menuItems" (click)="doAction(menuItem)">
-                <app-icon class="primary text-lg" iconName="{{menuItem.icon}}" iconClass="material-icons"></app-icon>
-                <span class="primary text-lg">&nbsp;{{menuItem.title}}</span>
-                <span *ngIf="getNotificationForButton(menuItem)"
-                      [matBadge]="getNotificationForButton(menuItem).value"
-                      matBadgePosition="above after"
-                      matBadgeSize="medium"
-                      matBadgeColor="accent" class="notification-badge"></span>
-                <mat-icon class="material-icons">keyboard_arrow_right</mat-icon>
-            </mat-list-item>
-        </mat-nav-list>
-    </mat-card>
+    <div *ngIf="(isMobile | async) && screen.menuItems.length > 0" class="menu-list" appArrowTab>
+        <app-option-button *ngFor="let o of screen.menuItems; let i = index" 
+            appArrowTabItem
+            [attr.tabindex]="i"
+            [disabled]="!o.enabled"
+            [optionTitle]="o.title" 
+            [optionIcon]="o.icon" 
+            [optionSize]="'md'"
+            (click)="doAction(o)">
+            <span *ngIf="getNotificationForButton(o)"
+                [matBadge]="getNotificationForButton(o).value"
+                matBadgePosition="above after"
+                matBadgeSize="medium"
+                matBadgeColor="accent" class="notification-badge"></span>
+        </app-option-button>
+    </div>
     <div class="status-strip-container">
         <app-status-strip *ngIf="screen.statusStrip"></app-status-strip>
     </div>
