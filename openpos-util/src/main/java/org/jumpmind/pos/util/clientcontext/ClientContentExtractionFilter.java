@@ -3,6 +3,7 @@ package org.jumpmind.pos.util.clientcontext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -20,9 +21,13 @@ public class ClientContentExtractionFilter extends OncePerRequestFilter {
     @Autowired
     ClientContext clientContext;
 
+    @Value("${openpos.installationId:'not set'}")
+    String installationId;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Enumeration<String> headerNames = request.getHeaderNames();
+        clientContext.put("deviceId", installationId);
         while( headerNames.hasMoreElements() ) {
             String header = headerNames.nextElement();
             if(header.startsWith("ClientContext-")){
