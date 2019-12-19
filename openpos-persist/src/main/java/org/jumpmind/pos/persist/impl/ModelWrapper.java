@@ -407,12 +407,23 @@ public class ModelWrapper {
         List<Column> columns = new ArrayList<>();
         for (Column modelColumn : fieldsToColumns.values()) {
             for (Column tableColumn : table.getColumns()) {                
-                if (modelColumn.equals(tableColumn)) {
+                if (isCompatible(modelColumn, tableColumn)) {
                     columns.add(tableColumn);
                     break;
                 }
             }
         }
         return columns.toArray(new Column[columns.size()]);
+    }
+
+    private boolean isCompatible(Column col1, Column col2) {
+        boolean equals = col1.equals(col2);
+        if (!equals) {
+            if (col1.getName().equalsIgnoreCase(col2.getName())) {
+                equals |= col1.isOfTextType() && col2.isOfTextType();
+                equals |= col2.isOfNumericType() && col2.isOfNumericType();
+            }
+        }
+        return equals;
     }
 }
