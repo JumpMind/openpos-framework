@@ -11,9 +11,15 @@ public class Toast extends Message {
     private ToastType toastType;
     private int duration = 2500;
     private String verticalPosition = "bottom";
+    private boolean disabled;
 
     public static Toast createSuccessToast(String message) {
+        return createSuccessToast(message, false);
+    }
+
+    public static Toast createSuccessToast(String message, boolean disabled) {
         Toast toast = new Toast(message);
+        toast.setDisabled(disabled);
         toast.setToastType(ToastType.Success);
         return toast;
     }
@@ -44,6 +50,14 @@ public class Toast extends Message {
     public Toast(String message, ToastType toastType, int duration, String verticalPosition) {
         this(message, toastType, duration);
         this.verticalPosition = verticalPosition;
+    }
+
+    public void setDisabled(boolean disabled) {
+        this.disabled = disabled;
+    }
+
+    public boolean isDisabled() {
+        return disabled;
     }
 
     public String getMessage() {
