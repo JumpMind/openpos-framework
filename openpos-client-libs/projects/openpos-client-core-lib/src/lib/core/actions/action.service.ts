@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable, OnDestroy} from '@angular/core';
 import { IActionItem } from './action-item.interface';
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -12,28 +12,29 @@ import { OpenposMessage } from '../messages/message';
 import { MessageTypes } from '../messages/message-types';
 
 @Injectable()
-export class ActionService {
+export class ActionService implements OnDestroy{
 
     private blockActions: boolean;
     private actionPayloads: Map<string, () => void> = new Map<string, () => void>();
     private actionDisablers = new Map<string, BehaviorSubject<boolean>>();
+    private subscriptions = new Subscription();
 
     constructor(
         private dialogService: MatDialog,
         private messageProvider: MessageProvider ) {
-        messageProvider.getScopedMessages$().subscribe( message => {
+        this.subscriptions.add(messageProvider.getScopedMessages$().subscribe( message => {
             if (message.disabled) {
                console.log('creating a screen that is disabled');
                this.blockActions = true;
             } else {
                this.blockActions = false;
             }
-        });
-        messageProvider.getAllMessages$<OpenposMessage>().subscribe( message => {
+        }));
+        this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe( message => {
             if (message.type === MessageTypes.TOAST) {
                 this.blockActions = false;
             }
-        });
+        }));
     }
 
     async doAction( actionItem: IActionItem, payload?: any ) {
@@ -142,5 +143,11 @@ export class ActionService {
         }
 
         return true;
+    }
+
+    ngOnDestroy(): void {
+        if( this.subscriptions ){
+            this.subscriptions.unsubscribe();
+        }
     }
 }
