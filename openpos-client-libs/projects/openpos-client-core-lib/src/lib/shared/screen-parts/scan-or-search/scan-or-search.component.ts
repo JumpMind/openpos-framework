@@ -40,6 +40,8 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
+    keyboardLayout = 'US Standard';
+
     private scanServiceSubscription: Subscription;
 
     constructor(public devices: DeviceService, injector: Injector, private el: ElementRef, private renderer: Renderer2,
@@ -63,6 +65,9 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
             this.renderer.addClass( this.el.nativeElement, 'focusInitial');
         } else {
             this.renderer.removeClass(this.el.nativeElement, 'focusInitial');
+        }
+        if (this.screenData.keyboardLayout) {
+            this.keyboardLayout = this.screenData.keyboardLayout;
         }
     }
 

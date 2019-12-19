@@ -1,6 +1,7 @@
 @mixin option-button-theme($theme) {
     $border: map-get(map-get($theme, foreground), border);
     $disabled-border: map-get(map-get($theme, foreground), disabled-button);
+    $focused-color: map-get(map-get($theme, background), focused-button);
 
     app-option-button {
         button {
@@ -12,5 +13,4 @@
             }
         }
     }
-
 }

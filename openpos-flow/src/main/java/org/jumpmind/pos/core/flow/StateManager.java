@@ -488,31 +488,35 @@ public class StateManager implements IStateManager {
         activeThread.set(Thread.currentThread());
     }
 
-    private boolean notBusy(Action action) {
+    private boolean notBusy(String actionName, boolean doNotBlockForResponse) {
         boolean notBusy = true;
+        long currentActionTimeInMs = System.currentTimeMillis();
+
         synchronized (this) {
-            if (isAtRest() || action.isDoNotBlockForResponse() ||
+            if (isAtRest() || doNotBlockForResponse ||
                     activeThread.get() == null ||
-                    activeThread.get().equals(Thread.currentThread())) {
+                    activeThread.get().equals(Thread.currentThread()) &&
+                    currentActionTimeInMs >= lastActionTimeInMs.longValue()) {
                 Thread active = activeThread.get();
                 log.info("Action received: {}, State manager is NOT busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
-                        action.getName(),
+                        actionName,
                         activeCalls.get(), Thread.currentThread().getName(), active != null ? active.getName() : null, lastShowTimeInMs.get()-lastActionTimeInMs.get());
                 lastInteractionTime.set(new Date());
                 activeCalls.incrementAndGet();
                 markAsBusy();
             } else {
-                log.info("Action received: {}, State manager is busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
-                        action.getName(), activeCalls.get(), Thread.currentThread().getName(), activeThread.get().getName(), lastShowTimeInMs.get()-lastActionTimeInMs.get());
+                log.info("Action received: {}, State manager is busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}, Current action occured before last action time: {} ",
+                        actionName, activeCalls.get(), Thread.currentThread().getName(), activeThread.get().getName(), lastShowTimeInMs.get()-lastActionTimeInMs.get(), lastActionTimeInMs.get()-currentActionTimeInMs);
                 notBusy = false;
             }
         }
+        
         return notBusy;
     }
 
     @Override
     public void doAction(Action action) {
-        if (notBusy(action)) {
+        if (notBusy(action.getName(), action.isDoNotBlockForResponse())) {
             try {
                 // Global action handler takes precedence over all actions (for now)
                 Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
@@ -568,6 +572,9 @@ public class StateManager implements IStateManager {
                 handleOrRaiseException(ex);
             } finally {
                 activeCalls.decrementAndGet();
+                if (action.isDoNotBlockForResponse()) {
+                    lastShowTimeInMs.set(System.currentTimeMillis());
+                }
             }
         } else {
             log.warn("Discarding unexpected action " + action.getName());
@@ -951,14 +958,27 @@ public class StateManager implements IStateManager {
     }
 
     protected void onEvent(Event event) {
-        List<Class> classes = initialFlowConfig.getEventHandlers();
-        classes.forEach(clazz->eventBroadcaster.postEventToObject(clazz, event));
+        if (notBusy(event.toString(), true)) {
+            try {
+                List<Class> classes = initialFlowConfig.getEventHandlers();
+                classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
 
-        Object state = getCurrentState();
-        if (state != null) {
-            eventBroadcaster.postEventToObject(state, event);
+                Object state = getCurrentState();
+                if (state != null) {
+                    if (!eventBroadcaster.postEventToObject(state, event)) {
+                        lastShowTimeInMs.set(System.currentTimeMillis());
+                    }
+                }
+            } finally {
+                activeCalls.decrementAndGet();
+            }
+        } else {
+            log.warn("Discarding unexpected event " + event.toString());
         }
     }
-
-
+    
+    @Override
+    public long getLastActionTimeInMs() {
+        return lastActionTimeInMs.get();
+    }
 }

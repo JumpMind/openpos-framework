@@ -6,6 +6,7 @@ export interface SaleTotalPanelInterface extends IAbstractScreen {
     totals: ITotal[];
     grandTotal: ITotal;
     checkoutButton: IActionItem;
+    helpButton: IActionItem;
     logoutButton: IActionItem;
     loyaltyButton: IActionItem;
     promoButton: IActionItem;

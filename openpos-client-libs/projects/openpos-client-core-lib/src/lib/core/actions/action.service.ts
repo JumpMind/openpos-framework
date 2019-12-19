@@ -31,7 +31,7 @@ export class ActionService implements OnDestroy{
             }
         }));
         this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe( message => {
-            if (message.type === MessageTypes.TOAST) {
+            if (message.type === MessageTypes.TOAST  && !message.disabled) {
                 this.blockActions = false;
             }
         }));

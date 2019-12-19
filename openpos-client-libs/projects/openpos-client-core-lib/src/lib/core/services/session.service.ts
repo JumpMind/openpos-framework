@@ -128,10 +128,10 @@ export class SessionService implements IMessageHandler<any> {
     public sendMessage<T extends OpenposMessage>(message: T) {
         if ( message.type === MessageTypes.ACTION && message instanceof ActionMessage ) {
             const actionMessage = message as ActionMessage;
-            this.publish(actionMessage.actionName, 'Screen', actionMessage.payload);
+            this.publish(actionMessage.actionName, 'Screen', actionMessage.payload, actionMessage.doNotBlockForResponse);
         } else if (message.type === MessageTypes.PROXY && message instanceof ActionMessage) {
             const actionMessage = message as ActionMessage;
-            this.publish(actionMessage.actionName, actionMessage.type, actionMessage.payload);
+            this.publish(actionMessage.actionName, actionMessage.type, actionMessage.payload, actionMessage.doNotBlockForResponse);
         }
         this.sessionMessages$.next(message);
     }
@@ -509,7 +509,7 @@ export class SessionService implements IMessageHandler<any> {
         this.publish('Refresh', 'Screen');
     }
 
-    public publish(actionString: string, type: string, payload?: any): boolean {
+    public publish(actionString: string, type: string, payload?: any, doNotBlockForResponse = false): boolean {
         // Block any actions if we are backgrounded and running in cordova
         // (unless we are coming back out of the background)
         if (this.inBackground && actionString !== 'Refresh') {
@@ -520,7 +520,7 @@ export class SessionService implements IMessageHandler<any> {
         if (this.getAppId() && deviceId) {
             console.info(`Publishing action '${actionString}' of type '${type}' to server...`);
             this.stompService.publish('/app/action/app/' + this.getAppId() + '/node/' + deviceId,
-                JSON.stringify({ name: actionString, type, data: payload }));
+                JSON.stringify({ name: actionString, type, data: payload, doNotBlockForResponse: doNotBlockForResponse }));
             return true;
         } else {
             console.info(`Can't publish action '${actionString}' of type '${type}' ` +

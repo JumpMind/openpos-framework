@@ -1,4 +1,4 @@
-import { Directive, ViewChildren, ElementRef, QueryList, OnDestroy, ContentChildren } from '@angular/core';
+import { Directive, QueryList, OnDestroy, ContentChildren } from '@angular/core';
 import { ArrowTabItemDirective } from './arrow-tab-item.directive';
 import { Subscription } from 'rxjs';
 import { KeyPressProvider } from '../providers/keypress.provider';
@@ -7,20 +7,27 @@ import { KeyPressProvider } from '../providers/keypress.provider';
     selector: '[appArrowTab]'
 })
 export class ArrowTabDirective implements OnDestroy {
-    @ContentChildren(ArrowTabItemDirective, {read: ElementRef})
-    buttons: QueryList<ElementRef>;
+    @ContentChildren(ArrowTabItemDirective)
+    buttons: QueryList<ArrowTabItemDirective>;
 
     private _subscription: Subscription;
 
     constructor( keyPresses: KeyPressProvider) {
         this._subscription = keyPresses.subscribe( 'ArrowUp', 1, (event: KeyboardEvent) => {
 
-            if ( event.repeat || event.type !== 'keydown' ) {
+            if ( event.repeat || event.type !== 'keydown') {
                 return;
             }
-            const index = this.buttons.toArray().map(v => v.nativeElement).indexOf(document.activeElement);
+
+            let index = -1;
+            const activeButton = this.buttons.toArray().filter(v =>
+                v.nativeElement === document.activeElement || v.nativeElement.contains(document.activeElement));
+            if (activeButton && activeButton.length > 0) {
+                index = this.buttons.toArray().indexOf(activeButton[0]);
+            }
+
             let newIndex = index - 1;
-            while (newIndex > 0 && this.buttons.toArray()[newIndex].nativeElement.disabled) {
+            while (newIndex >= 0 && this.buttons.toArray()[newIndex].isDisabled()) {
                 newIndex--;
             }
             if ( newIndex >= 0) {
@@ -32,9 +39,16 @@ export class ArrowTabDirective implements OnDestroy {
             if ( event.repeat || event.type !== 'keydown' ) {
                 return;
             }
-            const index = this.buttons.toArray().map(v => v.nativeElement).indexOf(document.activeElement);
+
+            let index = -1;
+            const activeButton = this.buttons.toArray().filter(v =>
+                v.nativeElement === document.activeElement || v.nativeElement.contains(document.activeElement));
+            if (activeButton && activeButton.length > 0) {
+                index = this.buttons.toArray().indexOf(activeButton[0]);
+            }
+
             let newIndex = index + 1;
-            while (newIndex < this.buttons.length - 1 && this.buttons.toArray()[newIndex].nativeElement.disabled) {
+            while (newIndex < this.buttons.length && this.buttons.toArray()[newIndex].isDisabled()) {
                 newIndex++;
             }
             if ( newIndex < this.buttons.length) {

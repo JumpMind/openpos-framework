@@ -8,10 +8,11 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 })
 export class KebabMenuComponent {
 
-    constructor( @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<KebabMenuComponent>) {
-    }
+  constructor( @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<KebabMenuComponent>) {
+  }
 
-    closeMenu(option: any) {
-      this.dialogRef.close(option);
-    }
+  closeMenu(option: any) {
+    this.dialogRef.close(option);
+  }
+
 }

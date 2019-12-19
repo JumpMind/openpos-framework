@@ -19,7 +19,7 @@
     </div>
 </div>
 <mat-sidenav-container>
-    <mat-sidenav>
+    <mat-sidenav appKeypressSource>
         <app-bacon-drawer (buttonClicked)="baconDrawer.close()"></app-bacon-drawer>
     </mat-sidenav>
     <mat-sidenav-content (swiperight)="baconDrawer.open()">

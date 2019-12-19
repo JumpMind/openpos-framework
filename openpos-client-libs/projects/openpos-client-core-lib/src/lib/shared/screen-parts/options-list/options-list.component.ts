@@ -8,6 +8,7 @@ import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openp
 import { FocusService } from '../../../core/focus/focus.service';
 import { MatDialog } from '@angular/material';
 import { KebabMenuComponent } from '../../components/kebab-menu/kebab-menu.component';
+import { KeyPressProvider } from '../../providers/keypress.provider';
 
 
 @ScreenPart({
@@ -34,9 +35,9 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
 
     isMobile: Observable<boolean>;
 
-    constructor(
-        injector: Injector, mediaService: OpenposMediaService,
-        protected dialog: MatDialog, protected focusService: FocusService) {
+    constructor( injector: Injector, mediaService: OpenposMediaService, protected dialog: MatDialog,
+                 protected focusService: FocusService, protected keyPresses: KeyPressProvider) {
+
         super(injector);
         this.isMobile = mediaService.observe(new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -81,7 +82,8 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
                     disableClose: false,
                     autoFocus: false,
                     restoreFocus: false
-                }
+                },
+                autoFocus: false
             });
 
             dialogRef.afterClosed().subscribe(result => {
@@ -92,5 +94,4 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
             });
         }
     }
-
 }

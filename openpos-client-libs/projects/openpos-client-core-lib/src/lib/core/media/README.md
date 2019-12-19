@@ -40,3 +40,19 @@ The directive `responsive-class` when attached to an element will add and remove
 ```
 
 There is also an `opGridAreas` directive to replace `gdAreas` and work with the OpenPos responsive API: `opAreas.mobile, opAreas.tablet`
+
+## Media Sizing
+
+### Screen Sizes
+
+OpenPOS screens have been designed to support a wide range of screen resolutions and aspect ratios.  The majority of screens use media breakpoints that service desktop, tablet, and mobile resolutions as well as portrait vs landscape orientation.
+
+Common screen sizing for desktop applications is 1920x1080px. Self checkout screens are designed to better match portrait orientation screen resolutions, such as 1080x1920px. Tablet screens support resolutions between 960x600px and 840x1280px in either orientation. Mobile screens support resolutions up to 600x960px in portrait orientation.
+
+### Icons
+
+Icons are served as SVG files, so they can be resized on the client without loss of quality.  The majority of icons are square shaped, with typical sizing of 24x24px, 36x36px, 48x48px, and 64x64px.
+
+### Images
+
+Images vary in size and shape but are typically limited to 50% of the screen height and width. Most images are designed based on the particular orientation and spacing of the screen (i.e. if the image container or screen is a portrait aspect ratio, so is the image).

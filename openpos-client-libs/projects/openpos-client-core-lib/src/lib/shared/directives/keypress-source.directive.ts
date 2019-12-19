@@ -25,10 +25,16 @@ export class KeyPressSourceDirective implements OnInit {
     @HostListener('keydown', ['$event'])
     onkeydown( event: KeyboardEvent) {
         this.keydown$.next(event);
+        if (this.keyPressProvider.keyHasSubscribers(event.key)) {
+            event.stopPropagation();
+        }
     }
 
     @HostListener('keyup', ['$event'])
     onkeyup( event: KeyboardEvent) {
         this.keyup$.next(event);
+        if (this.keyPressProvider.keyHasSubscribers(event.key)) {
+            event.stopPropagation();
+        }
     }
 }

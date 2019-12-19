@@ -7,4 +7,5 @@ export interface SelfCheckoutFormInterface extends IAbstractScreen {
     alternateSubmitActions: IActionItem[];
     imageUrl: string;
     autoComplete: boolean;
+    instructions: string;
 }

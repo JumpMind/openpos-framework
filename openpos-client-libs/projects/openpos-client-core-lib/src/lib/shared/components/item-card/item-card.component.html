@@ -30,7 +30,7 @@
             </section>
             <app-icon *ngIf="isReadOnly && item.icon" [iconName]="item.icon" [iconClass]="'material-icons mat-48'"></app-icon>
             <div class="menu-items" *ngIf="!isReadOnly && item.menuItems && expanded">
-                <app-kebab-label-button *ngIf="item.menuItems.length > 1; else elseBlock"
+                <app-kebab-label-button #kebab *ngIf="item.menuItems.length > 1; else elseBlock"
                     [menuItems]="item.menuItems" [label]="item.optionsLabel"
                     (menuItemClick)="doItemAction($event, item.index)" class="primary item-kebab-label">
                 </app-kebab-label-button>

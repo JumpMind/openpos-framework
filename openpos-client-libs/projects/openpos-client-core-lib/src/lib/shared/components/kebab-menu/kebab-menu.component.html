@@ -1,8 +1,10 @@
 <mat-card-title>
     Please select an option to continue
 </mat-card-title>
-<mat-dialog-content appArrowTab class="buttons">
-    <app-option-button appArrowTabItem *ngFor="let o of data.menuItems"
+<mat-dialog-content class="buttons" appArrowTab>
+    <app-option-button *ngFor="let o of data.menuItems; let i = index"
+        appArrowTabItem
+        [attr.tabindex]="i"
         [disabled]="!o.enabled"
         [optionTitle]="o.title"
         [optionIcon]="o.icon"

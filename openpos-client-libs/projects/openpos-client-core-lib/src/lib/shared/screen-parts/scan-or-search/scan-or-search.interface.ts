@@ -12,4 +12,5 @@ export interface ScanOrSearchInterface {
     inputType: FieldInputType;
     scanType: ScanType;
     scanIcon: string;
+    keyboardLayout: string;
 }

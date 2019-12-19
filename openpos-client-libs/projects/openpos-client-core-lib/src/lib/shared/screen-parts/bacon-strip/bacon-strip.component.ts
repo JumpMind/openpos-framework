@@ -6,6 +6,8 @@ import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { HelpTextService } from '../../../core/help-text/help-text.service';
 import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openpos-media.service';
 import { Observable } from 'rxjs';
+import { KeyPressProvider } from '../../providers/keypress.provider';
+import { Configuration } from '../../../configuration/configuration';
 
 @ScreenPart({
     name: 'baconStrip'
@@ -26,7 +28,8 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     isMobile: Observable<boolean>;
 
     searchExpanded = false;
-    constructor(injector: Injector, public helpTextService: HelpTextService, private media: OpenposMediaService) {
+    constructor(injector: Injector, public helpTextService: HelpTextService, private media: OpenposMediaService,
+                protected keyPresses: KeyPressProvider) {
         super(injector);
 
         this.isMobile = media.observe(new Map([
@@ -37,10 +40,22 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
             [MediaBreakpoints.DESKTOP_PORTRAIT, false],
             [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
         ]));
+
+        this.subscriptions.add(
+          this.keyPresses.subscribe( 'Escape', 1, (event: KeyboardEvent) => {
+            // ignore repeats and check configuration
+            if ( event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
+              return;
+            }
+            if ( event.type === 'keydown' && this.screenData.actions) {
+              this.buttonClick();
+            }
+          })
+        );
     }
 
     screenDataUpdated() {
-        if (this.screenData.actions && this.screenData.actions.length == 1) {
+        if (this.screenData.actions && this.screenData.actions.length === 1) {
             this.iconButtonName = this.screenData.actions[0].icon;
         } else if (this.screenData.actions) {
             this.iconButtonName = 'menu';
@@ -54,7 +69,7 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     }
 
     buttonClick() {
-        if (this.screenData.actions.length == 1) {
+        if (this.screenData.actions.length === 1) {
             this.doAction(this.screenData.actions[0]);
         } else {
             this.baconDrawer.toggle();

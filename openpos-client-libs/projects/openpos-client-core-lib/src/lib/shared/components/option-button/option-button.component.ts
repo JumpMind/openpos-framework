@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import { DomEventManager } from '../../../core/services/dom-event-manager.service';
 
 @Component({
     selector: 'app-option-button',
@@ -13,8 +14,12 @@ export class OptionButtonComponent {
     @Input() optionSize: string;
     @Output() buttonClick = new EventEmitter();
 
-    constructor() {
+    @ViewChild('button') button;
 
+    constructor(private elementRef: ElementRef, private domEventManager: DomEventManager) {
+      this.domEventManager.createEventObserver(this.elementRef.nativeElement, 'focus').subscribe(() => {
+        this.button.focus();
+      });
     }
 
     clickFn() {

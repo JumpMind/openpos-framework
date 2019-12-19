@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.ui.data.SellItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
@@ -20,6 +19,7 @@ public class SaleUIMessage extends UIMessage {
     private Total grandTotal;
 
     private ActionItem checkoutButton;
+    private ActionItem helpButton;
     private ActionItem logoutButton;
     private ActionItem loyaltyButton;
     private ActionItem mobileLoyaltyButton;
@@ -163,6 +163,14 @@ public class SaleUIMessage extends UIMessage {
 
     public void setLogoutButton(ActionItem logoutButton) {
         this.logoutButton = logoutButton;
+    }
+
+    public ActionItem getHelpButton() {
+        return helpButton;
+    }
+
+    public void setHelpButton(ActionItem helpButton) {
+        this.helpButton = helpButton;
     }
 
     public String getBackgroundImage() {

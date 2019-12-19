@@ -65,7 +65,8 @@ export class KebabButtonComponent implements OnDestroy {
                     disableClose: false,
                     autoFocus: false,
                     restoreFocus: false
-                }
+                },
+                autoFocus: false
             });
 
             dialogRef.afterClosed().subscribe(result => {

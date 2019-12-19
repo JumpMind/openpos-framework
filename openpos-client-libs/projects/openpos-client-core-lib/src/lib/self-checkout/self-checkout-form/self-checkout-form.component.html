@@ -8,7 +8,7 @@
         fxLayoutAlign="center center">
 
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-form-image">
-
+        <app-instructions *ngIf="screen.instructions" class="text-center instructions" [instructions]="screen.instructions" [instructionsSize]="'text-lg'"></app-instructions>
         <div responsive-class class="self-checkout-form-part-outer">
             <app-auto-complete-address-part *ngIf="screen.autoComplete" [formName]="'form'"
                 [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">

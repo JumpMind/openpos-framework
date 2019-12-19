@@ -14,33 +14,33 @@
     &.mobile {
         padding: 12px;
         margin: 4px 0px;
+        text-align: start;
+        justify-self: start;
     }
 
     .option-icon {
         align-self: center;
     }
 
-    .option-line {
-        text-align: center;
-        align-self: center;
-    
-        &.mobile {
-            text-align: start;
-            justify-self: start;
-        }
-    
-        &.sm {
-            @extend %text-sm;
-        }
-    
-        &.md {
-            @extend %text-md;
-        }
-    
-        &.lg {
-            @extend %text-lg;
+    .option-content {
+        width: 100%;
+
+        .option-line {
+
+            &.sm {
+                @extend %text-sm;
+            }
+        
+            &.md {
+                @extend %text-md;
+            }
+        
+            &.lg {
+                @extend %text-lg;
+            }
         }
     }
+
 }
 
 

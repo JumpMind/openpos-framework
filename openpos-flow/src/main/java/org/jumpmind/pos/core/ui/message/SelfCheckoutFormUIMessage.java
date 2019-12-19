@@ -28,6 +28,8 @@ public class SelfCheckoutFormUIMessage extends UIMessage implements IHasForm {
     
     private ProgressBarPart progressBar;
 
+    private String instructions;
+
     public SelfCheckoutFormUIMessage() {
         setScreenType(UIMessageType.SELF_CHECKOUT_FORM);
         ActionItem submitButton = new ActionItem("Next", "Next", IconType.Forward);
@@ -81,6 +83,14 @@ public class SelfCheckoutFormUIMessage extends UIMessage implements IHasForm {
 
     public void setProgressBar(ProgressBarPart progressBar) {
         this.progressBar = progressBar;
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
 }
