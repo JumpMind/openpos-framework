@@ -23,6 +23,8 @@
             <div fxLayout="row" fxLayoutAlign="center center">
                 <button *ngIf="screenData.skipButton && screenData.skipButton.enabled" class="skip-icon" mat-button
                     (click)="doAction(screenData.skipButton)">
+                    <app-icon *ngIf="screenData.skipButton.icon" [iconName]="screenData.skipButton.icon" [iconClass]="'material-icons mat-48'"></app-icon>
+                    <span *ngIf="screenData.skipButton.icon && screenData.skipButton.title">&nbsp;</span>
                     <h2>{{screenData.skipButton.title}}</h2>
                 </button>
             </div>
