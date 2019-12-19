@@ -28,27 +28,26 @@ export class AilaScannerCordovaPlugin implements IPlatformPlugin, IScanner {
                 initialized.error(`Tried to initialize plugin ${this.name()} which is not present`);
             }
 
-            this.AilaCordovaPlugin.configure(
-                'PadlocScanScanningModeContinuous',
-                'PadlocScanMotionDetectionModeOn',
-                'PadlocScanBeepModeOn',
-                'PadlocScanCardDetectionModeOn',
-                255,
-                'PadlocScanDebugLevelWarn',
-                (configResult) => {
-                    this.AilaCordovaPlugin.init(
-                        (initResult) => {
-                        },
-                        (initError) => {
-                            initialized.error(initError);
-                        });
-                },
-                (configError) => {
-                    initialized.error(configError);
+            (this.AilaCordovaPlugin.setConfig(
+                    true,
+                    'PadlocScanScanningModeContinuous',
+                    'PadlocScanMotionDetectionModeOn',
+                    'PadlocScanBeepModeOn',
+                    'PadlocScanCardDetectionModeOn',
+                    ['PadlocScanCodeTypeUPCEAN', 'PadlocScanCodeTypeQR', 'PadlocScanCodeType128', 'PadlocScanCodeType39', 
+                    'PadlocScanCodeType2of5', 'PadlocScanCodeTypePDF417', 'PadlocScanCodeTypeDataBar', 'PadlocScanCodeTypeDataMatrix', 
+                    'PadlocScanCodeTypeCodaBar'],
+                    'PadlocScanDebugLevelWarn') as Promise<any>)
+                .then(this.AilaCordovaPlugin.init())
+                .then(result => {
+                     console.log('AilaCordovaPlugins initialized and configured successfully');
+                     initialized.complete();
+                })
+                .catch(error => {
+                    console.log(`AilaCordovaPlugins failed to initialize ${error}`);
+                    initialized.error(error);
                 });
-            initialized.complete();
         });
-
     }
 
     startScanning(): Observable<IScanData> {
@@ -56,10 +55,9 @@ export class AilaScannerCordovaPlugin implements IPlatformPlugin, IScanner {
             throw Error(`Tried to start scanning with ${this.name()} which is not loaded`);
         }
 
-        this.AilaCordovaPlugin.scanStart((result) => {
-            this.seqScanStep();
-        });
-
+        (this.AilaCordovaPlugin.scanStart() as Promise<any>)
+            .then(result => this.seqScanStep())
+            .catch(error => console.log(`Aila scanStart Error ${error}`));
         return this.scanData$;
     }
 
@@ -68,24 +66,27 @@ export class AilaScannerCordovaPlugin implements IPlatformPlugin, IScanner {
             throw Error(`Tried to stop scanning with ${this.name()} which is not loaded`);
         }
 
-        this.AilaCordovaPlugin.scanStop((result) => {
-        }, (error) => {
-            alert('Error: ' + error);
-        });
+        (this.AilaCordovaPlugin.scanStop() as Promise<any>)
+            .catch(error => {
+                console.log(`Aila scanStop() Error: ${error}`); 
+                alert('Error: ' + error);
+            });
     }
 
     private seqScanStep() {
-        this.AilaCordovaPlugin.getNextScan(result => {
-            const type = result[0];
-            // prune off the ()
-            const data = (result[1] as string).substr(1, result[1].length - 2);
-            console.log( `Aila Scan Type: ${type}`);
-            console.log( `Aila Scan Data: ${data}`);
-            this.scanData$.next({type: AilaBarcodeUtils.convertToOpenposType(type, data.length), data});
-            this.seqScanStep();
-        }, (error) => {
-            alert('Error: ' + error);
-        });
+        (this.AilaCordovaPlugin.getNextScan() as Promise<any>)
+            .then(result => {
+                console.log(`Aila Scan raw result ${JSON.stringify(result)}`);
+                const type = result[0];
+                const data = result[1];
+                console.log( `Aila Scan Type: ${type}`);
+                console.log( `Aila Scan Data: ${data}`);
+                this.scanData$.next({type: AilaBarcodeUtils.convertToOpenposType(type, data.length), data});
+                this.seqScanStep();
+            })
+            .catch(error => {
+                console.log(`Aila getNextScan() Error: ${error}`);
+                alert('Error: ' + error);
+            });
     }
-
 }
