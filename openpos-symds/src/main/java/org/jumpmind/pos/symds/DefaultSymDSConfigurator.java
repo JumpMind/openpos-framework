@@ -24,8 +24,9 @@ public class DefaultSymDSConfigurator implements ISymDSConfigurator {
 
     @Override
     public void beforeCreate(Properties properties) {
-        properties.put(ParameterConstants.DATA_LOADER_IGNORE_MISSING_TABLES, true);
+        properties.put(ParameterConstants.DATA_LOADER_IGNORE_MISSING_TABLES, "true");
         properties.put(ParameterConstants.TRIGGER_CREATE_BEFORE_INITIAL_LOAD, "false");
+        properties.put(ParameterConstants.AUTO_SYNC_TRIGGERS_AT_STARTUP, "false");
         String nodeGroupId = env.getProperty("openpos.symmetric.nodeGroupId");
         if (isNotBlank(nodeGroupId)) {
             properties.put(ParameterConstants.NODE_GROUP_ID, nodeGroupId);
