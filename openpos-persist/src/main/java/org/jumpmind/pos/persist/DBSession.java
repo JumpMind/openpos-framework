@@ -380,7 +380,9 @@ public class DBSession {
     }
 
     protected void insert(ModelWrapper model, Table table) {
-        excecuteDml(DmlType.INSERT, model, table);
+        if (0 == excecuteDml(DmlType.INSERT, model, table)) {
+            throw new DuplicateKeyException("Received 0 rows during insert to " + table.getName());
+        }
     }
 
     protected int update(ModelWrapper model, Table table) {
