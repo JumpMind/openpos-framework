@@ -244,6 +244,9 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                 }
 
                 if (!screenInterceptor.intercept(legacyScreen, previousScreen, subscriber, this, posSessionInfo)) {
+                    if (lastTranslator != null) {
+                        stateManager.performOutjections(lastTranslator);
+                    }
                     ITranslator newTranslator = translatorFactory.createScreenTranslator(legacyScreen, subscriber.getAppId(),
                             subscriber.getProperties());
 
