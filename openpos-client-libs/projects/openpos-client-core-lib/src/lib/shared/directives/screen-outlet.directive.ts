@@ -165,6 +165,10 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         this.updateClazzes( this.personalizationClazzes, this.personalizationClazzes);
         this.updateClazzes( this.themeClazzes, this.themeClazzes);
 
+        if (!!this.componentRef) {
+            this.componentRef.changeDetectorRef.detectChanges();
+        }
+
         // Output the componentRef and screen to the training-wrapper
         this.componentEmitter.emit({ componentRef: this.componentRef, screen });
 
