@@ -326,6 +326,10 @@ public class StateManager implements IStateManager {
             //TODO: discuss whether this is how we want to handle cancelled transitions
             Action cancelAction = new Action("TransitionCancelled");
             cancelAction.setCausedBy(action);
+            if (applicationState.getCurrentContext().getState() == null) {
+                throw new FlowException("A transition was cancelled but there is no state to go back to. This could be a case where the first thing shown is a transition to the initial state, " +
+                        "like a user name prompt leading into self-checkout for example. To correct this, adjust your flow config so there is truly an initial state to go back to when the transition is cancelled.");
+            }
             stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         }
 
