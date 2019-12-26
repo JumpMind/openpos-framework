@@ -26,9 +26,11 @@ import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class ActionItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -60,10 +62,6 @@ public class ActionItem implements Serializable {
     public final static String BUTTON_SIZE_MD = "menuItem-md";
     public final static String BUTTON_SIZE_LG = "menuItem-lg";
     public final static String BUTTON_SIZE_XL = "menuItem-xl";
-    
-    public ActionItem() {
-    }
-    
     
     public ActionItem(String action) {
         this.action = action;    
