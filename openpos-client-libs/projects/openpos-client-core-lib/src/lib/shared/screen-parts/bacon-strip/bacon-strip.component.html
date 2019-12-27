@@ -1,9 +1,10 @@
 <div class="container mat-elevation-z5" responsive-class>
     <div class="leftside" [ngClass]="{'leftside-expanded' : searchExpanded}">
-        <app-icon-button *ngIf="iconButtonName" [iconName]="iconButtonName" iconClass="md"
-            (buttonClick)="buttonClick()"></app-icon-button>
+        <app-icon-button *ngIf="iconButtonName" [iconName]="iconButtonName"
+            [iconClass]="(isMobile$ | async) ? 'mat-30': 'md'" (buttonClick)="buttonClick()">
+        </app-icon-button>
 
-        <span>{{screenData.headerText}}</span>
+        <span [ngClass]="{'header-padding' : !iconButtonName}">{{screenData.headerText}}</span>
 
         <app-icon-button *ngIf="helpTextService.isAvailable() | async" iconName="help"
             (click)="helpTextService.toggle()"></app-icon-button>
