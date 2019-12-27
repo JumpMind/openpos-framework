@@ -1,7 +1,9 @@
 package org.jumpmind.pos.core.flow;
 
 import java.lang.reflect.Method;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jumpmind.pos.server.model.Action;
@@ -46,15 +48,20 @@ public class StateLifecycle {
     
     protected void invokeArrive(StateManager stateManager, Object state, Action action) {
         List<Method> methods = MethodUtils.getMethodsListWithAnnotation(state.getClass(), OnArrive.class, true, true);
+        Set<String> called = new HashSet<>();
         if (methods != null && !methods.isEmpty()) {
-            for (Method method : methods) {        
-                invokeLifecyleMethod(state, action, method);   
+            for (Method method : methods) {
+                if (!called.contains(method.getName())) {
+                    invokeLifecyleMethod(state, action, method);
+                    called.add(method.getName());
+                }
             }
         }
     }    
 
     protected void invokeLifecyleMethod(Object state, Action action, Method method) {
-        try {            
+        try {
+            method.setAccessible(true);
             if (method.getParameters() != null && method.getParameters().length == 1) {                        
                 method.invoke(state, action);
             } else {
