@@ -4,7 +4,7 @@
         (click)="onSelected()"></app-icon>
 
     <input responsive-class matInput class="search-expand-input" [ngClass]="{'search-expand-input-selected' : open}"
-        (keyup.enter)="onEnter()" [(ngModel)]="barcode" [placeholder]="screenData.scanSomethingText"
+        (keydown.enter)="onEnter()" [(ngModel)]="barcode" [placeholder]="screenData.scanSomethingText"
         [attr.minlength]="screenData.scanMinLength" [attr.maxlength]="screenData.scanMaxLength"
         [formatterName]="screenData.inputType" (disabled)="!open" (focusout)="onFocusOut()">
 </div>
