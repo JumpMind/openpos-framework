@@ -1,12 +1,14 @@
 <mat-card #scrollList *ngIf="items && (items | async)?.length > 0" class="sale-mobile-items-outer">
     <app-mobile-item *ngFor="let item of (items | async); index as i; trackBy: itemsTrackByFn" [item]="item"
-        [expanded]="isItemExpanded(i)" 
-        [ngClass]="{'mobile-item-border' : i != (items | async)?.length - 1}"
+        [expanded]="isItemExpanded(i)" [ngClass]="{'mobile-item-border' : i != (items | async)?.length - 1}"
         (click)="updateExpandedIndex(i)"></app-mobile-item>
 </mat-card>
 
 <div *ngIf="(items | async)?.length === 0" class="sale-item-prompt-outer">
-    <div responsive-class class="sale-item-list-prompt">{{screenData.prompt}}</div>
-    <div responsive-class class="sale-item-list-instructions">{{screenData.instructions}}</div>
+    <app-instructions class="sale-item-list-prompt" [instructions]="screenData.prompt" instructionsSize="text-lg">
+    </app-instructions>
+    <app-instructions class="sale-item-list-instructions" [instructions]="screenData.instructions"
+        instructionsSize="text-sm">
+    </app-instructions>
     <img *ngIf="screenData.backgroundImage" [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
 </div>

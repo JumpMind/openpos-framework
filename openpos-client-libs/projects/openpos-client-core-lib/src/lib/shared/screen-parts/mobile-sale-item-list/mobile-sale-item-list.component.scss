@@ -15,7 +15,6 @@
 }
 
 .sale-item-list-prompt {
-    @extend %text-xl;
     padding: 16px;
     max-width: 75%;
     max-height: 75%;
@@ -24,7 +23,6 @@
 }
 
 .sale-item-list-instructions {
-    @extend %text-sm;
     text-align: center;
 }
 
