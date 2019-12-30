@@ -32,6 +32,7 @@ public class SellItem extends DefaultItem {
     private boolean showSellingPrice = false;
     private List<AdditionalLabel> additionalLabels = new ArrayList<>();
     private List<AdditionalLabel> returnItemLabels;
+    private List<AdditionalLabel> orderItemLabels;
     private String imageUrl;
     private String optionsLabel;
 
@@ -252,6 +253,21 @@ public class SellItem extends DefaultItem {
 
     public void setOptionsLabel(String optionsLabel) {
         this.optionsLabel = optionsLabel;
+    }
+
+    public List<AdditionalLabel> getOrderItemLabels() {
+        return orderItemLabels;
+    }
+
+    public void setOrderItemLabels(List<AdditionalLabel> orderItemLabels) {
+        this.orderItemLabels = orderItemLabels;
+    }
+
+    public void addOrderItemLabel(String label, String value) {
+        if(this.orderItemLabels == null) {
+            this.orderItemLabels = new ArrayList<>();
+        }
+        this.orderItemLabels.add(new AdditionalLabel(label, value));
     }
 
 }

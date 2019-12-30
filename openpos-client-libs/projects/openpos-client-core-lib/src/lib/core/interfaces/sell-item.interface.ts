@@ -23,6 +23,7 @@ export interface ISellItem extends IItem {
     showSellingPrice: boolean;
     additionalLabels: {label: string, value: string} [];
     returnItemLabels: {label: string, value: string} [];
+    orderItemLabels: {label: string, value: string} [];
     optionsLabel: string;
     isOrderItem: boolean;
 }
