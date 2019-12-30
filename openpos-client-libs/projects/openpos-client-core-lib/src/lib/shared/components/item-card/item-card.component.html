@@ -13,6 +13,13 @@
                     </li>
                 </ul>
             </section>
+            <section class="order-info order" *ngIf="item.orderItemLabels && expanded">
+                <ul responsive-class class="order-info-text">
+                    <li *ngFor="let orderItemLabel of item.orderItemLabels">
+                        {{orderItemLabel.label}} {{orderItemLabel.value}}
+                    </li>
+                </ul>
+            </section>
             <ul responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
                 <li *ngFor="let additionalLabel of item.additionalLabels" class="muted-color">
                     {{additionalLabel.label}}: {{additionalLabel.value}}
@@ -21,7 +28,7 @@
         </div>
         <div class="right-side">
             <section class="price">
-                <app-currency-text responsive-class class="item-card-price" [ngClass]="{'warn': item.returnItemLabels}"
+                <app-currency-text responsive-class class="item-card-price" [ngClass]="{'order': item.isOrderItem, 'warn': item.returnItemLabels}"
                     [amountText]="item.amount">
                 </app-currency-text>
                 <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
