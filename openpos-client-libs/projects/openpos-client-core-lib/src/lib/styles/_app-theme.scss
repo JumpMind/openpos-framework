@@ -51,7 +51,8 @@
         foreground: map-merge($mat-foreground, $openpos-foreground),
         background: map-merge($mat-light-theme-background, $openpos-background),
         selected: $selected,
-        success: mat-palette($mat-green)
+        success: mat-palette($mat-green),
+        orders: mat-palette($mat-orange, 800)
     );
     @return map-merge(map-merge($openpos-mat-theme, $openpos-addons), $addons);
 }
@@ -76,6 +77,8 @@
     $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
     $success-color: mat-color(map-get($theme, success));
+    $order-color: mat-color(map-get($theme, orders));
+
 
     // this is a hack to get around a default value in angular material that they removed in future versions
     // if we ever upgrade we can probably remove this. This allows the field to be sized by flex instead of being
@@ -102,6 +105,10 @@
 
     .success{
         color:$success-color;
+    }
+
+    .order {
+        color: $order-color;
     }
 
     .muted-color {
