@@ -16,6 +16,7 @@ export const Configuration = {
     googleApiKey: '',
     loadingDialogDelay: 1000,
     confirmConnectionTimeoutMillis: 20000,
+    electronClientLogFilename: 'openpos-client.log',
 
     // These properties are static on the client and not overriden by configuration.service.ts
     compatibilityVersion: 'v1',

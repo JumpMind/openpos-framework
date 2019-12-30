@@ -1,3 +1,4 @@
+import { Configuration } from './../../configuration/configuration';
 import { ILogger } from './logger.interface';
 import { ElectronService } from 'ngx-electron';
 import { Injectable } from '@angular/core';
@@ -23,7 +24,7 @@ export class ElectronLogger implements ILogger {
             if (!fs.existsSync(logDir)) {
                 fs.mkdirSync(logDir);
             }
-            fileTransport.file = logDir + '/nu-client.log';
+            fileTransport.file = `${logDir}/${Configuration.electronClientLogFilename}`;
             fileTransport.format = '{y}-{m}-{d} {h}:{i}:{s},{ms} {level}  {text}';
             this.electronLogger.transports.console.level = false;
             this.electron.ipcRenderer.on('errorInWindow', function(event, data) {
