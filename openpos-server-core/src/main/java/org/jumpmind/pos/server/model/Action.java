@@ -81,4 +81,14 @@ public class Action implements Serializable, Cloneable {
         return data != null ? data.toString() : null;
     }
 
+    public boolean causedBy(String actionName) {
+        boolean causedBy = false;
+        Action actionToCheck = this;
+        do {
+            causedBy |= actionToCheck.getName().equals(actionName);
+            actionToCheck = actionToCheck.getCausedBy();
+        } while (actionToCheck != null && !causedBy);
+        return causedBy;
+    }
+
 }
