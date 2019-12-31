@@ -1,7 +1,7 @@
-import { Configuration } from './../../configuration/configuration';
 import { ILogger } from './logger.interface';
 import { ElectronService } from 'ngx-electron';
-import { Injectable } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
+import { IElectronLoggerConfig, ELECTRON_LOGGER_CONFIG } from './electron-logger-config';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +9,7 @@ import { Injectable } from '@angular/core';
 export class ElectronLogger implements ILogger {
     electronLogger: any;
 
-    constructor(private electron: ElectronService) {
+    constructor(@Inject(ELECTRON_LOGGER_CONFIG) config: IElectronLoggerConfig, private electron: ElectronService) {
         if (this.electron.isElectronApp) {
             console.log('configuring electron logging');
             this.electronLogger = this.electron.remote.require('electron-log');
@@ -18,16 +18,16 @@ export class ElectronLogger implements ILogger {
             const fileTransport = this.electronLogger.transports.file;
             const app = this.electron.remote.app;
             const path = this.electron.remote.require('path');
-            const logDir = path.dirname(app.getPath('exe')) + '/../logs';
+            const logDir = config.logDir && config.logDir.trim().length > 0 ? config.logDir : path.dirname(app.getPath('exe')) + '/../logs';
             console.log('log directory set to ' + logDir);
             const fs = this.electron.remote.require('fs');
             if (!fs.existsSync(logDir)) {
                 fs.mkdirSync(logDir);
             }
-            //fileTransport.fileName = Configuration.electronClientLogFilename;
-            //fileTransport.resolvePath = (variables) => logDir;
-            fileTransport.file = logDir + '/' + Configuration.electronClientLogFilename;
-            fileTransport.format = '{y}-{m}-{d} {h}:{i}:{s},{ms} {level}  {text}';
+            // fileTransport.fileName = Configuration.electronClientLogFilename;
+            // fileTransport.resolvePath = (variables) => logDir;
+            fileTransport.file = `${logDir}/${config.clientLogFilename}`;
+            fileTransport.format = config.format;
             this.electronLogger.transports.console.level = false;
             this.electron.ipcRenderer.on('errorInWindow', function(event, data) {
                 this.electronLogger.error(data);
