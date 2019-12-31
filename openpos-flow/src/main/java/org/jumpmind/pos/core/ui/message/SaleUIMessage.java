@@ -7,6 +7,7 @@ import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.OrderSummary;
 
 @AssignKeyBindings
 public class SaleUIMessage extends UIMessage {
@@ -17,6 +18,8 @@ public class SaleUIMessage extends UIMessage {
 
     private List<Total> totals;
     private Total grandTotal;
+
+    private List<OrderSummary> orders;
 
     private ActionItem checkoutButton;
     private ActionItem helpButton;
@@ -75,6 +78,21 @@ public class SaleUIMessage extends UIMessage {
 
     public void setGrandTotal(String name, String amount) {
         this.grandTotal = new Total(name, amount);
+    }
+
+    public List<OrderSummary> getOrders() {
+        return orders;
+    }
+
+    public void setOrders(List<OrderSummary> orders) {
+        this.orders = orders;
+    }
+
+    public void addOrder(OrderSummary orderSummary) {
+        if(this.orders == null) {
+            this.orders = new ArrayList<>();
+        }
+        this.orders.add(orderSummary);
     }
 
     public UICustomer getCustomer() {
