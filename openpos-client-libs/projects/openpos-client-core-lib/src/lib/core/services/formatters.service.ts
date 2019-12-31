@@ -73,6 +73,7 @@ export class FormattersService {
         NOLOCALEFormatters.set('hour', new TimeFormatter(TimeFormat.HOUR));
         NOLOCALEFormatters.set('minsec', new TimeFormatter(TimeFormat.MIN_SEC));
         NOLOCALEFormatters.set('monthdate', new DateTimeFormatter('MM/dd'));
+        NOLOCALEFormatters.set('monthdateyear', new DateTimeFormatter('MM/dd/yyyy'));
     }
 
     getFormatter(name: string): IFormatter {

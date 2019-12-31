@@ -144,6 +144,7 @@ import { TitleComponent } from './components/title/title.component';
 import { ContentCardComponent } from './components/content-card/content-card.component';
 import { OptionButtonComponent } from './components/option-button/option-button.component';
 import { TenderPartComponent } from './screen-parts/tender-part/tender-part.component';
+import { LocalizedDateNoTimePipe } from './pipes/localized-date-no-time.pipe';
 
 const screenParts = [
     TenderPartComponent,
@@ -281,6 +282,7 @@ const pipes = [
     PhonePipe,
     HourMinSecPipe,
     LocalizedDatePipe,
+    LocalizedDateNoTimePipe,
     ValueFormatterPipe,
     POSCurrencyPipe,
     StringListFilterPipe,
