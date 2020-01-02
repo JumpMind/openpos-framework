@@ -15,4 +15,5 @@ export interface SaleInterface extends IAbstractScreen {
     checkoutButton: IActionItem;
     providerKey: string;
     orders: IOrderSummary[];
+    removeOrderAction: IActionItem;
 }

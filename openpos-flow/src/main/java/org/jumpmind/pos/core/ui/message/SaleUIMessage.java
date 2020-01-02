@@ -20,6 +20,7 @@ public class SaleUIMessage extends UIMessage {
     private Total grandTotal;
 
     private List<OrderSummary> orders;
+    private ActionItem removeOrderAction;
 
     private ActionItem checkoutButton;
     private ActionItem helpButton;
@@ -93,6 +94,14 @@ public class SaleUIMessage extends UIMessage {
             this.orders = new ArrayList<>();
         }
         this.orders.add(orderSummary);
+    }
+
+    public ActionItem getRemoveOrderAction() {
+        return removeOrderAction;
+    }
+
+    public void setRemoveOrderAction(ActionItem removeOrderAction) {
+        this.removeOrderAction = removeOrderAction;
     }
 
     public UICustomer getCustomer() {
