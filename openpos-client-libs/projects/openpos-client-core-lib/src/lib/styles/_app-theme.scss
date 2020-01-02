@@ -107,8 +107,12 @@
         color:$success-color;
     }
 
-    .order {
+    .order-color {
         color: $order-color;
+    }
+
+    .order-background {
+        background-color: $order-color;
     }
 
     .muted-color {
