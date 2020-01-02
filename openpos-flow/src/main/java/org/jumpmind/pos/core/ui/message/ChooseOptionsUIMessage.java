@@ -6,12 +6,12 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ChooseOptionsUIMesage extends UIMessage {
+public class ChooseOptionsUIMessage extends UIMessage {
 
     private List<FormOptionItem> options = new ArrayList<FormOptionItem>();
     private String instructions;
 
-    public ChooseOptionsUIMesage() {
+    public ChooseOptionsUIMessage() {
         setScreenType(UIMessageType.CHOOSE_OPTIONS);
     }
 

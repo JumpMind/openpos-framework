@@ -58,6 +58,7 @@ import { CLIENTCONTEXT } from './client-context/client-context-provider.interfac
 import { TimeZoneContext } from './client-context/time-zone-context';
 import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
+import { ELECTRON_LOGGER_CONFIG, DEFAULT_ELECTRON_LOGGER_CONFIG } from './logging/electron-logger-config';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -121,6 +122,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         TrainingOverlayService,
         ConfigurationService,
         KeyPressProvider,
+        { provide: ELECTRON_LOGGER_CONFIG, useValue: DEFAULT_ELECTRON_LOGGER_CONFIG },
         { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
         { provide: LOGGERS, useExisting: ElectronLogger, multi: true },
         HelpTextService,

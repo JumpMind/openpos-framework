@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.ui.message;
 
+import lombok.Data;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.ui.IHasForm;
 import org.jumpmind.pos.core.ui.ActionItem;
@@ -8,6 +9,7 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class DynamicFormUIMessage extends UIMessage implements IHasForm {
 
     private Form form = new Form();
@@ -24,49 +26,4 @@ public class DynamicFormUIMessage extends UIMessage implements IHasForm {
         setScreenType(UIMessageType.DYNAMIC_FORM);
     }
 
-    @Override
-    public void setForm(Form form) {
-        this.form = form;
-    }
-
-    @Override
-    public Form getForm() {
-        return form;
-    }
-
-    public ActionItem getSubmitButton() {
-        return submitButton;
-    }
-
-    public void setSubmitButton(ActionItem submitButton) {
-        this.submitButton = submitButton;
-    }
-
-    public List<String> getAlternateSubmitActions() {
-        return alternateSubmitActions;
-    }
-
-    public void setAlternateSubmitActions(List<String> alternateSubmitActions) {
-        this.alternateSubmitActions = alternateSubmitActions;
-    }
-
-    public void addAlternateSubmitAction( String alternatedSubmitAction ) {
-
-    }
-
-    public String getInstructions() {
-        return instructions;
-    }
-
-    public void setInstructions(String instructions) {
-        this.instructions = instructions;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
 }
