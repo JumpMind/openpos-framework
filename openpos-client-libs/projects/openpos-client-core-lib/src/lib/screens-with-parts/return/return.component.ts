@@ -76,7 +76,7 @@ export class ReturnComponent extends PosScreen<any> implements OnInit, OnDestroy
 
     ngOnDestroy(): void {
         this.unregisterScanner();
-        this.scannerService.stopScanning();
+        // this.scannerService.stopScanning();
         super.ngOnDestroy();
     }
 
