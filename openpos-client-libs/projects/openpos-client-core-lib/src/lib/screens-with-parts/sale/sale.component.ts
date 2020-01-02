@@ -8,7 +8,6 @@ import { ITotal } from '../../core/interfaces/total.interface';
 import { Subscription, Observable } from 'rxjs';
 import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
-import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
@@ -34,6 +33,8 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
 
     initialized = false;
 
+    removeOrderAction: IActionItem;
+
     private scanServiceSubscription: Subscription;
 
     constructor(private scannerService: ScannerService, protected dialog: MatDialog, injector: Injector, media: OpenposMediaService) {
@@ -53,6 +54,7 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
         this.totals = this.screen.totals ? this.screen.totals.slice() : [];
         this.screen.customerName = this.screen.customerName != null && this.screen.customerName.length > 10 ?
             this.screen.customerName.substring(0, 10) + '...' : this.screen.customerName;
+        this.removeOrderAction = this.screen.removeOrderAction;
         this.dialog.closeAll();
     }
 
@@ -96,6 +98,13 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
         if (this.scanServiceSubscription !== null) {
             this.scanServiceSubscription.unsubscribe();
             this.scanServiceSubscription = null;
+        }
+    }
+
+    public onOrderClick(event: any) {
+        if (this.screen.orders) {
+            const index = this.screen.orders.indexOf(event);
+            this.doAction('OrderDetails', index);
         }
     }
 }

@@ -1,6 +1,22 @@
 <app-bacon-strip class="sale-bacon-strip">
     <div class="sale-outer">
         <div *ngIf="!(isMobile | async)" class="sale-body">
+            <section class="orders" *ngIf="screen.orders && screen.orders.length > 0">
+                <div class="orders-content">
+                    <strong class="orders-label muted-color" responsiveClass>
+                            {{screen.orders.length}} Linked Order(s)
+                    </strong>
+                    <div style="overflow-y: auto;">
+                        <app-order-card *ngFor="let order of screen.orders"
+                            class="order"
+                            [order]="order"
+                            [removeOrderAction]="removeOrderAction"
+                            (click)="onOrderClick(order)">
+                        </app-order-card>
+                    </div>
+                </div>
+                <div class="vertical-divider grey-background"></div>
+            </section>
             <div class="sale-items-outer">
                 <app-scan-or-search class="scan-or-search mat-elevation-z1" [defaultAction]="screen.checkoutButton" [focusInitial]="!Configuration.useOnScreenKeyboard">
                 </app-scan-or-search>
