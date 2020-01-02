@@ -13,7 +13,7 @@
                     </li>
                 </ul>
             </section>
-            <section class="order-info order" *ngIf="item.orderItemLabels && expanded">
+            <section class="order-info order-color" *ngIf="item.orderItemLabels && expanded">
                 <ul responsive-class class="order-info-text">
                     <li *ngFor="let orderItemLabel of item.orderItemLabels">
                         {{orderItemLabel.label}} {{orderItemLabel.value}}
