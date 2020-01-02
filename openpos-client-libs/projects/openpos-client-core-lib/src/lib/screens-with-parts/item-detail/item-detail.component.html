@@ -1,17 +1,16 @@
-<app-bacon-strip>
-    <section responsive-class class="item-card">
-        <h1 responsive-class>{{screen.itemName}}</h1>
-        <p responsive-class>{{screen.summary}}</p>
-        <app-carousel class="carousel" carouselSize="xl" [carouselItemClass]="'rounded-edge'">
-            <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
-                <img  [src]="image | imageUrl">
-            </ng-template>
-        </app-carousel>
-        <ul responsive-class class="properties">
-            <li *ngFor="let prop of screen.itemProperties">
-                <app-display-property [property]="prop"></app-display-property>
-            </li>
-        </ul>
-        <app-options-list></app-options-list>
-    </section>
-</app-bacon-strip>
+<app-bacon-strip></app-bacon-strip>
+<section responsive-class class="item-card">
+    <h1 responsive-class>{{screen.itemName}}</h1>
+    <p responsive-class>{{screen.summary}}</p>
+    <app-carousel class="carousel" carouselSize="xl" [carouselItemClass]="'rounded-edge'">
+        <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
+            <img [src]="image | imageUrl">
+        </ng-template>
+    </app-carousel>
+    <ul responsive-class class="properties">
+        <li *ngFor="let prop of screen.itemProperties">
+            <app-display-property [property]="prop"></app-display-property>
+        </li>
+    </ul>
+    <app-options-list optionListSizeClass="md"></app-options-list>
+</section>
