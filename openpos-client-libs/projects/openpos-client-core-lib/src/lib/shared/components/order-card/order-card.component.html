@@ -1,5 +1,5 @@
 <div class="order-card" [ngClass]="{'mat-elevation-z4':hover, 'mat-elevation-z1':!hover}">
-    <section class="order-header order-background">
+    <section responsive-class class="order-header order-background">
         <app-icon [iconName]="order.iconName" [iconClass]="'contrast xs'"></app-icon>
         <strong class="contrast"><kbd>{{order.title}}</kbd></strong>
         <strong class="contrast order-header-value"><kbd>{{order.number}}</kbd></strong>
@@ -15,12 +15,18 @@
                 <strong><kbd class="amount-due">{{order.amountDueLabel}}</kbd></strong>
             </div>
             <div responsive-class class="order-details-values">
-                <kbd>{{order.orderCreated|localizeddatenotime}}</kbd>
-                <kbd>{{order.orderDue|localizeddatenotime}}</kbd>
-                <kbd>{{order.status}}</kbd>
-                <kbd>{{order.itemCount}}</kbd>
-                <kbd><app-currency-text [amountText]="order.orderTotal"></app-currency-text></kbd>
-                <strong><kbd><app-currency-text class="amount-due" [amountText]="order.amountDue"></app-currency-text></kbd></strong>
+                <kbd *ngIf="order.orderCreated">{{order.orderCreated|localizeddatenotime}}</kbd>
+                <kbd *ngIf="!order.orderCreated">-</kbd>
+                <kbd *ngIf="order.orderDue">{{order.orderDue|localizeddatenotime}}</kbd>
+                <kbd *ngIf="!order.orderDue">-</kbd>
+                <kbd *ngIf="order.status">{{order.status}}</kbd>
+                <kbd *ngIf="!order.status">-</kbd>
+                <kbd *ngIf="order.itemCount">{{order.itemCount}}</kbd>
+                <kbd *ngIf="!order.itemCount">-</kbd>
+                <kbd *ngIf="order.orderTotal"><app-currency-text [amountText]="order.orderTotal"></app-currency-text></kbd>
+                <kbd *ngIf="!order.orderTotal">-</kbd>
+                <strong *ngIf="order.amountDue"><kbd><app-currency-text class="amount-due" [amountText]="order.amountDue"></app-currency-text></kbd></strong>
+                <strong *ngIf="!order.amountDue"><kbd>-</kbd></strong>
             </div>
         </section>
         <div class="remove-button" *ngIf="order && removeOrderAction">
