@@ -24,6 +24,7 @@ public class BaconStripPart implements IHasBackButton, Serializable {
     private String headerText;
     private String logo;
     private List<ActionItem> actions;
+    private String icon;
 
     @Override
     public void setBackButton(ActionItem button) {

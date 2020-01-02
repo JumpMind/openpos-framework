@@ -11,6 +11,7 @@
 @import './search-expand-input/search-expand-input-theme';
 @import './sale-total-panel/sale-total-panel-theme';
 @import './tender-part/tender-part-theme';
+@import './basic-bacon-strip/basic-bacon-strip-theme';
 
 @mixin screen-part-themes($theme) {
     @include bacon-strip-theme($theme);
@@ -25,4 +26,5 @@
     @include search-expand-input-theme($theme);
     @include sale-total-panel-theme($theme);
     @include tender-part-theme($theme);
+    @include basic-bacon-strip-theme($theme);
 }

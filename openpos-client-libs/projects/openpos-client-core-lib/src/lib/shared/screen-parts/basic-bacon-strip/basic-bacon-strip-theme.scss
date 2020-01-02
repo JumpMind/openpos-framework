@@ -1,0 +1,20 @@
+@mixin basic-bacon-strip-theme($theme) {
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-primary-contrast: mat-color(map-get($theme, primary), default-contrast);
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+
+    app-basic-bacon-strip {
+        >.container {
+            background-color: $app-primary;
+            color: $app-primary-contrast;
+        }
+
+        .mat-drawer-backdrop.mat-drawer-shown {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+    }
+}
