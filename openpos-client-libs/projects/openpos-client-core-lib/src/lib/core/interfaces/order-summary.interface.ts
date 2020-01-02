@@ -12,11 +12,15 @@ export interface IOrderSummary {
     statusLabel: string;
     statusIcon: string;
     orderDue: Date;
+    orderCreated: Date;
     orderTotal: string;
     itemCountIcon: string;
     customerIcon: string;
+    amountDue: string;
+    amountDueLabel: string;
     orderTotalLabel: string;
     orderDueLabel: string;
+    orderCreatedLabel: string;
     orderDueIcon: string;
     orderLabel: string;
     orderIcon: string;

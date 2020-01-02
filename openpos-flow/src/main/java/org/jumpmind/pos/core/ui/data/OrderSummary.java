@@ -16,11 +16,15 @@ public class OrderSummary implements Serializable {
     private String statusLabel;
     private String statusIcon;
     private Date orderDue;
+    private Date orderCreated;
     private String orderTotalLabel;
+    private String amountDueLabel;
     private String orderDueLabel;
+    private String orderCreatedLabel;
     private String orderDueIcon;
     private String itemCountLabel;
     private String orderTotal;
+    private String amountDue;
     private String itemCountIcon;
     private TimeUnitLabels timeUnitLabels;
 
@@ -28,8 +32,9 @@ public class OrderSummary implements Serializable {
     }
 
     public OrderSummary(String number, String title, String iconName, OrderCustomer customer, String itemCount, String status, String statusLabel,
-                        String statusIcon, Date orderDue, String orderTotalLabel, String orderDueLabel, String orderDueIcon, String itemCountLabel,
-                        String orderTotal, String itemCountIcon, TimeUnitLabels timeUnitLabels) {
+                        String statusIcon, Date orderDue, Date orderCreated, String orderTotalLabel, String amountDueLabel,
+                        String orderDueLabel, String orderCreatedLabel, String orderDueIcon, String itemCountLabel,
+                        String orderTotal, String amountDue, String itemCountIcon, TimeUnitLabels timeUnitLabels) {
         this.number = number;
         this.title = title;
         this.iconName = iconName;
@@ -39,11 +44,15 @@ public class OrderSummary implements Serializable {
         this.statusLabel = statusLabel;
         this.statusIcon = statusIcon;
         this.orderDue = orderDue;
+        this.orderCreated = orderCreated;
         this.orderTotalLabel = orderTotalLabel;
+        this.amountDueLabel = amountDueLabel;
         this.orderDueLabel = orderDueLabel;
+        this.orderCreatedLabel = orderCreatedLabel;
         this.orderDueIcon = orderDueIcon;
         this.itemCountLabel = itemCountLabel;
         this.orderTotal = orderTotal;
+        this.amountDue = amountDue;
         this.itemCountIcon = itemCountIcon;
         this.timeUnitLabels = timeUnitLabels;
     }
@@ -120,6 +129,14 @@ public class OrderSummary implements Serializable {
         this.orderDue = orderDue;
     }
 
+    public Date getOrderCreated() {
+        return orderCreated;
+    }
+
+    public void setOrderCreated(Date orderCreated) {
+        this.orderCreated = orderCreated;
+    }
+
     public String getOrderTotalLabel() {
         return orderTotalLabel;
     }
@@ -128,12 +145,28 @@ public class OrderSummary implements Serializable {
         this.orderTotalLabel = orderTotalLabel;
     }
 
+    public String getAmountDueLabel() {
+        return amountDueLabel;
+    }
+
+    public void setAmountDueLabel(String amountDueLabel) {
+        this.amountDueLabel = amountDueLabel;
+    }
+
     public String getOrderDueLabel() {
         return orderDueLabel;
     }
 
     public void setOrderDueLabel(String orderDueLabel) {
         this.orderDueLabel = orderDueLabel;
+    }
+
+    public String getOrderCreatedLabel() {
+        return orderCreatedLabel;
+    }
+
+    public void setOrderCreatedLabel(String orderCreatedLabel) {
+        this.orderCreatedLabel = orderCreatedLabel;
     }
 
     public String getOrderDueIcon() {
@@ -158,6 +191,14 @@ public class OrderSummary implements Serializable {
 
     public void setOrderTotal(String orderTotal) {
         this.orderTotal = orderTotal;
+    }
+
+    public String getAmountDue() {
+        return amountDue;
+    }
+
+    public void setAmountDue(String amountDue) {
+        this.amountDue = amountDue;
     }
 
     public String getItemCountIcon() {
