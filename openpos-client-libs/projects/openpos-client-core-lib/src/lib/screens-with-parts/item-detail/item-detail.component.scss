@@ -27,6 +27,8 @@ p{
     @extend %page-gutter;
     @extend %page-element;
     width: 75%;
+    height: 100%;
+    overflow-y: auto;
     align-self: center;
     justify-self: center;
     grid-template: "image title" auto
