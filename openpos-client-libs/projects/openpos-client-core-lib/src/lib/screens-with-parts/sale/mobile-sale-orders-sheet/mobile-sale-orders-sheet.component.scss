@@ -1,0 +1,33 @@
+@import "../../../styles/mixins/typography";
+
+.orders-content{
+    display:grid;
+    grid-template-rows: auto 1fr;
+    height:100%;
+
+    .label-outer {
+        display: grid;
+        
+        .orders-label {
+            margin:8px;
+            text-align: center;
+            @extend %text-sm;
+    
+            .double-arrow {
+                display:inline-grid;
+                transform: rotate(90deg);
+            }
+        }
+    }
+
+
+    .orders-cards {
+        min-height:100px;
+        overflow-y: auto;
+        .order {
+           margin:8px;
+        }
+    }
+
+
+}

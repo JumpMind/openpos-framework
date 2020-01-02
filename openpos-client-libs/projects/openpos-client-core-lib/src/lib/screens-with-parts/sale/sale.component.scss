@@ -88,5 +88,23 @@
                 overflow-y: auto;
             }
         }
+
+        .orders-mobile-swipe-up-container {
+            display: grid;
+            width: 100%;
+            align-content: center;
+            justify-content:center;
+        
+            .orders-label-mobile {
+                margin: 8px;
+                text-align: center;
+                @extend %text-sm;
+
+                .double-arrow {
+                    display:inline-grid;
+                    transform: rotate(-90deg);
+                }
+            }
+        }
     }
 }

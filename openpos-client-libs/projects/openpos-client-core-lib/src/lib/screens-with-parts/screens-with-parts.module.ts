@@ -28,6 +28,7 @@ import { ScanInputDialogComponent } from './scan-input-dialog/scan-input-dialog.
 import { MobileReturnReceiptsSheetComponent } from './return/mobile-return-receipts-sheet/mobile-return-receipts-sheet.component';
 import { OptionsScreenComponent } from './options/options-screen.component';
 import { OptionsScreenDialogComponent } from './options/options-screen-dialog.component';
+import { MobileSaleOrdersSheetComponent } from './sale/mobile-sale-orders-sheet/mobile-sale-orders-sheet.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -40,6 +41,7 @@ const screens = [
     DataTableComponent,
     AutoCompleteAddressComponent,
     SaleComponent,
+    MobileSaleOrdersSheetComponent,
     ItemDetailComponent,
     TenderComponent,
     SignatureCaptureComponent,

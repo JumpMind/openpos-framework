@@ -32,5 +32,11 @@
             <app-mobile-sale-item-list class="sale-list-background-mobile"></app-mobile-sale-item-list>
         </div>
         <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>
+        <div *ngIf="(isMobile | async) && screen.orders && screen.orders.length > 0" class="orders-mobile-swipe-up-container dark-background" (swipeup)="openSheet()" responsive-class> 
+            <strong class="orders-label-mobile contrast-color">
+                <app-icon iconName="double_arrow" iconClass="double-arrow md"></app-icon>
+                {{screen.orders.length}} Linked Order(s)
+            </strong>
+        </div>
     </div>
 </app-bacon-strip>

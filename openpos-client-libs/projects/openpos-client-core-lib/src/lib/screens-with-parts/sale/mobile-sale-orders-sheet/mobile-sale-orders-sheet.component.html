@@ -1,0 +1,17 @@
+<section class="orders-content" (swipedown)="closeSheet()" responsive-class>
+    <div class="label-outer dark-background">
+            <strong class="orders-label contrast-color">
+                    <app-icon iconName="double_arrow" iconClass="double-arrow md"></app-icon>
+                    {{orders.length}} Linked Order(s)
+            </strong>
+    </div>
+    <div class="orders-cards">
+            <app-order-card *ngFor="let order of orders"
+                class="order"
+                [order]="order" 
+                [removeOrderAction]="removeOrderAction" 
+                (removeButtonClick)="onOrderRemove(order)"
+                (click)="onOrderClick(order)">
+            </app-order-card>
+    </div>
+</section>
