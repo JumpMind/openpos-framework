@@ -1,0 +1,13 @@
+@mixin order-card-theme($theme){
+
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    app-order-card {
+        .contrast {
+            color: mat-color(map-get($theme, primary), default-contrast);
+        }
+    }
+
+  }

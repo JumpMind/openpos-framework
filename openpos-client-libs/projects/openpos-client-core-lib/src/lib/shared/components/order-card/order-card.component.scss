@@ -6,50 +6,44 @@
 
 .order-card {
     display: grid;
-    padding: 10px;
     background-color: white;
 
-    .order-info {
+    .order-header {
         display: grid;
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns: auto 1fr 1fr;
+        align-items: center;
+        padding: 10px;
 
-        .order-info-labels {
-            display:grid;
-            @extend %text-sm;
-        }
-        
-        .order-info-values {
-            display: grid;
+        .order-header-value {
             text-align: end;
-            @extend %text-sm;
         }
     }
 
-    .order-totals {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-
-        .order-totals-labels {
-            display:grid;
-            @extend %text-sm;
-        }
-        
-        .order-totals-values {
-            display: grid;
-            text-align: end;
-            @extend %text-sm;
-        }
-
-    }
-    
-    .icon {
-        justify-self: center;
-    }
-
-    .remove-button {
+    .order-content {
         display:grid;
-        justify-items:end;
-        padding-top:10px;
-        padding-right:15px;
+        padding: 10px;
+        .order-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+    
+            .order-details-labels {
+                display:grid;
+                @extend %text-sm;
+            }
+            
+            .order-details-values {
+                display: grid;
+                text-align: end;
+                @extend %text-sm;
+            }
+        }
+    
+        .remove-button {
+            display:grid;
+            justify-items:end;
+            padding-top:10px;
+            padding-right:15px;
+        }
     }
+
 }
