@@ -8,7 +8,7 @@
 
             <ng-container *ngIf="screenData && screenData.backButton && screenData.backButton.enabled">
                 <button mat-button (click)="doMenuItemAction(screenData.backButton)">
-                    <app-icon [iconName]="'clear'" [iconClass]="'material-icons mat-48'"></app-icon>
+                    <app-icon [iconName]="screenData.backButton.icon ? screenData.backButton.icon : 'clear'" [iconClass]="'material-icons mat-48'"></app-icon>
                 </button>
             </ng-container>
         </div>
