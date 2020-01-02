@@ -1,0 +1,27 @@
+@import "../../../styles/variables/spacing";
+@import "../../../styles/mixins/typography";
+
+:host {
+    display: grid;
+    grid-auto-flow: row;
+    grid-template-rows: auto 1fr;
+}
+
+.container {
+    @extend %text-md;
+    @extend %page-header;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    z-index: 100;
+    align-items: center;
+
+    app-icon {
+        justify-self: start;
+    }
+
+    img {
+        max-height: 50px;
+        justify-self: center;
+    }
+
+}

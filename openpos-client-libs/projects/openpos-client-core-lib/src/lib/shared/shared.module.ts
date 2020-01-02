@@ -146,6 +146,7 @@ import { OptionButtonComponent } from './components/option-button/option-button.
 import { TenderPartComponent } from './screen-parts/tender-part/tender-part.component';
 import { OrderCardComponent } from './components/order-card/order-card.component';
 import { LocalizedDateNoTimePipe } from './pipes/localized-date-no-time.pipe';
+import { BasicBaconStripComponent } from './screen-parts/basic-bacon-strip/basic-bacon-strip.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -173,6 +174,7 @@ const screenParts = [
     OptionsListComponent,
     ScanPartComponent,
     SearchExpandInputComponent,
+    BasicBaconStripComponent,
 ];
 
 const components = [

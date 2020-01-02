@@ -1,0 +1,4 @@
+<div responsive-class class="container mat-elevation-z5">
+    <app-icon *ngIf="screenData.icon" [iconName]="screenData.icon" [iconClass]="(isMobile | async) ? 'mat-30': 'md'"></app-icon>
+    <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
+</div>
