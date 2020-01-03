@@ -39,7 +39,7 @@ export class ScanPartComponent extends ScreenPartComponent<ScanInterface> implem
 
     ngOnDestroy(): void {
         this.unregisterScanner();
-        this.scannerService.stopScanning();
+        // this.scannerService.stopScanning();
         super.ngOnDestroy();
     }
 

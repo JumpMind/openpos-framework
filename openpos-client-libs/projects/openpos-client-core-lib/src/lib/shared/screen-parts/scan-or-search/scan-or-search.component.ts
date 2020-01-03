@@ -81,7 +81,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     ngOnDestroy(): void {
         this.unregisterScanner();
-        this.scannerService.stopScanning();
+        // this.scannerService.stopScanning();
         super.ngOnDestroy();
     }
 

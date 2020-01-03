@@ -63,7 +63,7 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
 
     ngOnDestroy(): void {
         this.unregisterScanner();
-        this.scannerService.stopScanning();
+        // this.scannerService.stopScanning();
         super.ngOnDestroy();
     }
 

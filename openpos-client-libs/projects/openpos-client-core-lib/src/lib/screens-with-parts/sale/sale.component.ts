@@ -84,7 +84,7 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
 
     ngOnDestroy(): void {
         this.unregisterScanner();
-        this.scannerService.stopScanning();
+        // this.scannerService.stopScanning();
         super.ngOnDestroy();
     }
 

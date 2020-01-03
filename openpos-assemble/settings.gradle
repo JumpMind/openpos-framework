@@ -9,7 +9,6 @@ includeFlat 'openpos-test-module'
 // not currently being used
 // includeFlat 'openpos-client-personalize'
 includeFlat 'openpos-client-libs'
-includeFlat 'openpos-translate'
 includeFlat 'openpos-print'
 includeFlat 'openpos-management-server'
 includeFlat 'openpos-symds'

@@ -82,7 +82,7 @@ export class ScanSomethingComponent implements AfterViewInit, IMessageHandler<an
     this.subscription.unsubscribe();
     this.subscription = null;
     this.unregisterScanner();
-    this.scannerService.stopScanning();
+    // this.scannerService.stopScanning();
   }
 
   public onEnter(): void {

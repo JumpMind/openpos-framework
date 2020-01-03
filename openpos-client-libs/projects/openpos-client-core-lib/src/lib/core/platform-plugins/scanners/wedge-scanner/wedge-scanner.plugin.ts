@@ -18,7 +18,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
     private startSequence = '*';
     private endSequence = 'Enter';
     private codeTypeLength = 0;
-    private timeout = 100;
+    private timeout = 500;
     private typeMap: Map<string, OpenposScanType>;
     private scannerActive: boolean;
     private startSequenceObj = this.getControlStrings(this.startSequence);
