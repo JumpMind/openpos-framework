@@ -1,7 +1,7 @@
 <mat-card class="item-card" [ngClass]="{'mat-elevation-z5':hover, 'mat-elevation-z1':!hover}">
     <mat-card-content class="item-content">
         <img responsive-class class="item-card-image" *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" [ngClass]="{'collapsed': !expanded}">
-        <div class="left-side">
+        <div class="left-side" [ngClass]="{'collapsed': !expanded}">
             <div *ngIf="item.description" responsive-class class="item-card-title">
                 {{item.description}}
             </div>
@@ -27,7 +27,7 @@
             </ul>
         </div>
         <div class="right-side">
-            <section class="price">
+            <section class="price" [ngClass]="{'collapsed': !expanded}">
                 <app-currency-text responsive-class class="item-card-price" [ngClass]="{'order': item.isOrderItem, 'warn': item.returnItemLabels}"
                     [amountText]="item.amount">
                 </app-currency-text>

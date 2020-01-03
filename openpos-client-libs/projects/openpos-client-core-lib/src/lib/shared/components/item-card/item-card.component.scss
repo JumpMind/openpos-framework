@@ -10,55 +10,65 @@
     }
 
     .item-content {
-        display:grid;
+        display: grid;
         grid-template-columns: auto 1fr auto;
-        width:100%;
-        height:100%;
-    
+        width: 100%;
+        height: 100%;
+
         .item-card-image {
             height: 275px;
-            padding-right:16px;
-            
+            padding-right: 16px;
+
             &.tablet {
                 height: 150px;
             }
-            
+
             &.mobile {
                 height: 50px;
             }
         }
-    
+
         .item-card-image.collapsed {
             height: 50px;
         }
-        
+
         .left-side {
-            display:grid;
-            grid-template-rows:auto auto auto 1fr;
+            display: grid;
+            grid-template-rows: auto auto auto 1fr;
             height: 100%;
-        
+
+            &.collapsed {
+                align-content: center;
+                grid-template-rows: auto;
+
+                .item-card-title {
+                    margin-bottom: 0px;
+                }
+            }
+
             .item-card-title {
                 grid-area: 1/1/1/1;
                 @extend %text-md;
                 margin-bottom: 5px;
             }
-        
+
             .return-info {
                 grid-area: 2/1/2/1;
-                display:grid;
+                display: grid;
                 grid-template-columns: auto 1fr;
                 border: 1px solid;
-                border-radius:5px;
+                border-radius: 5px;
                 align-items: center;
                 width: max-content;
                 padding: 4px;
-                
+
                 .return-info-text {
                     padding-left: 5px;
                     padding-right: 5px;
                     list-style-type: none;
                     margin: unset;
                     @extend %text-sm;
+
                     >* {
                         margin-top: 2px;
                         margin-bottom: 2px;
@@ -68,27 +78,28 @@
 
             .order-info {
                 grid-area: 3/1/3/1;
-                display:grid;
+                display: grid;
                 grid-template-columns: auto 1fr;
                 border: 1px solid;
-                border-radius:5px;
+                border-radius: 5px;
                 align-items: center;
                 width: max-content;
                 padding: 4px;
-                
+
                 .order-info-text {
                     padding-left: 5px;
                     padding-right: 5px;
                     list-style-type: none;
                     margin: unset;
                     @extend %text-sm;
+
                     >* {
                         margin-top: 2px;
                         margin-bottom: 2px;
                     }
                 }
             }
-        
+
             .item-card-details {
                 grid-area: 4/1/4/1;
                 @extend %text-sm;
@@ -96,38 +107,43 @@
                 list-style-type: none;
                 padding: unset;
                 margin: unset;
-                >*{
+
+                >* {
                     margin-top: 4px;
                 }
             }
         }
-        
+
         .right-side {
-            display:grid;
+            display: grid;
             height: 100%;
-    
+
             .price {
-                display:grid;
+                display: grid;
                 grid-template-rows: auto 1fr;
                 justify-self: end;
-    
+
+                &.collapsed {
+                    align-self: center;
+                }
+
                 .item-card-price {
                     @extend %text-lg;
                     font-weight: bold;
                     text-align: right;
                 }
-                    
+
                 .item-card-original {
                     @extend %text-sm;
                     text-decoration: line-through;
                     text-align: right;
                 }
             }
-    
+
             .menu-items {
-                justify-self:end;
+                justify-self: end;
                 align-self: end;
-                    
+
                 .item-card-button {
                     @extend %text-md;
                     font-weight: normal;
@@ -143,8 +159,3 @@
         padding: 0px;
     }
 }
-
-
-
-
-
