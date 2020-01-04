@@ -393,18 +393,6 @@ public class ScreenService implements IScreenService, IActionListener {
         }
     }
 
-    protected boolean looksLikeForm(Object actionData) {
-        if (actionData == null || actionData instanceof Form) {
-            return true;
-        }
-        
-        if (actionData instanceof Map) {
-            return Form.isAssignableFrom((Map<?,?>) actionData);
-        }
-        
-        return false;
-    }
-    
     protected boolean hasForm(ApplicationState applicationState) {
         if (applicationState.getLastDialog() != null) {
             return applicationState.getLastDialog() instanceof IHasForm;
