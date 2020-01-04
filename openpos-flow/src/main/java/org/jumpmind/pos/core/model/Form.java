@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class Form implements Serializable {
 
@@ -532,4 +533,29 @@ public class Form implements Serializable {
         return iconType;
     }
 
+	/**
+	 * Utility method to confirm whether or not a object
+	 * may be able to be converted to a Form object. This method was added when
+	 * it was realized that sometimes Jackson will convert attribute maps to
+	 * a Form when the map actually has no compatible attributes with a Form.
+	 * @param obj If null {@code true} will be returned.  Otherwise, the given
+	 * object is check if it can be assigned to a Form object or, if the object is
+	 * a Map, it is checked for existence of either the 'formElements' or 'formErrors' attribute.
+	 */
+	public static boolean isAssignableFrom(Object obj) {
+	    if (obj == null) {
+	        return true;
+	    }
+	    
+	    if (Form.class.isAssignableFrom(obj.getClass())) {
+	        return true;
+	    }
+	    
+	    if (obj instanceof Map) {
+	        Map<?,?> objMap = (Map<?,?>) obj;
+	        return objMap.containsKey("formElements") || objMap.containsKey("formErrors");
+	    }
+	    
+	    return false;
+	}
 }

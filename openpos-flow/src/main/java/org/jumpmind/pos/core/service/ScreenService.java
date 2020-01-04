@@ -372,8 +372,16 @@ public class ScreenService implements IScreenService, IActionListener {
         if (hasForm(applicationState)) {
             try {
                 Form form = mapper.convertValue(action.getData(), Form.class);
+                
                 if (form != null) {
-                    action.setData(form);
+                    // Sometimes Jackson convertValue method will produce an empty 
+                    // Form object even if the given action data doesn't even resemble a form!
+                    if (Form.isAssignableFrom(action.getData())) {
+                        action.setData(form);
+                    } else {
+                        logger.trace("Given action data is not actually a form, is instance of {}", 
+                            action.getData() != null ? action.getData().getClass().getName() : "?");
+                    }
                 }
             } catch (IllegalArgumentException ex) {
                 logger.error(ex.getMessage(), ex);
@@ -385,6 +393,18 @@ public class ScreenService implements IScreenService, IActionListener {
         }
     }
 
+    protected boolean looksLikeForm(Object actionData) {
+        if (actionData == null || actionData instanceof Form) {
+            return true;
+        }
+        
+        if (actionData instanceof Map) {
+            return Form.isAssignableFrom((Map<?,?>) actionData);
+        }
+        
+        return false;
+    }
+    
     protected boolean hasForm(ApplicationState applicationState) {
         if (applicationState.getLastDialog() != null) {
             return applicationState.getLastDialog() instanceof IHasForm;
