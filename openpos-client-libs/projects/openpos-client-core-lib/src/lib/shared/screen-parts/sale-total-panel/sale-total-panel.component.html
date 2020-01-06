@@ -13,6 +13,13 @@
                 <app-currency-text [amountText]="screenData.grandTotal.amount"></app-currency-text>
             </div>
         </div>
+        <div *ngIf="screenData.itemCount" class="sale-total-itemcount">
+            <div responsive-class class="primary sale-total-itemcount-title">{{screenData.itemCount.name}}
+            </div>
+            <div responsive-class class="sale-total-itemcount-amount">
+                {{screenData.itemCount.amount}}
+            </div>
+        </div>
         <button responsive-class mat-button *ngIf="screenData.promoButton"
             (click)="doMenuItemAction(screenData.promoButton)" class="sale-total-promo-button">
             <span>{{screenData.promoButton.title}}</span>

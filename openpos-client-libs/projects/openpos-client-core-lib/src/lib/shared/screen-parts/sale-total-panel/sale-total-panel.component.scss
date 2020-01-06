@@ -48,6 +48,20 @@
             }
         }
 
+        .sale-total-itemcount {
+            text-align: center;
+
+            .sale-total-itemcount-title {
+                @extend %text-lg;
+                padding-top: 16px;
+                padding-bottom: 8px;
+            }
+
+            .sale-total-itemcount-amount {
+                @extend %text-xl;
+            }
+        }
+
         .sale-total-promo-button {
             @extend %text-sm;
             width: 100%;
