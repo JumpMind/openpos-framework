@@ -46,7 +46,6 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
     }
 
     hasItems(): Observable<boolean> {
-        //return of(false);
         return !!this.saleItemCardList.items && this.saleItemCardList.items.pipe(map(items => !!items && items.length > 0));
     }
 

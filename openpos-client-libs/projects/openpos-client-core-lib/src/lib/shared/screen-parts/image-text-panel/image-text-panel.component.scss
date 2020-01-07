@@ -1,17 +1,15 @@
 .image-instructions-outer {
-    //height: 100%;
     display: flex;
     flex-direction: column;
     place-content: flex-end center;
 
-    .image-prompt {
+    .image-instructions {
         padding: 16px;
         max-width: 75%;
         max-height: 75%;
         align-self: center;
         text-align: center;
     }
-    
     .image {
         max-width: 75%;
         max-height: 75%;
