@@ -14,9 +14,9 @@
             </div>
         </div>
         <div *ngIf="screenData.itemCount" class="sale-total-itemcount">
-            <div responsive-class class="primary sale-total-itemcount-title">{{screenData.itemCount.name}}
+            <div *ngIf="screenData.itemCount.name" responsive-class class="primary sale-total-itemcount-title">{{screenData.itemCount.name}}
             </div>
-            <div responsive-class class="sale-total-itemcount-amount">
+            <div *ngIf="screenData.itemCount.amount" responsive-class class="sale-total-itemcount-amount">
                 {{screenData.itemCount.amount}}
             </div>
         </div>
