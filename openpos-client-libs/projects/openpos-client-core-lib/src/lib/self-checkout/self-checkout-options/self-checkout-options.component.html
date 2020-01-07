@@ -9,5 +9,6 @@
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="self-checkout-options-image">
         <app-instructions *ngIf="screen.prompt" class="text-center options-prompt" [instructions]="screen.prompt" [instructionsSize]="'text-lg'"></app-instructions>
         <app-options-list (optionClick)="doAction($event)" responsive-class class="self-checkout-options"></app-options-list>
+        <app-scan-part></app-scan-part>
     </div>
 </div>
