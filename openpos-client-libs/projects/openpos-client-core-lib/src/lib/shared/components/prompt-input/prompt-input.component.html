@@ -10,7 +10,7 @@
                     <mat-icon svgIcon="barcode"></mat-icon>
                 </button> 
                 <ng-template #iconBlock>
-                    <app-icon matPrefix iconClass="material-icons mat-48 primary" [iconName]="promptIcon"></app-icon>
+                    <app-icon matPrefix iconClass="material-icons md primary" [iconName]="promptIcon"></app-icon>
                 </ng-template>
                 <input matInput [errorStateMatcher]="errorMatcher" [formControlName]="'promptInputControl'" [formatterName]="responseType" cdkFocusInitial
                        [attr.minlength]="minLength" [attr.maxlength]="maxLength" [readonly]="readOnly" [attr.type]="isNumericField() ? 'tel' : 'text'"
@@ -39,7 +39,7 @@
             </mat-slide-toggle>
         
             <mat-form-field fxFlexFill *ngSwitchCase="isPassword()" ngClass="text-lg">
-                <app-icon matPrefix iconClass="material-icons mat-48 primary" [iconName]="promptIcon"></app-icon>
+                <app-icon matPrefix iconClass="material-icons md primary" [iconName]="promptIcon"></app-icon>
                 <input matInput [formControlName]="'promptInputControl'" cdkFocusInitial autoSelectOnFocus
                     type="password" [formatterName]="responseType"  [attr.minlength]="minLength" [attr.maxlength]="maxLength">
                 <mat-placeholder>{{placeholderText}}</mat-placeholder>
