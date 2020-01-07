@@ -38,10 +38,6 @@ public class SaleUIMessage extends UIMessage {
     private boolean locationEnabled;
     private String locationOverridePrompt;
 
-//    private String backgroundImage;
-//    private boolean autoHideBackgroundImageEnabled = true;
-//    private boolean autoHidePromptEnabled = true;
-
     private boolean enableCollapsibleItems = true;
 
     public SaleUIMessage() {
@@ -154,24 +150,6 @@ public class SaleUIMessage extends UIMessage {
     public void setPromoButton(ActionItem promoButton) {
         this.promoButton = promoButton;
     }
-
-    /*
-    public String getPrompt() {
-        Object part = this.get(MessagePartConstants.ImagePanel);
-        if (part != null && part instanceof ImagePanelPart) {
-            return null;
-        } else {
-            return prompt;
-        }
-    }
-
-    public void setPrompt(String prompt) {
-        Object part = this.get(MessagePartConstants.ImagePanel);
-        if (part != null) && part instanceof ImagePanelPart) {
-        }        
-        this.prompt = prompt;
-    }
-    */
     
     public void setTransactionActive(boolean isTransactionActive) {
         this.transactionActive = isTransactionActive;
@@ -217,15 +195,6 @@ public class SaleUIMessage extends UIMessage {
         this.helpButton = helpButton;
     }
 
-    /*
-    public String getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(String backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
-    */
     public boolean isEnableCollapsibleItems() {
         return enableCollapsibleItems;
     }
@@ -234,32 +203,4 @@ public class SaleUIMessage extends UIMessage {
         this.enableCollapsibleItems = enableCollapsibleItems;
     }
 
-    /*
-    public boolean isAutoHideBackgroundImageEnabled() {
-        return autoHideBackgroundImageEnabled;
-    }
-*/
-    /**
-     * If {@code true}, causes the background image to be hidden when one or more
-     * sell items are displayed.
-     * 
-     * @param autoHideBackgroundImageEnabled
-    public void setAutoHideBackgroundImageEnabled(boolean autoHideBackgroundImageEnabled) {
-        this.autoHideBackgroundImageEnabled = autoHideBackgroundImageEnabled;
-    }
-
-    public boolean isAutoHidePromptEnabled() {
-        return autoHidePromptEnabled;
-    }
-     */
-
-    /**
-     * If {@code true}, causes the prompt message to be hidden when one or more
-     * sell items are displayed.
-     * 
-     * @param autoHidePromptEnabled
-    public void setAutoHidePromptEnabled(boolean autoHidePromptEnabled) {
-        this.autoHidePromptEnabled = autoHidePromptEnabled;
-    }
-     */
 }
