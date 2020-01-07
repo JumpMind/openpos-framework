@@ -13,7 +13,6 @@ import org.jumpmind.pos.core.ui.data.OrderSummary;
 public class SaleUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
-//    private String prompt;
     private String providerKey;
 
     private List<Total> totals;
