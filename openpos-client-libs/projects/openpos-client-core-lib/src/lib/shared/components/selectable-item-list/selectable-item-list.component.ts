@@ -73,22 +73,22 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
     private _selectedItemList = new Array<ItemType>();
     private _config: SelectableItemListComponentConfiguration;
 
-    private subscription: Subscription;
     private selectedItemSubscription: Subscription;
+    private subscriptions = new Subscription();
 
     constructor(private keyPresses: KeyPressProvider, private actionService: ActionService, private session: SessionService) {
 
         // we only want to be subscribed for keypresses when we have selected items
         // so watch the selected item changes and add remove the key bindings.
-        this.selectedItemChange.subscribe(item => {
+        this.subscriptions.add(this.selectedItemChange.subscribe(item => {
             this.updateKeySubscriptions();
-        });
+        }));
 
-        this.selectedItemListChange.subscribe(list => {
+        this.subscriptions.add(this.selectedItemListChange.subscribe(list => {
             this.updateKeySubscriptions();
-        });
+        }));
 
-        this.subscription = this.keyPresses.subscribe( 'ArrowDown', 1, event => {
+        this.subscriptions.add(this.keyPresses.subscribe( 'ArrowDown', 1, event => {
             // ignore repeats and check configuration
             if ( event.repeat || !Configuration.enableKeybinds || !this.keyboardControl ) {
                 return;
@@ -96,9 +96,9 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
             if ( event.type === 'keydown') {
                 this.handleArrowKey(event);
             }
-        });
+        }));
 
-        this.subscription.add(
+        this.subscriptions.add(
             this.keyPresses.subscribe( 'ArrowUp', 1, event => {
                 // ignore repeats and check configuration
                 if ( event.repeat || !Configuration.enableKeybinds || !this.keyboardControl ) {
@@ -110,7 +110,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
             })
         );
 
-        this.subscription.add(
+        this.subscriptions.add(
             this.keyPresses.subscribe('ArrowRight', 2, event => {
                 if (event.repeat || !Configuration.enableKeybinds || !this.keyboardControl) {
                     return;
@@ -123,7 +123,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
             })
         );
 
-        this.subscription.add(
+        this.subscriptions.add(
             this.keyPresses.subscribe('ArrowLeft', 2, event => {
                 if (event.repeat || !Configuration.enableKeybinds || !this.keyboardControl) {
                     return;
@@ -160,7 +160,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
     }
 
     ngOnInit(): void {
-        this.subscription.add(this.listData.subscribe((selectableListData: ISelectableListData<ItemType>) => {
+        this.subscriptions.add(this.listData.subscribe((selectableListData: ISelectableListData<ItemType>) => {
             if (selectableListData != null) {
                 this.items = selectableListData.items;
                 this.disabledItems = selectableListData.disabledItems;
@@ -187,8 +187,8 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
     }
 
     ngOnDestroy(): void {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
+        if (this.subscriptions) {
+            this.subscriptions.unsubscribe();
         }
         if (this.selectedItemSubscription) {
             this.selectedItemSubscription.unsubscribe();

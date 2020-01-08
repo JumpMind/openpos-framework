@@ -16,6 +16,7 @@ export class BarcodeScanPublisherDirective implements OnInit, OnDestroy {
 
     private barcodePlugin: BarcodeScannerPlugin;
     private barcodeEventSubscription: Subscription;
+    private subscription: Subscription;
     constructor(el: ElementRef,
                 private cordovaService: CordovaService,
                 private messageProvider: MessageProvider,
@@ -25,7 +26,7 @@ export class BarcodeScanPublisherDirective implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        this.cordovaService.onDeviceReady.subscribe(message => {
+        this.subscription =this.cordovaService.onDeviceReady.subscribe(message => {
             if (message) {
                 console.info(`BarcodeScanPublisherDirective got deviceready`);
                 this.pluginService.getDevicePlugin('barcodeScannerPlugin').then(plugin => {
@@ -48,6 +49,9 @@ export class BarcodeScanPublisherDirective implements OnInit, OnDestroy {
     ngOnDestroy(): void {
         if (this.barcodeEventSubscription) {
             this.barcodeEventSubscription.unsubscribe();
+        }
+        if( this.subscription) {
+            this.subscription.unsubscribe();
         }
     }
 
