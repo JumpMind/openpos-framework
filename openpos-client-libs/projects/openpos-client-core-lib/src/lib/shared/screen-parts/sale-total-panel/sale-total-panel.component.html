@@ -1,4 +1,12 @@
 <mat-card class="sale-total-background">
+    <div *ngIf="screenData.itemCount" class="item-count">
+        <div *ngIf="screenData.itemCount.amount" class="item-count-amount">
+            {{screenData.itemCount.amount}}
+        </div>
+        <div *ngIf="screenData.itemCount.name" class="item-count-name">
+            <span *ngIf="screenData.itemCount.amount">&nbsp;</span>{{screenData.itemCount.name}}
+        </div>
+    </div>
     <div class="sale-total-content">
         <div *ngFor="let total of screenData.totals" class="sale-total-subtotal">
             <div responsive-class class="primary sale-total-subtotal-title">{{total.name}}</div>
@@ -11,13 +19,6 @@
             </div>
             <div responsive-class class="sale-total-total-amount">
                 <app-currency-text [amountText]="screenData.grandTotal.amount"></app-currency-text>
-            </div>
-        </div>
-        <div *ngIf="screenData.itemCount" class="sale-total-itemcount">
-            <div *ngIf="screenData.itemCount.name" responsive-class class="primary sale-total-itemcount-title">{{screenData.itemCount.name}}
-            </div>
-            <div *ngIf="screenData.itemCount.amount" responsive-class class="sale-total-itemcount-amount">
-                {{screenData.itemCount.amount}}
             </div>
         </div>
         <button responsive-class mat-button *ngIf="screenData.promoButton"

@@ -4,6 +4,14 @@
     display: grid;
 }
 
+.item-count {
+    display: flex;
+    height: fit-content;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
 .sale-total-background {
     display: grid;
     align-self: stretch;
