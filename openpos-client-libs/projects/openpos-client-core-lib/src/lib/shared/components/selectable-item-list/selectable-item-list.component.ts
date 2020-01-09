@@ -285,7 +285,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
     onItemClick(item: ItemType, event: any) {
         // look for block-selection attribute and don't do the selection if we find it in our path
         const originalItemIndex = this.itemsToShow.indexOf(item) + ((this.currentPage - 1) * this.configuration.numItemsPerPage);
-        if ( event.path.find(element => element.attributes && element.attributes.getNamedItem('block-selection')) ||
+        if ((event.path && event.path.find(element => element.attributes && element.attributes.getNamedItem('block-selection'))) ||
             this.disabledItems.get(originalItemIndex)) {
             return;
         }
