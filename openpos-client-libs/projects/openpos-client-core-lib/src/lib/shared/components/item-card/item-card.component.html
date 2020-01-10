@@ -30,7 +30,7 @@
         <div class="right-side">
             <section class="price" [ngClass]="{'collapsed': !expanded}">
                 <div class="item-price-and-indicators">
-                    <app-icon *ngIf="item.isGiftReceipt" class="giftReceipt" [iconName]="'redeem'" [iconClass]="'material-icons sm muted-color'"></app-icon>
+                    <app-icon *ngIf="item.isGiftReceipt" class="giftReceipt" [iconName]="'Gift'" [iconClass]="'material-icons sm muted-color'"></app-icon>
                     <app-currency-text responsive-class class="item-card-price" [ngClass]="{'order-color': item.isOrderItem, 'warn': item.returnItemLabels}"
                     [amountText]="item.amount">
                     </app-currency-text>
@@ -50,6 +50,7 @@
                         class="item-card-button primary" (click)="doItemAction(m, item.index)"
                         [disabled]="!isMenuItemEnabled(m)">
                         <span [ngClass]="{'muted-color': ! m.enabled}">{{m.title}}</span>
+                        <span *ngIf="m.title && m.icon">&nbsp;</span>
                         <app-icon *ngIf="m.icon" [iconName]="m.icon"></app-icon>
                     </button>
                 </ng-template>
