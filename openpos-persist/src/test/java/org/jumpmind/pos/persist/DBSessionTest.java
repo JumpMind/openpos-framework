@@ -408,6 +408,43 @@ public class DBSessionTest {
             db.close();
         }
     }
-    
-    
+
+    @Test
+    public void testDelete() {
+        String vin = "123456";
+        CarModel carModel = new CarModel();
+        carModel.setVin("123456");
+        carModel.setModelYear("2020");
+        carModel.setMake("maserati");
+        carModel.setModel("quattroporte");
+        {
+            DBSession db = sessionFactory.createDbSession();
+            db.save(carModel);
+            db.close();
+        }
+        {
+            DBSession db = sessionFactory.createDbSession();
+            Map<String, Object> fieldValues = new HashMap<>();
+            fieldValues.put("vin", vin);
+            List<CarModel> cars = db.findByFields(CarModel.class, fieldValues, 100);
+            assertNotNull(cars);
+            assertEquals(1, cars.size());
+
+            db.close();
+        }
+        {
+            DBSession db = sessionFactory.createDbSession();
+            db.delete(carModel);
+            db.close();
+        }
+        {
+            DBSession db = sessionFactory.createDbSession();
+            Map<String, Object> fieldValues = new HashMap<>();
+            fieldValues.put("vin", vin);
+            List<CarModel> cars = db.findByFields(CarModel.class, fieldValues, 100);
+            assertNotNull(cars);
+            assertEquals(0, cars.size());
+            db.close();
+        }
+    }
 }
