@@ -40,11 +40,16 @@
 }
 
 .mobile-loyalty-customer-outer {
-    grid-template-columns: 50% 50%;
-    grid-template-rows: 50% 50%;
+    grid-template-columns: auto 1fr;
     display: grid;
     margin: 0px;
     padding: 8px 16px;
+}
+
+.mobile-loyalty-customer-name {
+    display:grid;
+    justify-content: end;
+    justify-items: end;
 }
 
 .mobile-loyalty-image {
@@ -55,7 +60,7 @@
 }
 
 .mobile-loyalty-name {
-    @extend %text-md;
+    @extend %text-sm;
     justify-self: end;
 }
 

@@ -4,7 +4,6 @@ import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
-import org.jumpmind.pos.core.ui.data.SellItem;
 import org.jumpmind.pos.core.ui.data.TransactionReceipt;
 
 import java.util.ArrayList;
@@ -14,11 +13,11 @@ import java.util.List;
 public class ReturnUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
-    private String prompt;
     private String providerKey;
 
     private List<Total> totals;
     private Total grandTotal;
+    private Total itemCount;
 
     private List<TransactionReceipt> receipts = new ArrayList<>();
 
@@ -26,7 +25,6 @@ public class ReturnUIMessage extends UIMessage {
     private ActionItem loyaltyButton;
     private ActionItem removeReceiptAction;
 
-    private String itemCount;
     private boolean transactionActive = false;
 
     private UICustomer customer;
@@ -34,21 +32,11 @@ public class ReturnUIMessage extends UIMessage {
     private boolean locationEnabled;
     private String locationOverridePrompt;
 
-    private String backgroundImage;
-
     private boolean enableCollapsibleItems = true;
 
     public ReturnUIMessage() {
         this.setScreenType(UIMessageType.RETURN);
         this.setId("returns");
-    }
-
-    public String getPrompt() {
-        return prompt;
-    }
-
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
     }
 
     public String getProviderKey() {
@@ -125,11 +113,11 @@ public class ReturnUIMessage extends UIMessage {
         this.removeReceiptAction = removeReceiptAction;
     }
 
-    public String getItemCount() {
+    public Total getItemCount() {
         return itemCount;
     }
 
-    public void setItemCount(String itemCount) {
+    public void setItemCount(Total itemCount) {
         this.itemCount = itemCount;
     }
 
@@ -163,14 +151,6 @@ public class ReturnUIMessage extends UIMessage {
 
     public void setLocationOverridePrompt(String locationOverridePrompt) {
         this.locationOverridePrompt = locationOverridePrompt;
-    }
-
-    public String getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(String backgroundImage) {
-        this.backgroundImage = backgroundImage;
     }
 
     public boolean isEnableCollapsibleItems() {

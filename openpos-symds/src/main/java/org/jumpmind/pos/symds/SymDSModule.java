@@ -74,32 +74,36 @@ public class SymDSModule extends AbstractRDBMSModule {
 
     @Override
     public void initialize() {
-        SymmetricEngineHolder holder = new SymmetricEngineHolder();
-        Properties properties = new Properties();
+        if ("true".equals(env.getProperty("openpos.symmetric.start", "false"))) {
+            SymmetricEngineHolder holder = new SymmetricEngineHolder();
+            Properties properties = new Properties();
 
-        configurators.forEach(c->c.beforeCreate(properties));
+            configurators.forEach(c -> c.beforeCreate(properties));
 
-        serverEngine = new ServerSymmetricEngine(getDataSource(), applicationContext, properties, false, holder);
-        serverEngine.getExtensionService().addExtensionPoint(new DatabaseWriterFilterAdapter() {
-            @Override
-            public void batchCommitted(DataContext context) {
-                Batch batch = context.getBatch();
-                if (CHANNEL_RELOAD.equals(batch.getChannelId())) {
-                    Collection<String> names = cacheManager.getCacheNames();
-                    for (String name : names) {
-                        cacheManager.getCache(name).clear();
+            serverEngine = new ServerSymmetricEngine(getDataSource(), applicationContext, properties, false, holder);
+            serverEngine.getExtensionService().addExtensionPoint(new DatabaseWriterFilterAdapter() {
+                @Override
+                public void batchCommitted(DataContext context) {
+                    Batch batch = context.getBatch();
+                    if (CHANNEL_RELOAD.equals(batch.getChannelId())) {
+                        Collection<String> names = cacheManager.getCacheNames();
+                        for (String name : names) {
+                            cacheManager.getCache(name).clear();
+                        }
                     }
                 }
-            }
-        });
-        holder.getEngines().put(properties.getProperty(ParameterConstants.EXTERNAL_ID), serverEngine);
-        holder.setAutoStart(false);
-        context.setAttribute(WebConstants.ATTR_ENGINE_HOLDER, holder);
+            });
+            holder.getEngines().put(properties.getProperty(ParameterConstants.EXTERNAL_ID), serverEngine);
+            holder.setAutoStart(false);
+            context.setAttribute(WebConstants.ATTR_ENGINE_HOLDER, holder);
 
-        configurators.forEach(c->c.beforeStart(serverEngine));
-        serverEngine.setup();
+            configurators.forEach(c -> c.beforeStart(serverEngine));
+            serverEngine.setup();
+
+        }
 
         super.initialize();
+
     }
 
     @Override

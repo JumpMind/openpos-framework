@@ -5,6 +5,7 @@ import { IActionItem } from '../../../core/actions/action-item.interface';
 export interface SaleTotalPanelInterface extends IAbstractScreen {
     totals: ITotal[];
     grandTotal: ITotal;
+    itemCount: ITotal;
     checkoutButton: IActionItem;
     helpButton: IActionItem;
     logoutButton: IActionItem;

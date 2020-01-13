@@ -1,0 +1,10 @@
+<app-dialog-header></app-dialog-header>
+<app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions"
+                  [instructionsSize]="'text-md'"></app-instructions>
+<mat-dialog-content>
+    <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="form-image">
+
+    <app-auto-complete-address-part [formName]="'form'" [submitButton]="screen.submitButton"
+                                    [alternateSubmitActions]="screen.alternateSubmitActions">
+    </app-auto-complete-address-part>
+</mat-dialog-content>

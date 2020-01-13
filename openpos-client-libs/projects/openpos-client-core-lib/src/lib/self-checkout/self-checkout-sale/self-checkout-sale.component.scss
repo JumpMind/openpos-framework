@@ -11,8 +11,21 @@
     }
 }
 
+.self-checkout-list-empty {
+    // center when there are no items
+    justify-content: center;
+}
+
+.self-checkout-list-not-empty {
+    // put image at bottom when there are items
+    justify-content: space-between;
+}
+
 .self-checkout-list-background {
-    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+
     overflow-x: hidden;
     align-self: stretch;
     justify-self: stretch;

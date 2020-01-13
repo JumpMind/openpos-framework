@@ -63,6 +63,7 @@ export class IconService {
         this.icons.set('Flag', ['flag.svg', this.defaultIconProvider]);
         this.icons.set('Forward', ['keyboard_arrow_right.svg', this.defaultIconProvider]);
         this.icons.set('France', ['france.svg', this.defaultIconProvider]);
+        this.icons.set('Gift', ['gift_outline.svg', this.defaultIconProvider]);
         this.icons.set('GiftCard', ['card_giftcard.svg', this.defaultIconProvider]);
         this.icons.set('HamburgerMenu', ['menu.svg', this.defaultIconProvider]);
         this.icons.set('Help', ['help.svg', this.defaultIconProvider]);
@@ -104,6 +105,7 @@ export class IconService {
         this.icons.set('User', ['person.svg', this.defaultIconProvider]);
         this.icons.set('ViewAction', ['pageview.svg', this.defaultIconProvider]);
         this.icons.set('WebOrder', ['computer.svg', this.defaultIconProvider]);
+        this.icons.set('AddNote', ['note_add.svg', this.defaultIconProvider]);
     }
 
     public addIconMapping(name: string, icon: string, provider?: string) {

@@ -4,9 +4,11 @@ import { PosScreen } from '../../screens-with-parts/pos-screen/pos-screen.compon
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { DeviceService } from '../../core/services/device.service';
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable, of } from 'rxjs';
 import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
+import { SaleItemCardListComponent } from '../../shared/screen-parts/sale-item-card-list/sale-item-card-list.component';
+import { map } from 'rxjs/operators';
 
 @ScreenComponent({
     name: 'SelfCheckoutSale'
@@ -19,6 +21,7 @@ import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active
 export class SelfCheckoutSaleComponent extends PosScreen<any> implements
     OnInit, OnDestroy, OnBecomingActive, OnLeavingActive, AfterViewChecked {
     @ViewChild('scrollList', { read: ElementRef }) private scrollList: ElementRef;
+    @ViewChild('scrollList') private saleItemCardList: SaleItemCardListComponent;
 
     initialized = false;
 
@@ -40,6 +43,10 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements
             this.scrollToBottom();
             this.size = this.items.length;
         }
+    }
+
+    hasItems(): Observable<boolean> {
+        return !!this.saleItemCardList.items && this.saleItemCardList.items.pipe(map(items => !!items && items.length > 0));
     }
 
     scrollToBottom(): void {

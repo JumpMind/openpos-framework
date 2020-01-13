@@ -120,17 +120,30 @@
 
             .price {
                 display: grid;
+                width: 100%;
                 grid-template-rows: auto 1fr;
                 justify-self: end;
 
-                &.collapsed {
-                    align-self: center;
+                .item-price-and-indicators {
+                    display: grid;
+                    grid-template-columns: auto 1fr;
+                    align-items: center;
+
+                    .giftReceipt {
+                        grid-area: 1/1/1/1;
+                        padding-right:5px;
+                    }
+
+                    .item-card-price {
+                        grid-area: 1/2/1/2;
+                        @extend %text-lg;
+                        font-weight: bold;
+                        text-align: right;
+                    }
                 }
 
-                .item-card-price {
-                    @extend %text-lg;
-                    font-weight: bold;
-                    text-align: right;
+                &.collapsed {
+                    align-self: center;
                 }
 
                 .item-card-original {

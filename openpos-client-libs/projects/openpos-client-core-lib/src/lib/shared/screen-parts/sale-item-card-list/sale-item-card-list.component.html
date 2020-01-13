@@ -1,3 +1,4 @@
+<div class="sale-item-list-outer">
 <app-item-card *ngFor="let item of (items | async); index as i; trackBy: itemsTrackByFn" 
 #items
 [item]="item" 
@@ -6,8 +7,5 @@
 [enableHover]="screenData.enableCollapsibleItems"
 (click)="updateExpandedIndex(i)" >
 </app-item-card>
-
-<div *ngIf="(items | async)?.length === 0 && !screenData.readOnly" class="sale-item-prompt-outer">
-    <app-instructions [instructions]="screenData.prompt" [instructionsSize]="'text-xl'" class="sale-item-list-prompt"></app-instructions>
-    <img *ngIf="screenData.backgroundImage" [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
 </div>
+<app-image-text-panel [instructionsSize]="'text-xl'"></app-image-text-panel>
