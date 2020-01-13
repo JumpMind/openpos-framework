@@ -46,7 +46,7 @@ export class SystemStatusComponent extends ScreenPartComponent<ISystemStatus> {
                 }
             });
 
-            dialogRef.afterClosed().subscribe(result => {});
+            this.subscriptions.add(dialogRef.afterClosed().subscribe(result => {}));
         }
     }
 }
