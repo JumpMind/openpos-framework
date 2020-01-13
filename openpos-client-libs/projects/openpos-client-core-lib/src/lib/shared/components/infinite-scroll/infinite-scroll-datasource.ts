@@ -24,7 +24,7 @@ export class InfiniteScrollDatasource<T> extends DataSource<T> {
     connect(collectionViewer: CollectionViewer): Observable<T[] | ReadonlyArray<T>> {
 
         this.subscription.add(collectionViewer.viewChange.subscribe( range => {
-            if(range.end > this.data.length - this.dataLoadBuffer){
+            if(range.end >= this.data.length - this.dataLoadBuffer){
                 this.moreData();
             }
         }));
