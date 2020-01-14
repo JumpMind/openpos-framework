@@ -17,9 +17,12 @@ export class TaskCheckAllBoxComponent {
   TaskCheckAllStateEnum = TaskCheckAllStateEnum;
 
   private _state = TaskCheckAllStateEnum.NoneChecked;
+  private _stateChanged =  new EventEmitter<TaskCheckAllStateEnum>();
 
   constructor( taskListManager: TaskListManagerService, private cd: ChangeDetectorRef ) {
-    taskListManager.registerCheckAllBox(this);
+    if( taskListManager) {
+      taskListManager.registerCheckAllBox(this);
+    }
   }
 
   @Input()
@@ -32,7 +35,7 @@ export class TaskCheckAllBoxComponent {
   set state( value: TaskCheckAllStateEnum) {
     if( value !== this._state) {
       this._state = value;
-      this.stateChanged.emit(this._state);
+      this._stateChanged.emit(this._state);
       this.cd.detectChanges();
     }
   }
@@ -41,7 +44,9 @@ export class TaskCheckAllBoxComponent {
     return this._state;
   }
   @Output()
-  stateChanged = new EventEmitter<TaskCheckAllStateEnum>()
+  get stateChanged(): EventEmitter<TaskCheckAllStateEnum> {
+    return this._stateChanged;
+  }
 
   onClick( newState?: TaskCheckAllStateEnum) {
     if( !!newState ) {
@@ -59,6 +64,6 @@ export class TaskCheckAllBoxComponent {
           break;
       }
     }
-    this.stateChanged.emit(this.state);
+    this._stateChanged.emit(this.state);
   }
 }

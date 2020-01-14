@@ -18,6 +18,7 @@ export class TaskCheckBoxComponent implements OnDestroy{
   }
 
   private _checked: boolean;
+  private _checkedChange = new EventEmitter<boolean>();
 
   @Input()
   set checked( value: boolean) {
@@ -33,11 +34,13 @@ export class TaskCheckBoxComponent implements OnDestroy{
   }
 
   @Output()
-  checkedChange = new EventEmitter<boolean>();
+  get checkedChange(): EventEmitter<boolean>{
+    return this._checkedChange;
+  }
 
   public onClick(){
     this.checked = !this.checked;
-    this.checkedChange.emit(this.checked);
+    this._checkedChange.emit(this.checked);
   }
 
   ngOnDestroy(): void {
