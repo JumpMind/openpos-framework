@@ -79,6 +79,8 @@ export class IconService {
         this.icons.set('Logout', ['exit_to_app.svg', this.defaultIconProvider]);
         this.icons.set('LoyaltyProgram', ['loyalty.svg', this.defaultIconProvider]);
         this.icons.set('NoReceipt', ['block.svg', this.defaultIconProvider]);
+        this.icons.set('OrderSearch', ['shopping_cart.svg', this.defaultIconProvider]);
+        this.icons.set('OrderHistory', ['assignment.svg', this.defaultIconProvider]);
         this.icons.set('Password', ['lock.svg', this.defaultIconProvider]);
         this.icons.set('Percent', ['percent.svg', this.defaultIconProvider]);
         this.icons.set('Phone', ['phone.svg', this.defaultIconProvider]);
