@@ -1,9 +1,9 @@
 <mat-card class="sale-total-background">
     <div *ngIf="screenData.itemCount" class="item-count">
-        <div *ngIf="screenData.itemCount.amount" class="item-count-amount">
+        <div *ngIf="screenData.itemCount.amount" responsive-class class="item-count-amount">
             {{screenData.itemCount.amount}}
         </div>
-        <div *ngIf="screenData.itemCount.name" class="item-count-name">
+        <div *ngIf="screenData.itemCount.name" responsive-class class="item-count-name">
             <span *ngIf="screenData.itemCount.amount">&nbsp;</span>{{screenData.itemCount.name}}
         </div>
     </div>
