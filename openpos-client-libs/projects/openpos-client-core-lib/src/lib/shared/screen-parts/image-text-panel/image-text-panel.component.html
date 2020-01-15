@@ -1,0 +1,4 @@
+<div class="image-instructions-outer">
+    <app-instructions *ngIf="screenData.instructions" [instructions]="screenData.instructions" [instructionsSize]="instructionsSize" class="image-instructions"></app-instructions>
+    <img *ngIf="screenData.image" [src]="screenData.image | imageUrl" class="image">
+</div>

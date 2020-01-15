@@ -13,11 +13,12 @@ import org.jumpmind.pos.core.ui.data.OrderSummary;
 public class SaleUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
-    private String prompt;
     private String providerKey;
 
     private List<Total> totals;
     private Total grandTotal;
+    private Total itemCount;
+    
 
     private List<OrderSummary> orders;
     private ActionItem removeOrderAction;
@@ -29,15 +30,12 @@ public class SaleUIMessage extends UIMessage {
     private ActionItem mobileLoyaltyButton;
     private ActionItem promoButton;
 
-    private String itemCount;
     private boolean transactionActive = false;
 
     private UICustomer customer;
 
     private boolean locationEnabled;
     private String locationOverridePrompt;
-
-    private String backgroundImage;
 
     private boolean enableCollapsibleItems = true;
 
@@ -151,15 +149,7 @@ public class SaleUIMessage extends UIMessage {
     public void setPromoButton(ActionItem promoButton) {
         this.promoButton = promoButton;
     }
-
-    public String getPrompt() {
-        return prompt;
-    }
-
-    public void setPrompt(String prompt) {
-        this.prompt = prompt;
-    }
-
+    
     public void setTransactionActive(boolean isTransactionActive) {
         this.transactionActive = isTransactionActive;
     }
@@ -168,11 +158,15 @@ public class SaleUIMessage extends UIMessage {
         return transactionActive;
     }
 
-    public String getItemCount() {
+    public Total getItemCount() {
         return itemCount;
     }
 
-    public void setItemCount(String itemCount) {
+    public void setItemCount(String name, String amount) {
+        this.setItemCount(new Total(name, amount));
+    }
+    
+    public void setItemCount(Total itemCount) {
         this.itemCount = itemCount;
     }
 
@@ -200,14 +194,6 @@ public class SaleUIMessage extends UIMessage {
         this.helpButton = helpButton;
     }
 
-    public String getBackgroundImage() {
-        return backgroundImage;
-    }
-
-    public void setBackgroundImage(String backgroundImage) {
-        this.backgroundImage = backgroundImage;
-    }
-
     public boolean isEnableCollapsibleItems() {
         return enableCollapsibleItems;
     }
@@ -215,4 +201,5 @@ public class SaleUIMessage extends UIMessage {
     public void setEnableCollapsibleItems(boolean enableCollapsibleItems) {
         this.enableCollapsibleItems = enableCollapsibleItems;
     }
+
 }

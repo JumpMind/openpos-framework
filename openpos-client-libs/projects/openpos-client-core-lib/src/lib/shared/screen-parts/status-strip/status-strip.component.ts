@@ -22,11 +22,11 @@ export class StatusStripComponent extends ScreenPartComponent<StatusStripInterfa
     }
 
     screenDataUpdated() {
-        timer( 1000, 1000 ).subscribe( () => {
+        this.subscriptions.add(timer( 1000, 1000 ).subscribe( () => {
             if ( this.screenData.timestampBegin ) {
                 this.timer = (Date.now() - this.screenData.timestampBegin) / 1000;
             }
             this.date = Date.now();
-        });
+        }));
     }
 }

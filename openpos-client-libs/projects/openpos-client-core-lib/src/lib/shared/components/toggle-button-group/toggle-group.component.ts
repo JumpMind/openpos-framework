@@ -14,7 +14,8 @@ export class ToggleGroupComponent implements AfterViewInit, OnChanges, OnDestroy
   @Output() 
   valueChange = new EventEmitter();
   
-  private buttonChangeSubscriptions: Subscription[] = [];
+  private buttonChangeSubscriptions = new Subscription();
+  private subscriptions = new Subscription();
 
   @ContentChildren(ToggleButtonComponent, {descendants: true}) toggleButtons: QueryList<ToggleButtonComponent>;
 
@@ -22,20 +23,18 @@ export class ToggleGroupComponent implements AfterViewInit, OnChanges, OnDestroy
   }
 
   private subscribeForChildChanges() {
-    this.buttonChangeSubscriptions = [];
     this.toggleButtons.forEach( button => {
-        const subscr = button.change.subscribe(event => this.onToggleChange(event.source, event.value));
-        this.buttonChangeSubscriptions.push(subscr);
+        this.buttonChangeSubscriptions.add( button.change.subscribe(event => this.onToggleChange(event.source, event.value)));
       });
   }
 
   ngAfterViewInit(): void {
     this.subscribeForChildChanges();
     // Handle cases when children are updated dynamically
-    this.toggleButtons.changes.subscribe( x => {
-        this.buttonChangeSubscriptions.forEach(s => s.unsubscribe());
+    this.subscriptions.add(this.toggleButtons.changes.subscribe( x => {
+        this.buttonChangeSubscriptions.unsubscribe();
         this.subscribeForChildChanges();
-    });
+    }));
   }
 
   ngOnChanges(changes: SimpleChanges): void {
@@ -60,8 +59,7 @@ export class ToggleGroupComponent implements AfterViewInit, OnChanges, OnDestroy
   }
 
   ngOnDestroy(): void {
-    if (this.buttonChangeSubscriptions) {
-      this.buttonChangeSubscriptions.forEach( sub => sub.unsubscribe());
-    }
+      this.subscriptions.unsubscribe();
+      this.buttonChangeSubscriptions.unsubscribe();
   }
 }

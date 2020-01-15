@@ -7,7 +7,7 @@ import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openp
 
 
 @ScreenPart({
-  name: 'baconStrip'
+  name: 'basicBaconStrip'
 })
 @Component({
   selector: 'app-basic-bacon-strip',

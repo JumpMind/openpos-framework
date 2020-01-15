@@ -1,0 +1,18 @@
+.image-instructions-outer {
+    display: flex;
+    flex-direction: column;
+    place-content: flex-end center;
+
+    .image-instructions {
+        padding: 16px;
+        max-width: 75%;
+        max-height: 75%;
+        align-self: center;
+        text-align: center;
+    }
+    .image {
+        max-width: 75%;
+        max-height: 75%;
+        align-self: center;
+    }
+}

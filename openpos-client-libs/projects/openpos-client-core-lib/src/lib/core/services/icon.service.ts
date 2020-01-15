@@ -63,6 +63,7 @@ export class IconService {
         this.icons.set('Flag', ['flag.svg', this.defaultIconProvider]);
         this.icons.set('Forward', ['keyboard_arrow_right.svg', this.defaultIconProvider]);
         this.icons.set('France', ['france.svg', this.defaultIconProvider]);
+        this.icons.set('Gift', ['gift_outline.svg', this.defaultIconProvider]);
         this.icons.set('GiftCard', ['card_giftcard.svg', this.defaultIconProvider]);
         this.icons.set('HamburgerMenu', ['menu.svg', this.defaultIconProvider]);
         this.icons.set('Help', ['help.svg', this.defaultIconProvider]);
@@ -78,6 +79,8 @@ export class IconService {
         this.icons.set('Logout', ['exit_to_app.svg', this.defaultIconProvider]);
         this.icons.set('LoyaltyProgram', ['loyalty.svg', this.defaultIconProvider]);
         this.icons.set('NoReceipt', ['block.svg', this.defaultIconProvider]);
+        this.icons.set('OrderSearch', ['shopping_cart.svg', this.defaultIconProvider]);
+        this.icons.set('OrderHistory', ['assignment.svg', this.defaultIconProvider]);
         this.icons.set('Password', ['lock.svg', this.defaultIconProvider]);
         this.icons.set('Percent', ['percent.svg', this.defaultIconProvider]);
         this.icons.set('Phone', ['phone.svg', this.defaultIconProvider]);
@@ -104,6 +107,7 @@ export class IconService {
         this.icons.set('User', ['person.svg', this.defaultIconProvider]);
         this.icons.set('ViewAction', ['pageview.svg', this.defaultIconProvider]);
         this.icons.set('WebOrder', ['computer.svg', this.defaultIconProvider]);
+        this.icons.set('AddNote', ['note_add.svg', this.defaultIconProvider]);
     }
 
     public addIconMapping(name: string, icon: string, provider?: string) {

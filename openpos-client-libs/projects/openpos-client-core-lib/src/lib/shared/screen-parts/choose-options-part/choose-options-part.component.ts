@@ -41,11 +41,11 @@ export class ChooseOptionsPartComponent extends ScreenPartComponent<IFormOptionI
     }
 
     ngAfterViewInit(): void {
-        this.fields.changes.subscribe(() => {
+        this.subscriptions.add(this.fields.changes.subscribe(() => {
             if (this.fields.first) {
                 this.fields.first.focus();
             }
-        });
+        }));
     }
 
     onMakeOptionSelection( formOption: IFormOptionItem, formGroup: FormGroup): void {

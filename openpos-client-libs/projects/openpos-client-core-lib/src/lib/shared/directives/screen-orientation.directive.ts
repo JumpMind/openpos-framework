@@ -1,4 +1,5 @@
 import { Directive, Input, OnDestroy, OnInit } from '@angular/core';
+import {Subscription} from 'rxjs';
 import { DeviceService } from '../../core/services/device.service';
 
 export const MODE_LOCK_CURRENT = 'lock-current';
@@ -19,6 +20,7 @@ export type OrientationMode = 'lock-current' | 'portrait' | 'portrait-primary' |
 })
 export class ScreenOrientationDirective implements OnInit, OnDestroy {
 
+    private subscription: Subscription;
     private _enabled = false;
     @Input('screenOrientation') orientationMode: OrientationMode;
 
@@ -27,7 +29,7 @@ export class ScreenOrientationDirective implements OnInit, OnDestroy {
 
 
     ngOnInit(): void {
-        this.deviceService.onDeviceReady.subscribe(message => {
+        this.subscription = this.deviceService.onDeviceReady.subscribe(message => {
             if (message && this.deviceService.isRunningInCordova()) {
                 if (window.screen && (<any>window.screen).orientation) {
                     this._enabled = true;
@@ -54,6 +56,10 @@ export class ScreenOrientationDirective implements OnInit, OnDestroy {
         if (this._enabled) {
             console.info('Unlocking orientation');
             (<any>window.screen).orientation.unlock();
+        }
+
+        if(this.subscription){
+            this.subscription.unsubscribe();
         }
     }
 

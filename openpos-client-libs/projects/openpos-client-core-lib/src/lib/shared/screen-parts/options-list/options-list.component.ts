@@ -86,12 +86,12 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
                 autoFocus: false
             });
 
-            dialogRef.afterClosed().subscribe(result => {
+            this.subscriptions.add(dialogRef.afterClosed().subscribe(result => {
                 if (result) {
                     this.optionClick.emit(result);
                 }
                 this.focusService.restoreInitialFocus();
-            });
+            }));
         }
     }
 }

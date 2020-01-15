@@ -2,7 +2,8 @@
 	<app-self-checkout-menu></app-self-checkout-menu>
 
 	<div responsive-class class="self-checkout-body self-checkout-sale-body">
-		<app-sale-item-card-list #scrollList class="self-checkout-list-background"></app-sale-item-card-list>
+        <app-sale-item-card-list #scrollList class="self-checkout-list-background" 
+        [ngClass]="(hasItems() | async) ? 'self-checkout-list-not-empty' : 'self-checkout-list-empty'"></app-sale-item-card-list>
 
 		<app-sale-total-panel class="self-checkout-total-background"></app-sale-total-panel>
 	</div>

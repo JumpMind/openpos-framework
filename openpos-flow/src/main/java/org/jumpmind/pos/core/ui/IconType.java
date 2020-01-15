@@ -41,6 +41,7 @@ public interface IconType {
     public static final String Error = "Error"; //error
     public static final String ExternalLink = "ExternalLink"; //language;
     public static final String Forward = "Forward"; //keyboard_arrow_right
+    public static final String Gift = "Gift"; //gift_outline
     public static final String GiftCard = "GiftCard"; //card_giftcard
     public static final String HamburgerMenu = "HamburgerMenu"; //menu
     public static final String Help = "Help"; //help
@@ -83,5 +84,6 @@ public interface IconType {
     public static final String User = "User";
     public static final String ViewAction = "ViewAction"; //pageview
     public static final String WebOrder = "WebOrder"; //computer
+    public static final String AddNote = "AddNote"; //note_add
             
 }

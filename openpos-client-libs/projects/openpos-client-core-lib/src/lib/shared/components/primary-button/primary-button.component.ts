@@ -22,6 +22,8 @@ export class PrimaryButtonComponent implements OnInit {
   }
 
   clickFn() {
-    this.buttonClick.emit(true);
+    if (!this.disabled) {
+      this.buttonClick.emit(true);
+    }
   }
 }

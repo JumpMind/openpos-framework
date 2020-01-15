@@ -1,4 +1,5 @@
-import { Component, Input, Output, EventEmitter, ViewChild, ElementRef } from '@angular/core';
+import {Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnDestroy} from '@angular/core';
+import {Subscription} from 'rxjs';
 import { DomEventManager } from '../../../core/services/dom-event-manager.service';
 
 @Component({
@@ -6,7 +7,7 @@ import { DomEventManager } from '../../../core/services/dom-event-manager.servic
     templateUrl: './option-button.component.html',
     styleUrls: ['./option-button.component.scss']
   })
-export class OptionButtonComponent {
+export class OptionButtonComponent implements OnDestroy{
     @Input() disabled = false;
     @Input() inputType: string;
     @Input() optionTitle: string;
@@ -16,13 +17,21 @@ export class OptionButtonComponent {
 
     @ViewChild('button') button;
 
+    private subscription: Subscription;
+
     constructor(private elementRef: ElementRef, private domEventManager: DomEventManager) {
-      this.domEventManager.createEventObserver(this.elementRef.nativeElement, 'focus').subscribe(() => {
+      this.subscription = this.domEventManager.createEventObserver(this.elementRef.nativeElement, 'focus').subscribe(() => {
         this.button.focus();
       });
     }
 
     clickFn() {
       this.buttonClick.emit(true);
+    }
+
+    ngOnDestroy(): void {
+        if(this.subscription){
+            this.subscription.unsubscribe();
+        }
     }
 }

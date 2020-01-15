@@ -1,3 +1,4 @@
+import { ImageTextPanelComponent } from './screen-parts/image-text-panel/image-text-panel.component';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -175,6 +176,7 @@ const screenParts = [
     ScanPartComponent,
     SearchExpandInputComponent,
     BasicBaconStripComponent,
+    ImageTextPanelComponent
 ];
 
 const components = [

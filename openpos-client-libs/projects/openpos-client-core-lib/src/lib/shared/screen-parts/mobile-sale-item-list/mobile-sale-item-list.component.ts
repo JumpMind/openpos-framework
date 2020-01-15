@@ -32,12 +32,12 @@ export class MobileSaleItemListComponent extends ScreenPartComponent<MobileSaleI
 
     screenDataUpdated() {
         this.items = this.dataMessageService.getData$(this.screenData.providerKey);
-        this.items.subscribe(() => {
+        this.subscriptions.add(this.items.subscribe(() => {
           this.items.forEach(i => {
             this.expandedIndex = i.length - 1;
           });
           this.scrollToBottom();
-        });
+        }));
     }
 
     ngOnInit(): void {

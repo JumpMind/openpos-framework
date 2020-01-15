@@ -4,6 +4,14 @@
     display: grid;
 }
 
+.item-count {
+    display: flex;
+    height: fit-content;
+    padding: 5px;
+    justify-content: center;
+    align-items: center;
+}
+
 .sale-total-background {
     display: grid;
     align-self: stretch;
@@ -44,6 +52,20 @@
             }
 
             .sale-total-total-amount {
+                @extend %text-xl;
+            }
+        }
+
+        .sale-total-itemcount {
+            text-align: center;
+
+            .sale-total-itemcount-title {
+                @extend %text-lg;
+                padding-top: 16px;
+                padding-bottom: 8px;
+            }
+
+            .sale-total-itemcount-amount {
                 @extend %text-xl;
             }
         }
