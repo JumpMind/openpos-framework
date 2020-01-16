@@ -76,7 +76,10 @@ export class InfiniteScrollComponent<T> implements OnInit {
   }
 
   ngOnInit(): void {
-    this.dataSource = new InfiniteScrollDatasource<T>(this.dataMessageService.getData$(this.dataKey), () => this.dataMessageService.requestMoreData(this.dataKey), this.dataLoadBuffer);
+    this.dataSource = new InfiniteScrollDatasource<T>(
+        this.dataMessageService.getData$(this.dataKey),
+        () => this.dataMessageService.requestMoreData(this.dataKey),
+        this.dataLoadBuffer);
     this.dataSource.dataLoaded.subscribe( loaded => {
       if( loaded ){
         this.renderer.addClass(this.el.nativeElement, 'data-loaded');
