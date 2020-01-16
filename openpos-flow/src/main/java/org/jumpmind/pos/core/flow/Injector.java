@@ -40,7 +40,7 @@ public class Injector {
     }
 
     public void resetInjections(Object target, ScopeType scopeType) {
-        Class<?> targetClass = target.getClass();
+        Class<?> targetClass = target != null ? target.getClass() : null;
         while (targetClass != null) {
             Field[] fields = targetClass.getDeclaredFields();
             for (Field field : fields) {
@@ -88,8 +88,8 @@ public class Injector {
     }
 
     protected void performInjectionsImpl(Object target, Scope scope, StateContext currentContext, boolean autowire) {
-        Class<?> targetClass = target.getClass();
-        if (autowire && applicationContext != null) {
+        Class<?> targetClass = target != null ? target.getClass() : null;
+        if (autowire && applicationContext != null && targetClass != null) {
             logger.trace("Running Spring Autowiring on '{}'...", targetClass.getName());
             applicationContext.autowireBean(target);
             logger.trace("Spring Autowiring on '{}' completed", targetClass.getName());
@@ -208,7 +208,7 @@ public class Injector {
     }
 
     protected void performPostContruct(Object target) {
-        Method[] methods = target.getClass().getDeclaredMethods();
+        Method[] methods = target != null ? target.getClass().getDeclaredMethods() : new Method[0];
         for (Method method : methods) {
             PostConstruct postConstructAnnotation = method.getAnnotation(PostConstruct.class);
             if (postConstructAnnotation != null) {
