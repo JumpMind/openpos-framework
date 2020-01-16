@@ -10,7 +10,6 @@ import java.util.Map;
 import java.util.Set;
 
 import org.jumpmind.pos.core.flow.ApplicationState;
-import org.jumpmind.pos.core.flow.ApplicationStateSerializer;
 import org.jumpmind.pos.core.flow.FlowException;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
@@ -35,9 +34,6 @@ import jpos.events.DataEvent;
 @Component
 public class DevToolsActionListener implements IActionListener {
 
-    @Autowired
-    private ApplicationStateSerializer applicationStateSerializer;
-
     private static final String SAVE_PATH = "./savepoints";
 
     final Logger logger = LoggerFactory.getLogger(getClass());
@@ -57,10 +53,7 @@ public class DevToolsActionListener implements IActionListener {
     public void actionOccured(String appId, String deviceId, Action action) {
         IStateManager stateManager = stateManagerFactory.retrieve(appId, deviceId);
         
-        if (action.getName().contains("::Save")) {
-            String saveName = action.getName().substring(16);
-            saveState(stateManager, saveName);
-        } else if (action.getName().contains("DevTools::Scan")) {
+        if (action.getName().contains("DevTools::Scan")) {
             SimulatedScannerService service = SimulatedScannerService.instance;
             if (service != null) {
                 service.setScanData(((String)action.getData()).getBytes());
@@ -71,12 +64,6 @@ public class DevToolsActionListener implements IActionListener {
                 scanData.setType(OpenposBarcodeType.CODE128);
                 stateManager.doAction(new Action("Scan", scanData));
             }
-        } else if (action.getName().contains("DevTools::Load")) {
-            String saveName = action.getName().substring(16);
-            loadState(stateManager, saveName);
-        } else if (action.getName().contains("DevTools::RemoveSave")) {
-            String saveName = action.getName().substring(22);
-            removeSave(saveName);
         } else if (action.getName().contains("::Remove")) {
             Map<String, String> element = action.getData();
             String scopeId = element.get("ID");
@@ -183,55 +170,6 @@ public class DevToolsActionListener implements IActionListener {
         return res;
     }
 
-    public void saveState(IStateManager sm, String saveName) {
-        String filename = SAVE_PATH + saveName + ".json";
-        try {
-            applicationStateSerializer.serialize(sm, sm.getApplicationState(), filename);
-            logger.info("Saved state " + filename);
-        } catch (FlowException ex) {
-            logger.info(ex.getMessage());
-        } catch (Exception ex) {
-            logger.warn("Unable to save state at " + filename, ex);
-        }
-    }
 
-    public void loadState(IStateManager sm, String saveName) {
-        String filename = SAVE_PATH + saveName + ".json";
-
-        boolean resumeState = false;
-
-        try {
-            ApplicationState applicationState = applicationStateSerializer.deserialize(sm, filename);
-            sm.setApplicationState(applicationState);
-//            screenService.setApplicationState(applicationState);
-            sm.getApplicationState().getScope().setDeviceScope("stateManager", sm);
-            resumeState = true;
-            logger.info("Loaded save state " + filename);
-        } catch (FlowException ex) {
-            logger.info(ex.getMessage());
-        } catch (Exception ex) {
-            logger.warn("Failed to load save state " + filename, ex);
-        }
-
-        if (resumeState) {
-            sm.refreshScreen();
-        }
-
-    }
-
-    public void removeSave(String saveName) {
-        String filename = SAVE_PATH + saveName + ".json";
-        File save = null;
-        try {
-            save = new File(filename);
-        } catch (Exception ex) {
-            logger.warn("Can't find save state " + filename, ex);
-        }
-        if (save != null && save.delete()) {
-            logger.info("Successfully deleted save state " + filename);
-        } else {
-            logger.warn("Failed to delete save state " + filename);
-        }
-    }
 
 }
