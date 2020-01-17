@@ -1,16 +1,9 @@
 @mixin sale-total-panel-theme($theme) {
-    $app-primary: mat-color(map-get($theme, primary));
-    $app-primary-contrast: mat-color(map-get($theme, primary), default-contrast);
     $border: map-get($mat-grey, 800);
+    $item-count-background: map-get($mat-grey, 200);
 
     .item-count {
-        background-color: $app-primary;
-        .item-count-amount {
-            color: $app-primary-contrast;
-        }
-        .item-count-name {
-            color: $app-primary-contrast;
-        }
+        background-color: $item-count-background;
     }
     
     .sale-total-total {
