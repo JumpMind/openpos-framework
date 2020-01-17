@@ -1,4 +1,4 @@
-import { Component, Injector, OnInit, OnDestroy, AfterViewChecked, ViewChild, ElementRef } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { SaleInterface } from './sale.interface';
 import { MatDialog, MatBottomSheet } from '@angular/material';
 import { PosScreen } from '../pos-screen/pos-screen.component';
@@ -6,9 +6,6 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 import { ITotal } from '../../core/interfaces/total.interface';
 
 import { Subscription, Observable } from 'rxjs';
-import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
-import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
-import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 import { Configuration } from './../../configuration/configuration';
@@ -23,8 +20,7 @@ import { MobileSaleOrdersSheetComponent } from './mobile-sale-orders-sheet/mobil
     templateUrl: './sale.component.html',
     styleUrls: ['./sale.component.scss']
 })
-export class SaleComponent extends PosScreen<SaleInterface> implements
-    OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
+export class SaleComponent extends PosScreen<SaleInterface> {
 
     isMobile: Observable<boolean>;
 
@@ -36,9 +32,7 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
 
     removeOrderAction: IActionItem;
 
-    private scanServiceSubscription: Subscription;
-
-    constructor(private scannerService: ScannerService, protected dialog: MatDialog, injector: Injector,
+    constructor(protected dialog: MatDialog, injector: Injector,
                 media: OpenposMediaService,  private bottomSheet: MatBottomSheet) {
         super(injector);
         this.isMobile = media.observe(new Map([
@@ -67,39 +61,6 @@ export class SaleComponent extends PosScreen<SaleInterface> implements
     public onMenuItemClick(menuItem: IActionItem) {
         if (menuItem.enabled) {
             this.doAction(menuItem);
-        }
-    }
-
-    ngOnInit(): void {
-        this.registerScanner();
-    }
-
-    onBecomingActive() {
-        this.registerScanner();
-    }
-
-    onLeavingActive() {
-        this.unregisterScanner();
-    }
-
-    ngOnDestroy(): void {
-        this.unregisterScanner();
-        // this.scannerService.stopScanning();
-        super.ngOnDestroy();
-    }
-
-    private registerScanner() {
-        if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
-            this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
-                this.doAction({ action: 'Scan' }, scanData);
-            });
-        }
-    }
-
-    private unregisterScanner() {
-        if (this.scanServiceSubscription !== null) {
-            this.scanServiceSubscription.unsubscribe();
-            this.scanServiceSubscription = null;
         }
     }
 
