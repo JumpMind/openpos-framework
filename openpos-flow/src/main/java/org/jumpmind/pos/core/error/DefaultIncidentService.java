@@ -6,6 +6,7 @@ import org.jumpmind.pos.core.ui.DialogProperties;
 import org.jumpmind.pos.core.ui.IconType;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.message.DialogUIMessage;
+import org.jumpmind.pos.core.ui.message.ErrorDialogUIMessage;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,13 +50,13 @@ public class DefaultIncidentService implements IIncidentService {
                 throwable
         );
 
-        DialogUIMessage dialog = new DialogUIMessage();
-        dialog.setTitle("Error");
-        dialog.setIcon(IconType.Error);
-        dialog.setMessage(String.format(incidentMessage, incidentId));
-        dialog.setId(incidentId);
-        dialog.addButton(ActionItem.builder().enabled(true).title("Continue").action(ErrorGlobalActionHandler.RESET_STATE_MANAGER).build());
-        return dialog;
+        return ErrorDialogUIMessage.builder().
+                title("Unexpected Error").
+                message(String.format(incidentMessage, incidentId)).
+                button(ActionItem.builder().
+                        enabled(true).
+                        title("Continue").
+                        action(ErrorGlobalActionHandler.RESET_STATE_MANAGER).build()).build();
     }
 
     private synchronized String generateIncidentId(String deviceId) {
