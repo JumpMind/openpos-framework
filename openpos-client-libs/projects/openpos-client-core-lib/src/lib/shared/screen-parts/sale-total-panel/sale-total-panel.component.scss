@@ -7,7 +7,8 @@
 .item-count {
     display: flex;
     height: fit-content;
-    padding: 5px;
+    padding-top: 12px;
+    padding-bottom: 12px;
     justify-content: center;
     align-items: center;
 }
@@ -83,6 +84,7 @@
         align-self: end;
 
         .sale-total-loyalty-button {
+            min-height: 90px;
             .sale-total-loyalty-button-icon {
                 padding: 0px 8px;
                 max-width: 100%;
@@ -104,6 +106,7 @@
         }
 
         .sale-total-button {
+            min-height: 90px;
             margin-top: 16px;
             width: 100%;
         }
