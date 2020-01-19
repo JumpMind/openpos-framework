@@ -74,7 +74,6 @@ public class SymDSModule extends AbstractRDBMSModule {
 
     @Override
     public void initialize() {
-        if ("true".equals(env.getProperty("openpos.symmetric.start", "false"))) {
             SymmetricEngineHolder holder = new SymmetricEngineHolder();
             Properties properties = new Properties();
 
@@ -98,8 +97,11 @@ public class SymDSModule extends AbstractRDBMSModule {
             context.setAttribute(WebConstants.ATTR_ENGINE_HOLDER, holder);
 
             configurators.forEach(c -> c.beforeStart(serverEngine));
-            serverEngine.setup();
 
+        if ("true".equals(env.getProperty("openpos.symmetric.start", "false"))) {
+            serverEngine.setup();
+        } else {
+            serverEngine.setupDatabase(false);
         }
 
         super.initialize();

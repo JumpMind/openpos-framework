@@ -51,8 +51,9 @@ public class DefaultIncidentService implements IIncidentService {
         );
 
         return ErrorDialogUIMessage.builder().
-                title("Unexpected Error").
+                title("An Unexpected Error Occurred").
                 message(String.format(incidentMessage, incidentId)).
+                imageUrl("content:error").
                 button(ActionItem.builder().
                         enabled(true).
                         title("Continue").
