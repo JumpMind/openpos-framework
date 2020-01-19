@@ -47,6 +47,7 @@ public interface IStateManager {
     public void showScreen(UIMessage screen);
     public void showToast(Toast toast);
     public void refreshScreen();
+    public void reset();
     public Object getCurrentState();
     public ApplicationState getApplicationState();
 	public void performOutjections(Object object);

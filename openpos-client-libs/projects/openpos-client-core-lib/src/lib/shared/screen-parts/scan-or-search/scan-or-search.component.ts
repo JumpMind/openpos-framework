@@ -36,7 +36,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     @Input() defaultAction: IActionItem;
 
-    @Input() focusInitial: boolean = true;
+    @Input() focusInitial = true;
 
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
@@ -61,7 +61,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     ngOnInit(): void {
         super.ngOnInit();
         this.registerScanner();
-        if( this.focusInitial ) {
+        if (this.focusInitial) {
             this.renderer.addClass( this.el.nativeElement, 'focusInitial');
         } else {
             this.renderer.removeClass(this.el.nativeElement, 'focusInitial');

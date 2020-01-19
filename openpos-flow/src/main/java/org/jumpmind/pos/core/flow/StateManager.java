@@ -38,6 +38,7 @@ import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.flow.config.SubTransition;
+import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.DialogProperties;
@@ -51,11 +52,13 @@ import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.event.OnEvent;
+import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -81,12 +84,6 @@ public class StateManager implements IStateManager {
     @Autowired
     private Outjector outjector;
 
-    @Autowired
-    private ApplicationStateSerializer applicationStateSerializer;
-
-    //@Autowired(required = false)
-    private List<? extends ITransitionStep> transitionSteps;
-
     @Autowired(required = false)
     private List<? extends ISessionTimeoutListener> sessionTimeoutListeners;
 
@@ -102,20 +99,17 @@ public class StateManager implements IStateManager {
     @Autowired
     private IClientConfigSelector clientConfigSelector;
 
-    private ApplicationState applicationState = new ApplicationState();
-
-    @Value("${org.jumpmind.pos.core.flow.StateManager.autoSaveState:false}")
-    private boolean autoSaveState = false;
-
     @Autowired
     private StateLifecycle stateLifecycle;
 
     @Autowired
     LocaleMessageFactory localeMessageFactory;
 
-    private FlowConfig initialFlowConfig;
+    private ApplicationState applicationState = new ApplicationState();
 
-    private AtomicReference<Date> lastInteractionTime = new AtomicReference<Date>(new Date());
+    private List<? extends ITransitionStep> transitionSteps;
+
+    private FlowConfig initialFlowConfig;
 
     private long sessionTimeoutMillis = 0;
 
@@ -131,37 +125,31 @@ public class StateManager implements IStateManager {
 
     private EventBroadcaster eventBroadcaster;
 
-    private final AtomicInteger activeCalls = new AtomicInteger(0);
-    private final AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
-    private final AtomicLong lastActionTimeInMs = new AtomicLong(0);
-    private final AtomicLong lastShowTimeInMs = new AtomicLong(0);
-    private final AtomicReference<Thread> activeThread = new AtomicReference<>();
+    private AtomicReference<Date> lastInteractionTime = new AtomicReference<Date>(new Date());
+    private AtomicInteger activeCalls = new AtomicInteger(0);
+    private AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
+    private AtomicLong lastActionTimeInMs = new AtomicLong(0);
+    private AtomicLong lastShowTimeInMs = new AtomicLong(0);
+    private AtomicReference<Thread> activeThread = new AtomicReference<>();
+
+    @Override
+    public void reset() {
+        init(getAppId(), getDeviceId());
+        this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
+    }
 
     public void init(String appId, String nodeId) {
 
+
+        this.applicationState.reset();
         this.applicationState.setAppId(appId);
         this.applicationState.setDeviceId(nodeId);
         this.eventBroadcaster = new EventBroadcaster(this);
 
-        boolean resumeState = false;
-
-        if (autoSaveState) {
-            try {
-                applicationState = applicationStateSerializer.deserialize(this, "./openpos-state.json");
-                resumeState = true;
-            } catch (FlowException ex) {
-                log.info(ex.getMessage());
-            } catch (Exception ex) {
-                log.warn("Failed to load openpos-state.json", ex);
-            }
-        }
         applicationState.getScope().setDeviceScope("stateManager", this);
         initDefaultScopeObjects();
 
-        if (resumeState) {
-            sendConfigurationChangedMessage();
-            refreshScreen();
-        } else if (initialFlowConfig != null) {
+        if (initialFlowConfig != null) {
             applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
             sendConfigurationChangedMessage();
             // TODO: think about making this ASYNC so it doesn't hold up the rest of initialization
@@ -418,7 +406,6 @@ public class StateManager implements IStateManager {
 
     @Override
     public void refreshScreen() {
-
         Map<String, UIDataMessageProvider<?>> dataProviders = applicationState.getDataMessageProviderMap();
         uiDataMessageProviderService.resetProviders(applicationState);
 

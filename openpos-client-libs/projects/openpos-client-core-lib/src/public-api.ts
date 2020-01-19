@@ -154,7 +154,6 @@ export * from './lib/screens-with-parts/auto-complete-address/auto-complete-addr
 export * from './lib/core/interfaces/option-item.interface';
 export * from './lib/screens-with-parts/data-table/data-table.component';
 export * from './lib/screens-with-parts/pos-screen/pos-screen.component';
-export * from './lib/shared/components/scan-something/scan.interface';
 
 export * from './lib/screens-with-parts/screens-with-parts.module';
 export * from './lib/screens-with-parts/dialog/dialog.interface';
@@ -220,7 +219,6 @@ export * from './lib/shared/components/primary-button/primary-button.component';
 export * from './lib/shared/components/product-list/product-list.component';
 export * from './lib/shared/components/prompt-input/prompt-input.component';
 export * from './lib/shared/components/receipt-card/receipt-card.component';
-export * from './lib/shared/components/scan-something/scan-something.component';
 export * from './lib/shared/components/searchable-pop-tart/searchable-pop-tart.component';
 export * from './lib/shared/components/secondary-button/secondary-button.component';
 export * from './lib/shared/components/selectable-item-list/selectable-item-list.component';

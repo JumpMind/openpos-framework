@@ -50,6 +50,23 @@ public class ApplicationState {
 
     private Map<String, UIDataMessageProvider<?>> dataMessageProviderMap;
 
+    public void reset() {
+        Object queryParams = scope.getDeviceScope().get("queryParams");
+        Object personalizationProperties = scope.getDeviceScope().get("personalizationProperties");
+        scope = new Scope();
+        stateStack = new LinkedList<>();
+        currentContext = null;
+        currentTransition = null;
+        lastDialog = null;
+        lastScreen = null;
+        lastPreInterceptedDialog = null;
+        lastPreInterceptedScreen = null;
+        dataMessageProviderMap = null;
+        scope.setDeviceScope("queryParams",queryParams);
+        scope.setDeviceScope("personalizationProperties",personalizationProperties);
+
+    }
+
     public Scope getScope() {
         return scope;
     }

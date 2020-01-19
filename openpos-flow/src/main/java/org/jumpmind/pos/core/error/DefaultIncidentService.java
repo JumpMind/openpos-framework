@@ -1,6 +1,11 @@
 package org.jumpmind.pos.core.error;
 
+import org.jumpmind.pos.core.flow.ErrorGlobalActionHandler;
+import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.DialogProperties;
+import org.jumpmind.pos.core.ui.IconType;
 import org.jumpmind.pos.core.ui.Toast;
+import org.jumpmind.pos.core.ui.message.DialogUIMessage;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +26,7 @@ public class DefaultIncidentService implements IIncidentService {
     private static final String INCIDENT_ID_FILENAME = ".incident_id";
 
     private String incidentIdFileLocation;
-    private String incidentMessage = "An error has occurred. Please use incident id: %s when reporting the issue.";
+    private String incidentMessage = "Unfortunately, an unexpected error has occurred. Please report this incident using the following id: %s.  ";
 
     private File incidentIdFile;
     private Integer incidentCount;
@@ -44,7 +49,13 @@ public class DefaultIncidentService implements IIncidentService {
                 throwable
         );
 
-        return Toast.createWarningToast(String.format(incidentMessage, incidentId));
+        DialogUIMessage dialog = new DialogUIMessage();
+        dialog.setTitle("Error");
+        dialog.setIcon(IconType.Error);
+        dialog.setMessage(String.format(incidentMessage, incidentId));
+        dialog.setId(incidentId);
+        dialog.addButton(ActionItem.builder().enabled(true).title("Continue").action(ErrorGlobalActionHandler.RESET_STATE_MANAGER).build());
+        return dialog;
     }
 
     private synchronized String generateIncidentId(String deviceId) {

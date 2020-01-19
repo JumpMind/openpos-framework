@@ -60,7 +60,6 @@ import { DynamicFormControlComponent } from './components/dynamic-form-control/d
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { SelectableItemListComponent } from './components/selectable-item-list/selectable-item-list.component';
 import { OverFlowListComponent } from './components/overflow-list/overflow-list.component';
-import { ScanSomethingComponent } from './components/scan-something/scan-something.component';
 import { FabToggleButtonComponent } from './components/fab-toggle-button/fab-toggle-button.component';
 import { FabToggleGroupComponent } from './components/fab-toggle-group/fab-toggle-group.component';
 import { PopTartComponent } from './components/pop-tart/pop-tart.component';
@@ -194,7 +193,6 @@ const components = [
     ProductListComponent,
     SelectableItemListComponent,
     OverFlowListComponent,
-    ScanSomethingComponent,
     FabToggleButtonComponent,
     FabToggleGroupComponent,
     PopTartComponent,
@@ -308,7 +306,6 @@ const pipes = [
     ],
     entryComponents: [
         KebabMenuComponent,
-        ScanSomethingComponent,
         PopTartComponent,
         SearchablePopTartComponent,
         DatePartChooserDialogComponent,

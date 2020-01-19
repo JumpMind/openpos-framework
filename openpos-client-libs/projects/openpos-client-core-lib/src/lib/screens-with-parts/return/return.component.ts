@@ -1,20 +1,11 @@
 import { MatDialog, MatBottomSheet } from '@angular/material';
-import { Component, ViewChild, AfterViewInit, OnInit, AfterViewChecked, ElementRef, Injector, OnDestroy } from '@angular/core';
-import { ObservableMedia } from '@angular/flex-layout';
+import { Component, Injector } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
-import { NavListComponent } from '../../shared/components/nav-list/nav-list.component';
 import { PosScreen } from '../pos-screen/pos-screen.component';
-import { ITotal } from '../../core/interfaces/total.interface';
-import { TotalType } from '../../core/interfaces/total-type.enum';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
-import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { ITransactionReceipt } from '../../shared/components/receipt-card/transaction-receipt.interface';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
-import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
-import { OnBecomingActive } from '../../core/life-cycle-interfaces/becoming-active.interface';
-import { OnLeavingActive } from '../../core/life-cycle-interfaces/leaving-active.interface';
 import { MobileReturnReceiptsSheetComponent } from './mobile-return-receipts-sheet/mobile-return-receipts-sheet.component';
 
 /**
@@ -28,7 +19,7 @@ import { MobileReturnReceiptsSheetComponent } from './mobile-return-receipts-she
     templateUrl: './return.component.html',
     styleUrls: ['./return.component.scss']
 })
-export class ReturnComponent extends PosScreen<any> implements OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
+export class ReturnComponent extends PosScreen<any> {
 
     isMobile: Observable<boolean>;
 
@@ -41,9 +32,7 @@ export class ReturnComponent extends PosScreen<any> implements OnInit, OnDestroy
     public receipts: ITransactionReceipt[];
     public removeReceiptAction: IActionItem;
 
-    private scanServiceSubscription: Subscription;
-
-    constructor(private scannerService: ScannerService, protected dialog: MatDialog, injector: Injector,
+    constructor(protected dialog: MatDialog, injector: Injector,
                 media: OpenposMediaService, private bottomSheet: MatBottomSheet ) {
         super(injector);
         this.isMobile = media.observe(new Map([
@@ -60,39 +49,6 @@ export class ReturnComponent extends PosScreen<any> implements OnInit, OnDestroy
         this.receipts = this.screen.receipts;
         this.removeReceiptAction = this.screen.removeReceiptAction;
         this.dialog.closeAll();
-    }
-
-    ngOnInit(): void {
-        this.registerScanner();
-    }
-
-    onBecomingActive() {
-        this.registerScanner();
-    }
-
-    onLeavingActive() {
-        this.unregisterScanner();
-    }
-
-    ngOnDestroy(): void {
-        this.unregisterScanner();
-        // this.scannerService.stopScanning();
-        super.ngOnDestroy();
-    }
-
-    private registerScanner() {
-        if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
-            this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
-                this.doAction({ action: 'Scan' }, scanData);
-            });
-        }
-    }
-
-    private unregisterScanner() {
-        if (this.scanServiceSubscription !== null) {
-            this.scanServiceSubscription.unsubscribe();
-            this.scanServiceSubscription = null;
-        }
     }
 
     public onReceiptClick(event: any) {

@@ -14,5 +14,6 @@ public final class MessageType {
     public static final String Proxy = "Proxy";
     public static final String UIData = "UIData";
     public static final String LocaleChanged = "LocaleChanged";
+    public static final String Connected = "Connected";
     
 }

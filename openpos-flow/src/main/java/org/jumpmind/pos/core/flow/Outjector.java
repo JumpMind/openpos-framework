@@ -16,7 +16,7 @@ public class Outjector {
         
         Map<String, OutjectedValue> outjectedValues = new HashMap<>();
         
-        Class<?> targetClass = target.getClass();
+        Class<?> targetClass = target != null ? target.getClass() : null;
         while (targetClass != null) {
             performOutjectionsImpl(targetClass, target, scope, currentContext, outjectedValues);
             targetClass = targetClass.getSuperclass();
