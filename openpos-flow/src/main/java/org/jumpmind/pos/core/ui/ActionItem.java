@@ -45,7 +45,7 @@ public class ActionItem implements Serializable {
     protected String buttonSize;
     protected String fontSize;
     protected String keybind;
-
+    protected boolean queueIfBlocked;
     protected boolean doNotBlockForResponse;
 
     @JsonIgnore
@@ -253,6 +253,13 @@ public class ActionItem implements Serializable {
 		this.confirmationDialog = confirmationDialog;
 	}
 
+    public void setQueueIfBlocked(boolean queueIfBlocked) {
+        this.queueIfBlocked = queueIfBlocked;
+    }
+
+    public boolean isQueueIfBlocked() {
+        return queueIfBlocked;
+    }
 
     public String getKeybind() {
         return keybind;
