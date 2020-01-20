@@ -6,6 +6,7 @@ includeFlat 'openpos-util'
 includeFlat 'openpos-service'
 includeFlat 'openpos-persist'
 includeFlat 'openpos-test-module'
+includeFlat 'openpos-devices'
 // not currently being used
 // includeFlat 'openpos-client-personalize'
 includeFlat 'openpos-client-libs'

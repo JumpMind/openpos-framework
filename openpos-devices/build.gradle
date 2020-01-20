@@ -1,0 +1,12 @@
+apply from: '../openpos-gradle/src/main/resources/java.gradle'
+apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
+apply from: '../openpos-gradle/src/main/resources/spring.gradle'
+
+
+dependencies {
+    if (openposDevMode.toBoolean()) {
+        compile project(":openpos-service")
+    } else {
+        compile "org.jumpmind.pos:openpos-service:$openposVersion"
+    }
+}
