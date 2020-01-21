@@ -2,6 +2,11 @@
 
 Actions represent something that happens on the client that needs to be reported to the server. The most common action is a button clicked by the user. The button would have an [IActionItem](action-item.interface.ts) associated with it and when clicked `doAction` should be called passing in the ActionItem and optionally any payload that needs to be sent back to the server.
 
+# Action Queueing
+
+If a barrage of actions are expected and each should be handled (ie. actions that result from a scanner) then the `queueIfBlocked` setting should be set to `true` on the `IActionItem`.  This means that
+an action *will* be queued until the server responds to the previous action and then the queued action will be sent.
+
 ## Action Confirmation
 
 `ActionItem` has a property `confirmationDialog` of type [IConfirmationDialog](confirmation-dialog.interface.ts) that when set will prompt the user to confirm the action before sending it to the server. The `IConfirmationDialog` object allows for customizing the message presented to the user as well as the titles of the positive and negative buttons.

@@ -61,6 +61,31 @@ describe('ActionService', () => {
             expect(messageProvider.sendMessage).not.toHaveBeenCalled();
         }));
 
+        // WORKING
+        it('Should queue action and send when unblocked', fakeAsync(() => {
+            setup();
+
+            actionService.doAction({ action: 'Test1', enabled: true });
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test1'}));
+
+
+            actionService.doAction({ action: 'Test2', queueIfBlocked: true });
+
+            tick();
+
+            expect(messageProvider.sendMessage).not.toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
+
+            scopedMessages$.next({});
+
+            tick();
+
+            expect(messageProvider.sendMessage).toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
+
+        }));
+
         it('Should show confirmation dialog if confirmation dialog property is set', fakeAsync(() => {
             const action: IActionItem = { action: 'Test', enabled: true, confirmationDialog };
 
@@ -140,7 +165,7 @@ describe('ActionService', () => {
             expect(messageProvider.sendMessage).not.toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
         }));
 
-        it('Should unblock actions when a scoped response is recieved', fakeAsync(() => {
+        it('Should unblock actions when a scoped response is received', fakeAsync(() => {
             const action1: IActionItem = { action: 'Test1', enabled: true};
             const action2: IActionItem = { action: 'Test2', enabled: true};
 
