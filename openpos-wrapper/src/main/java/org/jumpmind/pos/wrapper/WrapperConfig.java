@@ -23,7 +23,6 @@ package org.jumpmind.pos.wrapper;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.*;
 
@@ -37,6 +36,8 @@ public class WrapperConfig {
     protected Map<String, ArrayList<String>> prop;
     
     protected File workingDirectory;
+    
+    protected File javaProcessWorkingDirectory;
 
     protected String jarFile;
     
@@ -137,6 +138,15 @@ public class WrapperConfig {
 
     public List<String> getDependencies() {
         return prop.get("wrapper.ntservice.dependency");
+    }
+    
+    public File getJavaProcessWorkingDirectory() {
+        if (javaProcessWorkingDirectory == null) {
+            String workDir = getProperty(prop, "wrapper.java.process.workingdir", this.getWorkingDirectory().getAbsolutePath());
+            javaProcessWorkingDirectory = new File(workDir);
+        }
+        
+        return javaProcessWorkingDirectory;
     }
     
     public String getJavaCommand() {
