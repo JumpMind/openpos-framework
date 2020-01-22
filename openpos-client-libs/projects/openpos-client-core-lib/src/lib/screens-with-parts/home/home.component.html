@@ -2,20 +2,20 @@
     <app-basic-bacon-strip *ngIf="screen.hasOwnProperty('basicBaconStrip')"></app-basic-bacon-strip>
     <app-bacon-strip *ngIf="screen.hasOwnProperty('baconStrip')"></app-bacon-strip>
     <div *ngIf="!(isMobile | async) && screen.menuItems.length > 0" class="body-container">
-        <div class="button-grid">
-            <div class="menu-button-border"
+        <div responsive-class class="button-grid">
+            <div responsive-class class="menu-button-border"
                  *ngFor="let menuItem of screen.menuItems"
                  [matBadge]="getNotificationForButton(menuItem)?.value"
                  matBadgePosition="above after"
-                 matBadgeSize="large"
+                 [matBadgeSize]="(badgeSize | async)"
                  matBadgeColor="accent"
                  [matBadgeHidden]="!getNotificationForButton(menuItem)"
                  [@bounce]="getNotificationForButton(menuItem)? (bounceInterval | async) : 'down'">
-                <button class="menu-button" mat-raised-button
+                <button responsive-class class="menu-button" mat-raised-button
                         gdAuto="column" color=primary [disabled]="!menuItem.enabled"
                         (click)="doAction(menuItem)" [actionItem]="menuItem">
                     <div class="menu-button-content">
-                        <app-icon iconName="{{menuItem.icon}}" iconClass="material-icons mat-64"></app-icon>
+                        <app-icon iconName="{{menuItem.icon}}" [iconClass]="(iconClass | async)"></app-icon>
                         <div class="menu-button-title">{{menuItem.title}}</div>
                         <div *ngIf="menuItem.keybind && keybindsEnabled()" style="padding-bottom: 8px;" class="text-xs">{{menuItem.keybind}}</div>
                     </div>
