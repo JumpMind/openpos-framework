@@ -1,14 +1,12 @@
 package org.jumpmind.pos.devices.model;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
-import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.ColumnDef;
-import org.jumpmind.pos.persist.TableDef;
-import org.jumpmind.pos.persist.Tagged;
+import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 import org.jumpmind.util.AppUtils;
 import org.springframework.core.env.AbstractEnvironment;
@@ -30,9 +28,12 @@ import lombok.Setter;
 @AllArgsConstructor
 public class DeviceModel extends AbstractModel implements ITaggedModel {
 
+    @ColumnDef(primaryKey = true)
+    private String appId;
+
     @ColumnDef(primaryKey = true,description="A unique identifier for this Device")
     private String deviceId;
-    
+
     @ColumnDef(description="The type of the Device.  Store/DC workstation or handheld, Customer handheld, website, etc.")
     private String deviceType; // STORE/DC/WORKSTATION/HANDELD/CUSTOMER
                                // HANDHELD/WEBSITE, etc.
@@ -101,4 +102,5 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
         return withOutBusinessUnitId;
     }
 
+    private List<DeviceParamModel> deviceParamModels;
 }

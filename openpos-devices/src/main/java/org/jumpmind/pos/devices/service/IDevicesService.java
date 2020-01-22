@@ -2,8 +2,7 @@ package org.jumpmind.pos.devices.service;
 
 import io.swagger.annotations.Api;
 import org.jumpmind.pos.devices.model.DeviceModel;
-import org.jumpmind.pos.devices.service.model.PersonalizationRequest;
-import org.jumpmind.pos.devices.service.model.PersonalizationResponse;
+import org.jumpmind.pos.devices.service.model.*;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "Devices Service")
@@ -15,10 +14,19 @@ public interface IDevicesService {
     @ResponseBody
     public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request);
 
-    @RequestMapping(path="/device/{deviceId}", method = RequestMethod.GET)
+    @RequestMapping(path="/device", method = RequestMethod.GET)
     @ResponseBody
-    public DeviceModel getDevice(@PathVariable("deviceId") String deviceId);
+    public GetDeviceResponse getDevice(@RequestBody GetDeviceRequest request);
+
+    @RequestMapping(path="/myDevice", method = RequestMethod.GET)
+    @ResponseBody
+    public GetDeviceResponse getMyDevice();
 
     @RequestMapping(path="/device", method = RequestMethod.PUT)
-    public void saveDevice(@RequestBody DeviceModel device);
+    @ResponseBody
+    public SaveDeviceResponse saveDevice(@RequestBody SaveDeviceRequest request);
+
+    @RequestMapping(path="/authenticate", method = RequestMethod.GET)
+    @ResponseBody
+    public AuthenticateDeviceResponse authenticateDevice(@RequestBody AuthenticateDeviceRequest request);
 }

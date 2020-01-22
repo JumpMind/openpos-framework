@@ -16,6 +16,7 @@ import org.jumpmind.pos.server.model.ProxyMessage;
 import org.jumpmind.pos.server.model.ProxyResponse;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.clientcontext.ClientContextProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,12 @@ public class ProxyService implements IActionListener {
     @Autowired
     IMessageService messageService;
 
+    @ClientContextProperty(name="deviceId")
+    String deviceId;
+
+    @ClientContextProperty(name="appId")
+    String appId;
+
     private HashMap<UUID, ProxyResponseMapEntry> requestToResponseMap = new HashMap<>();
 
     @Override
@@ -41,7 +48,7 @@ public class ProxyService implements IActionListener {
         return types;
     }
 
-    public CompletableFuture<ProxyResponse> sendMessage(String appId, String deviceId, ProxyMessage message) {
+    public CompletableFuture<ProxyResponse> sendMessage( ProxyMessage message) {
         CompletableFuture<ProxyResponse> futureResponse = new CompletableFuture<>();
         this.requestToResponseMap.put(message.getMessageId(), new ProxyResponseMapEntry(futureResponse));
 

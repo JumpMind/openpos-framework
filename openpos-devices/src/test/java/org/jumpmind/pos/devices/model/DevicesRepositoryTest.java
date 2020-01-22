@@ -1,5 +1,6 @@
 package org.jumpmind.pos.devices.model;
 
+import org.jumpmind.pos.devices.DeviceTestUtils;
 import org.jumpmind.pos.devices.TestDevicesConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -14,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("test")
+@ActiveProfiles("dev.sql.test")
 @ContextConfiguration(classes = { TestDevicesConfig.class })
 public class DevicesRepositoryTest {
 
@@ -23,7 +24,7 @@ public class DevicesRepositoryTest {
 
     @Test
     public void testFindDevice() {
-        DeviceModel device = devicesRepository.findDevice("00100-001");
+        DeviceModel device = devicesRepository.getDevice("00100-001", "pos");
         assertNotNull(device);
         assertEquals("00100-001", device.getDeviceId());
         assertEquals("WORKSTATION", device.getDeviceType());

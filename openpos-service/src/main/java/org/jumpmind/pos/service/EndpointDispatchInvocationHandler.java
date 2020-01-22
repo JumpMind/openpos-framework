@@ -169,7 +169,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     private ServiceSpecificConfig getSpecificConfig(Method method) {
         String serviceName = AbstractInvocationStrategy.getServiceName(method);
         if (isNotBlank(serviceName)) {
-            return serviceConfig.getServiceConfig(installationId, serviceName);
+            return serviceConfig.getServiceConfig(serviceName);
         } else {
             throw new IllegalStateException(method.getDeclaringClass().getSimpleName() + " must declare @"
                     + RestController.class.getSimpleName() + " and it must have the value() attribute set");

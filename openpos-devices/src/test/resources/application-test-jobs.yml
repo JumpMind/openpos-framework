@@ -1,0 +1,43 @@
+---
+spring:
+  datasource:
+    initialize: false
+---
+openpos:
+  installationId: '09999'
+  businessunitId: '09999'
+  
+  general:
+    sqlScriptProfile: test-jobs
+
+  modules:
+    include:
+      - ContextModule
+
+  jobs:
+    config:
+      testJob1:
+        moduleName: ContextModule
+        type: BY_KEY
+        tables:
+          - TEST_JOB_1
+          - TEST_JOB_2
+        where:
+          business_date < '${businessDate-30}'
+      testJob2:
+        moduleName: ContextModule
+        type: BY_SQL
+        tables:
+          - TEST_JOB_1
+          - TEST_JOB_2
+        where:
+          business_date < '${businessDate-30}'
+---                
+db:
+  url: jdbc:openpos:h2:mem:test
+  user:
+  password:
+  driver: org.h2.Driver
+
+server:
+  port: 1975

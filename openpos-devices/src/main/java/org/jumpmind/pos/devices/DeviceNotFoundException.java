@@ -1,22 +1,14 @@
 package org.jumpmind.pos.devices;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
+
+@ResponseStatus(code= HttpStatus.NOT_FOUND)
 public class DeviceNotFoundException extends DevicesException {
 
     private static final long serialVersionUID = 1L;
-    
-    String deviceId;
-    
-    public DeviceNotFoundException(String deviceId) {
-        super("A device with an id of " + deviceId + " cannot be found");
-        this.deviceId = deviceId;
-    }
-    
-    public String getDeviceId() {
-        return deviceId;
-    }
-    
-    public void setDeviceId(String deviceId) {
-        this.deviceId = deviceId;
-    }
 
+    public DeviceNotFoundException() {
+        super("A device for this request could not be found");
+    }
 }

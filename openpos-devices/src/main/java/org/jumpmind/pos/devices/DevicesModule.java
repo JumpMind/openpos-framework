@@ -5,14 +5,19 @@ import org.jumpmind.pos.devices.service.IDevicesService;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.service.AbstractRDBMSModule;
+import org.jumpmind.pos.service.ModuleEnabledCondition;
 import org.jumpmind.security.ISecurityService;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.annotation.*;
+import org.springframework.core.annotation.Order;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
+@Configuration("DevicesModule")
+@EnableTransactionManagement()
+@Conditional(ModuleEnabledCondition.class)
+@Order(10)
 public class DevicesModule extends AbstractRDBMSModule {
 
     public final String NAME = "dev";
