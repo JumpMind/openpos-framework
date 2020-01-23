@@ -12,12 +12,12 @@ openpos:
 
   modules:
     include:
-      - ContextModule
+      - DeviceModule
 
   jobs:
     config:
       testJob1:
-        moduleName: ContextModule
+        moduleName: DeviceModule
         type: BY_KEY
         tables:
           - TEST_JOB_1

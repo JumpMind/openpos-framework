@@ -15,7 +15,7 @@ import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@ActiveProfiles("dev.sql.test")
+@ActiveProfiles("test")
 @ContextConfiguration(classes = { TestDevicesConfig.class })
 public class DevicesRepositoryTest {
 

@@ -48,4 +48,8 @@ public class ClientContext {
 
         return props.keySet();
     }
+
+    public void clear() {
+        propertiesMap.set(null);
+    }
 }

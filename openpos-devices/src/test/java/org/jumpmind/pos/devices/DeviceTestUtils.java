@@ -18,4 +18,8 @@ public class DeviceTestUtils {
     public void setTimezoneOffset(String offset){
         clientContext.put("timezoneOffset", offset);
     }
+
+    public void reset(){
+        clientContext.clear();
+    }
 }
