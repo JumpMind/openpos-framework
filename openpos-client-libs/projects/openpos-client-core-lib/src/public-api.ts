@@ -308,6 +308,8 @@ export * from './lib/shared/screen-parts/status-strip/status-strip.component';
 export * from './lib/shared/screen-parts/status-strip/status-strip.interface';
 export * from './lib/shared/screen-parts/system-status/system-status.component';
 export * from './lib/shared/screen-parts/image-text-panel/image-text-panel.interface';
+export * from './lib/shared/screen-parts/dialog-timer/dialog-timer.interface';
+export * from './lib/shared/screen-parts/dialog-timer/dialog-timer.component';
 
 export * from './lib/shared/utils/date.utils';
 export * from './lib/shared/validators/openpos-validators';

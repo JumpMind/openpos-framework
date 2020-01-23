@@ -13,4 +13,5 @@ public final class MessagePartConstants {
     public static final String Banner="banner";
     public static final String ProgressBar = "progressBar";
     public static final String OptionsList="optionsList";
+    public static final String DialogTimer="dialogTimer";
 }

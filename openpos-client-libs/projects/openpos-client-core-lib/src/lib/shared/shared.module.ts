@@ -147,6 +147,7 @@ import { TenderPartComponent } from './screen-parts/tender-part/tender-part.comp
 import { OrderCardComponent } from './components/order-card/order-card.component';
 import { LocalizedDateNoTimePipe } from './pipes/localized-date-no-time.pipe';
 import { BasicBaconStripComponent } from './screen-parts/basic-bacon-strip/basic-bacon-strip.component';
+import { DialogTimerComponent } from './screen-parts/dialog-timer/dialog-timer.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -175,7 +176,8 @@ const screenParts = [
     ScanPartComponent,
     SearchExpandInputComponent,
     BasicBaconStripComponent,
-    ImageTextPanelComponent
+    ImageTextPanelComponent,
+    DialogTimerComponent
 ];
 
 const components = [
