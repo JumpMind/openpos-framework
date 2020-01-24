@@ -22,10 +22,6 @@ public interface IDevicesService {
     @ResponseBody
     public GetDeviceResponse getMyDevice();
 
-    @RequestMapping(path="/device", method = RequestMethod.PUT)
-    @ResponseBody
-    public SaveDeviceResponse saveDevice(@RequestBody SaveDeviceRequest request);
-
     @RequestMapping(path="/authenticate", method = RequestMethod.GET)
     @ResponseBody
     public AuthenticateDeviceResponse authenticateDevice(@RequestBody AuthenticateDeviceRequest request);

@@ -51,6 +51,7 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
     public void onApplicationEvent(SessionConnectEvent event) {
         String sessionId = (String) event.getMessage().getHeaders().get("simpSessionId");
         String authToken = getHeader(event.getMessage(), "authToken");
+        String deviceToken = getHeader(event.getMessage(), "deviceToken");
         String clientVersion = getHeader(event.getMessage(), "version");
         log.info(BoxLogging.box("Session Connected " + sessionId) + "\n" + clientVersion + "\n");
         String compatibilityVersion = getHeader(event.getMessage(), COMPATIBILITY_VERSION_HEADER);

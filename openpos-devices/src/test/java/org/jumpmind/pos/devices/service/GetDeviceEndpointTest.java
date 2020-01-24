@@ -1,45 +1,63 @@
 package org.jumpmind.pos.devices.service;
 
-import org.jumpmind.pos.devices.DeviceNotFoundException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jumpmind.pos.devices.TestDevicesConfig;
-import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.service.model.GetDeviceRequest;
+import org.jumpmind.pos.devices.service.model.GetDeviceResponse;
+import org.jumpmind.pos.service.utils.MockGetRequestBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
 
 import static org.junit.Assert.assertEquals;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("test")
+
+@AutoConfigureMockMvc
 @ContextConfiguration(classes = { TestDevicesConfig.class })
 public class GetDeviceEndpointTest {
+
+    ObjectMapper mapper = new ObjectMapper();
+
     @Autowired
-    GetDeviceEndpoint getDeviceEndpoint;
+    MockMvc mvc;
 
     @Test
-    public void getDeviceShouldReturnMatchingDevice() {
-        DeviceModel deviceModel = getDeviceEndpoint.getDevice(
-                GetDeviceRequest.builder()
-                    .deviceId("00100-001")
-                    .appId("pos")
-                .build()).getDeviceModel();
+    public void getDeviceShouldReturnMatchingDevice() throws Exception {
 
-        assertEquals("00100-001", deviceModel.getDeviceId());
+        String result =
+            mvc.perform(
+                    new MockGetRequestBuilder("/devices/device")
+                            .content(
+                                    GetDeviceRequest.builder()
+                                            .deviceId("00100-001")
+                                            .appId("pos")
+                                            .build()
+                            ).build())
+            .andExpect(status().isOk())
+            .andReturn().getResponse().getContentAsString();
+
+        assertEquals("00100-001", mapper.readValue(result, GetDeviceResponse.class).getDeviceModel().getDeviceId());
     }
 
-    @Test(expected = DeviceNotFoundException.class)
-    public void getDeviceShouldThrowDeviceNotFoundException() {
-        getDeviceEndpoint.getDevice(
-                GetDeviceRequest.builder()
-                        .deviceId("11111-111")
-                        .appId("pos")
-                        .build()
-        ).getDeviceModel();
+    @Test()
+    public void getDeviceShouldRespondWithNotFound() throws Exception {
+        mvc.perform(new MockGetRequestBuilder("/devices/device")
+                .content(
+                        GetDeviceRequest.builder()
+                                .deviceId("xxxxx")
+                                .appId("pos")
+                                .build())
+                .build())
+                .andExpect(status().is5xxServerError());
     }
 }

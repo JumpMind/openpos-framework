@@ -3,6 +3,7 @@ package org.jumpmind.pos.devices.model;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.ModelId;
@@ -12,6 +13,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +44,29 @@ public class DevicesRepository {
         } else {
             throw new DeviceNotFoundException();
         }
+    }
+
+    public DeviceModel getDeviceByAuth(String auth) {
+        Map<String, Object> params = new HashMap();
+        params.put("authToken", auth);
+
+        DeviceAuthModel authModel = devSession.findFirstByFields(DeviceAuthModel.class, params, 1);
+
+        if(authModel == null){
+            throw new DeviceNotFoundException();
+        }
+
+        params = new HashMap<>();
+        params.put("deviceId", authModel.getDeviceId());
+        params.put("appId", authModel.getAppId());
+
+        DeviceModel deviceModel = devSession.findFirstByFields(DeviceModel.class, params, 1);
+
+        if(deviceModel == null){
+            throw new DeviceNotFoundException();
+        }
+
+        return deviceModel;
     }
 
     @CacheEvict(value = "/devices/device")

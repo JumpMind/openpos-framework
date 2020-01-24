@@ -24,6 +24,7 @@ public class ClientContentExtractionFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Enumeration<String> headerNames = request.getHeaderNames();
+        clientContext.clear();
         while( headerNames.hasMoreElements() ) {
             String header = headerNames.nextElement();
             if(header.startsWith("ClientContext-")){
