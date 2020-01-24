@@ -34,7 +34,12 @@ public class SaveDeviceEndpoint {
         }
 
         //Make sure we are authorized to make this update
-        String registeredAuthToken = devicesRepository.getDeviceAuth(modelToSave.getDeviceId(), modelToSave.getAppId());
+        String registeredAuthToken = null;
+        try{
+            registeredAuthToken = devicesRepository.getDeviceAuth(modelToSave.getDeviceId(), modelToSave.getAppId());
+        } catch( DeviceNotFoundException ex ) {
+            // TODO what should we do here?
+        }
 
         // If we have a token for our deviceId and AppId it needs to match the request
         if( registeredAuthToken != null && !registeredAuthToken.equals(authToken)){

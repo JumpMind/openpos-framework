@@ -1,6 +1,5 @@
 package org.jumpmind.pos.devices.model;
 
-import org.jumpmind.pos.devices.DeviceTestUtils;
 import org.jumpmind.pos.devices.TestDevicesConfig;
 import org.junit.Test;
 import org.junit.runner.RunWith;
