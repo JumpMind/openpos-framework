@@ -13,7 +13,7 @@
   padding: 20px;
   border-radius: 4px;
 
-  &.tablet {
+  &.mobile {
     margin: 6px;
     padding: 6px;
   }
@@ -23,7 +23,7 @@
   min-width: 160px;
   min-height: 160px;
 
-  &.tablet {
+  &.mobile {
     min-width: 96px;
     min-height: 96px;
     line-height: 24px;
@@ -86,7 +86,7 @@
     place-items: stretch;
     grid-template-columns: repeat(auto-fit, 240px);
 
-    &.tablet {
+    &.mobile {
       grid-template-columns: repeat(auto-fit, 120px);
     }
   }
