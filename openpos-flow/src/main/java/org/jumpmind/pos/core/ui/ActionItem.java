@@ -47,6 +47,7 @@ public class ActionItem implements Serializable {
     protected String keybind;
     protected boolean queueIfBlocked;
     protected boolean doNotBlockForResponse;
+    protected ActionTimer actionTimer;
 
     @JsonIgnore
     protected boolean autoAssignEnabled = true;
@@ -290,6 +291,14 @@ public class ActionItem implements Serializable {
 
     public void setDoNotBlockForResponse(boolean doNotBlockForResponse) {
         this.doNotBlockForResponse = doNotBlockForResponse;
+    }
+
+    public ActionTimer getActionTimer() {
+        return actionTimer;
+    }
+
+    public void setActionTimer(ActionTimer actionTimer) {
+        this.actionTimer = actionTimer;
     }
     
 }

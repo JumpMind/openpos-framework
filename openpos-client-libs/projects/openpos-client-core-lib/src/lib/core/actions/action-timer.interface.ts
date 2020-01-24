@@ -1,20 +1,18 @@
-import { IActionItem } from '../../../core/actions/action-item.interface';
-export interface DialogTimerInterface {
+
+export interface IActionTimer {
+
     /**
-     * The action to send back to the server after timeoutSecs has elapsed.
-     * Optional.
+     * Optional text to display in front of the countdown timer.
      */
-    timeoutAction: string;
+    countdownPrefixText: string;
+
     /**
      * After this many seconds have elapsed, the dialog will be automatically closed
      * and the timeoutAction (if any) is sent back to the server. If <= 0, then
      * the timeout functionality will be disabled.
      */
     timeoutSecs: number;
-    /**
-     * If supplied, then the given text will be displayed in front of the countdown seconds.
-     */
-    timeoutMessage: string;
+
     /**
      * If true, then a countdown timer is displayed.
      */

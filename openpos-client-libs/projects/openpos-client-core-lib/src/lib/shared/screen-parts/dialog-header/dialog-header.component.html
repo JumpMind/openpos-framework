@@ -3,7 +3,8 @@
         <app-icon   *ngIf="screenData.headerIcon" 
                     class="screen-icon" 
                     [iconName]="screenData.headerIcon"></app-icon>
-        <span>{{screenData.headerText}}</span>
+        
+        <span><ng-container *ngIf="!!screenData.headerIcon && !!screenData.headerText">&nbsp;</ng-container>{{screenData.headerText}}</span>
     </div>
     <app-icon-button 
         class="back-button" 

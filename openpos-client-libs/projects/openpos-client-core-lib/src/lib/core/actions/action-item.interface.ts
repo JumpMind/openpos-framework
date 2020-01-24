@@ -1,4 +1,5 @@
 import { IConfirmationDialog } from './confirmation-dialog.interface';
+import { IActionTimer } from './action-timer.interface';
 
 export interface IActionItem {
     // Action to be sent to the server when the ActionItem is performed
@@ -19,6 +20,13 @@ export interface IActionItem {
      * If set the action service will queue up the action if the action service is currently blocked
      */
     queueIfBlocked?: boolean;
+
+    /**
+     * If set, a timer will be associated with this action and this action will be
+     * sent back to server when the timer triggers. Currently supported only on the GenericDialogComponent.
+     */
+    actionTimer?: IActionTimer;
+
     // TODO Remove this. This should not come from the server
     buttonSize?: string;
     // TODO Remove this. This should not come from the server
