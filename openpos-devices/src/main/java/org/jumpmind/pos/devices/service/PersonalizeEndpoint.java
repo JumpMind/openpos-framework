@@ -16,7 +16,10 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -40,33 +43,43 @@ public class PersonalizeEndpoint {
     Environment env;
 
     public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request){
-        String authToken = request.getAuthToken();
+        String authToken = request.getDeviceToken();
         String deviceId = request.getDeviceId();
         String appId = request.getAppId();
 
+        DeviceModel deviceModel;
 
-        // TODO add a configuration map of appIds that are allowed to share deviceIds. IE probabaly shouldn't allow a self-checkout share with pos
-        try{
-            String auth = devicesRepository.getDeviceAuth(request.getDeviceId(), request.getAppId());
+        if(isNotBlank(deviceId) && isNotBlank(appId)){
+            // TODO add a configuration map of appIds that are allowed to share deviceIds. IE probabaly shouldn't allow a self-checkout share with pos
+            try{
+                String auth = devicesRepository.getDeviceAuth(request.getDeviceId(), request.getAppId());
 
-            if( !auth.equals(authToken)) {
-                throw new DeviceNotAuthorizedException();
+                if( !auth.equals(authToken)) {
+                    throw new DeviceNotAuthorizedException();
+                }
+
+            } catch (DeviceNotFoundException ex){
+                // if device doesn't exist create a new unique code
+                authToken = UUID.randomUUID().toString();
+                devicesRepository.saveDeviceAuth(appId, deviceId, authToken);
+
             }
 
-        } catch (DeviceNotFoundException ex){
-            // if device doesn't exist create a new unique code
-            authToken = UUID.randomUUID().toString();
-            devicesRepository.saveDeviceAuth(appId, deviceId, authToken);
-
+            deviceModel = new DeviceModel();
+            deviceModel.setAppId(request.getAppId());
+            deviceModel.setDeviceId(request.getDeviceId());
+            if( request.getPersonalizationParameters() != null ) {
+                deviceModel.setDeviceParamModels(
+                        request.getPersonalizationParameters().keySet().stream().map( key -> new DeviceParamModel( key, request.getPersonalizationParameters().get(key))).collect(Collectors.toList())
+                );
+            }
+        } else if ( isNotBlank(authToken)){
+            deviceModel = devicesRepository.getDeviceByAuth(authToken);
+        } else {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DeviceId and AppId or AuthToken are required for personalization");
         }
 
-        DeviceModel deviceModel = new DeviceModel();
-        deviceModel.setAppId(request.getAppId());
-        deviceModel.setDeviceId(request.getDeviceId());
-        if( request.getPersonalizationParameters() != null )
-        deviceModel.setDeviceParamModels(
-                request.getPersonalizationParameters().keySet().stream().map( key -> new DeviceParamModel( key, request.getPersonalizationParameters().get(key))).collect(Collectors.toList())
-        );
+
 
         deviceModel.setDeviceType(request.getDeviceType());
         deviceModel.setTimezoneOffset(AppUtils.getTimezoneOffset());

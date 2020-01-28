@@ -18,7 +18,7 @@ import { IDeviceResponse } from '../oldplugins/device-response.interface';
 import { HttpClient } from '@angular/common/http';
 import { PingParams } from '../interfaces/ping-params.interface';
 import { PingResult } from '../interfaces/ping-result.interface';
-import { PersonalizationResponse } from '../personalization/personalization-response.interface';
+import { PersonalizationConfigResponse } from '../personalization/personalization-config-response.interface';
 import { ElectronService } from 'ngx-electron';
 import { OpenposMessage } from '../messages/message';
 import { MessageTypes } from '../messages/message-types';
@@ -155,7 +155,7 @@ export class SessionService implements IMessageHandler<any> {
     }
 
     private buildTopicName(): string {
-        return '/topic/app/' + this.getAppId() + '/node/' + this.personalization.getDeviceId();
+        return '/topic/app/' + this.personalization.getAppId$().getValue() + '/node/' + this.personalization.getDeviceId$().getValue();
     }
 
     public setAuthToken(token: string) {
@@ -166,19 +166,11 @@ export class SessionService implements IMessageHandler<any> {
         this.queryParams[key] = value;
     }
 
-    public setAppId(value: string) {
-        this.personalization.setAppId(value);
-    }
-
-    public getAppId(): string {
-        return this.personalization.getAppId();
-    }
-
     public connected(): boolean {
         return this.stompService && this.stompService.connected();
     }
     private appendPersonalizationProperties(headers: any) {
-        const personalizationProperties = this.personalization.getPersonalizationProperties();
+        const personalizationProperties = this.personalization.getPersonalizationProperties$().getValue();
         if (personalizationProperties && headers) {
             const keys = Array.from(personalizationProperties.keys());
             for (const key of keys) {
@@ -209,9 +201,10 @@ export class SessionService implements IMessageHandler<any> {
     private getHeaders(): any {
         const headers = {
             authToken: this.authToken,
+            deviceToken: this.personalization.getDeviceToken$().getValue(),
             compatibilityVersion: Configuration.compatibilityVersion,
-            appId: this.getAppId(),
-            deviceId: this.personalization.getDeviceId(),
+            appId: this.personalization.getAppId$().getValue(),
+            deviceId: this.personalization.getDeviceId$().getValue(),
             queryParams: JSON.stringify(this.queryParams),
             version: JSON.stringify(VERSION)
         };
@@ -302,7 +295,7 @@ export class SessionService implements IMessageHandler<any> {
     }
 
     private async negotiateWebsocketUrl(): Promise<string> {
-        if (this.personalization.isManagedServer()) {
+        if (this.personalization.getIsManagedServer$().getValue()) {
             if (! this.discovery.getWebsocketUrl()) {
                 const discoverResp = await this.discovery.discoverDeviceProcess();
                 if (!discoverResp || ! discoverResp.success) {
@@ -393,50 +386,11 @@ export class SessionService implements IMessageHandler<any> {
         }
     }
 
-    public async requestPersonalization(pingParams?: PingParams): Promise<PersonalizationResponse> {
-        let url = '';
-        if (pingParams) {
-            let protocol = 'http://';
-            if (pingParams.useSsl) {
-                protocol = 'https://';
-            }
-            url = protocol + pingParams.serverName;
-            if (pingParams.serverPort) {
-                url = url + ':' + pingParams.serverPort;
-            }
-            url = url + '/personalize';
-
-        } else {
-            url = `${this.discovery.getServerBaseURL()}/personalize`;
-        }
-
-        console.info('Requesting Personalization with url: ' + url);
-
-        let personalizeError: any = null;
-        try {
-            const httpResult = await this.http.get<PersonalizationResponse>(url, {}).toPromise();
-            if (httpResult) {
-                httpResult.success = true;
-                console.info('Successful Personalization with url: ' + url);
-                return httpResult;
-            } else {
-                personalizeError = { message: '?' };
-            }
-        } catch (error) {
-            personalizeError = error;
-        }
-
-        if (personalizeError) {
-            console.info('bad validation of ' + url + ' with an error message of :' + personalizeError.message);
-            return { success: false, message: personalizeError.message };
-        }
-    }
-
     private async renegotiateConnection() {
         if (this.reconnecting) {
             return;
         }
-        if (this.personalization.isManagedServer()) {
+        if (this.personalization.getIsManagedServer$().getValue()) {
             this.unsubscribe();
             this.discovery.clearCachedUrls();
             this.reconnecting = true;
@@ -483,7 +437,7 @@ export class SessionService implements IMessageHandler<any> {
             // tslint:disable-next-line:max-line-length
             console.info(`>>> Publish deviceResponse requestId: "${deviceResponse.requestId}" deviceId: ${deviceResponse.deviceId} type: ${deviceResponse.type}`);
             this.stompService.publish(
-                `/app/device/app/${this.getAppId()}/node/${this.personalization.getDeviceId()}/device/${deviceResponse.deviceId}`,
+                `/app/device/app/${this.personalization.getAppId$().getValue()}/node/${this.personalization.getDeviceId$().getValue()}/device/${deviceResponse.deviceId}`,
                 JSON.stringify(deviceResponse));
         };
 
@@ -516,15 +470,16 @@ export class SessionService implements IMessageHandler<any> {
             console.info(`Blocked action '${actionString}' because app is in background.`);
             return false;
         }
-        const deviceId = this.personalization.getDeviceId();
-        if (this.getAppId() && deviceId) {
+        const deviceId = this.personalization.getDeviceId$().getValue();
+        const appId = this.personalization.getAppId$().getValue();
+        if ( appId && deviceId) {
             console.info(`Publishing action '${actionString}' of type '${type}' to server...`);
-            this.stompService.publish('/app/action/app/' + this.getAppId() + '/node/' + deviceId,
+            this.stompService.publish('/app/action/app/' + appId + '/node/' + deviceId,
                 JSON.stringify({ name: actionString, type, data: payload, doNotBlockForResponse: doNotBlockForResponse }));
             return true;
         } else {
             console.info(`Can't publish action '${actionString}' of type '${type}' ` +
-                `due to undefined App ID (${this.getAppId()}) or Device ID (${deviceId})`);
+                `due to undefined App ID (${appId}) or Device ID (${deviceId})`);
             return false;
         }
     }

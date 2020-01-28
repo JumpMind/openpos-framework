@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/devices")
 public interface IDevicesService {
 
+    @RequestMapping(path="/personalizationConfig")
+    public PersonalizationConfigResponse getPersonalizationConfig();
+
     @RequestMapping(path="/personalize", method = RequestMethod.POST)
     @ResponseBody
     public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request);

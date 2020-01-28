@@ -1,4 +1,4 @@
-package org.jumpmind.pos.server.config;
+package org.jumpmind.pos.devices.service.model;
 
 import java.io.Serializable;
 

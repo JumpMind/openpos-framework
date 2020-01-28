@@ -30,7 +30,16 @@ openpos:
       size: 20
     -
       name: APP_PROFILE
-
+  ui:
+    personalization:
+      devicePattern: '\d{5}-\d{3}'
+      parameters:
+        - property: 'brandId'
+          label: 'Brand ID'
+          defaultValue: 'default'
+        - property: 'deviceType'
+          label: 'Device Type'
+          defaultValue: 'default'
   jobs:
     schedule:
       job1:

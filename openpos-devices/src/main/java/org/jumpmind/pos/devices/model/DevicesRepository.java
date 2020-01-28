@@ -66,6 +66,8 @@ public class DevicesRepository {
             throw new DeviceNotFoundException();
         }
 
+        deviceModel.setDeviceParamModels(getDeviceParams(deviceModel.getDeviceId(), deviceModel.getAppId()));
+
         return deviceModel;
     }
 

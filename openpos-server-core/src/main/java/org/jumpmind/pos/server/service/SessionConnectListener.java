@@ -4,9 +4,13 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jumpmind.pos.devices.model.DeviceModel;
+import org.jumpmind.pos.devices.model.DeviceParamModel;
+import org.jumpmind.pos.devices.service.IDevicesService;
+import org.jumpmind.pos.devices.service.model.AuthenticateDeviceRequest;
 import org.jumpmind.pos.server.config.MessageUtils;
-import org.jumpmind.pos.server.config.PersonalizationParameter;
-import org.jumpmind.pos.server.config.PersonalizationParameters;
+import org.jumpmind.pos.devices.service.model.PersonalizationParameter;
+import org.jumpmind.pos.devices.service.model.PersonalizationParameters;
 import org.jumpmind.pos.util.BoxLogging;
 import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.jumpmind.pos.util.clientcontext.ClientContextConfig;
@@ -48,23 +52,37 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
     @Autowired(required = false)
     ClientContextConfig clientContextConfig;
 
+    @Autowired
+    IDevicesService devicesService;
+
     public void onApplicationEvent(SessionConnectEvent event) {
         String sessionId = (String) event.getMessage().getHeaders().get("simpSessionId");
         String authToken = getHeader(event.getMessage(), "authToken");
         String deviceToken = getHeader(event.getMessage(), "deviceToken");
         String clientVersion = getHeader(event.getMessage(), "version");
+
         log.info(BoxLogging.box("Session Connected " + sessionId) + "\n" + clientVersion + "\n");
         String compatibilityVersion = getHeader(event.getMessage(), COMPATIBILITY_VERSION_HEADER);
         String queryParams = getHeader(event.getMessage(), QUERY_PARAMS_HEADER);
         sessionQueryParamsMap.put(sessionId, toQueryParams(queryParams));
-        sessionAuthenticated.put(sessionId, isBlank(serverAuthToken)  || serverAuthToken.equals(authToken));
-        if (isNotBlank(serverAuthToken) && ! serverAuthToken.equals(authToken)) {
+
+        DeviceModel deviceModel = devicesService.authenticateDevice(
+                AuthenticateDeviceRequest.builder()
+                        .authToken(deviceToken)
+                        .build()).getDeviceModel();
+
+        if( deviceModel == null ){
+            this.log.warn("Device is not personalized");
+        }
+
+        sessionAuthenticated.put(sessionId, (isBlank(serverAuthToken)  || serverAuthToken.equals(authToken)) && deviceModel != null);
+        if ((isNotBlank(serverAuthToken) && ! serverAuthToken.equals(authToken)) || deviceModel == null) {
             String clientAuthTokenValueIfNull = authToken == null || "".equals(authToken) || "undefined".equals(authToken) ? String.format(" (value is: '%s')", authToken) : "";
             this.log.warn("Client auth token{} does not match server auth token, client connection will be rejected.", clientAuthTokenValueIfNull);
         };
         sessionCompatible.put(sessionId, serverCompatibilityVersion == null || serverCompatibilityVersion.equals(compatibilityVersion));
 
-        setPersonalizationResults(sessionId, event);
+        setPersonalizationResults(sessionId, deviceModel);
         setClientContext(sessionId, event);
     }
 
@@ -83,13 +101,16 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
         }
     }
 
-    private void setPersonalizationResults(String sessionId, SessionConnectEvent event) {
+    private void setPersonalizationResults(String sessionId, DeviceModel deviceModel) {
         if (personalizationParameters != null && personalizationParameters.getParameters() != null) {
             Map<String, String> personalizationResults = new HashMap<>();
             for (PersonalizationParameter param : personalizationParameters.getParameters()) {
                 String prop = param.getProperty();
-                String value = getHeader(event.getMessage(), prop);
-                personalizationResults.put(prop, value);
+                DeviceParamModel paramModel = deviceModel.getDeviceParamModels().stream().filter(deviceParamModel -> deviceParamModel.getParamName().equals(prop)).findFirst().orElse(null);
+
+                if(paramModel != null){
+                    personalizationResults.put(prop, paramModel.getParamValue());
+                }
             }
             sessionPersonalizationResults.put(sessionId, personalizationResults);
         }

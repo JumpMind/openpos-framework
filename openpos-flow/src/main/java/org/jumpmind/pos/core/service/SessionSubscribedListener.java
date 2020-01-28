@@ -8,7 +8,7 @@ import org.jumpmind.pos.core.ui.message.DialogUIMessage;
 import org.jumpmind.pos.core.ui.messagepart.DialogHeaderPart;
 import org.jumpmind.pos.core.ui.messagepart.MessagePartConstants;
 import org.jumpmind.pos.server.config.MessageUtils;
-import org.jumpmind.pos.server.config.PersonalizationParameters;
+import org.jumpmind.pos.devices.service.model.PersonalizationParameters;
 import org.jumpmind.pos.server.config.SessionSubscribedEvent;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.server.service.SessionConnectListener;

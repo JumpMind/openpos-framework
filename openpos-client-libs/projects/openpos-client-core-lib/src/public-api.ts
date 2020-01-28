@@ -55,7 +55,7 @@ export * from './lib/core/interfaces/message-dialog-properties.interface';
 export * from './lib/core/interfaces/message-handler.interface';
 export * from './lib/core/interfaces/open-pos-dialog-config.interface';
 export * from './lib/core/personalization/personalization-parameter.interface.';
-export * from './lib/core/personalization/personalization-response.interface';
+export * from './lib/core/personalization/personalization-config-response.interface';
 export * from './lib/core/interfaces/ping-params.interface';
 export * from './lib/core/interfaces/ping-result.interface';
 export * from './lib/core/interfaces/selection-mode.enum';

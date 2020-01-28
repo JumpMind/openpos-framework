@@ -328,13 +328,13 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                 this.logsAvailable = false;
             });
         }
-        if (this.personalization.isPersonalized()) {
+        if (this.personalization.getPersonalizationSuccessful$().getValue()) {
             this.session.publish('DevTools::Get', DevMenuComponent.MSG_TYPE);
         } else {
             console.info(`DevTools can't fetch server status since device is not yet personalized.`);
         }
         this.showDevMenu = !this.showDevMenu;
-        if (! this.personalization.isPersonalized()) {
+        if (! this.personalization.getPersonalizationSuccessful$().getValue()) {
             // Due to a bug in the WKWebview, the below is needed on cordova to get the
             // DevMenu to show on the iPad when personalization has failed.  Without this code,
             // the DevMenu is invisible until the iPad is rotated. With this code, though, there
@@ -448,8 +448,8 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {
         const prom = new Promise<{ success: boolean, message: string }>((resolve, reject) => {
-            const port = this.personalization.getServerPort();
-            const nodeId = this.personalization.getDeviceId().toString();
+            const port = this.personalization.getServerPort$().getValue();
+            const nodeId = this.personalization.getDeviceId$().getValue().toString();
             const url = `${this.discovery.getServerBaseURL()}/register/restart/node/${nodeId}`;
             const httpClient = this.httpClient;
             httpClient.get(url).subscribe(response => {

@@ -85,7 +85,7 @@ public class PersonalizationEndpointTest {
                                 PersonalizationRequest.builder()
                                         .deviceId("00100-001")
                                         .appId("pos")
-                                        .authToken("123456789")
+                                        .deviceToken("123456789")
                                         .build()
                         )
                         .build()
@@ -120,7 +120,7 @@ public class PersonalizationEndpointTest {
                         .content(
                                 PersonalizationRequest.builder()
                                         .deviceId("00100-001")
-                                        .authToken("foo")
+                                        .deviceToken("foo")
                                         .appId("pos")
                                         .build()
                         )
@@ -137,7 +137,7 @@ public class PersonalizationEndpointTest {
                         .content(
                                 PersonalizationRequest.builder()
                                         .deviceId("00100-001")
-                                        .authToken("123456789")
+                                        .deviceToken("123456789")
                                         .appId("pos")
                                         .personalizationParameters(params)
                                         .build()

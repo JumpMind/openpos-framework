@@ -12,7 +12,7 @@ import java.util.Map;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PersonalizationRequest {
-    private String authToken;
+    private String deviceToken;
     private String deviceId;
     private String appId;
     private String deviceType;

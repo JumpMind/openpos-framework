@@ -1,6 +1,7 @@
+import {catchError, map} from 'rxjs/operators';
 import { IStartupTask } from './startup-task.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
-import { Observable, Subject } from 'rxjs';
+import {Observable, of, Subject, throwError} from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { StartupTaskNames } from './startup-task-names';
 import { Injectable } from '@angular/core';
@@ -23,28 +24,45 @@ export class PersonalizationStartupTask implements IStartupTask {
 
     execute(data: StartupTaskData): Observable<string> {
         return Observable.create((message: Subject<string>) => {
-            this.personalizeFromQueueParams(data.route.queryParams, message);
-            message.next('Checking if device is personalized.');
-            if (!this.personalization.isPersonalized()) {
-                message.next('Launching personalization screen.');
-                this.matDialog.open(
-                    PersonalizationComponent, {
-                        disableClose: true,
-                        hasBackdrop: false,
-                        panelClass: 'openpos-default-theme'
+
+            message.next('Attempting to personalize using query parameters');
+
+
+            this.personalizeFromQueueParams(data.route.queryParams, message)
+                .pipe(
+                    catchError( error => {
+                        message.next(error);
+                        message.next('Attempting to personalize from saved token')
+                        return this.personalization.personalizeFromSavedSession();
+                    })
+                ).subscribe(
+                {
+                    error: (error) => {
+                            message.next(error);
+                            message.next('Launching personalization screen.');
+                            this.personalization.personalizeFromSavedSession()
+                            this.matDialog.open(
+                                PersonalizationComponent, {
+                                    disableClose: true,
+                                    hasBackdrop: false,
+                                    panelClass: 'openpos-default-theme'
+                                }
+                            ).afterClosed().subscribe(() => {
+                                message.complete();
+                            });
+                        },
+                    next: (result) => {
+                        message.next(result);
+                        message.complete();
                     }
-                ).afterClosed().subscribe(() => {
-                    message.complete();
-                });
-            } else {
-                message.next('Device is already personalized.');
-                message.complete();
-            }
+                }
+            );
         });
     }
 
-    personalizeFromQueueParams(queryParams: Params, message: Subject<string>) {
+    personalizeFromQueueParams(queryParams: Params, message: Subject<string>) : Observable<string>{
         const deviceId = queryParams.deviceId;
+        const appId = queryParams.appId;
         const serverName = queryParams.serverName;
         let serverPort = queryParams.serverPort;
         let sslEnabled = queryParams.sslEnabled;
@@ -64,9 +82,9 @@ export class PersonalizationStartupTask implements IStartupTask {
             serverPort = !serverPort ? 6140 : serverPort;
             sslEnabled = !sslEnabled ? false : sslEnabled;
 
-            this.personalization.personalize(serverName, serverPort, deviceId, personalizationProperties);
+            return this.personalization.personalize(serverName, serverPort, deviceId, appId, personalizationProperties, sslEnabled);
         }
+
+        return throwError('Personalizing using Query Params failed');
     }
-
-
 }
