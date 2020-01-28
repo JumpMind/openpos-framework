@@ -1,6 +1,7 @@
 package org.jumpmind.pos.util;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,7 +56,7 @@ public class ClassUtils {
      * Retrieves all of the classes at or below the given package which implement the given interface.
      * @param <T>
      * @param packageName The root package to begin searching
-     * @param annotation The annotation to search for.
+     * @param matchingType The annotation to search for.
      * @return A list of Class objects.
      */
     @SuppressWarnings("unchecked")

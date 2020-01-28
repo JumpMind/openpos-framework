@@ -1,0 +1,6 @@
+<div *ngIf="action.actionTimer" class="button-action-timer-container">
+    <span *ngIf="action.actionTimer.countdownPrefixText" class="button-action-timer-prefix">{{action.actionTimer.countdownPrefixText}}</span>
+    <ng-container *ngIf="!action.actionTimer.countdownPrefixText && action.actionTimer.displayCountdown">&nbsp;</ng-container>
+    <span *ngIf="action.actionTimer.displayCountdown" class="button-action-timer-countdown">{{secondsRemaining}}</span>
+    <span *ngIf="action.actionTimer.countdownUnitsText" class="button-action-timer-units">{{action.actionTimer.countdownUnitsText}}</span>
+</div>

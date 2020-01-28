@@ -1,0 +1,30 @@
+.buttons {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: end;
+  grid-column-gap: 8px;
+
+  &.mobile {
+    grid-column-gap: 4px;
+  }
+}
+
+.image-instructions-outer {
+  display: flex;
+  flex-direction: column;
+  place-content: flex-end center;
+
+  .image-instructions {
+    padding: 16px;
+    max-width: 75%;
+    max-height: 75%;
+    align-self: center;
+    text-align: center;
+  }
+
+  .image {
+    max-width: 75%;
+    max-height: 75%;
+    align-self: center;
+  }
+}

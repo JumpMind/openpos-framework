@@ -129,7 +129,7 @@ public class DatabaseScriptContainer {
                 try {                    
                     sqlscript.execute();
                 } catch (Exception ex) {
-                    throw new PersistException("Failed to execute script: " + script, ex);
+                    logger.warn("Failed to execute script: " + script, ex);
                 }
                 return null;
             }

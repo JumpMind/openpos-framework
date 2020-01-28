@@ -47,7 +47,7 @@ export class ScanPartComponent extends ScreenPartComponent<ScanInterface> implem
         if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
                 if (this.screenData.scanActionName) {
-                    this.doAction({ action: this.screenData.scanActionName }, scanData);
+                    this.doAction({ action: this.screenData.scanActionName, queueIfBlocked: true }, scanData);
                 }
             });
         }

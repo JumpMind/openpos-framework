@@ -14,12 +14,12 @@ public class ImageUtils {
         }
         
         List<Point> allPoints = new ArrayList<>();
-        signatureData.getPointGroups().stream().forEachOrdered(pointGroup -> {
-            pointGroup.stream().forEachOrdered(point -> {
+        for (org.jumpmind.pos.util.model.Point[] pointGroup : signatureData.getPointGroups()) {
+            for (org.jumpmind.pos.util.model.Point point : pointGroup) {
                 Point p = new Point(point.getX(), point.getY());
                 allPoints.add(p);
-            });
-        });
+            };
+        };
         
         return allPoints.toArray(new Point[]{});
     }

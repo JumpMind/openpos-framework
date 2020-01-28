@@ -1,0 +1,4 @@
+@mixin button-action-timer-theme($theme) {
+    $foreground: map-get($theme, foreground );
+
+}

@@ -43,12 +43,7 @@ export class NCRPaymentPlugin implements IPlatformPlugin {
     }
 
     forwardMessage(message: any) {
-        if (message.action === 'ActivateDevice') {
-            this.NCRCordovaPlugin.activateDevice(
-                response => { this.handleSuccess(message, response); },
-                response => { this.handleError(message, response); }
-            );
-        } else if (message.action === 'ProcessMessage') {
+        if (message.action === 'ProcessMessage') {
             this.NCRCordovaPlugin.processMessage(message.payload,
                 response => { this.handleSuccess(message, response); },
                 response => { this.handleError(message, response); }

@@ -23,6 +23,7 @@
 @import './content-card/content-card-theme';
 @import './option-button/option-button-theme';
 @import './order-card/order-card-theme';
+@import './button-action-timer/button-action-timer-theme';
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
@@ -50,4 +51,5 @@
     @include content-card-theme($theme);
     @include option-button-theme($theme);
     @include order-card-theme($theme);
+    @include button-action-timer-theme($theme);
 }

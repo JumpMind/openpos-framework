@@ -1,12 +1,5 @@
 package org.jumpmind.pos.core.ui.message;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.jumpmind.pos.core.model.Total;
-import org.jumpmind.pos.core.ui.ActionItem;
-import org.jumpmind.pos.core.ui.UIMessage;
-import org.jumpmind.pos.core.ui.data.SellItem;
 import org.jumpmind.pos.core.ui.messagepart.SelfCheckoutMenuPart;
 
 public class SelfCheckoutSaleUIMessage extends SaleUIMessage {

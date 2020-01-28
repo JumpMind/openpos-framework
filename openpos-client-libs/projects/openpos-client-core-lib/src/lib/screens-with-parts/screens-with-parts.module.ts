@@ -30,6 +30,7 @@ import { MobileReturnReceiptsSheetComponent } from './return/mobile-return-recei
 import { OptionsScreenComponent } from './options/options-screen.component';
 import { OptionsScreenDialogComponent } from './options/options-screen-dialog.component';
 import { MobileSaleOrdersSheetComponent } from './sale/mobile-sale-orders-sheet/mobile-sale-orders-sheet.component';
+import {ErrorDialogComponent} from "./error-dialog/error-dialog.component";
 
 const screens = [
     SelectionListScreenComponent,
@@ -63,7 +64,8 @@ const dialogs = [
     LoadingDialogComponent,
     DynamicFormDialogComponent,
     ScanInputDialogComponent,
-    AutoCompleteAddressDialogComponent
+    AutoCompleteAddressDialogComponent,
+    ErrorDialogComponent
 ];
 
 @NgModule({

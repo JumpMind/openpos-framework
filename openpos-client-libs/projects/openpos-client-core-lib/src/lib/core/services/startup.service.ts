@@ -33,7 +33,7 @@ export class StartupService implements CanActivate {
         private matDialog: MatDialog) {
 
         // This might not be the best way but it's the best I could come up with for now.
-        // This allows task defined in the core module to be overriden by vendor specific modules
+        // This allows task defined in the core module to be overridden by vendor specific modules
         // for example overriding the personalization task
         if ( tasks ) {
             tasks.forEach( task => this.dedupedTasks.set(task.name, task));

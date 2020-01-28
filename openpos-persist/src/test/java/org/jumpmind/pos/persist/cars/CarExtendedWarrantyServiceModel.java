@@ -1,5 +1,6 @@
 package org.jumpmind.pos.persist.cars;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Delegate;
@@ -22,6 +23,7 @@ public class CarExtendedWarrantyServiceModel extends AbstractModel {
 
     @Delegate
     @CompositeDef
+    @JsonIgnore
     ServiceDefn serviceDefn;
 
     @ColumnDef

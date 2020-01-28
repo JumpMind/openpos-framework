@@ -1,4 +1,3 @@
-import { ImageTextPanelComponent } from './screen-parts/image-text-panel/image-text-panel.component';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
@@ -60,7 +59,6 @@ import { DynamicFormControlComponent } from './components/dynamic-form-control/d
 import { ProductListComponent } from './components/product-list/product-list.component';
 import { SelectableItemListComponent } from './components/selectable-item-list/selectable-item-list.component';
 import { OverFlowListComponent } from './components/overflow-list/overflow-list.component';
-import { ScanSomethingComponent } from './components/scan-something/scan-something.component';
 import { FabToggleButtonComponent } from './components/fab-toggle-button/fab-toggle-button.component';
 import { FabToggleGroupComponent } from './components/fab-toggle-group/fab-toggle-group.component';
 import { PopTartComponent } from './components/pop-tart/pop-tart.component';
@@ -148,6 +146,8 @@ import { TenderPartComponent } from './screen-parts/tender-part/tender-part.comp
 import { OrderCardComponent } from './components/order-card/order-card.component';
 import { LocalizedDateNoTimePipe } from './pipes/localized-date-no-time.pipe';
 import { BasicBaconStripComponent } from './screen-parts/basic-bacon-strip/basic-bacon-strip.component';
+import { ButtonActionTimerComponent } from './components/button-action-timer/button-action-timer.component';
+import { ImageTextPanelComponent } from './screen-parts/image-text-panel/image-text-panel.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -176,7 +176,7 @@ const screenParts = [
     ScanPartComponent,
     SearchExpandInputComponent,
     BasicBaconStripComponent,
-    ImageTextPanelComponent
+    ImageTextPanelComponent,
 ];
 
 const components = [
@@ -194,7 +194,6 @@ const components = [
     ProductListComponent,
     SelectableItemListComponent,
     OverFlowListComponent,
-    ScanSomethingComponent,
     FabToggleButtonComponent,
     FabToggleGroupComponent,
     PopTartComponent,
@@ -252,7 +251,8 @@ const components = [
     TitleComponent,
     ContentCardComponent,
     OptionButtonComponent,
-    OrderCardComponent
+    OrderCardComponent,
+    ButtonActionTimerComponent
 ];
 
 const directives = [
@@ -308,7 +308,6 @@ const pipes = [
     ],
     entryComponents: [
         KebabMenuComponent,
-        ScanSomethingComponent,
         PopTartComponent,
         SearchablePopTartComponent,
         DatePartChooserDialogComponent,

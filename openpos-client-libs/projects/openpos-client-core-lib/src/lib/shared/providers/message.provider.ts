@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { SessionService } from '../../core/services/session.service';
 import { Observable, ReplaySubject, Subscription} from 'rxjs';
 import { OpenposMessage } from '../../core/messages/message';
-import {map} from 'rxjs/operators';
+import {map, filter} from 'rxjs/operators';
 import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
@@ -10,7 +10,7 @@ import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 @Injectable({providedIn:'root'})
 export class MessageProvider {
 
-    //Create state for our messages
+    // Create state for our messages
     private messages$ = new ReplaySubject<any>(1);
     private messageType: string;
     private subscription: Subscription;
@@ -23,7 +23,8 @@ export class MessageProvider {
             this.subscription.unsubscribe();
         }
         // Update state withe the latest message
-        this.subscription  = this.sessionService.getMessages( messageType ).subscribe( m => this.messages$.next(m));
+        this.subscription  = this.sessionService.getMessages( messageType )
+          .pipe(filter(m => m.screenType !== 'NoOp')).subscribe( m => this.messages$.next(m));
         this.messageType = messageType;
     }
 

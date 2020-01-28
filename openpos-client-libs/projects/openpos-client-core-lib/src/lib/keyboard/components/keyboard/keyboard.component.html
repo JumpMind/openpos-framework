@@ -1,6 +1,7 @@
 <div class="mat-keyboard-wrapper"
      [class.dark-theme]="darkTheme$ | async"
      [class.debug]="isDebug$ | async"
+     [ngClass]="keyboardLayoutClass()"
 >
   <nav class="mat-keyboard-layout">
     <div class="mat-keyboard-row"

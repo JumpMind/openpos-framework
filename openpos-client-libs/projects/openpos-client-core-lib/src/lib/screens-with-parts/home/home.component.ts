@@ -41,6 +41,8 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   gutterSize: Observable<number>;
   gridColumns: Observable<number>;
   isMobile: Observable<boolean>;
+  iconClass: Observable<string>;
+  badgeSize: Observable<string>;
 
   constructor( media: OpenposMediaService, injector: Injector ) {
     super(injector);
@@ -64,11 +66,29 @@ export class HomeComponent extends PosScreen<HomeInterface> {
 
     this.isMobile = media.observe(new Map([
       [MediaBreakpoints.MOBILE_PORTRAIT, true],
-      [MediaBreakpoints.MOBILE_LANDSCAPE, true],
+      [MediaBreakpoints.MOBILE_LANDSCAPE, false],
       [MediaBreakpoints.TABLET_PORTRAIT, false],
       [MediaBreakpoints.TABLET_LANDSCAPE, false],
       [MediaBreakpoints.DESKTOP_PORTRAIT, false],
       [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
+    ]));
+
+    this.iconClass = media.observe(new Map([
+      [MediaBreakpoints.MOBILE_PORTRAIT, 'material-icons mat-24'],
+      [MediaBreakpoints.MOBILE_LANDSCAPE, 'material-icons mat-24'],
+      [MediaBreakpoints.TABLET_PORTRAIT, 'material-icons mat-24'],
+      [MediaBreakpoints.TABLET_LANDSCAPE, 'material-icons mat-64'],
+      [MediaBreakpoints.DESKTOP_PORTRAIT, 'material-icons mat-64'],
+      [MediaBreakpoints.DESKTOP_LANDSCAPE, 'material-icons mat-64']
+    ]));
+
+    this.badgeSize = media.observe(new Map([
+      [MediaBreakpoints.MOBILE_PORTRAIT, 'medium'],
+      [MediaBreakpoints.MOBILE_LANDSCAPE, 'medium'],
+      [MediaBreakpoints.TABLET_PORTRAIT, 'medium'],
+      [MediaBreakpoints.TABLET_LANDSCAPE, 'large'],
+      [MediaBreakpoints.DESKTOP_PORTRAIT, 'large'],
+      [MediaBreakpoints.DESKTOP_LANDSCAPE, 'large']
     ]));
   }
 

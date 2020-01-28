@@ -6,19 +6,31 @@
   flex-direction: column;
   justify-content: space-between;
 }
-.menu-button-border{
+
+.menu-button-border {
   @include mat-elevation(10);
   margin: 20px;
   padding: 20px;
   border-radius: 4px;
+
+  &.mobile {
+    margin: 6px;
+    padding: 6px;
+  }
 }
 
-.menu-button{
+.menu-button {
   min-width: 160px;
   min-height: 160px;
+
+  &.mobile {
+    min-width: 96px;
+    min-height: 96px;
+    line-height: 24px;
+  }
 }
 
-.menu-button-content{
+.menu-button-content {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -55,23 +67,27 @@
 
 @supports not (display: grid) {
 
-  .button-grid{
+  .button-grid {
     text-align: center;
     position: absolute;
     top: 40%;
     width: 100%;
   }
 
-  .menu-button-border{
+  .menu-button-border {
     display: inline-block;
   }
 }
 
 @supports (display: grid) {
-  .button-grid{
+  .button-grid {
     display: grid;
     place-content: center;
     place-items: stretch;
-    grid-template-columns: repeat(auto-fit, 240px)
+    grid-template-columns: repeat(auto-fit, 240px);
+
+    &.mobile {
+      grid-template-columns: repeat(auto-fit, 120px);
+    }
   }
 }

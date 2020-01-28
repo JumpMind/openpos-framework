@@ -22,6 +22,7 @@ import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
 import { ScreenCreatorService } from '../../core/services/screen-creator.service';
 import { FocusService } from '../../core/focus/focus.service';
+import { filter } from 'rxjs/operators';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -58,7 +59,8 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.updateScreen();
-        this.subscriptions.add(this.session.getMessages('Screen').subscribe((message) => this.handle(message)));
+        this.subscriptions.add(this.session.getMessages('Screen').pipe(filter(m => m.screenType !== 'NoOp'))
+            .subscribe((message) => this.handle(message)));
         this.subscriptions.add(this.session.getMessages('Connected').subscribe((message) => this.handle(new SplashScreen())));
         this.subscriptions.add(this.session.getMessages(
             MessageTypes.LIFE_CYCLE_EVENT).subscribe( message => this.handleLifeCycleEvent(message)));

@@ -83,6 +83,14 @@ export class MatKeyboardComponent {
     return this._isDebug.asObservable();
   }
 
+  keyboardLayoutClass(): string {
+      if (this.layout && this.layout.name) {
+            return 'keyboard-layout-' + this.layout.name.replace(/\s+/g, '-').toLowerCase();
+      } else {
+          return '';
+      }
+  }
+
   // inject dependencies
   constructor() {}
 

@@ -117,7 +117,7 @@ public abstract class WrapperService {
             ArrayList<String> cmd = config.getCommand(isConsole);
             String cmdString = commandToString(cmd);
             boolean usingHeapDump = cmdString.indexOf("-XX:+HeapDumpOnOutOfMemoryError") != -1;
-            logger.log(Level.INFO, "Working directory is " + System.getProperty("user.dir"));
+            logger.log(Level.INFO, "Working directory is " + config.getJavaProcessWorkingDirectory().getCanonicalPath());
 
             long startTime = 0;
             int startCount = 0;
@@ -132,6 +132,7 @@ public abstract class WrapperService {
                     }
                     startTime = System.currentTimeMillis();
                     ProcessBuilder pb = new ProcessBuilder(cmd);
+                    pb.directory(config.getJavaProcessWorkingDirectory());
                     pb.redirectErrorStream(true);
 
                     try {

@@ -1,0 +1,11 @@
+<app-dialog-header></app-dialog-header>
+<app-content-card>
+    <div class="image-instructions-outer">
+    <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="image">
+    <app-instructions *ngIf="screen.message" [instructions]="screen.message"
+                      [instructionsSize]="'text-sm'" class="image-instructions"></app-instructions>
+    </div>
+</app-content-card>
+<mat-dialog-actions class="buttons">
+    <app-primary-button (buttonClick)="doAction(screen.button)">{{screen.button.title}}</app-primary-button>
+</mat-dialog-actions>

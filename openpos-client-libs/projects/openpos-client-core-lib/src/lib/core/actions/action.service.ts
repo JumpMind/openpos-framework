@@ -1,47 +1,58 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import { IActionItem } from './action-item.interface';
-import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
-import { MatDialog } from '@angular/material';
-import { QueueLoadingMessage } from '../services/session.service';
-import { ActionMessage } from '../messages/action-message';
-import { LoaderState } from '../../shared/components/loader/loader-state';
-import { MessageProvider } from '../../shared/providers/message.provider';
-import { BehaviorSubject, Observable, Subscription } from 'rxjs';
-import { IUrlMenuItem } from './url-menu-item.interface';
-import { OpenposMessage } from '../messages/message';
-import { MessageTypes } from '../messages/message-types';
+import {IActionItem} from './action-item.interface';
+import {ConfirmationDialogComponent} from '../components/confirmation-dialog/confirmation-dialog.component';
+import {MatDialog} from '@angular/material';
+import {QueueLoadingMessage} from '../services/session.service';
+import {ActionMessage} from '../messages/action-message';
+import {LoaderState} from '../../shared/components/loader/loader-state';
+import {MessageProvider} from '../../shared/providers/message.provider';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
+import {IUrlMenuItem} from './url-menu-item.interface';
+import {OpenposMessage} from '../messages/message';
+import {MessageTypes} from '../messages/message-types';
 
 @Injectable()
-export class ActionService implements OnDestroy{
+export class ActionService implements OnDestroy {
 
     private blockActions: boolean;
     private actionPayloads: Map<string, () => void> = new Map<string, () => void>();
     private actionDisablers = new Map<string, BehaviorSubject<boolean>>();
     private subscriptions = new Subscription();
+    private actionQueue = new Array<QueuedItem>();
 
     constructor(
         private dialogService: MatDialog,
-        private messageProvider: MessageProvider ) {
-        this.subscriptions.add(messageProvider.getScopedMessages$().subscribe( message => {
+        private messageProvider: MessageProvider) {
+        this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
             if (message.disabled) {
-               console.log('creating a screen that is disabled');
-               this.blockActions = true;
+                console.log('creating a screen that is disabled');
+                this.blockActions = true;
             } else {
-               this.blockActions = false;
+                this.unblock();
             }
         }));
-        this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe( message => {
-            if (message.type === MessageTypes.TOAST  && !message.disabled) {
-                this.blockActions = false;
+        this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe(message => {
+            if (message.type === MessageTypes.TOAST && !message.disabled) {
+                this.unblock();
             }
         }));
     }
 
-    async doAction( actionItem: IActionItem, payload?: any ) {
+    private unblock() {
+        this.blockActions = false;
+        const queued = this.actionQueue.pop();
+        if (queued) {
+            console.log('Dequeued an action to send')
+            this.doAction(queued.item, queued.payload);
+        }
+    }
+
+    async doAction(actionItem: IActionItem, payload?: any) {
         const sendAction = await this.canPerformAction(actionItem);
-
-        if ( sendAction ) {
-
+        if (sendAction) {
+            if (!actionItem.doNotBlockForResponse) {
+                this.blockActions = true;
+            }
             if (actionItem.hasOwnProperty('url')) {
                 this.doUrlAction(actionItem as IUrlMenuItem);
                 return;
@@ -49,7 +60,7 @@ export class ActionService implements OnDestroy{
 
             // First we will use the payload passed into this function then
             // Check if we have registered action payload
-            if ( !payload && this.actionPayloads.has(actionItem.action)) {
+            if (!payload && this.actionPayloads.has(actionItem.action)) {
                 console.info(`Checking registered action payload for ${actionItem.action}`);
                 try {
                     payload = this.actionPayloads.get(actionItem.action)();
@@ -58,15 +69,17 @@ export class ActionService implements OnDestroy{
                 }
             }
 
-            this.messageProvider.sendMessage( new ActionMessage(actionItem.action, actionItem.doNotBlockForResponse, payload));
-            if ( !actionItem.doNotBlockForResponse ) {
-                this.blockActions = true;
+            this.messageProvider.sendMessage(new ActionMessage(actionItem.action, actionItem.doNotBlockForResponse, payload));
+            if (!actionItem.doNotBlockForResponse) {
                 this.queueLoading();
             }
+        } else if (actionItem.queueIfBlocked) {
+            console.log('queueing an action to send')
+            this.actionQueue.push(new QueuedItem(actionItem, payload));
         }
     }
 
-    private doUrlAction( urlItem: IUrlMenuItem ) {
+    private doUrlAction(urlItem: IUrlMenuItem) {
         // check to see if we are an IURLMenuItem
         console.info(`About to open: ${urlItem.url} in target mode: ${urlItem.targetMode}, with options: ${urlItem.options}`);
         window.open(urlItem.url, urlItem.targetMode, urlItem.options);
@@ -113,25 +126,25 @@ export class ActionService implements OnDestroy{
         this.messageProvider.sendMessage(new QueueLoadingMessage(LoaderState.LOADING_TITLE));
     }
 
-    private async  canPerformAction( actionItem: IActionItem): Promise<boolean> {
+    private async canPerformAction(actionItem: IActionItem): Promise<boolean> {
         if (actionItem && typeof actionItem.enabled === 'boolean' && actionItem.enabled === false) {
             console.info('Not sending action because it was disabled');
             return false;
         }
 
-        if ( this.blockActions ) {
+        if (this.blockActions) {
             console.info('Not sending action because previous action required a response that we are still waiting for');
             return false;
         }
 
-        if ( this.actionIsDisabled(actionItem.action )) {
+        if (this.actionIsDisabled(actionItem.action)) {
             console.info('Not sending action because it was disabled by a disabler');
             return false;
         }
 
-        if ( actionItem.confirmationDialog ) {
+        if (actionItem.confirmationDialog) {
             console.info('Confirming action');
-            const dialogRef = this.dialogService.open(ConfirmationDialogComponent, { disableClose: true });
+            const dialogRef = this.dialogService.open(ConfirmationDialogComponent, {disableClose: true});
             dialogRef.componentInstance.confirmDialog = actionItem.confirmationDialog;
             const result = await dialogRef.afterClosed().toPromise();
 
@@ -146,8 +159,14 @@ export class ActionService implements OnDestroy{
     }
 
     ngOnDestroy(): void {
-        if( this.subscriptions ){
+        if (this.subscriptions) {
             this.subscriptions.unsubscribe();
         }
     }
+
+
+}
+
+export class QueuedItem {
+    constructor(public item: IActionItem, public payload: any) {}
 }

@@ -5,10 +5,6 @@
 </mat-card>
 
 <div *ngIf="(items | async)?.length === 0" class="sale-item-prompt-outer">
-    <app-instructions class="sale-item-list-prompt" [instructions]="screenData.prompt" instructionsSize="text-lg">
-    </app-instructions>
-    <app-instructions class="sale-item-list-instructions" [instructions]="screenData.instructions"
-        instructionsSize="text-sm">
-    </app-instructions>
+    <app-image-text-panel [instructionsSize]="'text-lg'"></app-image-text-panel>
     <img *ngIf="screenData.backgroundImage" [src]="screenData.backgroundImage | imageUrl" class="scan-item-icon">
 </div>
