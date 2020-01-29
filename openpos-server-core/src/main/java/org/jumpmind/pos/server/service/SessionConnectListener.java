@@ -40,6 +40,8 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
 
     Map<String, Map<String, String>> clientContext = Collections.synchronizedMap(new HashMap<>());
 
+    Map<String, DeviceModel> deviceModelMap = Collections.synchronizedMap(new HashMap<>());
+
     @Value("${openpos.general.authToken:#{null}}")
     String serverAuthToken;
 
@@ -70,6 +72,8 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
                 AuthenticateDeviceRequest.builder()
                         .authToken(deviceToken)
                         .build()).getDeviceModel();
+
+        deviceModelMap.put(sessionId, deviceModel);
 
         if( deviceModel == null ){
             this.log.warn("Device is not personalized");
@@ -149,5 +153,7 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
     }
 
     public Map<String, String> getClientContext(String sessionId) { return clientContext.get(sessionId); }
+
+    public DeviceModel getDeviceModel(String sessionId) { return deviceModelMap.get(sessionId); }
 
 }

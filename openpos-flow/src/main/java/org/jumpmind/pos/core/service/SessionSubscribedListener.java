@@ -114,6 +114,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             stateManager.setSessionAuthenticated(sessionId, sessionAuthTracker.isSessionAuthenticated(sessionId));
             stateManager.setSessionCompatible(sessionId, sessionAuthTracker.isSessionCompatible(sessionId));
             stateManager.setClientContext(clientContext);
+            stateManager.getApplicationState().getScope().setDeviceScope("device", sessionAuthTracker.getDeviceModel(sessionId));
 
             if (!created) {
                 stateManager.refreshScreen();

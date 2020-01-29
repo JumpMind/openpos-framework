@@ -6,12 +6,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.bouncycastle.util.Arrays;
-import org.jumpmind.pos.util.clientcontext.ClientContext;
-import org.jumpmind.pos.util.clientcontext.ClientContextProperty;
-import org.jumpmind.pos.util.clientcontext.ClientContextPropertyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.framework.AopProxyUtils;
@@ -28,8 +23,6 @@ public class EndpointInjector {
     @Autowired
     private AutowireCapableBeanFactory applicationContext;
 
-    @Autowired
-    private ClientContext clientContext;
     
     @Autowired(required=false)
     List<IServiceContextProvider> serviceContextProviders; 
@@ -72,27 +65,6 @@ public class EndpointInjector {
             if (in != null) {
                 field.setAccessible(true);
                 injectField(targetClass, target, in.name(), in.required(), field, context);
-            }
-
-            ClientContextProperty clientContextProperty = field.getAnnotation(ClientContextProperty.class);
-            if (clientContextProperty == null) {
-                clientContextProperty = field.getDeclaredAnnotation(ClientContextProperty.class);
-            }
-
-            if( clientContextProperty != null ) {
-                field.setAccessible(true);
-
-                String clientContextPropertyName = clientContextProperty.name();
-                if(StringUtils.isEmpty(clientContextPropertyName)){
-                    clientContextPropertyName = field.getName();
-                }
-
-                try {
-                    field.set(target, clientContext.get(clientContextPropertyName));
-                } catch (Exception e ){
-                    throw new PosServerException("Failed to apply injection. target=" + target, e);
-                }
-
             }
         }
     }
