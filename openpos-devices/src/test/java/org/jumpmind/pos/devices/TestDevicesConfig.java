@@ -8,8 +8,8 @@ import org.springframework.context.annotation.ComponentScan;
 import javax.annotation.PostConstruct;
 
 @ComponentScan(basePackages = { "org.jumpmind.pos.devices", "org.jumpmind.pos.service", "org.jumpmind.pos.persist"})
-@EnableConfigurationProperties
 @SpringBootApplication
+@EnableConfigurationProperties
 public class TestDevicesConfig {
 
     @Autowired

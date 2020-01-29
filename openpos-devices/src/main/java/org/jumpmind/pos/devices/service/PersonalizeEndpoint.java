@@ -33,7 +33,7 @@ public class PersonalizeEndpoint {
     @Autowired
     DevicesRepository devicesRepository;
 
-    @Value("${openpos.businessunitId}")
+    @Value("${openpos.businessunitId:undefined}")
     String businessUnitId;
 
     @Autowired(required = false)
