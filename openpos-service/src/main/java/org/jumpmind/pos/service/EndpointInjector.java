@@ -6,12 +6,16 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.bouncycastle.util.Arrays;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.clientcontext.ClientContextProperty;
 import org.jumpmind.pos.util.clientcontext.ClientContextPropertyException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.stereotype.Component;
@@ -41,6 +45,12 @@ public class EndpointInjector {
         if (applicationContext != null) {
             applicationContext.autowireBean(target);
         }
+
+        if( AopUtils.isAopProxy(target)){
+            targetClass = AopUtils.getTargetClass(target);
+            target = AopProxyUtils.getSingletonTarget(target);
+        }
+
         while (targetClass != null) {
             performInjectionsImpl(targetClass, target, context);
             targetClass = targetClass.getSuperclass();
