@@ -25,8 +25,10 @@ import org.jumpmind.db.model.IndexColumn;
 import org.jumpmind.db.model.NonUniqueIndex;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.model.UniqueIndex;
+import org.jumpmind.db.platform.DatabaseNamesConstants;
 import org.jumpmind.db.platform.IDatabasePlatform;
 import org.jumpmind.db.platform.IDdlBuilder;
+import org.jumpmind.db.platform.oracle.OracleDatabasePlatform;
 import org.jumpmind.db.sql.SqlScript;
 import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.util.model.ITypeCode;
@@ -155,7 +157,7 @@ public class DatabaseSchema {
         Set<Table> tables = new TreeSet<>();
         for (Class<?> entityClass : entityClasses) {
             //List<ModelClassMetaData> metas = createMetaDatas(entityClass);
-            ModelMetaData modelMetaData = createMetaData(entityClass);
+            ModelMetaData modelMetaData = createMetaData(entityClass, platform);
             classToModelMetaData.put(entityClass, modelMetaData);
             for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
                 validateTable(tablePrefix, meta.getTable());
@@ -182,7 +184,7 @@ public class DatabaseSchema {
             }
             Field[] fields = extensionClass.getDeclaredFields();
             for (Field field : fields) {
-                meta.getTable().addColumn(createColumn(field));
+                meta.getTable().addColumn(createColumn(field, platform));
             }
         }
     }
@@ -229,11 +231,11 @@ public class DatabaseSchema {
     protected void extendTable(Table dbTable, Class<?> clazz) {
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
-            dbTable.addColumn(createColumn(field));
+            dbTable.addColumn(createColumn(field, platform));
         }
     }
 
-    public static ModelMetaData createMetaData(Class<?> clazz) {
+    public static ModelMetaData createMetaData(Class<?> clazz, IDatabasePlatform platform) {
         List<ModelClassMetaData> list = new ArrayList<>();
 
         Class<?> entityClass = clazz;
@@ -256,7 +258,7 @@ public class DatabaseSchema {
                     Field[] fields = currentClass.getDeclaredFields();
                     for (Field field : fields) {
                         field.setAccessible(true);
-                        Column column = createColumn(field);
+                        Column column = createColumn(field, platform);
                         createIndex(field, column, indices);
                         if (column != null && (includeAllFields || column.isPrimaryKey())) {
                             if (isPrimaryKey(field)) {
@@ -325,7 +327,7 @@ public class DatabaseSchema {
         return false;
     }
 
-    protected static Column createColumn(Field field) {
+    protected static Column createColumn(Field field, IDatabasePlatform platform) {
         Column dbCol = null;
         ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
         if (colAnnotation != null) {
@@ -340,6 +342,8 @@ public class DatabaseSchema {
             dbCol.setDescription(colAnnotation.description());
             if (colAnnotation.type() == Types.OTHER) {
                 dbCol.setTypeCode(getDefaultType(field));
+            } else if (colAnnotation.type() == Types.CLOB && DatabaseNamesConstants.ORACLE.equals(platform.getName())) {
+                dbCol.setTypeCode(Types.LONGVARCHAR);
             } else {
                 dbCol.setTypeCode(colAnnotation.type());
             }
