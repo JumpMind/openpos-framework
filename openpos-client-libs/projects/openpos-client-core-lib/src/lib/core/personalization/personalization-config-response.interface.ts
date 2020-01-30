@@ -1,4 +1,4 @@
-import { PersonalizationParameter } from './personalization-parameter.interface.';
+import { PersonalizationParameter } from './personalization-parameter.interface';
 
 export interface PersonalizationConfigResponse {
     devicePattern?: string;

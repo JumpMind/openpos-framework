@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonalizationConfigResponse } from './personalization-config-response.interface';
-import {Observable, BehaviorSubject, Subject, ObjectUnsubscribedError, throwError} from 'rxjs';
+import {Observable, BehaviorSubject, Subject, throwError} from 'rxjs';
 import { map, tap} from 'rxjs/operators';
 import {PersonalizationRequest} from './personalization-request';
 import {PersonalizationResponse} from './personalization-response.interface';
@@ -74,7 +74,7 @@ export class PersonalizationService {
                 }
 
                 this.personalizationSuccessFul$.next(true);
-                retValue.next("Personalization successful");
+                retValue.next('Personalization successful');
                 retValue.complete();
             },
             error: error => {
@@ -99,9 +99,9 @@ export class PersonalizationService {
         let url = sslEnabled ? 'https://' : 'http://';
         url += serverName + ':' + serverPort + '/devices/personalizationConfig';
 
-        console.log('Requesting Personalization with url: ' + url);
+        console.log('Requesting Personalization config with url: ' + url);
         return this.http.get<PersonalizationConfigResponse>(url).pipe(
-            tap( result =>  result ? console.log('Successful Personalization with url: ' + url) : null )
+            tap( result =>  result ? console.log('Successful retrieval of Personalization Config with url: ' + url) : null )
         );
     }
 
