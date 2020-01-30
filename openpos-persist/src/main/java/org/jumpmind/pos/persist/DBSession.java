@@ -386,6 +386,7 @@ public class DBSession {
                 new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()));
 
         model.load();
+        model.loadValues();
 
         for (Table table : tables)  {
             delete(model, table);
