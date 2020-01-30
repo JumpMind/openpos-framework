@@ -392,7 +392,6 @@ export class SessionService implements IMessageHandler<any> {
         }
         if (this.personalization.getIsManagedServer$().getValue()) {
             this.unsubscribe();
-            this.discovery.clearCachedUrls();
             this.reconnecting = true;
             this.reconnectTimerSub = timer(5000, 5000).pipe(takeWhile(v => this.reconnecting)).subscribe(async () => {
                 if (await this.discovery.isManagementServerAlive()) {

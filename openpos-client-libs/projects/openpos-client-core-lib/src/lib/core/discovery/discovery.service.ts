@@ -31,11 +31,12 @@ export class DiscoveryService {
         combineLatest(  personalization.getAppId$().pipe(distinctUntilChanged()),
                         personalization.getDeviceId$()
             ).subscribe( ([appId, deviceId]) => this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl(appId, deviceId)));
-    }
 
-    public clearCachedUrls() {
-        this.serverBaseUrl = null;
-        this.websocketUrl = null;
+        combineLatest(  personalization.getIsManagedServer$(),
+                        personalization.getSslEnabled$(),
+                        personalization.getServerName$(),
+                        personalization.getServerPort$()
+            ).subscribe( ([isManagedServer, sslEnabled, serverName, serverPort]) => this.updateWebsocketUrl(isManagedServer, sslEnabled, serverName, serverPort));
     }
 
     public async isManagementServerAlive(): Promise<boolean> {
@@ -153,24 +154,24 @@ export class DiscoveryService {
         return `${this.getServerBaseURL()}/api`;
     }
 
-    public getWebsocketUrl(): string {
-        if (!this.websocketUrl) {
-            if (this.personalization.getIsManagedServer$().getValue()) {
-                console.debug(`webSocketUrl isn't set yet for the managed server`);
-            } else {
-                let protocol = 'ws://';
-                if (this.personalization.getSslEnabled$().getValue()) {
-                    protocol = 'wss://';
-                }
-                let url: string = protocol + this.personalization.getServerName$().getValue();
-                if (this.personalization.getServerPort$().getValue()) {
-                    url = url + ':' + this.personalization.getServerPort$().getValue();
-                }
-                url = url + '/api/websocket';
-                this.websocketUrl = url;
+    private updateWebsocketUrl( isManageServer: boolean, sslEnabled: boolean, serverName: string, serverPort: string) {
+        if (isManageServer) {
+            console.debug(`webSocketUrl isn't set yet for the managed server`);
+        } else {
+            let protocol = 'ws://';
+            if (sslEnabled) {
+                protocol = 'wss://';
             }
+            let url: string = protocol + serverName;
+            if (serverPort) {
+                url = url + ':' + serverPort;
+            }
+            url = url + '/api/websocket';
+            this.websocketUrl = url;
         }
+    }
 
+    public getWebsocketUrl(): string {
         return this.websocketUrl;
     }
 
