@@ -2,13 +2,19 @@
     Please select an option
 </h1>
 <mat-dialog-content appArrowTab>
-    <button 
-        *ngFor="let o of items" 
-        mat-button
-        appArrowTabItem 
-        (click)="select(o)">
-        <span>{{o}}</span>
-        <span fxFlex="1 1 auto"></span>
-        <mat-icon color="primary" class="material-icons">keyboard_arrow_right</mat-icon>
-    </button>
+    <div class="pop-tart-button-container">
+        <button 
+            *ngFor="let o of items"
+            responsive-class 
+            mat-button
+            appArrowTabItem 
+            class="pop-tart-button"
+            (click)="select(o)">
+            <div responsive-class class="pop-tart-button-content">
+                <span>{{o}}</span>
+                <span fxFlex="1 1 auto"></span>
+                <mat-icon color="primary" class="material-icons">keyboard_arrow_right</mat-icon>
+            </div>
+        </button>
+    </div>
 </mat-dialog-content>
