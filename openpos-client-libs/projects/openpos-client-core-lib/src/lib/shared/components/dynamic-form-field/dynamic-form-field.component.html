@@ -26,14 +26,6 @@
             <button *ngIf="formField.inputType==='PopTart'" type="button" mat-button matSuffix mat-icon-button (click)="openPopTart()">
                 <mat-icon>more_vert</mat-icon>
             </button>
-                        
-            <input class="poptart" *ngSwitchCase="'SearchablePopTart'" matInput [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
-                 [required]="formField.required" (click)="openSearchablePopTart()" 
-                 onfocus="this.blur()" readonly id="{{formField.id}}">
-
-            <button *ngIf="formField.inputType==='SearchablePopTart'" type="button" mat-button matSuffix mat-icon-button (click)="openSearchablePopTart()">
-                <mat-icon>more_vert</mat-icon>
-            </button>
 
             <input *ngSwitchCase="'AlphanumericPassword'" matInput [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)"
                 type="password" [required]="formField.required" id="{{formField.id}}" [formatterName]="formField.inputType">

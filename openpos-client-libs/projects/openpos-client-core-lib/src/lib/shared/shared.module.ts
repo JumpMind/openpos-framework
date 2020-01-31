@@ -62,7 +62,6 @@ import { OverFlowListComponent } from './components/overflow-list/overflow-list.
 import { FabToggleButtonComponent } from './components/fab-toggle-button/fab-toggle-button.component';
 import { FabToggleGroupComponent } from './components/fab-toggle-group/fab-toggle-group.component';
 import { PopTartComponent } from './components/pop-tart/pop-tart.component';
-import { SearchablePopTartComponent } from './components/searchable-pop-tart/searchable-pop-tart.component';
 import { NavListComponent } from './components/nav-list/nav-list.component';
 import { FileViewerComponent } from './components/file-viewer/file-viewer.component';
 import { CounterComponent } from './components/counter/counter.component';
@@ -197,7 +196,6 @@ const components = [
     FabToggleButtonComponent,
     FabToggleGroupComponent,
     PopTartComponent,
-    SearchablePopTartComponent,
     NavListComponent,
     FileViewerComponent,
     CounterComponent,
@@ -309,7 +307,6 @@ const pipes = [
     entryComponents: [
         KebabMenuComponent,
         PopTartComponent,
-        SearchablePopTartComponent,
         DatePartChooserDialogComponent,
         LocationOverrideDialogComponent,
         NavListComponent,

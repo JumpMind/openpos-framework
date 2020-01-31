@@ -1,20 +1,29 @@
-<h1 mat-dialog-title class="text-md">
-    Please select an option
-</h1>
+<div *ngIf="searchable" mat-dialog-title class="pop-tart-search-bar">
+    <mat-form-field fxFlexFill>
+        <input matInput [(ngModel)]="filterValue" [placeholder]="instructions">
+    </mat-form-field>
+</div>
+<div *ngIf="!searchable" mat-dialog-title class="pop-tart-title">
+    {{instructions}}
+</div>
+    
 <mat-dialog-content appArrowTab>
-    <div class="pop-tart-button-container">
-        <button 
-            *ngFor="let o of items"
-            responsive-class 
-            mat-button
-            appArrowTabItem 
-            class="pop-tart-button"
+    <div *ngIf="searchable" class="pop-tart-button-container">
+        <app-option-button *ngFor="let o of items | stringListFilter:filterValue | listLimit:10; let i = index"
+            appArrowTabItem
+            [attr.tabindex]="i"
+            [optionTitle]="o"
+            [optionSize]="'md'"
             (click)="select(o)">
-            <div responsive-class class="pop-tart-button-content">
-                <span>{{o}}</span>
-                <span fxFlex="1 1 auto"></span>
-                <mat-icon color="primary" class="material-icons">keyboard_arrow_right</mat-icon>
-            </div>
-        </button>
+        </app-option-button>
+    </div>
+    <div *ngIf="!searchable" class="pop-tart-button-container">
+        <app-option-button *ngFor="let o of items; let i = index"
+            appArrowTabItem
+            [attr.tabindex]="i"
+            [optionTitle]="o"
+            [optionSize]="'md'"
+            (click)="select(o)">
+        </app-option-button>
     </div>
 </mat-dialog-content>
