@@ -30,6 +30,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
     serverResponse: PersonalizationConfigResponse;
     clientTimeout: any;
     serverTimeout: any;
+    errorMessage: string;
 
     constructor(
         private formBuilder: FormBuilder, private clientUrlService: ClientUrlService,
@@ -213,7 +214,10 @@ export class PersonalizationComponent implements IScreen, OnInit {
         } else {
             this.personalizeLocal().subscribe({
                 next: response => this.matDialog.closeAll(),
-                error: error => console.warn(error)
+                error: error => {
+                    console.warn(error);
+                    this.errorMessage = `Personalization request failed`;
+                }
                 });
 
         }

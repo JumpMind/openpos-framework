@@ -108,7 +108,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             public screenService: ScreenService, public dialogService: DialogService, public session: SessionService,
             public deviceService: DeviceService, public dialog: MatDialog,
             public iconService: IconService, public snackBar: MatSnackBar, public overlayContainer: OverlayContainer,
-            protected router: Router, private pluginService: OldPluginService,
+            private pluginService: OldPluginService,
             private fileUploadService: FileUploadService,
             private httpClient: HttpClient, private cd: ChangeDetectorRef,
             private elRef: ElementRef, public renderer: Renderer2,
