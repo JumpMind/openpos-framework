@@ -26,6 +26,7 @@ import org.jumpmind.db.model.IndexColumn;
 import org.jumpmind.db.model.NonUniqueIndex;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.model.UniqueIndex;
+import org.jumpmind.db.platform.DatabaseNamesConstants;
 import org.jumpmind.db.platform.IDatabasePlatform;
 import org.jumpmind.db.platform.IDdlBuilder;
 import org.jumpmind.db.sql.SqlScript;
@@ -357,6 +358,8 @@ public class DatabaseSchema {
             dbCol.setDescription(colAnnotation.description());
             if (colAnnotation.type() == Types.OTHER) {
                 dbCol.setTypeCode(getDefaultType(field));
+            } else if (colAnnotation.type() == Types.CLOB && platformMatches(DatabaseNamesConstants.ORACLE, platform)) {
+                dbCol.setTypeCode(Types.LONGVARCHAR);
             } else {
                 dbCol.setTypeCode(colAnnotation.type());
             }
@@ -382,6 +385,10 @@ public class DatabaseSchema {
             }
         }
         return dbCol;
+    }
+
+    private static boolean platformMatches(String name, IDatabasePlatform platform) {
+        return platform != null && name != null && platform.getName().equals(name);
     }
 
     public Map<String, String> getEntityIdColumnsToFields(Class<?> entityClass) {

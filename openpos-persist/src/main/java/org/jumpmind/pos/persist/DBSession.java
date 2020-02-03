@@ -379,6 +379,24 @@ public class DBSession {
         }
     }
 
+    public void delete(AbstractModel argModel) {
+        List<Table> tables = getValidatedTables(argModel);
+
+        ModelWrapper model =
+                new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()));
+
+        model.load();
+        model.loadValues();
+
+        for (Table table : tables)  {
+            delete(model, table);
+        }
+    }
+
+    protected void delete(ModelWrapper model, Table table) {
+        excecuteDml(DmlType.DELETE, model, table);
+    }
+
     protected void insert(ModelWrapper model, Table table) {
         if (0 == excecuteDml(DmlType.INSERT, model, table)) {
             throw new DuplicateKeyException("Received 0 rows during insert to " + table.getName());
@@ -402,7 +420,7 @@ public class DBSession {
         return jdbcTemplate.getJdbcOperations().update(sql, values, types);
     }
 
-    public void batchInsert(List<? extends AbstractModel> models) {
+    protected void batchInternal(List<? extends  AbstractModel> models, DmlType dmlType) {
         if (models.size() > 0) {
             AbstractModel exampleModel = models.get(0);
 
@@ -416,13 +434,25 @@ public class DBSession {
             for (Table table : tables) {
                 boolean[] nullKeyValues = model.getNullKeys();
                 List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
-                DmlStatement statement = databasePlatform.createDmlStatement(DmlType.INSERT, table.getCatalog(), table.getSchema(), table.getName(),
+                DmlStatement statement = databasePlatform.createDmlStatement(dmlType, table.getCatalog(), table.getSchema(), table.getName(),
                         primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
                 String sql = statement.getSql();
                 Object[] values = statement.getValueArray(model.getColumnNamesToValues());
                 jdbcTemplate.getJdbcOperations().batchUpdate(sql, getValueArray(statement, models));
             }
         }
+    }
+
+    public void batchInsert(List<? extends AbstractModel> models) {
+        batchInternal(models, DmlType.INSERT);
+    }
+
+    public void batchDelete(List<? extends AbstractModel> models) {
+        batchInternal(models, DmlType.DELETE);
+    }
+
+    public void batchUpdate(List<? extends AbstractModel> models) {
+        batchInternal(models, DmlType.UPDATE);
     }
 
     private List<Object[]> getValueArray(DmlStatement statement, List<? extends AbstractModel> models) {

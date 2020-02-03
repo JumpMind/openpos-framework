@@ -1,5 +1,7 @@
 package org.jumpmind.pos.service.startup;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -20,19 +22,34 @@ public class ModuleStartupTask extends AbstractStartupTask {
     @Override
     protected void doTask() throws Exception {
         if (moduleRegistry.getModules() != null && moduleRegistry.getModules().size() > 0) {
-            List<IModule> modules = moduleRegistry.getModules();
-            for (IModule module : modules) {
-                logger.info(BoxLogging.box("Initializing Module: " + StringUtils.leftPad(module.getName(), 15).toUpperCase()));
-                module.initialize();
+            List<IModule> modules = new ArrayList<>(moduleRegistry.getModules());
+            Iterator<IModule> i = modules.iterator();
+            while (i.hasNext()) {
+                IModule module = i.next();
+                try {
+                    logger.info(logMessage("Initializing module: ", module));
+                    module.initialize();
+                } catch (Exception ex) {
+                    logger.error(logMessage("Failed to initialize module: ", module), ex);
+                    i.remove();
+                }
             }
             for (IModule module : modules) {
-                logger.info(BoxLogging.box("Starting Module: " + StringUtils.leftPad(module.getName(), 15).toUpperCase()));
-                module.start();
+                try {
+                    logger.info(logMessage("Started module: ", module));
+                    module.start();
+                } catch (Exception ex) {
+                    logger.error(logMessage("Failed to start module: ", module), ex);
+                }
             }
 
         } else {
             logger.info(BoxLogging.box("No modules detected to start ..."));
         }
+    }
+
+    private String logMessage(String msg, IModule module) {
+        return BoxLogging.box("Initializing Module: " + StringUtils.leftPad(module.getName(), 15).toUpperCase());
     }
 
 }
