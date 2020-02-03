@@ -240,7 +240,7 @@ public class QueryTemplate implements Cloneable {
 
     private Map<String, Object> splitInClause(Map.Entry<String, Object> entry, StringBuilder buffer, Query<?> query) {
         Map<String, Object> newParams = new HashMap<>();
-        Pattern pattern = Pattern.compile("(\\S+\\s+(?:not\\s+)?in\\s*\\(\\s*)(:" + Pattern.quote(entry.getKey()) + ")(\\s*\\))", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile("(\\S+\\s+(not\\s+)?in\\s*\\(\\s*)(:" + Pattern.quote(entry.getKey()) + ")(\\s*\\))", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(buffer);
         Map<Integer, ? extends List> indexToList = partitionList(entry.getValue(), query.getMaxInParameters());
         while (matcher.find()) {
@@ -248,9 +248,14 @@ public class QueryTemplate implements Cloneable {
             replacement.append("(");
             for (Map.Entry<Integer, ? extends List> indexEntry : indexToList.entrySet()) {
                 if (indexEntry.getKey() > 0) {
-                    replacement.append(" OR ");
+                    if (matcher.group(2) != null) {
+                        replacement.append(" AND ");
+                    }
+                    else {
+                        replacement.append(" OR ");
+                    }
                 }
-                replacement.append(matcher.group(1)).append(matcher.group(2)).append("$").append(indexEntry.getKey()).append(matcher.group(3));
+                replacement.append(matcher.group(1)).append(matcher.group(3)).append("$").append(indexEntry.getKey()).append(matcher.group(4));
                 newParams.put(entry.getKey() + "$" + indexEntry.getKey(), indexEntry.getValue());
             }
             replacement.append(")");
