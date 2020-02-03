@@ -358,7 +358,7 @@ public class DatabaseSchema {
             dbCol.setDescription(colAnnotation.description());
             if (colAnnotation.type() == Types.OTHER) {
                 dbCol.setTypeCode(getDefaultType(field));
-            } else if (colAnnotation.type() == Types.CLOB && DatabaseNamesConstants.ORACLE.equals(platform.getName())) {
+            } else if (colAnnotation.type() == Types.CLOB && platformMatches(DatabaseNamesConstants.ORACLE, platform)) {
                 dbCol.setTypeCode(Types.LONGVARCHAR);
             } else {
                 dbCol.setTypeCode(colAnnotation.type());
@@ -385,6 +385,10 @@ public class DatabaseSchema {
             }
         }
         return dbCol;
+    }
+
+    private static boolean platformMatches(String name, IDatabasePlatform platform) {
+        return platform != null && name != null && platform.getName().equals(name);
     }
 
     public Map<String, String> getEntityIdColumnsToFields(Class<?> entityClass) {
