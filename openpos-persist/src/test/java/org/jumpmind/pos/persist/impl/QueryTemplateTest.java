@@ -80,7 +80,7 @@ public class QueryTemplateTest {
         params.put("para", Arrays.asList("a", "b", "c", "d"));
         query.setMaxInParameters(2);
         SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
-        assertEquals("select foo from bar WHERE baz in ( :para$0 ) OR baz in ( :para$1 )", sqlStatement.getSql());
+        assertEquals("select foo from bar WHERE (baz in ( :para$0 ) OR baz in ( :para$1 ))", sqlStatement.getSql());
         assertEquals(3, sqlStatement.getParameters().getValues().size());
         assertEquals(Arrays.asList("a", "b", "c", "d"), sqlStatement.getParameters().getValues().get("para"));
         assertEquals(Arrays.asList("a", "b"), sqlStatement.getParameters().getValues().get("para$0"));
@@ -93,7 +93,7 @@ public class QueryTemplateTest {
         params.put("para", new String[] { "a", "b", "c", "d" });
         query.setMaxInParameters(2);
         SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
-        assertEquals("select foo from bar WHERE baz in ( :para$0 ) OR baz in ( :para$1 )", sqlStatement.getSql());
+        assertEquals("select foo from bar WHERE (baz in ( :para$0 ) OR baz in ( :para$1 ))", sqlStatement.getSql());
         assertEquals(3, sqlStatement.getParameters().getValues().size());
         assertArrayEquals(new String[] { "a", "b", "c", "d" }, (String[]) sqlStatement.getParameters().getValues().get("para"));
         assertEquals(Arrays.asList("a", "b"), sqlStatement.getParameters().getValues().get("para$0"));
@@ -106,7 +106,7 @@ public class QueryTemplateTest {
         params.put("para", Arrays.asList("a", "b", "c", "d"));
         query.setMaxInParameters(2);
         SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
-        assertEquals("select foo from bar WHERE baz NOT IN ( :para$0 ) OR baz NOT IN ( :para$1 )", sqlStatement.getSql());
+        assertEquals("select foo from bar WHERE (baz NOT IN ( :para$0 ) OR baz NOT IN ( :para$1 ))", sqlStatement.getSql());
         assertEquals(3, sqlStatement.getParameters().getValues().size());
         assertEquals(Arrays.asList("a", "b", "c", "d"), sqlStatement.getParameters().getValues().get("para"));
         assertEquals(Arrays.asList("a", "b"), sqlStatement.getParameters().getValues().get("para$0"));
@@ -119,7 +119,7 @@ public class QueryTemplateTest {
         params.put("para", new String[] { "a", "b", "c", "d" });
         query.setMaxInParameters(2);
         SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
-        assertEquals("select foo from bar WHERE baz NOT IN ( :para$0 ) OR baz NOT IN ( :para$1 )", sqlStatement.getSql());
+        assertEquals("select foo from bar WHERE (baz NOT IN ( :para$0 ) OR baz NOT IN ( :para$1 ))", sqlStatement.getSql());
         assertEquals(3, sqlStatement.getParameters().getValues().size());
         assertArrayEquals(new String[] { "a", "b", "c", "d" }, (String[]) sqlStatement.getParameters().getValues().get("para"));
         assertEquals(Arrays.asList("a", "b"), sqlStatement.getParameters().getValues().get("para$0"));
@@ -132,7 +132,7 @@ public class QueryTemplateTest {
         params.put("para", Arrays.asList("a", "b", "c", "d"));
         query.setMaxInParameters(2);
         SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
-        assertEquals("select foo from bar WHERE baz in \n( :para$0 ) OR baz in \n( :para$1 )", sqlStatement.getSql());
+        assertEquals("select foo from bar WHERE (baz in \n( :para$0 ) OR baz in \n( :para$1 ))", sqlStatement.getSql());
         assertEquals(3, sqlStatement.getParameters().getValues().size());
         assertEquals(Arrays.asList("a", "b", "c", "d"), sqlStatement.getParameters().getValues().get("para"));
         assertEquals(Arrays.asList("a", "b"), sqlStatement.getParameters().getValues().get("para$0"));
@@ -146,8 +146,8 @@ public class QueryTemplateTest {
         params.put("arap", Arrays.asList("z", "y", "x", "w", "v"));
         query.setMaxInParameters(2);
         SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
-        assertEquals("select foo from bar WHERE baz in ( :para$0 ) OR baz in ( :para$1 ) and " +
-                "waz not in ( :arap$0 ) OR waz not in ( :arap$1 ) OR waz not in ( :arap$2 )", sqlStatement.getSql());
+        assertEquals("select foo from bar WHERE (baz in ( :para$0 ) OR baz in ( :para$1 )) and " +
+                "(waz not in ( :arap$0 ) OR waz not in ( :arap$1 ) OR waz not in ( :arap$2 ))", sqlStatement.getSql());
         assertEquals(7, sqlStatement.getParameters().getValues().size());
         assertEquals(Arrays.asList("a", "b", "c", "d"), sqlStatement.getParameters().getValues().get("para"));
         assertEquals(Arrays.asList("a", "b"), sqlStatement.getParameters().getValues().get("para$0"));

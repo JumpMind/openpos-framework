@@ -245,6 +245,7 @@ public class QueryTemplate implements Cloneable {
         Map<Integer, ? extends List> indexToList = partitionList(entry.getValue(), query.getMaxInParameters());
         while (matcher.find()) {
             StringBuilder replacement = new StringBuilder();
+            replacement.append("(");
             for (Map.Entry<Integer, ? extends List> indexEntry : indexToList.entrySet()) {
                 if (indexEntry.getKey() > 0) {
                     replacement.append(" OR ");
@@ -252,6 +253,7 @@ public class QueryTemplate implements Cloneable {
                 replacement.append(matcher.group(1)).append(matcher.group(2)).append("$").append(indexEntry.getKey()).append(matcher.group(3));
                 newParams.put(entry.getKey() + "$" + indexEntry.getKey(), indexEntry.getValue());
             }
+            replacement.append(")");
             buffer.replace(matcher.start(), matcher.end(), replacement.toString());
         }
         return newParams;
