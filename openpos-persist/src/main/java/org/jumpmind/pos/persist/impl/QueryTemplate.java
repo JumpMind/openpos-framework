@@ -1,12 +1,14 @@
 package org.jumpmind.pos.persist.impl;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
+import org.apache.commons.collections4.MapUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringSubstitutor;
 import org.apache.commons.text.lookup.StringLookup;
@@ -176,6 +178,8 @@ public class QueryTemplate implements Cloneable {
             }
         }
 
+        splitTooManyValuesInClause(query, params, buff);
+
         if (!StringUtils.isEmpty(this.getGroupBy())) {
             buff.append(" GROUP BY ");
             buff.append(this.getGroupBy());
@@ -229,6 +233,70 @@ public class QueryTemplate implements Cloneable {
         }
     }
 
-    
+    private void splitTooManyValuesInClause(Query<?> query, Map<String, Object> params, StringBuilder buffer) {
+        if (MapUtils.isNotEmpty(params)) {
+            Map<String, Object> newParams = new HashMap<>();
+            for (Map.Entry<String, Object> entry : params.entrySet()) {
+                if (getSize(entry.getValue()) > query.getMaxInParameters()) {
+                    newParams.putAll(splitInClause(entry, buffer, query));
+                }
+            }
+            params.putAll(newParams);
+        }
+    }
 
+
+    private Map<String, Object> splitInClause(Map.Entry<String, Object> entry, StringBuilder buffer, Query<?> query) {
+        Map<String, Object> newParams = new HashMap<>();
+        Pattern pattern = Pattern.compile("(\\S+\\s+(not\\s+)?in\\s*\\(\\s*)(:" + Pattern.quote(entry.getKey()) + ")(\\s*\\))", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(buffer);
+        Map<Integer, ? extends List> indexToList = partitionList(entry.getValue(), query.getMaxInParameters());
+        while (matcher.find()) {
+            StringBuilder replacement = new StringBuilder();
+            replacement.append("(");
+            for (Map.Entry<Integer, ? extends List> indexEntry : indexToList.entrySet()) {
+                if (indexEntry.getKey() > 0) {
+                    if (matcher.group(2) != null) {
+                        replacement.append(" AND ");
+                    }
+                    else {
+                        replacement.append(" OR ");
+                    }
+                }
+                replacement.append(matcher.group(1)).append(matcher.group(3)).append("$").append(indexEntry.getKey()).append(matcher.group(4));
+                newParams.put(entry.getKey() + "$" + indexEntry.getKey(), indexEntry.getValue());
+            }
+            replacement.append(")");
+            buffer.replace(matcher.start(), matcher.end(), replacement.toString());
+        }
+        return newParams;
+    }
+
+    private Map<Integer, ? extends List> partitionList(Object object, int chunkSize) {
+        AtomicInteger counter = new AtomicInteger();
+        Stream<?> stream = null;
+        if (object instanceof Collection) {
+            stream = ((Collection) object).stream();
+        }
+        if (object.getClass().isArray()) {
+            stream = Arrays.stream((Object[]) object);
+        }
+        if (stream != null) {
+            return stream.collect(Collectors.groupingBy(it -> counter.getAndIncrement() / chunkSize));
+        }
+        return Collections.emptyMap();
+    }
+
+    private int getSize(Object paramValue) {
+        if (paramValue == null) {
+            return 0;
+        }
+        if (paramValue instanceof Collection) {
+            return ((Collection) paramValue).size();
+        }
+        if (paramValue.getClass().isArray()) {
+            return Array.getLength(paramValue);
+        }
+        return 1;
+    }
 }
