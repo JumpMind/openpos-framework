@@ -1,6 +1,6 @@
 <h1 mat-dialog-title>{{confirmDialog.title}}</h1>
 <mat-dialog-content><div [innerHTML]="confirmDialog.message | markdownFormatter"></div></mat-dialog-content>
 <mat-dialog-actions class="buttons">
-  <app-secondary-button (click)="closeDialog(false)">{{confirmDialog.cancelAction.title}}</app-secondary-button>
-  <app-primary-button cdkFocusInitial (click)="closeDialog(true)">{{confirmDialog.confirmAction.title}}</app-primary-button>
+  <app-secondary-button (click)="deny()">{{confirmDialog.cancelAction.title}}</app-secondary-button>
+  <app-primary-button (click)="confirm()">{{confirmDialog.confirmAction.title}}</app-primary-button>
 </mat-dialog-actions>
