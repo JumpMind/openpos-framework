@@ -88,6 +88,19 @@ public class QueryTemplateTest {
     }
 
     @Test
+    public void generateSQLWithInClauseAndParametersAsListAndNeedToSplitIgnoreLeadingParenthesis() {
+        queryTemplate.setWhere("(baz in ( ${para} ))");
+        params.put("para", Arrays.asList("a", "b", "c", "d"));
+        query.setMaxInParameters(2);
+        SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
+        assertEquals("select foo from bar WHERE ((baz in ( :para$0 ) OR baz in ( :para$1 )))", sqlStatement.getSql());
+        assertEquals(3, sqlStatement.getParameters().getValues().size());
+        assertEquals(Arrays.asList("a", "b", "c", "d"), sqlStatement.getParameters().getValues().get("para"));
+        assertEquals(Arrays.asList("a", "b"), sqlStatement.getParameters().getValues().get("para$0"));
+        assertEquals(Arrays.asList("c", "d"), sqlStatement.getParameters().getValues().get("para$1"));
+    }
+
+    @Test
     public void generateSQLWithInClauseAndParametersAsArrayAndNeedToSplit() {
         queryTemplate.setWhere("baz in ( ${para} )");
         params.put("para", new String[] { "a", "b", "c", "d" });

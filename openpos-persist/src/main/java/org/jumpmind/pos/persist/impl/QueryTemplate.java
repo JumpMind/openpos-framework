@@ -240,7 +240,7 @@ public class QueryTemplate implements Cloneable {
 
     private Map<String, Object> splitInClause(Map.Entry<String, Object> entry, StringBuilder buffer, Query<?> query) {
         Map<String, Object> newParams = new HashMap<>();
-        Pattern pattern = Pattern.compile("(\\S+\\s+(not\\s+)?in\\s*\\(\\s*)(:" + Pattern.quote(entry.getKey()) + ")(\\s*\\))", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
+        Pattern pattern = Pattern.compile("([\\w.$*@]+\\s+(not\\s+)?in\\s*\\(\\s*)(:" + Pattern.quote(entry.getKey()) + ")(\\s*\\))", Pattern.CASE_INSENSITIVE | Pattern.MULTILINE);
         Matcher matcher = pattern.matcher(buffer);
         Map<Integer, ? extends List> indexToList = partitionList(entry.getValue(), query.getMaxInParameters());
         while (matcher.find()) {
