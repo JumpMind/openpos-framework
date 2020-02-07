@@ -24,6 +24,7 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     @Input() readOnly = false;
     @Input() keyboardPreference: string;
     @Input() scanEnabled = false;
+    @Input() validationMessages: Map<string, string>;
 
     inputType: string;
     checked = true;
