@@ -2,7 +2,9 @@ package org.jumpmind.pos.core.flow.ui;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.ui.ActionItem;
@@ -18,6 +20,7 @@ public class PromptConfig {
     private String placeholder;
     private String responseText;
     private List<String> validationPatterns;
+    private Map<String, String> validationMessages;
     private BigDecimal min;
     private BigDecimal max;
     private DialogProperties dialogProperties;
@@ -73,6 +76,26 @@ public class PromptConfig {
             this.validationPatterns = new ArrayList<>();
         }
         this.validationPatterns.addAll(patterns);
+        return this;
+    }
+
+    public Map<String, String> getValidationMessages() {
+        return validationMessages;
+    }
+
+    public PromptConfig validationMessage(String validatorName, String message) {
+        if(this.validationMessages == null) {
+            this.validationMessages = new HashMap<>();
+        }
+        this.validationMessages.put(validatorName, message);
+        return this;
+    }
+
+    public PromptConfig validationMessages(Map<String, String> validationMessages) {
+        if(this.validationMessages == null) {
+            this.validationMessages = new HashMap<>();
+        }
+        this.validationMessages.putAll(validationMessages);
         return this;
     }
 
