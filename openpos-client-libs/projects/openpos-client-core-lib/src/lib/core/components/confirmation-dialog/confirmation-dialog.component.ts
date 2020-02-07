@@ -18,10 +18,6 @@ export class ConfirmationDialogComponent {
         this.deny();
     }
 
-    @HostListener('document:keydown.enter', ['$event']) onEnter(event: KeyboardEvent) {
-        this.confirm();
-    }
-
     confirm() {
         this.dialogRef.close(true);
     }
