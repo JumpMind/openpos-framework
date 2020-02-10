@@ -32,6 +32,7 @@ public interface IconType {
     public static final String DefaultPrompt = "DefaultPrompt"; //question_answer
     public static final String Delivery = "Delivery"; //local_shipping
     public static final String DeviceUnknown = "DeviceUnknown"; // device_unknown
+    public static final String Device = "Device"; //device
     public static final String Discount = "Discount"; //local_offer
     public static final String DollarSign = "DollarSign"; //attach_money
     public static final String Email = "Email"; //email
@@ -74,11 +75,11 @@ public interface IconType {
     public static final String Sales = "Sales"; //local_offer
     public static final String Search = "Search"; //search
     public static final String Security = "Security"; //security
-    public static final String Store = "Store"; //store
+    public static final String Store = "Store"; //storefront
     public static final String StoreCard = "StoreCard"; //card_membership
     public static final String SuspendAction = "SuspendAction"; //pause
     public static final String Tax = "Tax"; //account_balance
-    public static final String Till = "Till"; //local_mall
+    public static final String Till = "Till"; //nu-till-icon
     public static final String Training = "Training"; //school
     public static final String Trash = "Trash"; //delete
     public static final String User = "User";
