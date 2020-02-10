@@ -393,6 +393,19 @@ public class DBSession {
         }
     }
 
+    public void update(AbstractModel argModel) {
+        List<Table> tables = getValidatedTables(argModel);
+
+        ModelWrapper model =
+                new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()));
+
+        model.load();
+
+        for (Table table : tables) {
+            update(model, table);
+        }
+    }
+
     protected void delete(ModelWrapper model, Table table) {
         excecuteDml(DmlType.DELETE, model, table);
     }
