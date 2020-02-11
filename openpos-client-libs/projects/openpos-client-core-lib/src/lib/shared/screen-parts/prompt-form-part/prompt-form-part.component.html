@@ -8,6 +8,7 @@
                         [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
                         [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
                         [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
+                        [validationMessages]="screenData.validationMessages"
                         [readOnly]="!screenData.editable">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
@@ -40,6 +41,7 @@
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
                         [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
                         [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
+                        [validationMessages]="screenData.validationMessages"
                         [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
