@@ -18,7 +18,6 @@ import { IDeviceResponse } from '../oldplugins/device-response.interface';
 import { HttpClient } from '@angular/common/http';
 import { PingParams } from '../interfaces/ping-params.interface';
 import { PingResult } from '../interfaces/ping-result.interface';
-import { PersonalizationConfigResponse } from '../personalization/personalization-config-response.interface';
 import { ElectronService } from 'ngx-electron';
 import { OpenposMessage } from '../messages/message';
 import { MessageTypes } from '../messages/message-types';

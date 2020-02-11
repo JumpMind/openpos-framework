@@ -1,3 +1,6 @@
+import {MessageProvider} from '../shared/providers/message.provider';
+import {BlueFletchAuthProvider} from './auth-providers/blue-fletch-auth-provider';
+import {AndroidContentProviderPlugin} from './platform-plugins/cordova-plugins/android-content-provider-plugin';
 import {ConsoleScannerPlugin} from './platform-plugins/scanners/console-scanner/console-scanner.plugin';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
@@ -116,6 +119,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
+        { provide: PLUGINS, useExisting: AndroidContentProviderPlugin, multi: true },
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         LocationService,
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
@@ -136,6 +140,7 @@ export class CoreModule {
                 logger: ConsoleIntercepter,
                 toastService: ToastService,
                 uiDataService: UIDataMessageService,
+                blueFletchAuthProvider: BlueFletchAuthProvider,
                 keyProvider: KeyPressProvider) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');
         AppInjector.Instance = this.injector;
