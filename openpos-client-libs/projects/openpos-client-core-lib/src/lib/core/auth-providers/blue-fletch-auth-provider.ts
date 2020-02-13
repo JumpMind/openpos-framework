@@ -38,6 +38,8 @@ export class BlueFletchAuthProvider {
 
     private sendSignOnResponse( sessionData: string) {
         console.log(`responding with session data: ${sessionData}`);
-        this.sessionService.sendMessage(new ActionMessage( this.responseAction.action, this.responseAction.doNotBlockForResponse, sessionData));
+        let session = JSON.parse(sessionData);
+        session.extendedAttributes = JSON.parse(session.extendedAttributes);
+        this.sessionService.sendMessage(new ActionMessage( this.responseAction.action, this.responseAction.doNotBlockForResponse, JSON.stringify(session)));
     }
 }
