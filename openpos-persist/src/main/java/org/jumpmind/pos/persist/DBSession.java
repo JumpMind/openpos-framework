@@ -377,6 +377,8 @@ public class DBSession {
                 }
             }
         }
+
+        model.setRetrievalTime(new Date());
     }
 
     public void delete(AbstractModel argModel) {
