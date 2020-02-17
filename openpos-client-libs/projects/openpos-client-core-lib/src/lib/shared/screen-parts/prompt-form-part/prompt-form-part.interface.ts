@@ -21,4 +21,5 @@ export interface PromptFormPartInterface {
     scanEnabled: boolean;
     keyboardPreference: string;
     validators: Validator[];
+    validationMessages: Map<string, string>;
 }

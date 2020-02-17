@@ -31,6 +31,8 @@ public class FormField implements IFormElement, IField, Serializable {
     private boolean required = true;
     private boolean sensitive = false;
 
+    private boolean readOnly = false;
+
     public FormField() {
     }
     
@@ -332,5 +334,13 @@ public class FormField implements IFormElement, IField, Serializable {
     		setValidationMessages(new HashMap<String, String>());
     	}
     	getValidationMessages().put(validatorName, message);
+    }
+
+    public boolean isReadOnly() {
+        return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly) {
+        this.readOnly = readOnly;
     }
 }

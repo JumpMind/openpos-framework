@@ -87,3 +87,5 @@ openpos-management-server/openpos-management-server.iml
 openpos-management-server/conf/instance.uuid
 openpos-client-libs/.DS_Store
 openpos-client-libs/.DS_Store
+openpos-hazelcast/openpos-hazelcast.iml
+openpos-hazelcast/openpos-hazelcast.iml

@@ -1,8 +1,14 @@
 package org.jumpmind.pos.util;
 
+import java.beans.BeanInfo;
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import static org.apache.commons.beanutils.BeanUtils.*;
@@ -112,6 +118,20 @@ public class ReflectUtils {
             if (field != null) {
                 field.setAccessible(true);
                 return field;
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return null;
+    }
+
+    public static PropertyDescriptor getPropertyDescriptor(Object target, String propertyName) throws IntrospectionException {
+        Class<? extends Object> clazz = target.getClass();
+        while (clazz != Object.class) {
+            BeanInfo clazzInfo = Introspector.getBeanInfo(clazz);
+            List<PropertyDescriptor> properties = Arrays.asList(clazzInfo.getPropertyDescriptors());
+            PropertyDescriptor property = properties.stream().filter(p -> p.getName().equals(propertyName)).findFirst().orElse(null);
+            if(property != null) {
+                return property;
             }
             clazz = clazz.getSuperclass();
         }

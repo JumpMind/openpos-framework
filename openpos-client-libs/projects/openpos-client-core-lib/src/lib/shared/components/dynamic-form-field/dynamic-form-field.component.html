@@ -26,14 +26,6 @@
             <button *ngIf="formField.inputType==='PopTart'" type="button" mat-button matSuffix mat-icon-button (click)="openPopTart()">
                 <mat-icon>more_vert</mat-icon>
             </button>
-                        
-            <input class="poptart" *ngSwitchCase="'SearchablePopTart'" matInput [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
-                 [required]="formField.required" (click)="openSearchablePopTart()" 
-                 onfocus="this.blur()" readonly id="{{formField.id}}">
-
-            <button *ngIf="formField.inputType==='SearchablePopTart'" type="button" mat-button matSuffix mat-icon-button (click)="openSearchablePopTart()">
-                <mat-icon>more_vert</mat-icon>
-            </button>
 
             <input *ngSwitchCase="'AlphanumericPassword'" matInput [formControlName]="formField.id" [placeholder]="getPlaceholderText(formField)"
                 type="password" [required]="formField.required" id="{{formField.id}}" [formatterName]="formField.inputType">
@@ -116,7 +108,7 @@
 
     <ng-container *ngIf="formField.elementType==='Display'">
         <mat-form-field style="width:100%" [ngSwitch]="formField.valueDisplayMode">
-            <input *ngSwitchDefault [value]="formField.value" [name]="formField.id" [placeholder]="formField.label" matInput readonly=true>
+            <input *ngSwitchDefault [value]="formField.value" [name]="formField.id" [placeholder]="formField.label" matInput readonly=true class="read-only-input" style="color:grey">
             <textarea #displayMTA *ngSwitchCase="'Multiple'" [name]="formField.id" [placeholder]="formField.label" 
                 [attr.tabindex]="formField.tabindex || displayMTA.getAttribute('tabindex')" 
                 matTextareaAutosize matInput readonly=true>{{formField.values.join('\n')}}</textarea>

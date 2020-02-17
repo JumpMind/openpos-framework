@@ -9,11 +9,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
 export class PopTartComponent {
 
   items: Array<string>;
+  instructions: string;
+  searchable: boolean;
+  filterValue: string;
+
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any,
-    public dialogRef: MatDialogRef<PopTartComponent>) {
+              public dialogRef: MatDialogRef<PopTartComponent>) {
     this.items = data.optionItems;
-
+    this.instructions = data.instructions;
+    this.searchable = data.searchable;
   }
 
   public select(item: string) {

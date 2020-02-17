@@ -32,6 +32,9 @@ export class ImageComponent {
   constructor( private imageService: ImageService) { }
 
   imageError(image){
+    if(!this.altImageUrl){
+      throw Error('Alt image not defined')
+    }
     let altImage = this.imageService.replaceImageUrl(this.altImageUrl);
     if( image.src !== altImage ){
       image.src = altImage;

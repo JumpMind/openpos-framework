@@ -1,5 +1,5 @@
 @import './pager/pager-theme';
-@import './searchable-pop-tart/searchable-pop-tart-theme';
+@import './pop-tart/pop-tart-theme';
 @import './icon-button/icon-button-theme';
 @import './icon-fab-button/icon-fab-button-theme';
 @import './kebab-button/kebab-button-theme';
@@ -27,7 +27,7 @@
 
 @mixin openpos-component-theme-mixins($theme) {
     @include pager-theme($theme);
-    @include searchable-pop-tart-theme($theme);
+    @include pop-tart-theme($theme);
     @include icon-button-theme($theme);
     @include icon-fab-button-theme($theme);
     @include kebab-button-theme($theme);
