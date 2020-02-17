@@ -30,16 +30,23 @@ export class BlueFletchAuthProvider {
     private querySession() {
         if( this.androidContentProviderPlugin.pluginPresent() ){
             this.androidContentProviderPlugin.query( new AndroidContentQuery("content://com.bluefletch.launcherprovider/session", ["data"]))
-                .subscribe( data => this.sendSignOnResponse(data[0]["DATA"] ) )
+                .subscribe({
+                    next: data => this.sendSignOnResponse(data[0]["DATA"]),
+                    error: err =>  this.sessionService.sendMessage(new ActionMessage( this.responseAction.action, this.responseAction.doNotBlockForResponse))
+
+                })
         } else {
             console.warn(`Android Content Provider not present`);
+            this.sessionService.sendMessage(new ActionMessage( this.responseAction.action, this.responseAction.doNotBlockForResponse));
         }
     }
 
     private sendSignOnResponse( sessionData: string) {
         console.log(`responding with session data: ${sessionData}`);
         let session = JSON.parse(sessionData);
-        session.extendedAttributes = JSON.parse(session.extendedAttributes);
+        if( session.extendedAttributes ) {
+            session.extendedAttributes = JSON.parse(session.extendedAttributes);
+        }
         this.sessionService.sendMessage(new ActionMessage( this.responseAction.action, this.responseAction.doNotBlockForResponse, JSON.stringify(session)));
     }
 }
