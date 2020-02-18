@@ -19,7 +19,6 @@
  */
 package org.jumpmind.pos.core.flow;
 
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -37,7 +36,8 @@ import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
-import org.jumpmind.pos.core.flow.config.SubTransition;
+import org.jumpmind.pos.core.flow.config.SubFlowConfig;
+import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
 import org.jumpmind.pos.core.ui.Toast;
@@ -49,16 +49,12 @@ import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
-import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
-import org.jumpmind.pos.util.event.OnEvent;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -107,7 +103,7 @@ public class StateManager implements IStateManager {
 
     private ApplicationState applicationState = new ApplicationState();
 
-    private List<? extends ITransitionStep> transitionSteps;
+    private List<TransitionStepConfig> transitionStepConfigs;
 
     private FlowConfig initialFlowConfig;
 
@@ -160,8 +156,8 @@ public class StateManager implements IStateManager {
 
     }
 
-    protected void setTransitionSteps(List<? extends ITransitionStep> transitionSteps) {
-        this.transitionSteps = transitionSteps;
+    protected void setTransitionSteps(List<TransitionStepConfig> transitionStepConfigs) {
+        this.transitionStepConfigs = transitionStepConfigs;
     }
 
     private void initDefaultScopeObjects() {
@@ -245,11 +241,11 @@ public class StateManager implements IStateManager {
         transitionTo(action, newState, null, null);
     }
 
-    protected void transitionTo(Action action, Object newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState) {
+    protected void transitionTo(Action action, Object newState, SubFlowConfig enterSubStateConfig, StateContext resumeSuspendedState) {
         transitionTo(action, newState, enterSubStateConfig, resumeSuspendedState, false);
     }
 
-    protected void transitionTo(Action action, Object newState, SubTransition enterSubStateConfig, StateContext resumeSuspendedState,
+    protected void transitionTo(Action action, Object newState, SubFlowConfig enterSubStateConfig, StateContext resumeSuspendedState,
                                 boolean autoTransition) {
         if (applicationState.getCurrentContext() == null) {
             throw new FlowException(
@@ -271,7 +267,7 @@ public class StateManager implements IStateManager {
         stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
         TransitionResult transitionResult = executeTransition(applicationState.getCurrentContext(), newState, action);
-        if (transitionResult == TransitionResult.PROCEED) {
+        if (transitionResult.getTransitionResultCode() == TransitionResult.TransitionResultCode.PROCEED) {
             markAsBusy();
 
             boolean exitSubState = resumeSuspendedState != null;
@@ -293,8 +289,8 @@ public class StateManager implements IStateManager {
 
             applicationState.getCurrentContext().setState(newState);
 
-            if( transitionSteps != null ) {
-                for (ITransitionStep transitionStep : transitionSteps) {
+            if( transitionResult != null && transitionResult.getTransition() != null) {
+                for (ITransitionStep transitionStep : transitionResult.getTransition().getTransitionSteps()) {
                     performInjections(transitionStep);
                     transitionStep.afterTransition(new TransitionContext(action, applicationState.getCurrentContext()));
                     performOutjections(transitionStep);
@@ -318,38 +314,41 @@ public class StateManager implements IStateManager {
                 throw new FlowException("A transition was cancelled but there is no state to go back to. This could be a case where the first thing shown is a transition to the initial state, " +
                         "like a user name prompt leading into self-checkout for example. To correct this, adjust your flow config so there is truly an initial state to go back to when the transition is cancelled.");
             }
+            // resassert the previous state before the cancelled transition
             stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
+            if (transitionResult.getTransition().getQueuedAction() != null) { // allowed cancelled transitions to queue an action.
+                doAction(transitionResult.getTransition().getQueuedAction());
+            }
         }
-
     }
 
     protected String getReturnActionName(Action action) {
-        if (applicationState.getCurrentContext().getSubTransition() != null
-                && applicationState.getCurrentContext().getSubTransition().getReturnActionNames() != null) {
+        if (applicationState.getCurrentContext().getSubFlowConfig() != null
+                && applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames() != null) {
 
-            for (String returnActionName : applicationState.getCurrentContext().getSubTransition().getReturnActionNames()) {
+            for (String returnActionName : applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames()) {
                 if (StringUtils.equals(returnActionName, action.getName())) {
                     return action.getName(); // the action IS a return action,
                     // so don't modify.
                 }
             }
 
-            if (applicationState.getCurrentContext().getSubTransition().getReturnActionNames().length == 1) {
-                return applicationState.getCurrentContext().getSubTransition().getReturnActionNames()[0];
-            } else if (applicationState.getCurrentContext().getSubTransition().getReturnActionNames().length > 1) {
+            if (applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames().length == 1) {
+                return applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames()[0];
+            } else if (applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames().length > 1) {
                 throw new FlowException("Unpected situation. Non-return action raised which completed a subflow: " + action.getName()
                         + " -- but there is more than 1 return action mapped to this subflow so we don't know which return action to pick: "
-                        + Arrays.toString(applicationState.getCurrentContext().getSubTransition().getReturnActionNames()));
+                        + Arrays.toString(applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames()));
             }
         }
 
         return null;
     }
 
-    protected StateContext buildSubStateContext(SubTransition enterSubStateConfig, Action action) {
+    protected StateContext buildSubStateContext(SubFlowConfig enterSubStateConfig, Action action) {
         StateContext stateContext = new StateContext(enterSubStateConfig.getSubFlowConfig(), action);
         stateContext.getFlowScope().putAll(applicationState.getCurrentContext().getFlowScope());
-        stateContext.setSubTransition(enterSubStateConfig);
+        stateContext.setSubFlowConfig(enterSubStateConfig);
         return stateContext;
     }
 
@@ -381,16 +380,22 @@ public class StateManager implements IStateManager {
     }
 
     protected TransitionResult executeTransition(StateContext sourceStateContext, Object newState, Action action) {
-        if (CollectionUtils.isEmpty(transitionSteps)) {
-            return TransitionResult.PROCEED;
+        if (CollectionUtils.isEmpty(transitionStepConfigs)) {
+            TransitionResult result = new TransitionResult();
+            result.setTransitionResultCode(TransitionResult.TransitionResultCode.PROCEED);
+            return result;
         }
 
-        applicationState.setCurrentTransition(new Transition(transitionSteps, sourceStateContext, newState));
+        Transition transition = new Transition(transitionStepConfigs, sourceStateContext, newState);
+        applicationState.setCurrentTransition(transition);
 
         /*
          * This will block.
          */
-        TransitionResult result = applicationState.getCurrentTransition().execute(this, action);
+        TransitionResult.TransitionResultCode resultCode = applicationState.getCurrentTransition().execute(this, action);
+        TransitionResult result = new TransitionResult();
+        result.setTransitionResultCode(resultCode);
+        result.setTransition(transition);
         applicationState.setCurrentTransition(null);
         return result;
     }
@@ -517,21 +522,22 @@ public class StateManager implements IStateManager {
                 }
 
                 if (applicationState.getCurrentTransition() != null) {
-                    applicationState.getCurrentTransition().handleAction(action);
+                    boolean handled = applicationState.getCurrentTransition().handleAction(action);
+                    if (!handled) {
+                        throw new FlowException("Transition step " + applicationState.getCurrentTransition().getCurrentTransitionStep() + " cannot handle action '" + action + "'");
+                    }
                     return;
                 }
 
                 FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
                 StateConfig stateConfig = applicationState.findStateConfig(flowConfig);
 
-
-
                 validateStateConfig(applicationState.getCurrentContext().getState(), stateConfig);
 
                 Class<? extends Object> transitionStateClass = stateConfig.getActionToStateMapping().get(action.getName());
                 Class<? extends Object> globalTransitionStateClass = flowConfig.getActionToStateMapping().get(action.getName());
-                SubTransition subStateConfig = stateConfig.getActionToSubStateMapping().get(action.getName());
-                SubTransition globalSubStateConfig = flowConfig.getActionToSubStateMapping().get(action.getName());
+                SubFlowConfig subStateConfig = stateConfig.getActionToSubStateMapping().get(action.getName());
+                SubFlowConfig globalSubStateConfig = flowConfig.getActionToSubStateMapping().get(action.getName());
 
                 // Execute state specific action handlers
                 if (actionHandler.canHandleAction(applicationState.getCurrentContext().getState(), action)) {
@@ -555,9 +561,9 @@ public class StateManager implements IStateManager {
                     transitionToSubState(action, globalSubStateConfig);
                 } else {
                     throw new FlowException(String.format(
-                            "Unexpected action \"%s\". Either no @ActionHandler %s.on%s() method found, or no withTransition(\"%s\"...) defined in the flow config.",
+                            "Unexpected action \"%s\". Either no @ActionHandler %s.on%s() method found, or no withTransition(\"%s\"...) defined in the \"%s\" flow config.",
                             action.getName(), applicationState.getCurrentContext().getState().getClass().getName(), action.getName(),
-                            action.getName()));
+                            action.getName(), applicationState.getCurrentContext().getFlowConfig().getName()));
                 }
             } catch (Throwable ex) {
                 handleOrRaiseException(ex);
@@ -704,10 +710,10 @@ public class StateManager implements IStateManager {
                 if (autoTransitionStateClass != null && autoTransitionStateClass != CompleteState.class) {
                     transitionTo(action, createNewState(autoTransitionStateClass), null, suspendedState, true);
                 } else {
-                    SubTransition autoSubTransition = suspendedStateConfig.getActionToSubStateMapping().get(returnAction);
-                    if (autoSubTransition != null) {
+                    SubFlowConfig autoSubFlowConfig = suspendedStateConfig.getActionToSubStateMapping().get(returnAction);
+                    if (autoSubFlowConfig != null) {
                         applicationState.setCurrentContext(suspendedState);
-                        transitionToSubState(action, autoSubTransition);
+                        transitionToSubState(action, autoSubFlowConfig);
                     } else {
                         transitionTo(action, suspendedState.getState(), null, suspendedState);
                     }
@@ -722,7 +728,7 @@ public class StateManager implements IStateManager {
         }
     }
 
-    protected void transitionToSubState(Action action, SubTransition subStateConfig) {
+    protected void transitionToSubState(Action action, SubFlowConfig subStateConfig) {
         Class<? extends Object> subState = subStateConfig.getSubFlowConfig().getInitialState().getStateClass();
         transitionTo(action, createNewState(subState), subStateConfig, null);
     }

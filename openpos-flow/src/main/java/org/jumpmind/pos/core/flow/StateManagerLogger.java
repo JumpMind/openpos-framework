@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jumpmind.pos.core.flow.config.SubTransition;
+import org.jumpmind.pos.core.flow.config.SubFlowConfig;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.BoxLogging;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public class StateManagerLogger {
         this.log = log;
     }
 
-    protected void logStateTransition(Object oldState, Object newState, Action action, String returnAction, SubTransition enterSubState, StateContext exitSubState, ApplicationState applicationState, StateContext resumeSuspendedState) {
+    protected void logStateTransition(Object oldState, Object newState, Action action, String returnAction, SubFlowConfig enterSubState, StateContext exitSubState, ApplicationState applicationState, StateContext resumeSuspendedState) {
         if (oldState == newState) {
             return;
         }
@@ -197,7 +197,7 @@ public class StateManagerLogger {
         return buff.toString();
     }
 
-    protected List<String> buildSubStateStack(ApplicationState applicationState, SubTransition enterSubState, StateContext exitSubState, StateContext resumeSuspendedState) {
+    protected List<String> buildSubStateStack(ApplicationState applicationState, SubFlowConfig enterSubState, StateContext exitSubState, StateContext resumeSuspendedState) {
 
         List<String> subStackStack = 
                 applicationState.getStateStack().stream().map(context -> " " + context.getFlowConfig().getName()).

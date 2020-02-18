@@ -25,6 +25,8 @@ public class YamlConfigProvider implements IFlowConfigProvider {
     protected Map<String, List<YamlFlowConfig>> loadedYamlFlowConfigs = new HashMap<String, List<YamlFlowConfig>>();
     protected Map<String, String> appIdToStartFlowName = new HashMap<>();
 
+    private List<TransitionStepConfig> transitionSteps;
+
     public YamlConfigProvider() {
         this(null);
     }
@@ -41,7 +43,10 @@ public class YamlConfigProvider implements IFlowConfigProvider {
     public void load(String appId, String path) {
         try {
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
-            Resource[] resources = resolver.getResources("classpath*:/" + path + "/*.yml");
+
+
+
+            Resource[] resources = resolver.getResources("classpath*:/" + path + "/*-flow.yml");
 
             List<YamlFlowConfig> yamlFlowConfigs = new ArrayList<>();
 
@@ -50,19 +55,26 @@ public class YamlConfigProvider implements IFlowConfigProvider {
                 yamlFlowConfigs.addAll(loadYamlResource(appId, path, resource));
             }
 
-            // second pass here needs to then convert
+            // second pass here needed to convert
             loadYamlFlowConfigs(appId, yamlFlowConfigs);
 
+            transitionSteps = flowConfigConverter.convertTransitionSteps(new YamlTransitionStepProvider().loadTransitionSteps(resolver, appId, path, flowConfigLoader), yamlFlowConfigs);
+
         } catch (Exception ex) {
-            throw new FlowException(String.format("Failed to load YML flow config for appId %s and path %s", appId, path), ex);
+            throw new FlowException(String.format("Failed to load YML flow config for appId '%s' and path '%s'", appId, path), ex);
         }
     }
-    
+
     public void load(String appId, InputStream resource) {
         List<YamlFlowConfig> yamlFlowConfigs = new ArrayList<>();
         yamlFlowConfigs.addAll(loadYamlResource(appId, resource));
         // second pass here needs to then convert
         loadYamlFlowConfigs(appId, yamlFlowConfigs);
+    }
+
+    @Override
+    public List<TransitionStepConfig> getTransitionStepConfig(String appId, String nodeId) {
+        return transitionSteps;
     }
 
     @Override

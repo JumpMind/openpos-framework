@@ -25,6 +25,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
+import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.service.IScreenService;
 import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
@@ -104,7 +105,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
                 setCurrentStateManager(stateManager);
 
 
-                stateManager.setTransitionSteps(createTransitionSteps());
+                stateManager.setTransitionSteps(createTransitionSteps(appId, deviceId));
                 stateManager.registerQueryParams(queryParams);
                 stateManager.registerPersonalizationProperties(personalizationProperties);
                 stateManager.setErrorHandler(errorHandler);
@@ -116,28 +117,9 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
         return stateManager;
     }
 
-    private List<ITransitionStep> createTransitionSteps() {
-        List<ITransitionStep> steps = new ArrayList<>();
-        String[] names = applicationContext.getBeanNamesForType(ITransitionStep.class);
-        for (String name : names) {
-            steps.add((ITransitionStep) applicationContext.getBean(name));
-        }
-
-        Collections.sort(steps, (o1, o2) -> {
-            Integer o1order = 0;
-            Integer o2order = 0;
-            try {
-                o1order = o1.getClass().getAnnotation(Order.class).value();
-            } catch (NullPointerException ex) {
-            }
-            try {
-                o2order = o2.getClass().getAnnotation(Order.class).value();
-            } catch (NullPointerException ex) {
-            }
-
-            return o1order.compareTo(o2order);
-        });
-        return steps;
+    private List<TransitionStepConfig> createTransitionSteps(String appId, String deviceId) {
+        List<TransitionStepConfig> transitionStepConfigs = flowConfigProvider.getTransitionStepConfig(appId, deviceId);
+        return transitionStepConfigs;
     }
 
     @Override

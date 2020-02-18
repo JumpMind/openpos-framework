@@ -91,6 +91,7 @@ public class TestStates {
         public void onCustomerLookupComplete(Action action) {
 
         }
+
     }
 
     public static class CustomerState implements IState {
