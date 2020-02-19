@@ -121,6 +121,10 @@ public class Transition {
     public boolean handleAction(Action action) {
         return stateManager.handleAction(currentTransitionStep.get(), action);
     }
+
+    public IStateManager getStateManager() {
+        return stateManager;
+    }
     
     protected List<? extends ITransitionStep> cloneSteps(List<? extends ITransitionStep> steps) {
         List<ITransitionStep> clonedSteps = new ArrayList<>(steps.size());

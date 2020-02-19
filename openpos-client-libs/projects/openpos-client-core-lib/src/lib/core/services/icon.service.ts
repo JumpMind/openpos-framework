@@ -52,6 +52,7 @@ export class IconService {
         this.icons.set('DefaultPrompt', ['question_answer.svg', this.defaultIconProvider]);
         this.icons.set('Delivery', ['local_shipping.svg', this.defaultIconProvider]);
         this.icons.set('DeviceUnknown', ['device_unknown.svg', this.defaultIconProvider]);
+        this.icons.set('Device', ['device.svg', this.defaultIconProvider]);
         this.icons.set('Discount', ['local_offer.svg', this.defaultIconProvider]);
         this.icons.set('DollarSign', ['attach_money.svg', this.defaultIconProvider]);
         this.icons.set('Email', ['email.svg', this.defaultIconProvider]);
@@ -96,11 +97,11 @@ export class IconService {
         this.icons.set('Sales', ['local_offer.svg', this.defaultIconProvider]);
         this.icons.set('Search', ['search.svg', this.defaultIconProvider]);
         this.icons.set('Security', ['security.svg', this.defaultIconProvider]);
-        this.icons.set('Store', ['store.svg', this.defaultIconProvider]);
+        this.icons.set('Store', ['storefront.svg', this.defaultIconProvider]);
         this.icons.set('StoreCard', ['card_membership.svg', this.defaultIconProvider]);
         this.icons.set('SuspendAction', ['pause.svg', this.defaultIconProvider]);
         this.icons.set('Tax', ['account_balance.svg', this.defaultIconProvider]);
-        this.icons.set('Till', ['local_mall.svg', this.defaultIconProvider]);
+        this.icons.set('Till', ['till.svg', this.defaultIconProvider]);
         this.icons.set('Training', ['school.svg', this.defaultIconProvider]);
         this.icons.set('Trash', ['delete.svg', this.defaultIconProvider]);
         this.icons.set('UnitedStates', ['united-states.svg', this.defaultIconProvider]);

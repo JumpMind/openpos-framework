@@ -8,8 +8,7 @@ import { Subscription } from 'rxjs';
 import { ITextMask, TextMask } from '../../textmask';
 import { DynamicDateFormFieldComponent } from '../dynamic-date-form-field/dynamic-date-form-field.component';
 import { PopTartComponent } from '../pop-tart/pop-tart.component';
-import { SearchablePopTartComponent } from '../searchable-pop-tart/searchable-pop-tart.component';
-import { IFormElement, ISearchablePopTartField } from '../../../core/interfaces/form-field.interface';
+import { IFormElement, IPopTartField } from '../../../core/interfaces/form-field.interface';
 import { SessionService } from '../../../core/services/session.service';
 import { ScreenService } from '../../../core/services/screen.service';
 import { OldPluginService } from '../../../core/services/old-plugin.service';
@@ -71,11 +70,11 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
     }
 
     if (this.formField.inputType === 'ComboBox' || this.formField.inputType === 'SubmitOptionList' ||
-      this.formField.inputType === 'ToggleButton' || this.formField.inputType === 'PopTart' || this.formField.inputType === 'SearchablePopTart') {
+      this.formField.inputType === 'ToggleButton' || this.formField.inputType === 'PopTart' ) {
       let getValuesFromServer = true;
       if ('dynamicListEnabled' in this.formField) {
           // if dynamicListEnabled property is provided, we will observe its value
-          const dynFormFld = <any>this.formField;
+          const dynFormFld = this.formField as any;
           getValuesFromServer = dynFormFld.dynamicListEnabled;
       }
 
@@ -104,7 +103,7 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
             // event to the plugin.  This won't be called for cordova barcodescanner plugin
             // camera-based scan events.  It should only be used for third party scan events
             // which come from other sources such as a scan device
-            this.barcodeEventSubscription = (<BarcodeScannerPlugin> plugin).onBarcodeScanned.subscribe({
+            this.barcodeEventSubscription = (plugin as BarcodeScannerPlugin).onBarcodeScanned.subscribe({
                 next: (scan: Scan) => {
                     console.info(`dynamic-form-field '${this.formField.id}' got scan event: ${scan.value}`);
                     if (this.field.focused) {
@@ -171,26 +170,8 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
       width: '70%',
       data: {
         optionItems: this.values,
-        disableClose: false,
-        autoFocus: false
-     }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.info('pop tart closed with value of: ' + result);
-      this.formGroup.get(this.formField.id).setValue(result);
-      this.onFormElementChanged(this.formField);
-    });
-  }
-
-
-  openSearchablePopTart() {
-    const dialogRef = this.dialog.open(SearchablePopTartComponent, {
-      width: '85%',
-      height: '85%',
-      data: {
-        optionItems: this.values,
-        instructions: (this.formField as ISearchablePopTartField).instructions,
+        instructions: (this.formField as IPopTartField).instructions,
+        searchable: (this.formField as IPopTartField).searchable,
         disableClose: false,
         autoFocus: false
      }

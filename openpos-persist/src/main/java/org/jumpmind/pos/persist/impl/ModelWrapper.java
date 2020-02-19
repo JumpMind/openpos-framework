@@ -49,7 +49,7 @@ public class ModelWrapper {
         this.model = model;
         this.modelMetaData = modelMetaData;
         
-        Field field = modelMetaData.getSystemInfoField();
+        Field field = modelMetaData.getSystemDataField();
         try {
             if (field != null) {
                 systemData = (Map<String, Object>) field.get(model);

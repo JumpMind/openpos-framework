@@ -30,9 +30,12 @@
         </div>
         <div class="right-side">
             <section class="price">
-                <app-currency-text responsive-class class="item-card-price" [ngClass]="{'order-color': item.isOrderItem, 'warn': item.returnItemLabels}"
+                <div class="item-price-and-indicators">
+                    <app-icon *ngIf="item.isGiftReceipt" class="giftReceipt" [iconName]="'Gift'" [iconClass]="'material-icons sm muted-color'"></app-icon>
+                    <app-currency-text responsive-class class="item-card-price" [ngClass]="{'order-color': item.isOrderItem, 'warn': item.returnItemLabels}"
                     [amountText]="item.amount">
-                </app-currency-text>
+                    </app-currency-text>
+                </div>
                 <app-currency-text *ngIf="item.amount !== item.sellingPrice" responsive-class
                     class="muted-color item-card-original" [amountText]="item.sellingPrice">
                 </app-currency-text>

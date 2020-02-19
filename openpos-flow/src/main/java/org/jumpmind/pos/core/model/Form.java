@@ -132,42 +132,6 @@ public class Form implements Serializable {
         return field;        
     }
     
-    public SearchablePopTartField addSearchablePopTart(String fieldId, String label, String... values) {
-        return addSearchablePopTart(fieldId, label, values != null && values.length > 0 ? Arrays.asList(values) : new ArrayList<>());
-    }
-    
-    public SearchablePopTartField addSearchablePopTart(String fieldId, String label, List<String> values) {
-    	SearchablePopTartField field = new SearchablePopTartField(fieldId, label, null, values);
-        formElements.add(field);
-        return field;        
-
-    }
-    
-    public SearchablePopTartField addSearchablePopTart(String fieldId, String label, List<String> values, boolean required) {
-    	SearchablePopTartField field = new SearchablePopTartField(fieldId, label, null, values);
-        field.setRequired(required);
-        formElements.add(field);
-        return field;        
-
-    }
-    
-    public SearchablePopTartField addSearchablePopTart(String fieldId, String label, String value, List<String> values, boolean required) {
-    	SearchablePopTartField field = new SearchablePopTartField(fieldId, label, null, values);
-        field.setRequired(required);
-        field.setValue(value);
-        formElements.add(field);
-        return field;        
-    }
-    
-    public SearchablePopTartField addSearchablePopTart(String fieldId, String label, String value, List<String> values, boolean required, String instructions) {
-    	SearchablePopTartField field = new SearchablePopTartField(fieldId, label, null, values);
-        field.setRequired(required);
-        field.setValue(value);
-        field.setInstructions(instructions);
-        formElements.add(field);
-        return field;        
-    }
-
     public CounterField addCounterField(String fieldId, String label) {
         return addCounterField(fieldId, label, false, null, null);
     }

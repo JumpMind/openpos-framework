@@ -12,7 +12,7 @@
     class="scan-input"
     ngClass.xs="scan-input-xs"
     [keyboardLayout]="keyboardLayout"
-    (keyup.enter)="onEnter()"
+    (keydown.enter)="onEnter($event)"
     [(ngModel)]="barcode"
     (ngModelChange)="onValueChange($event)"
     [placeholder]="screenData.scanSomethingText"

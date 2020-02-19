@@ -53,9 +53,9 @@ processResources {
 
 repositories { 
     maven {
+        url symmetricMavenUrl 
         jcenter()
         mavenCentral()
-        url symmetricMavenUrl 
     } 
 }
 

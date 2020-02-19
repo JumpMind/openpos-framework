@@ -5,7 +5,9 @@ import java.util.List;
 public class PopTartField extends ComboField {
     
     private static final long serialVersionUID = 1L;
-
+    private String instructions;
+    private boolean searchable = false;
+    
     public PopTartField() {
         super();
         setInputType(FieldInputType.PopTart);
@@ -26,5 +28,21 @@ public class PopTartField extends ComboField {
         setInputType(FieldInputType.PopTart);
     }
 
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
+    }
+    
+    public boolean isSearchable() {
+        return searchable;
+    }
+
+    public void setSearchable(boolean searchable) {
+        this.searchable = searchable;
+    }
+    
 
 }

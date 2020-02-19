@@ -219,7 +219,6 @@ export * from './lib/shared/components/primary-button/primary-button.component';
 export * from './lib/shared/components/product-list/product-list.component';
 export * from './lib/shared/components/prompt-input/prompt-input.component';
 export * from './lib/shared/components/receipt-card/receipt-card.component';
-export * from './lib/shared/components/searchable-pop-tart/searchable-pop-tart.component';
 export * from './lib/shared/components/secondary-button/secondary-button.component';
 export * from './lib/shared/components/selectable-item-list/selectable-item-list.component';
 export * from './lib/shared/components/selectable-item-list/selectable-list-data.interface';
