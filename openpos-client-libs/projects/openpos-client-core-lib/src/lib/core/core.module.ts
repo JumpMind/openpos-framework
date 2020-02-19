@@ -1,10 +1,8 @@
-import {MessageProvider} from '../shared/providers/message.provider';
-import {BlueFletchAuthProvider} from './auth-providers/blue-fletch-auth-provider';
 import {AndroidContentProviderPlugin} from './platform-plugins/cordova-plugins/android-content-provider-plugin';
 import {ConsoleScannerPlugin} from './platform-plugins/scanners/console-scanner/console-scanner.plugin';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
-import { STARTUP_TASKS, STARTUP_COMPONENT, STARTUP_FAILED_COMPONENT } from './services/startup.service';
+import { STARTUP_TASKS, STARTUP_FAILED_COMPONENT } from './services/startup.service';
 
 // Angular Includes
 import { NgModule, Injector, Optional, SkipSelf, ErrorHandler } from '@angular/core';
@@ -109,7 +107,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: STARTUP_TASKS, useClass: FinalStartupTask, multi: true, deps: [SessionService]},
         { provide: STARTUP_TASKS, useClass: PlatformReadyStartupTask, multi: true },
         { provide: STARTUP_TASKS, useClass: PluginStartupTask, multi: true },
-        // { provide: STARTUP_COMPONENT, useValue: StartupComponent },
         { provide: STARTUP_FAILED_COMPONENT, useValue: StartupFailedComponent},
         AilaScannerCordovaPlugin,
         { provide: SCANNERS, useExisting: AilaScannerCordovaPlugin, multi: true},
@@ -140,7 +137,6 @@ export class CoreModule {
                 logger: ConsoleIntercepter,
                 toastService: ToastService,
                 uiDataService: UIDataMessageService,
-                blueFletchAuthProvider: BlueFletchAuthProvider,
                 keyProvider: KeyPressProvider) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');
         AppInjector.Instance = this.injector;
