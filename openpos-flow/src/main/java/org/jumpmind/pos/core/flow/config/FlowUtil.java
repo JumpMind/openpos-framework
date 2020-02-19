@@ -41,11 +41,16 @@ public class FlowUtil {
     }
 
     public static boolean isState(Class<?> clazz) {
-        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnArrive.class, true, true);
-        if ((IState.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(IState.class)) || (methods != null && !methods.isEmpty())
-                || ITransitionStep.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(ITransitionStep.class)) {
-            return true;
-        } else {
+        try {
+            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnArrive.class, true, true);
+            if ((IState.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(IState.class)) || (methods != null && !methods.isEmpty())
+                    || ITransitionStep.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(ITransitionStep.class)) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Throwable ex) {
+            log.debug("Failed to check if class has @OnArrive annotation " + clazz, ex);
             return false;
         }
     }
