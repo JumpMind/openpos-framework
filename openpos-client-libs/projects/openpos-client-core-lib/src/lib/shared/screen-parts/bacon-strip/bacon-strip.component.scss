@@ -33,7 +33,7 @@
         justify-self: end;
         display:grid;
         grid-template-rows: 1fr auto;
-        .version-info {
+        .status {
             @extend %text-xs;
             text-align:end;
         }
