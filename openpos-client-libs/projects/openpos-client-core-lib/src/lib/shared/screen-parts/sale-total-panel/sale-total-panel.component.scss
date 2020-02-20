@@ -24,7 +24,7 @@
 
     .sale-total-content {
         display: grid;
-        grid-row-gap: 32px;
+        grid-row-gap: 24px;
         padding-left: 24px;
         padding-right: 24px;
 
@@ -33,6 +33,7 @@
 
             .sale-total-subtotal-title {
                 @extend %text-sm;
+                padding-top: 8px;
                 padding-bottom: 8px;
             }
 
@@ -47,13 +48,13 @@
             border-top-width: 1px;
 
             .sale-total-total-title {
-                @extend %text-lg;
-                padding-top: 16px;
+                @extend %text-md;
+                padding-top: 8px;
                 padding-bottom: 8px;
             }
 
             .sale-total-total-amount {
-                @extend %text-xl;
+                @extend %text-lg;
             }
         }
 
@@ -61,13 +62,13 @@
             text-align: center;
 
             .sale-total-itemcount-title {
-                @extend %text-lg;
+                @extend %text-md;
                 padding-top: 16px;
                 padding-bottom: 8px;
             }
 
             .sale-total-itemcount-amount {
-                @extend %text-xl;
+                @extend %text-lg;
             }
         }
 
@@ -101,7 +102,7 @@
 
             .sale-total-loyalty-icon {
                 max-width: 100%;
-                max-height: 5em;
+                max-height: 2.5em;
             }
         }
 
