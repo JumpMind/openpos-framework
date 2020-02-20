@@ -38,7 +38,7 @@
             }
 
             .sale-total-subtotal-amount {
-                @extend %text-lg;
+                @extend %text-md;
             }
         }
 
@@ -54,7 +54,7 @@
             }
 
             .sale-total-total-amount {
-                @extend %text-lg;
+                @extend %text-md;
             }
         }
 
