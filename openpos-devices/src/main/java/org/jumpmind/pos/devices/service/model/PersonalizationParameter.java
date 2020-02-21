@@ -1,7 +1,14 @@
-package org.jumpmind.pos.server.config;
+package org.jumpmind.pos.devices.service.model;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PersonalizationParameter implements Serializable {
     private static final long serialVersionUID = 1L;
 

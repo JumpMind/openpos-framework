@@ -17,8 +17,8 @@ export class ImageService {
     replaceImageUrl(originalUrl: string): string {
         if (originalUrl) {
             const apiServerBaseUrl = this.discovery.getApiServerBaseURL();
-            const deviceId = this.personalizer.getDeviceId();
-            const appId = this.session.getAppId();
+            const deviceId = this.personalizer.getDeviceId$().getValue();
+            const appId = this.personalizer.getAppId$().getValue();
 
             let url = originalUrl.replace(this.baseUrlToken, apiServerBaseUrl);
             url = url.replace(this.appIdToken, appId);

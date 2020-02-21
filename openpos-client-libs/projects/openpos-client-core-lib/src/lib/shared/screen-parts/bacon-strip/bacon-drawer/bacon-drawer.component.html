@@ -4,6 +4,7 @@
     mat-button
     responsive-class
     class="button"
+    (keydown.enter)="buttonClick(item)"
     (click)="buttonClick(item)">
     <div responsive-class class="button-content">
       <app-icon [iconName]="item.icon" iconClass="md"></app-icon>

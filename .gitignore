@@ -39,7 +39,7 @@ openpos-cordova/.project
 openpos-cordova/.project
 openpos-client/.angulardoc.json
 openpos-client/package-lock.json
-/.DS_Store
+**/.DS_Store
 openpos-client/.vscode/settings.json
 /node/
 biglots.code-workspace
@@ -87,3 +87,5 @@ openpos-management-server/openpos-management-server.iml
 openpos-management-server/conf/instance.uuid
 openpos-client-libs/.DS_Store
 openpos-client-libs/.DS_Store
+openpos-hazelcast/openpos-hazelcast.iml
+openpos-hazelcast/openpos-hazelcast.iml

@@ -24,23 +24,11 @@ export class SubscribeToSessionTask implements IStartupTask {
         const messages: string[] = [];
         if (!this.session.connected()) {
 
-            if (!this.session.getAppId()) {
-                let appId = data.state.url.substring(1);
-                console.info('calculating app id from ' + appId);
-                if (appId.indexOf('?') > 0) {
-                    appId = appId.substring(0, appId.indexOf('?'));
-                }
-                if (appId.indexOf('/') > 0) {
-                    appId = appId.substring(appId.lastIndexOf('/') + 1);
-                }
-                this.session.setAppId(appId);
-            }
-
             data.route.queryParamMap.keys.forEach(key => {
                 this.session.addQueryParam(key, data.route.queryParamMap.get(key));
             });
 
-            messages.push(`[StartupService] Subscribing to server using appId '${this.session.getAppId()}'...`);
+            messages.push(`[StartupService] Subscribing to server ...`);
             this.session.unsubscribe();
 
             return Observable.create((result: Subject<string>) => {

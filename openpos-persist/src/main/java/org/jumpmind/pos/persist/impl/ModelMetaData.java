@@ -8,7 +8,7 @@ import java.util.List;
 public class ModelMetaData {
 
     private List<ModelClassMetaData> modelClassMetaData;
-    private Field systemInfoField;
+    private Field systemData;
 
 
     public List<ModelClassMetaData> getModelClassMetaData() {
@@ -19,16 +19,16 @@ public class ModelMetaData {
         this.modelClassMetaData = modelClassMetaData;
     }
 
-    public Field getSystemInfoField() {
-        return systemInfoField;
+    public Field getSystemDataField() {
+        return systemData;
     }
 
-    public void setSystemInfoField(Field systemInfoField) {
-        this.systemInfoField = systemInfoField;
+    public void setSystemDataField(Field systemInfoField) {
+        this.systemData = systemInfoField;
     }
 
     public void init() {
-        systemInfoField = FieldUtils.getField(modelClassMetaData.get(modelClassMetaData.size()-1).getClass(), "systemInfo", true);
+        systemData = FieldUtils.getField(modelClassMetaData.get(modelClassMetaData.size()-1).getClazz(), "systemData", true);
     }
 
     @Override

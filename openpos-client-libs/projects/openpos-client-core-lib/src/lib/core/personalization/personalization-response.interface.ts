@@ -1,9 +1,6 @@
-import { PersonalizationParameter } from './personalization-parameter.interface.';
+import {IDeviceModel} from './device-model.interface';
 
 export interface PersonalizationResponse {
-    success?: boolean;
-    message?: string;
-    devicePattern?: string;
-    parameters?: PersonalizationParameter[];
-    openposManagementServer?: boolean;
+    authToken: string;
+    deviceModel: IDeviceModel;
 }

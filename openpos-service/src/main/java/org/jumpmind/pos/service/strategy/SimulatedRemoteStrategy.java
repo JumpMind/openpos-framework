@@ -7,7 +7,9 @@ import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.springframework.stereotype.Component;
 
+import java.lang.reflect.AnnotatedParameterizedType;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 @Component(SimulatedRemoteStrategy.SIMULATED_REMOTE_STRATEGY)
@@ -30,6 +32,10 @@ public class SimulatedRemoteStrategy extends LocalOnlyStrategy implements IInvoc
             newArgs[i] = mapper.readValue(mapper.writeValueAsString(args[i]), args[i].getClass());
         }
         Object retObj = super.invoke(config, proxy, method, endpoints, newArgs);
+        if (retObj instanceof List<?>) {
+            String className = ((AnnotatedParameterizedType) method.getAnnotatedReturnType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName();
+            return mapper.readValue(mapper.writeValueAsString(retObj), mapper.getTypeFactory().constructCollectionType(List.class, Class.forName(className)));
+        }
         return mapper.readValue(mapper.writeValueAsString(retObj), retObj.getClass());
     }
 }

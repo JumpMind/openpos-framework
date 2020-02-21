@@ -16,7 +16,12 @@
         <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
     </div>
     <div *ngIf="!searchExpanded" class="rightside">
-        {{operatorInfo}}
+        <div>
+            {{operatorInfo}}
+        </div>
+        <div responsive-class class="status">
+            {{statusLine}}
+        </div>
     </div>
 </div>
 <mat-sidenav-container>

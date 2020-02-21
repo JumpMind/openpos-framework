@@ -43,7 +43,7 @@ public class ServiceConfig {
         return specificConfig;
     }
 
-    public ServiceSpecificConfig getServiceConfig(String deviceId, String serviceId) {
+    public ServiceSpecificConfig getServiceConfig(String serviceId) {
         ServiceSpecificConfig config = getSpecificConfig().get(serviceId);
         if (config == null) {
             config = new ServiceSpecificConfig();
@@ -64,7 +64,7 @@ public class ServiceConfig {
         }
 
         if (additionalConfigSource != null) {
-            additionalConfigSource.applyAdditionalConfiguration(deviceId, String.format("openpos.services.specificConfig.%s", serviceId), config);
+            additionalConfigSource.applyAdditionalConfiguration(String.format("openpos.services.specificConfig.%s", serviceId), config);
         }
 
         return config;

@@ -1,11 +1,7 @@
 package org.jumpmind.pos.core.ui.message;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.model.KeyboardType;
@@ -226,5 +222,24 @@ public class PromptUIMessage extends UIMessage {
             Set<Validator> theValidators = (Set<Validator>) this.get("validators");
             theValidators.addAll(Arrays.asList(validators));
         }
+    }
+
+    public void setValidationMessages( Map<String,String> messages) {
+        this.put("validationMessages", messages);
+    }
+
+    @SuppressWarnings("unchecked")
+    public Map<String, String> getValidationMessages() {
+        if(any().containsKey("validationMessages")) {
+            return (Map<String, String>) any().get("validationMessages");
+        }
+        return null;
+    }
+
+    public void addValidationMessage( String validatorName, String message) {
+        if( getValidationMessages() == null) {
+            setValidationMessages(new HashMap<String, String>());
+        }
+        getValidationMessages().put(validatorName, message);
     }
 }

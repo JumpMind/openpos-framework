@@ -55,10 +55,10 @@ export class ClientUrlService {
 
     private getQueryParameters(
         serverName: string, serverPort: string, serverSslEnabled: boolean,
-        deviceId: string, personalizationProperties: Map<string, string>): string {
+        deviceId: string, appId: string, personalizationProperties: Map<string, string>): string {
 
         let queryParams = '?serverName=' + serverName + '&serverPort=' + serverPort + '&sslEnabled=' + serverSslEnabled
-            + '&deviceId=' + deviceId;
+            + '&deviceId=' + deviceId + '&appId=' + appId;
 
         if (personalizationProperties) {
             const keys = Array.from(personalizationProperties.keys());
@@ -72,11 +72,11 @@ export class ClientUrlService {
 
     public navigate(
         clientName: string, clientPort: string, appName: string, clientSslEnabled: boolean,
-        serverName: string, serverPort: string, serverSslEnabled: boolean, deviceId: string,
+        serverName: string, serverPort: string, serverSslEnabled: boolean, deviceId: string, appId: string,
         personalizationProperties: Map<string, string>) {
 
         this._clientUrl = this.getClientUrl(clientName, clientPort, appName, clientSslEnabled);
-        const queryParams = this.getQueryParameters(serverName, serverPort, serverSslEnabled, deviceId, personalizationProperties);
+        const queryParams = this.getQueryParameters(serverName, serverPort, serverSslEnabled, deviceId, appId, personalizationProperties);
         const url = this.clientUrl + queryParams;
 
         localStorage.setItem('clientUrl', url);

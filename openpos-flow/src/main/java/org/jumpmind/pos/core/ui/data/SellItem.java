@@ -287,4 +287,73 @@ public class SellItem extends DefaultItem {
     public void setSvgImage(boolean svgImage) {
         this.svgImage = svgImage;
     }
+
+    public boolean matches(SellItem otherItem) {
+        if((this.posItemId != null && (otherItem.getPosItemId() == null || !this.posItemId.equals(otherItem.getPosItemId())))
+                || (this.posItemId == null && otherItem.getPosItemId() != null)) {
+            return false;
+        }
+        if((altItemId != null && (otherItem.getAltItemId() == null || !this.altItemId.equals(otherItem.getAltItemId())))
+                || (this.altItemId == null && otherItem.getAltItemId() != null)) {
+            return false;
+        }
+        if((originalAmount != null && (otherItem.getOriginalAmount() == null || !this.originalAmount.equals(otherItem.getOriginalAmount())))
+                || (this.originalAmount == null && otherItem.getOriginalAmount() != null)) {
+            return false;
+        }
+        if((sellingPrice != null && (otherItem.getSellingPrice() == null || !this.sellingPrice.equals(otherItem.getSellingPrice())))
+                || (this.sellingPrice == null && otherItem.getSellingPrice() != null)) {
+            return false;
+        }
+        if((quantity != null && (otherItem.getQuantity() == null || !this.quantity.equals(otherItem.getQuantity())))
+                || (this.quantity == null && otherItem.getQuantity() != null)) {
+            return false;
+        }
+        if((discountAmount != null && (otherItem.getDiscountAmount() == null || !this.discountAmount.equals(otherItem.getDiscountAmount())))
+                || (this.discountAmount == null && otherItem.getDiscountAmount() != null)) {
+            return false;
+        }
+        if((salesAssociate != null && (otherItem.getSalesAssociate() == null || !this.salesAssociate.equals(otherItem.getSalesAssociate())))
+                || (this.salesAssociate == null && otherItem.getSalesAssociate() != null)) {
+            return false;
+        }
+        if((menuItems != null && (otherItem.getMenuItems() == null || menuItems.size() != otherItem.getMenuItems().size()))
+                || (menuItems == null && otherItem.getMenuItems() != null)) {
+            return false;
+        }
+        if((isGiftReceipt && !otherItem.isGiftReceipt)||(!isGiftReceipt && !otherItem.isGiftReceipt)) {
+            return false;
+        }
+        if((isQuantityChangeable && !otherItem.isQuantityChangeable)||(!isQuantityChangeable && !otherItem.isQuantityChangeable)) {
+            return false;
+        }
+        if((isOrderItem && !otherItem.isOrderItem)||(!isOrderItem && !otherItem.isOrderItem)) {
+            return false;
+        }
+        if((showSellingPrice && !otherItem.showSellingPrice)||(!showSellingPrice && !otherItem.showSellingPrice)) {
+            return false;
+        }
+        if((additionalLabels != null && (otherItem.getAdditionalLabels() == null || additionalLabels.size() != otherItem.getAdditionalLabels().size()))
+                || (additionalLabels == null && otherItem.getAdditionalLabels() != null)) {
+            return false;
+        }
+        if((returnItemLabels != null && (otherItem.getReturnItemLabels() == null || returnItemLabels.size() != otherItem.getReturnItemLabels().size()))
+                || (returnItemLabels == null && otherItem.getReturnItemLabels() != null)) {
+            return false;
+        }
+        if((orderItemLabels != null && (otherItem.getOrderItemLabels() == null || orderItemLabels.size() != otherItem.getOrderItemLabels().size()))
+                || (orderItemLabels == null && otherItem.getOrderItemLabels() != null)) {
+            return false;
+        }
+        if((imageUrl != null && (otherItem.getImageUrl() == null || !this.imageUrl.equals(otherItem.getImageUrl())))
+                || (this.imageUrl == null && otherItem.getImageUrl() != null)) {
+            return false;
+        }
+        if((optionsLabel != null && (otherItem.getOptionsLabel() == null || !this.optionsLabel.equals(otherItem.getOptionsLabel())))
+                || (this.optionsLabel == null && otherItem.getOptionsLabel() != null)) {
+            return false;
+        }
+        return true;
+    }
+
 }

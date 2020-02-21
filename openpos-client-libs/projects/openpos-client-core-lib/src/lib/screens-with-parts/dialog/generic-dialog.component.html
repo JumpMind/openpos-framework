@@ -19,7 +19,7 @@
                 <app-button-action-timer [action]="m" class="muted-color"></app-button-action-timer>
             </app-secondary-button>
             <app-primary-button *ngIf="primaryButton" (click)="doAction(primaryButton)" id="primaryButton"
-                cdkFocusInitial [actionItem]="primaryButton">
+                [actionItem]="primaryButton">
                 {{primaryButton.title}}
                 <app-button-action-timer [action]="primaryButton" class="primary-inverse"></app-button-action-timer>
             </app-primary-button>

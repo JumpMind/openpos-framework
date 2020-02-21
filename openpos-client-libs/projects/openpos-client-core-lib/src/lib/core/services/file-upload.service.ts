@@ -54,7 +54,7 @@ export class FileUploadService {
         const uploadFunc = (blob: Blob): Promise<boolean> => {
             const prom = new Promise<boolean>((resolve, reject) => {
                 const f = new FormData();
-                f.append('nodeId', this.personalization.getDeviceId());
+                f.append('nodeId', this.personalization.getDeviceId$().getValue());
                 f.append('targetContext', context);
                 f.append('filename', filename);
                 f.append('file', blob);

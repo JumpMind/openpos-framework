@@ -68,7 +68,10 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             this.updateTheme(theme);
         }));
         this.subscriptions.add(this.personalization.getPersonalizationProperties$().subscribe( properties => {
-            this.updatePersonalizationProperties(properties);
+            if( properties != null ){
+                this.updatePersonalizationProperties(properties);
+            }
+
         }));
     }
 

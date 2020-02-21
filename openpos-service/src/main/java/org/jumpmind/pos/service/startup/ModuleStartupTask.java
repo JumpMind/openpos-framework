@@ -49,7 +49,7 @@ public class ModuleStartupTask extends AbstractStartupTask {
     }
 
     private String logMessage(String msg, IModule module) {
-        return BoxLogging.box("Initializing Module: " + StringUtils.leftPad(module.getName(), 15).toUpperCase());
+        return BoxLogging.box(msg + StringUtils.leftPad(module.getName(), 15).toUpperCase());
     }
 
 }

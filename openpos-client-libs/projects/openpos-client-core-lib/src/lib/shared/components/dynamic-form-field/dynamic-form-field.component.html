@@ -108,7 +108,7 @@
 
     <ng-container *ngIf="formField.elementType==='Display'">
         <mat-form-field style="width:100%" [ngSwitch]="formField.valueDisplayMode">
-            <input *ngSwitchDefault [value]="formField.value" [name]="formField.id" [placeholder]="formField.label" matInput readonly=true>
+            <input *ngSwitchDefault [value]="formField.value" [name]="formField.id" [placeholder]="formField.label" matInput readonly=true class="read-only-input" style="color:grey">
             <textarea #displayMTA *ngSwitchCase="'Multiple'" [name]="formField.id" [placeholder]="formField.label" 
                 [attr.tabindex]="formField.tabindex || displayMTA.getAttribute('tabindex')" 
                 matTextareaAutosize matInput readonly=true>{{formField.values.join('\n')}}</textarea>

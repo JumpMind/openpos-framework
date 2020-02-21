@@ -78,4 +78,12 @@
     }
   }
 
+  .mat-icon-button.xl,
+  .material-icons.xl {
+    @extend .material-icons.mat-128;
+    &.mobile{
+      @extend .material-icons.mat-64;
+    }
+  }
+
 }

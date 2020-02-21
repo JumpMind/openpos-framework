@@ -21,13 +21,10 @@ public class ClientContentExtractionFilter extends OncePerRequestFilter {
     @Autowired
     ClientContext clientContext;
 
-    @Value("${openpos.installationId:'not set'}")
-    String installationId;
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Enumeration<String> headerNames = request.getHeaderNames();
-        clientContext.put("deviceId", installationId);
+        clientContext.clear();
         while( headerNames.hasMoreElements() ) {
             String header = headerNames.nextElement();
             if(header.startsWith("ClientContext-")){

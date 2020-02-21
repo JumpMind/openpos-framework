@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonalizationService } from '../personalization/personalization.service';
 import { DiscoveryResponse } from './discovery-response.interface';
-import { timeout, catchError } from 'rxjs/operators';
-import { of, BehaviorSubject, Observable } from 'rxjs';
+import {timeout, catchError, distinctUntilChanged} from 'rxjs/operators';
+import {of, BehaviorSubject, Observable, combineLatest} from 'rxjs';
 import { DiscoveryParams } from './discovery-params.interface';
 
 @Injectable({
@@ -19,28 +19,31 @@ export class DiscoveryService {
 
     constructor(protected personalization: PersonalizationService,
                 private http: HttpClient) {
-        personalization.getBaseUrlAttributeChanged$().subscribe((changed) => {
-            if (changed) {
-                this.updateServerBaseUrl();
-            }
-        });
-        personalization.getAppIdChanged$().subscribe((changed) => {
-            if (changed) {
-                this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
-            }
-        });
-    }
 
-    public clearCachedUrls() {
-        this.serverBaseUrl = null;
-        this.websocketUrl = null;
+        combineLatest(  personalization.getSslEnabled$(),
+                        personalization.getServerName$(),
+                        personalization.getServerPort$(),
+                        personalization.getAppId$(),
+                        personalization.getDeviceId$()
+        ).subscribe(([sslEnabled, serverName, serverPort, appId, deviceId]) =>
+            this.updateServerBaseUrl(serverName, serverPort, sslEnabled, appId, deviceId));
+
+        combineLatest(  personalization.getAppId$().pipe(distinctUntilChanged()),
+                        personalization.getDeviceId$()
+            ).subscribe( ([appId, deviceId]) => this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl(appId, deviceId)));
+
+        combineLatest(  personalization.getIsManagedServer$(),
+                        personalization.getSslEnabled$(),
+                        personalization.getServerName$(),
+                        personalization.getServerPort$()
+            ).subscribe( ([isManagedServer, sslEnabled, serverName, serverPort]) => this.updateWebsocketUrl(isManagedServer, sslEnabled, serverName, serverPort));
     }
 
     public async isManagementServerAlive(): Promise<boolean> {
         let result = false;
-        if (this.personalization.isManagedServer()) {
-            const url = `http${this.personalization.isSslEnabled() ? 's' : ''}` +
-                `://${this.personalization.getServerName()}:${this.personalization.getServerPort()}/ping`;
+        if (this.personalization.getIsManagedServer$().getValue()) {
+            const url = `http${this.personalization.getSslEnabled$().getValue() ? 's' : ''}` +
+                `://${this.personalization.getServerName$().getValue()}:${this.personalization.getServerPort$().getValue()}/ping`;
             const httpResult = await this.http.get(url, {responseType: 'text'})
                 .pipe(timeout(1000),
                     catchError(e => {
@@ -58,10 +61,10 @@ export class DiscoveryService {
 
     private makeParams(params?: DiscoveryParams): DiscoveryParams {
         return {
-            server: params && typeof params.server !== 'undefined' ? params.server : this.personalization.getServerName(),
-            port: params && typeof params.port !== 'undefined' ? params.port : this.personalization.getServerPort(),
-            deviceId: params && typeof params.deviceId !== 'undefined' ? params.deviceId : this.personalization.getDeviceId(),
-            sslEnabled: params && typeof params.sslEnabled !== 'undefined' ? params.sslEnabled : this.personalization.isSslEnabled(),
+            server: params && typeof params.server !== 'undefined' ? params.server : this.personalization.getServerName$().getValue(),
+            port: params && typeof params.port !== 'undefined' ? params.port : this.personalization.getServerPort$().getValue(),
+            deviceId: params && typeof params.deviceId !== 'undefined' ? params.deviceId : this.personalization.getDeviceId$().getValue(),
+            sslEnabled: params && typeof params.sslEnabled !== 'undefined' ? params.sslEnabled : this.personalization.getSslEnabled$().getValue(),
             appId: params && typeof params.appId !== 'undefined' ? params.appId : null,
             maxWaitMillis: params && typeof params.maxWaitMillis !== 'undefined' ? params.maxWaitMillis : 90000
         };
@@ -113,24 +116,22 @@ export class DiscoveryService {
     }
 
     public getServerBaseURL(): string {
-        if (!this.serverBaseUrl) {
-            if (this.personalization.isManagedServer()) {
-                console.debug(`serverBaseURL isn't set yet for the managed server`);
-            } else {
-                this.updateServerBaseUrl();
-            }
+        if (this.personalization.getIsManagedServer$().getValue()) {
+            console.debug(`serverBaseURL isn't set yet for the managed server`);
         }
         return this.serverBaseUrl;
     }
 
-    private updateServerBaseUrl() {
-        const protocol = this.personalization.isSslEnabled() ? 'https' : 'http';
-        this.serverBaseUrl = `${protocol}://${this.personalization.getServerName()}` +
-            `${this.personalization.getServerPort() ? `:${this.personalization.getServerPort()}` : ''}`;
+    private updateServerBaseUrl( serverName: string, serverPort: string, sslEnabled: boolean, appId: string, deviceId: string) {
+        if( !serverName || !serverPort || !appId || !deviceId ) return;
+
+        const protocol = sslEnabled ? 'https' : 'http';
+        this.serverBaseUrl = `${protocol}://${serverName}` +
+            `${serverPort ? `:${serverPort}` : ''}`;
         console.info(`Generated serverBaseURL: ${this.serverBaseUrl}`);
         this.serverBaseUrl$.next(this.getServerBaseURL());
         this.apiServerBaseUrl$.next(this.getApiServerBaseURL());
-        this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl());
+        this.deviceAppApiServerBaseUrl$.next(this.getDeviceAppApiServerBaseUrl(appId, deviceId));
     }
 
     public getServerBaseURL$(): Observable<string> {
@@ -141,8 +142,8 @@ export class DiscoveryService {
         return this.apiServerBaseUrl$;
     }
 
-    private getDeviceAppApiServerBaseUrl(): string {
-        return `${this.getApiServerBaseURL()}/appId/${this.personalization.getAppId()}/deviceId/${this.personalization.getDeviceId()}`;
+    private getDeviceAppApiServerBaseUrl(appId: string, deviceId: string): string {
+        return `${this.getApiServerBaseURL()}/appId/${appId}/deviceId/${deviceId}`;
     }
 
     public getDeviceAppApiServerBaseUrl$(): Observable<string> {
@@ -153,24 +154,24 @@ export class DiscoveryService {
         return `${this.getServerBaseURL()}/api`;
     }
 
-    public getWebsocketUrl(): string {
-        if (!this.websocketUrl) {
-            if (this.personalization.isManagedServer()) {
-                console.debug(`webSocketUrl isn't set yet for the managed server`);
-            } else {
-                let protocol = 'ws://';
-                if (this.personalization.isSslEnabled()) {
-                    protocol = 'wss://';
-                }
-                let url: string = protocol + this.personalization.getServerName();
-                if (this.personalization.getServerPort()) {
-                    url = url + ':' + this.personalization.getServerPort();
-                }
-                url = url + '/api/websocket';
-                this.websocketUrl = url;
+    private updateWebsocketUrl( isManageServer: boolean, sslEnabled: boolean, serverName: string, serverPort: string) {
+        if (isManageServer) {
+            console.debug(`webSocketUrl isn't set yet for the managed server`);
+        } else {
+            let protocol = 'ws://';
+            if (sslEnabled) {
+                protocol = 'wss://';
             }
+            let url: string = protocol + serverName;
+            if (serverPort) {
+                url = url + ':' + serverPort;
+            }
+            url = url + '/api/websocket';
+            this.websocketUrl = url;
         }
+    }
 
+    public getWebsocketUrl(): string {
         return this.websocketUrl;
     }
 

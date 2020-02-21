@@ -3,7 +3,6 @@ package org.jumpmind.pos.service.strategy;
 import org.jumpmind.pos.service.PosServerException;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
-import org.jumpmind.pos.util.clientcontext.ClientContextPropertyException;
 import org.jumpmind.pos.util.web.ConfiguredRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

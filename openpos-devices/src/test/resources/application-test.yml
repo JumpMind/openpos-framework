@@ -1,0 +1,100 @@
+---
+openpos:
+  installationId: '09999'
+  businessunitId: '09999'
+  tagconfig:
+    tags:
+    -
+      name: REGION
+      group: LOCATION
+      level: 1
+    -
+      name: COUNTRY
+      group: LOCATION
+      level: 2
+    -
+      name: STATE
+      group: LOCATION
+      level: 3
+    -
+      name: STORE_NUMBER
+      group: LOCATION
+      level: 4
+    -
+      name: STORE_TYPE
+    -
+      name: DEVICE_TYPE
+      size: 20
+    -
+      name: PRICE_ZONE
+      size: 20
+    -
+      name: APP_PROFILE
+  ui:
+    personalization:
+      devicePattern: '\d{5}-\d{3}'
+      parameters:
+        - property: 'brandId'
+          label: 'Brand ID'
+          defaultValue: 'default'
+        - property: 'deviceType'
+          label: 'Device Type'
+          defaultValue: 'default'
+  jobs:
+    schedule:
+      job1:
+        beanName: logFileShipperJob
+        enabled: false
+        type: periodic
+        expression: 10000
+        useRandomStartTime: true
+      job2:
+        beanName: logFileShipperJob
+        enabled: true
+        type: cron
+        expression: 5555
+        useRandomStartTime: false
+      noJob:
+        enabled: true
+        type: periodic
+        expression: 10000
+        useRandomStartTime: true
+    config:
+      fileCleanupJob:
+        '[work/logs]':
+          pattern: "*"
+          retentionInMinutes: 1
+          recursive: false
+          deleteEmptyDirs: true
+        '[work/logs/tmp]':
+          pattern: "*"
+          retentionInMinutes: 1
+          recursive: false
+          deleteEmptyDirs: true
+        work2:
+          pattern: "*"
+          retentionInMinutes: 1
+          recursive: false
+          deleteEmptyDirs: true
+    testList:
+      -
+        enabled: true
+        type: periodic
+        expression: 3400
+        useRandomStartTime: true
+      -
+        enabled: false
+        type: periodic
+        expression: 12345
+      -
+        enabled: true
+        type: cron
+        useRandomStartTime: false 
+server:
+  port: 6140
+
+company:
+  id: 1
+
+brand:
+  id: 0

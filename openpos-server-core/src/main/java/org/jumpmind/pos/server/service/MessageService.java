@@ -4,7 +4,7 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.jumpmind.pos.server.config.PersonalizationParameters;
+import org.jumpmind.pos.devices.service.model.PersonalizationParameters;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.web.ServerException;
 import org.slf4j.Logger;
@@ -51,8 +51,6 @@ public class MessageService implements IMessageService {
     @Autowired(required=false)
     List<IActionListener> actionListeners;
 
-    @Autowired(required=false)
-    PersonalizationParameters personalizationParameters;
 
     @PostConstruct
     public void init() {
@@ -66,22 +64,6 @@ public class MessageService implements IMessageService {
     public String ping() {
         logger.info("Received a ping request");
         return "{ \"pong\": \"true\" }";
-    }
-
-    @RequestMapping(method = RequestMethod.GET, value = "personalize", produces = "application/json")
-    @ResponseBody
-    public String personalize() {
-        logger.info("Received a personalization request");
-        String response = "[ ]";
-        try {
-            if (personalizationParameters != null) {
-                response = mapper.writerWithDefaultPrettyPrinter().writeValueAsString(personalizationParameters);
-            }
-        } catch (JsonProcessingException e) {
-            logger.error("Could not parse personalization properties");
-        }
-        
-        return response;
     }
 
     @MessageMapping("action/app/{appId}/node/{deviceId}")
