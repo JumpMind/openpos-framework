@@ -67,7 +67,6 @@ export * from './lib/core/interfaces/tender-item.interface';
 export * from './lib/core/interfaces/toast-screen.interface';
 export * from './lib/core/interfaces/total-type.enum';
 export * from './lib/core/interfaces/total.interface';
-export * from './lib/core/interfaces/transaction-summary.interface';
 export * from './lib/core/actions/url-menu-item.interface';
 export * from './lib/core/interfaces/validator.enum';
 export * from './lib/core/messages/message-types';

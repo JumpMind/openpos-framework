@@ -1,0 +1,42 @@
+@import "../../../styles/mixins/typography";
+
+.transaction-history-outer {
+    display: grid;
+    grid-template-rows: auto auto auto;
+    padding: 16px;
+    gap: 16px;
+    margin-bottom: 8px;
+}
+
+.transaction-history-title {
+    @extend %text-md;
+    display: grid;
+    grid-template-columns: 1fr auto;
+}
+
+.detail-label {
+    padding-right: 4px;
+}
+
+.transaction-history-details {
+    @extend %text-sm;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: auto auto;
+    gap: 8px;
+}
+
+.transaction-history-actions {
+    width: 100%;
+    display: grid;
+    grid-auto-flow: column;
+}
+
+.transaction-button {
+    @extend %text-sm;
+    margin: 0px 4px;
+
+    .transaction-button-text {
+        margin-right: 8px;
+    }
+}

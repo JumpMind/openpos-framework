@@ -1,0 +1,47 @@
+<div class="transaction-history-outer">
+    <div class="transaction-history-title">
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.customerName}}</span>
+            <b>{{screenData.customerName}}</b>
+        </div>
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.status}}</span>
+            <b>{{screenData.status}}</b>
+        </div>
+    </div>
+
+    <div class="transaction-history-details">
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.transactionDate}}:</span>
+            <span>{{screenData.transactionDate}}</span>
+        </div>
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.deviceId}}:</span>
+            <span>{{screenData.deviceId}}</span>
+        </div>
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.storeId}}:</span>
+            <span>{{screenData.storeId}}</span>
+        </div>
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.username}}:</span>
+            <span>{{screenData.username}}</span>
+        </div>
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.tillId}}:</span>
+            <span>{{screenData.tillId}}</span>
+        </div>
+        <div>
+            <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.barcode}}:</span>
+            <span>{{screenData.barcode}}</span>
+        </div>
+    </div>
+
+    <div class="transaction-history-actions">
+        <button *ngFor="let button of screenData.actions" mat-raised-button color="primary-inverse"
+            class="transaction-button" (click)="onClick(button)">
+            <span class="transaction-button-text">{{button.title}}</span>
+            <app-icon [iconName]="button.icon" iconClass="mat-24"></app-icon>
+        </button>
+    </div>
+</div>

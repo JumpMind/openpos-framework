@@ -1,0 +1,34 @@
+:host {
+    height: 100%;
+}
+
+.transaction-bacon-strip {
+    height: 100%;
+
+    .transaction-search-top {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        margin: 16px;
+        margin-bottom: 0px;
+        gap: 16px;
+
+        .transaction-search-button {
+            span {
+                padding-right: 4px;
+            }
+        }
+    }
+
+    .transaction-search-outer {
+        height: 100%;
+        display: grid;
+        grid-template-rows: auto 1fr;
+        min-height: 100px;
+    }
+
+    .transaction-list-outer {
+        background-color: white;
+        margin: 16px;
+        overflow-y: auto;
+    }
+}

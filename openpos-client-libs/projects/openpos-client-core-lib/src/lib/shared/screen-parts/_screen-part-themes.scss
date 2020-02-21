@@ -12,6 +12,7 @@
 @import './sale-total-panel/sale-total-panel-theme';
 @import './tender-part/tender-part-theme';
 @import './basic-bacon-strip/basic-bacon-strip-theme';
+@import './transaction-history-part/transaction-history-part-theme';
 
 @mixin screen-part-themes($theme) {
     @include bacon-strip-theme($theme);
@@ -27,4 +28,5 @@
     @include sale-total-panel-theme($theme);
     @include tender-part-theme($theme);
     @include basic-bacon-strip-theme($theme);
+    @include transaction-history-part-theme($theme);
 }
