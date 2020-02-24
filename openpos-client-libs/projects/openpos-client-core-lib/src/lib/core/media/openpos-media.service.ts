@@ -1,8 +1,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {MediaService} from '@angular/flex-layout';
-import {BreakpointObserver, Breakpoints, BreakpointState} from '@angular/cdk/layout';
-import {Observable, Subject} from 'rxjs';
-import {startWith, map, filter, takeUntil} from 'rxjs/operators';
+import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
+import {merge, Observable, Subject} from 'rxjs';
+import {debounceTime, filter, map, startWith, takeUntil, tap} from 'rxjs/operators';
 import {SessionService} from '../services/session.service';
 
 export class MediaBreakpoints {
@@ -16,30 +16,13 @@ export class MediaBreakpoints {
     static SMALL_DESKTOP_LANDSCAPE = 'small-desktop-landscape';
 }
 
-@Injectable({
-    providedIn: 'root',
-})
-export class OpenposMediaService implements OnDestroy {
-    breakpointToName = new Map<string, string>();
-    destroyed = new Subject();
+export interface MediaBreakpoint {
+    name: string;
+    value: string;
+}
 
-    constructor(
-        private observableMedia: MediaService,
-        private breakpointObserver: BreakpointObserver,
-        private sessionService: SessionService) {
-
-        sessionService.getMessages('ConfigChanged').pipe(
-            filter(message => message.configType === 'MediaService'),
-            takeUntil(this.destroyed)
-        ).subscribe(message => this.updateBreakpoints(message));
-    }
-
-    ngOnDestroy(): void {
-        this.destroyed.next();
-    }
-
-    /*
-    Breakpoints can be overriden with the following client config in application.yml:
+/*
+    Breakpoints can be set with the following client config in application.yml:
 
     clientConfiguration:
       clientConfigSets:
@@ -54,64 +37,142 @@ export class OpenposMediaService implements OnDestroy {
                'desktop-portrait': '(min-width: 840px) and (orientation: portrait)'
                'desktop-landscape': '(min-width: 1280px) and (orientation: landscape)'
     */
-    private updateBreakpoints(message: any) {
+@Injectable({
+    providedIn: 'root',
+})
+export class OpenposMediaService implements OnDestroy {
+    breakpointToName = new Map<string, string>();
+    destroyed$ = new Subject();
+    breakpointChanged$ = new Subject<MediaBreakpoint>();
+    configChanged$ = new Subject();
+    logDebounceTime = 100;
+
+    constructor(
+        private mediaService: MediaService,
+        private breakpointObserver: BreakpointObserver,
+        private sessionService: SessionService) {
+
+        this.logChanges();
+        this.watchForConfigChanges();
+    }
+
+    ngOnDestroy(): void {
+        this.destroyed$.next();
+    }
+
+    /**
+     * Logs configuration and breakpoint changes.
+     */
+    logChanges(): void {
+        this.configChanged$.pipe(debounceTime(this.logDebounceTime))
+            .subscribe(message => this.log('Configuration Changed', message));
+
+        this.breakpointChanged$.pipe(debounceTime(this.logDebounceTime))
+            .subscribe(mediaBreakpoint => this.log('Active Breakpoint', mediaBreakpoint));
+    }
+
+    /**
+     * Updates the the breakpoints when the configuration changes.
+     */
+    watchForConfigChanges(): void {
+        this.sessionService.getMessages('ConfigChanged').pipe(
+            filter(message => message.configType === 'MediaService'),
+            tap(message => this.updateBreakpointsFromConfig(message)),
+            tap(() => this.configChanged$.next()),
+            tap(() => this.watchForBreakpointChanges()),
+            takeUntil(this.destroyed$)
+        ).subscribe();
+    }
+
+    /**
+     * Updates the available breakpoints from the configuration.
+     * @param message The configuration message
+     */
+    updateBreakpointsFromConfig(message: any) {
         this.breakpointToName.clear();
 
         Object.keys(message)
             .filter(configKey => configKey.startsWith('breakpoints'))
-            .forEach(configKey => this.addBreakpointToName(message, configKey));
+            .forEach(configKey => this.addBreakpointFromConfig(message, configKey));
     }
 
-    addBreakpointToName(message: any, configKey: string): void {
+    /**
+     * Adds a breakpoint from a given configuration.
+     * @param message The configuration
+     * @param configKey The configuration key to add
+     */
+    addBreakpointFromConfig(message: any, configKey: string): void {
         const breakpoint = message[configKey];
         const breakpointName = configKey.split('.')[1];
         this.breakpointToName.set(breakpoint, breakpointName);
     }
 
-    observe<T>(breakpointNameToObject?: Map<string, T>): Observable<T> {
+    /**
+     * Notifies listeners when the active breakpoint changes.
+     */
+    watchForBreakpointChanges(): void {
         const breakpointsToWatch = Array.from(this.breakpointToName.keys());
 
-        return this.breakpointObserver.observe(breakpointsToWatch)
+        this.breakpointObserver.observe(breakpointsToWatch)
             .pipe(
-                map(breakpointState => this.mapBreakpointToObject(breakpointState, breakpointNameToObject)),
-                takeUntil(this.destroyed)
-            );
+                filter(breakpointState => breakpointState.matches),
+                map(breakpointState => this.getActiveMediaBreakpoint(breakpointState)),
+                tap(mediaBreakpoint => this.breakpointChanged$.next(mediaBreakpoint)),
+                takeUntil(merge(this.configChanged$, this.destroyed$))
+            ).subscribe();
     }
 
-    mapBreakpointToObject<T>(breakpointState: BreakpointState, breakpointNameToObject: Map<string, T>): T {
-        if (!breakpointState.matches) {
+    /**
+     * Observe changes in the active breakpoint and get notified with custom values.
+     * @param breakpointNameToObject A map of values to use for notifying when the active breakpoint changes
+     */
+    observe<T>(breakpointNameToObject?: Map<string, T>): Observable<T> {
+        return this.breakpointChanged$.pipe(
+            map(mediaBreakpoint => mediaBreakpoint.name),
+            map(breakpointName => breakpointNameToObject.get(breakpointName))
+        );
+    }
+
+    /**
+     * Gets the active media breakpoint from a breakpoint state.
+     * @param breakpointState The breakpoint state
+     */
+    getActiveMediaBreakpoint(breakpointState: BreakpointState): MediaBreakpoint {
+        const breakpoints = breakpointState.breakpoints;
+        const activeBreakpoint = Object.keys(breakpoints).find(breakpoint => breakpoints[breakpoint]);
+
+        if (!activeBreakpoint) {
             return null;
         }
 
-        const breakpoints = breakpointState.breakpoints;
-        let matchedObject = null;
+        const activeBreakpointName = this.breakpointToName.get(activeBreakpoint);
 
-        for (let breakpoint in breakpoints) {
-            const isMatched = breakpoints[breakpoint];
-
-            if (isMatched) {
-                const breakpointName = this.breakpointToName.get(breakpoint);
-                matchedObject = breakpointNameToObject.get(breakpointName);
-                break;
-            }
-        }
-
-        return matchedObject;
+        return {
+            name: activeBreakpointName,
+            value: activeBreakpoint
+        };
     }
 
-    /*
-       ** Expects a map of media sizes (xs, s, m, l, xl) to values
-       ** Returns an observable that streams out the appropriate values on media size changes
-       */
+    /**
+     * Returns an observable that streams out a set of custom values that map to active breakpoints.
+     * @param mappedValues A map of media sizes (xs, s, m, l, xl) to custom values
+     */
     mediaObservableFromMap<T>(mappedValues: Map<string, T>): Observable<T> {
         const aliases = Array.from(mappedValues.keys());
-        const startAlias = aliases.find(alias => this.observableMedia.isActive(alias));
+        const startAlias = aliases.find(alias => this.mediaService.isActive(alias));
 
-        return this.observableMedia.asObservable()
+        return this.mediaService.asObservable()
             .pipe(
                 map(change => mappedValues.get(change.mqAlias)),
                 startWith(mappedValues.get(startAlias))
             );
     }
 
+    /**
+     * Logs messages and includes the service name in the messages.
+     * @param args The arguments to log
+     */
+    log(...args): void {
+        console.log.apply(console, ['[Media Service]'].concat(args));
+    }
 }
