@@ -4,15 +4,16 @@
         <div class="transaction-search-top">
             <app-scan-or-search class="scan-or-search mat-elevation-z1" [focusInitial]="false"></app-scan-or-search>
 
-            <app-primary-button *ngIf="screen.searchButton" inputType="submit" class="transaction-search-button">
+            <app-primary-button *ngIf="screen.searchButton" inputType="submit" class="transaction-search-button"
+                (click)="doAction(screen.searchButton)">
                 <span>{{screen.searchButton.title}}</span>
                 <app-icon *ngIf="screen.searchButton.icon" [iconName]="screen.searchButton.icon"></app-icon>
             </app-primary-button>
         </div>
 
-        <div class="transaction-list-outer">
+        <mat-card class="transaction-list-outer">
             <app-transaction-summary *ngFor="let t of screen.transactions; let i = index" [transactionSummary]="t"
                 [border]="i > 0" class="transaction-summary-list"></app-transaction-summary>
-        </div>
+        </mat-card>
     </div>
 </app-bacon-strip>
