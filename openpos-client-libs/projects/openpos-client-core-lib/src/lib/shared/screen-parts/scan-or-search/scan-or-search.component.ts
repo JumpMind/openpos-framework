@@ -94,7 +94,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     private unregisterScanner() {
-        if (this.scanServiceSubscription !== null) {
+        if (this.scanServiceSubscription) {
             this.scanServiceSubscription.unsubscribe();
             this.scanServiceSubscription = null;
         }
