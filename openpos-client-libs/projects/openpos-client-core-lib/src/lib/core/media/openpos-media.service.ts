@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {MediaService} from '@angular/flex-layout';
 import {BreakpointObserver, BreakpointState} from '@angular/cdk/layout';
-import {merge, Observable, Subject} from 'rxjs';
+import {BehaviorSubject, merge, Observable, Subject} from 'rxjs';
 import {debounceTime, filter, map, startWith, takeUntil, tap} from 'rxjs/operators';
 import {SessionService} from '../services/session.service';
 
@@ -36,15 +36,17 @@ export interface MediaBreakpoint {
                'tablet-landscape': '(min-width: 960px) and (max-width: 1279.99px) and (orientation: landscape)'
                'desktop-portrait': '(min-width: 840px) and (orientation: portrait)'
                'desktop-landscape': '(min-width: 1280px) and (orientation: landscape)'
+               'small-desktop-portriat': '(min-width: 768px) and (max-width: 768px) and (orientation: portrait)'
+               'small-desktop-landscape': '(min-width: 1366px) and (max-width: 1366px) and (orientation: landscape)'
     */
 @Injectable({
     providedIn: 'root',
 })
 export class OpenposMediaService implements OnDestroy {
     breakpointToName = new Map<string, string>();
-    destroyed$ = new Subject();
-    breakpointChanged$ = new Subject<MediaBreakpoint>();
+    activeBreakpoint$ = new BehaviorSubject<MediaBreakpoint>(null);
     configChanged$ = new Subject();
+    destroyed$ = new Subject();
     logDebounceTime = 100;
 
     constructor(
@@ -67,7 +69,7 @@ export class OpenposMediaService implements OnDestroy {
         this.configChanged$.pipe(debounceTime(this.logDebounceTime))
             .subscribe(message => this.log('Configuration Changed', message));
 
-        this.breakpointChanged$.pipe(debounceTime(this.logDebounceTime))
+        this.activeBreakpoint$.pipe(debounceTime(this.logDebounceTime))
             .subscribe(mediaBreakpoint => this.log('Active Breakpoint', mediaBreakpoint));
     }
 
@@ -75,13 +77,14 @@ export class OpenposMediaService implements OnDestroy {
      * Updates the the breakpoints when the configuration changes.
      */
     watchForConfigChanges(): void {
-        this.sessionService.getMessages('ConfigChanged').pipe(
-            filter(message => message.configType === 'MediaService'),
-            tap(message => this.updateBreakpointsFromConfig(message)),
-            tap(() => this.configChanged$.next()),
-            tap(() => this.watchForBreakpointChanges()),
-            takeUntil(this.destroyed$)
-        ).subscribe();
+        this.sessionService.getMessages('ConfigChanged')
+            .pipe(
+                filter(message => message.configType === 'MediaService'),
+                tap(message => this.updateBreakpointsFromConfig(message)),
+                tap(() => this.configChanged$.next()),
+                tap(() => this.watchForBreakpointChanges()),
+                takeUntil(this.destroyed$)
+            ).subscribe();
     }
 
     /**
@@ -103,6 +106,8 @@ export class OpenposMediaService implements OnDestroy {
      */
     addBreakpointFromConfig(message: any, configKey: string): void {
         const breakpoint = message[configKey];
+        // Remove the path part of the configuration key
+        // Example: breakpoints.desktop-landscape => desktop-landscape
         const breakpointName = configKey.split('.')[1];
         this.breakpointToName.set(breakpoint, breakpointName);
     }
@@ -117,7 +122,7 @@ export class OpenposMediaService implements OnDestroy {
             .pipe(
                 filter(breakpointState => breakpointState.matches),
                 map(breakpointState => this.getActiveMediaBreakpoint(breakpointState)),
-                tap(mediaBreakpoint => this.breakpointChanged$.next(mediaBreakpoint)),
+                tap(mediaBreakpoint => this.activeBreakpoint$.next(mediaBreakpoint)),
                 takeUntil(merge(this.configChanged$, this.destroyed$))
             ).subscribe();
     }
@@ -127,10 +132,11 @@ export class OpenposMediaService implements OnDestroy {
      * @param breakpointNameToObject A map of values to use for notifying when the active breakpoint changes
      */
     observe<T>(breakpointNameToObject?: Map<string, T>): Observable<T> {
-        return this.breakpointChanged$.pipe(
-            map(mediaBreakpoint => mediaBreakpoint.name),
-            map(breakpointName => breakpointNameToObject.get(breakpointName))
-        );
+        return this.activeBreakpoint$
+            .pipe(
+                map(mediaBreakpoint => mediaBreakpoint.name),
+                map(breakpointName => breakpointNameToObject.get(breakpointName))
+            );
     }
 
     /**
@@ -139,7 +145,8 @@ export class OpenposMediaService implements OnDestroy {
      */
     getActiveMediaBreakpoint(breakpointState: BreakpointState): MediaBreakpoint {
         const breakpoints = breakpointState.breakpoints;
-        const activeBreakpoint = Object.keys(breakpoints).find(breakpoint => breakpoints[breakpoint]);
+        const breakpointNames = Object.keys(breakpoints);
+        const activeBreakpoint = breakpointNames.find(breakpoint => breakpoints[breakpoint]);
 
         if (!activeBreakpoint) {
             return null;
@@ -173,6 +180,6 @@ export class OpenposMediaService implements OnDestroy {
      * @param args The arguments to log
      */
     log(...args): void {
-        console.log.apply(console, ['[Media Service]'].concat(args));
+        console.log.apply(console, ['Media Service:'].concat(args));
     }
 }

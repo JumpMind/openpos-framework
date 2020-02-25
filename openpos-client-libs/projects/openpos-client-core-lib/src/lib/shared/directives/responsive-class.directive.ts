@@ -31,20 +31,22 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
      * Updates the active classes on the host element when the active breakpoint changes.
      */
     watchBreakpointChanges(): void {
-        this.mediaService.observe(this.breakpointNameToClasses).pipe(
-            tap(classNames => this.updateClasses(classNames)),
-            takeUntil(this.destroyed$)
-        ).subscribe();
+        this.mediaService.observe(this.breakpointNameToClasses)
+            .pipe(
+                tap(classNames => this.updateClasses(classNames)),
+                takeUntil(this.destroyed$)
+            ).subscribe();
     }
 
     /**
      * Updates the available class names when the media service configuration changes.
      */
     watchBreakpointConfigChanges(): void {
-        this.mediaService.configChanged$.pipe(
-            tap(() => this.updateBreakpointNameToClassNames()),
-            takeUntil(this.destroyed$)
-        ).subscribe();
+        this.mediaService.configChanged$
+            .pipe(
+                tap(() => this.updateBreakpointNameToClassNames()),
+                takeUntil(this.destroyed$)
+            ).subscribe();
     }
 
     /**
@@ -66,7 +68,7 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
      * 'desktop-landscape' => ['desktop', 'desktop-landscape']
      * 'small-desktop-landscape' => ['small-desktop', 'small-desktop-landscape']
      *
-     * @param breakpointName
+     * @param breakpointName The name of the breakpoint to parse
      */
     parseClassNames(breakpointName: string): string[] {
         const deviceTypeOrientationSeparatorIndex = breakpointName.lastIndexOf('-');
@@ -105,7 +107,7 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
     }
 
     /**
-     * Updates the classes on the host element.
+     * Updates the classes on the host element and removes classes that are not needed for the active breakpoint.
      * @param classNames The class name to update
      */
     updateClasses(classNames: string[]): void {
