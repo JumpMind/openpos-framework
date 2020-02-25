@@ -38,6 +38,9 @@ The directive `responsive-class` when attached to an element will add and remove
     &.tablet-landscape {
         // Style to apply when tablet target is active and in landscape orientation
     }
+    &.small-desktop-landscape {
+      // Style to apply when small desktop target is active and in landscape orientation
+    } 
 }
 ```
 
