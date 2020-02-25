@@ -31,6 +31,12 @@
 
     .rightside {
         justify-self: end;
+        display:grid;
+        grid-template-rows: 1fr auto;
+        .status {
+            @extend %text-xs;
+            text-align:end;
+        }
     }
 
     >* {

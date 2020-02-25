@@ -41,7 +41,7 @@ public interface IconType {
     public static final String Employees = "Employees"; //group
     public static final String Error = "Error"; //error
     public static final String ExternalLink = "ExternalLink"; //language;
-    public static final String Fingerprint = "Fingerprint"; //keyboard_arrow_right
+    public static final String Fingerprint = "Fingerprint"; //fingerprint
     public static final String Forward = "Forward"; //keyboard_arrow_right
     public static final String Gift = "Gift"; //gift_outline
     public static final String GiftCard = "GiftCard"; //card_giftcard

@@ -5,7 +5,4 @@ import { Component } from '@angular/core';
     templateUrl: './openpos-app.component.html'
 })
 export class OpenposAppComponent {
-
-    constructor() {
-    }
 }

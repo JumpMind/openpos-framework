@@ -4,6 +4,8 @@ export interface BaconStripInterface {
     deviceId: string;
     operatorText: string;
     headerText: string;
+    version: string;
+    certification: string;
     logo: string;
     actions: IActionItem[];
 }
