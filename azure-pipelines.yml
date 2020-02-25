@@ -42,12 +42,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST*.xml'
-    tasks: 'jacocoRootReport deploy generateSourceArtifact'
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish Server Code Coverage'
-  inputs: 
-    codeCoverageTool: JaCoCo
-    summaryFileLocation: '**/jacocoRootReport.xml'
+    tasks: 'deploy generateSourceArtifact'
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish Client Code Coverage'
   inputs: 
