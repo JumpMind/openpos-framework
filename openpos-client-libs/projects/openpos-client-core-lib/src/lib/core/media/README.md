@@ -17,7 +17,7 @@ clientConfiguration:
           'tablet-landscape': '(min-width: 960px) and (max-width: 1279.99px) and (orientation: landscape)'
           'desktop-portrait': '(min-width: 840px) and (orientation: portrait)'
           'desktop-landscape': '(min-width: 1280px) and (orientation: landscape)'
-          'small-desktop-portriat': '(min-width: 768px) and (max-width: 768px) and (orientation: portrait)'
+          'small-desktop-portrait': '(min-width: 768px) and (max-width: 768px) and (orientation: portrait)'
           'small-desktop-landscape': '(min-width: 1366px) and (max-width: 1366px) and (orientation: landscape)'
 ```
 
