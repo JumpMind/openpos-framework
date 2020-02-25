@@ -8,13 +8,13 @@
     (buttonClick)="devices.scan()"
     ></app-icon-square-button>
 <input #input matInput
-    class="scan-input"
-    ngClass.xs="scan-input-xs"
-    [keyboardLayout]="keyboardLayout"
-    (keydown.enter)="onEnter($event)"
-    [(ngModel)]="barcode"
-    (ngModelChange)="onValueChange($event)"
-    [placeholder]="screenData.scanSomethingText"
-    [attr.minlength]="screenData.scanMinLength"
-    [attr.maxlength]="screenData.scanMaxLength"
-    [formatterName]="screenData.inputType">
+       class="scan-input"
+       ngClass.xs="scan-input-xs"
+       [keyboardLayout]="keyboardLayout"
+       (keydown.enter)="onEnter($event)"
+       [(ngModel)]="barcode"
+       (ngModelChange)="onValueChange()"
+       [placeholder]="screenData.scanSomethingText"
+       [attr.minlength]="screenData.scanMinLength"
+       [attr.maxlength]="screenData.scanMaxLength"
+       [formatterName]="screenData.inputType">
