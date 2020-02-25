@@ -6,7 +6,6 @@ apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'idea'
 apply plugin: 'maven'
-apply plugin: 'jacoco'
 
 def removeSnapshot = { v ->
     if (v.endsWith('-SNAPSHOT')) {
@@ -128,13 +127,6 @@ test {
     if (project.hasProperty('excludeTests')) {
         println('Excluding tests: ' + project.property('excludeTests'))
         exclude project.property('excludeTests')
-    }
-}
-
-jacocoTestReport {
-    executionData = fileTree(buildDir).include("/jacoco/*.exec")
-    reports {
-        xml.enabled true
     }
 }
 
