@@ -1,24 +1,24 @@
-import { IActionItem } from '../../../core/actions/action-item.interface';
+import {IActionItem} from '../../../core/actions/action-item.interface';
 import {
     Component,
-    Input,
-    Output,
-    EventEmitter,
-    OnInit,
-    OnDestroy,
-    Injector,
     ElementRef,
+    EventEmitter,
+    Injector,
+    Input,
+    OnDestroy,
+    OnInit,
+    Output,
     Renderer2
 } from '@angular/core';
-import { ScreenPartComponent } from '../screen-part';
-import { ScanOrSearchInterface } from './scan-or-search.interface';
-import { DeviceService } from '../../../core/services/device.service';
-import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openpos-media.service';
-import { Observable, Subscription } from 'rxjs';
-import { ScannerService } from '../../../core/platform-plugins/scanners/scanner.service';
-import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-active.interface';
-import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
+import {ScreenPartComponent} from '../screen-part';
+import {ScanOrSearchInterface} from './scan-or-search.interface';
+import {DeviceService} from '../../../core/services/device.service';
+import {ScreenPart} from '../../decorators/screen-part.decorator';
+import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
+import {Observable, Subscription} from 'rxjs';
+import {ScannerService} from '../../../core/platform-plugins/scanners/scanner.service';
+import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
+import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
 
 @ScreenPart({
     name: 'scanOrSearch'
@@ -36,7 +36,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     @Input() defaultAction: IActionItem;
 
-    @Input() focusInitial = true;
+    @Input() focusInitial = false;
 
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
@@ -114,7 +114,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
         }
     }
 
-    public onValueChange($event: any): void {
+    public onValueChange(): void {
         this.change.emit(this.barcode);
     }
 }
