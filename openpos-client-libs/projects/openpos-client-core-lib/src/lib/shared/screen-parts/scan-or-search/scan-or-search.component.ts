@@ -8,8 +8,7 @@ import {
     Input,
     OnDestroy,
     OnInit,
-    Output,
-    Renderer2
+    Output
 } from '@angular/core';
 import {ScreenPartComponent} from '../screen-part';
 import {ScanOrSearchInterface} from './scan-or-search.interface';
@@ -45,8 +44,11 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     private scanServiceSubscription: Subscription;
 
-    constructor(public devices: DeviceService, injector: Injector, private el: ElementRef, private renderer: Renderer2,
-                mediaService: OpenposMediaService, private scannerService: ScannerService) {
+    constructor(public devices: DeviceService,
+                injector: Injector,
+                private el: ElementRef,
+                mediaService: OpenposMediaService,
+                private scannerService: ScannerService) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -62,11 +64,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     ngOnInit(): void {
         super.ngOnInit();
         this.registerScanner();
-        if (this.focusInitial) {
-            this.renderer.addClass(this.el.nativeElement, 'focusInitial');
-        } else {
-            this.renderer.removeClass(this.el.nativeElement, 'focusInitial');
-        }
+
         if (this.screenData.keyboardLayout) {
             this.keyboardLayout = this.screenData.keyboardLayout;
         }
