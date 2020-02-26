@@ -3,6 +3,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     Injector,
     Input,
     OnDestroy,
@@ -28,15 +29,15 @@ import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-activ
     templateUrl: './scan-or-search.component.html',
     styleUrls: ['./scan-or-search.component.scss']
 })
-export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInterface> implements
-    OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
+export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInterface> implements OnInit, OnDestroy, OnBecomingActive, OnLeavingActive {
 
     public barcode: string;
     isMobile$: Observable<boolean>;
 
     @Input() defaultAction: IActionItem;
 
-    @Input() focusInitial = false;
+    @HostBinding('class.focusInitial')
+    @Input() focusInitial = true;
 
     @Output() change: EventEmitter<string> = new EventEmitter<string>();
 
@@ -62,7 +63,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
         super.ngOnInit();
         this.registerScanner();
         if (this.focusInitial) {
-            this.renderer.addClass( this.el.nativeElement, 'focusInitial');
+            this.renderer.addClass(this.el.nativeElement, 'focusInitial');
         } else {
             this.renderer.removeClass(this.el.nativeElement, 'focusInitial');
         }
