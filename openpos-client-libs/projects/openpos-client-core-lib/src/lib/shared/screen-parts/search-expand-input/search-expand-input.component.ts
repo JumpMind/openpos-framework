@@ -67,7 +67,6 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
 
     ngOnDestroy(): void {
         this.unregisterScanner();
-        // this.scannerService.stopScanning();
     }
 
     private registerScanner() {
@@ -79,7 +78,7 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
     }
 
     private unregisterScanner() {
-        if (this.scanServiceSubscription !== null) {
+        if (this.scanServiceSubscription) {
             this.scanServiceSubscription.unsubscribe();
             this.scanServiceSubscription = null;
         }

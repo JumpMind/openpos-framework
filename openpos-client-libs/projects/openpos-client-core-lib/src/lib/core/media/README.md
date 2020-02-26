@@ -17,6 +17,8 @@ clientConfiguration:
           'tablet-landscape': '(min-width: 960px) and (max-width: 1279.99px) and (orientation: landscape)'
           'desktop-portrait': '(min-width: 840px) and (orientation: portrait)'
           'desktop-landscape': '(min-width: 1280px) and (orientation: landscape)'
+          'small-desktop-portrait': '(min-width: 768px) and (max-width: 768px) and (orientation: portrait)'
+          'small-desktop-landscape': '(min-width: 1366px) and (max-width: 1366px) and (orientation: landscape)'
 ```
 
 The directive `responsive-class` when attached to an element will add and remove classes for the active device size so that classes can be built as such:
@@ -36,6 +38,9 @@ The directive `responsive-class` when attached to an element will add and remove
     &.tablet-landscape {
         // Style to apply when tablet target is active and in landscape orientation
     }
+    &.small-desktop-landscape {
+      // Style to apply when small desktop target is active and in landscape orientation
+    } 
 }
 ```
 
