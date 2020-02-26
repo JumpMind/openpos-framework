@@ -4,6 +4,12 @@
         <div class="transaction-search-top">
             <app-scan-or-search class="scan-or-search mat-elevation-z1" [focusInitial]="false"></app-scan-or-search>
 
+            <app-secondary-button *ngIf="screen.clearButton" inputType="submit" class="transaction-search-button"
+                (click)="doAction(screen.clearButton)">
+                <span>{{screen.clearButton.title}}</span>
+                <app-icon *ngIf="screen.clearButton.icon" [iconName]="screen.clearButton.icon"></app-icon>
+            </app-secondary-button>
+
             <app-primary-button *ngIf="screen.searchButton" inputType="submit" class="transaction-search-button"
                 (click)="doAction(screen.searchButton)">
                 <span>{{screen.searchButton.title}}</span>

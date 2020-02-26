@@ -5,4 +5,5 @@ import { IActionItem } from '../../core/actions/action-item.interface';
 export interface TransactionSearchInterface extends IAbstractScreen {
     transactions: ITransactionSummary[];
     searchButton: IActionItem;
+    clearButton: IActionItem;
 }

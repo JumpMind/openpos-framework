@@ -11,6 +11,7 @@ public class TransactionSearchUIMessage extends UIMessage {
     private List<TransactionSummary> transactions;
 
     private ActionItem searchButton;
+    private ActionItem clearButton;
 
     public TransactionSearchUIMessage() {
         this.setScreenType(UIMessageType.TRANSACTION_SEARCH);
@@ -31,5 +32,13 @@ public class TransactionSearchUIMessage extends UIMessage {
 
     public void setSearchButton(ActionItem searchButton) {
         this.searchButton = searchButton;
+    }
+
+    public ActionItem getClearButton() {
+        return clearButton;
+    }
+
+    public void setClearButton(ActionItem clearButton) {
+        this.clearButton = clearButton;
     }
 }
