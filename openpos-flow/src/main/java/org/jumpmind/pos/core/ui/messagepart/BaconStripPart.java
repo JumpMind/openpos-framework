@@ -22,6 +22,8 @@ public class BaconStripPart implements IHasBackButton, Serializable {
     private String deviceId;
     private String operatorText;
     private String headerText;
+    private String version;
+    private String certification;
     private String logo;
     private List<ActionItem> actions;
     private String icon;

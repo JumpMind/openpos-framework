@@ -17,7 +17,7 @@
     display: grid;
     align-self: stretch;
     justify-self: stretch;
-    margin: 0px;
+    margin: 0;
     padding-top: 16px;
     padding-bottom: 16px;
     overflow-y: auto;
@@ -28,16 +28,25 @@
         padding-left: 24px;
         padding-right: 24px;
 
+        &.small-desktop-landscape {
+            grid-row-gap: 24px;
+        }
+
         .sale-total-subtotal {
             text-align: center;
 
             .sale-total-subtotal-title {
                 @extend %text-sm;
                 padding-bottom: 8px;
+                padding-top: 8px;
             }
 
             .sale-total-subtotal-amount {
                 @extend %text-lg;
+
+                &.small-desktop-landscape {
+                    @extend %text-md;
+                }
             }
         }
 
@@ -48,12 +57,20 @@
 
             .sale-total-total-title {
                 @extend %text-lg;
-                padding-top: 16px;
+                padding-top: 8px;
                 padding-bottom: 8px;
+
+                &.small-desktop-landscape {
+                    @extend %text-md;
+                }
             }
 
             .sale-total-total-amount {
                 @extend %text-xl;
+
+                &.small-desktop-landscape {
+                    @extend %text-lg;
+                }
             }
         }
 
@@ -75,7 +92,7 @@
             @extend %text-sm;
             width: 100%;
             text-align: left;
-            padding: 0px;
+            padding: 0;
         }
     }
 
@@ -86,7 +103,7 @@
         .sale-total-loyalty-button {
             min-height: 70px;
             .sale-total-loyalty-button-icon {
-                padding: 0px 8px;
+                padding: 0 8px;
                 max-width: 100%;
                 max-height: 50px;
             }
@@ -102,6 +119,10 @@
             .sale-total-loyalty-icon {
                 max-width: 100%;
                 max-height: 5em;
+
+                &.small-desktop-landscape {
+                    max-height: 3em;
+                }
             }
         }
 

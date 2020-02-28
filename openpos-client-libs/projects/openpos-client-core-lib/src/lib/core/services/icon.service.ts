@@ -61,6 +61,7 @@ export class IconService {
         this.icons.set('Employees', ['group.svg', this.defaultIconProvider]);
         this.icons.set('Error', ['error.svg', this.defaultIconProvider]);
         this.icons.set('ExternalLink', ['language.svg', this.defaultIconProvider]);
+        this.icons.set('Fingerprint', ['fingerprint.svg', this.defaultIconProvider]);
         this.icons.set('Flag', ['flag.svg', this.defaultIconProvider]);
         this.icons.set('Forward', ['keyboard_arrow_right.svg', this.defaultIconProvider]);
         this.icons.set('France', ['france.svg', this.defaultIconProvider]);
