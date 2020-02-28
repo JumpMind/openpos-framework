@@ -8,22 +8,14 @@ import java.util.List;
 
 public class TransactionSearchUIMessage extends UIMessage {
 
-    private List<TransactionSummary> transactions;
-
     private ActionItem searchButton;
     private ActionItem clearButton;
+
+    private String providerKey;
 
     public TransactionSearchUIMessage() {
         this.setScreenType(UIMessageType.TRANSACTION_SEARCH);
         this.setId("transaction");
-    }
-
-    public List<TransactionSummary> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<TransactionSummary> transactions) {
-        this.transactions = transactions;
     }
 
     public ActionItem getSearchButton() {
@@ -40,5 +32,13 @@ public class TransactionSearchUIMessage extends UIMessage {
 
     public void setClearButton(ActionItem clearButton) {
         this.clearButton = clearButton;
+    }
+
+    public String getProviderKey() {
+        return providerKey;
+    }
+
+    public void setProviderKey(String providerKey) {
+        this.providerKey = providerKey;
     }
 }

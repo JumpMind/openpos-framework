@@ -26,9 +26,9 @@
         min-height: 100px;
     }
 
-    .transaction-list-outer {
-        background-color: white;
+    app-infinite-scroll {
+        border-radius: 4px;
         margin: 16px;
-        overflow-y: auto;
     }
+
 }

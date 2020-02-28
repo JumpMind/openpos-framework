@@ -17,9 +17,14 @@
             </app-primary-button>
         </div>
 
-        <mat-card class="transaction-list-outer">
-            <app-transaction-summary *ngFor="let t of screen.transactions; let i = index" [transactionSummary]="t"
-                [border]="i > 0" class="transaction-summary-list"></app-transaction-summary>
-        </mat-card>
+        <app-infinite-scroll [dataKey]="screen.providerKey" [itemTemplate]="itemTemplate" virtualScrollMinBufferPx="200"
+            virtualScrollMaxBufferPx="400" [itemHeightPx]="150">
+
+            <ng-template #itemTemplate let-item>
+                <app-transaction-summary [transactionSummary]="item" class="transaction-summary-list">
+                </app-transaction-summary>
+            </ng-template>
+
+        </app-infinite-scroll>
     </div>
 </app-bacon-strip>

@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { TransactionSearchInterface } from './transaction-search.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 
 @ScreenComponent({
-    name: 'TransactionSearch'
+  name: 'TransactionSearch'
 })
 @Component({
   selector: 'app-transaction-search',
@@ -13,6 +13,12 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
 })
 export class TransactionSearchComponent extends PosScreen<TransactionSearchInterface> {
 
-  buildScreen() { }
+
+  constructor(injector: Injector) {
+    super(injector);
+  }
+
+  buildScreen() {
+  }
 
 }

@@ -13,9 +13,6 @@ export class TransactionSummaryComponent {
   @Input()
   transactionSummary: ITransactionSummary;
 
-  @Input()
-  border = false;
-
   constructor(private actionService: ActionService) { }
 
   onClick(actionItem: IActionItem): void {
