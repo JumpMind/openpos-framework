@@ -4,7 +4,6 @@ import { Validators, FormControl, FormGroup, ValidatorFn } from '@angular/forms'
 import { ValidatorsService } from '../../../core/services/validators.service';
 import { IActionItem } from '../../../core/actions/action-item.interface';
 import { PromptFormPartInterface } from './prompt-form-part.interface';
-import { unescapeIdentifier } from '@angular/compiler';
 
 @Component({
     selector: 'app-prompt-form-part',
