@@ -23,6 +23,8 @@ package org.jumpmind.pos.core.flow;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections.CollectionUtils;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
@@ -41,6 +43,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class StateManagerContainer implements IStateManagerContainer, ApplicationListener<Event> {
 
     @Autowired
@@ -119,7 +122,37 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
     private List<TransitionStepConfig> createTransitionSteps(String appId, String deviceId) {
         List<TransitionStepConfig> transitionStepConfigs = flowConfigProvider.getTransitionStepConfig(appId, deviceId);
+        if (CollectionUtils.isEmpty(transitionStepConfigs)) {
+            log.info("No configured transition steps found for appId {} deviceId {}. Using discovered steps from Spring.", appId, deviceId);
+            transitionStepConfigs = createTransitionStepsFromSpring(appId, deviceId);
+        }
         return transitionStepConfigs;
+    }
+
+    private List<TransitionStepConfig> createTransitionStepsFromSpring(String appId, String deviceId) {
+        List<TransitionStepConfig> steps = new ArrayList<>();
+        String[] names = applicationContext.getBeanNamesForType(ITransitionStep.class);
+        for (String name : names) {
+            TransitionStepConfig config = new TransitionStepConfig();
+            config.setTransitionStepClass((Class<? extends ITransitionStep>) applicationContext.getBean(name).getClass());
+            steps.add(config);
+        }
+
+        Collections.sort(steps, (o1, o2) -> {
+            Integer o1order = 0;
+            Integer o2order = 0;
+            try {
+                o1order = o1.getTransitionStepClass().getAnnotation(Order.class).value();
+            } catch (NullPointerException ex) {
+            }
+            try {
+                o2order = o2.getTransitionStepClass().getAnnotation(Order.class).value();
+            } catch (NullPointerException ex) {
+            }
+
+            return o1order.compareTo(o2order);
+        });
+        return steps;
     }
 
     @Override

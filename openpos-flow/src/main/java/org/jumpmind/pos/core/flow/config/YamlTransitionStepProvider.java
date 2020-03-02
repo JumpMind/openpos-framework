@@ -32,6 +32,10 @@ public class YamlTransitionStepProvider {
 
         Map<String, Object> yamlDoc = (Map<String, Object>) yaml.load(inputStream);
 
+        if (yamlDoc == null || yamlDoc.get("TransitionSteps") == null) {
+            return null;
+        }
+
         List<Object> transitionStepsRaw = (List<Object>) yamlDoc.get("TransitionSteps");
 
         for (Object transitionStepRaw : transitionStepsRaw) {
