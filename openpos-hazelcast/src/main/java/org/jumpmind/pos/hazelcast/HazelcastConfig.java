@@ -12,9 +12,10 @@ import org.springframework.context.annotation.Profile;
 public class HazelcastConfig {
 
     @Bean
-    public Config hazelCastConfig(){
-        Config config = new Config();
-        config.setInstanceName("hazelcast-instance")
+    public Config hazelCastConfig() {
+        Config config = new Config().
+                setProperty("hazelcast.logging.type", "slf4j").
+                setInstanceName("hazelcast-instance")
                 .addMapConfig(
                         new MapConfig()
                                 .setName("configuration")
