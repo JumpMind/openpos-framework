@@ -1,5 +1,5 @@
-<div class="transaction-summary-outer">
-    <app-icon [iconName]="transactionSummary.icon" iconClass="mat-64"></app-icon>
+<div *ngIf="transactionSummary" class="transaction-summary-outer">
+    <app-icon *ngIf="transactionSummary.icon" [iconName]="transactionSummary.icon" iconClass="mat-64"></app-icon>
 
     <div class="summary-left-side">
         <div>
