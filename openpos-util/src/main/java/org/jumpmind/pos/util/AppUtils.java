@@ -2,10 +2,12 @@ package org.jumpmind.pos.util;
 
 import java.net.InetAddress;
 import java.nio.charset.Charset;
+import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,6 +16,8 @@ public final class AppUtils {
     static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
     
     static AtomicReference<String> HOST_NAME = new AtomicReference<String>(null);
+
+    private static FastDateFormat timezoneFormatter = FastDateFormat.getInstance("Z");
         
     private AppUtils() {
     }
@@ -25,6 +29,14 @@ public final class AppUtils {
         } else {
             return false;
         }
+    }
+
+    public static String getTimezoneOffset() {
+        String tz = timezoneFormatter.format(new Date());
+        if (tz != null && tz.length() == 5) {
+            return tz.substring(0, 3) + ":" + tz.substring(3, 5);
+        }
+        return null;
     }
     
     public static String getHostName() {
