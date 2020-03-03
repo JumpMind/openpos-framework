@@ -1,5 +1,6 @@
 package org.jumpmind.pos.util.clientcontext;
 
+import org.jumpmind.pos.util.AppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,8 +20,8 @@ public class ClientContext {
     String installationId;
 
     public void put(String name, String value) {
-        if(propertiesMap.get() == null) {
-            propertiesMap.set( new HashMap<>());
+        if (propertiesMap.get() == null) {
+            propertiesMap.set(new HashMap<>());
         }
 
         propertiesMap.get().put(name, value);
@@ -29,12 +30,13 @@ public class ClientContext {
     public String get(String name) {
         Map<String, String> props = propertiesMap.get();
 
-        if( props == null || !props.containsKey(name) ){
-            if("deviceId".equals(name)){
+        if (props == null || !props.containsKey(name)) {
+            if ("deviceId".equals(name)) {
                 return installationId;
-            }
-            if("appId".equals(name)){
+            } else if ("appId".equals(name)) {
                 return "server";
+            } else if ("timezoneOffset".equals(name)) {
+                return AppUtils.getTimezoneOffset();
             }
             log.warn("ClientContext property '" + name + "' not found in ClientContext map.");
             return null;
@@ -46,7 +48,7 @@ public class ClientContext {
     public Set<String> getPropertyNames() {
         Map<String, String> props = propertiesMap.get();
 
-        if( props == null ){
+        if (props == null) {
             return new HashSet<>();
         }
 
