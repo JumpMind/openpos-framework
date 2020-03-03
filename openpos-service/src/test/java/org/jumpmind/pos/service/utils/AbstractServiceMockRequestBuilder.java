@@ -2,6 +2,7 @@ package org.jumpmind.pos.service.utils;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 
@@ -11,9 +12,11 @@ public abstract class AbstractServiceMockRequestBuilder {
     protected Object content;
     protected String deviceId;
     protected String appId;
+    protected ObjectMapper mapper;
 
     public AbstractServiceMockRequestBuilder (String url){
         this.url = url;
+        this.mapper = new ObjectMapper();
     }
 
     public AbstractServiceMockRequestBuilder content(Object content){
@@ -31,11 +34,14 @@ public abstract class AbstractServiceMockRequestBuilder {
         return this;
     }
 
+    public AbstractServiceMockRequestBuilder mapper(ObjectMapper mapper) {
+        this.mapper = mapper;
+        return this;
+    }
+
     public abstract MockHttpServletRequestBuilder build() throws JsonProcessingException;
 
     protected void appendBaseParameters(MockHttpServletRequestBuilder request ) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-
         request.contentType(MediaType.APPLICATION_JSON)
                .accept(MediaType.APPLICATION_JSON)
                .content( mapper.writerWithDefaultPrettyPrinter().writeValueAsString(content));
