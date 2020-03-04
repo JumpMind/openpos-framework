@@ -10,11 +10,34 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MockPOS {
+/**
+ * A developer tool for testing a printer with openpos capabilities.
+ */
+public class PrinterTester {
+
+    private static IOpenposPrinter createPrinter() {
+        Map<String, Object> settings = new HashMap<>();
+        settings.put("printerCommandLocations", "esc_p.properties,epson.properties");
+        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
+        settings.put("printWidth", "46");
+//        settings.put("usbVendorId", 0x04b8); // EPSON
+        settings.put("usbVendorId", 0x08a6); // TOSHIBA
+        settings.put("usbProductId", "ANY");
+
+
+        IOpenposPrinter printer = null;
+        try {
+            printer = (IOpenposPrinter) Class.forName(EscpPOSPrinter.class.getName()).newInstance();
+            printer.init(settings);
+            printer.open("printerName", null);
+        } catch (Exception ex) {
+            ex.printStackTrace();;
+        }
+        return printer;
+    }
 
     public static void main(String[] args) throws Exception {
-
-
+        
         try {
             IOpenposPrinter printer = createPrinter();
 
@@ -24,13 +47,6 @@ public class MockPOS {
             printer.printNormal(0, printer.getCommand(PrinterCommands.FORMAT_NORMAL));
             printer.printNormal(0, printer.getCommand(PrinterCommands.ALIGN_LEFT));
             printer.printNormal(0, printer.getCommand(PrinterCommands.LINE_SPACING_SINGLE));
-
-//            printer.printNormal(0, "12345678901234567890123456789012345678901234567890\n");
-//            printer.close();
-//            if (true) {
-//                return;
-//            }
-
 
             printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
 
@@ -156,30 +172,6 @@ public class MockPOS {
                 }
             }
         }
-    }
-
-    private static IOpenposPrinter createPrinter() {
-        Map<String, Object> settings = new HashMap<>();
-//        entry.addProperty(JposEntry.LOGICAL_NAME_PROP_NAME, "EpsonPrinterUSB");
-//        entry.addProperty(JposEntry.SERVICE_CLASS_PROP_NAME, EscpPOSPrinter.class.getName());
-//        entry.addProperty(JposEntry.SI_FACTORY_CLASS_PROP_NAME, EscpServiceInstanceFactory.class.getName());
-        settings.put("printerCommandLocations", "esc_p.properties,epson.properties");
-        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
-        settings.put("printWidth", "46");
-//        settings.put("usbVendorId", 0x04b8); // EPSON
-        settings.put("usbVendorId", 0x08a6); // TOSHIBA
-        settings.put("usbProductId", "ANY");
-
-
-        IOpenposPrinter printer = null;
-        try {
-            printer = (IOpenposPrinter) Class.forName(EscpPOSPrinter.class.getName()).newInstance();
-            printer.init(settings);
-            printer.open("printerName", null);
-        } catch (Exception ex) {
-            ex.printStackTrace();;
-        }
-        return printer;
     }
 
     // TODO temp.
