@@ -64,6 +64,24 @@ public class TestJposRegPopulator extends AbstractRegPopulator {
                 }
             {
                 JposEntry entry = new SimpleEntry();
+                entry.addProperty(JposEntry.LOGICAL_NAME_PROP_NAME, "EpsonPrinterUSB");
+                entry.addProperty(JposEntry.SERVICE_CLASS_PROP_NAME, EscpPOSPrinter.class.getName());
+                entry.addProperty(JposEntry.SI_FACTORY_CLASS_PROP_NAME, EscpServiceInstanceFactory.class.getName());
+                entry.addProperty("PrinterCommandLocations", "esc_p.properties,epson.properties");
+                entry.addProperty("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
+                entry.addProperty("printWidth", "46");
+                entry.addProperty("usbVendorId", "0x04b8");
+                entry.addProperty("usbProductId", "ANY");
+
+
+
+//                entry.add(entry.createProp("hostname", "192.168.42.197", String.class));
+
+
+                entries.put(entry.getLogicalName(), entry);
+            }
+            {
+                JposEntry entry = new SimpleEntry();
                 entry.addProperty(JposEntry.LOGICAL_NAME_PROP_NAME, "BrotherPrinter");
                 entry.addProperty(JposEntry.SERVICE_CLASS_PROP_NAME, EscpPOSPrinter.class.getName());
                 entry.addProperty(JposEntry.SI_FACTORY_CLASS_PROP_NAME, EscpServiceInstanceFactory.class.getName());
