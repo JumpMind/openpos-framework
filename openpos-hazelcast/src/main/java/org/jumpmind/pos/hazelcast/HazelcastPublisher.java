@@ -18,11 +18,15 @@ public class HazelcastPublisher implements ApplicationListener<AppEvent> {
     @Autowired
     HazelcastInstance hz;
 
+    @Autowired
+    DeviceStatusMapHazelcastImpl deviceStatusMap;
+
     @EventListener
     public void onApplicationEvent(AppEvent event) {
         if (!event.isRemote()) {
             log.info("{} received an event {} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), event.getSource());
             // then share it with the world
+            deviceStatusMap.update(event);
             ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
             topic.publish(event);
         } else {

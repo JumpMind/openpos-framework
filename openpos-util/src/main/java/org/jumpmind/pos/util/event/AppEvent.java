@@ -1,8 +1,6 @@
 package org.jumpmind.pos.util.event;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import java.io.Serializable;
@@ -10,6 +8,7 @@ import java.io.Serializable;
 @ToString
 @Data
 public class AppEvent extends Event implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     String deviceId;
     String appId;
