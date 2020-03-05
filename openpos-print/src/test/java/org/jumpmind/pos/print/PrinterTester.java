@@ -17,8 +17,11 @@ public class PrinterTester {
 
     private static IOpenposPrinter createPrinter() {
         Map<String, Object> settings = new HashMap<>();
-        settings.put("printerCommandLocations", "esc_p.properties,epson.properties");
-        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
+        settings.put("printerCommandLocations", "esc_p.properties,toshiba_esc_p.properties");
+//        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
+        settings.put("connectionClass", "org.jumpmind.pos.print.SocketConnectionFactory");
+        settings.put("hostName", "192.168.42.181");
+        settings.put("port", "9100");
         settings.put("printWidth", "46");
 //        settings.put("usbVendorId", 0x04b8); // EPSON
         settings.put("usbVendorId", 0x08a6); // TOSHIBA
