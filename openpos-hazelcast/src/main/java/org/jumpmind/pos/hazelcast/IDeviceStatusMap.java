@@ -10,7 +10,7 @@ public interface IDeviceStatusMap {
      * Retrieves the map.  Any changes to the map will be distributed to all openpos cluster members.
      * @return The distributed Device status map, keyed by Device ID;
      */
-    ConcurrentMap<String, DeviceStatus> map();
+    ConcurrentMap<String, DeviceStatus> get();
 
     // ConcurrentMap<String, String> map2();
 

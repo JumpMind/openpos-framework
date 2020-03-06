@@ -21,7 +21,7 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
     HazelcastInstance hz;
 
     @Override
-    public ConcurrentMap<String, DeviceStatus> map() {
+    public ConcurrentMap<String, DeviceStatus> get() {
         return mapProvider.getMap(DEVICES_MAP_NAME, String.class, DeviceStatus.class);
     }
 
@@ -31,7 +31,7 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
 
     @Override
     public void touch(String deviceId) {
-        map().compute(deviceId, (k, deviceStatus) -> {
+        get().compute(deviceId, (k, deviceStatus) -> {
             DeviceStatus status = deviceStatus;
             if (status != null) {
                 status = deviceStatus.shallowCopy();
@@ -54,7 +54,7 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
         });
          */
 
-        map().compute(event.getDeviceId(), (k, deviceStatus) -> {
+        get().compute(event.getDeviceId(), (k, deviceStatus) -> {
             DeviceStatus status = deviceStatus;
             if (status == null) {
                 status = new DeviceStatus(event.getDeviceId(), hz.getLocalEndpoint().getUuid().toString());
