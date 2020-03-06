@@ -23,7 +23,6 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
         return mapProvider.getMap(DEVICES_MAP_NAME, String.class, DeviceStatus.class);
     }
 
-    @Override
     public ConcurrentMap<String, String> map2() {
         return mapProvider.getMap("string-map", String.class, String.class);
     }
@@ -45,12 +44,14 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
 
     @Override
     public void update(AppEvent event) {
+        /*
         map2().compute(event.getDeviceId(), (k, v) -> {
             String status = v;
             status = System.currentTimeMillis() + "";
             return status;
         });
-/*
+         */
+
         map().compute(event.getDeviceId(), (k, deviceStatus) -> {
             DeviceStatus status = deviceStatus;
             if (status == null) {
@@ -62,7 +63,6 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
             status.setLatestEvent(event);
             return status;
         });
-*/
     }
 
 }

@@ -12,7 +12,7 @@ public interface IDeviceStatusMap {
      */
     ConcurrentMap<String, DeviceStatus> map();
 
-    ConcurrentMap<String, String> map2();
+    // ConcurrentMap<String, String> map2();
 
     /**
      * Updates the lastActiveTimeMs for the device.
