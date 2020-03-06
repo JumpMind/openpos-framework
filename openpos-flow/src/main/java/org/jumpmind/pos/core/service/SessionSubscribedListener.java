@@ -14,12 +14,12 @@ import org.jumpmind.pos.server.config.SessionSubscribedEvent;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.server.service.SessionConnectListener;
 import org.jumpmind.pos.util.Versions;
+import org.jumpmind.pos.util.event.EventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
@@ -54,7 +54,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
     Versions versions;
     
     @Autowired
-    private ApplicationEventPublisher applicationEventPublisher;
+    EventPublisher eventPublisher;
 
 
     @Override
@@ -122,7 +122,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             stateManager.setClientContext(clientContext);
             stateManager.getApplicationState().getScope().setDeviceScope("device", sessionAuthTracker.getDeviceModel(sessionId));
 
-            applicationEventPublisher.publishEvent(new DeviceConnectedEvent(deviceId, appId));
+            eventPublisher.publish(new DeviceConnectedEvent(deviceId, appId));
             
             if (!created) {
                 stateManager.refreshScreen();

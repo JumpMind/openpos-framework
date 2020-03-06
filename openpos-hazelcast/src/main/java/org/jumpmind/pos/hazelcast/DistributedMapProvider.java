@@ -1,13 +1,13 @@
 package org.jumpmind.pos.hazelcast;
 
 import com.hazelcast.core.HazelcastInstance;
-import com.hazelcast.map.IMap;
-import org.jumpmind.pos.core.device.DeviceStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import java.util.concurrent.ConcurrentMap;
 
 @Component
+@Profile("hazelcast")
 public class DistributedMapProvider {
     @Autowired
     HazelcastInstance hz;

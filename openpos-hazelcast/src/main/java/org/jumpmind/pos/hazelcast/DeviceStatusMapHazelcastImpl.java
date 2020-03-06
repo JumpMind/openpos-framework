@@ -4,11 +4,13 @@ import com.hazelcast.core.HazelcastInstance;
 import org.jumpmind.pos.core.device.DeviceStatus;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentMap;
 
 @Component
+@Profile("hazelcast")
 public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
     private static final String DEVICES_MAP_NAME = "devices-map";
 

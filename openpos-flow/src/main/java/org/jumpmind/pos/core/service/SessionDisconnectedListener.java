@@ -4,10 +4,10 @@ import org.jumpmind.pos.core.event.DeviceDisconnectedEvent;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.server.service.SessionConnectListener;
+import org.jumpmind.pos.util.event.EventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationListener;
 import org.springframework.messaging.Message;
 import org.springframework.stereotype.Component;
@@ -25,7 +25,7 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
     SessionConnectListener sessionAuthTracker;
 
     @Autowired
-    ApplicationEventPublisher applicationEventPublisher;
+    EventPublisher eventPublisher;
     
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {        
@@ -35,7 +35,7 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
         
         DeviceModel deviceModel = sessionAuthTracker.getDeviceModel(sessionId);
         
-        applicationEventPublisher.publishEvent(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId()));
+        eventPublisher.publish(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId()));
         
         stateManagerContainer.removeSessionIdVariables(sessionId);
         stateManagerContainer.setCurrentStateManager(null);
