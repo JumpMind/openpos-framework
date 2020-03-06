@@ -4,7 +4,7 @@ import org.jumpmind.pos.util.event.AppEvent;
 
 import lombok.ToString;
 
-@ToString
+@ToString(callSuper = true)
 public class DeviceConnectedEvent extends AppEvent {
 
     private static final long serialVersionUID = 1L;

@@ -24,13 +24,13 @@ public class HazelcastPublisher implements ApplicationListener<AppEvent> {
     @EventListener
     public void onApplicationEvent(AppEvent event) {
         if (!event.isRemote()) {
-            log.info("{} received an event {} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), event.getSource());
+            log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), event.hashCode(), event.getSource());
             // then share it with the world
             deviceStatusMap.update(event);
             ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
             topic.publish(event);
         } else {
-            log.info("{} received an event {} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), event.getSource());
+            log.info("{} received an event {},{} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), event.hashCode(), event.getSource());
 
         }
     }
