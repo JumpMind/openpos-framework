@@ -11,4 +11,16 @@ public class DeviceNotFoundException extends DevicesException {
     public DeviceNotFoundException() {
         super("A device for this request could not be found");
     }
+
+    public DeviceNotFoundException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DeviceNotFoundException(String message) {
+        super(message);
+    }
+
+    public DeviceNotFoundException(Throwable cause) {
+        super(cause);
+    }
 }
