@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.apache.log4j.Logger;
 import org.jumpmind.pos.core.flow.IState;
+import org.jumpmind.pos.core.flow.ITransitionStep;
 import org.jumpmind.pos.core.flow.OnArrive;
 import org.jumpmind.pos.util.event.OnEvent;
 import org.jumpmind.pos.core.flow.OnGlobalAction;
@@ -39,18 +40,31 @@ public class FlowUtil {
         return state.getSimpleName();
     }
 
-    public static boolean isState(Class<? extends Object> clazz) {
+    public static boolean isState(Class<?> clazz) {
         try {
             List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnArrive.class, true, true);
-            if ((IState.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(IState.class)) || (methods != null && !methods.isEmpty())) {
+            if ((IState.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(IState.class)) || (methods != null && !methods.isEmpty())
+                    || ITransitionStep.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(ITransitionStep.class)) {
                 return true;
             } else {
                 return false;
             }
         } catch (Throwable ex) {
-            log.debug("Failed to check isState on clazz " + clazz, ex);
+            log.debug("Failed to check if class has @OnArrive annotation " + clazz, ex);
             return false;
         }
+    }
+
+    public static boolean isTransitionStep(Class<?> clazz) {
+        if (ITransitionStep.class.isAssignableFrom(clazz) || clazz.isAssignableFrom(ITransitionStep.class)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static boolean isFlowClass(Class<? extends Object> clazz ) {
+        return isState(clazz) || isTransitionStep(clazz);
     }
 
     public static boolean isGlobalActionHandler(Class<? extends Object> clazz) {
@@ -80,5 +94,6 @@ public class FlowUtil {
             return false;
         }
     }
+
 
 }

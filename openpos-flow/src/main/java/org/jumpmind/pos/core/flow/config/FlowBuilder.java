@@ -58,8 +58,8 @@ public class FlowBuilder implements IFlowBuilder {
             builder.withTransition(returnAction, CompleteState.class);
         }
         flowConfig.setInitialState(builder.build());
-        SubTransition subTransition = new SubTransition(returnActions, flowConfig);
-        stateConfig.getActionToSubStateMapping().put(actionName, subTransition);
+        SubFlowConfig subFlowConfig = new SubFlowConfig(returnActions, flowConfig);
+        stateConfig.getActionToSubStateMapping().put(actionName, subFlowConfig);
         return this;
     }
 
@@ -73,8 +73,8 @@ public class FlowBuilder implements IFlowBuilder {
             }
         }
         
-        SubTransition subTransition = new SubTransition(returnActions, flowConfig);
-        stateConfig.getActionToSubStateMapping().put(actionName, subTransition);
+        SubFlowConfig subFlowConfig = new SubFlowConfig(returnActions, flowConfig);
+        stateConfig.getActionToSubStateMapping().put(actionName, subFlowConfig);
         return this;
     }
 }

@@ -3,10 +3,13 @@ package org.jumpmind.pos.core.flow;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
+import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.flow.config.YamlConfigProvider;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
@@ -36,7 +39,7 @@ public class StateManagerTestUtils {
         TestUtil.setField(stateManager, "actionHandler", actionHandler);
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());
-        TestUtil.setField(stateManager, "transitionSteps", Arrays.asList(new TestTransitionStepCancel(), new TestTransitionStepProceed()));
+        TestUtil.setField(stateManager, "transitionStepConfigs", Arrays.asList(new TransitionStepConfig(TestTransitionStepCancel.class), new TransitionStepConfig(TestTransitionStepProceed.class)));
         TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
         TestUtil.setField(stateManager, "messageService", messageService);
 
@@ -46,5 +49,6 @@ public class StateManagerTestUtils {
         
         return stateManager;
     }
+
 
 }

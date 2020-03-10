@@ -26,4 +26,6 @@ export interface ISellItem extends IItem {
     orderItemLabels: {label: string, value: string} [];
     optionsLabel: string;
     isOrderItem: boolean;
+    isTender: boolean;
+    svgImage: boolean;
 }

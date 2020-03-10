@@ -1,0 +1,18 @@
+<app-bacon-strip class="sale-bacon-strip">
+    <div class="sale-outer">
+        <div *ngIf="!(isMobile | async)" class="sale-body">
+            <div class="sale-items-outer">
+                <app-transaction-history-part></app-transaction-history-part>
+                <app-sale-item-card-list class="sale-list-background"></app-sale-item-card-list>
+                <app-status-strip></app-status-strip>
+            </div>
+            <app-sale-total-panel></app-sale-total-panel>
+        </div>
+        <div *ngIf="(isMobile | async)" class="sale-body-mobile">
+            <app-transaction-history-part></app-transaction-history-part>
+            <app-mobile-loyalty-part class="sale-loyalty-mobile"></app-mobile-loyalty-part>
+            <app-mobile-sale-item-list class="sale-list-background-mobile"></app-mobile-sale-item-list>
+        </div>
+        <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>
+    </div>
+</app-bacon-strip>

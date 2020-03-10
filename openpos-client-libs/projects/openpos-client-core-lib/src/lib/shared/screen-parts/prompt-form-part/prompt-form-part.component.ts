@@ -38,11 +38,11 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
             this.screenData.validators.forEach(v => validators.push(this.validatorsService.getValidator(v.toString())));
         }
 
-        if (this.screenData.minLength) {
+        if (this.screenData.minLength !== null && this.screenData.minLength !== undefined) {
             validators.push(Validators.minLength(this.screenData.minLength));
         }
 
-        if (this.screenData.maxLength) {
+        if (this.screenData.maxLength !== null && this.screenData.maxLength !== undefined) {
             validators.push(Validators.maxLength(this.screenData.maxLength));
         }
 
@@ -52,11 +52,11 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
             }
         }
 
-        if (this.screenData.max) {
+        if (this.screenData.max !== null && this.screenData.max !== undefined) {
             validators.push(Validators.max(this.screenData.max));
         }
 
-        if (this.screenData.min) {
+        if (this.screenData.min !== null && this.screenData.min !== undefined) {
             validators.push(Validators.min(this.screenData.min));
         }
 

@@ -1,0 +1,18 @@
+@mixin transaction-history-part-theme($theme) {
+    $primary: map-get($theme, primary);
+    $contrast: mat-color($primary, default-contrast);
+    $background: map-get($mat-grey, 200);
+    $dark: map-get($mat-grey, 600);
+
+    app-transaction-history-part {
+
+        .transaction-history-outer {
+            border-bottom: 1px solid $dark;
+        }
+
+        .transaction-history-details {
+            color: $dark;
+        }
+    }
+
+}

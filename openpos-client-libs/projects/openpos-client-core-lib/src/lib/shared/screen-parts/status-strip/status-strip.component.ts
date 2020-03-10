@@ -24,7 +24,8 @@ export class StatusStripComponent extends ScreenPartComponent<StatusStripInterfa
     screenDataUpdated() {
         this.subscriptions.add(timer( 1000, 1000 ).subscribe( () => {
             if ( this.screenData.timestampBegin ) {
-                this.timer = (Date.now() - this.screenData.timestampBegin) / 1000;
+                const timestampBegin = this.screenData.timestampBegin;
+                this.timer = ((new Date(new Date().getTime() + new Date().getTimezoneOffset() * 60000)).getTime() - timestampBegin) / 1000;
             }
             this.date = Date.now();
         }));

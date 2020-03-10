@@ -29,6 +29,11 @@
             }
         }
 
+        .item-card-svg-image {
+            grid-area: 1/1/1/1;
+            padding-right: 16px;
+        }
+
         .item-card-image.collapsed {
             height: 50px;
         }
@@ -134,7 +139,7 @@
 
                     .giftReceipt {
                         grid-area: 1/1/1/1;
-                        padding-right:5px;
+                        padding-right: 5px;
                     }
 
                     .item-card-price {

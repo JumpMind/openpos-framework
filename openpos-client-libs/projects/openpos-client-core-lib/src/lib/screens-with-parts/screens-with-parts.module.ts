@@ -31,6 +31,8 @@ import { OptionsScreenComponent } from './options/options-screen.component';
 import { OptionsScreenDialogComponent } from './options/options-screen-dialog.component';
 import { MobileSaleOrdersSheetComponent } from './sale/mobile-sale-orders-sheet/mobile-sale-orders-sheet.component';
 import {ErrorDialogComponent} from "./error-dialog/error-dialog.component";
+import { TransactionSearchComponent } from './transaction-search/transaction-search.component';
+import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -49,7 +51,9 @@ const screens = [
     SignatureCaptureComponent,
     DynamicFormComponent,
     OptionsScreenComponent,
-    OptionsScreenDialogComponent
+    OptionsScreenDialogComponent,
+    TransactionSearchComponent,
+    TransactionDetailsComponent
 ];
 
 const dialogs = [

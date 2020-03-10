@@ -51,7 +51,6 @@ public class YamlFlowConfigFileLoader {
 
         List<YamlFlowConfig> yamlFlowConfigs = new ArrayList<>();
 
-
         Map<String, Object> yamlDoc = (Map<String, Object>) yaml.load(inputStream);
 
         for (String flowName : yamlDoc.keySet()) {
@@ -93,22 +92,9 @@ public class YamlFlowConfigFileLoader {
             } else {
                 Map<String, Object> nestedStateConfig = (Map<String, Object>) stateReferenceOrConfig;
                 if (nestedStateConfig.containsKey("subflow")) {
-                    String subFlowRefOrState = (String) nestedStateConfig.get("subflow");
-                    Map<String, String> configScope = (Map<String, String>) nestedStateConfig.get("ConfigScope");
-
-                    YamlStateConfig subStateConfig = new YamlStateConfig(subFlowRefOrState);
-                    subStateConfig.setSubTransition(true);
-
-                    List<String> returnActions = getReturnActions(nestedStateConfig);
-                    subStateConfig.setReturnActions(returnActions);
-
-                    if (configScope != null) {
-                        subStateConfig.setConfigScope(configScope);
-                    }
+                    YamlStateConfig subStateConfig = loadSubstateReference(actionName, nestedStateConfig);
                     flowConfig.getFlowStateConfigs().add(subStateConfig);
-
                     currentStateConfig.getActionToStateConfigs().put(actionName, subStateConfig);
-
                 } else {
                     String nestedStateName = (String) nestedStateConfig.keySet().toArray()[0];
                     YamlStateConfig inlineState = new YamlStateConfig(nestedStateName);
@@ -119,16 +105,31 @@ public class YamlFlowConfigFileLoader {
                         throw new FlowException("Malformed yml state flow config. "
                                 + "We expected actions on nested state but didn't find any. Nested state name: " + nestedStateName + " related to actoin name: " + actionName);
                     }
-//                    if (inlineState.isConcreteStateDefinition()) { // the concrete state defs are added a top level, and we'll preverse the 
-//                        // action: inline state, as an action: reference here.
-//                        currentStateConfig.getActionToStateConfigs().put(actionName, new YamlStateConfig(nestedStateName));
-//                    } else {                        
                     currentStateConfig.getActionToStateConfigs().put(actionName, inlineState);
-//                    }
                     // TODO here we are dropping the action name / mapping to the inlined 
                 }
             }
         }
+    }
+
+    public YamlStateConfig loadSubstateReference(String actionName, Map<String, Object> nestedStateConfig) {
+        String subFlowRefOrState = (String) nestedStateConfig.get("subflow");
+        if (subFlowRefOrState == null) {
+            throw new FlowException("A subflow reference is required here. e.g.  {subflow: ItemInquiryFlow, ReturnAction: ItemInquiryFinished}");
+        }
+        Map<String, String> configScope = (Map<String, String>) nestedStateConfig.get("ConfigScope");
+
+        YamlStateConfig subStateConfig = new YamlStateConfig(subFlowRefOrState);
+        subStateConfig.setSubTransition(true);
+
+        List<String> returnActions = getReturnActions(nestedStateConfig);
+        subStateConfig.setReturnActions(returnActions);
+
+        if (configScope != null) {
+            subStateConfig.setConfigScope(configScope);
+        }
+
+        return subStateConfig;
     }
 
     protected List<String> getReturnActions(Map<String, Object> nestedStateConfig) {

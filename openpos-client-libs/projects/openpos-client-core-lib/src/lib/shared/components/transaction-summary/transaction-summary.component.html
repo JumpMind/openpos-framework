@@ -1,0 +1,58 @@
+<div *ngIf="transactionSummary" class="transaction-summary-outer">
+    <app-icon *ngIf="transactionSummary.icon" [iconName]="transactionSummary.icon" iconClass="mat-64"></app-icon>
+
+    <div class="summary-left-side">
+        <div>
+            <span *ngIf="transactionSummary.labels"
+                class="summary-label">{{transactionSummary.labels.sequenceNumber}}</span>
+            <span>{{transactionSummary.sequenceNumber}}</span>
+        </div>
+        <div>
+            <span *ngIf="transactionSummary.labels"
+                class="summary-label">{{transactionSummary.labels.customerName}}</span>
+            <span>{{transactionSummary.customerName}}</span>
+        </div>
+        <div>
+            <span>{{transactionSummary.items}}</span>
+            <span *ngIf="transactionSummary.labels"
+                class="summary-items-label">{{transactionSummary.labels.items}}</span>
+        </div>
+    </div>
+
+    <div class="summary-right-side">
+        <div class="summary-details">
+            <div class="summary-detail-column">
+                <div>
+                    <span *ngIf="transactionSummary.labels"
+                        class="summary-label">{{transactionSummary.labels.transactionDate}}:</span>
+                    <span>{{transactionSummary.transactionDate}}</span>
+                </div>
+                <div>
+                    <span *ngIf="transactionSummary.labels"
+                        class="summary-label">{{transactionSummary.labels.username}}:</span>
+                    <span>{{transactionSummary.username}}</span>
+                </div>
+            </div>
+            <div class="summary-detail-column">
+                <div>
+                    <span *ngIf="transactionSummary.labels"
+                        class="summary-label">{{transactionSummary.labels.deviceId}}:</span>
+                    <span>{{transactionSummary.deviceId}}</span>
+                </div>
+                <div>
+                    <span *ngIf="transactionSummary.labels"
+                        class="summary-label">{{transactionSummary.labels.storeId}}:</span>
+                    <span>{{transactionSummary.storeId}}</span>
+                </div>
+            </div>
+            <app-currency-text [amountText]="transactionSummary.total" class="summary-total"></app-currency-text>
+        </div>
+        <div class="transaction-buttons">
+            <button *ngFor="let button of transactionSummary.actions" mat-button color="primary"
+                class="transaction-button" (click)="onClick(button)">
+                <span class="transaction-button-text">{{button.title}}</span>
+                <app-icon [iconName]="button.icon" iconClass="mat-24"></app-icon>
+            </button>
+        </div>
+    </div>
+</div>

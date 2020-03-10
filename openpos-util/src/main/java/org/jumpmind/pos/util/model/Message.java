@@ -40,8 +40,8 @@ public class Message implements Serializable {
         return this.optionalProperties.containsKey(name);
     }
 
-    public Object get(String name) {
-        return optionalProperties.get(name);
+    public <T> T get(String name) {
+        return (T)optionalProperties.get(name);
     }
 
     public void clearAdditionalProperties() {

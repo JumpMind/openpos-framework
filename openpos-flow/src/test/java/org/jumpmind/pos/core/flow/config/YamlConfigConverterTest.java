@@ -59,7 +59,7 @@ public class YamlConfigConverterTest {
             assertEquals(initialState.getActionToStateMapping().get("GotoInlineState"), InlineState.class);
             assertEquals(initialState.getActionToStateMapping().get("GotoNestedInlineState"), InlineState2.class);
             {                
-                SubTransition substateClassTestStateTransition = initialState.getActionToSubStateMapping().get("GotoSubstateClass"); 
+                SubFlowConfig substateClassTestStateTransition = initialState.getActionToSubStateMapping().get("GotoSubstateClass");
                 assertArrayEquals(new String[] {"SubstateClassReturnAction"}, substateClassTestStateTransition.getReturnActionNames());
                 FlowConfig subFlowConfig = substateClassTestStateTransition.getSubFlowConfig();
                 assertEquals(SubstateClassTestState.class, subFlowConfig.getInitialState().getStateClass());
@@ -67,7 +67,7 @@ public class YamlConfigConverterTest {
                 assertEquals("value2", subFlowConfig.getConfigScope().get("testKey2"));
             }
             {                
-                SubTransition substateFlowTransition = initialState.getActionToSubStateMapping().get("GotoSubstateFlow"); 
+                SubFlowConfig substateFlowTransition = initialState.getActionToSubStateMapping().get("GotoSubstateFlow");
                 assertArrayEquals(new String[] {"SubstateFlowReturnAction"}, substateFlowTransition.getReturnActionNames());
                 FlowConfig subFlowConfig = substateFlowTransition.getSubFlowConfig();
                 assertEquals(InitialState2.class, subFlowConfig.getInitialState().getStateClass());
@@ -97,7 +97,7 @@ public class YamlConfigConverterTest {
                 assertEquals(InlineState.class, firstLevelState.getActionToStateMapping().get("GotoInlineState"));
                 assertEquals(InlineState2.class, firstLevelState.getActionToStateMapping().get("GotoNestedInlineState"));
                 {                
-                    SubTransition substateClassTestStateTransition = firstLevelState.getActionToSubStateMapping().get("GotoSubstateClass"); 
+                    SubFlowConfig substateClassTestStateTransition = firstLevelState.getActionToSubStateMapping().get("GotoSubstateClass");
                     assertArrayEquals(new String[] {"SubstateClassReturnAction", "SomeOtherAction"}, substateClassTestStateTransition.getReturnActionNames());
                     FlowConfig subFlowConfig = substateClassTestStateTransition.getSubFlowConfig();
                     assertEquals(SubstateClassTestState.class, subFlowConfig.getInitialState().getStateClass());
@@ -105,7 +105,7 @@ public class YamlConfigConverterTest {
                     assertEquals("value4", subFlowConfig.getConfigScope().get("testKey4"));                    
                 }
                 {                
-                    SubTransition substateFlowTransition = firstLevelState.getActionToSubStateMapping().get("GotoSubstateFlow"); 
+                    SubFlowConfig substateFlowTransition = firstLevelState.getActionToSubStateMapping().get("GotoSubstateFlow");
                     assertArrayEquals(new String[] {"SubstateFlowReturnAction"}, substateFlowTransition.getReturnActionNames());
                     FlowConfig subFlowConfig = substateFlowTransition.getSubFlowConfig();
                     assertEquals(InitialState2.class, subFlowConfig.getInitialState().getStateClass());

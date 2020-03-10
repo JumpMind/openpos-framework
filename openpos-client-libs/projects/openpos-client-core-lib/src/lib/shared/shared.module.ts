@@ -147,6 +147,8 @@ import { LocalizedDateNoTimePipe } from './pipes/localized-date-no-time.pipe';
 import { BasicBaconStripComponent } from './screen-parts/basic-bacon-strip/basic-bacon-strip.component';
 import { ButtonActionTimerComponent } from './components/button-action-timer/button-action-timer.component';
 import { ImageTextPanelComponent } from './screen-parts/image-text-panel/image-text-panel.component';
+import { TransactionSummaryComponent } from './components/transaction-summary/transaction-summary.component';
+import { TransactionHistoryPartComponent } from './screen-parts/transaction-history-part/transaction-history-part.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -176,6 +178,7 @@ const screenParts = [
     SearchExpandInputComponent,
     BasicBaconStripComponent,
     ImageTextPanelComponent,
+    TransactionHistoryPartComponent,
 ];
 
 const components = [
@@ -250,7 +253,8 @@ const components = [
     ContentCardComponent,
     OptionButtonComponent,
     OrderCardComponent,
-    ButtonActionTimerComponent
+    ButtonActionTimerComponent,
+    TransactionSummaryComponent
 ];
 
 const directives = [
@@ -302,7 +306,7 @@ const pipes = [
         ...components,
         ...screenParts,
         ...pipes,
-        BaconDrawerComponent
+        BaconDrawerComponent,
     ],
     entryComponents: [
         KebabMenuComponent,

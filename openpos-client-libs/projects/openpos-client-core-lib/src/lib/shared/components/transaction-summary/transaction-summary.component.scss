@@ -1,0 +1,59 @@
+@import "../../../styles/mixins/typography";
+
+.transaction-summary-outer {
+    margin: 0px 16px;
+    padding: 16px 0px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 8px;
+}
+
+.summary-left-side {
+    @extend %text-md;
+    display: grid;
+    grid-template-rows: auto auto auto;
+    gap: 8px;
+}
+
+.summary-right-side {
+    @extend %text-md;
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 8px;
+}
+
+.summary-details {
+    @extend %text-sm;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 16px;
+}
+
+.summary-detail-column {
+    display: grid;
+    grid-template-rows: auto auto;
+    gap: 16px;
+}
+
+.summary-total {
+    @extend %text-lg;
+    font-weight: bold;
+    text-align: end;
+}
+
+.summary-label {
+    padding-right: 4px;
+}
+
+.summary-items-label {
+    padding-left: 4px;
+}
+
+.transaction-button {
+    @extend %text-sm;
+    margin: 0px 4px;
+
+    .transaction-button-text {
+        margin-right: 8px;
+    }
+}

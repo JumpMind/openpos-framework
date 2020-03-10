@@ -1,19 +1,9 @@
 package org.jumpmind.pos.core.flow.config;
 
-import java.lang.reflect.Method;
-
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.reflect.MethodUtils;
-
-import org.jumpmind.pos.core.flow.CompleteState;
-import org.jumpmind.pos.core.flow.FlowException;
-import org.jumpmind.pos.core.flow.IState;
-import org.jumpmind.pos.core.flow.OnArrive;
+import org.jumpmind.pos.core.flow.*;
 import org.jumpmind.pos.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +13,7 @@ public class YamlConfigConverter {
     
     private static final Logger log = LoggerFactory.getLogger(YamlConfigConverter.class);
     
-    private static Map<String, Class<Object>> knownStateClasses;
+    private static Map<String, Class<Object>> knownFlowClasses;
 
     private static Map<String, Class<Object>> knownOnEventClasses;
     
@@ -100,10 +90,10 @@ public class YamlConfigConverter {
         StateConfig stateConfig = new StateConfig();
         stateConfig.setStateName(yamlStateConfig.getStateName());
         
-        Class<? extends Object> stateClass = resolveStateClass(yamlStateConfig, true);
+        Class<? extends Object> stateClass = resolveFlowClass(yamlStateConfig.getStateName(), true);
         
         if (stateClass != null) {
-            stateConfig.setStateClass(resolveStateClass(yamlStateConfig, true));            
+            stateConfig.setStateClass(resolveFlowClass(yamlStateConfig.getStateName(), true));
         } else {
             throw new FlowException("Failed to resolve state class for name from yaml: " + yamlStateConfig.getStateName());
         }
@@ -119,7 +109,7 @@ public class YamlConfigConverter {
             flowConfig.addGlobalTransitionOrActionHandler(actionName, actionToStateMapping.get(actionName));
         }
         
-        Map<String, SubTransition> actionToSubStateMapping = buildActionToSubStateMapping(yamlFlowConfigs, yamlStateConfig);
+        Map<String, SubFlowConfig> actionToSubStateMapping = buildActionToSubStateMapping(yamlFlowConfigs, yamlStateConfig);
         for (String actionName : actionToSubStateMapping.keySet()) {
             FlowConfig subFlowConfig = actionToSubStateMapping.get(actionName).getSubFlowConfig();
             flowConfig.addGlobalSubTransition(actionName, subFlowConfig);
@@ -132,7 +122,7 @@ public class YamlConfigConverter {
         for (String actionName : yamlStateConfig.getActionToStateConfigs().keySet()) {
             YamlStateConfig stateConfig = yamlStateConfig.getActionToStateConfigs().get(actionName);
             if (!stateConfig.isSubTransition()) {
-                Class<? extends Object> stateClass = resolveStateClass(stateConfig, true);
+                Class<? extends Object> stateClass = resolveFlowClass(stateConfig.getStateName(), true);
                 
                 if (stateClass != null) {                    
                     actionToStateMapping.put(actionName, stateClass);
@@ -146,41 +136,48 @@ public class YamlConfigConverter {
     }
     
     @SuppressWarnings("all")
-    protected Map<String, SubTransition> buildActionToSubStateMapping(List<YamlFlowConfig> yamlFlowConfigs, YamlStateConfig yamlStateConfig) {
-        Map<String, SubTransition> actionToSubStateMapping = new LinkedHashMap<>();
+    protected Map<String, SubFlowConfig> buildActionToSubStateMapping(List<YamlFlowConfig> yamlFlowConfigs, YamlStateConfig yamlStateConfig) {
+        Map<String, SubFlowConfig> actionToSubStateMapping = new LinkedHashMap<>();
         
         for (String actionName : yamlStateConfig.getActionToStateConfigs().keySet()) {
             YamlStateConfig stateConfig = yamlStateConfig.getActionToStateConfigs().get(actionName);
             if (stateConfig.isSubTransition()) {
-                SubTransition subTransition = new SubTransition();
-                
-                YamlFlowConfig yamlFlowConfig = findFlowByName(stateConfig.getStateName(), yamlFlowConfigs);
-                if (yamlFlowConfig != null) {
-                    FlowConfig flowConfig = convertToFlowConfig(yamlFlowConfigs, yamlFlowConfig);
-                    subTransition.setSubFlowConfig(flowConfig);
-                } else {
-                    Class<? extends Object> stateClass = resolveStateClass(stateConfig, false);
-                    if (stateClass == null) {
-                        throw new FlowException("Failed to resolve substate reference to a subflow or a state class: " + 
-                                stateConfig.getStateName() + " referred to by action: " + actionName);
-                    }
-                    FlowConfig flowConfig = new FlowConfig(stateClass.getSimpleName());
-                    FlowBuilder builder = FlowBuilder.addState(stateClass);
-                    for (String returnAction : stateConfig.getReturnActions()) {
-                        builder.withTransition(returnAction, CompleteState.class);
-                    }
-                    flowConfig.setInitialState(builder.build());
-                    subTransition.setSubFlowConfig(flowConfig);
-                }
-                
-                subTransition.setReturnActionNames(stateConfig.getReturnActions().toArray(new String[] {}));
-                
-                subTransition.getSubFlowConfig().setConfigScope((Map)stateConfig.getConfigScope());
-                actionToSubStateMapping.put(actionName, subTransition);
+                SubFlowConfig subFlowConfig = convertSubflowReference(yamlFlowConfigs, actionName, stateConfig);
+                actionToSubStateMapping.put(actionName, subFlowConfig);
             }
         }
         
         return actionToSubStateMapping;
+    }
+
+    private SubFlowConfig convertSubflowReference(List<YamlFlowConfig> allYamlFlowConfigs, String actionName, YamlStateConfig stateConfig) {
+        SubFlowConfig subFlowConfig = new SubFlowConfig();
+
+        YamlFlowConfig yamlFlowConfig = findFlowByName(stateConfig.getStateName(), allYamlFlowConfigs);
+        if (yamlFlowConfig != null) {
+            FlowConfig flowConfig = convertToFlowConfig(allYamlFlowConfigs, yamlFlowConfig);
+            subFlowConfig.setSubFlowConfig(flowConfig);
+        } else {
+            Class<? extends Object> stateClass = resolveFlowClass(stateConfig.getStateName(), false);
+            if (stateClass == null) {
+                throw new FlowException("Failed to resolve substate reference to a subflow or a state class: " +
+                        stateConfig.getStateName() + " referred to by action: " + actionName);
+            }
+            FlowConfig flowConfig = new FlowConfig(stateClass.getSimpleName());
+            FlowBuilder builder = FlowBuilder.addState(stateClass);
+            for (String returnAction : stateConfig.getReturnActions()) {
+                builder.withTransition(returnAction, CompleteState.class);
+            }
+            flowConfig.setInitialState(builder.build());
+            subFlowConfig.setSubFlowConfig(flowConfig);
+        }
+
+        subFlowConfig.setReturnActionNames(stateConfig.getReturnActions().toArray(new String[] {}));
+
+        subFlowConfig.getSubFlowConfig().setConfigScope((Map)stateConfig.getConfigScope());
+
+        return subFlowConfig;
+
     }
 
     protected YamlFlowConfig findFlowByName(String stateName, List<YamlFlowConfig> yamlFlowConfigs) {
@@ -189,21 +186,21 @@ public class YamlConfigConverter {
     }
 
     @SuppressWarnings("rawtypes")
-    protected Class<? extends Object> resolveStateClass(YamlStateConfig yamlStateConfig, boolean allowGlobalActionHandler) {
+    protected Class<? extends Object> resolveFlowClass(String name, boolean allowGlobalActionHandler) {
         
-        if (knownStateClasses == null) {
+        if (knownFlowClasses == null) {
 
-            List<Class<Object>> knownStateClassList = ClassUtils.getClassesForPackageAndType("org.jumpmind.pos", Object.class);
+            List<Class<Object>> knownFlowClassList = ClassUtils.getClassesForPackageAndType("org.jumpmind.pos", Object.class);
             if(additionalPackages != null) {
-                additionalPackages.forEach( p -> knownStateClassList.addAll( ClassUtils.getClassesForPackageAndType( p, Object.class)));
+                additionalPackages.forEach( p -> knownFlowClassList.addAll( ClassUtils.getClassesForPackageAndType( p, Object.class)));
             }
 
-            knownStateClasses = knownStateClassList.stream()
+            knownFlowClasses = knownFlowClassList.stream()
                     .filter(clazz -> filterStateClass(clazz, allowGlobalActionHandler))
                     .collect(Collectors.toMap(e -> ((Class)e).getSimpleName(), v -> v) );
         }
         
-        return knownStateClasses.get(yamlStateConfig.getStateName());
+        return knownFlowClasses.get(name);
     }
 
     protected Class<? extends Object> resolveOnEventClass(String simpleClassName) {
@@ -224,9 +221,9 @@ public class YamlConfigConverter {
 
     private boolean filterStateClass(Class<Object> clazz, boolean allowGlobalActionHandler) {
         if (allowGlobalActionHandler) {
-            return (FlowUtil.isState(clazz)) || FlowUtil.isGlobalActionHandler(clazz);
+            return (FlowUtil.isFlowClass(clazz)) || FlowUtil.isGlobalActionHandler(clazz);
         } else {
-            return FlowUtil.isState(clazz);
+            return FlowUtil.isFlowClass(clazz);
         }
     }
 
@@ -257,4 +254,33 @@ public class YamlConfigConverter {
         }
     }
 
+    public List<TransitionStepConfig> convertTransitionSteps(List<YamlTransitionStepConfig> yamlTransitionSteps, List<YamlFlowConfig> allYamlFlowConfigs) {
+        if (yamlTransitionSteps == null || yamlTransitionSteps.isEmpty()) {
+            return Collections.emptyList();
+        }
+
+        List<TransitionStepConfig> transitionSteps = new ArrayList<>(yamlTransitionSteps.size());
+
+        for (YamlTransitionStepConfig yamlTransitionStep : yamlTransitionSteps) {
+            TransitionStepConfig transitionStepConfig = new TransitionStepConfig();
+
+            Class<?> flowClass = resolveFlowClass(yamlTransitionStep.getTransitionStepName(), true);
+
+            if (FlowUtil.isTransitionStep((flowClass))) {
+                transitionStepConfig.setTransitionStepClass((Class<? extends ITransitionStep>) flowClass);
+
+                for (String actionName : yamlTransitionStep.getActionToStateConfigs().keySet()) {
+                    SubFlowConfig subflow = convertSubflowReference(allYamlFlowConfigs, actionName, yamlTransitionStep.getActionToStateConfigs().get(actionName));
+                }
+            } else {
+                throw new FlowException("Class for name '" + yamlTransitionStep.getTransitionStepName() +
+                        "' needs to implement ITransitionStep. Actual class: " + flowClass);
+            }
+
+            transitionSteps.add(transitionStepConfig);
+        }
+
+        return transitionSteps;
+
+    }
 }

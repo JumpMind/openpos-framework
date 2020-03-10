@@ -31,7 +31,7 @@ public class StateConfig {
     private String stateName;
     private Class<? extends Object> stateClass;
     private Map<String, Class<? extends Object>> actionToStateMapping = new HashMap<>();
-    private Map<String, SubTransition> actionToSubStateMapping = new HashMap<>();
+    private Map<String, SubFlowConfig> actionToSubStateMapping = new HashMap<>();
 
     public StateConfig() {
         actionToStateMapping.put("EndConverstation", CompleteState.class);
@@ -55,10 +55,10 @@ public class StateConfig {
     public void setActionToStateMapping(Map<String, Class<? extends Object>> actionToStateMapping) {
         this.actionToStateMapping = actionToStateMapping;
     }
-    public Map<String, SubTransition> getActionToSubStateMapping() {
+    public Map<String, SubFlowConfig> getActionToSubStateMapping() {
         return actionToSubStateMapping;
     }
-    public void setActionToSubStateMapping(Map<String, SubTransition> actionToSubStateMapping) {
+    public void setActionToSubStateMapping(Map<String, SubFlowConfig> actionToSubStateMapping) {
         this.actionToSubStateMapping = actionToSubStateMapping;
     }    
 

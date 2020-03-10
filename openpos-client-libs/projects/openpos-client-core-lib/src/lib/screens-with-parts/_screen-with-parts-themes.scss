@@ -6,6 +6,7 @@
 @import './tender/tender-theme';
 @import './item-detail/item-detail-theme';
 @import './return/return-theme';
+@import './transaction-search/transaction-search-theme';
 
 @mixin screen-with-parts-themes($theme){
     @include sale-theme($theme);
@@ -15,4 +16,5 @@
     @include tender-theme($theme);
     @include item-detail-theme($theme);
     @include return-theme($theme);
+    @include transaction-search-theme($theme);
 }

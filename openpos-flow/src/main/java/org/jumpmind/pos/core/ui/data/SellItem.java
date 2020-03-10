@@ -35,6 +35,8 @@ public class SellItem extends DefaultItem {
     private List<AdditionalLabel> orderItemLabels;
     private String imageUrl;
     private String optionsLabel;
+    private boolean isTender;
+    private boolean svgImage;
 
     /**
      * Put properties in this map if they are optional. When not set, they don't
@@ -268,6 +270,22 @@ public class SellItem extends DefaultItem {
             this.orderItemLabels = new ArrayList<>();
         }
         this.orderItemLabels.add(new AdditionalLabel(label, value));
+    }
+
+    public boolean getIsTender() {
+        return isTender;
+    }
+
+    public void setIsTender(boolean isTender) {
+        this.isTender = isTender;
+    }
+
+    public boolean isSvgImage() {
+        return svgImage;
+    }
+
+    public void setSvgImage(boolean svgImage) {
+        this.svgImage = svgImage;
     }
 
     public boolean matches(SellItem otherItem) {

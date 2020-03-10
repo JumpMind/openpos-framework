@@ -39,7 +39,7 @@ public class FlowConfig {
     @JsonIgnore
     private Map<String, Class<? extends Object>> actionToStateMapping = new HashMap<>();
     @JsonIgnore
-    private Map<String, SubTransition> actionToSubStateMapping = new HashMap<>();
+    private Map<String, SubFlowConfig> actionToSubStateMapping = new HashMap<>();
 
     private List<Class> eventHandlers = new ArrayList<>();
 
@@ -119,8 +119,8 @@ public class FlowConfig {
     }
 
     public void addGlobalSubTransition(String string, FlowConfig flowConfig) {
-        SubTransition subTransition = new SubTransition(null, flowConfig);
-        actionToSubStateMapping.put(string, subTransition);
+        SubFlowConfig subFlowConfig = new SubFlowConfig(null, flowConfig);
+        actionToSubStateMapping.put(string, subFlowConfig);
     }
 
     public Map<Class<? extends Object>, StateConfig> getStateConfigs() {
@@ -139,11 +139,11 @@ public class FlowConfig {
         this.actionToStateMapping = actionToStateMapping;
     }
 
-    public Map<String, SubTransition> getActionToSubStateMapping() {
+    public Map<String, SubFlowConfig> getActionToSubStateMapping() {
         return actionToSubStateMapping;
     }
 
-    public void setActionToSubStateMapping(Map<String, SubTransition> actionToSubStateMapping) {
+    public void setActionToSubStateMapping(Map<String, SubFlowConfig> actionToSubStateMapping) {
         this.actionToSubStateMapping = actionToSubStateMapping;
     }
 

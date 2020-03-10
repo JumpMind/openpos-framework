@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jumpmind.pos.core.flow.config.FlowConfig;
-import org.jumpmind.pos.core.flow.config.SubTransition;
+import org.jumpmind.pos.core.flow.config.SubFlowConfig;
 import org.jumpmind.pos.server.model.Action;
 
 public class StateContext {
@@ -13,7 +13,7 @@ public class StateContext {
     private Action action;
     private Object state;
     private Map<String, ScopeValue> flowScope = new HashMap<String, ScopeValue>(4);
-    private SubTransition subTransition;
+    private SubFlowConfig subFlowConfig;
     
     public StateContext() {
         
@@ -33,8 +33,8 @@ public class StateContext {
     }
     
     public boolean isSubstateReturnAction(String actionName) {
-        if (subTransition != null && subTransition.getReturnActionNames() != null) {
-            for (String returnActionName : subTransition.getReturnActionNames()) {
+        if (subFlowConfig != null && subFlowConfig.getReturnActionNames() != null) {
+            for (String returnActionName : subFlowConfig.getReturnActionNames()) {
                 if (returnActionName.equals(actionName)) {
                     return true;
                 }
@@ -44,9 +44,9 @@ public class StateContext {
     }
     
     public String getPrimarySubstateReturnAction() {
-        if (subTransition != null && subTransition.getReturnActionNames() != null
-                && subTransition.getReturnActionNames().length == 1) {
-            return subTransition.getReturnActionNames()[0];
+        if (subFlowConfig != null && subFlowConfig.getReturnActionNames() != null
+                && subFlowConfig.getReturnActionNames().length == 1) {
+            return subFlowConfig.getReturnActionNames()[0];
         } else {
             return null;
         }
@@ -93,12 +93,12 @@ public class StateContext {
     	flowScope.remove(name);
     }
 
-    public SubTransition getSubTransition() {
-        return subTransition;
+    public SubFlowConfig getSubFlowConfig() {
+        return subFlowConfig;
     }
 
-    public void setSubTransition(SubTransition subTransition) {
-        this.subTransition = subTransition;
+    public void setSubFlowConfig(SubFlowConfig subFlowConfig) {
+        this.subFlowConfig = subFlowConfig;
     }
 
     @Override

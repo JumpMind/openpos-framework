@@ -9,7 +9,9 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
@@ -42,6 +44,7 @@ import org.jumpmind.pos.core.flow.TestStates.TransitionInterceptionState;
 import org.jumpmind.pos.core.flow.TestStates.StateWithHandlerForTerminatingAction;
 import org.jumpmind.pos.core.flow.config.FlowBuilder;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
+import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.service.ScreenService;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
@@ -153,6 +156,7 @@ public class StateManagerTest {
         config.addGlobalTransitionOrActionHandler("RepostActionStateGotToSell", SellState.class);
         config.addGlobalTransitionOrActionHandler("TestTransitionProceed", HomeState.class);
         config.addGlobalTransitionOrActionHandler("TestTransitionCancel", HomeState.class);
+        config.addGlobalTransitionOrActionHandler("TestTransitionCancelWithQueuedAction", SellState.class);
         config.addGlobalTransitionOrActionHandler("SomeGlobalAction", GlobalActionHandler.class);
         config.addGlobalTransitionOrActionHandler("SomeGlobalActionWithException", GlobalActionHandlerWithException.class);
         config.addGlobalSubTransition("CustomerLookupGlobal", customerFlow);
@@ -169,13 +173,34 @@ public class StateManagerTest {
         TestUtil.setField(stateManager, "actionHandler", actionHandler);
         TestUtil.setField(stateManager, "injector", injector);
         TestUtil.setField(stateManager, "outjector", new Outjector());
-        TestUtil.setField(stateManager, "transitionSteps", Arrays.asList(new TestTransitionStepCancel(), new TestTransitionStepProceed()));
+
+        TestUtil.setField(stateManager, "transitionStepConfigs", buildTestTransitionSteps());
         TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
      
         stateManager.setErrorHandler(null);
     }
 
-    
+    private List<TransitionStepConfig> buildTestTransitionSteps() {
+        List<TransitionStepConfig> transitionSteps = new ArrayList<>();
+        {
+            TransitionStepConfig config = new TransitionStepConfig();
+            config.setTransitionStepClass(TestTransitionStepCancel.class);
+            transitionSteps.add(config);
+        }
+        {
+            TransitionStepConfig config = new TransitionStepConfig();
+            config.setTransitionStepClass(TestTransitionStepProceed.class);
+            transitionSteps.add(config);
+        }
+        {
+            TransitionStepConfig config = new TransitionStepConfig();
+            config.setTransitionStepClass(TestTransitionStepCancelWithQueuedAction.class);
+            transitionSteps.add(config);
+        }
+
+        return transitionSteps;
+    }
+
     @Test
     public void testSubStateTransitionBackToAnotherState() {
         stateManager.init("pos", "100-1");
@@ -559,6 +584,16 @@ public class StateManagerTest {
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
         stateManager.doAction("TestTransitionCancel");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
+    }
+
+    @Test
+    public void testTransitionCancelWithQueueAction() {
+        stateManager.init("pos", "100-1");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("Sell");
+        assertEquals(SellState.class, stateManager.getCurrentState().getClass());
+        stateManager.doAction("TestTransitionCancelWithQueuedAction");
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
     }
 
     // TODO: temp ignore this to see if it is the culprit for the hanging build

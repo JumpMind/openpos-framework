@@ -6,6 +6,8 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import org.jumpmind.pos.core.flow.config.SubFlowConfig;
+import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.server.model.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,30 +16,33 @@ public class Transition {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Logger logGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
-    private final StateManagerLogger stateManagerLog = new StateManagerLogger(logGraphical);    
+    private final StateManagerLogger stateManagerLog = new StateManagerLogger(logGraphical);
     
     private CountDownLatch latch;
 
     private List<? extends ITransitionStep> transitionSteps;
+    private List<TransitionStepConfig> transitionStepConfigs;
     private StateContext sourceStateContext;
     private Object targetState;
     private StateManager stateManager;
     private Action originalAction;
-    private TransitionResult transitionResult;
-    
+    private TransitionResult.TransitionResultCode transitionResult;
+    private Action queuedAction;
+
     private AtomicReference<ITransitionStep> currentTransitionStep = new AtomicReference<ITransitionStep>(null);
     private AtomicInteger stepIndex = new AtomicInteger(0);
     
-    public Transition(List<? extends ITransitionStep> transitionSteps, StateContext sourceStateContext, Object targetState) {
+    public Transition(List<TransitionStepConfig> transitionStepConfigs, StateContext sourceStateContext, Object targetState) {
         super();
-        this.transitionSteps = cloneSteps(transitionSteps);
+        this.transitionStepConfigs = transitionStepConfigs;
+        this.transitionSteps = createSteps(transitionStepConfigs);
         this.sourceStateContext = sourceStateContext;
         this.targetState = targetState;
         
         latch = new CountDownLatch(transitionSteps.size());
     }
 
-    public TransitionResult execute(StateManager stateManager, Action originalAction) {
+    public TransitionResult.TransitionResultCode execute(StateManager stateManager, Action originalAction) {
         this.stateManager = stateManager;
         this.originalAction = originalAction;
         proceed();
@@ -52,7 +57,7 @@ public class Transition {
     public void proceed() {
         if (afterLastStep()) {
             if (transitionResult == null) {
-                transitionResult = TransitionResult.PROCEED;
+                transitionResult = TransitionResult.TransitionResultCode.PROCEED;
             }
             stateManager.performOutjections(currentTransitionStep.get());
             latch.countDown();
@@ -108,10 +113,19 @@ public class Transition {
         
         return applicable;
     }
+
+    public void cancelAndQueueAction(String action) {
+        cancelAndQueueAction(new Action(action));
+    }
+
+    public void cancelAndQueueAction(Action action) {
+        queuedAction = action;
+        cancel();
+    }
     
     public void cancel() {
         log.info("Transition was canncelled by " + currentTransitionStep.get());
-        transitionResult = TransitionResult.CANCEL;
+        transitionResult = TransitionResult.TransitionResultCode.CANCEL;
         stepIndex.set(Integer.MAX_VALUE);
         while (latch.getCount() > 0) {            
             latch.countDown();
@@ -126,20 +140,19 @@ public class Transition {
         return stateManager;
     }
     
-    protected List<? extends ITransitionStep> cloneSteps(List<? extends ITransitionStep> steps) {
-        List<ITransitionStep> clonedSteps = new ArrayList<>(steps.size());
-        for (ITransitionStep step : steps) {
+    protected List<? extends ITransitionStep> createSteps(List<TransitionStepConfig> stepConfigs) {
+        List<ITransitionStep> steps = new ArrayList<>(stepConfigs.size());
+        for (TransitionStepConfig stepConfig : stepConfigs) {
             try {                
-                ITransitionStep clonedStep = step.getClass().newInstance();
-                clonedSteps.add(clonedStep);
+                ITransitionStep transitionStep = stepConfig.getTransitionStepClass().newInstance();
+                steps.add(transitionStep);
             } catch (Exception ex) {
-                throw new FlowException("Failed to clone step " + step, ex);
+                throw new FlowException("Failed to create step " + stepConfig.getTransitionStepClass(), ex);
             }
         }
         
-        return clonedSteps;
-    }    
-
+        return steps;
+    }
 
     public ITransitionStep getCurrentTransitionStep() {
         return currentTransitionStep.get();
@@ -161,4 +174,7 @@ public class Transition {
         return originalAction;
     }
 
+    public Action getQueuedAction() {
+        return queuedAction;
+    }
 }

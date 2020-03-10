@@ -1,0 +1,15 @@
+@mixin transaction-summary-theme($theme) {
+    $app-primary: mat-color(map-get($theme, primary));
+    $app-accent: mat-color(map-get($theme, accent));
+    $app-warn: mat-color(map-get($theme, warn));
+
+    $foreground: map-get($theme, foreground);
+    $background: map-get($theme, background);
+
+    app-transaction-summary {
+        .transaction-summary-outer {
+            border-bottom: solid 1px map_get($foreground, divider);
+        }
+    }
+
+}
