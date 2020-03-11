@@ -15,10 +15,16 @@ public class StateLifecycle {
     @SuppressWarnings("deprecation")
     public void executeArrive(StateManager stateManager, Object state, Action action) {
         try {
+            boolean arrivedInvoked = false;
             if (state instanceof IState) {
-                ((IState)state).arrive(action);  
+                ((IState)state).arrive(action);
+                arrivedInvoked = true;
             }
-            invokeArrive(stateManager, state, action);
+            arrivedInvoked |= invokeArrive(stateManager, state, action);
+
+            if (!arrivedInvoked) {
+                throw new FlowException("A state must have at least one @OnArrive method. state=" + state + " action=" + action);
+            }
         } catch (RuntimeException ex) {
             if (stateManager.getErrorHandler() != null) {
                 stateManager.getErrorHandler().handleError(stateManager, ex);
@@ -46,17 +52,21 @@ public class StateLifecycle {
         }
     }
     
-    protected void invokeArrive(StateManager stateManager, Object state, Action action) {
+    protected boolean invokeArrive(StateManager stateManager, Object state, Action action) {
         List<Method> methods = MethodUtils.getMethodsListWithAnnotation(state.getClass(), OnArrive.class, true, true);
+        boolean arrivedCalled = false;
         Set<String> called = new HashSet<>();
         if (methods != null && !methods.isEmpty()) {
             for (Method method : methods) {
                 if (!called.contains(method.getName())) {
                     invokeLifecyleMethod(state, action, method);
                     called.add(method.getName());
+                    arrivedCalled = true;
                 }
             }
         }
+
+        return arrivedCalled;
     }    
 
     protected void invokeLifecyleMethod(Object state, Action action, Method method) {

@@ -3,6 +3,7 @@ package org.jumpmind.pos.core.flow.config;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.jumpmind.pos.core.flow.*;
 import org.jumpmind.pos.util.ClassUtils;
 import org.slf4j.Logger;
@@ -127,7 +128,10 @@ public class YamlConfigConverter {
                 if (stateClass != null) {                    
                     actionToStateMapping.put(actionName, stateClass);
                 } else {                    
-                    throw new FlowException("Failed to resolve state class for name from yaml: \"" + yamlStateConfig.getStateName() + "\"");
+                    throw new FlowException("Failed to resolve state class for name from yaml: \"" + stateConfig.getStateName() +
+                            "\". Check that a class named \"" + stateConfig.getStateName() +"\" exists and that it has an @OnArrive method " +
+                            "and that is under one of the following packages: org.jumpmind.pos " +
+                            (!CollectionUtils.isEmpty(additionalPackages) ? " OR "+additionalPackages : ""));
                 }
             }
         }
@@ -189,7 +193,6 @@ public class YamlConfigConverter {
     protected Class<? extends Object> resolveFlowClass(String name, boolean allowGlobalActionHandler) {
         
         if (knownFlowClasses == null) {
-
             List<Class<Object>> knownFlowClassList = ClassUtils.getClassesForPackageAndType("org.jumpmind.pos", Object.class);
             if(additionalPackages != null) {
                 additionalPackages.forEach( p -> knownFlowClassList.addAll( ClassUtils.getClassesForPackageAndType( p, Object.class)));
