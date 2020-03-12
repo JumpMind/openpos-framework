@@ -138,7 +138,10 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
             return false;
         }
         String path = buildPath(method);
-        Object obj = endPointsByPath.get(path);
+        if (endPointsByPath == null) {
+            throw new PosServerException("endPointsByPath == null.  This class has not been fully initialized by Spring");
+        }
+            Object obj = endPointsByPath.get(path);
         ServiceSpecificConfig config = getSpecificConfig(method);
         EndpointSpecificConfig endConfig = null;
         if (obj != null) {
