@@ -15,16 +15,16 @@ import org.jumpmind.pos.persist.TableDef;
 @TableDef(name="extended_warranty_service")
 public class CarExtendedWarrantyServiceModel extends AbstractModel {
 
+    @Delegate
+    @CompositeDef
+    @JsonIgnore
+    ServiceDefn serviceDefn;
+
     @ColumnDef(primaryKey = true)
     String warrantyId;
 
     @ColumnDef
     int termInMonths;
-
-    @Delegate
-    @CompositeDef
-    @JsonIgnore
-    ServiceDefn serviceDefn;
 
     @ColumnDef
     String vin;

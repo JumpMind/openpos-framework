@@ -4,26 +4,45 @@ import jpos.JposException;
 import jpos.POSPrinter;
 import jpos.POSPrinterConst;
 import jpos.POSPrinterControl114;
+import jpos.config.JposEntry;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Map;
 
-public class MockPOS {
+/**
+ * A developer tool for testing a printer with openpos capabilities.
+ */
+public class PrinterTester {
+
+    private static IOpenposPrinter createPrinter() {
+        Map<String, Object> settings = new HashMap<>();
+        settings.put("printerCommandLocations", "esc_p.properties,toshiba_esc_p.properties");
+//        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
+        settings.put("connectionClass", "org.jumpmind.pos.print.SocketConnectionFactory");
+        settings.put("hostName", "192.168.42.181");
+        settings.put("port", "9100");
+        settings.put("printWidth", "46");
+//        settings.put("usbVendorId", 0x04b8); // EPSON
+        settings.put("usbVendorId", 0x08a6); // TOSHIBA
+        settings.put("usbProductId", "ANY");
+
+
+        IOpenposPrinter printer = null;
+        try {
+            printer = (IOpenposPrinter) Class.forName(EscpPOSPrinter.class.getName()).newInstance();
+            printer.init(settings);
+            printer.open("printerName", null);
+        } catch (Exception ex) {
+            ex.printStackTrace();;
+        }
+        return printer;
+    }
 
     public static void main(String[] args) throws Exception {
-
-
+        
         try {
-            POSPrinterControl114 jposPrinter = (jpos.POSPrinterControl114) new POSPrinter();
-
-            jposPrinter.open("EpsonPrinter");
-            jposPrinter.claim(100);
-
-            // grr...
-            Field sevice19Field = jposPrinter.getClass().getDeclaredField("service19");
-            sevice19Field.setAccessible(true);
-            IOpenposPrinter printer = (IOpenposPrinter) sevice19Field.get(jposPrinter);
-
-            printer.setDeviceEnabled(true);
+            IOpenposPrinter printer = createPrinter();
 
             // reset method.
             printer.printNormal(0, printer.getCommand(PrinterCommands.ESC_P_MODE));
@@ -31,19 +50,6 @@ public class MockPOS {
             printer.printNormal(0, printer.getCommand(PrinterCommands.FORMAT_NORMAL));
             printer.printNormal(0, printer.getCommand(PrinterCommands.ALIGN_LEFT));
             printer.printNormal(0, printer.getCommand(PrinterCommands.LINE_SPACING_SINGLE));
-
-
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/chris.png"));
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/chris.png"));
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/chris.png"));
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/chris.png"));
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/chris.png"));
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/chris.png"));
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/chris.png"));
-//
-//            printer.printNormal(0, "\n\n\n\n\n\n\n\n");
-//            printer.cutPaper(100);
-//            System.exit(0);
 
             printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
 
@@ -69,23 +75,27 @@ public class MockPOS {
             printer.printNormal(0, buffer.toString());
             buffer.setLength(0);
 
+            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/gift-receipt-header2.png"));
+            printer.printNormal(0, "\n\n");
             printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/items-divider.png"));
+            printer.printNormal(0, "\n\n");
 
             printer.printNormal(0, NORMAL);
             printer.printNormal(0, printer.getCommand(PrinterCommands.FONT_SIZE_MEDIUM));
             printer.printNormal(0, printer.getCommand(PrinterCommands.LINE_SPACING_SINGLE));
 
+// Toshiba: 42 chars wide.
             buffer.append("777777777 Item Affected by Tax      50.00 \n");
-            buffer.append("002900184 VETCO-SERVICES (T)        29.99 T\n");
+            buffer.append("002900184 VETCO-SERVICES (T)       29.99 T\n");
             buffer.append(BOLD + "  50% COUPON DISCOUNT You saved 30.00\n" + NORMAL);
-            buffer.append("002900184 VETCO-SERVICES (T)        59.99 T\n");
+            buffer.append("002900184 VETCO-SERVICES (T)       59.99 T\n");
 //            lineSpacing1AndHalf();
-            buffer.append("002900184 VETCO-SERVICES (T)        29.99 T\n\n");
+            buffer.append("002900184 VETCO-SERVICES (T)       29.99 T\n\n");
             //printer.printNormal(0, printer.getCommand(PrinterCommands.LINE_SPACING_1_AND_HALF));
             //lineSpacing1();
-            buffer.append("                   Subtotal          119.97\n");
+            buffer.append("                  Subtotal          119.97\n");
 //            lineSpacing1AndHalf();
-            buffer.append("          CA Sales Tax 6.0%            7.20\n\n");
+            buffer.append("         CA Sales Tax 6.0%            7.20\n\n");
             printer.printNormal(0, buffer.toString());
             buffer.setLength(0);
 
@@ -154,6 +164,7 @@ public class MockPOS {
 
             printer.printNormal(0, "\n\n\n\n\n\n");
             printer.cutPaper(100);
+            printer.close();
 
         } catch (Exception ex) {
             ex.printStackTrace();

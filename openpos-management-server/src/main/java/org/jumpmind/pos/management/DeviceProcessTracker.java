@@ -313,6 +313,9 @@ public class DeviceProcessTracker {
                                 DeviceProcessStatus.Running);
                     }
                     if (pi.getPid() != null) {
+                        if (dpi.getPid() == null) {
+                            log.info("Device Process '{}' pid is: {}", this.deviceId, pi.getPid());
+                        }
                         updateDeviceProcessStatus(this.deviceId, DeviceProcessStatus.Running, pi.getPid());
                     } else {
                         updateDeviceProcessStatus(this.deviceId, DeviceProcessStatus.Running);

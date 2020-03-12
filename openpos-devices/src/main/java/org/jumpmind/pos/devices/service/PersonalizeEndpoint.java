@@ -1,5 +1,6 @@
 package org.jumpmind.pos.devices.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.devices.model.DeviceModel;
@@ -27,6 +28,7 @@ import java.util.stream.StreamSupport;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+@Slf4j
 @Endpoint(path="/devices/personalize")
 public class PersonalizeEndpoint {
 
@@ -50,8 +52,9 @@ public class PersonalizeEndpoint {
         DeviceModel deviceModel;
 
         if(isNotBlank(deviceId) && isNotBlank(appId)){
-            // TODO add a configuration map of appIds that are allowed to share deviceIds. IE probabaly shouldn't allow a self-checkout share with pos
+            // TODO add a configuration map of appIds that are allowed to share deviceIds. IE probably shouldn't allow a self-checkout share with pos
             try{
+                log.info("Validating auth request of {} as {}", deviceId, appId);
                 String auth = devicesRepository.getDeviceAuth(request.getDeviceId(), request.getAppId());
 
                 if( !auth.equals(authToken)) {
@@ -59,6 +62,7 @@ public class PersonalizeEndpoint {
                 }
 
             } catch (DeviceNotFoundException ex){
+                log.info("Registering {} as {}", deviceId, appId);
                 // if device doesn't exist create a new unique code
                 authToken = UUID.randomUUID().toString();
                 devicesRepository.saveDeviceAuth(appId, deviceId, authToken);
