@@ -367,6 +367,10 @@ public class TestStates {
         
         boolean onAction1Invoked = false;
         boolean beforeActionInvoked = false;
+
+        @OnArrive
+        public void arrive() {
+        }
         
         @ActionHandler
         public void onAction1(Action action) {
@@ -400,6 +404,10 @@ public class TestStates {
         boolean beforeAction_AInvoked = false;
         boolean beforeAction_BInvoked = false;
         boolean beforeAction_CInvoked = false;
+
+        @OnArrive
+        public void arrive() {
+        }
         
         @ActionHandler
         public void onAction1(Action action) {
@@ -461,6 +469,10 @@ public class TestStates {
     public static class StateWithMultipleBeforeActionAndFailOnExceptionIsTrue extends StateWithMultipleBeforeActionMethods {
         boolean beforeAction_DInvoked = false;
 
+        @OnArrive
+        public void arrive() {
+        }
+
         @BeforeAction(order=0)
         public void onBeforeAnyAction_D(Action action) {
             assertEquals("Action1", action.getName());
@@ -502,6 +514,10 @@ public class TestStates {
     }
 
     public static class ExceptionOnDepartState {
+
+        @OnArrive
+        public void arrive() {
+        }
         
         @OnDepart
         public void depart() {
@@ -510,6 +526,10 @@ public class TestStates {
     }
     
     public static class ExceptionInActionHandlerState {
+        @OnArrive
+        public void arrive() {
+        }
+
         @ActionHandler
         public void onThrowsExceptionAction(Action action) {
             throw new RuntimeException("error in action handler");
@@ -523,6 +543,10 @@ public class TestStates {
 
         @In(scope = ScopeType.Device)
         public IStateManager stateManager;
+
+        @OnArrive
+        public void arrive() {
+        }
 
         @ActionHandler
         public void onTerminatingAction(Action action) {
