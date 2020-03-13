@@ -4,22 +4,19 @@ import com.hazelcast.config.Config;
 import com.hazelcast.internal.serialization.Data;
 import com.hazelcast.internal.serialization.SerializationService;
 import com.hazelcast.internal.serialization.impl.DefaultSerializationServiceBuilder;
-import com.hazelcast.internal.serialization.impl.ObjectDataOutputStream;
-import com.hazelcast.nio.ObjectDataOutput;
-import com.hazelcast.version.Version;
-import org.jumpmind.pos.UtilTestConfig;
 import org.jumpmind.pos.util.event.AppEvent;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes= {HazelcastTestConfig.class})
+@ContextConfiguration(classes= {HazelcastConfig.class})
+@ActiveProfiles("hazelcast")
 public class AppEventStreamSerializerTest {
 
     @Autowired
