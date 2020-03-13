@@ -44,11 +44,11 @@ public class SchemaDelegateTest {
         assertEquals(pkColumns[1].getName(),"EFFECTIVE_START_DATE");
         Column[] nonPKColumns = table.getNonPrimaryKeyColumns();
         assertEquals(nonPKColumns.length,11);
-        assertEquals(nonPKColumns[0].getName(),"TERM_IN_MONTHS");
-        assertEquals(nonPKColumns[1].getName(),"EFFECTIVE_END_DATE");
-        assertEquals(nonPKColumns[2].getName(),"ISO_CURRENCY_CODE");
-        assertEquals(nonPKColumns[3].getName(),"RETAIL_PRICE");
-        assertEquals(nonPKColumns[4].getName(),"COST");
+        assertEquals(nonPKColumns[0].getName(),"EFFECTIVE_END_DATE");
+        assertEquals(nonPKColumns[1].getName(),"ISO_CURRENCY_CODE");
+        assertEquals(nonPKColumns[2].getName(),"RETAIL_PRICE");
+        assertEquals(nonPKColumns[3].getName(),"COST");
+        assertEquals(nonPKColumns[4].getName(),"TERM_IN_MONTHS");
         assertEquals(nonPKColumns[5].getName(),"VIN");
         assertEquals(nonPKColumns[6].getName(),"CROSS_REF_FIELD");
     }

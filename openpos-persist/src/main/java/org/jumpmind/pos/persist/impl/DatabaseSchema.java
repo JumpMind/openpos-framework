@@ -295,7 +295,10 @@ public class DatabaseSchema {
                 if (isPrimaryKey(field)) {
                     metaData.addEntityIdFieldMetadata(field.getName(), new FieldMetaData(clazz,field,column));
                     metaData.addPrimaryKeyColumn(column);
-                    pkColumns.add(column);
+                    // We want parent PK columns first. Because of this reverse ordering,
+                    // primary key columns will appear in reverse order in the SQL from how they appear in the java
+                    // source file.
+                    pkColumns.add(0, column); // NOTE reverse ordering here.
                 } else {
                     columns.add(column);
                 }

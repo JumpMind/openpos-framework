@@ -42,6 +42,10 @@ public class MoneyCalculator {
     public static Money money(String currencyId, BigDecimal value) {
         return money(currencyId, value, RoundingMode.HALF_UP);
     }
+
+    public static Money money(String currencyId, String value) {
+        return money(currencyId, new BigDecimal(value));
+    }
     public static Money money(String currencyId, BigDecimal value, RoundingMode roundingMode) {
         return Money.of(CurrencyUnit.of(currencyId), value, roundingMode);
     }

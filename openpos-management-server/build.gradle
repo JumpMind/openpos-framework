@@ -1,3 +1,7 @@
+plugins {
+    id 'org.springframework.boot' version '2.1.3.RELEASE'
+}
+
 apply from: '../openpos-gradle/src/main/resources/java.gradle'
 apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 apply from: '../openpos-gradle/src/main/resources/spring.gradle'
@@ -13,5 +17,23 @@ dependencies {
 test {
     filter {
         includeTestsMatching 'org.jumpmind.pos.management.*'
+    }
+}
+
+task apiJar(type: Jar) {
+    classifier = "api"
+    from sourceSets.main.output
+}
+
+artifacts {
+    archives sourcesJar, bootJar, apiJar
+}
+
+// To launch local:
+// java -Dloader.path=./src/test/resources -Dspring.profiles.active=bltest -jar build/libs/openpos-management-server.jar
+bootJar {
+    mainClassName = 'org.jumpmind.pos.management.OpenposManagementServer'
+    manifest {
+        attributes 'Main-Class': 'org.springframework.boot.loader.PropertiesLauncher'
     }
 }

@@ -19,7 +19,7 @@ export class TransactionHistoryPartComponent extends ScreenPartComponent<ITransa
   }
 
   onClick(actionItem: IActionItem): void {
-    this.actionService.doAction(actionItem);
+    this.actionService.doAction(actionItem, this.screenData);
   }
 
 }

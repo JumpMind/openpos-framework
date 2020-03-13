@@ -18,10 +18,13 @@ public class SocketConnectionFactory implements IConnectionFactory {
     public OutputStream open(Map<String, Object> settings) {
         if (os == null) {
             String hostname = (String) settings.get("hostName");
-            Integer port = (Integer) settings.get("port");
+            Object portObject = settings.get("port");
+            int port = getInt(settings.get("port"), 9100);
+            int soTimeout = getInt(settings.get("soTimeout"), 2500);
             try {
                 log.info("Connecting to printer at {}:{}", hostname, port);
                 Socket socket = new Socket(hostname, port);
+                socket.setSoTimeout(soTimeout);
                 os = socket.getOutputStream();
                 log.info("Connected to printer at {}:{}", hostname, port);
             } catch (Exception ex) {
@@ -30,6 +33,16 @@ public class SocketConnectionFactory implements IConnectionFactory {
             }
         }
         return os;
+    }
+
+    private int getInt(Object object, int defaultValue) {
+        int value = defaultValue;
+        if (object instanceof String) {
+            value = Integer.parseInt((String)object);
+        } else if (object instanceof Integer) {
+            value = (Integer)object;
+        }
+        return value;
     }
 
     @Override

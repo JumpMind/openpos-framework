@@ -64,7 +64,7 @@ openpos:
       initializationScript:
     
       # Maximum time a client request to start a child OpenPOS device process will
-      # but put on hold while waiting for the process to finish starting.
+      # be put on hold while waiting for the process to finish starting.
       startMaxWaitMillis: 45000
   
       # The name for the logfile that will be created in the working directory for
@@ -198,4 +198,7 @@ openpos:
 logging:
   level:
     org.jumpmind: INFO
-    
+
+spring:
+  pid:
+    file: ${openpos.managementServer.mainWorkDirPath}/openpos-mgmt.pid

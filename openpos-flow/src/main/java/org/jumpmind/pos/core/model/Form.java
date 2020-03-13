@@ -3,11 +3,7 @@ package org.jumpmind.pos.core.model;
 import org.jumpmind.pos.util.DriversLicenseUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Form implements Serializable {
 
@@ -108,30 +104,27 @@ public class Form implements Serializable {
     public PopTartField addPopTart(String fieldId, String label, String... values) {
         return addPopTart(fieldId, label, values != null && values.length > 0 ? Arrays.asList(values) : new ArrayList<>());
     }
-    
+
     public PopTartField addPopTart(String fieldId, String label, List<String> values) {
-        PopTartField field = new PopTartField(fieldId, label, null, values);
-        formElements.add(field);
-        return field;        
+        return addPopTart(fieldId, label, null, values, false);
 
     }
-    
+
     public PopTartField addPopTart(String fieldId, String label, List<String> values, boolean required) {
-        PopTartField field = new PopTartField(fieldId, label, null, values);
-        field.setRequired(required);
-        formElements.add(field);
-        return field;        
-
+        return addPopTart(fieldId, label, null, values, required);
     }
-    
+
     public PopTartField addPopTart(String fieldId, String label, String value, List<String> values, boolean required) {
-    	PopTartField field = new PopTartField(fieldId, label, null, values);
+        return createPopTartField(fieldId, label, value, values, required);
+    }
+
+    public static PopTartField createPopTartField(String fieldId, String label, String value, List<String> values, boolean required) {
+        PopTartField field = new PopTartField(fieldId, label, null, values);
         field.setRequired(required);
         field.setValue(value);
-        formElements.add(field);
-        return field;        
+        return field;
     }
-    
+
     public CounterField addCounterField(String fieldId, String label) {
         return addCounterField(fieldId, label, false, null, null);
     }

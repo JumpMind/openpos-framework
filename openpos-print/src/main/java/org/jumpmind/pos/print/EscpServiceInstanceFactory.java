@@ -68,7 +68,7 @@ public class EscpServiceInstanceFactory implements JposServiceInstanceFactory {
     }
 
     private void configureOpenposPrinter(IOpenposPrinter printer, JposEntry jposentry) {
-        String hostname = getRequiredJposProperty(jposentry,"hostname");
+        String hostname = getJposProperty(jposentry,"hostname", "localhost");
         String port = getJposProperty(jposentry, "port", "9100");
         Map<String, Object> settings = new HashMap<>();
         settings.put("hostName", hostname);

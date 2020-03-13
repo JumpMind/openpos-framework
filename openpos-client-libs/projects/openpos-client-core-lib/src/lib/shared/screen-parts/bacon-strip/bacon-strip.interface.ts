@@ -1,4 +1,4 @@
-import { IActionItem } from '../../../core/actions/action-item.interface';
+import {IActionItem} from '../../../core/actions/action-item.interface';
 
 export interface BaconStripInterface {
     deviceId: string;
@@ -7,5 +7,6 @@ export interface BaconStripInterface {
     version: string;
     certification: string;
     logo: string;
+    icon: string;
     actions: IActionItem[];
 }
