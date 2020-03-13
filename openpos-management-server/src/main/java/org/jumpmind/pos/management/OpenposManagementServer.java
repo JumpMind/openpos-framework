@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.ApplicationPidFileWriter;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ public class OpenposManagementServer {
         System.out.println("OpenposManagementServer working dir: " + System.getProperty("user.dir"));
         invokeOptionalStartupClass();
         SpringApplication application = new SpringApplication(OpenposManagementServer.class);
+        application.addListeners(new ApplicationPidFileWriter());
         application.run(args);
     }
     
