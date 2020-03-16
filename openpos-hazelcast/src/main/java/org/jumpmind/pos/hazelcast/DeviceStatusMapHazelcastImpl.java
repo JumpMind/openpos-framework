@@ -2,9 +2,11 @@ package org.jumpmind.pos.hazelcast;
 
 import com.hazelcast.core.HazelcastInstance;
 import org.jumpmind.pos.core.device.DeviceStatus;
+import org.jumpmind.pos.core.event.DeviceHeartbeatEvent;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentMap;
@@ -28,9 +30,16 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
     public ConcurrentMap<String, String> map2() {
         return mapProvider.getMap("string-map", String.class, String.class);
     }
-
+    
+    @EventListener(classes = DeviceHeartbeatEvent.class)
+    protected void processHeartbeat(DeviceHeartbeatEvent event) {
+        if (! event.isRemote()) {
+            touch(event.getDeviceId());
+        }
+    }
+    
     @Override
-    public void touch(String deviceId) {
+    public synchronized void touch(String deviceId) {
         // FYI: map.compute() method doesn't work with hazelcast or I'd use it.
         DeviceStatus status = get().get(deviceId);
         if (status == null) {
@@ -44,7 +53,7 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
     }
 
     @Override
-    public void update(AppEvent event) {
+    public synchronized void update(AppEvent event) {
         // FYI: map.compute() method doesn't work with hazelcast or I'd use it.
         
         DeviceStatus status = get().get(event.getDeviceId());
