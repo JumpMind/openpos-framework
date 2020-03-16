@@ -134,6 +134,7 @@ export class OpenposMediaService implements OnDestroy {
     observe<T>(breakpointNameToObject?: Map<string, T>): Observable<T> {
         return this.activeBreakpoint$
             .pipe(
+                filter(mediaBreakpoint => !!mediaBreakpoint),
                 map(mediaBreakpoint => mediaBreakpoint.name),
                 map(breakpointName => breakpointNameToObject.get(breakpointName))
             );
