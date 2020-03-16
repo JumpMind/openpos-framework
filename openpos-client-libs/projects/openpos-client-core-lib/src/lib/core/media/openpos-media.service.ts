@@ -21,6 +21,24 @@ export interface MediaBreakpoint {
     value: string;
 }
 
+const exampleConfig =
+    `
+clientConfiguration:
+      clientConfigSets:
+      - tags: default
+        configsForTags:
+          MediaService:
+             breakpoints:
+               'mobile-portrait': '(max-width: 599.99px) and (orientation: portrait)'
+               'mobile-landscape': '(max-width: 959.99px) and (orientation: landscape)'
+               'tablet-portrait': '(min-width: 600px) and (max-width: 839.99px) and (orientation: portrait)'
+               'tablet-landscape': '(min-width: 960px) and (max-width: 1279.99px) and (orientation: landscape)'
+               'desktop-portrait': '(min-width: 840px) and (orientation: portrait)'
+               'desktop-landscape': '(min-width: 1280px) and (orientation: landscape)'
+               'small-desktop-portrait': '(min-width: 768px) and (max-width: 768px) and (orientation: portrait)'
+               'small-desktop-landscape': '(min-width: 1366px) and (max-width: 1366px) and (orientation: landscape)'    
+`;
+
 /*
     Breakpoints can be set with the following client config in application.yml:
 
@@ -45,7 +63,7 @@ export interface MediaBreakpoint {
 export class OpenposMediaService implements OnDestroy {
     breakpointToName = new Map<string, string>();
     activeBreakpoint$ = new BehaviorSubject<MediaBreakpoint>(null);
-    configChanged$ = new Subject();
+    configChanged$ = new Subject<any>();
     destroyed$ = new Subject();
     logDebounceTime = 100;
 
@@ -66,11 +84,23 @@ export class OpenposMediaService implements OnDestroy {
      * Logs configuration and breakpoint changes.
      */
     logChanges(): void {
-        this.configChanged$.pipe(debounceTime(this.logDebounceTime))
-            .subscribe(message => this.log('Configuration Changed', message));
+        this.log(
+            'Initializing:',
+            'Waiting for client configuration... For example, please add a client configuration to the application.yml file',
+            exampleConfig
+        );
 
-        this.activeBreakpoint$.pipe(debounceTime(this.logDebounceTime))
-            .subscribe(mediaBreakpoint => this.log('Active Breakpoint', mediaBreakpoint));
+        this.configChanged$
+            .pipe(
+                debounceTime(this.logDebounceTime),
+                takeUntil(this.destroyed$)
+            ).subscribe(message => this.log('Configuration Changed:', message));
+
+        this.activeBreakpoint$
+            .pipe(
+                debounceTime(this.logDebounceTime),
+                takeUntil(this.destroyed$)
+            ).subscribe(mediaBreakpoint => this.log('Active Breakpoint:', mediaBreakpoint));
     }
 
     /**
@@ -81,7 +111,7 @@ export class OpenposMediaService implements OnDestroy {
             .pipe(
                 filter(message => message.configType === 'MediaService'),
                 tap(message => this.updateBreakpointsFromConfig(message)),
-                tap(() => this.configChanged$.next()),
+                tap(message => this.configChanged$.next(message)),
                 tap(() => this.watchForBreakpointChanges()),
                 takeUntil(this.destroyed$)
             ).subscribe();
@@ -181,6 +211,6 @@ export class OpenposMediaService implements OnDestroy {
      * @param args The arguments to log
      */
     log(...args): void {
-        console.log.apply(console, ['Media Service:'].concat(args));
+        console.log.apply(console, ['[Media Service]'].concat(args));
     }
 }
