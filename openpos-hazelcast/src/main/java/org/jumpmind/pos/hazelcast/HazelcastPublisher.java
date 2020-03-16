@@ -5,15 +5,15 @@ import com.hazelcast.topic.ITopic;
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
-import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 @Slf4j
 @Component
 @Profile("hazelcast")
-public class HazelcastPublisher implements IEventDistributor {
+public class HazelcastPublisher implements IEventDistributor, ApplicationListener<AppEvent> {
 
     @Autowired
     HazelcastInstance hz;
@@ -21,7 +21,6 @@ public class HazelcastPublisher implements IEventDistributor {
     @Autowired
     DeviceStatusMapHazelcastImpl deviceStatusMap;
 
-    @EventListener
     public void onApplicationEvent(AppEvent event) {
         if (!event.isRemote()) {
             log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
