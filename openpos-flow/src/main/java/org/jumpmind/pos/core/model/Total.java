@@ -14,6 +14,10 @@ public class Total implements Serializable {
     private String amount;
     private TotalType type;
 
+    @SuppressWarnings("unused")
+    private Total() {
+    }
+    
     public Total(String name, String amount) {
         this(name, amount, TotalType.Amount);
     }
