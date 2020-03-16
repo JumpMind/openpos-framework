@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * Sends periodic DeviceHeartbeatEvents for all the active devices in the system.
+ * Use the {@code openpos.general.deviceHeartbeatDelayMs} property to control
+ * how often events are published.  By default, every 30 seconds.
+ */
 @Component
 @Profile("hazelcast")
 @Slf4j
