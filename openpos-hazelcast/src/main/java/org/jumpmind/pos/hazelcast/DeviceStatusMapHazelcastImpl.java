@@ -31,40 +31,32 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
 
     @Override
     public void touch(String deviceId) {
-        get().compute(deviceId, (k, deviceStatus) -> {
-            DeviceStatus status = deviceStatus;
-            if (status != null) {
-                status = deviceStatus.shallowCopy();
-                status.setLastActiveTimeMs(System.currentTimeMillis());
-            } else {
-                status = new DeviceStatus(deviceId, hz.getLocalEndpoint().getUuid().toString());
-            }
+        // FYI: map.compute() method doesn't work with hazelcast or I'd use it.
+        DeviceStatus status = get().get(deviceId);
+        if (status == null) {
+            status = new DeviceStatus(deviceId, hz.getLocalEndpoint().getUuid().toString());
+        } else {
+            status = status.shallowCopy();
+            status.setLastActiveTimeMs(System.currentTimeMillis());
+        }
+        get().put(deviceId, status);
 
-            return status;
-        });
     }
 
     @Override
     public void update(AppEvent event) {
-        /*
-        map2().compute(event.getDeviceId(), (k, v) -> {
-            String status = v;
-            status = System.currentTimeMillis() + "";
-            return status;
-        });
-         */
-
-        get().compute(event.getDeviceId(), (k, deviceStatus) -> {
-            DeviceStatus status = deviceStatus;
-            if (status == null) {
-                status = new DeviceStatus(event.getDeviceId(), hz.getLocalEndpoint().getUuid().toString());
-            } else {
-                status = deviceStatus.shallowCopy();
-            }
-            status.setLastActiveTimeMs(System.currentTimeMillis());
-            status.setLatestEvent(event);
-            return status;
-        });
+        // FYI: map.compute() method doesn't work with hazelcast or I'd use it.
+        
+        DeviceStatus status = get().get(event.getDeviceId());
+        if (status == null) {
+            status = new DeviceStatus(event.getDeviceId(), hz.getLocalEndpoint().getUuid().toString());
+        } else {
+            status = status.shallowCopy();
+        }
+        status.setLastActiveTimeMs(System.currentTimeMillis());
+        status.setLatestEvent(event);
+        
+        get().put(event.getDeviceId(), status);
     }
 
 }

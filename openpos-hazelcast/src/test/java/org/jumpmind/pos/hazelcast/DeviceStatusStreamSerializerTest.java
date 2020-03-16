@@ -9,6 +9,7 @@ import org.jumpmind.pos.util.event.AppEvent;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -16,7 +17,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes= {HazelcastTestConfig.class})
+@ContextConfiguration(classes= {HazelcastConfig.class})
+@ActiveProfiles("hazelcast")
 public class DeviceStatusStreamSerializerTest {
 
     @Autowired
