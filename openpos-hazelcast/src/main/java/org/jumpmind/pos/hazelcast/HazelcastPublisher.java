@@ -3,6 +3,8 @@ package org.jumpmind.pos.hazelcast;
 import com.hazelcast.core.HazelcastInstance;
 import com.hazelcast.topic.ITopic;
 import lombok.extern.slf4j.Slf4j;
+
+import org.jumpmind.pos.core.event.DeviceHeartbeatEvent;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -22,15 +24,18 @@ public class HazelcastPublisher implements IEventDistributor, ApplicationListene
     DeviceStatusMapHazelcastImpl deviceStatusMap;
 
     public void onApplicationEvent(AppEvent event) {
-        if (!event.isRemote()) {
-            log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
-            // then share it with the world
-            deviceStatusMap.update(event);
-            ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
-            topic.publish(event);
-        } else {
-            log.info("{} received an event {},{} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
-
+        // DeviceHeartbeats are handled in the DeviceStatusMapHazelcastImpl
+        if (! (event instanceof DeviceHeartbeatEvent)) {
+            if (!event.isRemote()) {
+                log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
+                // then share it with the world
+                deviceStatusMap.update(event);
+                ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
+                topic.publish(event);
+            } else {
+                log.info("{} received an event {},{} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
+    
+            }
         }
     }
 
