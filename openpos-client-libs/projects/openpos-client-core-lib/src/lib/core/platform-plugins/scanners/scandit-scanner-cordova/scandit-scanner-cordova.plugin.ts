@@ -16,7 +16,7 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
 
     private licenseKey = "";
     private scanData$ = new Subject<IScanData>();
-    private settings = new Scandit.BarcodeCaptureSettings();
+    private settings;
     private barcodeCapture: any = {};
     private cameraSettings;
     private context: any;
@@ -66,6 +66,7 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
 
     initialize(): Observable<string> {
         return Observable.create( (initialized: Subject<string>) => {
+            this.settings = new Scandit.BarcodeCaptureSettings();
             this.context = Scandit.DataCaptureContext.forLicenseKey(this.licenseKey);
             this.barcodeCapture = Scandit.BarcodeCapture.forContext(this.context, this.settings);
             this.barcodeCapture.feedback = this.getFeedback();
