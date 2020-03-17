@@ -17,8 +17,8 @@ public class DeviceHeartbeatEvent extends AppEvent {
     private DeviceHeartbeatEvent() {
     }
     
-    public DeviceHeartbeatEvent(String deviceId) {
-        super(deviceId, null);
+    public DeviceHeartbeatEvent(String deviceId, String appId) {
+        super(deviceId, appId);
     }
     
 }

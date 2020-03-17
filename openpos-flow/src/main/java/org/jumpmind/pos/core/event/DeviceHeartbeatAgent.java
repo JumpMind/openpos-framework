@@ -36,7 +36,7 @@ public class DeviceHeartbeatAgent {
     public void heartbeat() {
         stateManagerContainer.getAllStateManagers().forEach(stateManager -> {
             if (stateManager.getAppId() != null) {
-                eventPublisher.publish(new DeviceHeartbeatEvent(stateManager.getDeviceId()));
+                eventPublisher.publish(new DeviceHeartbeatEvent(stateManager.getDeviceId(), stateManager.getAppId()));
             }
         });
     }
