@@ -11,8 +11,8 @@ public class DeviceInactiveEvent extends AppEvent {
     @SuppressWarnings("unused")
     private DeviceInactiveEvent() {}
     
-    public DeviceInactiveEvent(String deviceId) {
-        super(deviceId, null);
+    public DeviceInactiveEvent(String deviceId, String appId) {
+        super(deviceId, appId);
     }
 
 }
