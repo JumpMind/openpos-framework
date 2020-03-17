@@ -4,6 +4,7 @@ import com.hazelcast.core.HazelcastInstance;
 import org.jumpmind.pos.core.device.DeviceStatus;
 import org.jumpmind.pos.core.event.DeviceHeartbeatEvent;
 import org.jumpmind.pos.util.event.AppEvent;
+import org.jumpmind.pos.util.event.ITransientEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
@@ -29,6 +30,13 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
 
     public ConcurrentMap<String, String> map2() {
         return mapProvider.getMap("string-map", String.class, String.class);
+    }
+
+    @EventListener(classes = AppEvent.class)
+    protected void updateDeviceStatus(AppEvent event) {
+        if (!event.isRemote() && !(event instanceof ITransientEvent)) {
+            update(event);
+        }
     }
     
     @EventListener(classes = DeviceHeartbeatEvent.class)

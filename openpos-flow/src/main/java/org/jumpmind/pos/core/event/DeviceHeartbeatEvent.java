@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.event;
 
 import org.jumpmind.pos.util.event.AppEvent;
+import org.jumpmind.pos.util.event.ITransientEvent;
 
 /**
  * DevicHeartbeatEvents are published periodically to indicate that a device is 
@@ -8,7 +9,7 @@ import org.jumpmind.pos.util.event.AppEvent;
  * Machine from which they originate and are used for notifying code implemented
  * in other OpenPOS modules that a device is alive.
  */
-public class DeviceHeartbeatEvent extends AppEvent {
+public class DeviceHeartbeatEvent extends AppEvent implements ITransientEvent {
 
     private static final long serialVersionUID = 1L;
 
