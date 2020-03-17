@@ -41,6 +41,7 @@ public interface IconType {
     public static final String Employees = "Employees"; //group
     public static final String Error = "Error"; //error
     public static final String ExternalLink = "ExternalLink"; //language;
+    public static final String Finance = "Finance"; //finance
     public static final String Fingerprint = "Fingerprint"; //fingerprint
     public static final String Forward = "Forward"; //keyboard_arrow_right
     public static final String Gift = "Gift"; //gift_outline
@@ -66,6 +67,7 @@ public interface IconType {
     public static final String Phone = "Phone"; //phone or call
     public static final String Pickup = "Pickup"; //schedule
     public static final String Print = "Print"; //print
+    public static final String Productivity = "Productivity"; //chart_trending
     public static final String PurchaseOrder = "PurchaseOrder"; //account_balance_wallet
     public static final String Receipt = "Receipt"; //receipt
     public static final String Remove = "Remove"; //remove
