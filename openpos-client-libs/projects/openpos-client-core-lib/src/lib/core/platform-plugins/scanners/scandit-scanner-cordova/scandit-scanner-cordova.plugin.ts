@@ -37,11 +37,11 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
                 this.licenseKey = m.licenseKey;
             }
             Object.getOwnPropertyNames(m).forEach( propName => {
-                if(this.settings.hasOwnProperty(propName)){
+                if(this.settings && this.settings.hasOwnProperty(propName)){
                     this.settings[propName] = m[propName];
                 }
             });
-            if(m.enabledCodes){
+            if(m.enabledCodes && this.settings){
                 let codes = m.enabledCodes.split(',');
                 codes.forEach( code => this.settings.enableSymbology(ScanditBarcodeUtils.convertFromOpenposType(code.trim()), true));
             }
