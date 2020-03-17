@@ -10,6 +10,9 @@ openpos:
       # If specified, will override the default host name as calculated by 
       # org.jumpmind.pos.util.NetworkUtils#getNetworkHostname()
       # This hostname value is used for return in the clientConnect URLs.
+      #
+      # A value of 'LOCAL' will use the address of the interface on which
+      # the request was received from the client.
       hostname:
       webServiceBaseUrlTemplate: http://$host:$port
       secureWebServiceBaseUrlTemplate: https://$host:$port
@@ -64,7 +67,7 @@ openpos:
       initializationScript:
     
       # Maximum time a client request to start a child OpenPOS device process will
-      # but put on hold while waiting for the process to finish starting.
+      # be put on hold while waiting for the process to finish starting.
       startMaxWaitMillis: 45000
   
       # The name for the logfile that will be created in the working directory for
@@ -198,4 +201,7 @@ openpos:
 logging:
   level:
     org.jumpmind: INFO
-    
+
+spring:
+  pid:
+    file: ${openpos.managementServer.mainWorkDirPath}/openpos-mgmt.pid

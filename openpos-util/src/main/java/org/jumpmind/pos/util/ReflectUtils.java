@@ -1,5 +1,10 @@
 package org.jumpmind.pos.util;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.beans.BeanInfo;
 import java.beans.IntrospectionException;
 import java.beans.Introspector;
@@ -10,12 +15,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import lombok.extern.slf4j.Slf4j;
-import static org.apache.commons.beanutils.BeanUtils.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import static java.lang.String.*;
-import org.apache.commons.lang3.time.DateUtils;
+import static org.apache.commons.beanutils.BeanUtils.copyProperty;
 
 @Slf4j
 public class ReflectUtils {
