@@ -29,12 +29,10 @@ public class HazelcastPublisher implements IEventDistributor, ApplicationListene
             if (!event.isRemote()) {
                 log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
                 // then share it with the world
-                deviceStatusMap.update(event);
                 ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
                 topic.publish(event);
             } else {
                 log.info("{} received an event {},{} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
-    
             }
         }
     }
@@ -43,5 +41,6 @@ public class HazelcastPublisher implements IEventDistributor, ApplicationListene
     @Override
     public void distribute(AppEvent event) {
         onApplicationEvent(event);
+        deviceStatusMap.updateDeviceStatus(event);
     }
 }
