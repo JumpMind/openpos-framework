@@ -58,4 +58,7 @@ export class InfineaScannerCordovaPlugin implements IPlatformPlugin, IScanner {
             console.log(`Time| ${new Date()} || Disable Barcode Scan| Failure`);
         }, 'false');*/
     }
+
+    triggerScan() {
+    }
   }

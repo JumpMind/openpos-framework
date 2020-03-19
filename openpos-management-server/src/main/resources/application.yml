@@ -10,6 +10,9 @@ openpos:
       # If specified, will override the default host name as calculated by 
       # org.jumpmind.pos.util.NetworkUtils#getNetworkHostname()
       # This hostname value is used for return in the clientConnect URLs.
+      #
+      # A value of 'LOCAL' will use the address of the interface on which
+      # the request was received from the client.
       hostname:
       webServiceBaseUrlTemplate: http://$host:$port
       secureWebServiceBaseUrlTemplate: https://$host:$port

@@ -5,6 +5,7 @@ import java.time.Duration;
 import java.time.Instant;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.util.NetworkUtils;
@@ -114,27 +115,42 @@ public class ProcessManagerService {
         
         return null;
     }
-    
-    public DiscoveryResponse constructDiscoveryResponse(DeviceProcessInfo pi) {
+
+    public DiscoveryResponse constructDiscoveryResponse(DeviceProcessInfo pi, HttpServletRequest request) {
         DiscoveryResponse cci = new DiscoveryResponse(
-            this.resolveHostname(),
+            this.resolveHostname(request),
             pi.getPort(),
-            makeUrl(config.getClientConnect().getWebServiceBaseUrlTemplate(), pi),
-            makeUrl(config.getClientConnect().getSecureWebServiceBaseUrlTemplate(), pi),
-            makeUrl(config.getClientConnect().getWebSocketBaseUrlTemplate(), pi),
-            makeUrl(config.getClientConnect().getSecureWebSocketBaseUrlTemplate(), pi)
+            makeUrl(config.getClientConnect().getWebServiceBaseUrlTemplate(), pi, request),
+            makeUrl(config.getClientConnect().getSecureWebServiceBaseUrlTemplate(), pi, request),
+            makeUrl(config.getClientConnect().getWebSocketBaseUrlTemplate(), pi, request),
+            makeUrl(config.getClientConnect().getSecureWebSocketBaseUrlTemplate(), pi, request)
         );        
         return cci;
     }
     
-    protected String resolveHostname() {
-        return StringUtils.isNotBlank(config.getClientConnect().getHostname()) ? config.getClientConnect().getHostname() : NetworkUtils.getNetworkHostname();
+    protected String resolveHostname(HttpServletRequest request) {
+        String returnName = null;
+        if (null != request) {
+            String configHostName = config.getClientConnect().getHostname();
+            if (StringUtils.isNotBlank(configHostName)) {
+                if (OpenposManagementServerConfig.ClientConnect.USE_LOCAL_INTERFACE_ADDR.equals(configHostName.trim())) {
+                    returnName = request.getLocalAddr();
+                }
+            }
+        }
+        
+        if (returnName == null) {
+            returnName = StringUtils.isNotBlank(config.getClientConnect().getHostname()) ? config.getClientConnect().getHostname() : NetworkUtils.getNetworkHostname();
+        }
+        
+        return returnName;
     }
-    protected String makeUrl(String urlTemplate, DeviceProcessInfo pi) {
+    
+    protected String makeUrl(String urlTemplate, DeviceProcessInfo pi, HttpServletRequest request) {
         if (StringUtils.isNotBlank(urlTemplate)) {
             String url = urlTemplate;
             if (url.contains("$host")) {
-                url = url.replace("$host", this.resolveHostname());
+                url = url.replace("$host", this.resolveHostname(request));
             }
             
             if (url.contains("$port") && pi.getPort() != null) {

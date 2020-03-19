@@ -205,4 +205,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
         return scanData;
     }
 
+    triggerScan() {
+    }
+
 }

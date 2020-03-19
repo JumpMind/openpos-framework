@@ -32,7 +32,7 @@
 .summary-detail-column {
     display: grid;
     grid-template-rows: auto auto;
-    gap: 16px;
+    gap: 16px 32px;
 }
 
 .summary-total {

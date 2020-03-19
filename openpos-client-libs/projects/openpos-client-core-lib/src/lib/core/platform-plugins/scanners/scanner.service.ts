@@ -17,4 +17,8 @@ export class ScannerService {
     public stopScanning() {
         this.scanners.forEach(s => s.stopScanning() );
     }
+
+    public triggerScan() {
+        this.scanners.forEach(s => s.triggerScan());
+    }
 }

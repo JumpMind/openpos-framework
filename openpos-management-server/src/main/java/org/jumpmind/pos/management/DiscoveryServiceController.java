@@ -1,5 +1,7 @@
 package org.jumpmind.pos.management;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Lookup;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -32,14 +34,15 @@ public class DiscoveryServiceController {
     @GetMapping("discover")
     public DiscoveryResponse getConnectionUrl(
         @RequestParam(required=false) String appId,
-        @RequestParam String deviceId
+        @RequestParam String deviceId,
+        HttpServletRequest request
     ) {
         log.info("Received a discovery request for appId: {}, deviceId: {}", appId, deviceId);
         try {
             DeviceProcessInfo pi = processManager.queryOrLaunchDeviceProcess(appId, deviceId);
             if (pi != null) {
                 if (pi.getStatus() == DeviceProcessStatus.Running) {
-                    return processManager.constructDiscoveryResponse(pi);
+                    return processManager.constructDiscoveryResponse(pi, request);
                 } else {
                     log.trace("Nothing to return.  Device Process '{}' status is: {}", pi.getDeviceId(), pi.getStatus());
                     return null;

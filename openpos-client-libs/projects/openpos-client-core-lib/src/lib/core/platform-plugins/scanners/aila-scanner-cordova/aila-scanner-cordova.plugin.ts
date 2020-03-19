@@ -89,4 +89,7 @@ export class AilaScannerCordovaPlugin implements IPlatformPlugin, IScanner {
                 alert('Error: ' + error);
             });
     }
+
+    triggerScan() {
+    }
 }

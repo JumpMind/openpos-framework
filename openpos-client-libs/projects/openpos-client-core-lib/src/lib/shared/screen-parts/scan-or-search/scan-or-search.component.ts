@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import {ScreenPartComponent} from '../screen-part';
 import {ScanOrSearchInterface} from './scan-or-search.interface';
-import {DeviceService} from '../../../core/services/device.service';
 import {ScreenPart} from '../../decorators/screen-part.decorator';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
 import {Observable, Subscription} from 'rxjs';
@@ -44,11 +43,11 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     private scanServiceSubscription: Subscription;
 
-    constructor(public devices: DeviceService,
+    constructor(
                 injector: Injector,
                 private el: ElementRef,
                 mediaService: OpenposMediaService,
-                private scannerService: ScannerService) {
+                public scannerService: ScannerService) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],

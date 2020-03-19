@@ -58,6 +58,7 @@ public class OpenposManagementServerConfig {
     
     @Data
     public static class ClientConnect {
+        public static final String USE_LOCAL_INTERFACE_ADDR = "LOCAL";
         private String hostname;
         private String webServiceBaseUrlTemplate;
         private String secureWebServiceBaseUrlTemplate;
