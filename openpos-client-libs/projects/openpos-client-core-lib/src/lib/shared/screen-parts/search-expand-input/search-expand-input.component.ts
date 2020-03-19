@@ -94,6 +94,9 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
     }
 
     public onSelected(): void {
+        if( open ) {
+            this.scannerService.triggerScan();
+        }
         this.open = true;
         this.inputElement.focus();
         this.expanded.emit(true);

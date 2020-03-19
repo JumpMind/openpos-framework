@@ -1,5 +1,6 @@
 import {AndroidContentProviderPlugin} from './platform-plugins/cordova-plugins/android-content-provider-plugin';
 import {ConsoleScannerPlugin} from './platform-plugins/scanners/console-scanner/console-scanner.plugin';
+import {ScanditScannerCordovaPlugin} from './platform-plugins/scanners/scandit-scanner-cordova/scandit-scanner-cordova.plugin';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
 import { STARTUP_TASKS, STARTUP_FAILED_COMPONENT } from './services/startup.service';
@@ -60,6 +61,7 @@ import { TimeZoneContext } from './client-context/time-zone-context';
 import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
 import { ELECTRON_LOGGER_CONFIG, DEFAULT_ELECTRON_LOGGER_CONFIG } from './logging/electron-logger-config';
+import { ScanditCameraViewComponent } from './platform-plugins/scanners/scandit-scanner-cordova/scandit-camera-view/scandit-camera-view.component';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -71,7 +73,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StartupComponent,
         StartupFailedComponent,
         DialogContentComponent,
-        SplashScreenComponent
+        SplashScreenComponent,
+        ScanditCameraViewComponent
     ],
     declarations: [
         DialogContentComponent,
@@ -79,7 +82,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         PersonalizationComponent,
         StartupComponent,
         StartupFailedComponent,
-        SplashScreenComponent
+        SplashScreenComponent,
+        ScanditCameraViewComponent
     ],
     imports: [
         SharedModule,
@@ -109,14 +113,17 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: STARTUP_TASKS, useClass: PluginStartupTask, multi: true },
         { provide: STARTUP_FAILED_COMPONENT, useValue: StartupFailedComponent},
         AilaScannerCordovaPlugin,
+        ScanditScannerCordovaPlugin,
         { provide: SCANNERS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: WedgeScannerPlugin, multi: true },
         { provide: SCANNERS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: ConsoleScannerPlugin, multi: true},
+        { provide: SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
         { provide: PLUGINS, useExisting: AndroidContentProviderPlugin, multi: true },
+        { provide: PLUGINS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         LocationService,
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},

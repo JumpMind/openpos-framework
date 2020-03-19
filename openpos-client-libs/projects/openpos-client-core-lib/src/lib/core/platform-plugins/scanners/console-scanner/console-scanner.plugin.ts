@@ -23,4 +23,7 @@ export class ConsoleScannerPlugin implements IScanner {
     stopScanning() {
     }
 
+    triggerScan() {
+    }
+
 }
