@@ -1,5 +1,8 @@
 package org.jumpmind.pos.hazelcast;
 
+import com.hazelcast.cluster.MembershipEvent;
+import com.hazelcast.cluster.MembershipListener;
+import com.hazelcast.config.ListenerConfig;
 import com.hazelcast.core.HazelcastInstance;
 import org.jumpmind.pos.core.device.DeviceStatus;
 import org.jumpmind.pos.core.event.DeviceHeartbeatEvent;
@@ -11,10 +14,13 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ConcurrentMap;
+import java.util.function.Consumer;
+
+import javax.annotation.PostConstruct;
 
 @Component
 @Profile("hazelcast")
-public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
+public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap, MembershipListener {
     private static final String DEVICES_MAP_NAME = "devices-map";
 
     @Autowired
@@ -22,7 +28,14 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
 
     @Autowired
     HazelcastInstance hz;
+    
+    Consumer<String> disappearanceHandler;
 
+    @PostConstruct
+    void init() {
+        hz.getConfig().addListenerConfig(new ListenerConfig(this));
+    }
+    
     @Override
     public ConcurrentMap<String, DeviceStatus> get() {
         return mapProvider.getMap(DEVICES_MAP_NAME, String.class, DeviceStatus.class);
@@ -74,6 +87,27 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap {
         status.setLatestEvent(event);
         
         get().put(event.getDeviceId(), status);
+    }
+
+    @Override
+    public void setDisappearanceHandler(Consumer<String> onDeviceDisconnect) {
+        this.disappearanceHandler = onDeviceDisconnect;
+    }
+
+    @Override
+    public void memberAdded(MembershipEvent event) {
+    }
+
+    @Override
+    public void memberRemoved(MembershipEvent event) {
+        if (this.disappearanceHandler != null) {
+            String memberId = event.getMember().getUuid().toString();
+            get().values().stream()
+                .filter(deviceStatus -> memberId.equals(deviceStatus.getServerId()))
+                .forEach(deviceStatus -> {
+                    this.disappearanceHandler.accept(deviceStatus.getDeviceId());
+                });
+        }
     }
 
 }
