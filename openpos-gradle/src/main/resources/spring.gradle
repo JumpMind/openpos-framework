@@ -1,7 +1,7 @@
 
 ext {
     junitVersion='4.12'
-    h2databaseVersion='1.4.197'
+    h2databaseVersion='1.4.199'
 }
 
 
