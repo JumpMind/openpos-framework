@@ -33,7 +33,8 @@ public interface IDeviceStatusMap {
      * for each device that has disappears.  This could happen if the server
      * that is hosting the session for one or more devices is terminated or
      * abnormally exits.
-     * @param onDeviceDisconnect The consumer to invoke once per device
+     * @param onDeviceDisconnect The consumer to invoke once per device. A device id
+     * will be supplied as the parameter to the consumer.
      */
     void setDisappearanceHandler(Consumer<String> onDeviceDisconnect);
 }
