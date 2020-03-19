@@ -2,8 +2,8 @@ package org.jumpmind.pos.hazelcast;
 
 import com.hazelcast.cluster.MembershipEvent;
 import com.hazelcast.cluster.MembershipListener;
-import com.hazelcast.config.ListenerConfig;
 import com.hazelcast.core.HazelcastInstance;
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.device.DeviceStatus;
 import org.jumpmind.pos.core.event.DeviceHeartbeatEvent;
 import org.jumpmind.pos.util.event.AppEvent;
@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 
 @Component
 @Profile("hazelcast")
+@Slf4j
 public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap, MembershipListener {
     private static final String DEVICES_MAP_NAME = "devices-map";
 
@@ -33,16 +34,12 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap, Membershi
 
     @PostConstruct
     void init() {
-        hz.getConfig().addListenerConfig(new ListenerConfig(this));
+        hz.getCluster().addMembershipListener(this);
     }
     
     @Override
     public ConcurrentMap<String, DeviceStatus> get() {
         return mapProvider.getMap(DEVICES_MAP_NAME, String.class, DeviceStatus.class);
-    }
-
-    public ConcurrentMap<String, String> map2() {
-        return mapProvider.getMap("string-map", String.class, String.class);
     }
 
     @EventListener(classes = AppEvent.class)
@@ -96,6 +93,7 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap, Membershi
 
     @Override
     public void memberAdded(MembershipEvent event) {
+        log.trace("New member added with id: {}", event.getMember().getUuid().toString());
     }
 
     @Override
