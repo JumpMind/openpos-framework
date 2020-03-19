@@ -1,6 +1,10 @@
 package org.jumpmind.pos.core.service;
 
+import org.jumpmind.pos.core.event.DeviceDisconnectedEvent;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
+import org.jumpmind.pos.devices.model.DeviceModel;
+import org.jumpmind.pos.server.service.SessionConnectListener;
+import org.jumpmind.pos.util.event.EventPublisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,11 +21,22 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
     @Autowired
     IStateManagerContainer stateManagerContainer;
 
+    @Autowired
+    SessionConnectListener sessionAuthTracker;
+
+    @Autowired
+    EventPublisher eventPublisher;
+    
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {        
         Message<?> msg = event.getMessage();
         String sessionId = (String) msg.getHeaders().get("simpSessionId");
-        logger.info("session disconnected: {}", sessionId); 
+        logger.info("session disconnected: {}", sessionId);
+        
+        DeviceModel deviceModel = sessionAuthTracker.getDeviceModel(sessionId);
+        
+        eventPublisher.publish(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId()));
+        
         stateManagerContainer.removeSessionIdVariables(sessionId);
         stateManagerContainer.setCurrentStateManager(null);
     }

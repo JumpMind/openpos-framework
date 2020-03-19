@@ -205,12 +205,16 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     }
 
     /**
-     * Only process AppEvents that are from other state managers.  Wait to process the event until the current StateManager is idle.
+     * Only process AppEvents that are from other state managers and aren't remote.  
+     * Wait to process the event until the current StateManager is idle.
      */
     private boolean process(IStateManager stateManager, Event event) {
         if (event instanceof AppEvent) {
             AppEvent appEvent = (AppEvent) event;
-            if (!appEvent.getAppId().equals(stateManager.getAppId()) || !appEvent.getDeviceId().equals(stateManager.getDeviceId())) {
+            if (!appEvent.isRemote() && 
+                 (!appEvent.getAppId().equals(stateManager.getAppId()) || 
+                  !appEvent.getDeviceId().equals(stateManager.getDeviceId()))
+            ) {
                 stateManager.markAsBusy();
                 return true;
             }

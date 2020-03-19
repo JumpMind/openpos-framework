@@ -28,5 +28,22 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
 public @interface OnEvent {
+    /**
+     * Only applies if the event type is NOT AppEvent OR it IS an AppEvent (or subclass) and the
+     * device ID of the event is the same as the device ID of the current StateManager.
+     * In that case, setting this value to {@code true} will allow the event to be processed regardless of
+     * the app ID value of the event.
+     */
     boolean receiveEventsFromSelf() default false;
+
+    /**
+     * If this is set, then all event types will be received.  Ignored if {@link #ofTypes()} identifies specific
+     * Event types that are to be handled.
+     */
+    boolean receiveAllEvents() default false;
+
+    /**
+     * Use this to specify specific event types that should be handled.  This has the highest precedence of all.
+     */
+    Class<? extends Event>[] ofTypes() default {};
 }

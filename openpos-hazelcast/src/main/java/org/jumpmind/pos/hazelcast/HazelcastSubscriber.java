@@ -35,7 +35,7 @@ public class HazelcastSubscriber {
             AppEvent event = m.getMessageObject();
             if (!m.getPublishingMember().getUuid().equals(hz.getLocalEndpoint().getUuid())) {
                 event.setRemote(true);
-                log.info("{} received an event from a different endpoint: {}", getClass().getSimpleName(), event);
+                log.info("{} received an event from a different endpoint: {},{}", getClass().getSimpleName(), event, System.identityHashCode(event));
                 eventPublisher.publish(event);
             }
         }
