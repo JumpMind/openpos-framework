@@ -1,18 +1,17 @@
-import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
-import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
-import { deepAssign } from '../../utilites/deep-assign';
-import { IActionItem } from '../../core/actions/action-item.interface';
-import { Injector, OnDestroy, Optional } from '@angular/core';
-import { ActionService } from '../../core/actions/action.service';
-import { Subscription } from 'rxjs';
+import {IAbstractScreen} from '../../core/interfaces/abstract-screen.interface';
+import {IScreen} from '../../shared/components/dynamic-screen/screen.interface';
+import {deepAssign} from '../../utilites/deep-assign';
+import {IActionItem} from '../../core/actions/action-item.interface';
+import {Injector, OnDestroy, Optional} from '@angular/core';
+import {ActionService} from '../../core/actions/action.service';
+import {Subject, Subscription} from 'rxjs';
 
 export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, OnDestroy {
-
-
     screen: T;
     actionService: ActionService;
 
     subscriptions = new Subscription();
+    destroyed$ = new Subject();
 
     // I don't completely understand why we need @Optional here. I suspect it has something to do with
     // creating these components dynamically and this being an abstract class.
@@ -40,6 +39,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
         if ( this.subscriptions ) {
             this.subscriptions.unsubscribe();
         }
+        this.destroyed$.next();
     }
 
     abstract buildScreen();
