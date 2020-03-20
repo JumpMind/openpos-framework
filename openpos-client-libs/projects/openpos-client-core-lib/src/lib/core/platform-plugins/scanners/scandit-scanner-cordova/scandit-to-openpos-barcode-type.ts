@@ -19,7 +19,8 @@ export class ScanditBarcodeUtils {
         [Barcode.Symbology.QR, OpenposScanType.QRCODE],
         [Barcode.Symbology.RM4SCC, OpenposScanType.RM4SCC],
         [Barcode.Symbology.EAN13UPCA, OpenposScanType.UPCA],
-        [Barcode.Symbology.UPCE, OpenposScanType.UPCE]
+        [Barcode.Symbology.UPCE, OpenposScanType.UPCE],
+        [Barcode.Symbology.InterleavedTwoOfFive, OpenposScanType.ITF],
     ]);
 
 

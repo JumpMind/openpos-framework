@@ -14,7 +14,7 @@ export enum OpenposScanType {
     EAN8 = 'EAN8',
     EAN13 = 'EAN13',
     EAN128 = 'EAN128',
-    GS1DATABAR = 'CS1DATABAR',
+    GS1DATABAR = 'GS1DATABAR',
     ITF14 = 'ITF14',
     LATENT_IMAGE = 'LATENT_IMAGE',
     PHARMACODE = 'PHARMACODE',
@@ -52,6 +52,7 @@ export enum OpenposScanType {
     KOREAN_POSTAL = 'KOREAN_POSTAL',
     CCA = 'CCA',
     CCB = 'CCB',
-    CCC = 'CCC'
+    CCC = 'CCC',
+    ITF = 'ITF',
 
 }
