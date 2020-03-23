@@ -28,7 +28,7 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
 
     constructor(sessionService: SessionService, private matDialog: MatDialog) {
 
-        if (Scandit) {
+        if (typeof Scandit !== 'undefined') {
             this.settings = new Scandit.BarcodeCaptureSettings();
 
         }
