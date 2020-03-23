@@ -11,7 +11,7 @@
               . subitems"
      gdGap="8px"
      gdColumns="auto 1fr"
-     (click)="doAction(item)">
+     (click)="doAction(item, item.actionData)">
     <app-icon gdArea="icon" [iconName]="item.icon"></app-icon>
     <div class="item-title" gdArea="title">{{item.title}}</div>
     <div gdArea="subitems">
