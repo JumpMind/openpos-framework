@@ -1,12 +1,12 @@
-import { ViewChildren, AfterViewInit, Input, QueryList, ViewChild, Component, Injector } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { ScreenPartComponent } from '../screen-part';
-import { FormBuilder } from '../../../core/services/form-builder.service';
-import { DynamicFormFieldComponent } from '../../components/dynamic-form-field/dynamic-form-field.component';
-import { ShowErrorsComponent } from '../../components/show-errors/show-errors.component';
-import { IForm } from '../../../core/interfaces/form.interface';
-import { IFormElement } from '../../../core/interfaces/form-field.interface';
-import { IActionItem } from '../../../core/actions/action-item.interface';
+import {Component, EventEmitter, Injector, Input, Output, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {FormGroup} from '@angular/forms';
+import {ScreenPartComponent} from '../screen-part';
+import {FormBuilder} from '../../../core/services/form-builder.service';
+import {DynamicFormFieldComponent} from '../../components/dynamic-form-field/dynamic-form-field.component';
+import {ShowErrorsComponent} from '../../components/show-errors/show-errors.component';
+import {IForm} from '../../../core/interfaces/form.interface';
+import {IFormElement} from '../../../core/interfaces/form-field.interface';
+import {IActionItem} from '../../../core/actions/action-item.interface';
 
 @Component({
     selector: 'app-dynamic-form-part',
@@ -14,7 +14,8 @@ import { IActionItem } from '../../../core/actions/action-item.interface';
     styleUrls: ['./dynamic-form-part.component.scss']
 })
 export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
-
+    @Output() valueChanges = new EventEmitter<any>();
+    @Output() formChanges = new EventEmitter<FormGroup>();
     @ViewChildren(DynamicFormFieldComponent) children: QueryList<DynamicFormFieldComponent>;
     @ViewChild('formErrors') formErrors: ShowErrorsComponent;
     form: FormGroup;
@@ -22,6 +23,14 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
     buttons: IFormElement[];
 
     private _alternateSubmitActions: string[];
+
+    ngOnInit(): void {
+        super.ngOnInit();
+        this.form.valueChanges.subscribe(value => {
+            this.formChanges.emit(this.form);
+            this.valueChanges.emit(value);
+        });
+    }
 
     @Input() set formName(name: string) {
         this.screenPartName = name;
@@ -65,7 +74,7 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
                         // Show errors for each of the fields where necessary
                         Object.keys(this.form.controls).forEach(f => {
                             const control = this.form.get(f);
-                            control.markAsTouched({ onlySelf: true });
+                            control.markAsTouched({onlySelf: true});
                         });
                         throw Error('form is invalid');
                     }
