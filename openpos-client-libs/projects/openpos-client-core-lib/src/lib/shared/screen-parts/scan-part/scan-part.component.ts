@@ -54,7 +54,7 @@ export class ScanPartComponent extends ScreenPartComponent<ScanInterface> implem
     }
 
     private unregisterScanner() {
-        if (this.scanServiceSubscription !== null) {
+        if (this.scanServiceSubscription != null) {
             this.scanServiceSubscription.unsubscribe();
             this.scanServiceSubscription = null;
         }

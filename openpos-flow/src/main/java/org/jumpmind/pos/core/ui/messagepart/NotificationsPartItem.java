@@ -7,10 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationsPartItem extends ActionItem implements Serializable {
+    private Object actionData;
     private List<String> subItems;
 
     public NotificationsPartItem(String action, String title, String icon) {
         super(action, title, icon);
+    }
+
+    public NotificationsPartItem(String action, Object actionData, String title, String icon) {
+        super(action, title, icon);
+        this.actionData = actionData;
     }
 
     public List<String> getSubItems() {
@@ -29,5 +35,13 @@ public class NotificationsPartItem extends ActionItem implements Serializable {
         subItems.add(item);
 
         return this;
+    }
+
+    public Object getActionData() {
+        return actionData;
+    }
+
+    public void setActionData(Object actionData) {
+        this.actionData = actionData;
     }
 }

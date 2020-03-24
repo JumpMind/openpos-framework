@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.service;
 
-        import org.jumpmind.pos.core.flow.ApplicationState;
+        import org.jumpmind.pos.core.event.DeviceConnectedEvent;
+import org.jumpmind.pos.core.flow.ApplicationState;
         import org.jumpmind.pos.core.flow.IStateManager;
         import org.jumpmind.pos.core.flow.IStateManagerContainer;
         import org.jumpmind.pos.core.flow.Scope;
@@ -10,7 +11,8 @@ package org.jumpmind.pos.core.service;
         import org.jumpmind.pos.server.service.IMessageService;
         import org.jumpmind.pos.server.service.SessionConnectListener;
         import org.jumpmind.pos.util.Versions;
-        import org.junit.Before;
+import org.jumpmind.pos.util.event.EventPublisher;
+import org.junit.Before;
         import org.junit.Test;
         import org.mockito.*;
         import org.springframework.context.ApplicationContext;
@@ -42,6 +44,9 @@ public class SessionSubscribedListenerTest {
 
     @Mock
     ApplicationContext applicationContext;
+    
+    @Mock
+    EventPublisher eventPublisher;
 
     @Mock
     Versions versions;
@@ -181,6 +186,7 @@ public class SessionSubscribedListenerTest {
         Mockito.verify(stateManager).registerQueryParams(Mockito.any());
         Mockito.verify(stateManager).registerPersonalizationProperties(Mockito.any());
         Mockito.verify(stateManager).sendConfigurationChangedMessage();
+        Mockito.verify(eventPublisher).publish(Mockito.isA(DeviceConnectedEvent.class));
         Mockito.verify(stateManager).refreshScreen();
     }
 

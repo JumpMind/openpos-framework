@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="67px" height="63px" viewBox="0 0 67 63" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 58 (84663) - https://sketch.com -->
+    <title>cash-down</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Page-1" stroke="none" stroke-width="1" fill-rule="evenodd">
+        <rect id="Rectangle" x="30" y="40" width="5" height="6"></rect>
+        <polygon id="Triangle" transform="translate(32.500000, 50.166667) scale(1, -1) translate(-32.500000, -50.166667) " points="32.5 46 40 54.3333333 25 54.3333333"></polygon>
+        <g id="Shape" transform="translate(9.000000, 9.000000)" fill-rule="nonzero">
+            <path d="M0,0 L47,0 L47,31 L0,31 L0,0 M24,8 C28.418278,8 32,11.581722 32,16 C32,20.418278 28.418278,24 24,24 C19.581722,24 16,20.418278 16,16 C16,11.581722 19.581722,8 24,8 M10.2857143,5 C10.2857143,7.89949494 7.91921939,10.25 5,10.25 L5,20.75 C7.91921939,20.75 10.2857143,23.1005051 10.2857143,26 L36.7142857,26 C36.7142857,23.1005051 39.0807806,20.75 42,20.75 L42,10.25 C39.0807806,10.25 36.7142857,7.89949494 36.7142857,5 L10.2857143,5 Z"></path>
+        </g>
+    </g>
+</svg>

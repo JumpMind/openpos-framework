@@ -16,6 +16,8 @@ public interface IconType {
     public static final String Cancel = "Cancel"; // cancel
     public static final String CancelAction = "CancelAction"; //block
     public static final String Cash = "Cash"; //local_atm
+    public static final String CashUp = "CashUp"; //cash_up
+    public static final String CashDown= "CashDown"; //cash_down
     public static final String Check = "Check"; //money
     public static final String Clock = "Clock"; //watch_later
     public static final String Close = "Close"; //close
