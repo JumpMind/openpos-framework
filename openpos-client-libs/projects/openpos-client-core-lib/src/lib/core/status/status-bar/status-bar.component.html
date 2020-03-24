@@ -1,0 +1,16 @@
+<section *ngIf="statusList" class="status-icons">
+  <app-icon *ngFor="let statusMessage of statusList"
+            [iconName]="statusMessage.icon"
+            iconClass="xs"
+            [class.ok]="statusMessage.status === Status.OK"
+            [class.warn]="statusMessage.status === Status.WARN"
+            [class.error]="statusMessage.status === Status.ERROR"
+  ></app-icon>
+</section>
+<section *ngIf="systemInfo" class="system-info">
+  <p *ngFor="let info of systemInfo.entries(); last as isLast">
+    <span>{{info[0]}}</span>
+    <span>{{info[1]}}</span>
+    <span *ngIf="!isLast"> | </span>
+  </p>
+</section>

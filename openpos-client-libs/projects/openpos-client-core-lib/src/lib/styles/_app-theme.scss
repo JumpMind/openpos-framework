@@ -9,6 +9,7 @@
 @import '../self-checkout/self-checkout-themes';
 @import '../customer-display/customer-display-themes';
 @import '../keyboard/keyboard-theme';
+@import '../core/status/status-bar/status-bar-theme';
 
 @include mat-core();
 
@@ -68,6 +69,7 @@
     @include self-checkout-themes($theme);
     @include customer-display-themes($theme);
     @include keyboard-theme($theme);
+    @include status-bar-theme($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
