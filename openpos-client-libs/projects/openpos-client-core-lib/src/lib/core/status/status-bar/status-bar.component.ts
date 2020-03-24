@@ -1,6 +1,6 @@
-import {Component, OnDestroy} from '@angular/core';
-import {Observable, Subject} from 'rxjs';
-import {map, takeUntil, tap} from 'rxjs/operators';
+import {Component, ElementRef, Renderer2} from '@angular/core';
+import {Observable} from 'rxjs';
+import {map, tap} from 'rxjs/operators';
 import {Status} from '../../messages/status.enum';
 import {StatusMessage} from '../status.message';
 import {StatusService} from '../status.service';
@@ -15,11 +15,12 @@ export class StatusBarComponent {
   Status = Status;
 
   statusList$: Observable<StatusMessage[]>;
-  systemInfo$: Observable<SystemInfoEntry[]>
+  systemInfo$: Observable<SystemInfoEntry[]>;
 
-  constructor( public statusService: StatusService) {
+  constructor( statusService: StatusService, render2: Renderer2, elementRef: ElementRef) {
     this.systemInfo$ = statusService.getSystemInfo().pipe(
-        map( info => Array.from(info.entries()).map( entry => new SystemInfoEntry(entry[0], entry[1])))
+        map( info => Array.from(info.entries()).map( entry => new SystemInfoEntry(entry[0], entry[1]))),
+        tap( info => render2.addClass(elementRef.nativeElement, 'show'))
     );
     this.statusList$ = statusService.getStatus().pipe(
         map( statusMap => Array.from(statusMap.values()))
