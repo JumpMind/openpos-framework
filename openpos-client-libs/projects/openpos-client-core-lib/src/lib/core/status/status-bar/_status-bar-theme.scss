@@ -1,3 +1,5 @@
+@import '~@angular/material/theming';
+
 @mixin status-bar-theme($theme){
   $app-primary: mat-color(map-get($theme, primary));
   $app-primary-contrast: mat-color(map-get($theme, primary), default-contrast);
@@ -9,5 +11,19 @@
 
   app-status-bar{
     background-color: map-get($background, status-bar);
+    color: map-get($foreground, inverse-secondary-text);
+
+    .status-icons{
+      app-icon{
+        &.offline{
+          color: map-get($mat-yellow, 600);
+        }
+
+        &.error{
+          color: $app-warn;
+        }
+      }
+    }
+
   }
 }

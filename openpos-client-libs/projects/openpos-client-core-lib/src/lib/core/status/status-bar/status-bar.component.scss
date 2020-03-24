@@ -1,4 +1,35 @@
+@import "../../../styles/mixins/typography";
+
 :host{
   display: grid;
+  grid-template-columns: auto 1fr;
   height: 25px;
+  padding-left: 4px;
+  padding-right: 4px;
+
+  .status-icons{
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: left;
+    column-gap: 4px;
+  }
+
+  .system-info{
+    @extend %text-xs;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: right;
+    align-content: center;
+    p{
+      display: grid;
+      grid-auto-flow: column;
+      column-gap: 4px;
+      margin-block-start: unset;
+      margin-block-end: unset;
+      margin-inline-start: unset;
+      margin-inline-end: unset;
+    }
+  }
+
+
 }

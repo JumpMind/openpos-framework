@@ -1,16 +1,16 @@
-<section *ngIf="statusList" class="status-icons">
-  <app-icon *ngFor="let statusMessage of statusList"
+<section class="status-icons">
+  <app-icon *ngFor="let statusMessage of statusList$ | async"
             [iconName]="statusMessage.icon"
             iconClass="xs"
-            [class.ok]="statusMessage.status === Status.OK"
-            [class.warn]="statusMessage.status === Status.WARN"
+            [class.online]="statusMessage.status === Status.ONLINE"
+            [class.offline]="statusMessage.status === Status.OFFLINE"
             [class.error]="statusMessage.status === Status.ERROR"
   ></app-icon>
 </section>
-<section *ngIf="systemInfo" class="system-info">
-  <p *ngFor="let info of systemInfo.entries(); last as isLast">
-    <span>{{info[0]}}</span>
-    <span>{{info[1]}}</span>
-    <span *ngIf="!isLast"> | </span>
+<section class="system-info">
+  <p *ngFor="let info of systemInfo$ | async; last as isLast">
+    <span>{{info.label}}</span>
+    <span>{{info.value}}</span>
+    <span *ngIf="!isLast">&nbsp;|&nbsp;</span>
   </p>
 </section>

@@ -3,7 +3,7 @@
   $background: map-get($theme, background );
 
   app-mobile-footer{
-      background-color: map-get($background, status-bar);
+      background-color: map-get($background, footer);
       color: mat-color(map-get($theme, primary), default-contrast);
   }
 }
