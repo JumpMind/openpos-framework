@@ -1,5 +1,6 @@
 package org.jumpmind.pos.print;
 
+import javafx.print.Printer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,11 +13,11 @@ public class SocketConnectionFactory implements IConnectionFactory {
 
     static final Logger log = LoggerFactory.getLogger(SocketConnectionFactory.class);
 
-    OutputStream os;
+    PrinterConnection printerConnection;
 
     @Override
-    public OutputStream open(Map<String, Object> settings) {
-        if (os == null) {
+    public PrinterConnection open(Map<String, Object> settings) {
+        if (printerConnection == null) {
             String hostname = (String) settings.get("hostName");
             Object portObject = settings.get("port");
             int port = getInt(settings.get("port"), 9100);
@@ -25,14 +26,15 @@ public class SocketConnectionFactory implements IConnectionFactory {
                 log.info("Connecting to printer at {}:{}", hostname, port);
                 Socket socket = new Socket(hostname, port);
                 socket.setSoTimeout(soTimeout);
-                os = socket.getOutputStream();
+                printerConnection.setOut(socket.getOutputStream());
+                printerConnection.setIn(socket.getInputStream());
                 log.info("Connected to printer at {}:{}", hostname, port);
             } catch (Exception ex) {
                 throw new PrintException(String.format("Failed to connect to printer at %s:%s",
                         hostname, port), ex);
             }
         }
-        return os;
+        return printerConnection;
     }
 
     private int getInt(Object object, int defaultValue) {
@@ -47,11 +49,6 @@ public class SocketConnectionFactory implements IConnectionFactory {
 
     @Override
     public void close() {
-        if (os != null) {
-            try {
-                os.close();
-            } catch (IOException e) {
-            }
-        }
+        printerConnection.close();
     }
 }

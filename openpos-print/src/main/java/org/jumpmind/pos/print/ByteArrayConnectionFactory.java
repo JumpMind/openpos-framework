@@ -10,9 +10,11 @@ public class ByteArrayConnectionFactory implements IConnectionFactory {
     ByteArrayOutputStream out;
 
     @Override
-    public OutputStream open(Map<String, Object> settings) {
+    public PrinterConnection open(Map<String, Object> settings) {
+        PrinterConnection printerConnection = new PrinterConnection();
         this.out = new ByteArrayOutputStream();
-        return this.out;
+        printerConnection.setOut(this.out);
+        return printerConnection;
     }
 
     @Override

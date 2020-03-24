@@ -3,9 +3,6 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
-import org.apache.commons.io.IOUtils;
-import jpos.services.POSPrinterService19;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import javax.imageio.ImageIO;
@@ -18,8 +15,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     PrinterCommands printerCommands = new PrinterCommandPlaceholders();
     int receiptLineSpacing;
-    OutputStream stream;
     PrintWriter writer;
+    PrinterConnection printerConnection;
     Map<String, Object> settings;
     EscpImagePrinter imagePrinter;
     IConnectionFactory connectionFactory;
@@ -42,8 +39,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void open(String logicalName, EventCallbacks cb) {
         this.printerName = logicalName;
-        this.stream = connectionFactory.open(this.settings);
-        this.writer = new PrintWriter(this.stream);
+        this.printerConnection = connectionFactory.open(this.settings);
+        this.writer = new PrintWriter(printerConnection.getOut());
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
         initializePrinter();
     }
@@ -150,11 +147,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             if (imagePrinter == null) {
                 throw new PrintException("imagePrinter cannot be null here. This printer driver was not initialized properly.");
             }
-            if (stream == null) {
-                throw new PrintException("outputStream cannot be null here. This printer driver was not initialized properly.");
+            if (printerConnection == null) {
+                throw new PrintException("printerConnection cannot be null here. This printer driver was not initialized properly.");
             }
             BufferedImage bufferedImage = ImageIO.read(image);
-            imagePrinter.printImage(stream, bufferedImage);
+            imagePrinter.printImage(printerConnection.getOut(), bufferedImage);
             printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
         } catch (Exception ex) {
             throw new PrintException("Failed to read and print buffered image", ex);
@@ -184,6 +181,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public String getPrinterName() {
         return printerName;
+    }
+
+    @Override
+    public PrinterConnection getPrinterConnection() {
+        return printerConnection;
     }
 
     private void refreshConnectionFactoryFromSettings() {

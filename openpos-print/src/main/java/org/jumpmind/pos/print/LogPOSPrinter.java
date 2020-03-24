@@ -51,6 +51,11 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public PrinterConnection getPrinterConnection() {
+        return new PrinterConnection();
+    }
+
+    @Override
     public void openCashDrawer(String cashDrawerId) {
         log.info("\r\n" +
                 "      ------------------------------ -\n" +

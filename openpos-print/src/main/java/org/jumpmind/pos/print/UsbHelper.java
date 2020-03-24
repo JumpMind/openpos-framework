@@ -36,7 +36,9 @@ public class UsbHelper {
 
         claimInterfaceWithRetries(usbInterface, RETRIES);
 
-        UsbEndpoint usbEndpoint = usbInterface.getUsbEndpoint((byte) 1);
+//        UsbEndpoint usbEndpoint = usbInterface.getUsbEndpoint((byte) 1);
+
+        UsbEndpoint usbEndpoint = (UsbEndpoint) usbInterface.getUsbEndpoints().get(0);
 
         UsbPipe pipe = usbEndpoint.getUsbPipe();
 
