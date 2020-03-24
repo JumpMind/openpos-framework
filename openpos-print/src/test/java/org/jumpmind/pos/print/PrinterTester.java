@@ -62,6 +62,15 @@ public class PrinterTester {
             int inByte =  printer.getPrinterConnection().getIn().read();
             System.out.println("Result from printer: " + inByte);
 
+            System.out.println("COVER IS OPEN? " + printer.getCoverOpen());
+
+            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Initial print on receipt printer.\n");
+
+            printer.printSlip("Printing on the slip printer.", 30000);
+
+            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Back to receipt printer.\n");
+
+
 //            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
 
 //            StringBuilder buffer = new StringBuilder(128);
@@ -173,8 +182,8 @@ public class PrinterTester {
 //            printer.printBarCode(POSPrinterConst.PTR_S_RECEIPT,"380502001835720192324", POSPrinterConst.PTR_BCS_Code128, 50, 150,
 //                    POSPrinterConst.PTR_BC_CENTER, POSPrinterConst.PTR_BC_TEXT_BELOW);
 
-//            printer.printNormal(0, "\n\n\n\n\n\n");
-//            printer.cutPaper(100);
+            printer.printNormal(0, "\n\n\n\n\n\n");
+            printer.cutPaper(100);
             printer.close();
 
         } catch (Exception ex) {

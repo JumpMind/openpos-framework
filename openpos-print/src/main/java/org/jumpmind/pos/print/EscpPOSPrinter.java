@@ -23,6 +23,16 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     boolean deviceEnabled  = true;
     private String printerName;
 
+    static final int STATUS_RECEIPT_PAPER_LOW             = 0b00000001;
+    static final int STATUS_COVER_OPEN                    = 0b00000010;
+    static final int STATUS_RECEIPT_PAPER_OUT             = 0b00000100;
+    static final int STATUS_JAM                           = 0b00001000;
+    static final int SLIP_LEADING_EDGE_SENSOR_COVERED     = 0b00100000;
+    static final int SLIP_TRAILING_EDGE_SENSOR_COVERED    = 0b01000000;
+    static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
+
+    int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
+
     public EscpPOSPrinter() {
 
     }
@@ -69,13 +79,40 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public void printNormal(int station, String data) {
-        if (data != null && data.length() > 0) {
-            if (writer == null) {
-                throw new PrintException("The output stream for the printer driver cannot be null at this point. It probably was not initialized properly. (Hint: you may need to call open()");
+        try {
+            setPrintStation(station);
+
+            if (data != null && data.length() > 0) {
+                if (writer == null) {
+                    throw new PrintException("The output stream for the printer driver cannot be null " +
+                            "at this point. It probably was not initialized properly. (Hint: you may need to call open()");
+                }
+                writer.print(data);
+                writer.flush();
             }
-            writer.print(data);
-            writer.flush();
+        } catch (Exception ex) {
+            if (ex instanceof PrintException) {
+                throw (PrintException)ex;
+            } else {
+                throw new PrintException("Failed to print " + data, ex);
+            }
         }
+    }
+
+    private void setPrintStation(int station) throws Exception {
+        if (station != currentPrintStation) {
+            writer.flush();
+            switch (station) {
+                case POSPrinterConst.PTR_S_SLIP:
+                    printerConnection.getOut().write((byte)0x1C); // select slip station.
+                    break;
+                case POSPrinterConst.PTR_S_RECEIPT:
+                default:
+                    printerConnection.getOut().write((byte)0x10); // clear printer/receipt to receipt mode.
+                    break;
+            }
+         }
+        currentPrintStation = station;
     }
 
     @Override
@@ -212,6 +249,88 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             printWidth = 48;
         }
         return printWidth;
+    }
+
+    public int readPrinterStatus() {
+        try {
+            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
+            getPrinterConnection().getOut().flush();
+            int statusByte = getPrinterConnection().getIn().read();
+            return statusByte;
+        } catch (Exception ex) {
+            throw new PrintException("getCoverOpen() failed ", ex);
+        }
+    }
+
+    public void printSlip(String text, int timeoutInMillis) {
+        // wait for paper to appear in the slip printer (check franking/endorsement).
+        long start = System.currentTimeMillis();
+
+        while ((readPrinterStatus() & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0
+            && (System.currentTimeMillis()-start) < timeoutInMillis) {
+            try {
+                System.out.println("NO PAPER YET, WAITING.");
+                Thread.sleep(250);
+            } catch (InterruptedException e) {
+            }
+        }
+
+        if ((readPrinterStatus() & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0) {
+            PrintException ex = new PrintException("Timed out while waiting for printer in the slip station after " +
+                    timeoutInMillis + "ms.");
+            ex.setErrorCode(PrintException.PRINT_ERROR_SLIP_INSERT_TIMEOUT);
+            throw ex;
+        }
+
+        System.out.println("Printnig to slip printer");
+        printNormal(POSPrinterConst.PTR_S_SLIP, text);
+
+        try {
+            System.out.println("ok now removing.");
+            beginRemoval(timeoutInMillis);
+        } catch (Exception ex) {
+            throw new PrintException("Failed to print to slip station " + text, ex);
+        }
+
+    }
+
+    @Override
+    public boolean getCoverOpen() throws JposException {
+        return (readPrinterStatus() & STATUS_COVER_OPEN) > 0;
+    }
+
+    @Override
+    public boolean getJrnEmpty() throws JposException {
+        return (readPrinterStatus() & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0;
+    }
+
+    @Override
+    public boolean getRecNearEnd() throws JposException {
+        return (readPrinterStatus() & STATUS_RECEIPT_PAPER_LOW) > 0;
+    }
+
+    @Override
+    public boolean getRecEmpty() throws JposException {
+        return (readPrinterStatus() & STATUS_RECEIPT_PAPER_OUT) > 0;
+    }
+
+    @Override
+    public void beginRemoval(int timeout) throws JposException {
+        // not really clear on what the semantics of "beginRemoval" should be.
+        long start = System.currentTimeMillis();
+
+        final String FEED_10_LINES = "\n\n\n\n\n\n\n\n\n\n";
+
+        do {
+            writer.write(FEED_10_LINES);
+            writer.flush();
+        } while ((readPrinterStatus() & SLIP_TRAILING_EDGE_SENSOR_COVERED) > 0
+            && (System.currentTimeMillis()-start) < timeout);
+    }
+
+    @Override
+    public void endRemoval() throws JposException {
+        // not really clear on what the semantics of "endRemoval" should be.
     }
 
     @Override
@@ -775,11 +894,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public boolean getCoverOpen() throws JposException {
-        throw new PrintNotSupportedException("Method not supported on this driver.");
-    }
-
-    @Override
     public int getErrorLevel() throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
     }
@@ -806,11 +920,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public String getFontTypefaceList() throws JposException {
-        throw new PrintNotSupportedException("Method not supported on this driver.");
-    }
-
-    @Override
-    public boolean getJrnEmpty() throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
     }
 
@@ -890,11 +999,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public boolean getRecEmpty() throws JposException {
-        throw new PrintNotSupportedException("Method not supported on this driver.");
-    }
-
-    @Override
     public boolean getRecLetterQuality() throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
     }
@@ -937,11 +1041,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public int getRecLineWidth() throws JposException {
         // TODO this would be nice to support.
-        throw new PrintNotSupportedException("Method not supported on this driver.");
-    }
-
-    @Override
-    public boolean getRecNearEnd() throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
     }
 
@@ -1056,22 +1155,12 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public void beginRemoval(int timeout) throws JposException {
-        throw new PrintNotSupportedException("Method not supported on this driver.");
-    }
-
-    @Override
     public void clearOutput() throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
     }
 
     @Override
     public void endInsertion() throws JposException {
-        throw new PrintNotSupportedException("Method not supported on this driver.");
-    }
-
-    @Override
-    public void endRemoval() throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
     }
 

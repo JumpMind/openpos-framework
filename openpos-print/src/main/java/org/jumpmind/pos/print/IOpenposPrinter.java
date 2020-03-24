@@ -21,4 +21,6 @@ public interface IOpenposPrinter extends POSPrinterService19 {
     public String getPrinterName();
 
     public PrinterConnection getPrinterConnection();
+
+    public void printSlip(String text, int timeoutInMillis);
 }

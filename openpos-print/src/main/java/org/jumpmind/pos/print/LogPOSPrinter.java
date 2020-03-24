@@ -56,6 +56,15 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public void printSlip(String text, int timeoutInMillis) {
+        try {
+            printNormal(0, text);
+        } catch (JposException ex) {
+            throw new PrintException("Failed to print slip", ex);
+        }
+    }
+
+    @Override
     public void openCashDrawer(String cashDrawerId) {
         log.info("\r\n" +
                 "      ------------------------------ -\n" +

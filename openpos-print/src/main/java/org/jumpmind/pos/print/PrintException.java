@@ -1,6 +1,13 @@
 package org.jumpmind.pos.print;
 
+import lombok.Data;
+
+@Data
 public class PrintException extends RuntimeException {
+
+    static final int PRINT_ERROR_SLIP_INSERT_TIMEOUT = 1;
+
+    int errorCode;
 
     public PrintException() {
         super();
