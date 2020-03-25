@@ -7,6 +7,7 @@ import {ShowErrorsComponent} from '../../components/show-errors/show-errors.comp
 import {IForm} from '../../../core/interfaces/form.interface';
 import {IFormElement} from '../../../core/interfaces/form-field.interface';
 import {IActionItem} from '../../../core/actions/action-item.interface';
+import {IDynamicFormPartEventArg} from './dynamic-form-part-event-arg.interface';
 
 @Component({
     selector: 'app-dynamic-form-part',
@@ -14,8 +15,7 @@ import {IActionItem} from '../../../core/actions/action-item.interface';
     styleUrls: ['./dynamic-form-part.component.scss']
 })
 export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
-    @Output() valueChanges = new EventEmitter<any>();
-    @Output() formChanges = new EventEmitter<FormGroup>();
+    @Output() formChanges = new EventEmitter<IDynamicFormPartEventArg>();
     @ViewChildren(DynamicFormFieldComponent) children: QueryList<DynamicFormFieldComponent>;
     @ViewChild('formErrors') formErrors: ShowErrorsComponent;
     form: FormGroup;
@@ -23,14 +23,6 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
     buttons: IFormElement[];
 
     private _alternateSubmitActions: string[];
-
-    ngOnInit(): void {
-        super.ngOnInit();
-        this.form.valueChanges.subscribe(value => {
-            this.formChanges.emit(this.form);
-            this.valueChanges.emit(value);
-        });
-    }
 
     @Input() set formName(name: string) {
         this.screenPartName = name;
@@ -46,6 +38,13 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> {
         this.buttons = new Array<IFormElement>();
 
         this.form = this.formBuilder.group(this.screenData);
+        this.form.valueChanges.subscribe(value => {
+            this.formBuilder.buildFormPayload(this.form, this.screenData);
+            this.formChanges.emit({
+                form: this.screenData,
+                formGroup: this.form
+            });
+        });
 
         if (this.screenData && this.screenData.formElements) {
             this.screenData.formElements.forEach(element => {

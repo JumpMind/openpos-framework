@@ -301,6 +301,7 @@ export * from './lib/shared/screen-parts/bacon-strip/bacon-strip.interface';
 export * from './lib/shared/screen-parts/dialog-header/dialog-header.component';
 export * from './lib/shared/screen-parts/dialog-header/dialog-header.interface';
 export * from './lib/shared/screen-parts/dynamic-form-part/dynamic-form-part.component';
+export * from './lib/shared/screen-parts/dynamic-form-part/dynamic-form-part-event-arg.interface';
 export * from './lib/shared/screen-parts/sausage-links/sausage-links.component';
 export * from './lib/shared/screen-parts/scan-or-search/scan-or-search.component';
 export * from './lib/shared/screen-parts/scan-or-search/scan-or-search.interface';
