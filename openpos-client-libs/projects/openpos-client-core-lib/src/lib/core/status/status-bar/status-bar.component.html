@@ -7,10 +7,9 @@
             [class.error]="statusMessage.status === Status.ERROR"
   ></app-icon>
 </section>
-<section class="system-info">
-  <p *ngFor="let info of systemInfo$ | async; last as isLast">
-    <span>{{info.label}}</span>
-    <span>{{info.value}}</span>
-    <span *ngIf="!isLast">&nbsp;|&nbsp;</span>
-  </p>
+<section class="system-info-left" responsive-class>
+  {{(systemInfo$ | async)?.line1}}
+</section>
+<section class="system-info-right" responsive-class>
+  {{(systemInfo$ | async)?.line2}}
 </section>

@@ -11,7 +11,7 @@ import {SessionService} from '../services/session.service';
 })
 export class StatusService {
 
-    private systemInfoConfig$ = new ReplaySubject<Map<string, string>>(1);
+    private systemInfoConfig$ = new ReplaySubject<ConfigChangedMessage>(1);
     private latestStatus = new Map<string, StatusMessage>();
     private latestStatus$ = new ReplaySubject<Map<string, StatusMessage>>(1);
 
@@ -29,16 +29,12 @@ export class StatusService {
         return this.latestStatus$;
     }
 
-    public getSystemInfo(): Observable<Map<string, string>> {
+    public getSystemInfo(): Observable<ConfigChangedMessage> {
         return this.systemInfoConfig$;
     }
 
     private configUpdated( message: ConfigChangedMessage ){
-        let properties =
-            new Map(Object.entries(message)
-                .filter( entry => entry[0] !== 'configType' && entry[0] !== 'type'));
-
-        this.systemInfoConfig$.next(properties);
+        this.systemInfoConfig$.next(message);
     }
 
     private statusUpdated( message: StatusMessage){

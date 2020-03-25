@@ -1,6 +1,7 @@
 import {Component, ElementRef, Renderer2} from '@angular/core';
 import {Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
+import {ConfigChangedMessage} from '../../messages/config-changed-message';
 import {Status} from '../../messages/status.enum';
 import {StatusMessage} from '../status.message';
 import {StatusService} from '../status.service';
@@ -15,11 +16,11 @@ export class StatusBarComponent {
   Status = Status;
 
   statusList$: Observable<StatusMessage[]>;
-  systemInfo$: Observable<SystemInfoEntry[]>;
+  systemInfo$: Observable<SystemInfo>;
 
   constructor( statusService: StatusService, render2: Renderer2, elementRef: ElementRef) {
     this.systemInfo$ = statusService.getSystemInfo().pipe(
-        map( info => Array.from(info.entries()).map( entry => new SystemInfoEntry(entry[0], entry[1]))),
+        map( message => message as SystemInfo),
         tap( info => render2.addClass(elementRef.nativeElement, 'show'))
     );
     this.statusList$ = statusService.getStatus().pipe(
@@ -29,8 +30,7 @@ export class StatusBarComponent {
 
 }
 
-
-class SystemInfoEntry {
-  constructor(public label: string, public value: string) {
-  }
+class SystemInfo extends ConfigChangedMessage{
+  public line1: string;
+  public line2: string;
 }

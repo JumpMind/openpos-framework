@@ -2,11 +2,12 @@
 
 :host{
   display: grid;
-  grid-template-columns: auto 1fr;
+  grid-template-columns: auto 1fr auto;
   height: 0px;
   padding-left: 4px;
   padding-right: 4px;
-
+  column-gap: 4px;
+  
   &.show{
     height: 25px;
   }
@@ -18,20 +19,25 @@
     column-gap: 4px;
   }
 
-  .system-info{
+  .system-info-left{
+    @extend %text-xs;
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: left;
+    align-content: center;
+    &.mobile{
+      justify-content: right;
+    }
+  }
+
+  .system-info-right{
     @extend %text-xs;
     display: grid;
     grid-auto-flow: column;
     justify-content: right;
     align-content: center;
-    p{
-      display: grid;
-      grid-auto-flow: column;
-      column-gap: 4px;
-      margin-block-start: unset;
-      margin-block-end: unset;
-      margin-inline-start: unset;
-      margin-inline-end: unset;
+    &.mobile{
+      display: none;
     }
   }
 }
