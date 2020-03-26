@@ -24,4 +24,9 @@ public class PrintException extends RuntimeException {
     public PrintException(Throwable cause) {
         super(cause);
     }
+
+    public String toString() {
+        // don't use lombok's toString()
+        return super.toString();
+    }
 }

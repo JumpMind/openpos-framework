@@ -3,10 +3,12 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.awt.print.PrinterException;
 import java.io.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +63,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         printNormal(0, getCommand(PrinterCommands.FORMAT_NORMAL));
         printNormal(0, getCommand(PrinterCommands.ALIGN_LEFT));
         printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
+        printNormal(0, getCommand(PrinterCommands.ESC_P_RESET));
     }
 
     @Override
@@ -80,8 +83,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void printNormal(int station, String data) {
         try {
-            setPrintStation(station);
-
+//            setPrintStation(station);
             if (data != null && data.length() > 0) {
                 if (writer == null) {
                     throw new PrintException("The output stream for the printer driver cannot be null " +
@@ -99,21 +101,22 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         }
     }
 
-    private void setPrintStation(int station) throws Exception {
-        if (station != currentPrintStation) {
-            writer.flush();
-            switch (station) {
-                case POSPrinterConst.PTR_S_SLIP:
-                    printerConnection.getOut().write((byte)0x1C); // select slip station.
-                    break;
-                case POSPrinterConst.PTR_S_RECEIPT:
-                default:
-                    printerConnection.getOut().write((byte)0x10); // clear printer/receipt to receipt mode.
-                    break;
-            }
-         }
-        currentPrintStation = station;
-    }
+    // see printSlip() instead for now.
+//    private void setPrintStation(int station) throws Exception {
+//        if (station != currentPrintStation) {
+//            writer.flush();
+//            switch (station) {
+//                case POSPrinterConst.PTR_S_SLIP:
+//                    printerConnection.getOut().write((byte)0x1C); // select slip station.
+//                    break;
+//                case POSPrinterConst.PTR_S_RECEIPT:
+//                default:
+//                    printerConnection.getOut().write((byte)0x10); // clear printer/receipt to receipt mode.
+//                    break;
+//            }
+//         }
+//        currentPrintStation = station;
+//    }
 
     @Override
     public void cutPaper(int percentage) {
@@ -253,9 +256,16 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     public int readPrinterStatus() {
         try {
+            // TODO this needs work on NCR. Calling this more than a few times puts the printer in a bad state.
             getPrinterConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
+//            getPrinterConnection().getOut().write(new byte[] {0x1D, 0x04, 5});// realtime status request
+
             getPrinterConnection().getOut().flush();
+            Thread.sleep(500);
             int statusByte = getPrinterConnection().getIn().read();
+            if (statusByte == -1) {
+                throw new PrinterException("Can't read printer status.");
+            }
             return statusByte;
         } catch (Exception ex) {
             throw new PrintException("getCoverOpen() failed ", ex);
@@ -263,35 +273,35 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     public void printSlip(String text, int timeoutInMillis) {
-        // wait for paper to appear in the slip printer (check franking/endorsement).
-        long start = System.currentTimeMillis();
-
-        while ((readPrinterStatus() & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0
-            && (System.currentTimeMillis()-start) < timeoutInMillis) {
-            try {
-                System.out.println("NO PAPER YET, WAITING.");
-                Thread.sleep(250);
-            } catch (InterruptedException e) {
-            }
-        }
-
-        if ((readPrinterStatus() & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0) {
-            PrintException ex = new PrintException("Timed out while waiting for printer in the slip station after " +
-                    timeoutInMillis + "ms.");
-            ex.setErrorCode(PrintException.PRINT_ERROR_SLIP_INSERT_TIMEOUT);
-            throw ex;
-        }
-
-        System.out.println("Printnig to slip printer");
-        printNormal(POSPrinterConst.PTR_S_SLIP, text);
-
         try {
-            System.out.println("ok now removing.");
-            beginRemoval(timeoutInMillis);
+            beginSlipMode();
+            printNormal(POSPrinterConst.PTR_S_SLIP, text);
+            endSlipMode();
         } catch (Exception ex) {
             throw new PrintException("Failed to print to slip station " + text, ex);
         }
+    }
 
+    @Override
+    public void beginSlipMode() {
+        try {
+            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
+            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
+            getPrinterConnection().getOut().flush();
+        } catch (Exception ex) {
+            throw new PrintException("Failed to begingSlipMode", ex);
+        }
+    }
+
+    @Override
+    public void endSlipMode() {
+        try {
+            beginRemoval(-1);
+            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
+            getPrinterConnection().getOut().flush();
+        } catch (Exception ex) {
+            throw new PrintException("Failed to begingSlipMode", ex);
+        }
     }
 
     @Override
@@ -316,16 +326,13 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public void beginRemoval(int timeout) throws JposException {
-        // not really clear on what the semantics of "beginRemoval" should be.
-        long start = System.currentTimeMillis();
-
-        final String FEED_10_LINES = "\n\n\n\n\n\n\n\n\n\n";
-
-        do {
-            writer.write(FEED_10_LINES);
-            writer.flush();
-        } while ((readPrinterStatus() & SLIP_TRAILING_EDGE_SENSOR_COVERED) > 0
-            && (System.currentTimeMillis()-start) < timeout);
+        final String FEED_100_LINES = StringUtils.repeat("\n", 100);
+        writer.write(FEED_100_LINES);
+        writer.flush();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+        }
     }
 
     @Override

@@ -5,6 +5,7 @@ import jpos.POSPrinter;
 import jpos.POSPrinterConst;
 import jpos.POSPrinterControl114;
 import jpos.config.JposEntry;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -48,35 +49,48 @@ public class PrinterTester {
             IOpenposPrinter printer = createPrinter();
 
             // reset method.
-            printer.printNormal(0, printer.getCommand(PrinterCommands.ESC_P_MODE));
-            printer.printNormal(0, printer.getCommand(PrinterCommands.FONT_SIZE_MEDIUM));
-            printer.printNormal(0, printer.getCommand(PrinterCommands.FORMAT_NORMAL));
-            printer.printNormal(0, printer.getCommand(PrinterCommands.ALIGN_LEFT));
-            printer.printNormal(0, printer.getCommand(PrinterCommands.LINE_SPACING_SINGLE));
+//            printer.printNormal(0, printer.getCommand(PrinterCommands.ESC_P_MODE));
+//            printer.printNormal(0, printer.getCommand(PrinterCommands.FONT_SIZE_MEDIUM));
+//            printer.printNormal(0, printer.getCommand(PrinterCommands.FORMAT_NORMAL));
+//            printer.printNormal(0, printer.getCommand(PrinterCommands.ALIGN_LEFT));
+//            printer.printNormal(0, printer.getCommand(PrinterCommands.LINE_SPACING_SINGLE));
 
-            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
-//            printer.getPrinterConnection().getOut().write(new byte[] {0x1D, 0x04, 5}); // real time status request.
+            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x40}); // ESCP reset.
             printer.getPrinterConnection().getOut().flush();
 
-            Thread.sleep(100);
-            int inByte =  printer.getPrinterConnection().getIn().read();
-            System.out.println("Result from printer: " + inByte);
 
-            System.out.println("COVER IS OPEN? " + printer.getCoverOpen());
+//            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Initial print on receipt printer.\n");
 
-            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Initial print on receipt printer.\n");
+            String BOLD = printer.getCommand(PrinterCommands.FORMAT_BOLD);
+            String NORMAL = printer.getCommand(PrinterCommands.FORMAT_NORMAL);
 
-            printer.printSlip("Printing on the slip printer.", 30000);
 
-            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Back to receipt printer.\n");
+            // printer.printSlip(BOLD + "FOR DEPOSIT ONLY" + NORMAL + "\nPrinting on the slip printer.\n A second line here.\n\nAccount #12342346456\n", 0);
+
+//            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
+//            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
+//            printer.getPrinterConnection().getOut().flush();
+//
+//            printer.printNormal(0, BOLD + "FOR DEPOSIT ONLY" + NORMAL + "\nPrinting on the slip printer.\n A second line here.\n\nAccount #12342346456\n");
+//
+//            printer.printNormal(0, StringUtils.repeat("\n", 100));
+//            Thread.sleep(2000);
+//            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
+//            printer.getPrinterConnection().getOut().flush();
+
+            printer.printNormal(0, "This is for the receipt.");
+
+
+//            printer.printSlip(BOLD + "FOR DEPOSIT ONLY" + NORMAL + "\nPrinting on the slip printer.\n A second line here.\n\nAccount #12342346456\n", 30000);
+
+//            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Back to receipt printer.\n");
 
 
 //            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
 
 //            StringBuilder buffer = new StringBuilder(128);
 //
-//            String BOLD = printer.getCommand(PrinterCommands.FORMAT_BOLD);
-//            String NORMAL = printer.getCommand(PrinterCommands.FORMAT_NORMAL);
+
 //
 //            buffer.append(BOLD).append("6/18/2019 5:03PM");
 //            buffer.append(NORMAL).append(" Helped by ");

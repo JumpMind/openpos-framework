@@ -5,10 +5,13 @@ import org.jumpmind.pos.util.MutableByteArrayInputStream;
 
 import javax.usb.UsbConst;
 import javax.usb.UsbEndpoint;
+import javax.usb.UsbIrp;
 import javax.usb.UsbPipe;
 import java.io.ByteArrayOutputStream;
+import java.io.Closeable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -56,12 +59,30 @@ public class UsbConnectionFactory implements IConnectionFactory {
 
                     for (UsbEndpoint usbEndpoint : usbEndpoints) {
                         if (usbEndpoint.getDirection() == UsbConst.ENDPOINT_DIRECTION_IN ) {
-                            byte[] data = new byte[10];
+                            byte[] data = new byte[5];
                             UsbPipe pipe = usbEndpoint.getUsbPipe();
                             if (!pipe.isOpen()) {
                                 pipe.open();
+                                usbConnection.getInPipes().add(pipe);
+
                             }
-                            int bytesReceived = pipe.syncSubmit(data);
+
+                            UsbIrp packet = pipe.asyncSubmit(data);
+//                            int bytesReceived = pipe.syncSubmit();
+
+                            int bytesReceived = -1;
+
+                            packet.waitUntilComplete(5000);
+
+                            if (packet.isComplete()) {
+                                if (packet.isUsbException()) {
+                                    throw packet.getUsbException();
+                                }
+
+                                bytesReceived = packet.getActualLength();
+                                data = packet.getData();
+                                packet.complete();
+                            }
 
                             if (usbEndpoint.getType() != UsbConst.ENDPOINT_TYPE_BULK) {
                                 // for reasons not yet clear, we need to read from the "DATA" endpoint or
@@ -72,8 +93,9 @@ public class UsbConnectionFactory implements IConnectionFactory {
                             }
 
                             // it's also not clear why we need to read the last byte read, but it does have the data we need on NCR.
-                            byteRead = (data[bytesReceived-1] & 0xFF);
-                            break;
+                            if (bytesReceived > 0) {
+                                byteRead = (data[bytesReceived-1] & 0xFF);
+                            }
                         }
                     }
                 } catch (Exception ex) {

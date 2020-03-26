@@ -56,6 +56,15 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public void beginSlipMode() {
+
+    }
+
+    @Override
+    public void endSlipMode() {
+
+    }
+
     public void printSlip(String text, int timeoutInMillis) {
         try {
             printNormal(0, text);
