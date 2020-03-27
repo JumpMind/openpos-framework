@@ -44,8 +44,6 @@ public class YamlConfigProvider implements IFlowConfigProvider {
         try {
             ResourcePatternResolver resolver = new PathMatchingResourcePatternResolver(Thread.currentThread().getContextClassLoader());
 
-
-
             Resource[] resources = resolver.getResources("classpath*:/" + path + "/*-flow.yml");
 
             List<YamlFlowConfig> yamlFlowConfigs = new ArrayList<>();

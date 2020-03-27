@@ -29,6 +29,7 @@ public class PrinterCommands {
     public static final String BARCODE_TYPE_CODE_39 = "BARCODE_TYPE_CODE_39";
     public static final String BARCODE_FEED = "BARCODE_FEED";
     public static final String CASH_DRAWER_OPEN = "CASH_DRAWER_OPEN";
+    public static final String ESC_P_RESET = "ESC_P_RESET";
 
     private Map<String, String> printCommands;
 

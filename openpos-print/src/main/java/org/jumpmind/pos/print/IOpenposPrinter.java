@@ -19,4 +19,10 @@ public interface IOpenposPrinter extends POSPrinterService19 {
     public void init(Map<String,Object> settings);
 
     public String getPrinterName();
+
+    public PrinterConnection getPrinterConnection();
+
+    public void beginSlipMode();
+
+    public void endSlipMode();
 }
