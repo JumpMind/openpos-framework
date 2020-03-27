@@ -12,13 +12,15 @@
     <div *ngIf="!(isMobile | async) && !searchExpanded">
         <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
     </div>
-    <div *ngIf="!searchExpanded" class="rightside">
-        <div>
-            {{operatorInfo}}
-        </div>
-        <div responsive-class class="status">
-            {{statusLine}}
-        </div>
+    <div *ngIf="!searchExpanded && screenData.operatorLine1" class="rightside">
+        <p class="operator-name">{{screenData.operatorLine1}}</p>
+        <p class="operator-id">{{screenData.operatorLine2}}</p>
+        <app-icon-button class="icon" *ngIf="screenData.endSession && screenData.endSession.action" [iconName]="screenData.endSession.icon"
+                         iconClass="md" (buttonClick)="doAction(screenData.endSession)">
+        </app-icon-button>
+        <app-icon class="icon" *ngIf="screenData.endSession && !screenData.endSession.action" [iconName]="screenData.endSession.icon"
+                         iconClass="md">
+        </app-icon>
     </div>
 </div>
 <mat-sidenav-container>

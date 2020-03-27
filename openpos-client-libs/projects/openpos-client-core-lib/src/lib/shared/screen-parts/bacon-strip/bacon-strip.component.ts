@@ -19,8 +19,6 @@ import {Configuration} from '../../../configuration/configuration';
 })
 export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface> {
 
-    operatorInfo: string;
-    statusLine;
     iconButtonName: string;
 
     @ViewChild(MatSidenav)
@@ -62,20 +60,6 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
             this.iconButtonName = 'menu';
         } else {
             this.iconButtonName = this.screenData.icon;
-        }
-
-        if (this.screenData.operatorText && this.screenData.deviceId) {
-            this.operatorInfo = this.screenData.operatorText + ' on ' + this.screenData.deviceId;
-        } else {
-            this.operatorInfo = this.screenData.operatorText ? this.screenData.operatorText : this.screenData.deviceId;
-        }
-
-        this.statusLine = '';
-        if (this.screenData.certification) {
-            this.statusLine += 'CC: ' + this.screenData.certification;
-        }
-        if (this.screenData.version) {
-            this.statusLine += ' Version: ' + this.screenData.version;
         }
     }
 

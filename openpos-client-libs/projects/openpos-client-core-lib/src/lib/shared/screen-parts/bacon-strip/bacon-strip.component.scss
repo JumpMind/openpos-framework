@@ -32,10 +32,28 @@
     .rightside {
         justify-self: end;
         display:grid;
-        grid-template-rows: 1fr auto;
-        .status {
+        grid-template:  "name icon" auto
+                        "id icon" auto / auto auto;
+
+        .operator-name{
+            @extend %text-sm;
+            grid-area: name;
+        }
+
+        .operator-id{
             @extend %text-xs;
-            text-align:end;
+            grid-area: id;
+        }
+
+        .icon{
+            grid-area: icon;
+        }
+
+        p {
+            margin-block-start: unset;
+            margin-block-end: unset;
+            margin-inline-start: unset;
+            margin-inline-end: unset;
         }
     }
 
