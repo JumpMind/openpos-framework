@@ -1,7 +1,7 @@
 package org.jumpmind.pos.util.model;
 
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -24,7 +24,7 @@ public class Message implements Serializable {
      * Put properties in this map if they are optional. When not set, they don't
      * show up in the json which means less overhead.
      */
-    private Map<String, Object> optionalProperties = new HashMap<String, Object>();    
+    private Map<String, Object> optionalProperties = new LinkedHashMap<String, Object>();
     
     @JsonAnyGetter
     public Map<String, Object> any() {

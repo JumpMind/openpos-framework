@@ -1,0 +1,15 @@
+<section class="status-icons">
+  <app-icon *ngFor="let statusMessage of statusList$ | async"
+            [iconName]="statusMessage.icon"
+            iconClass="xs"
+            [class.online]="statusMessage.status === Status.ONLINE"
+            [class.offline]="statusMessage.status === Status.OFFLINE"
+            [class.error]="statusMessage.status === Status.ERROR"
+  ></app-icon>
+</section>
+<section class="system-info-left" responsive-class>
+  {{(systemInfo$ | async)?.line1}}
+</section>
+<section class="system-info-right" responsive-class>
+  {{(systemInfo$ | async)?.line2}}
+</section>

@@ -29,3 +29,9 @@
 .saveForm {
     padding-left: 10px;
 }
+
+.container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+}

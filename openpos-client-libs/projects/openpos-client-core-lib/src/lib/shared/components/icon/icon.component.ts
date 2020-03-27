@@ -53,8 +53,6 @@ export class IconComponent implements OnInit, OnChanges {
             this.iconClass = 'mat-24';
         } else if (this.iconClass === 'none') {
             this.iconClass = null;
-        } else if (!this.iconClass.includes('mat-')) {
-            this.iconClass += ' mat-24';
         }
 
         this.renderIcon(changes.iconClass ? changes.iconClass.previousValue : null);

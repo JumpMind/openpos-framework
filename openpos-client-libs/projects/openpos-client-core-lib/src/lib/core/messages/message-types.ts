@@ -9,4 +9,5 @@ export class MessageTypes {
     static DATA = "UIData";
     static CONNECTED = 'Connected'
     static SINGLE_SIGN_ON_REQUEST = 'SingleSignOnRequest';
+    static STATUS = 'Status';
 }

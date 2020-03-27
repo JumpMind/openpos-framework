@@ -149,6 +149,7 @@ import { ButtonActionTimerComponent } from './components/button-action-timer/but
 import { ImageTextPanelComponent } from './screen-parts/image-text-panel/image-text-panel.component';
 import { TransactionSummaryComponent } from './components/transaction-summary/transaction-summary.component';
 import { TransactionHistoryPartComponent } from './screen-parts/transaction-history-part/transaction-history-part.component';
+import { StatusBarComponent } from '../core/status/status-bar/status-bar.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -307,6 +308,7 @@ const pipes = [
         ...screenParts,
         ...pipes,
         BaconDrawerComponent,
+        StatusBarComponent,
     ],
     entryComponents: [
         KebabMenuComponent,

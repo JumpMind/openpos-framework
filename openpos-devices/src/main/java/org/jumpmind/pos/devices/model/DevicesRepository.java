@@ -32,7 +32,7 @@ public class DevicesRepository {
             device.setDeviceParamModels(getDeviceParams(device.getDeviceId(), device.getAppId()));
             return device;
         } else {
-            throw new DeviceNotFoundException();
+            throw new DeviceNotFoundException("No device found for appId=" + appId + " deviceId=" + deviceId);
         }
     }
 

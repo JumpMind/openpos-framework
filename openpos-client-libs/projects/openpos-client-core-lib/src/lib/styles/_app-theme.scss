@@ -9,6 +9,7 @@
 @import '../self-checkout/self-checkout-themes';
 @import '../customer-display/customer-display-themes';
 @import '../keyboard/keyboard-theme';
+@import '../core/status/status-bar/status-bar-theme';
 
 @include mat-core();
 
@@ -29,11 +30,13 @@
         icon: rgba(black, 0.24),
         icons: rgba(black, 0.24),
         text: rgba(black, 0.87),
-        inverse-text: whitesmoke
+        inverse-text: whitesmoke,
+        inverse-secondary-text: rgba(whitesmoke, 0.54)
     );
 
     $openpos-background: (
-        status-bar: map-get($mat-grey, 600),
+        status-bar: map-get($mat-grey, 800),
+        footer: map-get($mat-grey, 600),
         app-bar: map-get($mat-grey, 300),
         background: map-get($mat-grey, 200),
         hover: rgba(black, 0.02),
@@ -68,6 +71,7 @@
     @include self-checkout-themes($theme);
     @include customer-display-themes($theme);
     @include keyboard-theme($theme);
+    @include status-bar-theme($theme);
 
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));

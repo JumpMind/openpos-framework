@@ -54,6 +54,14 @@
   width: 180px;
 }
 
+.mat-icon-button.xs,
+  .material-icons.xs {
+    @extend .material-icons.mat-18;
+    &.mobile{
+      @extend .material-icons.mat-18;
+    }
+  }
+
 .mat-icon-button.sm,
   .material-icons.sm {
     @extend .material-icons.mat-30;

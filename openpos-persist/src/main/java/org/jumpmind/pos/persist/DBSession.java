@@ -245,6 +245,21 @@ public class DBSession {
     }
 
     @SuppressWarnings("unchecked")
+    public <T> List<T> query(String sqlQuery, Map<String, Object> params) {
+        try {
+            QueryTemplate queryTemplate = new QueryTemplate();
+            queryTemplate.setSelect(sqlQuery);
+
+            Query query = new Query<>().named("ANONYMOUS");
+
+            SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
+            return (List<T>) queryInternal(null, sqlStatement, 10000);
+        } catch (Exception ex) {
+            throw new PersistException("Failed to run query: " + sqlQuery, ex);
+        }
+    }
+
+    @SuppressWarnings("unchecked")
     public <T> List<T> query(Query<T> query, QueryTemplate queryTemplate, Map<String, Object> params, int maxResults) {
         try {
             SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
@@ -525,12 +540,16 @@ public class DBSession {
             Row row = rows.get(j);
             T object = null;
 
-            if (resultClass.equals(String.class)) {
-                object = (T) row.stringValue();
-            } else if (isModel(resultClass)) {
-                object = mapModel(resultClass, row);
+            if (resultClass != null) {
+                if (resultClass.equals(String.class)) {
+                    object = (T) row.stringValue();
+                } else if (isModel(resultClass)) {
+                    object = mapModel(resultClass, row);
+                } else {
+                    object = mapNonModel(resultClass, row);
+                }
             } else {
-                object = mapNonModel(resultClass, row);
+                object = (T) mapNonModel(row);
             }
             objects.add(object);
         }
@@ -600,6 +619,12 @@ public class DBSession {
     protected boolean isDefferedLoadField(Field field) {
         return field.getType().isAssignableFrom(Money.class) || ITypeCode.class.isAssignableFrom(field.getClass());
     }
+
+    private Map<String, Object> mapNonModel(Row row) {
+        return row;
+    }
+
+
 
     protected <T> T mapNonModel(Class<T> resultClass, Row row) throws Exception {
         T object = resultClass.newInstance();

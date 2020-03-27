@@ -20,7 +20,6 @@ public class UsbHelper {
         } catch (Exception ex) {
             throw new PrintException("Failed to locate device for vendorId=" + vendorId + " productId=" + productId, ex);
         }
-
     }
 
     public UsbConnection openUsbConnection(short vendorId, short productId) {
@@ -30,6 +29,10 @@ public class UsbHelper {
         }
 
         UsbConfiguration usbConfiguration = usbDevice.getActiveUsbConfiguration();
+        if (usbConfiguration == null) {
+            System.out.println(usbDevice.getUsbConfigurations());
+            usbConfiguration = usbDevice.getUsbConfiguration((byte)0);
+        }
         UsbInterface usbInterface = usbConfiguration.getUsbInterface((byte) 0);
 
         final int RETRIES = 10;
