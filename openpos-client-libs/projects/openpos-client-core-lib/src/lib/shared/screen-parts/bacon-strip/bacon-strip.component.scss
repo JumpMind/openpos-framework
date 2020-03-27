@@ -17,16 +17,15 @@
     align-items: center;
 
     .leftside {
-        grid-template-columns: auto auto 1fr;
+        grid-template-columns: auto 1fr;
+        &.expanded{
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
 
         span {
             @include ellipsed-text();
         }
-    }
-
-    .leftside-expanded {
-        grid-column-end: span 2;
-        grid-template-columns: auto fit-content(25%) 1fr;
     }
 
     .rightside {

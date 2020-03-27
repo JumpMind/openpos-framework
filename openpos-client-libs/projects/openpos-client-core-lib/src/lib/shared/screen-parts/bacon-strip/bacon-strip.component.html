@@ -1,8 +1,8 @@
 <div class="container mat-elevation-z5" responsive-class>
-    <div class="leftside" [ngClass]="{'leftside-expanded' : searchExpanded}">
+    <div class="leftside" [class.expanded]="searchExpanded">
         <app-icon-button *ngIf="iconButtonName" [iconName]="iconButtonName"
                          [title]="screenData.headerText"
-                         [iconClass]="(isMobile$ | async) ? 'mat-30': 'md'" (buttonClick)="buttonClick()">
+                         [iconClass]="'md'" (buttonClick)="buttonClick()">
         </app-icon-button>
         <app-icon-button *ngIf="helpTextService.isAvailable() | async" iconName="help"
             (click)="helpTextService.toggle()"></app-icon-button>
