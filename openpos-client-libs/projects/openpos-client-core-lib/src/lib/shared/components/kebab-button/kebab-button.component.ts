@@ -1,6 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Subscription } from 'rxjs';
+import { finalize } from 'rxjs/operators';
 import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
 import { KebabMenuComponent } from '../kebab-menu/kebab-menu.component';
@@ -22,6 +23,8 @@ export class KebabButtonComponent implements OnDestroy {
 
     @Input()
     iconName = 'KebabMenu';
+
+    dialogRef: MatDialogRef<KebabMenuComponent>;
 
     @Input()
     set keyBinding(key: string) {
@@ -54,11 +57,17 @@ export class KebabButtonComponent implements OnDestroy {
         if (this.subscription) {
             this.subscription.unsubscribe();
         }
+
+        // Ensure dialog gets closed, if it is still open due
+        // to a screen change/refresh while it was open
+        if (this.dialogRef) {
+            this.dialogRef.close();
+        }
     }
 
     public openKebabMenu() {
         if (this.dialog.openDialogs.length < 1) {
-            const dialogRef = this.dialog.open(KebabMenuComponent, {
+            this.dialogRef = this.dialog.open(KebabMenuComponent, {
                 data: {
                     menuItems: this.menuItems,
                     payload: null,
@@ -69,7 +78,7 @@ export class KebabButtonComponent implements OnDestroy {
                 autoFocus: false
             });
 
-            dialogRef.afterClosed().subscribe(result => {
+            this.dialogRef.afterClosed().pipe(finalize(() => this.dialogRef = undefined)).subscribe(result => {
                 if (result) {
                     this.menuItemClick.emit(result);
                 }
