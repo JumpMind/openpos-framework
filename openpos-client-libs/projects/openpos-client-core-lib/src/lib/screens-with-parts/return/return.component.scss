@@ -1,5 +1,10 @@
 @import "../../styles/mixins/typography";
 
+:host{
+    height: 100%;
+    overflow: hidden;
+}
+
 .return-bacon-strip {
     height: 100%;
 
