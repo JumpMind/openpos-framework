@@ -10,7 +10,7 @@ public class ErrorGlobalActionHandler {
     IStateManager stateManager;
 
     @OnGlobalAction
-    public void handleAction(Action action) {
+    public void onResetStateManager(Action action) {
         stateManager.reset();
     }
 }

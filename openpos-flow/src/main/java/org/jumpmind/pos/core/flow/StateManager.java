@@ -25,6 +25,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -635,7 +636,10 @@ public class StateManager implements IStateManager {
             throw new FlowException("Failed to execute global action handler: " + globalActionHandler, ex);
         }
         performInjections(actionHandler);
-        List<Method> globalMethods = MethodUtils.getMethodsListWithAnnotation(globalActionHandler, OnGlobalAction.class);
+        List<Method> globalMethods = MethodUtils.getMethodsListWithAnnotation(globalActionHandler, OnGlobalAction.class)
+                .stream()
+                .filter( method -> method.getName().equals("on" + action.getName()))
+                .collect(Collectors.toList());
         for (Method method : globalMethods) {
             invokeGlobalAction(action, method, actionHandler);
         }

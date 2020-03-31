@@ -14,7 +14,7 @@ public class LocationChangedGlobalActionHandler {
     ClientLocationService clientLocationService;
 
     @OnGlobalAction
-    public void handleAction(Action action) {
+    public void onLocationChanged(Action action) {
         LocationData locationData = Action.convertActionData(action.getData(), LocationData.class);
         clientLocationService.setLocationData(locationData);
     }
