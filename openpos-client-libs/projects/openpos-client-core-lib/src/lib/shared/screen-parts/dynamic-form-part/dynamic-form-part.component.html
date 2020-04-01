@@ -13,11 +13,11 @@
         <mat-card-actions *ngIf="(buttons && buttons.length > 0) || submitButton" mat-dialog-actions class="buttons">
             <app-secondary-button *ngFor="let button of buttons" (click)="doAction(button)">
                 <span>{{button.label}}</span>
-                <app-icon *ngIf="button.icon" [iconClass]="'material-icons md'" [iconName]="button.icon"></app-icon>
+                <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
             </app-secondary-button>
             <app-primary-button *ngIf="submitButton">
                 <span>{{submitButton.title}}</span>
-                <app-icon *ngIf="submitButton.icon" [iconClass]="'material-icons md'" [iconName]="submitButton.icon"></app-icon>
+                <app-icon *ngIf="submitButton.icon" [iconName]="submitButton.icon"></app-icon>
             </app-primary-button>
         </mat-card-actions>
     </div>
