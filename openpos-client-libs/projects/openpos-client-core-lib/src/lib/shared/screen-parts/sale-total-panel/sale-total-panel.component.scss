@@ -126,6 +126,13 @@
             }
         }
 
+        .sale-total-tax-exempt-label-no-customer {
+            @extend %text-sm;
+            text-align: center;
+            justify-self: center;
+            margin-bottom: 8px;
+        }
+
         .sale-total-button {
             min-height: 70px;
             margin-top: 16px;

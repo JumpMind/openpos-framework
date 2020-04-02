@@ -29,6 +29,9 @@
     </div>
 
     <div class="sale-total-buttons">
+        <div *ngIf="!screenData.customer && screenData.taxExemptCertificateDetail" class="muted-color sale-total-tax-exempt-label-no-customer">
+            {{screenData.taxExemptCertificateDetail.label}}: {{screenData.taxExemptCertificateDetail.value}}
+        </div>
         <app-secondary-button responsive-class
             *ngIf="!screenData.readOnly && !screenData.customer && screenData.loyaltyButton"
             [actionItem]="screenData.loyaltyButton" (actionClick)="doMenuItemAction(screenData.loyaltyButton)"
@@ -51,7 +54,11 @@
                  class="sale-total-loyalty-icon" responsive-class>
             <div *ngIf="screenData.customer.name" class="muted-color">{{screenData.customer.name}}</div>
             <div *ngIf="screenData.customer.label && screenData.customer.id" class="muted-color">
-                {{screenData.customer.label}}: {{screenData.customer.id}}</div>
+                {{screenData.customer.label}}: {{screenData.customer.id}}
+            </div>
+            <div *ngIf="screenData.taxExemptCertificateDetail" class="muted-color">
+                {{screenData.taxExemptCertificateDetail.label}}: {{screenData.taxExemptCertificateDetail.value}}
+            </div>
         </div>
 
         <app-primary-button responsive-class *ngIf="!screenData.readOnly && screenData.checkoutButton"
