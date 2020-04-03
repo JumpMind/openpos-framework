@@ -51,7 +51,7 @@ public class DBSessionTest {
         params.put("model", "Toyota");
         String sql = db.getSelectSql(RaceCarModel.class, params);
         assertEquals(
-                "select c0.vin, c0.model_year, c0.make, c0.model, c0.estimated_value, c0.iso_currency_code, c0.car_trim_type_code, c0.image, c0.antique, c0.create_time, c0.create_by, c0.last_update_time, c0.last_update_by, c0.tag_dealership_number, c0.color, c1.turbo_charged from car_car c0 join car_race_car c1 on c0.vin=c1.vin and c0.tag_dealership_number=c1.tag_dealership_number where c0.model=${model} and c1.turbo_charged=${turbocharged}",
+                "select c0.vin, c0.model_year, c0.make, c0.model, c0.estimated_value, c0.iso_currency_code, c0.car_trim_type_code, c0.image, c0.antique, c0.sub_model, c0.create_time, c0.create_by, c0.last_update_time, c0.last_update_by, c0.tag_dealership_number, c0.color, c1.turbo_charged from car_car c0 join car_race_car c1 on c0.vin=c1.vin and c0.tag_dealership_number=c1.tag_dealership_number where c0.model=${model} and c1.turbo_charged=${turbocharged}",
                 sql.toLowerCase());
     }
     
@@ -60,7 +60,7 @@ public class DBSessionTest {
         DBSession db = sessionFactory.createDbSession();
         String sql = db.getSelectSql(CarModel.class, null);
         assertEquals(
-                "select c0.vin, c0.model_year, c0.make, c0.model, c0.estimated_value, c0.iso_currency_code, c0.car_trim_type_code, c0.image, c0.antique, c0.create_time, c0.create_by, c0.last_update_time, c0.last_update_by, c0.tag_dealership_number, c0.color from car_car c0",
+                "select c0.vin, c0.model_year, c0.make, c0.model, c0.estimated_value, c0.iso_currency_code, c0.car_trim_type_code, c0.image, c0.antique, c0.sub_model, c0.create_time, c0.create_by, c0.last_update_time, c0.last_update_by, c0.tag_dealership_number, c0.color from car_car c0",
                 sql.toLowerCase());
     }
 
