@@ -127,6 +127,7 @@ public class StateManager implements IStateManager {
     private AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
     private AtomicLong lastActionTimeInMs = new AtomicLong(0);
     private AtomicLong lastShowTimeInMs = new AtomicLong(0);
+    private AtomicBoolean sessionTimeoutLatch = new AtomicBoolean( false);
     private AtomicReference<Thread> activeThread = new AtomicReference<>();
 
     @Override
@@ -471,6 +472,7 @@ public class StateManager implements IStateManager {
     @Override
     public void keepAlive() {
         lastInteractionTime.set(new Date());
+        sessionTimeoutLatch.set(false);
     }
 
     @Override
@@ -518,6 +520,7 @@ public class StateManager implements IStateManager {
                 // Global action handler takes precedence over all actions (for now)
                 Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
                 if (globalActionHandler != null) {
+                    //handleAction(globalActionHandler, action);
                     callGlobalActionHandler(action, globalActionHandler);
                     return;
                 }
@@ -652,6 +655,7 @@ public class StateManager implements IStateManager {
             } else {
                 method.invoke(actionHandler);
             }
+            performOutjections(actionHandler);
         } catch (Exception ex) {
             throw new FlowException("Failed to execute global action handler. Method: " + method + " actionHandler: " + actionHandler, ex);
         }
@@ -885,16 +889,10 @@ public class StateManager implements IStateManager {
     }
 
     protected void sessionTimeout() {
-        try {
-            log.info(String.format("Node %s session timed out.", applicationState.getDeviceId()));
-            if (!CollectionUtils.isEmpty(sessionTimeoutListeners)) {
-                Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : new Action("Timeout");
-                for (ISessionTimeoutListener sessionTimeoutListener : sessionTimeoutListeners) {
-                    sessionTimeoutListener.onSessionTimeout(this, localSessionTimeoutAction);
-                }
-            }
-        } catch (Exception ex) {
-            log.error("Failed to process the session timeout", ex);
+        if( sessionTimeoutLatch.get() == false){
+            sessionTimeoutLatch.set(true);
+            Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
+            doAction(localSessionTimeoutAction);
         }
     }
 
