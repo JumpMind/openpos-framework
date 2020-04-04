@@ -80,9 +80,6 @@ public class StateManager implements IStateManager {
     private Outjector outjector;
 
     @Autowired(required = false)
-    private List<? extends ISessionTimeoutListener> sessionTimeoutListeners;
-
-    @Autowired(required = false)
     private List<? extends ISessionListener> sessionListeners;
 
     @Autowired
