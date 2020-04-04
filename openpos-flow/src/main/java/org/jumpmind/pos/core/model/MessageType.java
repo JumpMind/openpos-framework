@@ -16,5 +16,7 @@ public final class MessageType {
     public static final String LocaleChanged = "LocaleChanged";
     public static final String Connected = "Connected";
     public static final String SingleSignOnRequest = "SingleSignOnRequest";
+    public static final String LockScreen = "LockScreen";
+    public static final String UnlockScreen = "UnlockScreen";
     
 }

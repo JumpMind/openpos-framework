@@ -127,6 +127,7 @@ export * from './lib/core/messages/ui-data-message';
 export * from './lib/core/messages/ui-message';
 export * from './lib/core/messages/message';
 export * from './lib/core/help-text/help-text.service';
+export * from './lib/core/lock-screen/lock-screen.service';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';

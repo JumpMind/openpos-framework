@@ -10,4 +10,6 @@ export class MessageTypes {
     static CONNECTED = 'Connected'
     static SINGLE_SIGN_ON_REQUEST = 'SingleSignOnRequest';
     static STATUS = 'Status';
+    static LOCK_SCREEN = 'LockScreen';
+    static UNLOCK_SCREEN = 'UnlockScreen';
 }

@@ -46,6 +46,8 @@ import { CordovaPlatform } from './platforms/cordova.platform';
 import { InfineaScannerCordovaPlugin } from './platform-plugins/scanners/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
 import { NCRPaymentPlugin } from './platform-plugins/cordova-plugins/ncr-payment-plugin';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
+import { ScanditCameraViewComponent } from './platform-plugins/scanners/scandit-scanner-cordova/scandit-camera-view/scandit-camera-view.component';
+import { LockScreenComponent } from './lock-screen/lock-screen.component';
 
 // Add supported locales
 import { registerLocaleData } from '@angular/common';
@@ -61,7 +63,7 @@ import { TimeZoneContext } from './client-context/time-zone-context';
 import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
 import { ELECTRON_LOGGER_CONFIG, DEFAULT_ELECTRON_LOGGER_CONFIG } from './logging/electron-logger-config';
-import { ScanditCameraViewComponent } from './platform-plugins/scanners/scandit-scanner-cordova/scandit-camera-view/scandit-camera-view.component';
+
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -74,7 +76,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StartupFailedComponent,
         DialogContentComponent,
         SplashScreenComponent,
-        ScanditCameraViewComponent
+        ScanditCameraViewComponent,
+        LockScreenComponent
     ],
     declarations: [
         DialogContentComponent,
@@ -83,7 +86,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StartupComponent,
         StartupFailedComponent,
         SplashScreenComponent,
-        ScanditCameraViewComponent
+        ScanditCameraViewComponent,
+        LockScreenComponent
     ],
     imports: [
         SharedModule,

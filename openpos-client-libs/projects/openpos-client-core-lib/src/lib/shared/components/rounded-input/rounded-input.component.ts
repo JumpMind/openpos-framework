@@ -13,12 +13,15 @@ export class RoundedInputComponent {
   placeholder: string;
 
   @Input()
+  inputType: string;
+
+  @Input()
   value: string = null;
 
   @Output()
-  valueChanged = new EventEmitter<string>();
+  valueChange = new EventEmitter<string>();
 
   onKeyUp(value: string){
-    this.valueChanged.emit(value);
+    this.valueChange.emit(value);
   }
 }
