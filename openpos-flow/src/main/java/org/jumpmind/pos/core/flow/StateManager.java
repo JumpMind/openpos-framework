@@ -128,7 +128,6 @@ public class StateManager implements IStateManager {
     private AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
     private AtomicLong lastActionTimeInMs = new AtomicLong(0);
     private AtomicLong lastShowTimeInMs = new AtomicLong(0);
-    private AtomicBoolean sessionTimeoutLatch = new AtomicBoolean( false);
     private AtomicReference<Thread> activeThread = new AtomicReference<>();
 
     @Override
@@ -473,7 +472,6 @@ public class StateManager implements IStateManager {
     @Override
     public void keepAlive() {
         lastInteractionTime.set(new Date());
-        sessionTimeoutLatch.set(false);
     }
 
     @Override
@@ -910,11 +908,8 @@ public class StateManager implements IStateManager {
     }
 
     protected void sessionTimeout() {
-        if( sessionTimeoutLatch.get() == false){
-            sessionTimeoutLatch.set(true);
             Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
             doAction(localSessionTimeoutAction);
-        }
     }
 
     @Override
