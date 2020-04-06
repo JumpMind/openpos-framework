@@ -45,8 +45,10 @@ export class LockScreenService {
     }
 
     private removeLockScreen(){
-        this.lockScreenOverlayRef.dispose();
-        this.lockScreenOverlayRef = null;
+        if( this.lockScreenOverlayRef ){
+            this.lockScreenOverlayRef.dispose();
+            this.lockScreenOverlayRef = null;
+        }
     }
 
     private createInjector(): PortalInjector {
