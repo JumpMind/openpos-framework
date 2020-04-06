@@ -906,6 +906,7 @@ public class StateManager implements IStateManager {
 
     protected void sessionTimeout() {
             Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
+            localSessionTimeoutAction.setDoNotBlockForResponse(true);
             doAction(localSessionTimeoutAction);
     }
 
