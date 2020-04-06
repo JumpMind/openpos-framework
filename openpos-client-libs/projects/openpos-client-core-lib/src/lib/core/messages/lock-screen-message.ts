@@ -8,5 +8,6 @@ export class LockScreenMessage implements OpenposMessage{
     userText: string;
     iconName: string;
     passwordAction: IActionItem;
+    errorMessage: string;
 
 }

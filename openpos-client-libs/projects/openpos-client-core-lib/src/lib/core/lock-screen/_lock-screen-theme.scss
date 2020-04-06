@@ -1,8 +1,14 @@
 @mixin lock-screen-theme($theme){
+  $app-warn: mat-color(map-get($theme, warn));
+
   app-lock-screen{
     section{
       background-color: rgba(0,0,0,.5);
       color: white;
+    }
+
+    .error{
+      color: $app-warn;
     }
   }
 }
