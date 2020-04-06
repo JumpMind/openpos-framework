@@ -3,6 +3,6 @@
         <app-icon [iconName]="data?.iconName" iconClass="xl"></app-icon>
         <h1>{{data?.userText}}</h1>
         <app-rounded-input placeholder="" [(value)]="password" (keydown.enter)="submitPassword()" inputType="password"></app-rounded-input>
-        <p class="error">{{data?.errorMessage}}</p>
+        <p *ngIf="!!data?.errorMessage" class="error">{{data?.errorMessage}}</p>
     </section>
 </main>
