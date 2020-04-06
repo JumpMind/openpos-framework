@@ -576,15 +576,16 @@ public class DBSession {
 
         for (int i = 0; i < propertyDescriptors.length; i++) {
             String propertyName = propertyDescriptors[i].getName();
-            String columnName = DatabaseSchema.camelToSnakeCase(propertyName);
-
-            if (row.containsKey(columnName)) {
-                Object value = row.get(columnName);
-                if (isDefferedLoadField(model.getField(propertyName))) {
-                    defferedLoadValues.put(propertyName, value);
-                } else {
-                    model.setValue(propertyName, value);
-                    matchedColumns.put(columnName, null);
+            String columnName = modelMetaData.getColumnNameForProperty(resultClass, propertyName);
+            if (columnName != null) {
+                if (row.containsKey(columnName)) {
+                    Object value = row.get(columnName);
+                    if (isDefferedLoadField(model.getField(propertyName))) {
+                        defferedLoadValues.put(propertyName, value);
+                    } else {
+                        model.setValue(propertyName, value);
+                        matchedColumns.put(columnName, null);
+                    }
                 }
             }
         }

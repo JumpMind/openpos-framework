@@ -20,6 +20,7 @@
 package org.jumpmind.pos.core.flow;
 
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -35,10 +36,7 @@ import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
 import org.jumpmind.pos.core.clientconfiguration.LocaleChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
-import org.jumpmind.pos.core.flow.config.FlowConfig;
-import org.jumpmind.pos.core.flow.config.StateConfig;
-import org.jumpmind.pos.core.flow.config.SubFlowConfig;
-import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
+import org.jumpmind.pos.core.flow.config.*;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
 import org.jumpmind.pos.core.ui.Toast;
@@ -82,9 +80,6 @@ public class StateManager implements IStateManager {
     private Outjector outjector;
 
     @Autowired(required = false)
-    private List<? extends ISessionTimeoutListener> sessionTimeoutListeners;
-
-    @Autowired(required = false)
     private List<? extends ISessionListener> sessionListeners;
 
     @Autowired
@@ -101,6 +96,9 @@ public class StateManager implements IStateManager {
 
     @Autowired
     LocaleMessageFactory localeMessageFactory;
+
+    @Autowired
+    private ActionHandlerHelper helper;
 
     private ApplicationState applicationState = new ApplicationState();
 
@@ -517,8 +515,9 @@ public class StateManager implements IStateManager {
             try {
                 // Global action handler takes precedence over all actions (for now)
                 Class<? extends Object> globalActionHandler = getGlobalActionHandler(action);
-                if (globalActionHandler != null) {
+                if (globalActionHandler != null && !isCalledFromGlobalActionHandler(globalActionHandler, action)) {
                     callGlobalActionHandler(action, globalActionHandler);
+                    refreshDeviceScope();
                     return;
                 }
 
@@ -643,6 +642,27 @@ public class StateManager implements IStateManager {
         for (Method method : globalMethods) {
             invokeGlobalAction(action, method, actionHandler);
         }
+    }
+
+    protected boolean isCalledFromGlobalActionHandler(Object handler, Action action) {
+        StackTraceElement[] currentStack = Thread.currentThread().getStackTrace();
+
+        if (currentStack.length > 150) {
+            helper.checkStackOverflow(StateManager.class, handler, currentStack);
+        }
+
+        for (StackTraceElement stackFrame : currentStack) {
+            Class<?> currentClass = helper.getClassFrom(stackFrame);
+            if (currentClass != null && !Modifier.isAbstract(currentClass.getModifiers()) && FlowUtil.isGlobalActionHandler(currentClass)
+                    && !currentClass.getName().equals(((Class)handler).getName())) {
+                return false;
+            } else if (stackFrame.getClassName().equals(((Class)handler).getName())) {
+                return true;
+            }
+
+        }
+
+        return false;
     }
 
     protected void invokeGlobalAction(Action action, Method method, Object actionHandler) {
@@ -885,17 +905,8 @@ public class StateManager implements IStateManager {
     }
 
     protected void sessionTimeout() {
-        try {
-            log.info(String.format("Node %s session timed out.", applicationState.getDeviceId()));
-            if (!CollectionUtils.isEmpty(sessionTimeoutListeners)) {
-                Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : new Action("Timeout");
-                for (ISessionTimeoutListener sessionTimeoutListener : sessionTimeoutListeners) {
-                    sessionTimeoutListener.onSessionTimeout(this, localSessionTimeoutAction);
-                }
-            }
-        } catch (Exception ex) {
-            log.error("Failed to process the session timeout", ex);
-        }
+            Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
+            doAction(localSessionTimeoutAction);
     }
 
     @Override

@@ -7,6 +7,7 @@ import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
+import org.jumpmind.pos.core.ui.data.AdditionalLabel;
 import org.jumpmind.pos.core.ui.data.OrderSummary;
 
 @AssignKeyBindings
@@ -33,6 +34,7 @@ public class SaleUIMessage extends UIMessage {
     private boolean transactionActive = false;
 
     private UICustomer customer;
+    private AdditionalLabel taxExemptCertificateDetail;
 
     private boolean locationEnabled;
     private String locationOverridePrompt;
@@ -108,6 +110,18 @@ public class SaleUIMessage extends UIMessage {
 
     public void setCustomer(UICustomer customer) {
         this.customer = customer;
+    }
+
+    public AdditionalLabel getTaxExemptCertificateDetail() {
+        return taxExemptCertificateDetail;
+    }
+
+    public void setTaxExemptCertificateDetail(AdditionalLabel taxExemptCertificateDetail) {
+        this.taxExemptCertificateDetail = taxExemptCertificateDetail;
+    }
+
+    public void setTaxExemptCertificateDetail(String label, String value) {
+        this.taxExemptCertificateDetail = new AdditionalLabel(label, value);
     }
 
     public ActionItem getLoyaltyButton() {

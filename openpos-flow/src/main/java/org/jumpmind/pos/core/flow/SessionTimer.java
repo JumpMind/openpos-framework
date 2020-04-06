@@ -28,6 +28,7 @@ public class SessionTimer {
         }
         log.debug("checking if StateManagers need to time out due to inactivity");
         for (StateManager stateManager : stateManagerContainer.getAllStateManagers()) {
+            stateManagerContainer.setCurrentStateManager(stateManager);
             stateManager.checkSessionTimeout();
         }
     }

@@ -31,8 +31,16 @@ public class CarModel extends AbstractTaggedModel implements ITaggedModel {
     private byte[] image;
     @ColumnDef
     private boolean antique;
-    
-    
+
+    /*
+     This tests deprecating a field and mapping to a new field, while keeping the column name the same.  The subModel
+     attribute used to be mapped to the sub_model column (by default), but I changed the mapping to the subModelCode
+     property in order to test use of the 'name' attribute on a ColumnDef.
+     */
+    @Deprecated
+    private String subModel;
+    @ColumnDef(name="sub_model")
+    private SubModelCode subModelCode;
     
     public String getModelYear() {
         return modelYear;
@@ -90,4 +98,28 @@ public class CarModel extends AbstractTaggedModel implements ITaggedModel {
     public void setAntique(boolean antique) {
         this.antique = antique;
     }
+
+    /*
+        The following four methods (getSubModel, setSubModel, setSubModelCode, getSubModelCode) test use of the
+        @ColumnDef 'name' attribute when building queries.  There was
+        a case where we needed to change the Java type of an existing column from a String to an ITypeCode and so I
+        handled it by adding a new attribute in the model class, but keeping the same column name.
+     */
+    @Deprecated
+    public String getSubModel() { return subModel; }
+    @Deprecated
+    public void setSubModel(String subModel) { this.subModel = subModel; }
+
+    public void setSubModelCode(SubModelCode subModelCode) {
+        this.subModel = subModelCode != null ? subModelCode.toString() : null;
+        this.subModelCode = subModelCode;
+    }
+
+    public SubModelCode getSubModelCode() {
+        if (this.subModelCode == null && this.subModel != null) {
+            return SubModelCode.of(subModel);
+        }
+        return subModelCode;
+    }
+
 }

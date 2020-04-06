@@ -92,6 +92,8 @@ task ng_deploy {
 }
 
 deploy.dependsOn ng_deploy
-test.dependsOn ng_test
-build.dependsOn ng_build
+if (!hasProperty('skipClient')) {
+    test.dependsOn ng_test
+    build.dependsOn ng_build
+}
 clean.dependsOn ng_clean
