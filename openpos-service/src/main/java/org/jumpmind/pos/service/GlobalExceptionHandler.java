@@ -19,11 +19,7 @@ public class GlobalExceptionHandler {
     @ResponseBody
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResult handleErrors(Throwable ex, WebRequest request) {
-        if (ex instanceof NeedsActionException) {
-            log.info("A " + ex.getClass().getSimpleName() + " exception was thrown");
-        } else {
-            log.warn("Web request failed.  " + request.getDescription(true), ex);
-        }
+        log.warn("Web request failed.  " + request.getDescription(true), ex);
         return new ErrorResult(ex.getMessage(), ex);
     }
 }
