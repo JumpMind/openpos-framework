@@ -88,7 +88,7 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
         this.contentMutationObserver.observe(this.elementRef.nativeElement, mutations);
     }
 
-    redraw(force = false): void {
+    redraw(): void {
         if (!this.needsRedrawn()) {
             return;
         }
