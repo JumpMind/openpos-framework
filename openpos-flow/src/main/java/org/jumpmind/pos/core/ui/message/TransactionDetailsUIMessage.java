@@ -23,6 +23,7 @@ public class TransactionDetailsUIMessage extends UIMessage {
 
     private ActionItem checkoutButton;
     private UICustomer customer;
+    private String statusMessage;
 
     private boolean enableCollapsibleItems = true;
 
