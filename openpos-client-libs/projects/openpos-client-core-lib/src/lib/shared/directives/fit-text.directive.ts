@@ -2,14 +2,16 @@ import {
     AfterViewInit,
     Directive,
     ElementRef,
+    EventEmitter,
     Input,
     OnChanges,
     OnDestroy,
+    Output,
     Renderer2,
     SimpleChanges
 } from '@angular/core';
 import {fromEvent, merge, of, Subject} from 'rxjs';
-import {debounce, takeUntil, tap} from 'rxjs/operators';
+import {debounce, filter, takeUntil} from 'rxjs/operators';
 
 @Directive({
     selector: '[fitText]'
@@ -18,30 +20,34 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
     @Input() maxFontSize = Infinity;
     @Input() minFontSize = -Infinity;
     @Input() debounce = 250;
+    @Output() fitted = new EventEmitter<FitTextDirective>();
 
     currentFontSize: number;
     previousFontSize: number;
 
-    currentWidth: number;
+    contentWidth: number;
     availableWidth: number;
 
     contentMutationObserver: MutationObserver;
+    contentChanged = false;
+
     animationFrameRequestId: number;
-    needsRedrawn = false;
     destroyed$ = new Subject();
 
     constructor(private elementRef: ElementRef, private renderer: Renderer2) {
-
     }
 
     ngAfterViewInit(): void {
+        // Do sizing when various events happen
         this.updateOnWindowChanges();
         this.updateOnContentChanges();
-        this.updateUntilStable();
+
+        // Do initial sizing
+        this.fitText();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        this.updateUntilStable();
+        this.fitText();
     }
 
     ngOnDestroy(): void {
@@ -58,14 +64,17 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
 
         merge(resizeEvent, orientationChangeEvent)
             .pipe(
+                // Using "debounce", instead of "debounceTime" prevents any need to make specific
+                // updates in ngOnChanges because "debounce" will always use the current value of "this.debounce"
                 debounce(() => of(this.debounce)),
-                tap(() => this.needsRedrawn = true),
+                filter(() => this.needsRedrawn()),
                 takeUntil(this.destroyed$)
             )
-            .subscribe(() => this.updateUntilStable());
+            .subscribe(() => this.fitText());
     }
 
     updateOnContentChanges(): void {
+        // Update the font size for these DOM mutations
         const mutations = {
             subtree: true,
             childList: true,
@@ -73,14 +82,14 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
         };
 
         this.contentMutationObserver = new MutationObserver(() => {
-            this.needsRedrawn = true;
-            this.updateUntilStable()
+            this.contentChanged = true;
+            this.fitText();
         });
         this.contentMutationObserver.observe(this.elementRef.nativeElement, mutations);
     }
 
-    update(): void {
-        if (this.isStable() && !this.needsRedrawn) {
+    redraw(force = false): void {
+        if (!this.needsRedrawn()) {
             return;
         }
 
@@ -89,34 +98,54 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
         const style = getComputedStyle(element);
 
         this.availableWidth = parent.clientWidth;
-        this.currentWidth = element.getBoundingClientRect().width;
+        this.contentWidth = element.getBoundingClientRect().width;
 
         this.currentFontSize = this.currentFontSize || parseFloat(style.fontSize);
         this.previousFontSize = this.currentFontSize;
 
-        const newFontSize = (this.availableWidth / this.currentWidth) * this.currentFontSize;
+        const newFontSize = (this.availableWidth / this.contentWidth) * this.currentFontSize;
 
+        // Update the current font size, while keeping it within bounds of min/max values
         this.currentFontSize = Math.min(
             Math.max(this.minFontSize, newFontSize),
             this.maxFontSize
         );
 
         this.renderer.setStyle(element, 'font-size', this.currentFontSize + 'px');
+        this.markAsClean();
     }
 
-    updateUntilStable(): void {
+    markAsClean(): void {
+        this.contentChanged = false;
+    }
+
+    fitText(): void {
         cancelAnimationFrame(this.animationFrameRequestId);
 
+        // Update the font size the next time the browser is ready to start the next repaint task
         this.animationFrameRequestId = requestAnimationFrame(() => {
-            this.update();
+            this.redraw();
 
-            if (!this.isStable()) {
-                this.updateUntilStable();
+            if (this.isFontSizeStable()) {
+                this.fitted.emit(this);
+            } else {
+                this.fitText();
             }
         });
     }
 
-    isStable(): boolean {
+    isFontSizeStable(): boolean {
+        // Stability happens as the previous and current font size converge
         return Math.floor(this.previousFontSize) === Math.floor(this.currentFontSize);
+    }
+
+    didAvailableWidthChange(): boolean {
+        // Check if the current parent width is different from the last saved value
+        const parent = this.renderer.parentNode(this.elementRef.nativeElement);
+        return this.availableWidth !== parent.clientWidth;
+    }
+
+    needsRedrawn(): boolean {
+        return this.contentChanged || this.didAvailableWidthChange() || !this.isFontSizeStable();
     }
 }
