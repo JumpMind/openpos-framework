@@ -1,0 +1,9 @@
+@mixin stamp-theme($theme) {
+    $foreground: map-get($theme, foreground);
+    $app-warn: mat-color(map-get($theme, warn));
+
+    app-stamp {
+        color: $app-warn;
+        border-color: $app-warn;
+    }
+}

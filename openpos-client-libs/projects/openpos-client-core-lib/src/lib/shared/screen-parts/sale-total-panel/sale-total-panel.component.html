@@ -1,4 +1,7 @@
 <mat-card class="sale-total-background">
+    <app-stamp fitText>
+        {{screenData.statusMessage}}
+    </app-stamp>
     <div *ngIf="screenData.itemCount" class="item-count">
         <div *ngIf="screenData.itemCount.amount" responsive-class class="item-count-amount">
             {{screenData.itemCount.amount}}
