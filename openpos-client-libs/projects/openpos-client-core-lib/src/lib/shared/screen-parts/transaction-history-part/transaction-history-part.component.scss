@@ -3,9 +3,13 @@
 .transaction-history-outer {
     display: grid;
     grid-template-rows: auto auto auto;
-    padding: 16px;
     gap: 16px;
-    margin-bottom: 8px;
+    row-gap: 16px;
+    column-gap: 16px;
+
+    &.mobile {
+        padding: 0 16px;
+    }
 }
 
 .transaction-history-title {
@@ -14,27 +18,36 @@
     grid-template-columns: 1fr auto;
 }
 
+.detail-field {
+}
+
 .detail-label {
     padding-right: 4px;
+}
+
+.detail-value {
+    font-weight: bold;
 }
 
 .transaction-history-details {
     @extend %text-sm;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     grid-template-rows: auto auto;
-    gap: 8px;
+    column-gap: 16px;
+    overflow: hidden;
 }
 
 .transaction-history-actions {
-    width: 100%;
     display: grid;
-    grid-auto-flow: column;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
 }
 
 .transaction-button {
     @extend %text-sm;
-    margin: 0px 4px;
+    padding: 16px;
+    border: 2px solid;
 
     .transaction-button-text {
         margin-right: 8px;

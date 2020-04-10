@@ -2,17 +2,16 @@
     $primary: map-get($theme, primary);
     $contrast: mat-color($primary, default-contrast);
     $background: map-get($mat-grey, 200);
-    $dark: map-get($mat-grey, 600);
+    $dark: map-get($mat-grey, 500);
+    $button-border: map-get($mat-blue-grey, 500);
 
     app-transaction-history-part {
-
-        .transaction-history-outer {
-            border-bottom: 1px solid $dark;
+        .transaction-button {
+            border-color: $button-border;
         }
 
         .transaction-history-details {
             color: $dark;
         }
     }
-
 }

@@ -1,39 +1,38 @@
-<div class="transaction-history-outer">
+<div class="transaction-history-outer" [ngClass]="{'mobile': isMobile$ | async}">
     <div class="transaction-history-title">
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.customerName}}</span>
-            <b>{{screenData.customerName}}</b>
+            <span class="detail-value">{{screenData.customerName}}</span>
         </div>
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.status}}</span>
-            <b>{{screenData.status}}</b>
+            <span class="detail-value">{{screenData.status}}</span>
         </div>
     </div>
-
     <div class="transaction-history-details">
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.transactionDate}}:</span>
-            <span>{{screenData.transactionDate}}</span>
+            <span class="detail-value">{{screenData.transactionDate | date: 'M/d/yyyy h:mm a'}}</span>
         </div>
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.deviceId}}:</span>
-            <span>{{screenData.deviceId}}</span>
+            <span class="detail-value">{{screenData.deviceId}}</span>
         </div>
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.storeId}}:</span>
-            <span>{{screenData.storeId}}</span>
+            <span class="detail-value">{{screenData.storeId}}</span>
         </div>
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.username}}:</span>
-            <span>{{screenData.username}}</span>
+            <span class="detail-value">{{screenData.username}}</span>
         </div>
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.tillId}}:</span>
-            <span>{{screenData.tillId}}</span>
+            <span class="detail-value">{{screenData.tillId}}</span>
         </div>
-        <div>
+        <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.barcode}}:</span>
-            <span>{{screenData.barcode}}</span>
+            <span class="detail-value">{{screenData.barcode}}</span>
         </div>
     </div>
 

@@ -121,6 +121,7 @@
         background-color: $order-color;
     }
 
+    .muted,
     .muted-color {
         color:mat-color($foreground, disabled);
     }

@@ -1,5 +1,5 @@
 <mat-card class="sale-total-background">
-    <app-stamp fitText>
+    <app-stamp class="status-stamp" fitText *ngIf="screenData.statusMessage">
         {{screenData.statusMessage}}
     </app-stamp>
     <div *ngIf="screenData.itemCount" class="item-count">

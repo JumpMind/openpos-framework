@@ -17,11 +17,6 @@
     width: 55vw;
   }
 
-
-.muted {
-    color: "accent";
-}
-
 .mat-cell {
     word-wrap: break-word;
 }
@@ -32,6 +27,7 @@
 
 .container {
     display: grid;
-    grid-template-rows: auto 1fr;
+    grid-template-rows: auto minmax(0, 1fr);
     height: 100%;
+    overflow: hidden;
 }

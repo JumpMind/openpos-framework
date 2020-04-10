@@ -103,7 +103,7 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
         this.currentFontSize = this.currentFontSize || parseFloat(style.fontSize);
         this.previousFontSize = this.currentFontSize;
 
-        const newFontSize = (this.availableWidth / this.contentWidth) * this.currentFontSize;
+        let newFontSize = (this.availableWidth / this.contentWidth) * this.currentFontSize;
 
         // Update the current font size, while keeping it within bounds of min/max values
         this.currentFontSize = Math.min(

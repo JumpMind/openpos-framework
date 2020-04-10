@@ -5,6 +5,7 @@
 }
 
 .item-count {
+    grid-area: item-count;
     display: flex;
     height: fit-content;
     padding-top: 12px;
@@ -12,8 +13,21 @@
     justify-content: center;
     align-items: center;
 }
+.status-stamp {
+    grid-area: status-stamp;
+    grid-row-start: status-stamp;
+    grid-row-end: buttons;
+    justify-self: center;
+    align-self: center;
+}
 
 .sale-total-background {
+    grid-template-areas:
+        "status-stamp"
+        "item-count"
+        "content"
+        "buttons";
+    grid-template-rows: 0 min-content minmax(0, 1fr) min-content;
     display: grid;
     align-self: stretch;
     justify-self: stretch;
@@ -23,6 +37,7 @@
     overflow-y: auto;
 
     .sale-total-content {
+        grid-area: content;
         display: grid;
         grid-row-gap: 32px;
         padding-left: 24px;
@@ -97,6 +112,7 @@
     }
 
     .sale-total-buttons {
+        grid-area: buttons;
         display: grid;
         align-self: end;
 
