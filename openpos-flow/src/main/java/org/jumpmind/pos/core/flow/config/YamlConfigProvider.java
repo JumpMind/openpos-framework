@@ -48,7 +48,10 @@ public class YamlConfigProvider implements IFlowConfigProvider {
 
             List<YamlFlowConfig> yamlFlowConfigs = new ArrayList<>();
 
-            for (Resource resource : resources) {
+            // Loop these backwards since most specific will be first in the class path an we want those
+            // last so they win the override
+            for( int i = resources.length - 1; i >= 0 ; --i){
+                Resource resource = resources[i];
                 // first pass needs to load all raw YAML.
                 yamlFlowConfigs.addAll(loadYamlResource(appId, path, resource));
             }
@@ -107,7 +110,16 @@ public class YamlConfigProvider implements IFlowConfigProvider {
             existingYamlFlowConfigs = new ArrayList<YamlFlowConfig>();
             loadedYamlFlowConfigs.put(appId, existingYamlFlowConfigs);
         }
-        existingYamlFlowConfigs.addAll(yamlFlowConfigs);
+
+        for( YamlFlowConfig flowConfig: yamlFlowConfigs){
+            YamlFlowConfig match = existingYamlFlowConfigs.stream().filter(flowConfig1 -> flowConfig.getFlowName().equals(flowConfig1.getFlowName())).findFirst().orElse(null);
+            if(match == null){
+                existingYamlFlowConfigs.add(flowConfig);
+            } else {
+                match.merge(flowConfig);
+            }
+        }
+
         return existingYamlFlowConfigs;
     }
 

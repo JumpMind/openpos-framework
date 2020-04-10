@@ -554,5 +554,12 @@ public class TestStates {
             stateManager.doAction(action);
         }
     }
+
+    public static class StateAddedThroughFlowExtension {
+        @OnArrive
+        public void arrive(){
+
+        }
+    }
     
 }

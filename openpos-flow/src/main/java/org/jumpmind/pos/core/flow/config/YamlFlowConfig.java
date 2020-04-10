@@ -60,4 +60,21 @@ public class YamlFlowConfig {
         return "YamlFlowConfig [flowName=" + flowName + ", flowStateConfigs=" + flowStateConfigs + "]";
     }
 
+    public void merge(YamlFlowConfig flowConfig){
+        flowConfig.getFlowStateConfigs().forEach( stateConfig -> {
+            YamlStateConfig matchedState = flowStateConfigs.stream().filter( stateConfig1 -> stateConfig.getStateName().equals(stateConfig1.getStateName()) && stateConfig1.getActionToStateConfigs().size() > 0 ).findFirst().orElse(null);
+            if( matchedState == null){
+                flowStateConfigs.add(stateConfig);
+            } else {
+                matchedState.merge(stateConfig);
+            }
+        });
+
+        flowConfig.getGlobalEventHandlers().forEach(s -> {
+            if(!globalEventHandlers.contains(s)){
+                globalEventHandlers.add(s);
+            }
+        });
+    }
+
 }

@@ -1,6 +1,5 @@
 package org.jumpmind.pos.service.strategy;
 
-import org.jumpmind.pos.service.NeedsActionException;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +33,6 @@ public class RemoteFirstStrategy implements IInvocationStrategy {
             try {
                 logger.info("Remote service unavailable.  Trying local");
                 return localStrategy.invoke(config, proxy, method, endpoints, args);
-            } catch (NeedsActionException nae) {
-                throw nae;
             } catch (Exception e) {
                 logger.info("Local call failed (this was the error).  Throwing original exception", e);
                 throw ex;

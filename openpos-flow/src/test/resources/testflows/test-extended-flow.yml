@@ -1,0 +1,6 @@
+---
+TestFlow:
+  - FirstLevelState:
+      AddedAction: StateAddedThroughFlowExtension
+  - StateAddedThroughFlowExtension:
+      Done: FirstLevelState

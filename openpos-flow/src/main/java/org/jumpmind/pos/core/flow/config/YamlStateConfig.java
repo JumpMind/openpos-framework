@@ -20,11 +20,15 @@
  */
 package org.jumpmind.pos.core.flow.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.jumpmind.pos.core.flow.FlowException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 public class YamlStateConfig {
     
     private String stateName;
@@ -80,6 +84,14 @@ public class YamlStateConfig {
         return "YamlStateConfig [stateName=" + stateName + ", actionToStateConfigs=" + actionToStateConfigs + ", isSubTransition="
                 + isSubTransition + ", returnActions=" + returnActions + "]";
     } 
-    
+
+    public void merge( YamlStateConfig stateConfig){
+        stateConfig.getActionToStateConfigs().forEach((s, stateConfig1) -> {
+            if(actionToStateConfigs.containsKey(s)){
+                log.info("Overriding transition {} on state {}", s, stateName );
+            }
+            actionToStateConfigs.put(s, stateConfig1);
+        });
+    }
 
 }
