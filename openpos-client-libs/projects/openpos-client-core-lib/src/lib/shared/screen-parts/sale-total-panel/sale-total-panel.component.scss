@@ -41,7 +41,6 @@
     .sale-total-content {
         grid-area: content;
         display: grid;
-        grid-row-gap: 32px;
         align-items: center;
         padding-left: 24px;
         padding-right: 24px;
@@ -137,7 +136,7 @@
 
             .sale-total-loyalty-icon {
                 max-width: 100%;
-                max-height: 8vh;
+                max-height: 5rem;
 
                 &.small-desktop-landscape {
                     max-height: 3em;
