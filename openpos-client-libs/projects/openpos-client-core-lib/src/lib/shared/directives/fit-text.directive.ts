@@ -82,6 +82,7 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     updateOnContentChanges(): void {
+        // Redraw when content or attributes of element or parent element changes
         this.contentMutationObserver.observe(this.elementRef.nativeElement, this.mutations);
         this.contentMutationObserver.observe(this.renderer.parentNode(this.elementRef.nativeElement), this.mutations);
     }
