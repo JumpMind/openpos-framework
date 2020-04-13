@@ -10,7 +10,6 @@ export class ImageService {
     private baseUrlToken = '${apiServerBaseUrl}';
     private appIdToken = '${appId}';
     private deviceIdToken = '${deviceId}';
-    private baseContentUrl = '${apiServerBaseUrl}/appId/${appId}/deviceId/${deviceId}/content?contentPath=';
 
     constructor(private personalizer: PersonalizationService,
                 private discovery: DiscoveryService, private session: SessionService) { }
@@ -28,12 +27,9 @@ export class ImageService {
         } else {
             return originalUrl;
         }
+
     }
 
-    contentUrl(path: string): string {
-        const url = this.replaceImageUrl(this.baseContentUrl);
-        return `${url}${path}&provider=classPathContentProvider`;
-    }
 }
 
 

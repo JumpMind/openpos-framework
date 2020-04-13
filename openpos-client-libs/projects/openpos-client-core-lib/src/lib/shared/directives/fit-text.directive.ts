@@ -4,22 +4,23 @@ import {
     ElementRef,
     EventEmitter,
     Input,
+    NgZone,
     OnChanges,
     OnDestroy,
     Output,
     Renderer2,
     SimpleChanges
 } from '@angular/core';
-import {fromEvent, merge, of, Subject} from 'rxjs';
-import {debounce, filter, takeUntil} from 'rxjs/operators';
+import {fromEvent, merge, Subject, timer} from 'rxjs';
+import {audit, filter, takeUntil} from 'rxjs/operators';
 
 @Directive({
-    selector: '[fitText]'
+    selector: '[fitText]',
 })
 export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
     @Input() maxFontSize = Infinity;
     @Input() minFontSize = -Infinity;
-    @Input() debounce = 500;
+    @Input() debounce = 250;
     @Output() fitted = new EventEmitter<FitTextDirective>();
 
     contentWidth: number;
@@ -30,6 +31,7 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
     contentMutationObserver: MutationObserver;
     contentChanged = false;
 
+    requestAnimationFrameId: number;
     fitTextCount = 0;
     destroyed$ = new Subject();
 
@@ -41,7 +43,7 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
         characterData: true
     };
 
-    constructor(private elementRef: ElementRef, private renderer: Renderer2) {
+    constructor(private elementRef: ElementRef, private renderer: Renderer2, private zone: NgZone) {
         this.contentMutationObserver = new MutationObserver(() => {
             this.contentChanged = true;
             this.fitText();
@@ -67,18 +69,24 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     updateOnWindowChanges(): void {
-        const resizeEvent = fromEvent(window, 'resize');
-        const orientationChangeEvent = fromEvent(window, 'orientationchange');
+        // Don't want Angular running change detection every time these events fire, so run outsize of Angular zone
+        // to prevent change detection from happening for every event that fires
+        this.zone.runOutsideAngular(() => {
+            const resizeEvent$ = fromEvent(window, 'resize');
+            const orientationChangeEvent$ = fromEvent(window, 'orientationchange');
+            const updateEvents$ = merge(resizeEvent$, orientationChangeEvent$)
+                .pipe(
+                    // Using "audit", instead of "auditTime" prevents any need to make specific
+                    // updates in ngOnChanges because "audit" always calls a callback for the latest timer value
+                    //
+                    // Also, audit seems to be aesthetically  pleasing than debounce
+                    audit(() => timer(this.debounce)),
+                    filter(() => this.needsRedrawn()),
+                    takeUntil(this.destroyed$)
+                );
 
-        merge(resizeEvent, orientationChangeEvent)
-            .pipe(
-                // Using "debounce", instead of "debounceTime" prevents any need to make specific
-                // updates in ngOnChanges because "debounce" will always use the current value of "this.debounce"
-                debounce(() => of(this.debounce)),
-                filter(() => this.needsRedrawn()),
-                takeUntil(this.destroyed$)
-            )
-            .subscribe(() => this.fitText());
+            updateEvents$.subscribe(() => this.fitText());
+        });
     }
 
     updateOnContentChanges(): void {
@@ -92,11 +100,6 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
     }
 
     redraw(): void {
-        if (!this.needsRedrawn()) {
-            console.log('[fitText]: No redraw necessary');
-            return;
-        }
-
         this.updateState();
 
         // Calculate the new font size using the ratio of available width to content width.
@@ -151,15 +154,21 @@ export class FitTextDirective implements AfterViewInit, OnChanges, OnDestroy {
         }
 
         this.fitTextCount++;
-        this.redraw();
+        cancelAnimationFrame(this.requestAnimationFrameId);
 
-        if (this.isFontSizeStable()) {
-            console.log(`[fitText]: Fitted font size ${this.currentFontSize}px after ${this.fitTextCount} attempt(s)`);
-            this.fitted.emit(this);
-            this.fitTextCount = 0;
-        } else {
-            this.fitText();
-        }
+        // For best performance, wait until the browser is ready to repaint before attempting to fit text again
+        this.requestAnimationFrameId = requestAnimationFrame(() => {
+            this.redraw();
+
+            if (this.isFontSizeStable()) {
+                console.log(`[fitText]: Fitted font size ${this.currentFontSize}px after ${this.fitTextCount} attempt(s)`);
+                // Emit event in the Angular zone so change detection is performed in all event listeners
+                this.zone.run(() => this.fitted.emit(this));
+                this.fitTextCount = 0;
+            } else {
+                this.fitText();
+            }
+        });
     }
 
     isFontSizeStable(): boolean {
