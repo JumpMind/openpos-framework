@@ -305,6 +305,10 @@ public class DBSession {
             current = current.getSuperclass();
         }
 
+        if (params != null) {
+            verifyParameters(toProcess, params.keySet());
+        }
+
         final String AND = " and ";
         final String JOIN = " join ";
         final String WHERE = " where ";
@@ -362,6 +366,36 @@ public class DBSession {
         return columns.toString() + joins.toString() + where.toString();
 
     }
+
+    /**
+     * Checks the given Set of query parameter property names can be found as a mapped column within the given list
+     * of entityModelClasses.
+     * @param entityModelClasses The list of classes to search
+     * @param queryParamKeys The list of property names to search for
+     * @throws PersistException if at least one property in the list of given queryParamKeys cannot be found within
+     * the given list of classes.
+     */
+    protected void verifyParameters(List<Class<?>> entityModelClasses, Set<String> queryParamKeys) {
+        if (queryParamKeys != null && ! queryParamKeys.isEmpty() && entityModelClasses != null) {
+            for (String property: queryParamKeys) {
+                boolean isPropertyMapped = entityModelClasses.stream().anyMatch(modelClass -> {
+                    ModelMetaData modelMetaData = this.databaseSchema.getModelMetaData(modelClass);
+                    return modelMetaData.getColumnNameForProperty(modelClass, property) != null;
+                });
+
+                if (! isPropertyMapped) {
+                    throw new PersistException(
+                        String.format("A @ColumnDef mapping for property '%s' could not be " +
+                            "found in any of the following classes: %s",
+                            property,
+                            entityModelClasses.stream().map(c -> c.getSimpleName()).collect(Collectors.joining(", "))
+                        )
+                    );
+                }
+            }
+        }
+    }
+
 
     public void save(AbstractModel argModel) {
         List<Table> tables = getValidatedTables(argModel);

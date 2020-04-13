@@ -1,10 +1,5 @@
 package org.jumpmind.pos.persist;
 
-import static org.junit.Assert.assertArrayEquals;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.fail;
-
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -25,6 +20,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = { TestPersistCarsConfig.class })
@@ -62,6 +59,23 @@ public class DBSessionTest {
         assertEquals(
                 "select c0.vin, c0.model_year, c0.make, c0.model, c0.estimated_value, c0.iso_currency_code, c0.car_trim_type_code, c0.image, c0.antique, c0.sub_model, c0.create_time, c0.create_by, c0.last_update_time, c0.last_update_by, c0.tag_dealership_number, c0.color from car_car c0",
                 sql.toLowerCase());
+    }
+
+    @Test
+    public void testGetSelectSqlWithNonMappedParam() {
+        DBSession db = sessionFactory.createDbSession();
+        Map<String, Object> params = new HashMap<>();
+        params.put("model", "Toyota");
+        params.put("nonExistentProperty1", "foo");
+        params.put("nonExistentProperty2", "bar");
+        try {
+            String sql = db.getSelectSql(CarModel.class, params);
+            fail("Expected PersistException");
+        } catch (Exception ex) {
+            assertSame(PersistException.class, ex.getClass());
+            assertTrue(ex.getMessage().contains("CarModel"));
+            assertTrue(ex.getMessage().contains("nonExistentProperty1"));
+        }
     }
 
     @Test
