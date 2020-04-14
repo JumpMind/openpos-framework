@@ -10,6 +10,7 @@ export module Barcode{
         Code25 = 'code25',
         Codabar = 'codabar',
         InterleavedTwoOfFive = 'interleavedTwoOfFive',
+        ITF = 'itf',
         MSIPlessey = 'msiPlessey',
         QR = 'qr',
         DataMatrix = 'dataMatrix',

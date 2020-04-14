@@ -21,6 +21,7 @@ export class ScanditBarcodeUtils {
         [Barcode.Symbology.EAN13UPCA, OpenposScanType.UPCA],
         [Barcode.Symbology.UPCE, OpenposScanType.UPCE],
         [Barcode.Symbology.InterleavedTwoOfFive, OpenposScanType.ITF],
+        [Barcode.Symbology.ITF, OpenposScanType.ITF],
     ]);
 
 
