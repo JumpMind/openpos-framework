@@ -71,7 +71,7 @@ public class TypeCodeTest {
         // 
         // Users of the openpos framework may need to ensure the class that contains
         // their type code declarations is loaded early in application startup.
-        // @SuppressWarnings("unused")
+        @SuppressWarnings("unused")
         MyTypeCode extraTypeCode1 = MyAddedTypeCodes.EXTRA_TYPE_CODE_1;
 
         // forceLoad is also a method that can be used to search the given package hierarchy for all ITypeCode subclasses

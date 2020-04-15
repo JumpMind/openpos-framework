@@ -32,7 +32,6 @@ public class ITypeCodeSerializer extends StdSerializer<ITypeCode> {
         String value;
         
         @JsonProperty("class")
-        //Class<? extends ITypeCode> clazz;
         String clazz;
 
         @JsonProperty
