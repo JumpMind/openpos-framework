@@ -26,7 +26,7 @@ public class SessionTimer {
         if (stateManagerContainer == null) {
             throw new FlowException("stateManagerFactory cannot be null.");
         }
-        log.debug("checking if StateManagers need to time out due to inactivity");
+        log.trace("checking if StateManagers need to time out due to inactivity");
         for (StateManager stateManager : stateManagerContainer.getAllStateManagers()) {
             stateManagerContainer.setCurrentStateManager(stateManager);
             stateManager.checkSessionTimeout();

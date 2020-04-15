@@ -6,6 +6,9 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.apache.commons.lang3.SerializationUtils;
+import org.jumpmind.pos.util.model.typecode.old.OriginalTypeCode;
+import org.jumpmind.pos.util.model.typecode.replace.ReplacementTypeCode;
+import org.jumpmind.pos.util.model.typecode.replace.ReplacementWithNonExistingOriginalTypeCode;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -35,7 +38,7 @@ public class TypeCodeTest {
     
     /**
      * Note: If codes are added dynamically by declaring them in this way,
-     * the declaring class (MyAddedTypeCode in this case), must be loaded before
+     * the declaring class (MyAddedTypeCode in this case), must be loaded/initialized before
      * any attempts to dynamically reference a type code value using MyTypeCode.of(stringValue);
      * the 'of' method will return null if the type code has not been created yet.
      *
@@ -68,8 +71,13 @@ public class TypeCodeTest {
         // 
         // Users of the openpos framework may need to ensure the class that contains
         // their type code declarations is loaded early in application startup.
-        @SuppressWarnings("unused")
+        // @SuppressWarnings("unused")
         MyTypeCode extraTypeCode1 = MyAddedTypeCodes.EXTRA_TYPE_CODE_1;
+
+        // forceLoad is also a method that can be used to search the given package hierarchy for all ITypeCode subclasses
+        // and force them to initialize.  This is required for the testDeserializationOfReplacedButNoOriginalTypeCode test
+        // to run successfully.
+        ITypeCodeRegistry.forceLoad("org.jumpmind.pos.util.model.typecode");
     }
 
     @Before
@@ -311,5 +319,61 @@ public class TypeCodeTest {
         assertEquals(MyTypeCode.CODE1.value(), MyTypeCode.CODE1.name());
         assertEquals("CODE1", MyTypeCode.CODE1.name());
     }
-    
+
+    public static final String EXPECTED_ReplacementTypeCode_VALUE_1_JSON =
+            "{\"value\":\"VALUE_1\",\"deserializationSearchClasses\":[\"org.jumpmind.pos.util.model.typecode.old.OriginalTypeCode\",\"org.jumpmind.pos.util.model.typecode.replace.ReplacementTypeCode\"],\"class\":\"org.jumpmind.pos.util.model.typecode.old.OriginalTypeCode\"}";
+
+    /**
+     * Ensure that if a Type Code has been moved or replaced and it is configured
+     * for deserialization compatibility with its old version, that the old class will be created
+     * upon deserialization if can be resolved by the classloader.
+     */
+    @Test
+    public void testSerializationOfReplacedTypeCode() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String json = mapper.writeValueAsString(ReplacementTypeCode.VALUE_1);
+        assertEquals(EXPECTED_ReplacementTypeCode_VALUE_1_JSON , json);
+
+        Object typeCode = mapper.readValue(json, OriginalTypeCode.class);
+        assertEquals(OriginalTypeCode.VALUE_1, typeCode);
+    }
+
+    public static final String EXPECTED_ReplacementWithNonExistingOriginalTypeCode_VALUE_1_JSON =
+            "{\"value\":\"VALUE_1\",\"deserializationSearchClasses\":[\"org.jumpmind.pos.util.model.typecode.old.NonExistentOriginalTypeCode\",\"org.jumpmind.pos.util.model.typecode.replace.ReplacementWithNonExistingOriginalTypeCode\"],\"class\":\"org.jumpmind.pos.util.model.typecode.old.NonExistentOriginalTypeCode\"}";
+    /**
+     * Ensure that if a Type Code has been moved or replaced, and it is configured
+     * for deserialization compatibility with its old version, and the original class is not on the classpath,
+     * that the replacement class will be created upon deserialization.
+     */
+    @Test
+    public void testSerializationOfReplacedButNoOriginalTypeCode() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        String json = mapper.writeValueAsString(ReplacementWithNonExistingOriginalTypeCode.VALUE_1);
+        assertEquals(EXPECTED_ReplacementWithNonExistingOriginalTypeCode_VALUE_1_JSON , json);
+
+        Object typeCode = mapper.readValue(json, ReplacementWithNonExistingOriginalTypeCode.class);
+        assertEquals(ReplacementWithNonExistingOriginalTypeCode.VALUE_1, typeCode);
+    }
+
+    public static final String ReplacementWithNonExistingOriginalTypeCode_VALUE_1_JSON =
+            "{\"value\":\"VALUE_1\",\"class\":\"org.jumpmind.pos.util.model.typecode.old.NonExistentOriginalTypeCode\"}";
+
+    /**
+     * Ensure that if a Type Code is attempted to be deserialized, and the class doesn't exist, but there is an existing
+     * replacement type code that has the class listed in its deserializationSearchClasses, that the object is
+     * successfully deserialized as the replacement type code.
+     *
+     * Requires {@link ITypeCodeRegistry#forceLoad(String...)} to be run first since the ReplacementWithNonExistingOriginalTypeCode
+     * class must be loaded/inited prior to attempted deserialization.
+     */
+    @Test
+    public void testDeserializationOfReplacedButNoOriginalTypeCode() throws IOException {
+        ObjectMapper mapper = new ObjectMapper();
+
+        Object typeCode = mapper.readValue(ReplacementWithNonExistingOriginalTypeCode_VALUE_1_JSON, ReplacementWithNonExistingOriginalTypeCode.class);
+        assertEquals(ReplacementWithNonExistingOriginalTypeCode.VALUE_1, typeCode);
+    }
+
 }

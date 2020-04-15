@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.commons.logging.LogFactory;
@@ -96,7 +97,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * the 'of' method to users of the class is that it provides a shorthand way to
  * create an instance of the TypeCode without having to do an explicit 'new' operation.
  * Also, if you use the ITypeCode.make() method, static instances of your TypeCode
- * will returned if they exist.  Otherwise a new 
+ * will be returned if they exist.
  * 
  */
 @JsonDeserialize(using = ITypeCodeDeserializer.class)
@@ -112,6 +113,31 @@ public interface ITypeCode extends Serializable, Comparable<ITypeCode>  {
      */
     default public String name() {
         return value();
+    }
+
+    /**
+     * Override this method for the case when an ITypeCode implementation class
+     * has moved from one package to another between releases of code or if for some reason a different class should
+     * be used to deserialize the ITypeCode value into.  The returned list should contain a list
+     * of fully qualified class names that the {@link ITypeCodeDeserializer} will use when attempting to locate the correct
+     * ITypeCode implementation class.  The first element in the returned array will also be used by the
+     * {@link ITypeCodeSerializer} as the default class to be used for deserialization on the receiving side.  I
+     * @return The list of fully qualified classes to attempt to deserialize the ITypeCode value into.  If {@code null},
+     * or empty, the ITypeCode implementation class itself will be assumed to be the class to be used for deserialization.
+     */
+    default public String[] getDeserializationSearchClasses() { return null; }
+
+    default public boolean isDeserializableFrom(String clazz) {
+        if (this.getClass().getName().equals(clazz)) {
+            return true;
+        }
+
+        String[] deserializationSearchClasses = this.getDeserializationSearchClasses();
+        if (deserializationSearchClasses != null) {
+            return Arrays.asList(deserializationSearchClasses).stream().anyMatch(c -> c.equals(clazz));
+        }
+
+        return false;
     }
 
     @SuppressWarnings("unchecked")

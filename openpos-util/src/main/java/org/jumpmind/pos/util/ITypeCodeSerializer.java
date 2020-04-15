@@ -2,6 +2,7 @@ package org.jumpmind.pos.util;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jumpmind.pos.util.model.ITypeCode;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -31,14 +32,28 @@ public class ITypeCodeSerializer extends StdSerializer<ITypeCode> {
         String value;
         
         @JsonProperty("class")
-        Class<? extends ITypeCode> clazz;
-        
+        //Class<? extends ITypeCode> clazz;
+        String clazz;
+
+        @JsonProperty
+        @JsonInclude(JsonInclude.Include.NON_NULL)
+        String[] deserializationSearchClasses;
+
         @SuppressWarnings("unused")
         private ITypeCodeWrapper() {}
         
         ITypeCodeWrapper(ITypeCode typeCode) {
             this.value = typeCode != null ? typeCode.value() : null;
-            this.clazz = typeCode != null ? typeCode.getClass() : null;
+            this.deserializationSearchClasses = typeCode.getDeserializationSearchClasses();
+            if (deserializationSearchClasses != null && deserializationSearchClasses.length > 0) {
+                this.clazz = deserializationSearchClasses[0];
+            } else {
+                this.clazz = typeCode != null ? typeCode.getClass().getName() : null;
+            }
+        }
+
+        boolean hasDeserializationAlternatives() {
+            return deserializationSearchClasses != null && deserializationSearchClasses.length > 0;
         }
     }
 }
