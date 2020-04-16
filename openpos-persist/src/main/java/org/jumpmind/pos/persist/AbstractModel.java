@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.jumpmind.pos.persist.model.IAuditableModel;
 
@@ -27,11 +28,11 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
     @ColumnDef(required=true, size="50", defaultValue = "system",
             description="The user who last updated this entry.")    
     private String lastUpdateBy;
+
+    @JsonIgnore
+    private Map<String, Object> systemData = new HashMap<>();
     
-    @SuppressWarnings("unused")
-    private transient Map<String, Object> systemData = new HashMap<>(); 
-    
-    private transient Map<String, Object> additionalFields = new CaseInsensitiveMap<String, Object>();
+    private Map<String, Object> additionalFields = new CaseInsensitiveMap<String, Object>();
 
     @Override
     public Date getCreateTime() {
