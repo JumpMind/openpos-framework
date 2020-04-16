@@ -241,7 +241,14 @@ public class ModelWrapper {
                     + " does not have a value. Model: " + model); 
                 }
                 CurrencyUnit currency = CurrencyUnit.of(modelCurrencyCode);
-                BigDecimal decimalValue = (BigDecimal)value;
+
+                BigDecimal decimalValue;
+                    if(value instanceof String){
+                        decimalValue = new BigDecimal((String)value);
+                    } else{
+                        decimalValue = (BigDecimal)value;
+                    }
+
                 decimalValue = decimalValue.setScale(currency.getDecimalPlaces());
                 value = Money.of(currency, decimalValue);
             } else if (ITypeCode.class.isAssignableFrom(fieldMetaData.getField().getType())) {

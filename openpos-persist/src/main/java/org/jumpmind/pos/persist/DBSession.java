@@ -269,6 +269,10 @@ public class DBSession {
         }
     }
 
+    public ModelWrapper wrap(AbstractModel model){
+       return new ModelWrapper(model, databaseSchema.getModelMetaData(model.getClass()));
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> QueryTemplate getQueryTemplate(Query<T> query) {
         QueryTemplate queryTemplate = new QueryTemplate();
