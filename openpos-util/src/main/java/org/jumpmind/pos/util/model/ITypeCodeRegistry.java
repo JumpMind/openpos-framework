@@ -41,6 +41,8 @@ public final class ITypeCodeRegistry {
         Set<Class<? extends ITypeCode>> typeCodeClasses = reflections.getSubTypesOf(ITypeCode.class);
         for (Class<? extends ITypeCode> typeCodeClass : typeCodeClasses) {
             try {
+                // Using this version of Class.forName intentionally to force initialization of the class so that
+                // all static initializers are run upon loading
                 Class.forName(typeCodeClass.getName(), true, typeCodeClass.getClassLoader());
                 log.debug("Loaded ITypeCode subclass: {}", typeCodeClass.getName());
             } catch (ClassNotFoundException ex) {
