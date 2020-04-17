@@ -288,8 +288,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             log.info("The module table is not available");
         }
 
-        log.info("The previous version of {} was {} and the current version is {}", getName(), fromVersion, getVersion());
-        log.info("The sqlScriptProfile is: {}", sqlScriptProfile);
+        log.info("The previous version of {} was {} and the current version is {}. sqlScriptProfile: {}", getName(),
+                fromVersion, getVersion(), sqlScriptProfile);
         DatabaseScriptContainer scripts = new DatabaseScriptContainer(String.format("%s/sql/%s", getName(), sqlScriptProfile),
                 getDatabasePlatform());
 

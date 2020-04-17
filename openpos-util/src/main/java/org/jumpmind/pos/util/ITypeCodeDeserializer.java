@@ -24,7 +24,6 @@ public class ITypeCodeDeserializer extends StdDeserializer<ITypeCode> {
     @Override
     public ITypeCode deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         ITypeCodeWrapper wrapper = jp.readValueAs(ITypeCodeWrapper.class);
-
         String[] classesToTry;
         boolean searchForCompatibleClass = false;
 
@@ -42,7 +41,7 @@ public class ITypeCodeDeserializer extends StdDeserializer<ITypeCode> {
         ITypeCode returnTypeCode = null;
         for (int i = 0; i < classesToTry.length; i++) {
             try {
-                Class typeCodeClass = Class.forName(classesToTry[i]);
+                Class typeCodeClass = Thread.currentThread().getContextClassLoader().loadClass(classesToTry[i]);
                 returnTypeCode = ITypeCode.make(typeCodeClass, wrapper.value);
                 break;
             } catch (ClassNotFoundException ex) {

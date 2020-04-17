@@ -44,7 +44,7 @@ public final class ITypeCodeRegistry {
                 Class.forName(typeCodeClass.getName(), true, typeCodeClass.getClassLoader());
                 log.debug("Loaded ITypeCode subclass: {}", typeCodeClass.getName());
             } catch (ClassNotFoundException ex) {
-                log.warn("ITypeCode subclass {} could not be found in order to force its initialization", typeCodeClass.getName());
+                log.error(String.format("ITypeCode subclass %s could not be found in order to force its initialization", typeCodeClass.getName()), ex);
             }
         }
     }
