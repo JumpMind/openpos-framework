@@ -1,8 +1,14 @@
 <main [ngStyle]=" data?.imageUrl | backgroundImageUrl">
     <section>
-        <app-icon [iconName]="data?.iconName" iconClass="xl"></app-icon>
-        <h1>{{data?.userText}}</h1>
-        <app-rounded-input placeholder="" [(value)]="password" (keydown.enter)="submitPassword()" inputType="password"></app-rounded-input>
-        <p *ngIf="!!data?.errorMessage" class="error">{{data?.errorMessage}}</p>
+        <div class="user">
+            <app-icon [iconName]="data?.iconName" iconClass="xl"></app-icon>
+            <h1>{{override ? data?.overrideText : data?.userText}}</h1>
+            <app-rounded-input *ngIf="override" [placeholder]="data.usernameHint" [(value)]="username" ></app-rounded-input>
+            <app-rounded-input [placeholder]="data.passwordHint" [(value)]="password" (keydown.enter)="submit()" inputType="password"></app-rounded-input>
+            <p *ngIf="!!data?.errorMessage" class="error">{{data?.errorMessage}}</p>
+        </div>
+        <div class="override">
+            <app-icon-button [iconName]="data.overrideAction.icon" (buttonClick)="toggleOverride()"></app-icon-button>
+        </div>
     </section>
 </main>

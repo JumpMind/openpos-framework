@@ -14,6 +14,8 @@ export class LockScreenComponent implements OnDestroy{
 
   data: LockScreenMessage;
   password = "";
+  username = "";
+  override = false;
 
   destroy = new Subject();
 
@@ -26,8 +28,24 @@ export class LockScreenComponent implements OnDestroy{
       ).subscribe();
   }
 
+  submit(){
+    if(this.override){
+      this.doOverride();
+    }else{
+      this.submitPassword();
+    }
+  }
+
   submitPassword(){
     this.actionService.doAction(this.data.passwordAction, this.password);
+  }
+
+  doOverride(){
+    this.actionService.doAction(this.data.overrideAction, {username: this.username, password: this.password})
+  }
+
+  toggleOverride(){
+    this.override = !this.override;
   }
 
   ngOnDestroy(): void {

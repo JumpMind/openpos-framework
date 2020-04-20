@@ -15,9 +15,6 @@ main{
     border-radius: 20px;
     padding: 16px;
     display: grid;
-    align-content: center;
-    justify-content: center;
-    justify-items: center;
 
     h1{
       text-align: center;
@@ -28,5 +25,21 @@ main{
       padding: 10px;
       border-radius: 10px;
     }
+
+    .override{
+      display: grid;
+      align-items: end;
+      justify-items: right;
+    }
+
+    .user{
+      align-items: center;
+      align-content: end;
+      justify-content: center;
+      justify-items: center;
+      display: grid;
+      row-gap: 8px;
+    };
   }
+
 }
