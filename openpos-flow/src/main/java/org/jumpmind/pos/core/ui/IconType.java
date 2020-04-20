@@ -7,6 +7,7 @@ public interface IconType {
     public static final String AddEmployee = "AddEmployee"; //person_add
     public static final String AddToCart = "AddToCart"; //add_shopping_cart
     public static final String Back = "Back"; //keyboard_arrow_left
+    public static final String BankIn = "BankIn"; //bank_transfer_in
     public static final String Barcode = "Barcode"; //barcode.svg
     public static final String BusinessCustomer = "BusinessCustomer"; //business
     public static final String BypassAction = "BypassAction"; //low_priority
