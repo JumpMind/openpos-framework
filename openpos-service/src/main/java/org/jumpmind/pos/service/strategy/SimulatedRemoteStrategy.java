@@ -39,6 +39,6 @@ public class SimulatedRemoteStrategy extends LocalOnlyStrategy implements IInvoc
             String className = ((AnnotatedParameterizedType) method.getAnnotatedReturnType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName();
             return mapper.readValue(mapper.writeValueAsString(retObj), mapper.getTypeFactory().constructCollectionType(List.class, Class.forName(className)));
         }
-        return mapper.readValue(mapper.writeValueAsString(retObj), retObj.getClass());
+        return retObj != null ? mapper.readValue(mapper.writeValueAsString(retObj), retObj.getClass()) : null;
     }
 }
