@@ -144,7 +144,6 @@ public class ModelWrapper {
     }
 
     protected void buildFieldColumnMap(LinkedHashMap<String, Column> fieldColumnMap, Class<?> clazz) {
-
         for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
             Map<String, FieldMetaData> fieldMetaDatas = classMetaData.getEntityFieldMetaDatas();
             fieldMetaDatas.forEach((k,v)->fieldColumnMap.put(v.getField().getName(),v.getColumn()));
@@ -222,7 +221,7 @@ public class ModelWrapper {
             fieldValue = PropertyUtils.getProperty(model, fieldName);
         } catch (NoSuchMethodException |
                 IllegalAccessException | InvocationTargetException ex) {
-            throw new PersistException("Failed to getFieldValue on " + model + "fieldName " + fieldName);
+            throw new PersistException("Failed to getFieldValue on " + model + "fieldName " + fieldName, ex);
         }
         return fieldValue;
     }
