@@ -101,6 +101,7 @@ export class IconService {
         this.icons.set('RetrieveAction', ['replay.svg', this.defaultIconProvider]);
         this.icons.set('Return', ['undo.svg', this.defaultIconProvider]);
         this.icons.set('Sales', ['local_offer.svg', this.defaultIconProvider]);
+        this.icons.set('ScaleBalance', ['scale_balance.svg', this.defaultIconProvider]);
         this.icons.set('Search', ['search.svg', this.defaultIconProvider]);
         this.icons.set('Security', ['security.svg', this.defaultIconProvider]);
         this.icons.set('Store', ['storefront.svg', this.defaultIconProvider]);
