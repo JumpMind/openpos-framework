@@ -21,11 +21,12 @@ public class BaconStripPart implements IHasBackButton, Serializable {
 
     private String operatorLine1;
     private String operatorLine2;
-    private ActionItem endSession;
     private String headerText;
     private String logo;
     private List<ActionItem> actions;
     private String icon;
+    private List<ActionItem> operatorMenu;
+    private String operatorIcon;
 
     @Override
     public void setBackButton(ActionItem button) {

@@ -15,10 +15,16 @@
     <div *ngIf="!searchExpanded && screenData.operatorLine1" class="rightside">
         <p class="operator-name">{{screenData.operatorLine1}}</p>
         <p class="operator-id">{{screenData.operatorLine2}}</p>
-        <app-icon-button class="icon" *ngIf="screenData.endSession && screenData.endSession.action" [iconName]="screenData.endSession.icon"
-                         iconClass="md" (buttonClick)="doAction(screenData.endSession)">
-        </app-icon-button>
-        <app-icon class="icon" *ngIf="screenData.endSession && !screenData.endSession.action" [iconName]="screenData.endSession.icon"
+        <app-kebab-button class="icon"
+                          *ngIf="screenData.operatorMenu"
+                          [iconName]="screenData.operatorIcon"
+                          iconClass="md"
+                          [menuItems]="screenData.operatorMenu"
+                          (menuItemClick)="doAction($event)">
+        </app-kebab-button>
+        <app-icon class="icon"
+                  *ngIf="!screenData.operatorMenu"
+                  [iconName]="screenData.operatorIcon"
                          iconClass="md">
         </app-icon>
     </div>

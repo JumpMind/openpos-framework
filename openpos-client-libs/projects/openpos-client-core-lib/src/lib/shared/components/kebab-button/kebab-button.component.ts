@@ -24,6 +24,9 @@ export class KebabButtonComponent implements OnDestroy {
     @Input()
     iconName = 'KebabMenu';
 
+    @Input()
+    iconClass;
+
     dialogRef: MatDialogRef<KebabMenuComponent>;
 
     @Input()

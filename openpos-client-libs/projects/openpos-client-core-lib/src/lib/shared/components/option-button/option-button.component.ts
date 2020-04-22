@@ -26,7 +26,7 @@ export class OptionButtonComponent implements OnDestroy{
     }
 
     clickFn() {
-      this.buttonClick.emit(true);
+        this.buttonClick.emit(true);
     }
 
     ngOnDestroy(): void {
