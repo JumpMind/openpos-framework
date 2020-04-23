@@ -1,18 +1,18 @@
-package org.jumpmind.pos.core.event;
+package org.jumpmind.pos.util.event;
 
 import org.jumpmind.pos.util.event.AppEvent;
 
 import lombok.ToString;
 
 @ToString(callSuper = true)
-public class DeviceConnectedEvent extends AppEvent {
-
+public class DeviceDisconnectedEvent extends AppEvent {
     private static final long serialVersionUID = 1L;
 
     @SuppressWarnings("unused")
-    private DeviceConnectedEvent() {}
+    private DeviceDisconnectedEvent() {}
     
-    public DeviceConnectedEvent(String deviceId, String appId) {
+    public DeviceDisconnectedEvent(String deviceId, String appId) {
         super(deviceId, appId);
     }
+
 }
