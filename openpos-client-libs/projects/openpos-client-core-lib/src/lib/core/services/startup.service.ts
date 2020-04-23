@@ -20,6 +20,7 @@ export class StartupService implements CanActivate {
     private dedupedTasks = new Map<string, IStartupTask>();
 
     public startupTaskMessages$ = new ReplaySubject<string>();
+    public startupComplete = false;
 
     private allMessages = [];
     private startupDialogRef: MatDialogRef<any>;
@@ -87,6 +88,7 @@ export class StartupService implements CanActivate {
                     complete: () => {
                         console.info('All Startup Tasks completed successfully');
                         result.next(true);
+                        this.startupComplete = true;
                         if ( this.startupDialogRef ) {
                             this.startupDialogRef.close();
                         }

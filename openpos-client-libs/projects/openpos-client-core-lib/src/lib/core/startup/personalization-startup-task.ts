@@ -1,7 +1,19 @@
-import {catchError, map} from 'rxjs/operators';
+import {
+    debounceTime,
+    delay, filter,
+    first,
+    mapTo,
+    retryWhen,
+    skip,
+    skipUntil,
+    skipWhile,
+    switchMap,
+    take,
+    tap
+} from 'rxjs/operators';
 import { IStartupTask } from './startup-task.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
-import {Observable, of, Subject, throwError} from 'rxjs';
+import {concat, interval, merge, Observable, of, Subject, throwError, timer} from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { StartupTaskNames } from './startup-task-names';
 import { Injectable } from '@angular/core';
@@ -23,44 +35,51 @@ export class PersonalizationStartupTask implements IStartupTask {
     }
 
     execute(data: StartupTaskData): Observable<string> {
-        return Observable.create((message: Subject<string>) => {
 
-            message.next('Attempting to personalize using query parameters');
+        if(this.hasPersonalizationQueryParams(data.route.queryParams)){
+            return concat( of('Attempting to personalize using query parameters'),
+            this.personalizeFromQueueParams(data.route.queryParams)
+                .pipe(take(1)));
+        }
 
+        if(this.personalization.hasSavedSession()){
+            let messages = new Subject<string>();
 
-            this.personalizeFromQueueParams(data.route.queryParams, message)
-                .pipe(
-                    catchError( error => {
-                        message.next(error);
-                        message.next('Attempting to personalize from saved token')
-                        return this.personalization.personalizeFromSavedSession();
-                    })
-                ).subscribe(
-                {
-                    error: (error) => {
-                            message.next(error);
-                            message.next('Launching personalization screen.');
-                            this.personalization.personalizeFromSavedSession()
-                            this.matDialog.open(
-                                PersonalizationComponent, {
-                                    disableClose: true,
-                                    hasBackdrop: false,
-                                    panelClass: 'openpos-default-theme'
-                                }
-                            ).afterClosed().subscribe(() => {
-                                message.complete();
-                            });
-                        },
-                    next: (result) => {
-                        message.next(result);
-                        message.complete();
-                    }
-                }
+            return concat(
+                        of('Attempting to personalize from saved token'),
+                        merge(
+                            messages,
+                            this.personalization.personalizeFromSavedSession().pipe(
+                                retryWhen( errors =>
+                                    errors.pipe(
+                                        switchMap( () => interval(1000),
+                                            (error, time) => `${error} \n Retry in ${5-time}`),
+                                        tap(result => messages.next(result)),
+                                        filter( result => result.endsWith('0')),
+                                        tap( () => messages.next('Attempting to personalize from saved token'))
+                                    )
+                                ),
+                                take(1),
+                                tap(() => messages.complete())
+                        ))
             );
-        });
+        }
+
+        return this.matDialog.open(
+            PersonalizationComponent, {
+                disableClose: true,
+                hasBackdrop: false,
+                panelClass: 'openpos-default-theme'
+            }
+        ).afterClosed().pipe(take(1));
     }
 
-    personalizeFromQueueParams(queryParams: Params, message: Subject<string>) : Observable<string>{
+    hasPersonalizationQueryParams(queryParams: Params): boolean {
+        return queryParams.deviceId && queryParams.appId && queryParams.servername && queryParams.serverPort;
+
+    }
+
+    personalizeFromQueueParams(queryParams: Params) : Observable<string>{
         const deviceId = queryParams.deviceId;
         const appId = queryParams.appId;
         const serverName = queryParams.serverName;
@@ -78,7 +97,6 @@ export class PersonalizationStartupTask implements IStartupTask {
         }
 
         if (deviceId && serverName) {
-            message.next('Personalizing from query params');
             serverPort = !serverPort ? 6140 : serverPort;
             sslEnabled = !sslEnabled ? false : sslEnabled;
 

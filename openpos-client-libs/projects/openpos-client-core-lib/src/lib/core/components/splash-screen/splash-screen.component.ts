@@ -1,5 +1,5 @@
 import { ScreenComponent } from '../../../shared/decorators/screen-component.decorator';
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 import { IScreen } from '../../../shared/components/dynamic-screen/screen.interface';
 
 @ScreenComponent({
@@ -9,6 +9,11 @@ import { IScreen } from '../../../shared/components/dynamic-screen/screen.interf
     templateUrl: './splash-screen.component.html'
 })
 export class SplashScreenComponent implements IScreen {
+
+
+    constructor() {
+    }
+
     show(screen: any ): void {
     }
 

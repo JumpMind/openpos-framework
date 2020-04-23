@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import {HttpClient, HttpResponse} from '@angular/common/http';
+import {Http} from '@angular/http';
 import { PersonalizationConfigResponse } from './personalization-config-response.interface';
-import {Observable, BehaviorSubject, Subject, throwError} from 'rxjs';
-import { map, tap} from 'rxjs/operators';
+import {Observable, BehaviorSubject, Subject, throwError, of} from 'rxjs';
+import {catchError, map, tap} from 'rxjs/operators';
 import {PersonalizationRequest} from './personalization-request';
 import {PersonalizationResponse} from './personalization-response.interface';
 
@@ -26,12 +27,12 @@ export class PersonalizationService {
     }
 
     public personalizeFromSavedSession(): Observable<string>{
-        if(this.deviceToken$.getValue() == null || this.serverPort$.getValue() == null || this.serverName$.getValue() == null ){
-            return throwError('No saved session');
-        }
-
         let request = new PersonalizationRequest(this.deviceToken$.getValue(), null, null, null );
         return this.sendPersonalizationRequest(this.sslEnabled$.getValue(), this.serverName$.getValue(), this.serverPort$.getValue(), request, null);
+    }
+
+    public hasSavedSession(): boolean {
+        return !!this.deviceToken$.getValue() && !!this.serverPort$.getValue() && !!this.serverName$.getValue();
     }
 
     public personalize(
@@ -51,20 +52,18 @@ export class PersonalizationService {
         let url = sslEnabled ? 'https://' : 'http://';
         url += serverName + ':' + serverPort + '/devices/personalize';
 
-        const retValue = new Subject<string>();
-
         if( personalizationParameters ){
             personalizationParameters.forEach( (value, key ) => request.personalizationParameters[key] = value);
         }
 
-        this.http.post<PersonalizationResponse>(url, request).subscribe( {
-            next: result => {
+        return this.http.post<PersonalizationResponse>(url, request).pipe(
+            map( (response: PersonalizationResponse) => {
                 console.info(`personalizing with server: ${serverName}, port: ${serverPort}, deviceId: ${request.deviceId}`);
                 this.setServerName(serverName);
                 this.setServerPort(serverPort);
-                this.setDeviceId(result.deviceModel.deviceId);
-                this.setDeviceToken(result.authToken);
-                this.setAppId(result.deviceModel.appId);
+                this.setDeviceId(response.deviceModel.deviceId);
+                this.setDeviceToken(response.authToken);
+                this.setAppId(response.deviceModel.appId);
                 this.setPersonalizationProperties(personalizationParameters);
 
                 if (sslEnabled) {
@@ -74,16 +73,22 @@ export class PersonalizationService {
                 }
 
                 this.personalizationSuccessFul$.next(true);
-                retValue.next('Personalization successful');
-                retValue.complete();
-            },
-            error: error => {
-                this.personalizationSuccessFul$.next(false);
-                retValue.error(error);
-            }
-        });
+                return 'Personalization successful';
+            }),
+            catchError( error => {
+                    this.personalizationSuccessFul$.next(false);
+                    if(error.status == 401){
+                        return throwError(`Device saved token does not match server`);
+                    }
 
-        return retValue;
+                    if(error.status == 0) {
+                        return throwError(`Unable to connect to ${serverName}:${serverPort}`);
+                    }
+
+                    return throwError(`${error.statusText}`);
+
+                })
+        )
     }
 
     public dePersonalize() {

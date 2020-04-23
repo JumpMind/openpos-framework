@@ -24,6 +24,7 @@ import { MessageTypes } from '../messages/message-types';
 import { ActionMessage } from '../messages/action-message';
 import { CLIENTCONTEXT, IClientContext } from '../client-context/client-context-provider.interface';
 import { DiscoveryService } from '../discovery/discovery.service';
+import {StartupService} from './startup.service';
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
@@ -104,6 +105,7 @@ export class SessionService implements IMessageHandler<any> {
     private reconnecting = false;
 
     private reconnectTimerSub: Subscription;
+    private connectedOnce = false;
 
 
     constructor(
@@ -266,6 +268,7 @@ export class SessionService implements IMessageHandler<any> {
                 this.stompStateSubscription = this.state.subscribe(stompState => {
                     if (stompState === 'CONNECTED') {
                         this.reconnecting = false;
+                        this.connectedOnce = true;
                         console.info('STOMP connecting');
                         if (!this.onServerConnect.value) {
                             this.onServerConnect.next(true);
@@ -307,7 +310,9 @@ export class SessionService implements IMessageHandler<any> {
         return this.discovery.getWebsocketUrl();
     }
     private sendDisconnected() {
-        this.sendMessage(new ImmediateLoadingMessage(this.disconnectedMessage));
+        if(this.connectedOnce){
+            this.sendMessage(new ImmediateLoadingMessage(this.disconnectedMessage));
+        }
     }
 
     handle(message: any) {
