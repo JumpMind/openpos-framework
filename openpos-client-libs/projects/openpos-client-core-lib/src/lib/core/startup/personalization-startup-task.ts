@@ -36,33 +36,41 @@ export class PersonalizationStartupTask implements IStartupTask {
 
     execute(data: StartupTaskData): Observable<string> {
 
-        if(this.hasPersonalizationQueryParams(data.route.queryParams)){
-            return concat( of('Attempting to personalize using query parameters'),
-            this.personalizeFromQueueParams(data.route.queryParams)
-                .pipe(take(1)));
-        }
+        if(this.hasPersonalizationQueryParams(data.route.queryParams) || this.personalization.hasSavedSession()){
 
-        if(this.personalization.hasSavedSession()){
+            let personalize$: Observable<string>;
+
             let messages = new Subject<string>();
+            let attemptMessage;
+
+            if(this.hasPersonalizationQueryParams(data.route.queryParams)){
+                attemptMessage = 'Attempting to personalize using query parameters';
+                personalize$ = this.personalizeFromQueueParams(data.route.queryParams);
+            } else if(this.personalization.hasSavedSession()){
+
+                attemptMessage = 'Attempting to personalize from saved token';
+                personalize$ = this.personalization.personalizeFromSavedSession();
+            }
 
             return concat(
-                        of('Attempting to personalize from saved token'),
-                        merge(
-                            messages,
-                            this.personalization.personalizeFromSavedSession().pipe(
-                                retryWhen( errors =>
-                                    errors.pipe(
-                                        switchMap( () => interval(1000),
-                                            (error, time) => `${error} \n Retry in ${5-time}`),
-                                        tap(result => messages.next(result)),
-                                        filter( result => result.endsWith('0')),
-                                        tap( () => messages.next('Attempting to personalize from saved token'))
-                                    )
-                                ),
-                                take(1),
-                                tap(() => messages.complete())
-                        ))
-            );
+                of(attemptMessage),
+                merge(
+                    messages,
+                    personalize$.pipe(
+                        retryWhen( errors =>
+                            errors.pipe(
+                                switchMap( () => interval(1000),
+                                    (error, time) => `${error} \n Retry in ${5-time}`),
+                                tap(result => messages.next(result)),
+                                filter( result => result.endsWith('0')),
+                                tap( () => messages.next(attemptMessage))
+                            )
+                        ),
+                        take(1),
+                        tap(() => messages.complete())
+                    ))
+                );
+
         }
 
         return this.matDialog.open(
@@ -75,7 +83,7 @@ export class PersonalizationStartupTask implements IStartupTask {
     }
 
     hasPersonalizationQueryParams(queryParams: Params): boolean {
-        return queryParams.deviceId && queryParams.appId && queryParams.servername && queryParams.serverPort;
+        return queryParams.deviceId && queryParams.appId && queryParams.serverName && queryParams.serverPort;
 
     }
 
