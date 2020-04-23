@@ -1,6 +1,6 @@
 package org.jumpmind.pos.core.service;
 
-import org.jumpmind.pos.core.event.DeviceDisconnectedEvent;
+import org.jumpmind.pos.util.event.DeviceDisconnectedEvent;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.server.service.SessionConnectListener;

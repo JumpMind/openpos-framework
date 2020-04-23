@@ -1,6 +1,6 @@
 package org.jumpmind.pos.core.service;
 
-        import org.jumpmind.pos.core.event.DeviceConnectedEvent;
+        import org.jumpmind.pos.util.event.DeviceConnectedEvent;
 import org.jumpmind.pos.core.flow.ApplicationState;
         import org.jumpmind.pos.core.flow.IStateManager;
         import org.jumpmind.pos.core.flow.IStateManagerContainer;
