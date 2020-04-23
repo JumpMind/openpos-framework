@@ -58,6 +58,7 @@ public interface IconType {
     public static final String KebabMenu = "KebabMenu"; //more_vert
     public static final String Lease = "Lease"; // account_balance
     public static final String Links = "Links"; //link
+    public static final String Light = "Light"; //lightbulb_on_outline
     public static final String Location = "Location";//location_on
     public static final String Login = "Login"; //lock
     public static final String Logout = "Logout"; //input
