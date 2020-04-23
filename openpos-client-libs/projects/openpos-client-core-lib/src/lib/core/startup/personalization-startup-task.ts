@@ -73,13 +73,15 @@ export class PersonalizationStartupTask implements IStartupTask {
 
         }
 
-        return this.matDialog.open(
+        return concat(
+            of("No saved session found prompting manual personalization"),
+            this.matDialog.open(
             PersonalizationComponent, {
                 disableClose: true,
                 hasBackdrop: false,
                 panelClass: 'openpos-default-theme'
             }
-        ).afterClosed().pipe(take(1));
+        ).afterClosed().pipe(take(1)));
     }
 
     hasPersonalizationQueryParams(queryParams: Params): boolean {
