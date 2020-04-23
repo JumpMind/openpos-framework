@@ -1,19 +1,13 @@
 import {
-    debounceTime,
-    delay, filter,
-    first,
-    mapTo,
+    filter,
     retryWhen,
-    skip,
-    skipUntil,
-    skipWhile,
     switchMap,
     take,
     tap
 } from 'rxjs/operators';
 import { IStartupTask } from './startup-task.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
-import {concat, interval, merge, Observable, of, Subject, throwError, timer} from 'rxjs';
+import {concat, interval, merge, Observable, of, Subject, throwError} from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { StartupTaskNames } from './startup-task-names';
 import { Injectable } from '@angular/core';
