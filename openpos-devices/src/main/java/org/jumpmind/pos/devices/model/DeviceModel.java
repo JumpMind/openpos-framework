@@ -39,7 +39,7 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     private String deviceType; // STORE/DC/WORKSTATION/HANDELD/CUSTOMER
     // HANDHELD/WEBSITE, etc.
 
-    @ColumnDef(size = "10", description = "The locale under which this Device currently operations")
+    @ColumnDef(size = "10", description = "The locale under which this Device currently operates")
     String locale;
 
     @ColumnDef(description = "The timezone offset under which this Device currently operates")
