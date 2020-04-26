@@ -268,20 +268,24 @@ public class ModelWrapper {
         if (clazz.isInstance(model)) {
             ReflectUtils.setProperty(fieldMetaData.getField(), model, value);
         } else {
-            Field[] fields = model.getClass().getDeclaredFields();
-            for (Field field : fields) {
-                CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
-                if (compositeDefAnnotation != null) {
-                    if (field.getType() == fieldMetaData.getClazz()) {
-                        Object fieldValue = getFieldValue(model, field.getName());
-                        if (fieldValue == null) {
-                            ReflectUtils.setProperty(field, model, fieldMetaData.getClazz().newInstance());
-                            fieldValue = getFieldValue(model, field.getName());
+            Class<? extends Object> targetClazz = model.getClass();
+            while (targetClazz != Object.class) {
+                Field[] fields = targetClazz.getDeclaredFields();
+                for (Field field : fields) {
+                    CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
+                    if (compositeDefAnnotation != null) {
+                        if (field.getType() == fieldMetaData.getClazz()) {
+                            Object fieldValue = getFieldValue(model, field.getName());
+                            if (fieldValue == null) {
+                                ReflectUtils.setProperty(field, model, fieldMetaData.getClazz().newInstance());
+                                fieldValue = getFieldValue(model, field.getName());
+                            }
+                            ReflectUtils.setProperty(fieldMetaData.getField(), fieldValue, value);
+                            return;
                         }
-                        ReflectUtils.setProperty(fieldMetaData.getField(), fieldValue, value);
-                        break;
                     }
                 }
+                targetClazz = targetClazz.getSuperclass();
             }
         }
     }
