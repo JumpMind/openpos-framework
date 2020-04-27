@@ -27,6 +27,7 @@ public class PromptConfig {
     private ActionItem actionMenuItem = new ActionItem("Next", "Next", true);
     private List<ActionItem> otherActions = new ArrayList<>();
     private String id;
+    private boolean allowScan;
 
     public PromptConfig named(String name) {
         this.name = name;
@@ -167,6 +168,15 @@ public class PromptConfig {
     public PromptConfig addOtherAction(ActionItem option) {
         otherActions.add(option);
         return this;
+    }
+
+    public PromptConfig allowScan(boolean allow){
+        this.allowScan = allow;
+        return this;
+    }
+
+    public boolean getAllowScan() {
+        return this.allowScan;
     }
 
     public String getName() {
