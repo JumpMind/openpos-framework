@@ -1,9 +1,7 @@
 package org.jumpmind.pos.persist;
 
 import java.io.Serializable;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
@@ -34,6 +32,8 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
 
     @JsonIgnore
     private Map<String, Object> additionalFields = new CaseInsensitiveMap<String, Object>();
+    
+    private Map<Class, Object> extensions = new HashMap<>();
 
     @Override
     public Date getCreateTime() {
@@ -85,7 +85,22 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
     
     public Map<String, Object> getAdditionalFields() {
         return new HashMap<>(additionalFields);
-    }    
-    
-    
+    }
+
+    public void addExtension(Class clazz, Object extension){
+        extensions.put(clazz, extension);
+    }
+
+    public Map<Class, Object> getExtensions() { return new HashMap<>(extensions); }
+
+    public Object getExtension(Class clazz){
+        if(!extensions.containsKey(clazz)){
+            try {
+                extensions.put(clazz, clazz.newInstance());
+            } catch (Exception e) {
+               throw new PersistException("Error getting extension class " + clazz, e);
+            }
+        }
+        return extensions.get(clazz);
+    }
 }

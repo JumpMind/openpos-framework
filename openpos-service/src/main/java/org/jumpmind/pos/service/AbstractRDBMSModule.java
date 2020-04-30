@@ -40,11 +40,7 @@ import org.jumpmind.db.sql.SqlTemplateSettings;
 import org.jumpmind.db.util.BasicDataSourceFactory;
 import org.jumpmind.db.util.ConfigDatabaseUpgrader;
 import org.jumpmind.exception.IoException;
-import org.jumpmind.pos.persist.DBSession;
-import org.jumpmind.pos.persist.DBSessionFactory;
-import org.jumpmind.pos.persist.DatabaseScriptContainer;
-import org.jumpmind.pos.persist.PersistException;
-import org.jumpmind.pos.persist.TableDef;
+import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.persist.driver.Driver;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.service.model.ModuleModel;
@@ -94,6 +90,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Value("${openpos.general.sqlScriptProfile:test}")
     protected String sqlScriptProfile;
+
+    @Value("${openpos.general.dataModelExtensionPackages:#{null}}")
+    protected String additionalPackages;
 
     protected DataSource dataSource;
 
@@ -239,6 +238,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             String packageName = this.getClass().getPackage().getName();
 
             List<Class<?>> tableClasses = getClassesForPackageAndAnnotation(packageName, TableDef.class);
+            List<Class<?>> tableExtensionClasses = getClassesForPackageAndAnnotation(packageName, Extends.class);
+            tableExtensionClasses.addAll(getClassesForPackageAndAnnotation(additionalPackages, Extends.class));
 
             TypedProperties sessionContext = new TypedProperties();
 
@@ -248,7 +249,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             sessionContext.put(DBSession.JDBC_FETCH_SIZE, env.getProperty(DBSession.JDBC_FETCH_SIZE));
             sessionContext.put(DBSession.JDBC_QUERY_TIMEOUT, env.getProperty(DBSession.JDBC_QUERY_TIMEOUT));
 
-            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tagHelper);
+            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper);
 
         }
 

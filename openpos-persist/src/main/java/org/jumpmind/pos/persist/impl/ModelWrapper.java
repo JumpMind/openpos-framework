@@ -1,18 +1,13 @@
 package org.jumpmind.pos.persist.impl;
 
+import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +43,21 @@ public class ModelWrapper {
     public ModelWrapper(AbstractModel model, ModelMetaData modelMetaData) {
         this.model = model;
         this.modelMetaData = modelMetaData;
+
+        modelMetaData.getModelClassMetaData().forEach( modelClassMetaData -> {
+            if(modelClassMetaData.getExtensionClazzes() != null){
+                modelClassMetaData.getExtensionClazzes().forEach(extensionClazz -> {
+                    if( !model.getExtensions().containsKey(extensionClazz)){
+                        //initialize all the extension classes on the model
+                        try {
+                            this.model.addExtension(extensionClazz, extensionClazz.newInstance());
+                        } catch (Exception ex) {
+                            throw new PersistException("Failed to create model extension class " + extensionClazz, ex );
+                        }
+                    }
+                });
+            }
+        });
         
         Field field = modelMetaData.getSystemDataField();
         try {
@@ -196,7 +206,7 @@ public class ModelWrapper {
                     columnNamesToObjectValues.put(fieldName, tagValue);
                 } else {
                     Column column = fieldsToColumns.get(fieldName);
-                    Object value = getFieldValue(model,fieldName);
+                    Object value = getFieldValue(fieldName);
 
                     if (value instanceof Money) {
                         handleMoneyField(columnNamesToObjectValues, fieldName, column, (Money)value);    
@@ -214,14 +224,20 @@ public class ModelWrapper {
         }
     }    
 
-    protected Object getFieldValue(Object modelClass, String fieldName) {
+    protected Object getFieldValue(String fieldName) {
         Object fieldValue=null;
-        Class<?> clazz = modelClass.getClass();
+        Object obj = model;
+        FieldMetaData fieldMetaData = getFieldMetaData(fieldName);
+
+        if(model.getExtensions().containsKey(fieldMetaData.getClazz())){
+            obj = model.getExtension(fieldMetaData.getClazz());
+        }
+
         try {
-            fieldValue = PropertyUtils.getProperty(model, fieldName);
+            fieldValue = PropertyUtils.getProperty(obj, fieldName);
         } catch (NoSuchMethodException |
                 IllegalAccessException | InvocationTargetException ex) {
-            throw new PersistException("Failed to getFieldValue on " + model + "fieldName " + fieldName, ex);
+            throw new PersistException("Failed to getFieldValue on " + obj + "fieldName " + fieldName, ex);
         }
         return fieldValue;
     }
@@ -229,12 +245,12 @@ public class ModelWrapper {
     @SuppressWarnings("unchecked")
     public void setValue(String fieldName, Object value) {
         FieldMetaData fieldMetaData = getFieldMetaData(fieldName);
-        
+
         try {            
             if (fieldMetaData.getField().getType().isAssignableFrom(Money.class)
                     && value != null) {
                 Field xRefField = getXRefForField(fieldName);
-                String modelCurrencyCode = (String)getFieldValue(model,xRefField.getName());
+                String modelCurrencyCode = (String)getFieldValue(xRefField.getName());
                 if (StringUtils.isEmpty(modelCurrencyCode)) {
                     throw new PersistException("Money field " + fieldName + " cannot be loaded because crossReference= " + getXrefName(fieldName)
                     + " does not have a value. Model: " + model); 
@@ -265,20 +281,26 @@ public class ModelWrapper {
 
     private void setFieldValue(FieldMetaData fieldMetaData, Object value) throws Exception {
         Class<?> clazz = fieldMetaData.getClazz();
-        if (clazz.isInstance(model)) {
-            ReflectUtils.setProperty(fieldMetaData.getField(), model, value);
+        Object targetObject = model;
+
+        if(model.getExtensions().containsKey(clazz)){
+            targetObject = model.getExtension(clazz);
+        }
+
+        if (clazz.isInstance(targetObject)) {
+            ReflectUtils.setProperty(fieldMetaData.getField(), targetObject, value);
         } else {
-            Class<? extends Object> targetClazz = model.getClass();
+            Class<? extends Object> targetClazz = targetObject.getClass();
             while (targetClazz != Object.class) {
                 Field[] fields = targetClazz.getDeclaredFields();
                 for (Field field : fields) {
                     CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
                     if (compositeDefAnnotation != null) {
                         if (field.getType() == fieldMetaData.getClazz()) {
-                            Object fieldValue = getFieldValue(model, field.getName());
+                            Object fieldValue = getFieldValue(field.getName());
                             if (fieldValue == null) {
-                                ReflectUtils.setProperty(field, model, fieldMetaData.getClazz().newInstance());
-                                fieldValue = getFieldValue(model, field.getName());
+                                ReflectUtils.setProperty(field, targetObject, fieldMetaData.getClazz().newInstance());
+                                fieldValue = getFieldValue(field.getName());
                             }
                             ReflectUtils.setProperty(fieldMetaData.getField(), fieldValue, value);
                             return;
@@ -300,7 +322,7 @@ public class ModelWrapper {
             
             try {
                 ColumnDef xRefColumnDef = xRefField.getDeclaredAnnotation(ColumnDef.class);
-                String modelCurrencyCode = (String)getFieldValue(model,xRefField.getName());
+                String modelCurrencyCode = (String)getFieldValue(xRefField.getName());
                 if (StringUtils.isEmpty(modelCurrencyCode)) {
                     try {
                         xRefField.set(model, isoCurrencyCode);

@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import lombok.Delegate;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
@@ -57,7 +58,6 @@ public class DatabaseSchema {
 
     protected Database buildDesiredModel() {
         Collection<Table> tables = loadTables(tablePrefix);
-        loadExtensions();
 
         Database db = new Database();
         db.addTables(tables);
@@ -157,7 +157,7 @@ public class DatabaseSchema {
         Set<Table> tables = new TreeSet<>();
         for (Class<?> entityClass : entityClasses) {
             //List<ModelClassMetaData> metas = createMetaDatas(entityClass);
-            ModelMetaData modelMetaData = createMetaData(entityClass, platform);
+            ModelMetaData modelMetaData = createMetaData(entityClass, getEntityExtensionClasses(entityClass), platform);
             classToModelMetaData.put(entityClass, modelMetaData);
             for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
                 validateTable(tablePrefix, meta.getTable());
@@ -172,21 +172,11 @@ public class DatabaseSchema {
         return tables;
     }
 
-    protected void loadExtensions() {
-        for (Class<?> extensionClass : entityExtensionClasses) {
-            Extends extendsAnnotation = extensionClass.getAnnotation(Extends.class);
-            Class<?> baseClass = extendsAnnotation.entityClass();
-            ModelMetaData modelMetaData = classToModelMetaData.get(baseClass);
-            ModelClassMetaData meta = modelMetaData != null ? modelMetaData.getModelClassMetaData().get(0) : null;
-            if (meta == null) {
-                throw new PersistException("Failed to process extension entity " + extensionClass
-                        + " Could not find table mapped for base entity class: " + baseClass);
-            }
-            Field[] fields = extensionClass.getDeclaredFields();
-            for (Field field : fields) {
-                meta.getTable().addColumn(createColumn(field, platform));
-            }
-        }
+    protected List<Class<?>> getEntityExtensionClasses(Class<?> entityClazz){
+        return entityExtensionClasses.stream().filter( extensionClazz -> {
+            Extends extendsAnnotation = extensionClazz.getAnnotation(Extends.class);
+            return extendsAnnotation != null && entityClazz.equals(extendsAnnotation.entityClass());
+        }).collect(Collectors.toList());
     }
     
     protected String getTableName(String tablePrefix, String tableName) {
@@ -235,11 +225,11 @@ public class DatabaseSchema {
         }
     }
 
-    public static ModelMetaData createMetaData(Class<?> clazz) {
-        return createMetaData(clazz, null);
+    public static ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses) {
+        return createMetaData(clazz, entityExtensionClasses, null);
     }
 
-    public static ModelMetaData createMetaData(Class<?> clazz, IDatabasePlatform databasePlatform) {
+    public static ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses, IDatabasePlatform databasePlatform) {
         List<ModelClassMetaData> list = new ArrayList<>();
         Class<?> entityClass = clazz;
         boolean ignoreSuperClasses = false;
@@ -249,6 +239,7 @@ public class DatabaseSchema {
                 ignoreSuperClasses = tblAnnotation.ignoreSuperTableDef();
                 ModelClassMetaData meta = new ModelClassMetaData();
                 meta.setClazz(entityClass);
+                meta.setExtensionClazzes(entityExtensionClasses);
                 Table dbTable = new Table();
                 List<Column> columns = new ArrayList<>();
                 List<Column> pkColumns = new ArrayList<>();
@@ -261,6 +252,9 @@ public class DatabaseSchema {
                     createClassFieldsMetadata(currentClass, meta,includeAllFields,columns,pkColumns,indices, databasePlatform);
                     currentClass = currentClass.getSuperclass();
                     includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
+                }
+                for( Class<?> extensionClass: entityExtensionClasses){
+                    createClassFieldsMetadata(extensionClass, meta, true, columns, pkColumns, indices, databasePlatform);
                 }
                 for (Column column : pkColumns) {
                     dbTable.addColumn(column);

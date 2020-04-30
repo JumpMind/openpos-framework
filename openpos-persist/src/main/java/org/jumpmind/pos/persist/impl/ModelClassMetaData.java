@@ -13,6 +13,7 @@ public class ModelClassMetaData {
 
     private Table table;
     private Class<?> clazz;
+    private List<Class<?>> extensionClazzes;
     private String idxPrefix;
     private Map<String, FieldMetaData> entityIdFieldMetaDatas = new HashMap<>();
     private Map<String, FieldMetaData> entityFieldMetaDatas = new HashMap<>();
@@ -50,6 +51,10 @@ public class ModelClassMetaData {
     public void setClazz(Class<?> clazz) {
         this.clazz = clazz;
     }
+
+    public void setExtensionClazzes(List<Class<?>> extensionClazzes){ this.extensionClazzes = extensionClazzes; }
+
+    public List<Class<?>> getExtensionClazzes() { return extensionClazzes; }
 
     public void addEntityIdFieldMetadata(String name, FieldMetaData fieldMetaData) {
         entityIdFieldMetaDatas.put(name, fieldMetaData);
