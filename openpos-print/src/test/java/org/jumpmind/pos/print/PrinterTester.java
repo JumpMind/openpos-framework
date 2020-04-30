@@ -20,7 +20,7 @@ public class PrinterTester {
         Map<String, Object> settings = new HashMap<>();
         settings.put("printerCommandLocations", "esc_p.properties, epson.properties");
         settings.put("printerCommandLocations", "esc_p.properties,epson.properties");
-        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
+        settings.put("connectionClass", "org.jumpmind.pos.print.RS232ConnectionFactory");
 //        settings.put("connectionClass", "org.jumpmind.pos.print.SocketConnectionFactory");
 //        settings.put("hostName", "192.168.42.181");
 //        settings.put("port", "9100");
@@ -85,7 +85,7 @@ public class PrinterTester {
 //            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Back to receipt printer.\n");
 
 
-//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
+            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
 
 //            StringBuilder buffer = new StringBuilder(128);
 //
