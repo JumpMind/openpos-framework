@@ -2,7 +2,9 @@ package org.jumpmind.pos.print;
 
 import lombok.extern.slf4j.Slf4j;
 import gnu.io.*;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
@@ -11,30 +13,71 @@ public class RS232ConnectionFactory implements IConnectionFactory {
 
     private SerialPort serialPort;
 
+    public final static String PORT_NAME = "portName";
+    public final static String BAUD_RATE = "baudRate";
+    public final static String DATA_BITS = "dataBits";
+    public final static String STOP_BITS = "stopBits";
+    public final static String PARITY = "parity";
+    public final static String CONNECT_TIMEOUT = "connectTimeout";
+
     @Override
     public PrinterConnection open(Map<String, Object> settings) {
         java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+
+        String portName = (String) settings.get(PORT_NAME);
+        if (StringUtils.isEmpty(portName)) {
+            throw new PrintException("No PORT_NAME was specified.  Something like COM1 needs " +
+                    "to be specified for RS232 connections. " + settings);
+        }
+
+        log.info("Connecting to port " + portName + " for printing.");
+
         while (portEnum.hasMoreElements()) {
             CommPortIdentifier portIdentifier = portEnum.nextElement();
-            System.out.println(portIdentifier.getName());
 
-            if (portIdentifier.getName().equals("COM3")) {
+            if (portIdentifier.getName().equals(portName)) {
                 try {
-                    CommPort commPort = portIdentifier.open("SerialMain4", 3000);
-                    serialPort = (SerialPort) commPort;
-                    serialPort.setSerialPortParams(19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
-                    OutputStream out = serialPort.getOutputStream();
-
-                    PrinterConnection printerConnection = new PrinterConnection();
-                    printerConnection.setOut(out);
-                    return printerConnection;
+                    PrinterConnection connection = openSerialPort(settings, portIdentifier);
+                    log.info("Successfully connected to port " + portName + " for printing.");
+                    return connection;
                 } catch (Exception ex) {
-                    ex.printStackTrace();
+                    throw new PrintException("Failed to open serial port for printing " + portName + " settings=" + settings, ex);
                 }
             }
         }
 
-        return null;
+        throw new PrintException("No serial port for printing named '" + portName + "' could be found on this system.");
+    }
+
+    private PrinterConnection openSerialPort(Map<String, Object> settings, CommPortIdentifier portIdentifier) throws PortInUseException, UnsupportedCommOperationException, IOException {
+        int connectTimeout = getIntValue(CONNECT_TIMEOUT, 10000, settings);
+        int baudRate = getIntValue(BAUD_RATE, 19200, settings);
+        int dataBits = getIntValue(DATA_BITS, SerialPort.DATABITS_8, settings);
+        int stopBits = getIntValue(STOP_BITS, SerialPort.STOPBITS_1, settings);
+        int parity = getIntValue(PARITY, SerialPort.PARITY_NONE, settings);
+
+        String owner = RS232ConnectionFactory.class.getName();
+        CommPort commPort = portIdentifier.open(owner, connectTimeout);
+        serialPort = (SerialPort) commPort;
+        serialPort.setSerialPortParams(baudRate, dataBits, stopBits, parity);
+        OutputStream out = serialPort.getOutputStream();
+
+        PrinterConnection printerConnection = new PrinterConnection();
+        printerConnection.setOut(out);
+        return printerConnection;
+    }
+
+    private Integer getIntValue(String key, Integer defaultValue, Map<String, Object> settings) {
+        Object value = settings.get(key);
+        if (value instanceof String) {
+            return Integer.parseInt(((String) value).trim());
+        } else if (value instanceof  Integer) {
+            return (Integer) value;
+        } else if (value == null) {
+            return defaultValue;
+        } else {
+            throw new PrintException("Unrecognized type for key=" + key + " value=" + value);
+        }
     }
 
     @Override
@@ -47,6 +90,4 @@ public class RS232ConnectionFactory implements IConnectionFactory {
             }
         }
     }
-
-
 }
