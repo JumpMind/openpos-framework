@@ -51,13 +51,10 @@ import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
-import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig.*;
-import org.jumpmind.pos.util.startup.IDeviceStartupTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component()
