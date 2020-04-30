@@ -50,10 +50,14 @@ import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.model.Message;
+import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
+import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig.*;
+import org.jumpmind.pos.util.startup.IDeviceStartupTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -100,6 +104,9 @@ public class StateManager implements IStateManager {
     @Autowired
     private ActionHandlerHelper helper;
 
+    @Autowired
+    DeviceStartupTaskConfig deviceStartupTaskConfig;
+
     private ApplicationState applicationState = new ApplicationState();
 
     private List<TransitionStepConfig> transitionStepConfigs;
@@ -134,8 +141,6 @@ public class StateManager implements IStateManager {
     }
 
     public void init(String appId, String nodeId) {
-
-
         this.applicationState.reset();
         this.applicationState.setAppId(appId);
         this.applicationState.setDeviceId(nodeId);
@@ -143,6 +148,8 @@ public class StateManager implements IStateManager {
 
         applicationState.getScope().setDeviceScope("stateManager", this);
         initDefaultScopeObjects();
+
+        deviceStartupTaskConfig.processDeviceStartupTasks(nodeId, appId);
 
         if (initialFlowConfig != null) {
             applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
