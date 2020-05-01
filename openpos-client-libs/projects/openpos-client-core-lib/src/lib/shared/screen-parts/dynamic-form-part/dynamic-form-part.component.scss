@@ -8,7 +8,7 @@
     @extend %page-spaced-content; 
 
     .form-content {
-        min-height: 100px;
+        min-height: 10%;
         overflow-y: auto;
         padding: 24px;
         &.mobile {
