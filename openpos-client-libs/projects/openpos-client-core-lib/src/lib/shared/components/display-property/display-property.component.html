@@ -6,6 +6,13 @@
         <span gdArea="label" class="display-property-label column">{{property.label}}</span>
         <span gdArea="value" *ngIf="property.value" class="display-property-value column">{{property.value | valueFormatter: property.valueFormatter}}</span>
     </div>
+    <div *ngSwitchCase="DisplayPropertyAlignment.column_end" 
+        class="display-property column"
+        gdAreas="label value"
+        gdColumns="1fr auto">
+        <span gdArea="label" class="display-property-label vertical">{{property.label}}</span>
+        <span gdArea="value" *ngIf="property.value"  class="display-property-value vertical">{{property.value | valueFormatter: property.valueFormatter}}</span>
+    </div>
     <div *ngSwitchCase="DisplayPropertyAlignment.vertical" 
         class="display-property vertical"
         gdAreas="label | value">
