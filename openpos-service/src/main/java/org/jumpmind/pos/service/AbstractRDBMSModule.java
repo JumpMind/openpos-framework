@@ -239,7 +239,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
             List<Class<?>> tableClasses = getClassesForPackageAndAnnotation(packageName, TableDef.class);
             List<Class<?>> tableExtensionClasses = getClassesForPackageAndAnnotation(packageName, Extends.class);
-            tableExtensionClasses.addAll(getClassesForPackageAndAnnotation(additionalPackages, Extends.class));
+
+            if(additionalPackages != null){
+                tableExtensionClasses.addAll(getClassesForPackageAndAnnotation(additionalPackages, Extends.class));
+            }
 
             TypedProperties sessionContext = new TypedProperties();
 

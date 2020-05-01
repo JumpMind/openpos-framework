@@ -227,10 +227,17 @@ public class ModelWrapper {
     protected Object getFieldValue(String fieldName) {
         Object fieldValue=null;
         Object obj = model;
-        FieldMetaData fieldMetaData = getFieldMetaData(fieldName);
 
-        if(model.getExtensions().containsKey(fieldMetaData.getClazz())){
-            obj = model.getExtension(fieldMetaData.getClazz());
+        // First we need to figure out if this field is on the model or an extension model
+        try{
+            FieldMetaData fieldMetaData = getFieldMetaData(fieldName);
+            if(model.getExtensions().containsKey(fieldMetaData.getClazz())){
+                obj = model.getExtension(fieldMetaData.getClazz());
+            }
+        } catch (PersistException e){
+            // I'm not super crazy about just eating this exception here, but if we don't find any field meta data
+            // then we know the field isn't on an extension model, but it could still be on the model and is likely
+            // an @CompositeDef, which is ok we can try and get that value from the model
         }
 
         try {
@@ -283,10 +290,14 @@ public class ModelWrapper {
         Class<?> clazz = fieldMetaData.getClazz();
         Object targetObject = model;
 
+        // Is the field we are trying to set on the extension model? if so then we want to switch the target object
+        // to the correct extension model
         if(model.getExtensions().containsKey(clazz)){
             targetObject = model.getExtension(clazz);
         }
 
+        // If the field is on the top level model object then we just set it
+        // otherwise we need to loop through any composite objects to find the correct one
         if (clazz.isInstance(targetObject)) {
             ReflectUtils.setProperty(fieldMetaData.getField(), targetObject, value);
         } else {

@@ -607,32 +607,14 @@ public class DBSession {
         ModelWrapper model = new ModelWrapper((AbstractModel) object, modelMetaData);
         model.load();
 
-        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(object);
-
         LinkedCaseInsensitiveMap<String> matchedColumns = new LinkedCaseInsensitiveMap<String>();
-        LinkedHashMap<String, Object> defferedLoadValues = new LinkedHashMap<>();
+        LinkedHashMap<String, Object> deferredLoadValues = new LinkedHashMap<>();
 
-        for (int i = 0; i < propertyDescriptors.length; i++) {
-            String propertyName = propertyDescriptors[i].getName();
-            String columnName = modelMetaData.getColumnNameForProperty(resultClass, propertyName);
-            if (columnName != null) {
-                if (row.containsKey(columnName)) {
-                    Object value = row.get(columnName);
-                    if (isDefferedLoadField(model.getField(propertyName))) {
-                        defferedLoadValues.put(propertyName, value);
-                    } else {
-                        model.setValue(propertyName, value);
-                        matchedColumns.put(columnName, null);
-                    }
-                }
-            }
-        }
+        mapModelHelper(modelMetaData, row, object, model, resultClass, matchedColumns, deferredLoadValues);
 
-        for (String propertyName : defferedLoadValues.keySet()) {
-            Object value = defferedLoadValues.get(propertyName);
-            model.setValue(propertyName, value);
-            String columnName = DatabaseSchema.camelToSnakeCase(propertyName);
-            matchedColumns.put(columnName, null);
+        if(model.getModel().getExtensions() != null){
+            model.getModel().getExtensions().forEach( (clazz, o) ->
+                    mapModelHelper(modelMetaData, row, o, model, clazz,matchedColumns,deferredLoadValues));
         }
 
         addTags(row, matchedColumns, (AbstractModel) object);
@@ -640,6 +622,41 @@ public class DBSession {
         decorateRetrievedModel(model);
 
         return (T) model.getModel();
+    }
+
+    private void mapModelHelper(
+            ModelMetaData modelMetaData,
+            Row row,
+            Object object,
+            ModelWrapper modelWrapper,
+            Class<?> resultClass,
+            LinkedCaseInsensitiveMap<String> matchedColumns,
+            LinkedHashMap<String, Object> deferredLoadValues){
+        PropertyDescriptor[] propertyDescriptors = PropertyUtils.getPropertyDescriptors(object);
+
+        for (int i = 0; i < propertyDescriptors.length; i++) {
+            String propertyName = propertyDescriptors[i].getName();
+            String columnName = modelMetaData.getColumnNameForProperty(resultClass, propertyName);
+            if (columnName != null) {
+                if (row.containsKey(columnName)) {
+                    Object value = row.get(columnName);
+                    if (isDefferedLoadField(modelWrapper.getField(propertyName))) {
+                        deferredLoadValues.put(propertyName, value);
+                    } else {
+                        modelWrapper.setValue(propertyName, value);
+                        matchedColumns.put(columnName, null);
+                    }
+                }
+            }
+        }
+
+        for (String propertyName : deferredLoadValues.keySet()) {
+            Object value = deferredLoadValues.get(propertyName);
+            modelWrapper.setValue(propertyName, value);
+            String columnName = DatabaseSchema.camelToSnakeCase(propertyName);
+            matchedColumns.put(columnName, null);
+        }
+
     }
 
     protected void addTags(Row row, LinkedCaseInsensitiveMap<String> matchedColumns, AbstractModel model) {
