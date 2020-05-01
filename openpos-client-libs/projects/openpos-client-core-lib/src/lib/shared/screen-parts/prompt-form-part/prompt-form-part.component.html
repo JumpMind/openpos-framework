@@ -1,6 +1,7 @@
 <ng-template [ngIf]="this.screenData.type.toLowerCase() !== 'dialog'" [ngIfElse]="dialogForm">
     <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
         <div responsive-class class="form-part-body">
+            <app-dynamic-form-part *ngIf="screenData.infoForm && screenData.promptPosition === 'Bottom'" [formName]="'infoForm'"></app-dynamic-form-part>
             <app-content-card>
                 <div class="content">
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText"
@@ -17,6 +18,7 @@
                     </div>
                 </div>
             </app-content-card>
+            <app-dynamic-form-part *ngIf="screenData.infoForm && screenData.promptPosition === 'Top'" [formName]="'infoForm'"></app-dynamic-form-part>
 
             <div *ngIf="screenData.otherActions || screenData.actionButton" class="prompt-buttons">
                 <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
@@ -36,6 +38,7 @@
 <ng-template #dialogForm>
     <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup" class="form">
         <div responsive-class class="form-part-body">
+            <app-dynamic-form-part *ngIf="screenData.infoForm && screenData.promptPosition === 'Bottom'" [formName]="'infoForm'"></app-dynamic-form-part>
             <app-content-card>
                 <mat-dialog-content class="content">
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
@@ -50,6 +53,7 @@
                     </div>
                 </mat-dialog-content>
             </app-content-card>
+            <app-dynamic-form-part *ngIf="screenData.infoForm && screenData.promptPosition === 'Top'" [formName]="'infoForm'"></app-dynamic-form-part>
 
             <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" class="prompt-buttons">
                 <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
