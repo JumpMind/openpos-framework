@@ -1,0 +1,22 @@
+@import "../../styles/variables/spacing";
+
+.prompt-outer {
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: auto 1fr;
+    height: 100%;
+
+    .prompt-body {
+        overflow-y: auto;
+        display: grid;
+        width: 100%;
+        justify-self: center;
+        align-content: center;
+        @extend %page-spaced-content; 
+    
+        .prompt-image {
+            max-height: 4em;
+            justify-self: center;
+        }
+    }
+}

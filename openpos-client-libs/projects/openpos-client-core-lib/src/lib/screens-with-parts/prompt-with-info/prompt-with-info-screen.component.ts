@@ -11,7 +11,8 @@ import { PromptWithInfoInterface } from './prompt-with-info.interface';
 })
 @Component({
   selector: 'app-prompt-with-info-screen',
-  templateUrl: './prompt-with-info-screen.component.html'
+  templateUrl: './prompt-with-info-screen.component.html',
+  styleUrls: ['./prompt-with-info-screen.component.scss']
 })
 export class PromptWithInfoScreenComponent extends PosScreen<PromptWithInfoInterface> {
 
