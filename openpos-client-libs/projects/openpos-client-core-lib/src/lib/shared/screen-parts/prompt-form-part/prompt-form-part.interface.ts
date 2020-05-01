@@ -1,8 +1,9 @@
 import { FieldInputType } from '../../../core/interfaces/field-input-type.enum';
 import { IActionItem } from '../../../core/actions/action-item.interface';
 import { Validator } from '@angular/forms';
-import { PromptPosition } from './prompt-position.enum';
 import { IForm } from '../../../core/interfaces/form.interface';
+import { PromptPosition } from './prompt-position.enum';
+import { DisplayProperty } from '../../components/display-property/display-property.interface';
 
 export interface PromptFormPartInterface {
     type: string;
@@ -25,5 +26,5 @@ export interface PromptFormPartInterface {
     validators: Validator[];
     validationMessages: Map<string, string>;
     promptPosition: PromptPosition;
-    infoForm: IForm;
+    info: DisplayProperty[];
 }

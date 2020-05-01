@@ -1,8 +1,8 @@
 package org.jumpmind.pos.core.ui.message;
 
-import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.model.FormDisplayField;
+import org.jumpmind.pos.core.model.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PromptWithInfoUIMessage extends PromptUIMessage {
@@ -13,32 +13,32 @@ public class PromptWithInfoUIMessage extends PromptUIMessage {
         Bottom,
         Top
     }
-    
+
     private PromptPosition promptPosition = PromptPosition.Bottom;
-    private Form infoForm;
+    private List<DisplayProperty> info;
 
     public PromptWithInfoUIMessage() {
-        this(null);
+        this(new ArrayList<>());
     }
 
-    public PromptWithInfoUIMessage(List<FormDisplayField> infoFields) {
-        this.infoForm = new Form();
-        if (infoFields != null) {
-            infoFields.stream().forEachOrdered(f -> this.infoForm.addFormElement(f));
-        }
+    public PromptWithInfoUIMessage(List<DisplayProperty> info) {
+        this.info = info;
         this.setScreenType(UIMessageType.PROMPT_WITH_INFO);
     }
-    
-    public void addInfoField(FormDisplayField infoField) {
-        this.infoForm.addFormElement(infoField);
+
+    public void addInfoField(String label, String value, String valueFormatter) {
+        if(this.info == null) {
+            this.info = new ArrayList<>();
+        }
+        this.info.add(new DisplayProperty(label, value, valueFormatter));
     }
 
-    public Form getInfoForm() {
-        return infoForm;
+    public List<DisplayProperty> getInfo() {
+        return info;
     }
 
-    public void setInfoForm(Form infoForm) {
-        this.infoForm = infoForm;
+    public void setInfo(List<DisplayProperty> info) {
+        this.info = info;
     }
 
     public PromptPosition getPromptPosition() {
