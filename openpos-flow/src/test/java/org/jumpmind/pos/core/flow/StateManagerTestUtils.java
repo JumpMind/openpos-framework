@@ -13,11 +13,12 @@ import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.flow.config.YamlConfigProvider;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
+import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 
 public class StateManagerTestUtils {
-    
-    
+
     protected static StateManager buildStateManager(Injector injector, String yamlConfigPath) throws Exception {
         
         YamlConfigProvider provider = new YamlConfigProvider();
@@ -28,6 +29,9 @@ public class StateManagerTestUtils {
 
         IMessageService messageService = Mockito.mock(IMessageService.class);
         doNothing().when(messageService).sendMessage(any(String.class), any(String.class), any(Message.class));
+
+        DeviceStartupTaskConfig deviceStartupTaskConfig = Mockito.mock(DeviceStartupTaskConfig.class);
+        TestUtil.setField(stateManager, "deviceStartupTaskConfig", deviceStartupTaskConfig);
 
         LocaleMessageFactory localeMessageFactory = new LocaleMessageFactory();
         TestUtil.setField(localeMessageFactory, "supportedLocales", new String[] {"en_US"});
