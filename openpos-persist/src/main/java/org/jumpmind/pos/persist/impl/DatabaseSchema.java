@@ -173,10 +173,13 @@ public class DatabaseSchema {
     }
 
     protected List<Class<?>> getEntityExtensionClasses(Class<?> entityClazz){
-        return entityExtensionClasses.stream().filter( extensionClazz -> {
-            Extends extendsAnnotation = extensionClazz.getAnnotation(Extends.class);
-            return extendsAnnotation != null && entityClazz.equals(extendsAnnotation.entityClass());
-        }).collect(Collectors.toList());
+        if(entityExtensionClasses != null){
+            return entityExtensionClasses.stream().filter( extensionClazz -> {
+                Extends extendsAnnotation = extensionClazz.getAnnotation(Extends.class);
+                return extendsAnnotation != null && entityClazz.equals(extendsAnnotation.entityClass());
+            }).collect(Collectors.toList());
+        }
+        return new ArrayList<>();
     }
     
     protected String getTableName(String tablePrefix, String tableName) {
