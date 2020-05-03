@@ -54,7 +54,7 @@ public class TestPersistCarsConfig {
                     PersistTestUtil.testDbPlatform(), 
                     PersistTestUtil.getSessionContext(), 
                     Arrays.asList(CarModel.class, CarStats.class, ServiceInvoice.class, RaceCarModel.class),
-                    null,
+                    Arrays.asList(CarModelExtension.class),
                     queryTemplates,
                     DBSessionFactory.getDmlTemplates("persist-test"), tagHelper);
             
