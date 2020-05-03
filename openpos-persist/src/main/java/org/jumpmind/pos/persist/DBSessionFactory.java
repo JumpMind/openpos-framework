@@ -73,7 +73,8 @@ public class DBSessionFactory {
     protected void initSchema() {
         this.databaseSchema = new DatabaseSchema();
         databaseSchema.init(sessionContext.get("module.tablePrefix"), databasePlatform,
-                this.modelClazzes,
+                this.modelClazzes.stream().filter(e -> e.getAnnotation(org.jumpmind.pos.persist.TableDef.class) != null)
+                        .collect(Collectors.toList()),
                 this.modelExtensionClazzes);
     }
 
