@@ -17,6 +17,7 @@ import org.jumpmind.pos.core.flow.config.FlowBuilder;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
+import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -35,7 +36,9 @@ public class BeforeActionStateLifeCycleServiceIT {
     
     @Mock
     private IMessageService messageService;
-    
+
+    @Mock
+    private DeviceStartupTaskConfig deviceStartupTaskConfig;
     
     @Before
     public void setUp() throws Exception {

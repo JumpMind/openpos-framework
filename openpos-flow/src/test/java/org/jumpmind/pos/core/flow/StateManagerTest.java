@@ -49,6 +49,7 @@ import org.jumpmind.pos.core.service.ScreenService;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
+import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -79,6 +80,9 @@ public class StateManagerTest {
 
     @Mock
     private ActionHandlerHelper actionHelper;
+
+    @Mock
+    private DeviceStartupTaskConfig deviceStartupTaskConfig;
 
     @Before
     public void setup() throws Exception {

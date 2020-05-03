@@ -103,19 +103,18 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
         StateManager stateManager = stateManagersByNodeId.get(deviceId);
         if (stateManager == null) {
-            if (stateManager == null) {
-                stateManager = applicationContext.getBean(StateManager.class);
-                setCurrentStateManager(stateManager);
+            stateManager = applicationContext.getBean(StateManager.class);
+            setCurrentStateManager(stateManager);
+            clientContext.put("deviceId", deviceId);
+            clientContext.put("appId", appId);
 
-
-                stateManager.setTransitionSteps(createTransitionSteps(appId, deviceId));
-                stateManager.registerQueryParams(queryParams);
-                stateManager.registerPersonalizationProperties(personalizationProperties);
-                stateManager.setErrorHandler(errorHandler);
-                stateManager.setInitialFlowConfig(flowConfigProvider.getConfig(appId, deviceId));
-                stateManagersByNodeId.put(deviceId, stateManager);
-                stateManager.init(appId, deviceId);
-            }
+            stateManager.setTransitionSteps(createTransitionSteps(appId, deviceId));
+            stateManager.registerQueryParams(queryParams);
+            stateManager.registerPersonalizationProperties(personalizationProperties);
+            stateManager.setErrorHandler(errorHandler);
+            stateManager.setInitialFlowConfig(flowConfigProvider.getConfig(appId, deviceId));
+            stateManagersByNodeId.put(deviceId, stateManager);
+            stateManager.init(appId, deviceId);
         }
         return stateManager;
     }

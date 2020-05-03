@@ -1,9 +1,12 @@
 package org.jumpmind.pos.core.flow;
 
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
+import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.context.ApplicationContext;
 
@@ -20,11 +23,13 @@ public class StateManagerContainerTest {
         final ApplicationContext applicationContext = Mockito.mock(ApplicationContext.class);
         final StateManager stateManager = Mockito.mock(StateManager.class);
         final IFlowConfigProvider flowConfigProvider = Mockito.mock(IFlowConfigProvider.class);
-        
+        ClientContext clientContext = Mockito.mock(ClientContext.class);
+
         Mockito.when(applicationContext.getBean(StateManager.class)).thenReturn(stateManager);
         Mockito.when(applicationContext.getBeanNamesForType(ITransitionStep.class)).thenReturn(new String[0]);
         TestUtil.setField(container, "applicationContext", applicationContext);
         TestUtil.setField(container, "flowConfigProvider", flowConfigProvider);
+        TestUtil.setField(container, "clientContext", clientContext);
         
         for (int i = 0; i < 50; i++) {            
             container.create("pos", "0000-"+i, null, null);
