@@ -40,9 +40,21 @@
             }
         }
     }
-
 }
 
+.option-keybind {
+    &.sm {
+        @extend %text-sm;
+    }
+
+    &.md {
+        @extend %text-md;
+    }
+
+    &.lg {
+        @extend %text-lg;
+    }
+}
 
 ::ng-deep .option-item {
     column-gap: 16px;

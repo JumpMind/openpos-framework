@@ -13,6 +13,7 @@ export class OptionButtonComponent implements OnDestroy{
     @Input() optionTitle: string;
     @Input() optionIcon: string;
     @Input() optionSize: string;
+    @Input() keybind: string;
     @Output() buttonClick = new EventEmitter();
 
     @ViewChild('button') button;

@@ -9,6 +9,9 @@
         [optionTitle]="o.title"
         [optionIcon]="o.icon"
         [optionSize]="'md'"
+        [keybind]="o.keybind"
+        [actionItem]="o"
+        (actionClick)="closeMenu(o)"
         (buttonClick)="closeMenu(o)">
     </app-option-button>
 </mat-dialog-content>

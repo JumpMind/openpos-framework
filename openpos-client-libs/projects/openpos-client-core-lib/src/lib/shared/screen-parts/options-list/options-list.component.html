@@ -16,6 +16,9 @@
             [optionTitle]="o.title" 
             [optionIcon]="o.icon" 
             [optionSize]="optionListSizeClass"
+            [keybind]="o.keybind"
+            [actionItem]="o"
+            (actionClick)="onOptionClick(o)"
             (click)="onOptionClick(o)">
         </app-option-button>
         <app-option-button *ngIf="overflowOptions && overflowOptions.length > 0 && screenData.overflowButton"
@@ -24,6 +27,9 @@
             [optionTitle]="screenData.overflowButton.title"
             [optionIcon]="screenData.overflowButton.icon"
             [optionSize]="optionListSizeClass"
+            [keybind]="screenData.overflowButton.keybind"
+            [actionItem]="screenData.overflowButton"
+            (actionClick)="openKebabMenu()"
             (click)="openKebabMenu()">
         </app-option-button>
     </div>

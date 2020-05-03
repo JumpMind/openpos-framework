@@ -6,6 +6,7 @@
     [type]="inputType"
     color=primary-inverse
     class="option-item"
+    
 >
     <app-icon [iconName]="optionIcon"
         [iconClass]="optionSize"
@@ -15,5 +16,8 @@
     <div class="option-content">
         <span responsive-class class="option-line" [class.muted-color]="disabled" [ngClass]="optionSize">{{optionTitle}}</span>
         <ng-content></ng-content>
+    </div>
+    <div *ngIf="keybind">
+        <span responsive-class class="option-keybind muted-color" [ngClass]="optionSize">{{keybind}}</span>
     </div>
 </button>

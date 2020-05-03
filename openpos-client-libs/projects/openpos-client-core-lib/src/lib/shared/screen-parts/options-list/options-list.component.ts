@@ -8,7 +8,7 @@ import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openp
 import { FocusService } from '../../../core/focus/focus.service';
 import { MatDialog } from '@angular/material';
 import { KebabMenuComponent } from '../../components/kebab-menu/kebab-menu.component';
-import { KeyPressProvider } from '../../providers/keypress.provider';
+import { Configuration } from '../../../configuration/configuration';
 
 
 @ScreenPart({
@@ -36,7 +36,7 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     isMobile: Observable<boolean>;
 
     constructor( injector: Injector, mediaService: OpenposMediaService, protected dialog: MatDialog,
-                 protected focusService: FocusService, protected keyPresses: KeyPressProvider) {
+                 protected focusService: FocusService) {
 
         super(injector);
         this.isMobile = mediaService.observe(new Map([
@@ -71,6 +71,10 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
         } else {
             this.doAction(actionItem);
         }
+    }
+
+    public keybindsEnabled(option: IActionItem): boolean {
+        return Configuration.enableKeybinds && option.keybind && option.keybind !== 'Enter';
     }
 
     public openKebabMenu() {
