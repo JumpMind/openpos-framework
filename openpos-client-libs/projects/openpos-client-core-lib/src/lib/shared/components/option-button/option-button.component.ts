@@ -1,6 +1,7 @@
 import {Component, Input, Output, EventEmitter, ViewChild, ElementRef, OnDestroy} from '@angular/core';
 import {Subscription} from 'rxjs';
 import { DomEventManager } from '../../../core/services/dom-event-manager.service';
+import { Configuration } from '../../../configuration/configuration';
 
 @Component({
     selector: 'app-option-button',
@@ -28,6 +29,10 @@ export class OptionButtonComponent implements OnDestroy{
 
     clickFn() {
         this.buttonClick.emit(true);
+    }
+
+    public keybindsEnabled(): boolean {
+        return Configuration.enableKeybinds && !!this.keybind;
     }
 
     ngOnDestroy(): void {
