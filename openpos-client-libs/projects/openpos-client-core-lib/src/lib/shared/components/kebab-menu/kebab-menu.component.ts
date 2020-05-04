@@ -1,27 +1,49 @@
-import { Component, Inject } from '@angular/core';
+import { KeyPressProvider } from './../../providers/keypress.provider';
+import { Component, Inject, OnDestroy } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material';
-import { ActionService } from '../../../core/actions/action.service';
+import { Subscription } from 'rxjs';
+import { Configuration } from '../../../configuration/configuration';
 
 @Component({
-  selector: 'app-kebab-menu',
-  templateUrl: './kebab-menu.component.html',
-  styleUrls: ['./kebab-menu.component.scss'],
-
-// I don't want this providers declaration here, but I have not been able to figure out
-// how to resolve the following error otherwise:
-//
-// KebabMenuComponent.html:5 ERROR Error: StaticInjectorError(AppModule)[ActionItemKeyMappingDirective -> ActionService]:
-//   StaticInjectorError(Platform: core)[ActionItemKeyMappingDirective -> ActionService]:
-//     NullInjectorError: No provider for ActionService!
-  providers: [ActionService]
+    selector: 'app-kebab-menu',
+    templateUrl: './kebab-menu.component.html',
+    styleUrls: ['./kebab-menu.component.scss']
 })
-export class KebabMenuComponent {
+export class KebabMenuComponent implements OnDestroy {
 
-  constructor( @Inject(MAT_DIALOG_DATA) public data: any, public dialogRef: MatDialogRef<KebabMenuComponent>) {
-  }
+    protected subscriptions: Subscription = new Subscription();
 
-  closeMenu(option: any) {
-    this.dialogRef.close(option);
-  }
+    constructor(@Inject(MAT_DIALOG_DATA) public data: any,
+                public dialogRef: MatDialogRef<KebabMenuComponent>,
+                protected keyPresses: KeyPressProvider) {
+
+        if (Configuration.enableKeybinds) {
+            this.data.menuItems.forEach(item => {
+                if (!!item.keybind) {
+                    this.subscriptions.add(
+                        this.keyPresses.subscribe(item.keybind, 100, event => {
+                            // ignore repeats
+                            if (event.repeat || !Configuration.enableKeybinds) {
+                                return;
+                            }
+                            if (event.type === 'keydown') {
+                                this.closeMenu(item);
+                            }
+                        })
+                    );
+                }
+            });
+        }
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscriptions) {
+            this.subscriptions.unsubscribe();
+        }
+    }
+
+    closeMenu(option: any) {
+        this.dialogRef.close(option);
+    }
 
 }
