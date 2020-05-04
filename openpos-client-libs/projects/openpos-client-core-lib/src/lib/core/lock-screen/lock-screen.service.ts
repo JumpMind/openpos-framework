@@ -6,6 +6,7 @@ import {Observable, ReplaySubject} from 'rxjs';
 import {tap} from 'rxjs/operators';
 import {MessageProvider} from '../../shared/providers/message.provider';
 import {ActionService} from '../actions/action.service';
+import {FocusService} from '../focus/focus.service';
 import {LockScreenMessage} from '../messages/lock-screen-message';
 import {MessageTypes} from '../messages/message-types';
 import {SessionService} from '../services/session.service';
@@ -23,7 +24,9 @@ export class LockScreenService {
 
     constructor( sessionService: SessionService,
                  private overlay: Overlay,
-                 private injector: Injector) {
+                 private injector: Injector,
+                 private focusService: FocusService
+                 ) {
         sessionService.getMessages(MessageTypes.LOCK_SCREEN).pipe(
             tap( () => this.showLockScreen() ),
             tap( message => this.lockScreenData.next(message))
@@ -38,10 +41,12 @@ export class LockScreenService {
 
         this.lockScreenOverlayRef = this.overlay.create({
             height: '100%',
-            width: '100%'
+            width: '100%',
+
         });
         const lockScreenPortal = new ComponentPortal(LockScreenComponent, null, this.createInjector());
         this.lockScreenOverlayRef.attach(lockScreenPortal);
+        this.focusService.createInitialFocus(this.lockScreenOverlayRef.hostElement)
     }
 
     private removeLockScreen(){
