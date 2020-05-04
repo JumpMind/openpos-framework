@@ -229,15 +229,9 @@ public class ModelWrapper {
         Object obj = model;
 
         // First we need to figure out if this field is on the model or an extension model
-        try{
-            FieldMetaData fieldMetaData = getFieldMetaData(fieldName);
-            if(model.getExtensions().containsKey(fieldMetaData.getClazz())){
-                obj = model.getExtension(fieldMetaData.getClazz());
-            }
-        } catch (PersistException e){
-            // I'm not super crazy about just eating this exception here, but if we don't find any field meta data
-            // then we know the field isn't on an extension model, but it could still be on the model and is likely
-            // an @CompositeDef, which is ok we can try and get that value from the model
+        FieldMetaData fieldMetaData = getFieldMetaData(fieldName);
+        if( fieldMetaData  != null && model.getExtensions().containsKey(fieldMetaData.getClazz())){
+            obj = model.getExtension(fieldMetaData.getClazz());
         }
 
         try {
@@ -406,11 +400,7 @@ public class ModelWrapper {
                 break;
             }
         }
-        if (fieldMetaData != null) {
-            return fieldMetaData;
-        }  else {
-            throw new PersistException("Could not find field named " + fieldName + " on model " + modelMetaData);
-        }
+         return fieldMetaData;
     }
 
     public List<Column> getPrimaryKeyColumns() {

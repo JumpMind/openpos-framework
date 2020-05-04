@@ -93,7 +93,7 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
 
     public Map<Class, Object> getExtensions() { return new HashMap<>(extensions); }
 
-    public Object getExtension(Class clazz){
+    public <T> T getExtension(Class<T> clazz){
         if(!extensions.containsKey(clazz)){
             try {
                 extensions.put(clazz, clazz.newInstance());
@@ -101,6 +101,6 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
                throw new PersistException("Error getting extension class " + clazz, e);
             }
         }
-        return extensions.get(clazz);
+        return (T)extensions.get(clazz);
     }
 }

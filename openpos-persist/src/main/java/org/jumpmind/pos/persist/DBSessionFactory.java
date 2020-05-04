@@ -38,7 +38,7 @@ public class DBSessionFactory {
     IDatabasePlatform databasePlatform;
     TypedProperties sessionContext;
     List<Class<?>> modelClazzes;
-    List<Class<?>> modelExtensionClazzes;
+    List<Class<?>> modelExtensionClasses;
     TagHelper tagHelper;
 
     public void init(IDatabasePlatform databasePlatform, TypedProperties sessionContext, List<Class<?>> entities, List<Class<?>> extensionEntities, TagHelper tagHelper) {
@@ -64,7 +64,7 @@ public class DBSessionFactory {
 
         this.databasePlatform = databasePlatform;
         this.modelClazzes = entities;
-        this.modelExtensionClazzes = extensionEntities;
+        this.modelExtensionClasses = extensionEntities;
         this.tagHelper = tagHelper;
 
         this.initSchema();
@@ -75,7 +75,7 @@ public class DBSessionFactory {
         databaseSchema.init(sessionContext.get("module.tablePrefix"), databasePlatform,
                 this.modelClazzes.stream().filter(e -> e.getAnnotation(org.jumpmind.pos.persist.TableDef.class) != null)
                         .collect(Collectors.toList()),
-                this.modelExtensionClazzes);
+                this.modelExtensionClasses);
     }
 
     public void createAndUpgrade() {
