@@ -7,7 +7,8 @@ import { Component } from '@angular/core';
 })
 @Component({
     selector: 'app-prompt-with-info-screen-dialog',
-    templateUrl: './prompt-with-info-screen-dialog.component.html'
+    templateUrl: './prompt-with-info-screen-dialog.component.html',
+    styleUrls: ['./prompt-with-info-screen-dialog.component.scss']
 })
 export class PromptWithInfoScreenDialogComponent extends PromptWithInfoScreenComponent {
 }

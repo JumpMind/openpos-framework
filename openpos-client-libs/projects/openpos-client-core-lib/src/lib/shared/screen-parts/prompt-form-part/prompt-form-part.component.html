@@ -1,6 +1,11 @@
 <ng-template [ngIf]="this.screenData.type.toLowerCase() !== 'dialog'" [ngIfElse]="dialogForm">
     <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup">
         <div responsive-class class="form-part-body">
+            <app-content-card *ngIf="screenData.info && screenData.promptPosition === 'Bottom'">
+                <div class="content">
+                    <app-display-property *ngFor="let infoDetail of screenData.info" [property]="infoDetail" [alignmentType]="'column_end'"></app-display-property>
+                </div>
+            </app-content-card>
             <app-content-card>
                 <div class="content">
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText"
@@ -15,6 +20,11 @@
                     <div #optionsRef>
                         <ng-content select="[optionsScreen]"></ng-content>
                     </div>
+                </div>
+            </app-content-card>
+            <app-content-card *ngIf="screenData.info && screenData.promptPosition === 'Top'">
+                <div class="content">
+                    <app-display-property *ngFor="let infoDetail of screenData.info" [property]="infoDetail" [alignmentType]="'column_end'"></app-display-property>
                 </div>
             </app-content-card>
 
@@ -36,6 +46,11 @@
 <ng-template #dialogForm>
     <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup" class="form">
         <div responsive-class class="form-part-body">
+            <app-content-card *ngIf="screenData.info && screenData.promptPosition === 'Bottom'">
+                <div class="content">
+                    <app-display-property *ngFor="let infoDetail of screenData.info" [property]="infoDetail" [alignmentType]="'column_end'"></app-display-property>
+                </div>
+            </app-content-card>
             <app-content-card>
                 <mat-dialog-content class="content">
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
@@ -49,6 +64,11 @@
                         <ng-content select="[optionsDialog]"></ng-content>
                     </div>
                 </mat-dialog-content>
+            </app-content-card>
+            <app-content-card *ngIf="screenData.info && screenData.promptPosition === 'Top'">
+                <div class="content">
+                    <app-display-property *ngFor="let infoDetail of screenData.info" [property]="infoDetail" [alignmentType]="'column_end'"></app-display-property>
+                </div>
             </app-content-card>
 
             <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" class="prompt-buttons">
