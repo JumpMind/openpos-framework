@@ -8,8 +8,6 @@ import { OpenposMediaService, MediaBreakpoints } from '../../../core/media/openp
 import { FocusService } from '../../../core/focus/focus.service';
 import { MatDialog } from '@angular/material';
 import { KebabMenuComponent } from '../../components/kebab-menu/kebab-menu.component';
-import { Configuration } from '../../../configuration/configuration';
-
 
 @ScreenPart({
     name: 'optionsList'
@@ -71,10 +69,6 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
         } else {
             this.doAction(actionItem);
         }
-    }
-
-    public keybindsEnabled(option: IActionItem): boolean {
-        return Configuration.enableKeybinds && option.keybind && option.keybind !== 'Enter';
     }
 
     public openKebabMenu() {
