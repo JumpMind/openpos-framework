@@ -6,7 +6,6 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
-import org.jumpmind.pos.core.flow.config.SubFlowConfig;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.server.model.Action;
 import org.slf4j.Logger;
@@ -79,12 +78,12 @@ public class Transition {
 
     private void waitForEverybody() {
         try {
-            stateManager.setTransactionRestFlag(true);
+            stateManager.setTransitionRestFlag(true);
             latch.await();
         } catch (InterruptedException ex) {
             throw new FlowException("Transition await interupted.", ex);
         } finally {
-            stateManager.setTransactionRestFlag(false);
+            stateManager.setTransitionRestFlag(false);
         }
     }
 
@@ -124,7 +123,7 @@ public class Transition {
     }
     
     public void cancel() {
-        log.info("Transition was canncelled by " + currentTransitionStep.get());
+        log.info("Transition was cancelled by " + currentTransitionStep.get());
         transitionResult = TransitionResult.TransitionResultCode.CANCEL;
         stepIndex.set(Integer.MAX_VALUE);
         while (latch.getCount() > 0) {            

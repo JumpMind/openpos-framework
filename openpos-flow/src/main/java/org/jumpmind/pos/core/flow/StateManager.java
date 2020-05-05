@@ -152,7 +152,7 @@ public class StateManager implements IStateManager {
             applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
             sendConfigurationChangedMessage();
             // TODO: think about making this ASYNC so it doesn't hold up the rest of initialization
-            transitionTo(new Action("Startup"), initialFlowConfig.getInitialState());
+            transitionTo(new Action(StateManagerActionConstants.STARTUP_ACTION), initialFlowConfig.getInitialState());
         } else {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
@@ -311,13 +311,15 @@ public class StateManager implements IStateManager {
             }
         } else {
             //TODO: discuss whether this is how we want to handle cancelled transitions
-            Action cancelAction = new Action("TransitionCancelled");
+            Action cancelAction = new Action(StateManagerActionConstants.TRANSITION_CANCELLED_ACTION);
             cancelAction.setCausedBy(action);
             if (applicationState.getCurrentContext().getState() == null) {
                 throw new FlowException("A transition was cancelled but there is no state to go back to. This could be a case where the first thing shown is a transition to the initial state, " +
                         "like a user name prompt leading into self-checkout for example. To correct this, adjust your flow config so there is truly an initial state to go back to when the transition is cancelled.");
             }
             // resassert the previous state before the cancelled transition
+            // Note: this can be a problem if the state doesn't show a screen and just sends an action because
+            // the StateManager will be busy.
             stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
             if (transitionResult.getTransition().getQueuedAction() != null) { // allowed cancelled transitions to queue an action.
                 doAction(transitionResult.getTransition().getQueuedAction());
@@ -339,7 +341,7 @@ public class StateManager implements IStateManager {
             if (applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames().length == 1) {
                 return applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames()[0];
             } else if (applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames().length > 1) {
-                throw new FlowException("Unpected situation. Non-return action raised which completed a subflow: " + action.getName()
+                throw new FlowException("Unexpected situation. Non-return action raised which completed a subflow: " + action.getName()
                         + " -- but there is more than 1 return action mapped to this subflow so we don't know which return action to pick: "
                         + Arrays.toString(applicationState.getCurrentContext().getSubFlowConfig().getReturnActionNames()));
             }
@@ -941,7 +943,7 @@ public class StateManager implements IStateManager {
         return injector;
     }
 
-    public void setTransactionRestFlag(boolean transitionRestFlag) {
+    public void setTransitionRestFlag(boolean transitionRestFlag) {
         this.transitionRestFlag.set(transitionRestFlag);
     }
 
