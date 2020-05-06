@@ -157,7 +157,7 @@ public class DatabaseSchema {
         Set<Table> tables = new TreeSet<>();
         for (Class<?> entityClass : entityClasses) {
             //List<ModelClassMetaData> metas = createMetaDatas(entityClass);
-            ModelMetaData modelMetaData = createMetaData(entityClass, getEntityExtensionClasses(entityClass), platform);
+            ModelMetaData modelMetaData = createMetaData(entityClass, entityExtensionClasses, platform);
             classToModelMetaData.put(entityClass, modelMetaData);
             for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
                 validateTable(tablePrefix, meta.getTable());
@@ -172,7 +172,7 @@ public class DatabaseSchema {
         return tables;
     }
 
-    protected List<Class<?>> getEntityExtensionClasses(Class<?> entityClazz){
+    protected static List<Class<?>> getEntityExtensionClasses(Class<?> entityClazz, List<Class<?>> entityExtensionClasses){
         if(entityExtensionClasses != null){
             return entityExtensionClasses.stream().filter( extensionClazz -> {
                 Extends extendsAnnotation = extensionClazz.getAnnotation(Extends.class);
@@ -237,12 +237,13 @@ public class DatabaseSchema {
         Class<?> entityClass = clazz;
         boolean ignoreSuperClasses = false;
         while (entityClass != null && entityClass != Object.class) {
+            List<Class<?>> myExtensions =getEntityExtensionClasses(entityClass, entityExtensionClasses);
             TableDef tblAnnotation = entityClass.getAnnotation(TableDef.class);
             if (tblAnnotation != null && !ignoreSuperClasses) {
                 ignoreSuperClasses = tblAnnotation.ignoreSuperTableDef();
                 ModelClassMetaData meta = new ModelClassMetaData();
                 meta.setClazz(entityClass);
-                meta.setExtensionClazzes(entityExtensionClasses);
+                meta.setExtensionClazzes(myExtensions);
                 Table dbTable = new Table();
                 List<Column> columns = new ArrayList<>();
                 List<Column> pkColumns = new ArrayList<>();
@@ -256,7 +257,7 @@ public class DatabaseSchema {
                     currentClass = currentClass.getSuperclass();
                     includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
                 }
-                for( Class<?> extensionClass: entityExtensionClasses){
+                for( Class<?> extensionClass: myExtensions){
                     createClassFieldsMetadata(extensionClass, meta, true, columns, pkColumns, indices, databasePlatform);
                 }
                 for (Column column : pkColumns) {
