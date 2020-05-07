@@ -12,4 +12,5 @@ export class MessageTypes {
     static STATUS = 'Status';
     static LOCK_SCREEN = 'LockScreen';
     static UNLOCK_SCREEN = 'UnlockScreen';
+    static STARTUP = 'Startup';
 }

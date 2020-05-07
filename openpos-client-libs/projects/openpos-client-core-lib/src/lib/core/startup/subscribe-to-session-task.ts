@@ -7,6 +7,7 @@ import { StartupTaskData } from './startup-task-data';
 import { StartupTaskNames } from './startup-task-names';
 import { takeUntil, map, filter } from 'rxjs/operators';
 import { Configuration } from '../../configuration/configuration';
+import { MessageTypes } from '../messages/message-types';
 
 @Injectable()
 export class SubscribeToSessionTask implements IStartupTask {
@@ -14,6 +15,7 @@ export class SubscribeToSessionTask implements IStartupTask {
     order = 600;
 
     private connectionTimeoutSubscr: Subscription;
+    private startupMessageRecv = false;
 
     constructor(
         protected session: SessionService,
@@ -55,11 +57,23 @@ export class SubscribeToSessionTask implements IStartupTask {
         }
     }
 
+    protected subscribeToStartup(): void {
+        this.startupMessageRecv = false;
+        this.session.getMessages(MessageTypes.STARTUP).subscribe(
+            m => this.handleStartupMessage(m)
+        );
+    }
+
+    handleStartupMessage(message: any) {
+        this.startupMessageRecv = true;
+    }
+
     protected confirmConnection(maxWaitMillis = 7500): Observable<boolean> {
+        this.subscribeToStartup();
         return Observable.create((result: Subject<boolean>) => {
             this.connectionTimeoutSubscr = timer(0, 500).pipe(takeUntil(timer(maxWaitMillis))).subscribe(
                 x => {
-                    if (this.session.connected()) {
+                    if (this.session.connected() && this.startupMessageRecv) {
                         console.info(`Session connection confirmed`);
                         this.connectionTimeoutSubscr.unsubscribe();
                         result.next(true);

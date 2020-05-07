@@ -38,6 +38,7 @@ import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.*;
 import org.jumpmind.pos.core.model.MessageType;
+import org.jumpmind.pos.core.model.StartupMessage;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.DialogProperties;
@@ -146,17 +147,26 @@ public class StateManager implements IStateManager {
         applicationState.getScope().setDeviceScope("stateManager", this);
         initDefaultScopeObjects();
 
-        deviceStartupTaskConfig.processDeviceStartupTasks(nodeId, appId);
-
         if (initialFlowConfig != null) {
             applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
             sendConfigurationChangedMessage();
+
+            deviceStartupTaskConfig.processDeviceStartupTasks(nodeId, appId);
+
+            sendStartupCompleteMessage();
             // TODO: think about making this ASYNC so it doesn't hold up the rest of initialization
             transitionTo(new Action(StateManagerActionConstants.STARTUP_ACTION), initialFlowConfig.getInitialState());
         } else {
             throw new RuntimeException("Could not find a flow config for " + appId);
         }
 
+    }
+
+    private void sendStartupCompleteMessage() {
+        String appId = applicationState.getAppId();
+        String deviceId = applicationState.getDeviceId();
+
+        messageService.sendMessage(appId, deviceId, new StartupMessage());
     }
 
     protected void setTransitionSteps(List<TransitionStepConfig> transitionStepConfigs) {
