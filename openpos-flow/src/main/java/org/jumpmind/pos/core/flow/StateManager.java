@@ -154,6 +154,7 @@ public class StateManager implements IStateManager {
             deviceStartupTaskConfig.processDeviceStartupTasks(nodeId, appId);
 
             sendStartupCompleteMessage();
+
             // TODO: think about making this ASYNC so it doesn't hold up the rest of initialization
             transitionTo(new Action(StateManagerActionConstants.STARTUP_ACTION), initialFlowConfig.getInitialState());
         } else {
@@ -162,11 +163,10 @@ public class StateManager implements IStateManager {
 
     }
 
-    private void sendStartupCompleteMessage() {
+    public void sendStartupCompleteMessage() {
         String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
-
-        messageService.sendMessage(appId, deviceId, new StartupMessage());
+        messageService.sendMessage(appId, deviceId, new StartupMessage(true, "StateManager Startup Complete"));
     }
 
     protected void setTransitionSteps(List<TransitionStepConfig> transitionStepConfigs) {

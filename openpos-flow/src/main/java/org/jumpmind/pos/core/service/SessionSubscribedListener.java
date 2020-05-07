@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.service;
 
+import org.jumpmind.pos.core.model.StartupMessage;
 import org.jumpmind.pos.util.event.DeviceConnectedEvent;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
@@ -42,17 +43,17 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
     SessionConnectListener sessionAuthTracker;
 
     @Value("${openpos.incompatible.version.message:The compatibility version of the client does not match the server}")
-    String incompatibleVersionMessage; 
-    
-    @Autowired(required=false)
+    String incompatibleVersionMessage;
+
+    @Autowired(required = false)
     PersonalizationParameters personalizationParameters;
 
     @Autowired
     ApplicationContext applicationContext;
-    
+
     @Autowired
     Versions versions;
-    
+
     @Autowired
     EventPublisher eventPublisher;
 
@@ -113,6 +114,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
                 stateManager.registerQueryParams(queryParams);
                 stateManager.registerPersonalizationProperties(personalizationProperties);
                 stateManager.sendConfigurationChangedMessage();
+                stateManager.sendStartupCompleteMessage();
             }
 
             stateManagerContainer.setCurrentStateManager(stateManager);
@@ -123,7 +125,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             stateManager.getApplicationState().getScope().setDeviceScope("device", sessionAuthTracker.getDeviceModel(sessionId));
 
             eventPublisher.publish(new DeviceConnectedEvent(deviceId, appId));
-            
+
             if (!created) {
                 stateManager.refreshScreen();
             }
@@ -142,4 +144,5 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
             stateManagerContainer.setCurrentStateManager(null);
         }
     }
+
 }
