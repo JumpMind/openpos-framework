@@ -5,4 +5,5 @@ export interface StatusStripInterface {
     registerNumber: string;
     systemStatus: ISystemStatus;
     timestampBegin: number;
+    transactionNumber: string;
 }
