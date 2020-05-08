@@ -27,4 +27,5 @@ public interface IFlowConfigProvider {
     public List<TransitionStepConfig> getTransitionStepConfig(String appId, String nodeId);
     public FlowConfig getConfigByName(String appId, String nodeId, String name);
     public FlowConfig getConfig(String appId, String nodeId);
+    public void load(String appId, String path, String startFlowName);
 }
