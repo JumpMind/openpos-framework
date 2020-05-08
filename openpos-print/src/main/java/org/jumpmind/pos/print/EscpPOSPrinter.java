@@ -231,8 +231,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     private void refreshConnectionFactoryFromSettings() {
         try {
             this.connectionFactory = (IConnectionFactory)Class.forName((String)this.settings.get("connectionClass")).newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-            throw new PrintException("Failed to create the connection factory for " + getClass().getName());
+        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+            throw new PrintException("Failed to create the connection factory for " + getClass().getName(), ex);
         }
     }
 
