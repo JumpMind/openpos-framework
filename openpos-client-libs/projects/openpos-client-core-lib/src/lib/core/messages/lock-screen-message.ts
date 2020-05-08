@@ -1,8 +1,8 @@
-import {IActionItem} from '../actions/action-item.interface';
-import {OpenposMessage} from './message';
-import {MessageTypes} from './message-types';
+import { IActionItem } from '../actions/action-item.interface';
+import { OpenposMessage } from './message';
+import { MessageTypes } from './message-types';
 
-export class LockScreenMessage implements OpenposMessage{
+export class LockScreenMessage implements OpenposMessage {
     type = MessageTypes.LOCK_SCREEN;
     imageUrl: string;
     userText: string;
@@ -13,4 +13,5 @@ export class LockScreenMessage implements OpenposMessage{
     usernameHint: string;
     passwordHint: string;
     overrideText: string;
+    showSplashScreen = false;
 }

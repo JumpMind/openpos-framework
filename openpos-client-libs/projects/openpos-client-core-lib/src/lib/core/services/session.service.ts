@@ -24,7 +24,6 @@ import { MessageTypes } from '../messages/message-types';
 import { ActionMessage } from '../messages/action-message';
 import { CLIENTCONTEXT, IClientContext } from '../client-context/client-context-provider.interface';
 import { DiscoveryService } from '../discovery/discovery.service';
-import {StartupService} from './startup.service';
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
@@ -57,6 +56,11 @@ export class CancelLoadingMessage implements ILoading {
 
 export class ConnectedMessage {
     type = MessageTypes.CONNECTED;
+}
+
+export class UnlockScreenMessage {
+    type = MessageTypes.UNLOCK_SCREEN;
+    showSplashScreen = true;
 }
 
 @Injectable({
@@ -225,7 +229,7 @@ export class SessionService implements IMessageHandler<any> {
         }
 
         console.info(`Initiating session subscribe...`);
-        let url: string = await this.negotiateWebsocketUrl();
+        const url: string = await this.negotiateWebsocketUrl();
         if (url) {
             console.info('creating new stomp service at: ' + url);
 
@@ -266,34 +270,39 @@ export class SessionService implements IMessageHandler<any> {
 
             if (!this.stompStateSubscription) {
                 this.stompStateSubscription = this.state.subscribe(stompState => {
-                    if (stompState === 'CONNECTED') {
-                        this.reconnecting = false;
-                        this.connectedOnce = true;
-                        console.info('STOMP connecting');
-                        if (!this.onServerConnect.value) {
-                            this.onServerConnect.next(true);
-                        }
-                        this.sendMessage(new ConnectedMessage());
-                        this.cancelLoading();
-                    } else if (stompState === 'DISCONNECTING') {
-                        console.info('STOMP disconnecting');
-                    } else if (stompState === 'CLOSED') {
-                        console.info('STOMP closed');
-                        this.sendDisconnected();
-                        if( ! this.reconnecting) {
-                            this.renegotiateConnection();
-                        }
-                    }
+                    this.handleStompState(stompState);
                 });
             }
         } else {
             console.error('Failed to negotiate server url');
         }
-        
+
         if (!this.connected()) {
             this.sendDisconnected();
         }
 
+    }
+
+    private handleStompState(stompState: string) {
+        if (stompState === 'CONNECTED') {
+            this.reconnecting = false;
+            this.connectedOnce = true;
+            console.info('STOMP connecting');
+            if (!this.onServerConnect.value) {
+                this.onServerConnect.next(true);
+            }
+            this.sendMessage(new ConnectedMessage());
+            this.cancelLoading();
+        } else if (stompState === 'DISCONNECTING') {
+            console.info('STOMP disconnecting');
+        } else if (stompState === 'CLOSED') {
+            console.info('STOMP closed');
+            this.sendMessage(new UnlockScreenMessage());
+            this.sendDisconnected();
+            if (!this.reconnecting) {
+                this.renegotiateConnection();
+            }
+        }
     }
 
     private async negotiateWebsocketUrl(): Promise<string> {
@@ -309,8 +318,9 @@ export class SessionService implements IMessageHandler<any> {
         }
         return this.discovery.getWebsocketUrl();
     }
+
     private sendDisconnected() {
-        if(this.connectedOnce){
+        if (this.connectedOnce) {
             this.sendMessage(new ImmediateLoadingMessage(this.disconnectedMessage));
         }
     }
