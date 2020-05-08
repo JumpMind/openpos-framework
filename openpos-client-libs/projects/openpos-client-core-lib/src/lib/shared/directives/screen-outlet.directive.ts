@@ -23,6 +23,7 @@ import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-
 import { ScreenCreatorService } from '../../core/services/screen-creator.service';
 import { FocusService } from '../../core/focus/focus.service';
 import { filter } from 'rxjs/operators';
+import { SplashScreen } from '../../core/messages/splash-screen-message';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -234,15 +235,5 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         }
 
         console.info(msg);
-    }
-}
-
-export class SplashScreen {
-    type = 'Screen';
-    screenType = 'SplashScreen';
-    message: string;
-
-    constructor(message?: string) {
-        this.message = message;
     }
 }

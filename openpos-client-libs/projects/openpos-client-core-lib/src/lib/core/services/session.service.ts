@@ -24,8 +24,8 @@ import { MessageTypes } from '../messages/message-types';
 import { ActionMessage } from '../messages/action-message';
 import { CLIENTCONTEXT, IClientContext } from '../client-context/client-context-provider.interface';
 import { DiscoveryService } from '../discovery/discovery.service';
-import { SplashScreen } from '../../shared/directives/screen-outlet.directive';
 import { UnlockScreenMessage } from '../messages/unlock-screen-message';
+import { SplashScreen } from '../messages/splash-screen-message';
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
