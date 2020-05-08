@@ -240,4 +240,9 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 export class SplashScreen {
     type = 'Screen';
     screenType = 'SplashScreen';
+    message: string;
+
+    constructor(message?: string) {
+        this.message = message;
+    }
 }

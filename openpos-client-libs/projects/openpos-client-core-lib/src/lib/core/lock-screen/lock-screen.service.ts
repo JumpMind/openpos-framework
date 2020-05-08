@@ -11,7 +11,6 @@ import { LockScreenMessage } from '../messages/lock-screen-message';
 import { MessageTypes } from '../messages/message-types';
 import { SessionService } from '../services/session.service';
 import { LockScreenComponent } from './lock-screen.component';
-import { SplashScreen } from '../../shared/directives/screen-outlet.directive';
 
 export const LOCK_SCREEN_DATA = new InjectionToken<Observable<LockScreenMessage>>('LOCK_SCREEN_DATA');
 
@@ -23,7 +22,7 @@ export class LockScreenService {
     private lockScreenOverlayRef: OverlayRef;
     private lockScreenData = new ReplaySubject<LockScreenMessage>();
 
-    constructor(private sessionService: SessionService,
+    constructor(sessionService: SessionService,
         private overlay: Overlay,
         private injector: Injector,
         private focusService: FocusService
@@ -54,9 +53,6 @@ export class LockScreenService {
         if (this.lockScreenOverlayRef) {
             this.lockScreenOverlayRef.dispose();
             this.lockScreenOverlayRef = null;
-            if (message.showSplashScreen) {
-                this.sessionService.sendMessage(new SplashScreen());
-            }
         }
     }
 

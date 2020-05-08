@@ -24,6 +24,7 @@ import { MessageTypes } from '../messages/message-types';
 import { ActionMessage } from '../messages/action-message';
 import { CLIENTCONTEXT, IClientContext } from '../client-context/client-context-provider.interface';
 import { DiscoveryService } from '../discovery/discovery.service';
+import { SplashScreen } from '../../shared/directives/screen-outlet.directive';
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
@@ -60,7 +61,6 @@ export class ConnectedMessage {
 
 export class UnlockScreenMessage {
     type = MessageTypes.UNLOCK_SCREEN;
-    showSplashScreen = true;
 }
 
 @Injectable({
@@ -297,6 +297,7 @@ export class SessionService implements IMessageHandler<any> {
             console.info('STOMP disconnecting');
         } else if (stompState === 'CLOSED') {
             console.info('STOMP closed');
+            this.sendMessage(new SplashScreen('Reconnecting to server...'));
             this.sendMessage(new UnlockScreenMessage());
             this.sendDisconnected();
             if (!this.reconnecting) {

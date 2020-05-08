@@ -13,5 +13,4 @@ export class LockScreenMessage implements OpenposMessage {
     usernameHint: string;
     passwordHint: string;
     overrideText: string;
-    showSplashScreen = false;
 }
