@@ -13,7 +13,8 @@ import java.util.Set;
 
 @Component
 public class ClientContext {
-    private InheritableThreadLocal<Map<String, String>> propertiesMap = new InheritableThreadLocal<>();
+
+    private ThreadLocal<Map<String, String>> propertiesMap = new ThreadLocal<>();
     final Logger log = LoggerFactory.getLogger(getClass());
 
     @Value("${openpos.installationId:'not set'}")
