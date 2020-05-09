@@ -59,7 +59,12 @@ export class AutoCompleteAddressDirective implements AfterViewInit, OnDestroy {
                         if (item.types.indexOf('locality') > -1) {
                             // City / US Locality
                             address['locality'] = item['long_name'];
-                        } else if (item.types.indexOf('postal_town') > -1) {
+                        } 
+                        else if (item.types.indexOf('sublocality') > -1) {
+                            // City / US Locality
+                            address['locality'] = item['long_name'];
+                        }
+                        else if (item.types.indexOf('postal_town') > -1) {
                             // City / Foreign Locality
                             address['locality'] = item['long_name'];
                         } else if (item.types.indexOf('administrative_area_level_1') > -1) {
