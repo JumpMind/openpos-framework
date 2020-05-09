@@ -10,7 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.slf4j.MDC;
+import static org.apache.commons.lang3.StringUtils.*;
 public final class AppUtils {
     
     static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
@@ -20,6 +21,16 @@ public final class AppUtils {
     private static FastDateFormat timezoneFormatter = FastDateFormat.getInstance("Z");
         
     private AppUtils() {
+    }
+
+    public static void setupLogging(String appId) {
+        MDC.put("stateManager", appId);
+    }
+
+    public static void setupLogging(String appId, String deviceId) {
+        if (isNotBlank(appId) && isNotBlank(deviceId)) {
+            MDC.put("stateManager", String.format("%s:%s", appId, deviceId));
+        }
     }
     
     public static boolean isDevMode() {

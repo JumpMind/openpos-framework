@@ -34,6 +34,7 @@ import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationEvent;
@@ -41,6 +42,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import static org.jumpmind.pos.util.AppUtils.setupLogging;
 
 @Component
 @Slf4j
@@ -177,9 +180,13 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     public void setCurrentStateManager(IStateManager stateManager) {
         currentStateManager.set(stateManager);
         if (stateManager != null && stateManager.getClientContext() != null) {
+            setupLogging(stateManager.getAppId(), stateManager.getDeviceId());
             for (String property : stateManager.getClientContext().keySet()) {
                 clientContext.put(property, stateManager.getClientContext().get(property));
             }
+        } else {
+            setupLogging("server");
+
         }
     }
 

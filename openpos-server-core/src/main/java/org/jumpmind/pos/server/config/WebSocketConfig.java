@@ -2,6 +2,7 @@ package org.jumpmind.pos.server.config;
 
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +30,11 @@ import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBr
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
 import org.springframework.web.socket.server.HandshakeInterceptor;
-
+import static org.jumpmind.pos.util.AppUtils.setupLogging;
+@Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
-
-    final protected Logger logger = LoggerFactory.getLogger(WebSocketConfig.class);
 
     @Autowired(required = false)
     MutableBoolean initialized = new MutableBoolean(false);
@@ -127,9 +127,10 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
             public void afterMessageHandled(Message<?> message, MessageChannel channel, MessageHandler handler, Exception ex) {
                 SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.wrap(message);
                 SimpMessageType messageType = accessor.getMessageType();
-
                 if (messageType == SimpMessageType.MESSAGE) {
-                    logger.info("Post send of message for session " + accessor.getSessionId() + " with destination " + accessor.getDestination() + ":\n" + new String((byte[]) message.getPayload()));
+                    String[] tokens = accessor.getDestination().split("/");
+                    setupLogging(tokens[3], tokens[5]);
+                    log.info("Post send of message for session " + accessor.getSessionId() + " with destination " + accessor.getDestination() + ":\n" + new String((byte[]) message.getPayload()));
                 }
             }
         });
@@ -154,7 +155,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
                     WebSocketHandler wsHandler,
                     Map<String, Object> attributes) throws Exception {
                 if (!initialized.booleanValue()) {
-                    logger.info("Rejected websocket communication attempt because the server is not initialized");
+                    log.info("Rejected websocket communication attempt because the server is not initialized");
                     return false;
                 } else {
                     return true;

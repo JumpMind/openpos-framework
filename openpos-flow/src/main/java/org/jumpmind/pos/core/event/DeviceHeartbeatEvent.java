@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.event;
 
+import lombok.ToString;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.ITransientEvent;
 
@@ -9,6 +10,7 @@ import org.jumpmind.pos.util.event.ITransientEvent;
  * Machine from which they originate and are used for notifying code implemented
  * in other OpenPOS modules that a device is alive.
  */
+@ToString(callSuper = true)
 public class DeviceHeartbeatEvent extends AppEvent implements ITransientEvent {
 
     private static final long serialVersionUID = 1L;

@@ -28,6 +28,8 @@ import org.springframework.stereotype.Component;
 import java.util.Arrays;
 import java.util.Map;
 
+import static org.jumpmind.pos.util.AppUtils.setupLogging;
+
 @Component
 public class SessionSubscribedListener implements ApplicationListener<SessionSubscribedEvent>, MessageUtils {
 
@@ -68,6 +70,7 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
         String compatibilityVersion = this.getHeader(msg, MessageUtils.COMPATIBILITY_VERSION_HEADER);
         String deviceId = topicName.substring(topicName.indexOf("/node/") + "/node/".length());
         String appId = topicName.substring(topicName.indexOf("/app/") + "/app/".length(), topicName.indexOf("/node/"));
+        setupLogging(appId, deviceId);
         Map<String, String> personalizationProperties = sessionAuthTracker.getPersonalizationResults(sessionId);
 
         try {

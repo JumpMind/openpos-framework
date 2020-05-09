@@ -86,7 +86,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
                             String serviceName = controller.value();
                             String implementation = env
                                     .getProperty(String.format("openpos.services.specificConfig.%s.implementation", serviceName), "default");
-                            log.info("Loading endpoints for the '{}' implementation of {}({})", implementation, i.getSimpleName(),
+                            log.debug("Loading endpoints for the '{}' implementation of {}({})", implementation, i.getSimpleName(),
                                     serviceName);
                             Method[] methods = i.getMethods();
                             for (Method method : methods) {
