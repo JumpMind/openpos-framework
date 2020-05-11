@@ -8,7 +8,6 @@ import { IScanData } from '../scan.interface';
 import { IScanner } from '../scanner.interface';
 import { ScanditCameraViewComponent } from './scandit-camera-view/scandit-camera-view.component';
 import { ScanditBarcodeUtils } from './scandit-to-openpos-barcode-type';
-import { Barcode } from './types/barcode';
 
 declare var Scandit: any;
 
@@ -51,9 +50,10 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
             if (m.enabledCodes) {
                 const codes = m.enabledCodes.split(',');
                 codes.forEach(code => this.settings.enableSymbology(ScanditBarcodeUtils.convertFromOpenposType(code.trim()), true));
-                const code128SymbologySetting = this.settings.settingsForSymbology(Barcode.Symbology.Code128);
-                code128SymbologySetting.activeSymbolCounts = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23];
-
+                if (this.settings.getSymbologySettings(Scandit.Barcode.Symbology.CODE128) != null){
+                const symbolcounts = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23];
+                this.settings.getSymbologySettings(Scandit.Barcode.Symbology.CODE128).activeSymbolCounts = symbolcounts;
+            }
             }
             if (m.viewFinderType) {
                 this.viewFinderType = m.viewFinderType;
