@@ -92,6 +92,9 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
         } else if (element.id === 'locality') {
             this.locality = element;
             isAddressField = true;
+        } else if (element.id === 'sublocality') {
+            this.locality = element;
+            isAddressField = true;
         } else if (element.id === 'state') {
             this.state = element;
             isAddressField = true;
