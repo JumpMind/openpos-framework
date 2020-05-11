@@ -49,7 +49,11 @@ public class StatementInterceptor extends WrapperInterceptor {
 
     protected InterceptResult preparedStatementPreExecute(PreparedStatementWrapper ps, String methodName, Object[] parameters) {
         if (methodName.startsWith("set") && (parameters != null && parameters.length > 1)) {
-            psArgs.add(parameters[1]);
+            if (methodName.equals("setNull")) {
+                psArgs.add(null);
+            } else {
+                psArgs.add(parameters[1]);
+            }
         }
         return new InterceptResult();
     }
