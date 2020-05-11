@@ -1,4 +1,4 @@
-    /**
+/**
  * license agreements.  See the NOTICE file distributed
  * with this work for additional information regarding
  * copyright ownership.  JumpMind Inc licenses this file
@@ -211,7 +211,7 @@ public class StateManager implements IStateManager {
     }
 
     @Override
-    public Map<String, String> getClientContext(){
+    public Map<String, String> getClientContext() {
         return this.clientContext;
     }
 
@@ -302,7 +302,7 @@ public class StateManager implements IStateManager {
 
             applicationState.getCurrentContext().setState(newState);
 
-            if( transitionResult != null && transitionResult.getTransition() != null) {
+            if (transitionResult != null && transitionResult.getTransition() != null) {
                 for (ITransitionStep transitionStep : transitionResult.getTransition().getTransitionSteps()) {
                     performInjections(transitionStep);
                     transitionStep.afterTransition(new TransitionContext(action, applicationState.getCurrentContext()));
@@ -453,8 +453,8 @@ public class StateManager implements IStateManager {
 
         List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnRefresh.class, true, true);
 
-        if( !methods.isEmpty()) {
-            methods.forEach( m -> {
+        if (!methods.isEmpty()) {
+            methods.forEach(m -> {
                 m.setAccessible(true);
                 try {
                     m.invoke(getCurrentState());
@@ -507,21 +507,23 @@ public class StateManager implements IStateManager {
             if (isAtRest() || doNotBlockForResponse ||
                     activeThread.get() == null ||
                     activeThread.get().equals(Thread.currentThread()) &&
-                    currentActionTimeInMs >= lastActionTimeInMs.longValue()) {
+                            currentActionTimeInMs >= lastActionTimeInMs.longValue()) {
                 Thread active = activeThread.get();
                 log.info("Action received: {}, State manager is NOT busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}",
                         actionName,
-                        activeCalls.get(), Thread.currentThread().getName(), active != null ? active.getName() : null, lastShowTimeInMs.get()-lastActionTimeInMs.get());
+                        activeCalls.get(), Thread.currentThread().getName(), active != null ? active.getName() : null, lastShowTimeInMs.get() - lastActionTimeInMs.get());
                 lastInteractionTime.set(new Date());
                 activeCalls.incrementAndGet();
-                markAsBusy();
+                if (!doNotBlockForResponse) {
+                    markAsBusy();
+                }
             } else {
                 log.info("Action received: {}, State manager is busy.  Active calls: {}, Current thread: {}, Active thread: {}, Last display occurred after last action time: {}, Current action occured before last action time: {} ",
-                        actionName, activeCalls.get(), Thread.currentThread().getName(), activeThread.get().getName(), lastShowTimeInMs.get()-lastActionTimeInMs.get(), lastActionTimeInMs.get()-currentActionTimeInMs);
+                        actionName, activeCalls.get(), Thread.currentThread().getName(), activeThread.get().getName(), lastShowTimeInMs.get() - lastActionTimeInMs.get(), lastActionTimeInMs.get() - currentActionTimeInMs);
                 notBusy = false;
             }
         }
-        
+
         return notBusy;
     }
 
@@ -653,7 +655,7 @@ public class StateManager implements IStateManager {
         performInjections(actionHandler);
         List<Method> globalMethods = MethodUtils.getMethodsListWithAnnotation(globalActionHandler, OnGlobalAction.class)
                 .stream()
-                .filter( method -> method.getName().equals("on" + action.getName()))
+                .filter(method -> method.getName().equals("on" + action.getName()))
                 .collect(Collectors.toList());
         for (Method method : globalMethods) {
             invokeGlobalAction(action, method, actionHandler);
@@ -670,9 +672,9 @@ public class StateManager implements IStateManager {
         for (StackTraceElement stackFrame : currentStack) {
             Class<?> currentClass = helper.getClassFrom(stackFrame);
             if (currentClass != null && !Modifier.isAbstract(currentClass.getModifiers()) && FlowUtil.isGlobalActionHandler(currentClass)
-                    && !currentClass.getName().equals(((Class)handler).getName())) {
+                    && !currentClass.getName().equals(((Class) handler).getName())) {
                 return false;
-            } else if (stackFrame.getClassName().equals(((Class)handler).getName())) {
+            } else if (stackFrame.getClassName().equals(((Class) handler).getName())) {
                 return true;
             }
 
@@ -921,9 +923,9 @@ public class StateManager implements IStateManager {
     }
 
     protected void sessionTimeout() {
-            Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
-            localSessionTimeoutAction.setDoNotBlockForResponse(true);
-            doAction(localSessionTimeoutAction);
+        Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
+        localSessionTimeoutAction.setDoNotBlockForResponse(true);
+        doAction(localSessionTimeoutAction);
     }
 
     @Override
@@ -987,25 +989,15 @@ public class StateManager implements IStateManager {
     }
 
     protected void onEvent(Event event) {
-        if (notBusy(event.toString(), true)) {
-            try {
-                List<Class> classes = initialFlowConfig.getEventHandlers();
-                classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
+        List<Class> classes = initialFlowConfig.getEventHandlers();
+        classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
 
-                Object state = getCurrentState();
-                if (state != null) {
-                    if (!eventBroadcaster.postEventToObject(state, event)) {
-                        lastShowTimeInMs.set(System.currentTimeMillis());
-                    }
-                }
-            } finally {
-                activeCalls.decrementAndGet();
-            }
-        } else {
-            log.warn("Discarding unexpected event " + event.toString());
+        Object state = getCurrentState();
+        if (state != null) {
+            eventBroadcaster.postEventToObject(state, event);
         }
     }
-    
+
     @Override
     public long getLastActionTimeInMs() {
         return lastActionTimeInMs.get();

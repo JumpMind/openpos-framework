@@ -19,6 +19,10 @@ public class AppEvent extends Event implements Serializable {
     }
 
     public AppEvent(String deviceId, String appId) {
+        this(deviceId, appId, false);
+    }
+
+    public AppEvent(String deviceId, String appId, boolean remote) {
         super(createSourceString(appId, deviceId));
         this.deviceId = deviceId;
         this.appId = appId;

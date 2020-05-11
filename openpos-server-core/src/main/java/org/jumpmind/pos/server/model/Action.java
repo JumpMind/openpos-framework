@@ -22,14 +22,15 @@ package org.jumpmind.pos.server.model;
 
 import java.io.Serializable;
 
-import lombok.Data;
-import lombok.ToString;
+import lombok.*;
 import org.jumpmind.pos.util.DefaultObjectMapper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @ToString(onlyExplicitlyIncluded = true)
 @Data
+@Builder
+@AllArgsConstructor
 public class Action implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
