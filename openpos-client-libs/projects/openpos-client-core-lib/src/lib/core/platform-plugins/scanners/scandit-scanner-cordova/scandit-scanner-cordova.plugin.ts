@@ -53,7 +53,6 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
                 codes.forEach(code => this.settings.enableSymbology(ScanditBarcodeUtils.convertFromOpenposType(code.trim()), true));
                 const code128SymbologySetting = this.settings.settingsForSymbology(Barcode.Symbology.Code128);
                 code128SymbologySetting.activeSymbolCounts = [7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 23];
-
             }
             if (m.viewFinderType) {
                 this.viewFinderType = m.viewFinderType;
