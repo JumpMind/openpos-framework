@@ -10,6 +10,7 @@ import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
@@ -124,18 +125,22 @@ public class ReflectUtils {
         return null;
     }
 
-    public static PropertyDescriptor getPropertyDescriptor(Object target, String propertyName) throws IntrospectionException {
-        Class<? extends Object> clazz = target.getClass();
-        while (clazz != Object.class) {
-            BeanInfo clazzInfo = Introspector.getBeanInfo(clazz);
-            List<PropertyDescriptor> properties = Arrays.asList(clazzInfo.getPropertyDescriptors());
-            PropertyDescriptor property = properties.stream().filter(p -> p.getName().equals(propertyName)).findFirst().orElse(null);
-            if(property != null) {
-                return property;
+    public static PropertyDescriptor getPropertyDescriptor(Object target, String propertyName) {
+        try {
+            Class<? extends Object> clazz = target.getClass();
+            while (clazz != Object.class) {
+                BeanInfo clazzInfo = Introspector.getBeanInfo(clazz);
+                List<PropertyDescriptor> properties = Arrays.asList(clazzInfo.getPropertyDescriptors());
+                PropertyDescriptor property = properties.stream().filter(p -> p.getName().equals(propertyName)).findFirst().orElse(null);
+                if (property != null) {
+                    return property;
+                }
+                clazz = clazz.getSuperclass();
             }
-            clazz = clazz.getSuperclass();
+            return null;
+        } catch (Exception ex) {
+            throw new ReflectionException("Failed to execute getPropertyDescriptor for property '" + propertyName + "' on " + target, ex);
         }
-        return null;
     }
 
 }

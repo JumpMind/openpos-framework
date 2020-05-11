@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
-
+import static java.lang.String.*;
 import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
@@ -155,10 +155,15 @@ public class StateManager implements IStateManager {
 
             sendStartupCompleteMessage();
 
+            if (initialFlowConfig.getInitialState() == null ||
+                    initialFlowConfig.getInitialState().getStateClass() == null) {
+               throw new IllegalStateException(format("The flow for %s:%s did not have an initial state configured", appId, deviceId));
+            }
+
             // TODO: think about making this ASYNC so it doesn't hold up the rest of initialization
             transitionTo(new Action(StateManagerActionConstants.STARTUP_ACTION), initialFlowConfig.getInitialState());
         } else {
-            throw new RuntimeException("Could not find a flow config for " + appId);
+            throw new IllegalStateException("Could not find a flow config for " + appId);
         }
 
     }
