@@ -29,49 +29,53 @@ public class EventBroadcaster {
         boolean foundMethod = true;
 
         List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnEvent.class, true, true);
-        for (Method method : methods) {
-            boolean processEvent = false;
-            try {
-                OnEvent onEvent = method.getAnnotation(OnEvent.class);
-                if (onEvent.receiveAllEvents() || ArrayUtils.contains(onEvent.ofTypes(), event.getClass())) {
-                    processEvent = true;
-                } else {
-                    // if an appevent then only receive events from the same device id
-                    if (!(event instanceof AppEvent) || ((AppEvent) event).getDeviceId().equals(stateManager.getDeviceId())) {
-                        if (onEvent.receiveEventsFromSelf() ||
-                                !event.getSource().equals(AppEvent.createSourceString(stateManager.getAppId(), stateManager.getDeviceId()))) {
-                            processEvent = true;
-                        }
-                    }
-                }
-            } catch (Exception ex) {
-                throw new FlowException("Failed to execute method on state. Method: " + method + " object: " + object, ex);
-            }
-
-            if (processEvent) {
-                if (object == null) {
-                    try {
-                        object = clazz.newInstance();
-                        stateManager.performInjections(object);
-                    } catch (InstantiationException | IllegalAccessException ex) {
-                        throw new FlowException("Failed to create event handler of type " + clazz.getName(), ex);
-                    } catch (Exception ex) {
-                        throw new FlowException("Failed to inject values on the event handler of type " + clazz.getName(), ex);
-                    }
-                }
-
+        if (methods.size() > 0) {
+            for (Method method : methods) {
+                boolean processEvent = false;
                 try {
-                    method.setAccessible(true);
-                    foundMethod = true;
-                    if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
-                        method.invoke(object, event);
-                    } else if (method.getParameters() == null || method.getParameters().length == 0) {
-                        method.invoke(object);
+                    OnEvent onEvent = method.getAnnotation(OnEvent.class);
+                    if (onEvent.receiveAllEvents() || ArrayUtils.contains(onEvent.ofTypes(), event.getClass())) {
+                        processEvent = true;
+                    } else {
+                        // if an appevent then only receive events from the same device id
+                        if (!(event instanceof AppEvent) || ((AppEvent) event).getDeviceId().equals(stateManager.getDeviceId())) {
+                            if (onEvent.receiveEventsFromSelf() ||
+                                    !event.getSource().equals(AppEvent.createSourceString(stateManager.getAppId(), stateManager.getDeviceId()))) {
+                                processEvent = true;
+                            }
+                        }
                     }
                 } catch (Exception ex) {
                     throw new FlowException("Failed to execute method on state. Method: " + method + " object: " + object, ex);
                 }
+
+                if (processEvent) {
+                    if (object == null) {
+                        try {
+                            object = clazz.newInstance();
+                            stateManager.performInjections(object);
+                        } catch (InstantiationException | IllegalAccessException ex) {
+                            throw new FlowException("Failed to create event handler of type " + clazz.getName(), ex);
+                        } catch (Exception ex) {
+                            throw new FlowException("Failed to inject values on the event handler of type " + clazz.getName(), ex);
+                        }
+                    }
+
+                    try {
+                        method.setAccessible(true);
+                        foundMethod = true;
+                        if (method.getParameters() != null && method.getParameters().length == 1 && method.getParameterTypes()[0].isAssignableFrom(event.getClass())) {
+                            method.invoke(object, event);
+                        } else if (method.getParameters() == null || method.getParameters().length == 0) {
+                            method.invoke(object);
+                        }
+                    } catch (Exception ex) {
+                        throw new FlowException("Failed to execute method on state. Method: " + method + " object: " + object, ex);
+                    }
+                }
             }
+        } else {
+            foundMethod = false;
         }
         return foundMethod;
 

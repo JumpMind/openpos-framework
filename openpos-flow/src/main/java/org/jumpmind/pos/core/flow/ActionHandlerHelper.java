@@ -83,7 +83,8 @@ public class ActionHandlerHelper {
         try {
             String name = stackFrame.getClassName(); 
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-            if (!name.startsWith("sun") && !name.startsWith("org.gradle") && !name.startsWith("com.sun") && !name.startsWith("jdk")) {
+            if (!name.startsWith("sun") && !name.startsWith("org.gradle") && !name.startsWith("com.sun") && !name.startsWith("jdk")
+            && !name.startsWith("org.springframework.aop")) {
                 currentClass = classLoader.loadClass(name);
             }
         } catch (Exception e) {

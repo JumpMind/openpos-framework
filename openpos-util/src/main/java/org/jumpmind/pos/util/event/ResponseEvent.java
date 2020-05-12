@@ -2,8 +2,10 @@ package org.jumpmind.pos.util.event;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
 public class ResponseEvent<T> extends AppEvent {
 
     String targetDeviceId;

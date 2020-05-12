@@ -199,10 +199,8 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
         for (Map<String, StateManager> map : new ArrayList<>(stateManagersByAppIdByNodeId.values())) {
             for (StateManager stateManager : new ArrayList<>(map.values())) {
                 try {
-                    if (process(stateManager, event)) {
-                        setCurrentStateManager(stateManager);
-                        stateManager.onEvent(event);
-                    }
+                    setCurrentStateManager(stateManager);
+                    stateManager.onEvent(event);
                 } finally {
                     setCurrentStateManager(null);
                 }
@@ -210,22 +208,4 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
         }
     }
 
-    /**
-     * Only process AppEvents that are from other state managers and aren't remote.
-     * Wait to process the event until the current StateManager is idle.
-     */
-    private boolean process(IStateManager stateManager, Event event) {
-        if (event instanceof AppEvent) {
-            AppEvent appEvent = (AppEvent) event;
-            if (!appEvent.isRemote() &&
-                    (!appEvent.getAppId().equals(stateManager.getAppId()) ||
-                            !appEvent.getDeviceId().equals(stateManager.getDeviceId()))
-            ) {
-                return true;
-            }
-            return false;
-        } else {
-            return true;
-        }
-    }
 }
