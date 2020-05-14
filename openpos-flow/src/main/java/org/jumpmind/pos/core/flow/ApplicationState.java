@@ -83,7 +83,7 @@ public class ApplicationState {
         this.stateStack = stateStack;
     }
 
-    public StateContext getCurrentContext() {
+    public StateContext     getCurrentContext() {
         return currentContext;
     }
 

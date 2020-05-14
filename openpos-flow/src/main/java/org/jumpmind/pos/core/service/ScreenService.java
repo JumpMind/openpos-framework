@@ -212,7 +212,9 @@ public class ScreenService implements IScreenService, IActionListener {
 
                     deserializeForm(stateManager.getApplicationState(), action);
 
-                    logger.info("Received action from {}\n{}", deviceId, logFormatter.toJsonString(action));
+                    if (logger.isInfoEnabled()) {
+                        logger.info("Received action from {}\n{}", deviceId, logFormatter.toJsonString(action));
+                    }
 
                     try {
                         logger.debug("Posting action {}", action);
