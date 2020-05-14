@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import static java.lang.String.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
@@ -139,8 +140,9 @@ public class StateManager implements IStateManager {
 
     @Override
     public void reset() {
-        init(getAppId(), getDeviceId());
-        this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
+//        init(getAppId(), getDeviceId());
+        throw new StateManagerResetException();
+
     }
 
     public void init(String appId, String nodeId) {
@@ -201,13 +203,22 @@ public class StateManager implements IStateManager {
                     if (actionQueue.size() == 0) {
                         busyFlag.set(false);
                     }
-
                 }
             } catch (InterruptedException ex) {
                 log.warn("State manager thread was interupted, exiting.", ex);
+                busyFlag.set(false);
                 runningFlag.set(false);
             } catch (Throwable ex) {
-                handleOrRaiseException(ex);
+                busyFlag.set(false);
+                if (ExceptionUtils.getRootCause(ex) instanceof StateManagerResetException) {
+                    runningFlag.set(false);
+                    log.debug("Trapped StateManagerResetException.", ex);
+                    init(this.getAppId(), this.getDeviceId());
+                    this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
+                    break;
+                } else {
+                    handleOrRaiseException(ex);
+                }
             }
         }
         log.info("State action actionLoop is exiting.");
@@ -408,7 +419,7 @@ public class StateManager implements IStateManager {
             throw new FlowException("Transition step " + applicationState.getCurrentTransition().getCurrentTransitionStep() + " cannot handle action '" + action + "'");
         }
 
-        checkTransitionEnd(action);
+        checkTransitionEnd(transition.getOriginalAction());
     }
 
     private void checkTransitionEnd(Action action) {
@@ -566,11 +577,11 @@ public class StateManager implements IStateManager {
     @Override
     public void doAction(Action action) {
         ActionContext actionContext = null;
-//        if (isOnStateManagerThread()) {
+        if (isOnStateManagerThread()) {
             actionContext = new ActionContext(action, Thread.currentThread().getStackTrace());
-//        } else {
-//            actionContext = new ActionContext(action);
-//        }
+        } else {
+            actionContext = new ActionContext(action);
+        }
         actionQueue.offer(actionContext);
     }
 
@@ -579,6 +590,7 @@ public class StateManager implements IStateManager {
     }
 
     protected void processAction(ActionContext actionContext) {
+        lastInteractionTime.set(new Date());
         Action action = actionContext.getAction();
         try {
             // Global action handler takes precedence over all actions (for now)
@@ -630,10 +642,7 @@ public class StateManager implements IStateManager {
                         action.getName(), applicationState.getCurrentContext().getState().getClass().getName(), action.getName(),
                         action.getName(), applicationState.getCurrentContext().getFlowConfig().getName()));
             }
-        } catch (Throwable ex) {
-            handleOrRaiseException(ex);
         } finally {
-            activeCalls.decrementAndGet();
             if (action.isDoNotBlockForResponse()) {
                 lastShowTimeInMs.set(System.currentTimeMillis());
             }
