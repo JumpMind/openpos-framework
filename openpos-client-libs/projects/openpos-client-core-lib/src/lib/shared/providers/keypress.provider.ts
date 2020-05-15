@@ -39,7 +39,7 @@ export class KeyPressProvider implements OnDestroy {
 
     subscribe(key: string, priority: number, next: (KeyboardEvent) => void): Subscription {
         if (!key) {
-            console.warn('Cannot subscribe to null or undefined or empty string keybinding');
+            console.warn('[KeyPressProvider]: Cannot subscribe to null or undefined or empty string keybinding');
             return;
         }
 
@@ -52,6 +52,8 @@ export class KeyPressProvider implements OnDestroy {
             if (keybindSubscription && keybindSubscription.subscription === subscriptionOutput) {
                 priorityMap.delete(priority);
             }
+
+            console.log(`[KeyPressProvider]: Unsubscribing from "${key}" and priority "${priority}"`);
         });
 
         if (!this.subscribers.has(key)) {
@@ -59,7 +61,9 @@ export class KeyPressProvider implements OnDestroy {
         }
 
         if (this.subscribers.get(key).has(priority)) {
-            console.warn(`Another subscriber already exists with key ${key} and priority ${priority}`);
+            console.warn(`[KeyPressProvider]: Another subscriber already exists with key "${key}" and priority "${priority}"`);
+        } else {
+            console.log(`[KeyPressProvider]: Subscribed to key "${key}" and priority "${priority}"`);
         }
         this.subscribers.get(key).set(priority, new KeybindSubscription(key, subscriptionOutput, priority, next));
 

@@ -24,14 +24,28 @@ export class KeyPressSourceDirective implements OnInit, OnDestroy {
         const keydownEvent$ = fromEvent<KeyboardEvent>(window, 'keydown');
         const keyupEvent$ = fromEvent<KeyboardEvent>(window, 'keyup');
 
+        // Handling events from the window allows all key presses to be captured,
+        // even if no tab index element, or input element, has focus
         merge(keydownEvent$, keyupEvent$).pipe(
             filter(event => this.el.nativeElement.contains(event.target)),
-            tap(event => event.type === 'keydown' ? this.keydown$.next(event) : this.keyup$.next(event)),
-            filter(event => this.keyPressProvider.keyHasSubscribers(event)),
-            tap(event => event.stopPropagation()),
-            tap(event => event.preventDefault()),
+            tap(event => this.handleKeyboardEvent(event)),
             takeUntil(this.destroyed$)
         ).subscribe();
+    }
+
+    handleKeyboardEvent(event: KeyboardEvent): void {
+        if(event.type === 'keydown') {
+            this.keydown$.next(event)
+        } else {
+            this.keyup$.next(event)
+        }
+
+        if(this.keyPressProvider.keyHasSubscribers(event)) {
+            event.stopPropagation();
+            event.preventDefault();
+            const key = this.keyPressProvider.getNormalizedKey(event);
+            console.log(`[appKeypressSource]: Handling "${event.type}" event for "${key}" for element`, this.el.nativeElement);
+        }
     }
 
     ngOnDestroy(): void {
@@ -39,20 +53,4 @@ export class KeyPressSourceDirective implements OnInit, OnDestroy {
         this.keyPressProvider.unregisterKeyPressSource(this.keydown$);
         this.destroyed$.next();
     }
-
-    // @HostListener('keydown', ['$event'])
-    // onkeydown(event: KeyboardEvent) {
-    //     this.keydown$.next(event);
-    //     if (this.keyPressProvider.keyHasSubscribers(event)) {
-    //         event.stopPropagation();
-    //     }
-    // }
-    //
-    // @HostListener('keyup', ['$event'])
-    // onkeyup(event: KeyboardEvent) {
-    //     this.keyup$.next(event);
-    //     if (this.keyPressProvider.keyHasSubscribers(event)) {
-    //         event.stopPropagation();
-    //     }
-    // }
 }
