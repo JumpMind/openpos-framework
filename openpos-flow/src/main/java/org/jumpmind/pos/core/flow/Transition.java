@@ -19,8 +19,6 @@ public class Transition {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Logger logGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
     private final StateManagerLogger stateManagerLog = new StateManagerLogger(logGraphical);
-    
-    private CountDownLatch latch;
 
     private List<? extends ITransitionStep> transitionSteps;
     private List<TransitionStepConfig> transitionStepConfigs;
@@ -43,8 +41,6 @@ public class Transition {
         this.transitionSteps = createSteps(transitionStepConfigs);
         this.sourceStateContext = sourceStateContext;
         this.targetState = targetState;
-        
-//        latch = new CountDownLatch(transitionSteps.size());
     }
 
     public Transition(List<TransitionStepConfig> transitionStepConfigs, StateContext sourceStateContext, Object targetState, SubFlowConfig enterSubStateConfig, StateContext resumeSuspendedState, boolean autoTransition) {
@@ -68,7 +64,6 @@ public class Transition {
 
     public void begin() {
         proceed();
-//        return getTransitionResult();
     }
     
     public void proceed() {
@@ -77,11 +72,9 @@ public class Transition {
                 transitionResult = TransitionResult.TransitionResultCode.PROCEED;
             }
             stateManager.performOutjections(currentTransitionStep.get());
-//            latch.countDown();
             return;
         } else if (afterFirstStep()) {
             stateManager.performOutjections(currentTransitionStep.get());
-//            latch.countDown();
         }
         
         int localStepIndex = stepIndex.getAndIncrement();
@@ -89,21 +82,7 @@ public class Transition {
         currentTransitionStep.set(transitionSteps.get(localStepIndex));
         
         executeCurrentStep();
-        
-      //  waitForEverybody();
-
     }
-
-//    private void waitForEverybody() {
-//        try {
-//            stateManager.setTransitionRestFlag(true);
-//            latch.await();
-//        } catch (InterruptedException ex) {
-//            throw new FlowException("Transition await interupted.", ex);
-//        } finally {
-//            stateManager.setTransitionRestFlag(false);
-//        }
-//    }
 
     protected boolean afterFirstStep() {
         return stepIndex.get() > 0;
@@ -144,9 +123,6 @@ public class Transition {
         log.info("Transition was cancelled by " + currentTransitionStep.get());
         transitionResult = TransitionResult.TransitionResultCode.CANCEL;
         stepIndex.set(Integer.MAX_VALUE);
-//        while (latch.getCount() > 0) {
-//            latch.countDown();
-//        }
     }
     
     public boolean handleAction(Action action) {
