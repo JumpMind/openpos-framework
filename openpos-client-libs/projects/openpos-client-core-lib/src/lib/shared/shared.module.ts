@@ -124,6 +124,7 @@ import { KebabLabelButtonComponent } from './components/kebab-label-button/kebab
 import { NgxPaginationModule } from 'ngx-pagination';
 import { HelpTextPageWrapperComponent } from './components/help-text-page-wrapper/help-text-page-wrapper.component';
 import { OpenposAppHelpContainerComponent } from './components/openpos-app-help-container/openpos-app-help-container.component';
+import { ScanPartComponent } from './screen-parts/scan-part/scan-part.component';
 
 const screenParts = [
     ChooseOptionsPartComponent,
@@ -140,7 +141,8 @@ const screenParts = [
     ProgressBarPartComponent,
     WebcamViewerComponent,
     SystemStatusComponent,
-    BannerComponent
+    BannerComponent,
+    ScanPartComponent
 ];
 
 const components = [
