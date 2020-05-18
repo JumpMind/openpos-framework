@@ -184,6 +184,8 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
             for (String property : stateManager.getClientContext().keySet()) {
                 clientContext.put(property, stateManager.getClientContext().get(property));
             }
+            clientContext.put("deviceId", stateManager.getDeviceId());
+            clientContext.put("appId", stateManager.getAppId());
         } else {
             setupLogging("server");
 
