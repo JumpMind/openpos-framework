@@ -23,12 +23,13 @@ package org.jumpmind.pos.core.flow;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Scope {
 
-    private Map<String, ScopeValue> deviceScope = Collections.synchronizedMap(new HashMap<String, ScopeValue>());
-    private Map<String, ScopeValue> sessionScope = Collections.synchronizedMap(new HashMap<String, ScopeValue>());
-    private Map<String, ScopeValue> conversationScope = Collections.synchronizedMap(new HashMap<String, ScopeValue>());
+    private Map<String, ScopeValue> deviceScope = new ConcurrentHashMap<String, ScopeValue>();
+    private Map<String, ScopeValue> sessionScope = new ConcurrentHashMap<String, ScopeValue>();
+    private Map<String, ScopeValue> conversationScope = new ConcurrentHashMap<String, ScopeValue>();
 
     public void clearConversationScope() {
         conversationScope.clear();

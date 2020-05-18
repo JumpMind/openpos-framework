@@ -31,6 +31,9 @@ import org.jumpmind.pos.server.model.Action;
 public interface IStateManager {
 
     public void keepAlive();
+
+    void stop();
+
     public void init(String appId, String deviceId);
     @Deprecated
     public String getNodeId();

@@ -69,6 +69,8 @@ public class StateManager implements IStateManager {
     final Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
     private final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
 
+    final static AtomicInteger threadCounter = new AtomicInteger(1);
+
     @Autowired
     private IScreenService screenService;
 
@@ -128,6 +130,9 @@ public class StateManager implements IStateManager {
 
     private EventBroadcaster eventBroadcaster;
 
+    final String STATE_MANAGER_RESET_ACTION = "StateManagerReset";
+    final String STATE_MANAGER_STOP_ACTION = "StateManagerStop";
+
     private AtomicBoolean runningFlag = new AtomicBoolean(false);
     private AtomicBoolean busyFlag = new AtomicBoolean(false);
 
@@ -140,9 +145,16 @@ public class StateManager implements IStateManager {
 
     @Override
     public void reset() {
-//        init(getAppId(), getDeviceId());
-        throw new StateManagerResetException();
+        log.info("StateManager resetting.");
+        this.actionQueue.clear();
+        this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_RESET_ACTION)));
+    }
 
+    @Override
+    public void stop() {
+        log.info("StateManager stopping.");
+        this.actionQueue.clear();
+        this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_STOP_ACTION)));
     }
 
     public void init(String appId, String nodeId) {
@@ -175,13 +187,18 @@ public class StateManager implements IStateManager {
     }
 
     protected void startActionLoop(final String startupAction, final StateConfig initialState) {
-        String threadName = "StateManagerThread(" + applicationState.getDeviceId() + "/" + applicationState.getAppId() + ")";
+        String threadName = "StateManagerThread" + threadCounter.incrementAndGet() + "(" + applicationState.getDeviceId() + ":" + applicationState.getAppId() + ")";
         Thread stateManagerThread = new Thread(threadName) {
             public void run() {
-                stateManagerContainer.setCurrentStateManager(StateManager.this);
-                runningFlag.set(true);
-                transitionTo(new Action(startupAction), initialState);
-                actionLoop();
+                try {
+                    stateManagerContainer.setCurrentStateManager(StateManager.this);
+                    transitionTo(new Action(startupAction), initialState);
+                    runningFlag.set(true);
+                    actionLoop();
+                } catch (Throwable ex) {
+                    log.error("Unhandled exception from StatManager thread. StateManager thread exiting.", ex);
+                }
+
             }
         };
 
@@ -194,30 +211,43 @@ public class StateManager implements IStateManager {
 
     protected void actionLoop() {
         while (runningFlag.get()) {
+            ActionContext actionContext = null;
             try {
-                ActionContext actionContext = actionQueue.poll(60, TimeUnit.SECONDS);
+                actionContext = actionQueue.poll(60, TimeUnit.SECONDS);
                 if (actionContext != null) {
                     busyFlag.set(true);
-                    processAction(actionContext);
-                    actionContext.getAction().markProcessed();
+                    if (actionContext.getAction().getName().equals(STATE_MANAGER_RESET_ACTION)) {
+                        actionContext.getAction().markProcessed();
+                        runningFlag.set(false);
+                        busyFlag.set(false);
+                        init(this.getAppId(), this.getDeviceId());
+                        this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
+                        log.info("StateManager reset.");
+                        break;
+                    } else if (actionContext.getAction().getName().equals(STATE_MANAGER_STOP_ACTION)) {
+                        actionContext.getAction().markProcessed();
+                        runningFlag.set(false);
+                        busyFlag.set(false);
+                        log.info("StateManager stopped.");
+                        break;
+                    } else {
+                        processAction(actionContext);
+                        actionContext.getAction().markProcessed();
+                    }
                     if (actionQueue.size() == 0) {
                         busyFlag.set(false);
                     }
                 }
             } catch (InterruptedException ex) {
-                log.warn("State manager thread was interupted, exiting.", ex);
+                log.warn("StateManager thread was interrupted, exiting.", ex);
                 busyFlag.set(false);
                 runningFlag.set(false);
             } catch (Throwable ex) {
                 busyFlag.set(false);
-                if (ExceptionUtils.getRootCause(ex) instanceof StateManagerResetException) {
-                    runningFlag.set(false);
-                    log.debug("Trapped StateManagerResetException.", ex);
-                    init(this.getAppId(), this.getDeviceId());
-                    this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
-                    break;
-                } else {
-                    handleOrRaiseException(ex);
+                handleOrRaiseException(ex);
+            } finally {
+                if (actionContext != null) {
+                    actionContext.getAction().markProcessed();
                 }
             }
         }

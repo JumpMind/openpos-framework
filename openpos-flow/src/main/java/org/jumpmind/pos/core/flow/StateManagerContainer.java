@@ -161,7 +161,10 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     public synchronized void remove(String appId, String deviceId) {
         Map<String, StateManager> stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
         if (stateManagersByNodeId != null) {
-            stateManagersByNodeId.remove(deviceId);
+            IStateManager stateManager = stateManagersByNodeId.remove(deviceId);
+            if (stateManager != null) {
+                stateManager.stop();
+            }
         }
     }
 

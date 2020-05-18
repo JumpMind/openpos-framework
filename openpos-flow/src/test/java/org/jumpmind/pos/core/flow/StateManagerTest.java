@@ -183,6 +183,7 @@ public class StateManagerTest {
 
         TestUtil.setField(stateManager, "transitionStepConfigs", buildTestTransitionSteps());
         TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
+        TestUtil.setField(stateManager, "stateManagerContainer", new StateManagerContainer());
 
         stateManager.setErrorHandler(null);
     }
