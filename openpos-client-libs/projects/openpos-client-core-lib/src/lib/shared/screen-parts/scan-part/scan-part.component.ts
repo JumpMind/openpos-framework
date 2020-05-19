@@ -1,11 +1,12 @@
 import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { Component, OnInit, OnDestroy, Injector } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ScreenPartComponent } from '../screen-part';
 import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { Subscription } from 'rxjs';
 import { ScannerService } from '../../../core/platform-plugins/scanners/scanner.service';
 import { ScanInterface } from './scan-part.interface';
+import { MessageProvider } from '../../providers/message.provider';
 
 @ScreenPart({
     name: 'scan'
@@ -20,8 +21,8 @@ export class ScanPartComponent extends ScreenPartComponent<ScanInterface> implem
 
     private scanServiceSubscription: Subscription;
 
-    constructor(injector: Injector, private scannerService: ScannerService) {
-        super(injector);
+    constructor(messageProvider: MessageProvider, private scannerService: ScannerService) {
+        super(messageProvider);
     }
 
     ngOnInit(): void {
@@ -47,7 +48,7 @@ export class ScanPartComponent extends ScreenPartComponent<ScanInterface> implem
         if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
                 if (this.screenData.scanActionName) {
-                    this.doAction({ action: this.screenData.scanActionName, queueIfBlocked: true }, scanData);
+                    this.sessionService.onAction( this.screenData.scanActionName, scanData );
                 }
             });
         }
