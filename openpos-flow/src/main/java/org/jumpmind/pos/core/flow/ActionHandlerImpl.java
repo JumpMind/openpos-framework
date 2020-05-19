@@ -23,11 +23,11 @@ public class ActionHandlerImpl {
     @Autowired
     private ActionHandlerHelper helper;
 
-    public boolean canHandleAction(Object state, Action action) {
+    public boolean canHandleAction(Object state, ActionContext actionContext) {
         // if there is an action handler
         // AND it's not the current state firing this action.
-        Method actionMethod = helper.getActionMethod(state, action);
-        if (actionMethod != null && !isCalledFromState(state, action)) {
+        Method actionMethod = helper.getActionMethod(state, actionContext.getAction());
+        if (actionMethod != null && !isCalledFromState(state, actionContext)) {
             return true;
         } else {
             return false;
@@ -47,8 +47,8 @@ public class ActionHandlerImpl {
         }
     }
 
-    public boolean canHandleAnyAction(Object state, Action action) {
-        return helper.getAnyActionMethod(state) != null && !isCalledFromState(state, action);
+    public boolean canHandleAnyAction(Object state, ActionContext actionContext) {
+        return helper.getAnyActionMethod(state) != null && !isCalledFromState(state, actionContext);
     }
 
     public boolean handleAnyAction(IStateManager stateManager, Object state, Action action) {
@@ -65,14 +65,17 @@ public class ActionHandlerImpl {
     }
 
 
-    protected boolean isCalledFromState(Object state, Action action) {
-        StackTraceElement[] currentStack = Thread.currentThread().getStackTrace();
-
-        if (currentStack.length > 150) {
-            helper.checkStackOverflow(StateManager.class, state, currentStack);
+    protected boolean isCalledFromState(Object state, ActionContext actionContext) {
+        StackTraceElement[] stackTrace = actionContext.getStackTrace();
+        if (stackTrace == null) {
+            return false;
         }
 
-        for (StackTraceElement stackFrame : currentStack) {
+        if (stackTrace.length > 150) {
+            helper.checkStackOverflow(StateManager.class, state, stackTrace);
+        }
+
+        for (StackTraceElement stackFrame : stackTrace) {
             Class<?> currentClass = helper.getClassFrom(stackFrame);
             if (currentClass != null && !Modifier.isAbstract(currentClass.getModifiers()) && FlowUtil.isState(currentClass)
                     && currentClass != state.getClass()) {
