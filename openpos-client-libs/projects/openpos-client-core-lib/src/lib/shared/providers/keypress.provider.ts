@@ -25,7 +25,7 @@ export class KeyPressProvider implements OnDestroy {
     stopObserver$ = merge(this.destroyed$, this.keypressSourceRegistered$, this.keypressSourceUnregistered$);
     // Matches key lists, with keys optionally separated by a ","
     // ctrl+p
-    // ctrl+p,ctrl+π,p
+    // ctrl+p,ctrl+a,p
     keyListRegex = new RegExp(/(?<key>(\\,|[^,])+)((?<!\\),)?/, 'g');
     // Matches a single key
     // p
