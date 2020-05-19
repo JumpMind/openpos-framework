@@ -33,4 +33,5 @@ public final class UIMessageType {
     public static String CUSTOMER_DISPLAY_SALE = "CustomerDisplaySale";
     public static String TRANSACTION_SEARCH = "TransactionSearch";
     public static String TRANSACTION_DETAILS = "TransactionDetails";
+    public static String PROMOTION_SEARCH = "PromotionSearch";
 }
