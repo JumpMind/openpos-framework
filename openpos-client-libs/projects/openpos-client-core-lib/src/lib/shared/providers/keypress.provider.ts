@@ -8,8 +8,8 @@ import {takeUntil} from 'rxjs/operators';
  * keyPressProvider.subscribe('p', 1, () => this.doAction(...))
  * keyPressProvider.subscribe('ctrl+p', 1, () => this.doAction(...))
  *
- * // Separate multiple keys with a "," (for example, to handle Mac and Windows Ctrl+P)
- * keyPressProvider.subscribe('ctrl+p,ctrl+π', 1, () => this.doAction(...))
+ * // Separate multiple keys with a ","
+ * keyPressProvider.subscribe('ctrl+p,ctrl+a', 1, () => this.doAction(...))
  *
  * // Escape special keys "," and "+"
  * keyPressProvider.subscribe('shift+\+', 1, () => this.doAction(...))
