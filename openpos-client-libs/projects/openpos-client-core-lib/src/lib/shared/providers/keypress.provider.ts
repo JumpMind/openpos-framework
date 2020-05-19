@@ -1,6 +1,6 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 
 /**
  * How to subscribe to keys, and keys with modifiers:
@@ -58,7 +58,7 @@ export class KeyPressProvider implements OnDestroy {
         this.keypressSourceUnregistered$.next();
     }
 
-    subscribe(key: string, priority: number, next: (KeyboardEvent) => void): Subscription {
+    subscribe(key: string, priority: number, next: (KeyboardEvent) => void, stop$?: Observable<any>): Subscription {
         if (!key) {
             console.warn('[KeyPressProvider]: Cannot subscribe to null or undefined or empty string keybinding');
             return;
@@ -95,7 +95,13 @@ export class KeyPressProvider implements OnDestroy {
             subscriptions.push(subscription);
         });
 
-        return new Subscription(() => subscriptions.forEach(s => s.unsubscribe()));
+        const mainSubscription = new Subscription(() => subscriptions.forEach(s => s.unsubscribe()));
+
+        if (stop$) {
+            stop$.pipe(take(1)).subscribe(() => mainSubscription.unsubscribe());
+        }
+
+        return mainSubscription;
     }
 
     keyHasSubscribers(obj: KeyboardEvent | Keybinding | string): boolean {
