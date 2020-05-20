@@ -6,18 +6,19 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
+import lombok.Data;
+import org.jumpmind.pos.core.flow.config.SubFlowConfig;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.server.model.Action;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Data
 public class Transition {
     
     private final Logger log = LoggerFactory.getLogger(getClass());
     private final Logger logGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
     private final StateManagerLogger stateManagerLog = new StateManagerLogger(logGraphical);
-    
-    private CountDownLatch latch;
 
     private List<? extends ITransitionStep> transitionSteps;
     private List<TransitionStepConfig> transitionStepConfigs;
@@ -27,6 +28,9 @@ public class Transition {
     private Action originalAction;
     private TransitionResult.TransitionResultCode transitionResult;
     private Action queuedAction;
+    private SubFlowConfig enterSubStateConfig;
+    private StateContext resumeSuspendedState;
+    private boolean autoTransition;
 
     private AtomicReference<ITransitionStep> currentTransitionStep = new AtomicReference<ITransitionStep>(null);
     private AtomicInteger stepIndex = new AtomicInteger(0);
@@ -37,20 +41,29 @@ public class Transition {
         this.transitionSteps = createSteps(transitionStepConfigs);
         this.sourceStateContext = sourceStateContext;
         this.targetState = targetState;
-        
-        latch = new CountDownLatch(transitionSteps.size());
     }
 
-    public TransitionResult.TransitionResultCode execute(StateManager stateManager, Action originalAction) {
-        this.stateManager = stateManager;
-        this.originalAction = originalAction;
-        proceed();
-        
-        if (transitionResult == null) {
-            throw new FlowException("Invalid: transitionResult must be non-null at this point.");
+    public Transition(List<TransitionStepConfig> transitionStepConfigs, StateContext sourceStateContext, Object targetState, SubFlowConfig enterSubStateConfig, StateContext resumeSuspendedState, boolean autoTransition) {
+            super();
+            this.transitionStepConfigs = transitionStepConfigs;
+            this.transitionSteps = createSteps(transitionStepConfigs);
+            this.sourceStateContext = sourceStateContext;
+            this.targetState = targetState;
+            this.enterSubStateConfig = enterSubStateConfig;
+            this.resumeSuspendedState = resumeSuspendedState;
+            this.autoTransition = autoTransition;
+    }
+
+    public TransitionResult.TransitionResultCode getTransitionResult() {
+        if (transitionResult != null) {
+            return transitionResult;
+        } else {
+            return TransitionResult.TransitionResultCode.IN_PROGRESS;
         }
-        
-        return transitionResult;
+    }
+
+    public void begin() {
+        proceed();
     }
     
     public void proceed() {
@@ -59,11 +72,9 @@ public class Transition {
                 transitionResult = TransitionResult.TransitionResultCode.PROCEED;
             }
             stateManager.performOutjections(currentTransitionStep.get());
-            latch.countDown();
             return;
         } else if (afterFirstStep()) {
             stateManager.performOutjections(currentTransitionStep.get());
-            latch.countDown();
         }
         
         int localStepIndex = stepIndex.getAndIncrement();
@@ -71,20 +82,6 @@ public class Transition {
         currentTransitionStep.set(transitionSteps.get(localStepIndex));
         
         executeCurrentStep();
-        
-        waitForEverybody();
-
-    }
-
-    private void waitForEverybody() {
-        try {
-            stateManager.setTransitionRestFlag(true);
-            latch.await();
-        } catch (InterruptedException ex) {
-            throw new FlowException("Transition await interupted.", ex);
-        } finally {
-            stateManager.setTransitionRestFlag(false);
-        }
     }
 
     protected boolean afterFirstStep() {
@@ -126,9 +123,6 @@ public class Transition {
         log.info("Transition was cancelled by " + currentTransitionStep.get());
         transitionResult = TransitionResult.TransitionResultCode.CANCEL;
         stepIndex.set(Integer.MAX_VALUE);
-        while (latch.getCount() > 0) {            
-            latch.countDown();
-        }
     }
     
     public boolean handleAction(Action action) {

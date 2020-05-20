@@ -1,10 +1,6 @@
 package org.jumpmind.pos.core.flow;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.doNothing;
 
@@ -12,6 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
@@ -48,8 +45,10 @@ import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.service.ScreenService;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
+import org.jumpmind.symmetric.io.data.reader.IExtractDataReaderSource;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -167,24 +166,12 @@ public class StateManagerTest {
         config.addGlobalTransitionOrActionHandler("SomeGlobalAction", GlobalActionHandler.class);
         config.addGlobalTransitionOrActionHandler("SomeGlobalActionWithException", GlobalActionHandlerWithException.class);
         config.addGlobalSubTransition("CustomerLookupGlobal", customerFlow);
-        // config.addGlobalSubTransition("VendorList", vendorFlow);
-        
-        LocaleMessageFactory localeMessageFactory = new LocaleMessageFactory();
-        TestUtil.setField(localeMessageFactory, "supportedLocales", new String[] {"en_US"});
-        TestUtil.setField(stateManager, "localeMessageFactory", localeMessageFactory);
-        
+
+        stateManager = StateManagerTestUtils.buildStateManager(injector, null);
+
         stateManager.setInitialFlowConfig(config);
-        ActionHandlerImpl actionHandler = new ActionHandlerImpl();
-        ActionHandlerHelper helper = new ActionHandlerHelper();
-        TestUtil.setField(actionHandler, "beforeActionService" , new BeforeActionStateLifecycleService());
-        TestUtil.setField(actionHandler, "helper", helper);
-        TestUtil.setField(stateManager, "actionHandler", actionHandler);
-        TestUtil.setField(stateManager, "injector", injector);
-        TestUtil.setField(stateManager, "outjector", new Outjector());
-        TestUtil.setField(stateManager, "helper", helper);
 
         TestUtil.setField(stateManager, "transitionStepConfigs", buildTestTransitionSteps());
-        TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
 
         stateManager.setErrorHandler(null);
     }
@@ -212,7 +199,7 @@ public class StateManagerTest {
 
     @Test
     public void testSubStateTransitionBackToAnotherState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         
         HomeState homeState = (HomeState) stateManager.getCurrentState();
         homeState.departGeneralCalled = false;
@@ -221,7 +208,7 @@ public class StateManagerTest {
         
         assertEquals(HomeState.class, homeState.getClass());
         assertTrue(homeState.arriveCalled);
-        stateManager.doAction("ToSubState1");
+        doAction("ToSubState1");
         
         assertTrue(homeState.departGeneralCalled);
         assertTrue(homeState.departToSubflowCalled);
@@ -232,31 +219,52 @@ public class StateManagerTest {
     
     @Test
     public void testSubStateTransitionBackToAnotherSubState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("ToSubState2");
+        doAction("ToSubState2");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Back");
+        doAction("Back");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
     }
 
 
     @Test
-    public void testInitialState() {
-        stateManager.init("pos", "100-1");
+    public void testInitialState() throws Exception {
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+    }
+
+    private void stateManagerInit() {
+        stateManager.init("pos", "100-1");
+        try {
+            Thread.sleep(100);
+            while (stateManager.getCurrentState() == null) {
+                Thread.sleep(10);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+    private void doAction(Action action) {
+        StateManagerTestUtils.doAction(stateManager, action);
+    }
+
+
+    private void doAction(String actionName) {
+        StateManagerTestUtils.doAction(stateManager, new Action(actionName));
     }
 
     @Test
     public void testSimpleTransition() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         HomeState homeState = (HomeState) stateManager.getCurrentState();
         homeState.departGeneralCalled = false;
         homeState.departToSubflowCalled = false;
         homeState.departStateCalled = false;
         
         assertEquals(HomeState.class, homeState.getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertTrue(homeState.departGeneralCalled);
         assertFalse(homeState.departToSubflowCalled);
         assertTrue(homeState.departStateCalled);
@@ -266,105 +274,106 @@ public class StateManagerTest {
 
     @Test
     public void testSpecificVsAnyActionHandler() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestActions");
+        doAction("TestActions");
         assertEquals(ActionTestingState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("SpecificAction");
-        stateManager.doAction("Done");
+        doAction("SpecificAction");
+        doAction("Done");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         assertTrue("stateManager.getScopeValue(\"specificActionMethodCalled\")", stateManager.getScopeValue("specificActionMethodCalled"));
         assertFalse("stateManager.getScopeValue(\"anyActionMethodCalled\")", stateManager.getScopeValue("anyActionMethodCalled"));
 
-        stateManager.doAction("TestActions");
+        doAction("TestActions");
         assertEquals(ActionTestingState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("ActionHandledByAction");
-        stateManager.doAction("Done");
+        doAction("ActionHandledByAction");
+        doAction("Done");
         assertFalse("stateManager.getScopeValue(\"specificActionMethodCalled\")", stateManager.getScopeValue("specificActionMethodCalled"));
         assertTrue("stateManager.getScopeValue(\"anyActionMethodCalled\")", stateManager.getScopeValue("anyActionMethodCalled"));
     }
 
     @Test
     public void testActionInterception() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestTransitionInterception");
+        doAction("TestTransitionInterception");
         assertEquals(TransitionInterceptionState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
-        assertTrue("stateManager.getScopeValue(\"onSellCalled\")", stateManager.getScopeValue("onSellCalled"));
+        doAction("Sell");
+
+        assertNotNull("stateManager.getScopeValue(\"onSellCalled\")", stateManager.getScopeValue("onSellCalled"));
         assertFalse("stateManager.getScopeValue(\"anyActionMethodCalled\")", stateManager.getScopeValue("anyActionMethodCalled"));
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testSubState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Customer");
+        doAction("Customer");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSelected");
+        doAction("CustomerSelected");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testSubSubState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Customer");
+        doAction("Customer");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSignup");
+        doAction("CustomerSignup");
         assertEquals(CustomerSignupState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSignedup");
+        doAction("CustomerSignedup");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSelected");
+        doAction("CustomerSelected");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testFlowScope() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Customer");
+        doAction("Customer");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSearch");
+        doAction("CustomerSearch");
         assertEquals(CustomerSearchState.class, stateManager.getCurrentState().getClass());
         assertEquals("customer1234", stateManager.getScopeValue("selectedCustomer"));
-        stateManager.doAction("CustomerSelected");
+        doAction("CustomerSelected");
         assertNull("stateManager.getScopeValue(\"selectedCustomer\")", stateManager.getScopeValue("selectedCustomer"));
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
     
     @Test
     public void testFlowScopePropogation() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         assertNull("flowScopeValue1", stateManager.getScopeValue("flowScopeValue1"));
-        stateManager.doAction("TestFlowScope");
+        doAction("TestFlowScope");
         assertEquals(SubStateFlowScopePropogation1.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("SubStateFlowScopePropogation2Action");
+        doAction("SubStateFlowScopePropogation2Action");
         assertEquals(SubStateFlowScopePropogation2.class, stateManager.getCurrentState().getClass());
         assertEquals("flowScopeValue1", stateManager.getScopeValue("flowScopeValue1"));        
-        stateManager.doAction("Back");
+        doAction("Back");
         assertEquals(SubStateFlowScopePropogation1.class, stateManager.getCurrentState().getClass());
         assertEquals("flowScopeValue1", stateManager.getScopeValue("flowScopeValue1"));
-        stateManager.doAction("Back");
+        doAction("Back");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         assertNull("flowScopeValue1", stateManager.getScopeValue("flowScopeValue1"));
     }
 
     @Test
     public void testScopes() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestScopes");
+        doAction("TestScopes");
         assertEquals(TestScopesState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Done");
+        doAction("Done");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
 
         assertEquals("conversationScopeValue", stateManager.getScopeValue("conversationScopeValue"));
@@ -384,28 +393,40 @@ public class StateManagerTest {
 
     @Test
     public void testInjectConfigState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Customer");
+        doAction("Customer");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSelected");
+        doAction("CustomerSelected");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
         assertEquals("customerFlowTypeWorked", stateManager.getScopeValue("customerFlowTypeWorked"));
     }
 
     @Test
     public void testUnhandledAction() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+
+        IErrorHandler existingErrorHandler = stateManager.getErrorHandler();
+
+        final AtomicBoolean errorHandlerCalled = new AtomicBoolean(false);
+
         try {
-            stateManager.doAction("UnhandledAction");
-            fail("should have thrown exception for unhandled action");
-        } catch (Exception ex) {
-            assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-            assertEquals(FlowException.class, ex.getClass());
-            assertTrue(ex.getMessage().contains("UnhandledAction"));
+            stateManager.setErrorHandler(new IErrorHandler() {
+                @Override
+                public void handleError(IStateManager stateManager, Throwable ex) {
+                    assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+                    assertEquals(FlowException.class, ex.getClass());
+                    assertTrue(ex.getMessage().contains("UnhandledAction"));
+                    errorHandlerCalled.set(true);
+                }
+            });
+
+            doAction("UnhandledAction");
+        } finally {
+            stateManager.setErrorHandler(existingErrorHandler);
         }
     }
 
@@ -414,9 +435,9 @@ public class StateManagerTest {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
         
         stateManager.setErrorHandler(errorHandler);
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("UnhandledAction");
+        doAction("UnhandledAction");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
         assertEquals(FlowException.class, exArgument.getValue().getClass());
@@ -427,16 +448,27 @@ public class StateManagerTest {
     
     @Test
     public void testInjectionFailure() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+
+        IErrorHandler existingErrorHandler = stateManager.getErrorHandler();
+        final AtomicBoolean errorHandlerCalled = new AtomicBoolean(false);
+
         try {
-            stateManager.doAction("TestFailedInjections");
-            fail("should have thrown exception for failed injections");
-        } catch (Exception ex) {
-            // TODO: we transitioned to InjectionFailedState, but injections failed.  Expected behavior?
-            // assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-            assertEquals(FlowException.class, ex.getClass());
-            assertTrue(ex.getMessage().contains("inject"));
+            stateManager.setErrorHandler(new IErrorHandler() {
+                @Override
+                public void handleError(IStateManager stateManager, Throwable ex) {
+                    // TODO: we transitioned to InjectionFailedState, but injections failed.  Expected behavior?
+                    // assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+                    assertEquals(FlowException.class, ex.getClass());
+                    assertTrue(ex.getMessage().contains("inject"));
+                    errorHandlerCalled.set(true);
+                }
+            });
+            doAction("TestFailedInjections");
+            assertTrue("should have thrown exception for failed injections", errorHandlerCalled.get());
+        } finally {
+            stateManager.setErrorHandler(existingErrorHandler);
         }
     }
 
@@ -445,9 +477,9 @@ public class StateManagerTest {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
 
         stateManager.setErrorHandler(errorHandler);
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestFailedInjections");
+        doAction("TestFailedInjections");
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
         assertEquals(FlowException.class, exArgument.getValue().getClass());
         assertTrue(exArgument.getValue().getMessage().contains("inject"));
@@ -455,107 +487,117 @@ public class StateManagerTest {
     
     @Test
     public void testOptionalInjections() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestOptionalInjections");
+        doAction("TestOptionalInjections");
         assertEquals(OptionalInjectionState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testGlobalTransitionFromIntialState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Help");
+        doAction("Help");
         assertEquals(HelpState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testGlobalTransitionFromSubsquentState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Help");
+        doAction("Help");
         assertEquals(HelpState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("About");
+        doAction("About");
         assertEquals(AboutState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Home");
+        doAction("Home");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testGlobalTransitionFromSubState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Customer");
+        doAction("Customer");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Help");
+        doAction("Help");
         assertEquals(HelpState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Back");
+        doAction("Back");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSelected");
+        doAction("CustomerSelected");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testGlobalSubTransitionFromIntialState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerLookupGlobal");
+        doAction("CustomerLookupGlobal");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSignup");
+        doAction("CustomerSignup");
         assertEquals(CustomerSignupState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSignedup");
+        doAction("CustomerSignedup");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSelected");
+        doAction("CustomerSelected");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testGlobalSubTransitionFromSubState() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Customer");
+        doAction("Customer");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSignup");
+        doAction("CustomerSignup");
         assertEquals(CustomerSignupState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSignedup");
+        doAction("CustomerSignedup");
         assertEquals(CustomerState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("CustomerSelected");
+        doAction("CustomerSelected");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Home");
+        doAction("Home");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testGlobalActionHandler() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         class Invoked { boolean invoked = false; }
         final Invoked i = new Invoked();
         Runnable r = () -> i.invoked = true;
         
         assertFalse(i.invoked);
-        stateManager.doAction(new Action("SomeGlobalAction", r));
+        doAction(new Action("SomeGlobalAction", r));
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         assertTrue(i.invoked);
     }
 
     @Test
     public void testGlobalActionHandlerException() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+
+        IErrorHandler existingErrorHandler = stateManager.getErrorHandler();
+        final AtomicBoolean errorHandlerCalled = new AtomicBoolean(false);
+
         try {
-            stateManager.doAction(new Action("SomeGlobalActionWithException"));
-            fail("should have thrown an exception when doing action SomeGlobalActionWithException");
-        } catch (Exception ex) {
-            assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-            assertEquals(FlowException.class, ex.getClass());
-            assertEquals(InvocationTargetException.class, ex.getCause().getClass());
-            assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
-            assertTrue( ex.getCause().getCause().getMessage().contains("Global"));
+            stateManager.setErrorHandler(new IErrorHandler() {
+                @Override
+                public void handleError(IStateManager stateManager, Throwable ex) {
+                    assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+                    assertEquals(FlowException.class, ex.getClass());
+                    assertEquals(InvocationTargetException.class, ex.getCause().getClass());
+                    assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
+                    assertTrue( ex.getCause().getCause().getMessage().contains("Global"));
+                    errorHandlerCalled.set(true);
+                }
+            });
+            doAction("SomeGlobalActionWithException");
+        } finally {
+            stateManager.setErrorHandler(existingErrorHandler);
         }
     }
 
@@ -564,9 +606,9 @@ public class StateManagerTest {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
 
         stateManager.setErrorHandler(errorHandler);
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction(new Action("SomeGlobalActionWithException"));
+        doAction(new Action("SomeGlobalActionWithException"));
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         assertEquals(FlowException.class, exArgument.getValue().getClass());
@@ -577,31 +619,31 @@ public class StateManagerTest {
     
     @Test
     public void testTransitionProceed() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestTransitionProceed");
+        doAction("TestTransitionProceed");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testTransitionCancel() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestTransitionCancel");
+        doAction("TestTransitionCancel");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
 
     @Test
     public void testTransitionCancelWithQueueAction() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Sell");
+        doAction("Sell");
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestTransitionCancelWithQueuedAction");
+        doAction("TestTransitionCancelWithQueuedAction");
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
     }
 
@@ -609,9 +651,9 @@ public class StateManagerTest {
     @Ignore
     @Test(expected = FlowException.class)
     public void testStackOverflow() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("StackOverflow");
+        doAction("StackOverflow");
     }
 
     // TODO: temp ignore this to see if it is the culprit for the hanging build
@@ -625,66 +667,76 @@ public class StateManagerTest {
     
     @Test
     public void testMultiSubFlowReturnActions1() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("StartMultiReturnActionTest");
+        doAction("StartMultiReturnActionTest");
         assertEquals(MultiReturnActionTestState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("EnterSubstateInMultiReturnActionTest");
+        doAction("EnterSubstateInMultiReturnActionTest");
         assertEquals(MultiReturnActionInitialState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("MultiReturnAction1");
+        doAction("MultiReturnAction1");
         assertEquals(MultiReturnAction1State.class, stateManager.getCurrentState().getClass());
     }
     
     @Test
     public void testMultiSubFlowReturnActions2() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("StartMultiReturnActionTest");
+        doAction("StartMultiReturnActionTest");
         assertEquals(MultiReturnActionTestState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("EnterSubstateInMultiReturnActionTest");
+        doAction("EnterSubstateInMultiReturnActionTest");
         assertEquals(MultiReturnActionInitialState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("MultiReturnAction2");
+        doAction("MultiReturnAction2");
         assertEquals(MultiReturnAction2State.class, stateManager.getCurrentState().getClass());
     }
     
     @Test
     public void testMultiSubFlowReturnActions1_NoFlowConfig() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("StartMultiReturnActionTest");
+        doAction("StartMultiReturnActionTest");
         assertEquals(MultiReturnActionTestState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("EnterSubstateInMultiReturnActionTestNoFlowConfig");
+        doAction("EnterSubstateInMultiReturnActionTestNoFlowConfig");
         assertEquals(MultiReturnActionInitialState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("MultiReturnAction1");
+        doAction("MultiReturnAction1");
         assertEquals(MultiReturnAction1State.class, stateManager.getCurrentState().getClass());
     }
     
     @Test
     public void testMultiSubFlowReturnActions2_NoFlowConfig() {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("StartMultiReturnActionTest");
+        doAction("StartMultiReturnActionTest");
         assertEquals(MultiReturnActionTestState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("EnterSubstateInMultiReturnActionTestNoFlowConfig");
+        doAction("EnterSubstateInMultiReturnActionTestNoFlowConfig");
         assertEquals(MultiReturnActionInitialState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("MultiReturnAction2");
+        doAction("MultiReturnAction2");
         assertEquals(MultiReturnAction2State.class, stateManager.getCurrentState().getClass());
     }
     
 
     @Test
     public void testOnArriveThatThrowsException( ) {
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+
+        IErrorHandler existingErrorHandler = stateManager.getErrorHandler();
+        final AtomicBoolean errorHandlerCalled = new AtomicBoolean(false);
+
         try {
-            stateManager.doAction("TestExceptionOnArriveAction");
-            fail("should have thrown exception on arrive");
-        } catch (Exception ex) {
-            assertEquals(ExceptionOnArriveState.class, stateManager.getCurrentState().getClass());
-            assertEquals(FlowException.class, ex.getClass());
-            assertEquals(InvocationTargetException.class, ex.getCause().getClass());
-            assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
-            assertTrue( ex.getCause().getCause().getMessage().contains("arrive"));
+            stateManager.setErrorHandler(new IErrorHandler() {
+                @Override
+                public void handleError(IStateManager stateManager, Throwable ex) {
+                    assertEquals(ExceptionOnArriveState.class, stateManager.getCurrentState().getClass());
+                    assertEquals(FlowException.class, ex.getClass());
+                    assertEquals(InvocationTargetException.class, ex.getCause().getClass());
+                    assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
+                    assertTrue( ex.getCause().getCause().getMessage().contains("arrive"));
+                    errorHandlerCalled.set(true);
+                }
+            });
+            doAction("TestExceptionOnArriveAction");
+        } finally {
+            stateManager.setErrorHandler(existingErrorHandler);
         }
     }
     
@@ -693,9 +745,9 @@ public class StateManagerTest {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
         
         stateManager.setErrorHandler(errorHandler);
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestExceptionOnArriveAction");
+        doAction("TestExceptionOnArriveAction");
         
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
         
@@ -708,18 +760,28 @@ public class StateManagerTest {
     
     @Test
     public void testOnDepartThatThrowsException( ) {
-        stateManager.init("pos", "100-1");
-        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestExceptionOnDepartAction");
-        assertEquals(ExceptionOnDepartState.class, stateManager.getCurrentState().getClass());
+        stateManagerInit();
+        IErrorHandler existingErrorHandler = stateManager.getErrorHandler();
+        final AtomicBoolean errorHandlerCalled = new AtomicBoolean(false);
         try {
-            // OnDepart from prior state should throw the exception here
-            stateManager.doAction("Home");
-            fail("Should have failed in onDepart");
-        } catch (Exception ex) {
-            assertEquals(FlowException.class, ex.getClass());
-            assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
-            assertTrue(ex.getCause().getCause().getMessage().contains("departure"));
+
+            stateManager.setErrorHandler(new IErrorHandler() {
+                @Override
+                public void handleError(IStateManager stateManager, Throwable ex) {
+                    assertEquals(FlowException.class, ex.getClass());
+                    assertEquals(NullPointerException.class, ex.getCause().getCause().getClass());
+                    assertTrue(ex.getCause().getCause().getMessage().contains("departure"));
+                    errorHandlerCalled.set(true);
+                }
+            });
+            assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+            doAction("TestExceptionOnDepartAction");
+            assertEquals(ExceptionOnDepartState.class, stateManager.getCurrentState().getClass());
+
+            doAction("Home");
+            assertTrue("Should have failed in onDepart", errorHandlerCalled.get());
+        } finally {
+            stateManager.setErrorHandler(existingErrorHandler);
         }
     }
     
@@ -729,11 +791,11 @@ public class StateManagerTest {
         
         stateManager.setErrorHandler(errorHandler);
         
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("TestExceptionOnDepartAction");
+        doAction("TestExceptionOnDepartAction");
         assertEquals(ExceptionOnDepartState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("Home");
+        doAction("Home");
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
 
         assertEquals(FlowException.class, exArgument.getValue().getClass());
@@ -743,18 +805,30 @@ public class StateManagerTest {
 
     @Test
     public void testExceptionInActionHandler( ) {
-        stateManager.init("pos", "100-1");
-        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("GoToExceptionInActionHandlerState");
-        assertEquals(ExceptionInActionHandlerState.class, stateManager.getCurrentState().getClass());
+        stateManagerInit();
+
+        IErrorHandler existingErrorHandler = stateManager.getErrorHandler();
+        final AtomicBoolean errorHandlerCalled = new AtomicBoolean(false);
+
         try {
-            stateManager.doAction("ThrowsExceptionAction");
-            fail("should have thrown exception when running ThrowsExceptionAction");
-        } catch (Exception ex) {
-            assertEquals(FlowException.class, ex.getClass());
-            assertEquals(RuntimeException.class, ex.getCause().getCause().getClass());
-            assertTrue(ex.getCause().getCause().getMessage().contains("error in action handler"));
+            stateManager.setErrorHandler(new IErrorHandler() {
+                @Override
+                public void handleError(IStateManager stateManager, Throwable ex) {
+                    assertEquals(FlowException.class, ex.getClass());
+                    assertEquals(RuntimeException.class, ex.getCause().getCause().getClass());
+                    assertTrue(ex.getCause().getCause().getMessage().contains("error in action handler"));
+                    errorHandlerCalled.set(true);
+                }
+            });
+            assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+            doAction("GoToExceptionInActionHandlerState");
+            assertEquals(ExceptionInActionHandlerState.class, stateManager.getCurrentState().getClass());
+            doAction("ThrowsExceptionAction");
+            assertTrue("errorHandlerCalled.get()", errorHandlerCalled.get());
+        } finally {
+            stateManager.setErrorHandler(existingErrorHandler);
         }
+
     }
     
     @Test
@@ -762,12 +836,12 @@ public class StateManagerTest {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
 
         stateManager.setErrorHandler(errorHandler);
-        stateManager.init("pos", "100-1");
+        stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
-        stateManager.doAction("GoToExceptionInActionHandlerState");
+        doAction("GoToExceptionInActionHandlerState");
         assertEquals(ExceptionInActionHandlerState.class, stateManager.getCurrentState().getClass());
 
-        stateManager.doAction("ThrowsExceptionAction");
+        doAction("ThrowsExceptionAction");
         
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
         assertEquals(FlowException.class, exArgument.getValue().getClass());
@@ -778,9 +852,9 @@ public class StateManagerTest {
 
     @Test
     public void testSubflowWithHandlerForTerminatingAction() {
-        stateManager.init("pos", "100-1");
-        stateManager.doAction("ToSubFlowWithActionActionHandlerForTerminatingState");
-        stateManager.doAction("TerminatingAction");
+        stateManagerInit();
+        doAction("ToSubFlowWithActionActionHandlerForTerminatingState");
+        doAction("TerminatingAction");
         assertTrue(stateManager.getScopeValue("actionHandlerCalled"));
     }
 }

@@ -26,6 +26,7 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     actionService: ActionService;
     isMobile$: Observable<boolean>;
     initialScreenType = '';
+    initialId = '';
     public subscriptions = new Subscription();
 
     // I don't completely understand why we need @Optional here. I suspect it has something to do with
@@ -58,8 +59,9 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
                 // getting data from the next screen if we are not already cleaned up.
                 if (!this.initialScreenType.length) {
                     this.initialScreenType = s.screenType;
+                    this.initialId = s.id;
                 }
-                if (s.screenType === this.initialScreenType) {
+                if (s.screenType === this.initialScreenType && s.id === this.initialId) {
                     const screenPartData = getValue(s, this.screenPartName);
                     if (screenPartData !== undefined && screenPartData !== null) {
                         this.screenData = deepAssign(this.screenData, screenPartData);

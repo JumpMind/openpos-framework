@@ -11,7 +11,9 @@ import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.flow.config.YamlConfigProvider;
+import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
 import org.mockito.Mock;
@@ -22,8 +24,14 @@ public class StateManagerTestUtils {
     protected static StateManager buildStateManager(Injector injector, String yamlConfigPath) throws Exception {
         
         YamlConfigProvider provider = new YamlConfigProvider();
-        provider.load("pos", Thread.currentThread().getContextClassLoader().getResourceAsStream(yamlConfigPath));
-        FlowConfig flowConfig = provider.getConfigByName("pos", "100-1", "TestDoubleSubstateExitFlow");
+
+        FlowConfig flowConfig = null;
+
+        if (yamlConfigPath != null) {
+            provider.load("pos", Thread.currentThread().getContextClassLoader().getResourceAsStream(yamlConfigPath));
+            flowConfig = provider.getConfigByName("pos", "100-1", "TestDoubleSubstateExitFlow");
+        }
+
         
         StateManager stateManager = new StateManager();
 
@@ -46,12 +54,36 @@ public class StateManagerTestUtils {
         TestUtil.setField(stateManager, "transitionStepConfigs", Arrays.asList(new TransitionStepConfig(TestTransitionStepCancel.class), new TransitionStepConfig(TestTransitionStepProceed.class)));
         TestUtil.setField(stateManager, "stateLifecycle", new StateLifecycle());
         TestUtil.setField(stateManager, "messageService", messageService);
+        StateManagerContainer stateManagerContainer = new StateManagerContainer();
+        TestUtil.setField(stateManagerContainer, "clientContext", new ClientContext());
+        TestUtil.setField(stateManager, "stateManagerContainer", stateManagerContainer);
 
-        stateManager.setInitialFlowConfig(flowConfig);
-        
-        stateManager.init("pos", "100-1");
+        if (flowConfig != null) {
+            stateManager.setInitialFlowConfig(flowConfig);
+            stateManager.init("pos", "100-1");
+            Thread.sleep(500);
+        }
         
         return stateManager;
+    }
+
+    public static void doAction(StateManager stateManager, Action action) {
+        stateManager.doAction(action);
+        action.awaitProcessing();
+
+        try {
+            while (!stateManager.isAtRest()) {
+                Thread.sleep(10);
+            }
+        } catch (Exception ex) {
+            throw new RuntimeException(ex);
+        }
+    }
+
+
+    public static void doAction(StateManager stateManager, String actionName) {
+        Action action = new Action(actionName);
+        doAction(stateManager, action);
     }
 
 
