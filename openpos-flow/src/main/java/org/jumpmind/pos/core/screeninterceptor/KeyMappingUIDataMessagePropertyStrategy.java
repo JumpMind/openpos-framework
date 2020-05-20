@@ -39,7 +39,7 @@ public class KeyMappingUIDataMessagePropertyStrategy implements IMessageProperty
                 String keyMapping = keyMappingService.getKeyMapping(message, item.getAction());
                 if (!StringUtils.isEmpty(keyMapping)) {
                     item.setKeybind(keyMapping);
-                    String keyMappingDisplayName = keyMappingService.getDisplayName(keyMapping);
+                    String keyMappingDisplayName = keyMappingService.getDisplayName(message.getDataType(), keyMapping);
                     item.setKeybindDisplayName(keyMappingDisplayName);
                 }
             }
