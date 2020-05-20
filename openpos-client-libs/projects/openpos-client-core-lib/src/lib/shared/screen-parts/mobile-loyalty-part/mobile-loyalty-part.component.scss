@@ -2,7 +2,7 @@
 
 ::ng-deep .mobile-loyalty-button {
     width: 100%;
-    padding: 8px 16px;
+    padding: 8px 16px !important;
 
     .mat-button-wrapper {
         grid-template-columns: 30% 70%;
@@ -39,23 +39,27 @@
     align-self: center;
 }
 
-.mobile-loyalty-customer-outer {
-    grid-template-columns: auto 1fr;
-    display: grid;
-    margin: 0px;
-    padding: 8px 16px;
+::ng-deep .mobile-loyalty-customer-outer {
+    margin: 0px !important;
+    padding: 8px 16px !important;
+    width: 100%;
+
+    .mat-button-wrapper {
+        grid-template-columns: auto 1fr;
+        display: grid;
+        margin: 0px;
+        line-height: normal;
+    }
 }
 
 .mobile-loyalty-customer-name {
-    display:grid;
-    justify-content: end;
-    justify-items: end;
+    display: grid;
+    justify-self: end;
 }
 
 .mobile-loyalty-image {
     max-height: 32px;
     max-width: 100%;
-    grid-row-end: span 2;
     align-self: center;
 }
 

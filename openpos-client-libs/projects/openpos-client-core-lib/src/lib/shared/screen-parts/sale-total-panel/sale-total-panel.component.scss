@@ -118,32 +118,6 @@
         display: grid;
         align-self: end;
 
-        .sale-total-loyalty-button {
-            min-height: 70px;
-            .sale-total-loyalty-button-icon {
-                padding: 0 8px;
-                max-width: 100%;
-                max-height: 50px;
-            }
-        }
-
-        .sale-total-customer-label {
-            @extend %text-sm;
-            display: grid;
-            grid-row-gap: 8px;
-            text-align: center;
-            justify-self: center;
-
-            .sale-total-loyalty-icon {
-                max-width: 100%;
-                max-height: 5rem;
-
-                &.small-desktop-landscape {
-                    max-height: 3em;
-                }
-            }
-        }
-
         .sale-total-tax-exempt-label-no-customer {
             @extend %text-sm;
             text-align: center;
