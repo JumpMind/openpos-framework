@@ -1,7 +1,20 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {merge, Observable, Subject, Subscription} from 'rxjs';
-import {takeUntil} from 'rxjs/operators';
+import {take, takeUntil} from 'rxjs/operators';
 
+/**
+ * How to subscribe to keys, and keys with modifiers:
+ *
+ * keyPressProvider.subscribe('p', 1, () => this.doAction(...))
+ * keyPressProvider.subscribe('ctrl+p', 1, () => this.doAction(...))
+ *
+ * // Separate multiple keys with a ","
+ * keyPressProvider.subscribe('ctrl+p,ctrl+a', 1, () => this.doAction(...))
+ *
+ * // Escape special keys "," and "+"
+ * keyPressProvider.subscribe('shift+\+', 1, () => this.doAction(...))
+ * keyPressProvider.subscribe('shift+\,', 1, () => this.doAction(...))
+ */
 @Injectable()
 export class KeyPressProvider implements OnDestroy {
     private keyPressSources: Observable<KeyboardEvent>[] = [];
@@ -10,6 +23,14 @@ export class KeyPressProvider implements OnDestroy {
     keypressSourceRegistered$ = new Subject<Observable<KeyboardEvent>>();
     keypressSourceUnregistered$ = new Subject<Observable<KeyboardEvent>>();
     stopObserver$ = merge(this.destroyed$, this.keypressSourceRegistered$, this.keypressSourceUnregistered$);
+    // Matches key lists, with keys optionally separated by a ","
+    // ctrl+p
+    // ctrl+p,ctrl+a,p
+    keyListRegex = new RegExp(/(?<key>(\\,|[^,])+)((?<!\\),)?/, 'g');
+    // Matches a single key
+    // p
+    // ctrl+p
+    keyRegex = new RegExp(/(?<key>(\\\+|[^+])+)/, 'g');
 
     constructor() {
         merge(
@@ -37,33 +58,50 @@ export class KeyPressProvider implements OnDestroy {
         this.keypressSourceUnregistered$.next();
     }
 
-    subscribe(key: string, priority: number, next: (KeyboardEvent) => void): Subscription {
+    subscribe(key: string, priority: number, next: (KeyboardEvent) => void, stop$?: Observable<any>): Subscription {
         if (!key) {
-            console.warn('Cannot subscribe to null or undefined or empty string keybinding');
+            console.warn('[KeyPressProvider]: Cannot subscribe to null or undefined or empty string keybinding');
             return;
         }
 
-        key = this.getNormalizedKey(key);
+        const keyBindings = this.parse(key);
+        const subscriptions: Subscription[] = [];
 
-        const subscriptionOutput = new Subscription(() => {
-            const priorityMap = this.subscribers.get(key);
-            const keybindSubscription = priorityMap.get(priority);
+        keyBindings.forEach(keyBinding => {
+            const normalizedKey = this.getNormalizedKey(keyBinding);
 
-            if (keybindSubscription && keybindSubscription.subscription === subscriptionOutput) {
-                priorityMap.delete(priority);
+            const subscription = new Subscription(() => {
+                const priorityMap = this.subscribers.get(normalizedKey);
+                const keybindSubscription = priorityMap.get(priority);
+
+                if (keybindSubscription && keybindSubscription.subscription === subscription) {
+                    priorityMap.delete(priority);
+                }
+
+                console.log(`[KeyPressProvider]: Unsubscribing from "${normalizedKey}" and priority "${priority}"`);
+            });
+
+            if (!this.subscribers.has(normalizedKey)) {
+                this.subscribers.set(normalizedKey, new Map<number, KeybindSubscription>());
             }
+
+            if (this.subscribers.get(normalizedKey).has(priority)) {
+                console.warn(`[KeyPressProvider]: Another subscriber already exists with key "${normalizedKey}" and priority "${priority}"`);
+            } else {
+                console.log(`[KeyPressProvider]: Subscribed to key "${normalizedKey}" and priority "${priority}"`);
+            }
+            this.subscribers.get(normalizedKey).set(priority, new KeybindSubscription(normalizedKey, subscription, priority, next));
+
+            subscriptions.push(subscription);
         });
 
-        if (!this.subscribers.has(key)) {
-            this.subscribers.set(key, new Map<number, KeybindSubscription>());
+        const mainSubscription = new Subscription(() => subscriptions.forEach(s => s.unsubscribe()));
+
+        if (stop$) {
+            stop$.pipe(take(1)).subscribe(() => mainSubscription.unsubscribe());
         }
 
-        if (this.subscribers.get(key).has(priority)) {
-            console.warn(`Another subscriber already exists with key ${key} and priority ${priority}`);
-        }
-        this.subscribers.get(key).set(priority, new KeybindSubscription(key, subscriptionOutput, priority, next));
-
-        return subscriptionOutput;
+        return mainSubscription;
     }
 
     keyHasSubscribers(obj: KeyboardEvent | Keybinding | string): boolean {
@@ -92,7 +130,7 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     getNormalizedKey(obj: KeyboardEvent | Keybinding | string): string {
-        let keyBinding = typeof obj === 'string' ? this.parse(obj as string) : obj as Keybinding;
+        let keyBinding = typeof obj === 'string' ? this.parse(obj as string)[0] : obj as Keybinding;
         let normalizedKey = '';
 
         normalizedKey += (keyBinding.ctrlKey ? 'ctrl+' : '');
@@ -104,49 +142,64 @@ export class KeyPressProvider implements OnDestroy {
         return normalizedKey;
     }
 
-    parse(key: string): Keybinding {
+    parse(key: string): Keybinding[] {
         if (!key) {
             return null;
         }
 
-        const parts = key.split('+');
-        const keyBinding: Keybinding = {
-            key: parts[parts.length - 1].toLowerCase()
-        };
+        const keys = Array.from(key['matchAll'](this.keyListRegex)).map((value: RegExpMatchArray) => value.groups.key);
+        const keyBindings = [];
 
-        for (let i = 0; i < parts.length - 1; i++) {
-            const part = parts[i].toLowerCase();
+        keys.forEach(theKey => {
+            const parts = Array.from(theKey['matchAll'](this.keyRegex)).map((value: RegExpMatchArray) => value.groups.key);
+            const keyBinding: Keybinding = {
+                key: this.unescapeKey(parts[parts.length - 1].toLowerCase())
+            };
 
-            // Being flexible with how developers want to specify key modifiers
-            switch (part) {
-                case 'command':
-                case 'cmd':
-                case 'mta':
-                case 'met':
-                case 'meta':
-                    keyBinding.metaKey = true;
-                    break;
-                case 'alt':
-                case 'opt':
-                case 'option':
-                case 'optn':
-                    keyBinding.altKey = true;
-                    break;
-                case 'ctl':
-                case 'ctr':
-                case 'ctrl':
-                case 'control':
-                    keyBinding.ctrlKey = true;
-                    break;
-                case 'shft':
-                case 'sft':
-                case 'shift':
-                    keyBinding.shiftKey = true;
-                    break;
+            for (let i = 0; i < parts.length - 1; i++) {
+                const part = parts[i].toLowerCase();
+
+                // Being flexible with how developers want to specify key modifiers
+                switch (part) {
+                    case 'command':
+                    case 'cmd':
+                    case 'mta':
+                    case 'met':
+                    case 'meta':
+                        keyBinding.metaKey = true;
+                        break;
+                    case 'alt':
+                    case 'opt':
+                    case 'option':
+                    case 'optn':
+                        keyBinding.altKey = true;
+                        break;
+                    case 'ctl':
+                    case 'ctr':
+                    case 'ctrl':
+                    case 'control':
+                        keyBinding.ctrlKey = true;
+                        break;
+                    case 'shft':
+                    case 'sft':
+                    case 'shift':
+                        keyBinding.shiftKey = true;
+                        break;
+                }
             }
-        }
 
-        return keyBinding;
+            keyBindings.push(keyBinding);
+        });
+
+        return keyBindings;
+    }
+
+    unescapeKey(key: string): string {
+        return key.startsWith('\\') ? key.substr(1) : key;
+    }
+
+    escapeKey(key: string): string {
+        return !key.startsWith('\\') ? `\\${key}` : key;
     }
 }
 

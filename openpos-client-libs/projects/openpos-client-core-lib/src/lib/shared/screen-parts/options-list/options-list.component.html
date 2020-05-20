@@ -16,7 +16,7 @@
             [optionTitle]="o.title" 
             [optionIcon]="o.icon" 
             [optionSize]="optionListSizeClass"
-            [keybind]="o.keybind"
+            [keybind]="o.keybindDisplayName"
             [actionItem]="o"
             (actionClick)="onOptionClick(o)"
             (click)="onOptionClick(o)">
@@ -27,7 +27,7 @@
             [optionTitle]="screenData.overflowButton.title"
             [optionIcon]="screenData.overflowButton.icon"
             [optionSize]="optionListSizeClass"
-            [keybind]="screenData.overflowButton.keybind"
+            [keybind]="screenData.overflowButton.keybindDisplayName"
             [actionItem]="screenData.overflowButton"
             (actionClick)="openKebabMenu()"
             (click)="openKebabMenu()">

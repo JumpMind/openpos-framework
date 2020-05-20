@@ -59,9 +59,11 @@
             <span *ngIf="keybindsEnabled(screenData.helpButton)"
                   class="muted-color">{{screenData.helpButton.keybindDisplayName}}</span>
         </app-secondary-button>
-        <div *ngIf="screenData.customer" responsive-class class="sale-total-customer-label">
-            <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl"
-                 class="sale-total-loyalty-icon" responsive-class>
+        <app-secondary-button *ngIf="screenData.customer && screenData.loyaltyButton" responsive-class
+            class="sale-total-customer-button" [actionItem]="screenData.loyaltyButton"
+            (actionClick)="doMenuItemAction(screenData.loyaltyButton)" (click)="doMenuItemAction(screenData.loyaltyButton)">
+            <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon"
+                responsive-class>
             <div *ngIf="screenData.customer.name" class="muted-color">{{screenData.customer.name}}</div>
             <div *ngIf="screenData.customer.label && screenData.customer.id" class="muted-color">
                 {{screenData.customer.label}}: {{screenData.customer.id}}
@@ -69,7 +71,7 @@
             <div *ngIf="screenData.taxExemptCertificateDetail" class="muted-color">
                 {{screenData.taxExemptCertificateDetail.label}}: {{screenData.taxExemptCertificateDetail.value}}
             </div>
-        </div>
+        </app-secondary-button>
 
         <app-primary-button responsive-class *ngIf="!screenData.readOnly && screenData.checkoutButton"
                             [actionItem]="screenData.checkoutButton"

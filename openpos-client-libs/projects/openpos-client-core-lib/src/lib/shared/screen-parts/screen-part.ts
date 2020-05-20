@@ -1,21 +1,23 @@
-import { OnDestroy, OnInit, Injector, Optional } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
-import { filter } from 'rxjs/operators';
-import { MessageProvider } from '../providers/message.provider';
-import { IActionItem } from '../../core/actions/action-item.interface';
-import { SessionService } from '../../core/services/session.service';
-import { deepAssign } from '../../utilites/deep-assign';
-import { getValue } from '../../utilites/object-utils';
-import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
-import { UIMessage } from '../../core/messages/ui-message';
-import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
-import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
-import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-type-guards';
-import { MessageTypes } from '../../core/messages/message-types';
-import { ActionService } from '../../core/actions/action.service';
+import {Injector, OnDestroy, OnInit, Optional} from '@angular/core';
+import {Observable, Subject, Subscription} from 'rxjs';
+import {filter} from 'rxjs/operators';
+import {MessageProvider} from '../providers/message.provider';
+import {IActionItem} from '../../core/actions/action-item.interface';
+import {SessionService} from '../../core/services/session.service';
+import {deepAssign} from '../../utilites/deep-assign';
+import {getValue} from '../../utilites/object-utils';
+import {MediaBreakpoints, OpenposMediaService} from '../../core/media/openpos-media.service';
+import {UIMessage} from '../../core/messages/ui-message';
+import {LifeCycleMessage} from '../../core/messages/life-cycle-message';
+import {LifeCycleEvents} from '../../core/messages/life-cycle-events.enum';
+import {LifeCycleTypeGuards} from '../../core/life-cycle-interfaces/lifecycle-type-guards';
+import {MessageTypes} from '../../core/messages/message-types';
+import {ActionService} from '../../core/actions/action.service';
 
 export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
-
+    destroyed$ = new Subject();
+    beforeScreenDataUpdated$ = new Subject<T>();
+    afterScreenDataUpdated$ = new Subject<T>();
     sessionService: SessionService;
     screenPartName: string;
     screenData: T;
@@ -24,6 +26,7 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     actionService: ActionService;
     isMobile$: Observable<boolean>;
     initialScreenType = '';
+    initialId = '';
     public subscriptions = new Subscription();
 
     // I don't completely understand why we need @Optional here. I suspect it has something to do with
@@ -56,15 +59,18 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
                 // getting data from the next screen if we are not already cleaned up.
                 if (!this.initialScreenType.length) {
                     this.initialScreenType = s.screenType;
+                    this.initialId = s.id;
                 }
-                if (s.screenType === this.initialScreenType) {
+                if (s.screenType === this.initialScreenType && s.id === this.initialId) {
                     const screenPartData = getValue(s, this.screenPartName);
                     if (screenPartData !== undefined && screenPartData !== null) {
                         this.screenData = deepAssign(this.screenData, screenPartData);
                     } else {
                         this.screenData = deepAssign(this.screenData, s);
                     }
+                    this.beforeScreenDataUpdated$.next(this.screenData);
                     this.screenDataUpdated();
+                    this.afterScreenDataUpdated$.next(this.screenData);
                 }
             }));
         this.subscriptions.add(this.messageProvider.getAllMessages$().pipe(
@@ -73,6 +79,7 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     }
     ngOnDestroy(): void {
         this.subscriptions.unsubscribe();
+        this.destroyed$.next();
     }
 
     doAction( action: IActionItem | string, payload?: any) {

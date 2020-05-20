@@ -31,6 +31,9 @@ import org.jumpmind.pos.server.model.Action;
 public interface IStateManager {
 
     public void keepAlive();
+
+    void stop();
+
     public void init(String appId, String deviceId);
     @Deprecated
     public String getNodeId();
@@ -64,7 +67,6 @@ public interface IStateManager {
     public void registerPersonalizationProperties(Map<String, String> personalizationProperties);
     public Injector getInjector();
     public boolean isAtRest();
-    public void markAsBusy();
     public void sendConfigurationChangedMessage();
     public void setClientContext(Map<String,String> context);
     public Map<String, String> getClientContext();

@@ -91,7 +91,15 @@ public class MessageService implements IMessageService {
         try {
             StringBuilder topic = new StringBuilder(128);
             topic.append("/topic/app/").append(appId).append("/node/").append(deviceId);
-            byte[] json = messageToJson(message).getBytes("UTF-8");
+
+            String jsonString = messageToJson(message);
+
+            byte[] json = jsonString.getBytes("UTF-8");
+
+            if (jsonString.contains("\"type\" : \"UIData\"")) {
+                logger.info("Sending message to client: \n" + jsonString);
+            }
+
             if( json.length <= websocketSendBufferLimit ){
                 this.template.send(topic.toString(), MessageBuilder.withPayload(json).build());
             } else {

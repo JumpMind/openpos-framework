@@ -1,12 +1,12 @@
-import { Component, Input, Output, EventEmitter, OnDestroy } from '@angular/core';
-import { MatDialog, MatDialogRef } from '@angular/material';
-import { Subscription } from 'rxjs';
-import { finalize } from 'rxjs/operators';
-import { KeyPressProvider } from '../../providers/keypress.provider';
-import { Configuration } from '../../../configuration/configuration';
-import { KebabMenuComponent } from '../kebab-menu/kebab-menu.component';
-import { FocusService } from '../../../core/focus/focus.service';
-import { IActionItem } from '../../../core/actions/action-item.interface';
+import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {Subscription} from 'rxjs';
+import {finalize} from 'rxjs/operators';
+import {KeyPressProvider} from '../../providers/keypress.provider';
+import {Configuration} from '../../../configuration/configuration';
+import {KebabMenuComponent} from '../kebab-menu/kebab-menu.component';
+import {FocusService} from '../../../core/focus/focus.service';
+import {IActionItem} from '../../../core/actions/action-item.interface';
 
 @Component({
     selector: 'app-kebab-button',
@@ -78,6 +78,7 @@ export class KebabButtonComponent implements OnDestroy {
                     autoFocus: false,
                     restoreFocus: false
                 },
+                width: '35vw',
                 autoFocus: false
             });
 

@@ -21,6 +21,7 @@
 package org.jumpmind.pos.server.model;
 
 import java.io.Serializable;
+import java.util.concurrent.CountDownLatch;
 
 import lombok.*;
 import org.jumpmind.pos.util.DefaultObjectMapper;
@@ -45,6 +46,7 @@ public class Action implements Serializable, Cloneable {
     @ToString.Include
     private boolean doNotBlockForResponse;
     private transient Action causedBy; // Used when renaming an action during a substate return.
+    private transient CountDownLatch latch = new CountDownLatch(1);
     
     static ObjectMapper mapper = DefaultObjectMapper.build();
 
@@ -92,4 +94,20 @@ public class Action implements Serializable, Cloneable {
         return causedBy;
     }
 
+    public void markProcessed() {
+        if (latch != null) {
+            latch.countDown();
+        }
+
+    }
+
+    public void awaitProcessing() {
+        if (latch != null) {
+            try {
+                latch.await();
+            } catch (InterruptedException ex) {
+                throw new RuntimeException("awaitProcessing was interrupted.", ex);
+            }
+        }
+    }
 }

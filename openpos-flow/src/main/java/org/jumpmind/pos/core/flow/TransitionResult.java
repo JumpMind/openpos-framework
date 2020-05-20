@@ -7,6 +7,7 @@ import lombok.Data;
 public class TransitionResult {
 
     public static enum TransitionResultCode {
+        IN_PROGRESS,
         PROCEED,
         CANCEL
     }

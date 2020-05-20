@@ -9,5 +9,5 @@ public interface IKeyMappingService {
 	
     String getKeyMapping(UIMessage screen, String actionName, Map<String, Object> screenContext);
     String getKeyMapping(UIDataMessage message, String actionName);
-    String getDisplayName(String keyMapping);
+    String getDisplayName(String groupName, String keyMapping);
 }

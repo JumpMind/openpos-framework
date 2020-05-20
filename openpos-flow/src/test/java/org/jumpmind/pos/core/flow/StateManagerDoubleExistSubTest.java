@@ -30,16 +30,16 @@ public class StateManagerDoubleExistSubTest {
         StateManager stateManager = StateManagerTestUtils.buildStateManager(injector, "testflows/test-double-sub-exit-flow.yml");
         
         assertEquals(OrderDetailsState.class, stateManager.getCurrentState().getClass());
-        
-        stateManager.doAction("BagPromptRequired");
+
+        StateManagerTestUtils.doAction(stateManager, "BagPromptRequired");
         
         assertEquals(BagScanState.class, stateManager.getCurrentState().getClass());
-        
-        stateManager.doAction("BagNotFound");
+
+        StateManagerTestUtils.doAction(stateManager, "BagNotFound");
         
         assertEquals(BagNotFoundState.class, stateManager.getCurrentState().getClass());
-        
-        stateManager.doAction("NoBagsAdded");
+
+        StateManagerTestUtils.doAction(stateManager, "NoBagsAdded");
         
         assertEquals(OrderDetailsState.class, stateManager.getCurrentState().getClass());
     }
