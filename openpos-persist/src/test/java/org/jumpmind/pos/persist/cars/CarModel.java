@@ -2,12 +2,18 @@ package org.jumpmind.pos.persist.cars;
 
 import org.jumpmind.pos.persist.ColumnDef;
 import org.joda.money.Money;
+import org.jumpmind.pos.persist.IndexDef;
+import org.jumpmind.pos.persist.IndexDefs;
 import org.jumpmind.pos.persist.TableDef;
 import org.jumpmind.pos.persist.model.AbstractTaggedModel;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 
 @TableDef(name="car",
         description = "A basic concept of an automobile fit to drive down the road.")
+@IndexDefs({
+        @IndexDef(name = "idx_car_year", columns = {"modelYear"}),
+        @IndexDef(name = "idx_car_make_model", columns = {"make", "model"})
+})
 public class CarModel extends AbstractTaggedModel implements ITaggedModel {
 
     @SuppressWarnings("unused")

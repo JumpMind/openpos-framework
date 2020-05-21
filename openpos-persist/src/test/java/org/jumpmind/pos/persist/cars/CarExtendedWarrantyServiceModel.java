@@ -5,14 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Delegate;
 import org.joda.money.Money;
-import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.ColumnDef;
-import org.jumpmind.pos.persist.CompositeDef;
-import org.jumpmind.pos.persist.TableDef;
+import org.jumpmind.pos.persist.*;
 
 @Getter
 @Setter
 @TableDef(name="extended_warranty_service")
+@IndexDefs({
+        @IndexDef(name = "idx_currency_code_term", columns = {"isoCurrencyCode", "termInMonths"}),
+        @IndexDef(name = "idx_vin", columns = {"vin", "model"})
+})
 public class CarExtendedWarrantyServiceModel extends AbstractModel {
 
     @Delegate

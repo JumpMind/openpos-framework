@@ -2,6 +2,7 @@ package org.jumpmind.pos.persist;
 
 import org.joda.money.Money;
 import org.jumpmind.db.model.Column;
+import org.jumpmind.db.model.IIndex;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.pos.persist.cars.*;
 import org.jumpmind.pos.persist.impl.ModelClassMetaData;
@@ -120,5 +121,19 @@ public class SchemaDelegateTest {
         assertEquals(warranties.get(0).getCost(),Money.parse("USD 23.87"));
         assertEquals(warranties.get(0).getEffectiveStartDate(),"20191119");
         assertEquals(warranties.get(0).getRetailPrice(),Money.parse("USD 7.77"));
+    }
+
+    @Test
+    public void testIndexCreation() {
+        Table table = sessionFactory.getTables().get(0);
+        assertEquals(table.getName(),"CAR_EXTENDED_WARRANTY_SERVICE");
+        assertEquals(table.getIndexCount(), 2);
+        IIndex idxCurrencyCodeTerm = table.getIndex(0);
+        assertEquals(idxCurrencyCodeTerm.getName(), "CAR_IDX_CURRENCY_CODE_TERM");
+        assertEquals(idxCurrencyCodeTerm.getColumnCount(), 2);
+
+        IIndex idxVin = table.getIndex(1);
+        assertEquals(idxVin.getName(), "CAR_IDX_VIN");
+        assertEquals(idxVin.getColumnCount(), 1);
     }
 }

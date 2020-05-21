@@ -6,11 +6,11 @@
  * to you under the GNU General Public License, version 3.0 (GPLv3)
  * (the "License"); you may not use this file except in compliance
  * with the License.
- *
+ * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
  * <http://www.gnu.org/licenses/>.
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
@@ -20,15 +20,15 @@
  */
 package org.jumpmind.pos.persist;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
+@Target(ElementType.TYPE)
+@Repeatable(IndexDefs.class)
 public @interface IndexDef {
     String name();
-    int order() default 0;
+
+    String[] columns();
+
     boolean unique() default false;
 }
