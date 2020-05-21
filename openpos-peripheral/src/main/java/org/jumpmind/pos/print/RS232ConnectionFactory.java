@@ -20,31 +20,24 @@ public class RS232ConnectionFactory implements IConnectionFactory {
 
     @Override
     public PeripheralConnection open(Map<String, Object> settings) {
-        java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
-
         String portName = (String) settings.get(PORT_NAME);
         if (StringUtils.isEmpty(portName)) {
             throw new PrintException("No PORT_NAME was specified.  Something like COM1 needs " +
                     "to be specified for RS232 connections. " + settings);
         }
 
-        log.info("Connecting to port " + portName + " for printing.");
+        log.info("Connecting to port " + portName + "...");
 
-        while (portEnum.hasMoreElements()) {
-            CommPortIdentifier portIdentifier = portEnum.nextElement();
-
-            if (portIdentifier.getName().equals(portName)) {
-                try {
-                    PeripheralConnection connection = openSerialPort(settings, portIdentifier);
-                    log.info("Successfully connected to port " + portName + " for printing.");
-                    return connection;
-                } catch (Exception ex) {
-                    throw new PrintException("Failed to open serial port for printing " + portName + " settings=" + settings, ex);
-                }
-            }
+        try {
+            CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier(portName);
+            PeripheralConnection connection = openSerialPort(settings, portIdentifier);
+            log.info("Successfully connected to port " + portName + " for printing.");
+            return connection;
+        } catch (Exception ex) {
+            throw new PrintException("Failed to open serial port for printing " + portName + " settings=" + settings, ex);
         }
 
-        throw new PrintException("No serial port for printing named '" + portName + "' could be found on this system.");
+
     }
 
     private PeripheralConnection openSerialPort(Map<String, Object> settings, CommPortIdentifier portIdentifier) throws PortInUseException, UnsupportedCommOperationException, IOException {
