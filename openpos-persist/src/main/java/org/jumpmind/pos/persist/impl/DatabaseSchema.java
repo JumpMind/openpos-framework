@@ -267,7 +267,7 @@ public class DatabaseSchema {
                 }
 
                 IndexDefs indexDefs = clazz.getAnnotation(IndexDefs.class);
-                Map<String, IIndex> indices = createIndices(indexDefs, pkColumns, columns, meta, databasePlatform);
+                Map<String, IIndex> indices = createIndices(indexDefs, dbTable, meta, databasePlatform);
                 for (IIndex index : indices.values()) {
                     dbTable.addIndex(index);
                 }
@@ -311,14 +311,14 @@ public class DatabaseSchema {
         }
     }
 
-    private static Map<String, IIndex> createIndices(IndexDefs indexDefs, List<Column> pkColumns, List<Column> columns,
+    private static Map<String, IIndex> createIndices(IndexDefs indexDefs, Table table,
                                                      ModelClassMetaData metaData, IDatabasePlatform platform) {
         Map<String, IIndex> indices = new HashMap<>();
         if (indexDefs != null && indexDefs.value() != null) {
             for (IndexDef indexDef : indexDefs.value()) {
                 if (indexDef.columns() != null) {
                     for (String columnName : indexDef.columns()) {
-                        Column column = findColumn(columnName, pkColumns, columns, platform);
+                        Column column = findColumn(columnName, table, platform);
                         createIndex(indexDef, column, indices, metaData.getIdxPrefix());
                     }
                 }
@@ -328,23 +328,10 @@ public class DatabaseSchema {
         return indices;
     }
 
-    private static Column findColumn(String columnName, List<Column> pkColumns, List<Column> columns, IDatabasePlatform platform) {
+    private static Column findColumn(String columnName, Table table, IDatabasePlatform platform) {
         String snakeCase = alterCaseToMatchDatabaseDefaultCase(camelToSnakeCase(columnName), platform);
-        if (pkColumns != null) {
-            for (Column column : pkColumns) {
-                if (column.getName().equals(snakeCase)) {
-                    return column;
-                }
-            }
-        }
-        if (columns != null) {
-            for (Column column : columns) {
-                if (column.getName().equals(snakeCase)) {
-                    return column;
-                }
-            }
-        }
-        return null;
+        Column column = table.getColumnWithName(snakeCase);
+        return column;
     }
 
     private static void createIndex(IndexDef indexDef, Column column, Map<String, IIndex> indices, String idxPrefix) {
