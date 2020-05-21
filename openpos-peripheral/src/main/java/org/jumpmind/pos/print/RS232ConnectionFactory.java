@@ -11,8 +11,6 @@ import java.util.Map;
 @Slf4j
 public class RS232ConnectionFactory implements IConnectionFactory {
 
-    private SerialPort serialPort;
-
     public final static String PORT_NAME = "portName";
     public final static String BAUD_RATE = "baudRate";
     public final static String DATA_BITS = "dataBits";
@@ -21,7 +19,7 @@ public class RS232ConnectionFactory implements IConnectionFactory {
     public final static String CONNECT_TIMEOUT = "connectTimeout";
 
     @Override
-    public PrinterConnection open(Map<String, Object> settings) {
+    public PeripheralConnection open(Map<String, Object> settings) {
         java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
 
         String portName = (String) settings.get(PORT_NAME);
@@ -37,7 +35,7 @@ public class RS232ConnectionFactory implements IConnectionFactory {
 
             if (portIdentifier.getName().equals(portName)) {
                 try {
-                    PrinterConnection connection = openSerialPort(settings, portIdentifier);
+                    PeripheralConnection connection = openSerialPort(settings, portIdentifier);
                     log.info("Successfully connected to port " + portName + " for printing.");
                     return connection;
                 } catch (Exception ex) {
@@ -49,7 +47,7 @@ public class RS232ConnectionFactory implements IConnectionFactory {
         throw new PrintException("No serial port for printing named '" + portName + "' could be found on this system.");
     }
 
-    private PrinterConnection openSerialPort(Map<String, Object> settings, CommPortIdentifier portIdentifier) throws PortInUseException, UnsupportedCommOperationException, IOException {
+    private PeripheralConnection openSerialPort(Map<String, Object> settings, CommPortIdentifier portIdentifier) throws PortInUseException, UnsupportedCommOperationException, IOException {
         int connectTimeout = getIntValue(CONNECT_TIMEOUT, 10000, settings);
         int baudRate = getIntValue(BAUD_RATE, 19200, settings);
         int dataBits = getIntValue(DATA_BITS, SerialPort.DATABITS_8, settings);
@@ -58,13 +56,14 @@ public class RS232ConnectionFactory implements IConnectionFactory {
 
         String owner = RS232ConnectionFactory.class.getName();
         CommPort commPort = portIdentifier.open(owner, connectTimeout);
-        serialPort = (SerialPort) commPort;
+        SerialPort serialPort = (SerialPort) commPort;
         serialPort.setSerialPortParams(baudRate, dataBits, stopBits, parity);
         OutputStream out = serialPort.getOutputStream();
 
-        PrinterConnection printerConnection = new PrinterConnection();
-        printerConnection.setOut(out);
-        return printerConnection;
+        PeripheralConnection peripheralConnection = new PeripheralConnection();
+        peripheralConnection.setRawConnection(serialPort);
+        peripheralConnection.setOut(out);
+        return peripheralConnection;
     }
 
     private Integer getIntValue(String key, Integer defaultValue, Map<String, Object> settings) {
@@ -81,13 +80,10 @@ public class RS232ConnectionFactory implements IConnectionFactory {
     }
 
     @Override
-    public void close() {
-        if (serialPort != null) {
-            try {
-                serialPort.close();
-            } catch (Exception ex) {
-                throw new PrintException("Failed to close serialPort: " + serialPort, ex);
-            }
+    public void close(PeripheralConnection peripheralConnection) {
+        if (peripheralConnection.getRawConnection() instanceof SerialPort) {
+            SerialPort serialPort = (SerialPort)peripheralConnection.getRawConnection();
+            serialPort.close();
         }
     }
 }

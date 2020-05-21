@@ -1,13 +1,7 @@
 package org.jumpmind.pos.print;
 
 import jpos.JposException;
-import jpos.POSPrinter;
-import jpos.POSPrinterConst;
-import jpos.POSPrinterControl114;
-import jpos.config.JposEntry;
-import org.apache.commons.lang3.StringUtils;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -54,8 +48,8 @@ public class PrinterTester {
 //            printer.printNormal(0, printer.getCommand(PrinterCommands.ALIGN_LEFT));
 //            printer.printNormal(0, printer.getCommand(PrinterCommands.LINE_SPACING_SINGLE));
 
-            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x40}); // ESCP reset.
-            printer.getPrinterConnection().getOut().flush();
+            printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x40}); // ESCP reset.
+            printer.getPeripheralConnection().getOut().flush();
 
 
 //            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Initial print on receipt printer.\n");

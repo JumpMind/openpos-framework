@@ -5,6 +5,7 @@ import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.jumpmind.pos.util.ClassUtils;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,7 +19,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     PrinterCommands printerCommands = new PrinterCommandPlaceholders();
     int receiptLineSpacing;
     PrintWriter writer;
-    PrinterConnection printerConnection;
+    PeripheralConnection peripheralConnection;
     Map<String, Object> settings;
     EscpImagePrinter imagePrinter;
     IConnectionFactory connectionFactory;
@@ -51,8 +52,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void open(String logicalName, EventCallbacks cb) {
         this.printerName = logicalName;
-        this.printerConnection = connectionFactory.open(this.settings);
-        this.writer = new PrintWriter(printerConnection.getOut());
+        this.peripheralConnection = connectionFactory.open(this.settings);
+        this.writer = new PrintWriter(peripheralConnection.getOut());
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
         initializePrinter();
     }
@@ -72,7 +73,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             this.writer.close();
             this.writer = null;
         }
-        this.connectionFactory.close();
+        this.connectionFactory.close(this.peripheralConnection);
     }
 
     @Override
@@ -187,11 +188,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             if (imagePrinter == null) {
                 throw new PrintException("imagePrinter cannot be null here. This printer driver was not initialized properly.");
             }
-            if (printerConnection == null) {
+            if (peripheralConnection == null) {
                 throw new PrintException("printerConnection cannot be null here. This printer driver was not initialized properly.");
             }
             BufferedImage bufferedImage = ImageIO.read(image);
-            imagePrinter.printImage(printerConnection.getOut(), bufferedImage);
+            imagePrinter.printImage(peripheralConnection.getOut(), bufferedImage);
             printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
         } catch (Exception ex) {
             throw new PrintException("Failed to read and print buffered image", ex);
@@ -224,14 +225,14 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public PrinterConnection getPrinterConnection() {
-        return printerConnection;
+    public PeripheralConnection getPeripheralConnection() {
+        return peripheralConnection;
     }
 
     private void refreshConnectionFactoryFromSettings() {
         try {
-            this.connectionFactory = (IConnectionFactory)Class.forName((String)this.settings.get("connectionClass")).newInstance();
-        } catch (InstantiationException | IllegalAccessException | ClassNotFoundException ex) {
+            this.connectionFactory = (IConnectionFactory) ClassUtils.loadClass((String) this.settings.get("connectionClass")).newInstance();
+        } catch (Exception ex) {
             throw new PrintException("Failed to create the connection factory for " + getClass().getName(), ex);
         }
     }
@@ -257,12 +258,12 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public int readPrinterStatus() {
         try {
             // TODO this needs work on NCR. Calling this more than a few times puts the printer in a bad state.
-            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
+            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
 //            getPrinterConnection().getOut().write(new byte[] {0x1D, 0x04, 5});// realtime status request
 
-            getPrinterConnection().getOut().flush();
+            getPeripheralConnection().getOut().flush();
             Thread.sleep(500);
-            int statusByte = getPrinterConnection().getIn().read();
+            int statusByte = getPeripheralConnection().getIn().read();
             if (statusByte == -1) {
                 throw new PrinterException("Can't read printer status.");
             }
@@ -285,9 +286,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void beginSlipMode() {
         try {
-            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
-            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
-            getPrinterConnection().getOut().flush();
+            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
+            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
+            getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
             throw new PrintException("Failed to begingSlipMode", ex);
         }
@@ -297,8 +298,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public void endSlipMode() {
         try {
             beginRemoval(-1);
-            getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
-            getPrinterConnection().getOut().flush();
+            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
+            getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
             throw new PrintException("Failed to begingSlipMode", ex);
         }

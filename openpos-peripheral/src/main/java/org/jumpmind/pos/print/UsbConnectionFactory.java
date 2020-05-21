@@ -16,17 +16,18 @@ import java.util.Map;
 @Slf4j
 public class UsbConnectionFactory implements IConnectionFactory {
 
-    private UsbConnection usbConnection;
     private ByteArrayOutputStream outputStream;
     private Map<String, Object> settings;
 
     @Override
-    public PrinterConnection open(Map<String, java.lang.Object> settings) {
+    public PeripheralConnection open(Map<String, java.lang.Object> settings) {
         this.settings = settings;
         UsbHelper usbHelper = new UsbHelper();
 
         short vendorId = getId(settings, "usbVendorId");
         short deviceId = getId(settings, "usbDeviceId");
+
+        final UsbConnection usbConnection;
 
         try {
             usbConnection = usbHelper.openUsbConnection(vendorId, deviceId);
@@ -107,16 +108,18 @@ public class UsbConnectionFactory implements IConnectionFactory {
             }
         };
 
-        PrinterConnection printerConnection = new PrinterConnection();
-        printerConnection.setOut(outputStream);
-        printerConnection.setIn(inputStream);
-        return printerConnection;
+        PeripheralConnection peripheralConnection = new PeripheralConnection();
+        peripheralConnection.setRawConnection(usbConnection);
+        peripheralConnection.setOut(outputStream);
+        peripheralConnection.setIn(inputStream);
+        return peripheralConnection;
     }
 
     @Override
-    public void close() {
-        if (usbConnection != null) {
+    public void close(PeripheralConnection peripheralConnection) {
+        if (peripheralConnection.getRawConnection() instanceof UsbConnection) {
             try {
+                UsbConnection usbConnection = (UsbConnection) peripheralConnection.getRawConnection();
                 usbConnection.close();
             } catch (Exception ex) {
                 throw new PrintException("Failed to write bytes to USB port: " + settings, ex);

@@ -10,7 +10,7 @@ includeFlat 'openpos-devices'
 // not currently being used
 // includeFlat 'openpos-client-personalize'
 includeFlat 'openpos-client-libs'
-includeFlat 'openpos-print'
+includeFlat 'openpos-peripherals'
 includeFlat 'openpos-management-server'
 includeFlat 'openpos-symds'
 includeFlat 'openpos-hazelcast'

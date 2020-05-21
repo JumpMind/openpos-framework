@@ -6,7 +6,6 @@ import jpos.services.EventCallbacks;
 import org.apache.log4j.Logger;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 public class LogPOSPrinter implements IOpenposPrinter {
@@ -51,8 +50,8 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public PrinterConnection getPrinterConnection() {
-        return new PrinterConnection();
+    public PeripheralConnection getPeripheralConnection() {
+        return new PeripheralConnection();
     }
 
     @Override

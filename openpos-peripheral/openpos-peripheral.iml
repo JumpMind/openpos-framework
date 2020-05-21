@@ -1,0 +1,1591 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module relativePaths="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output/>
+    <orderEntry type="inheritedJdk"/>
+    <content url="file://$MODULE_DIR$/">
+      <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false"/>
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true"/>
+      <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource"/>
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-resource"/>
+      <excludeFolder url="file://$MODULE_DIR$/.gradle"/>
+      <excludeFolder url="file://$MODULE_DIR$/build"/>
+      <excludeFolder url="file://$MODULE_DIR$/bin"/>
+    </content>
+    <orderEntry type="sourceFolder" forTests="false"/>
+    <orderEntry type="module" module-name="openpos-util"/>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.23/ec62d74fe50689c28c0ff5b35d3aebcaa8b5be68/snakeyaml-1.23.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.23/7baa10c6d4ec2f3e72ac36164f1f801c302da21b/snakeyaml-1.23-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.yaml/snakeyaml/1.23/1186bcf89d33080275bab74a0b0f495af5c812ef/snakeyaml-1.23-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy/2.5.5/2388f952b369f6b11cde8e15ec872e9ca3e0ff3e/groovy-2.5.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy/2.5.5/97efd4dc925fee9e54b4a5547d575037590df57f/groovy-2.5.5-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy/2.5.5/6fc2335b7ca07f7a9eb74a9741d0c97be79468c3/groovy-2.5.5-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/usb4java-javax/1.3.0/b68f4617513a61e889fbf81926daba9c9accc96d/usb4java-javax-1.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/usb4java-javax/1.3.0/76268e0268e00cace559a5d3284b065d64044a76/usb4java-javax-1.3.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/usb4java-javax/1.3.0/684ff71e8ca72e5536116390909dd37fcb590690/usb4java-javax-1.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-text/1.3/9abf61708a66ab5e55f6169a200dbfc584b546d9/commons-text-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-text/1.3/8e170d7068f08823c0ad208214a48506f2950cbc/commons-text-1.3-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-text/1.3/9c51853f855aca4ea31785f30385e980a58eaf4b/commons-text-1.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/usb4java/1.3.0/2d5487fdf303642d480b199a9da0c5a0d2bb0e82/usb4java-1.3.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/usb4java/1.3.0/e688082c68718dfbd6f566beb2eebf31cc225036/usb4java-1.3.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/usb4java/1.3.0/e6f73cf21dbbc0ecf85417f311e13d8eb278d14a/usb4java-1.3.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.8.1/6505a72a097d9270f7a9e7bf42c4238283247755/commons-lang3-3.8.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.8.1/e7e19f37a0e712862967e39558b888fb59ee5b6a/commons-lang3-3.8.1-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-lang3/3.8.1/e9748d7783594da3735ad9724390a10e7cebc01d/commons-lang3-3.8.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-collections4/4.1/a4cf4688fe1c7e3a63aa636cc96d013af537768e/commons-collections4-4.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-collections4/4.1/4bb2e39f1eed190d997b8aefccc68d25b4e5af0a/commons-collections4-4.1-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-collections4/4.1/f305f3aa45a3b208c013ef92328f8f230329f20e/commons-collections4-4.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.6/815893df5f31da2ece4040fe0a12fd44b577afaf/commons-io-2.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.6/38ce4d06c1917fa2f2b1dde31bd111223ac7a551/commons-io-2.6-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-io/commons-io/2.6/2566800dc841d9d2c5a0d34d807e45d4107dbbdf/commons-io-2.6-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger2/2.9.2/362676bc7f4c6f9f1d568741becab0dfc198c898/springfox-swagger2-2.9.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger2/2.9.2/403dfdd9c65f8a8fd171d44c5e9c5a409065d4b9/springfox-swagger2-2.9.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger2/2.9.2/d34aabbd077e382cdaf369ec7111068c3a45cfe2/springfox-swagger2-2.9.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger-common/2.9.2/b38a41b3044af80cb7f41f67be5d158c9f6491ec/springfox-swagger-common-2.9.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger-common/2.9.2/fdc85225d0e5208551feb9bd8797b32fd28d5abb/springfox-swagger-common-2.9.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger-common/2.9.2/78938f219b4c9e3442bfd4a39f2cb706a34ff2a4/springfox-swagger-common-2.9.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger-ui/2.9.2/d542382a88ff3ea8d4032c28b2b0325797fada7d/springfox-swagger-ui-2.9.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger-ui/2.9.2/2a7a581ace52535cd602f8ef504a5b302e41716c/springfox-swagger-ui-2.9.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-swagger-ui/2.9.2/9913d0166ca5a271e4a3a1f6378e855a60d794c3/springfox-swagger-ui-2.9.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-spring-web/2.9.2/ed2ed714a6cba8804d00f80f0534901e4c7a3211/springfox-spring-web-2.9.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-spring-web/2.9.2/6e5fd80696fd8061abf7e4e75a04320faf881ef9/springfox-spring-web-2.9.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-spring-web/2.9.2/f33fa4b530101f0fab063663028795cc1aa17d6f/springfox-spring-web-2.9.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-schema/2.9.2/e268f38774b16bb51a92ccaef0dcf3dc651c0cee/springfox-schema-2.9.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-schema/2.9.2/d73a17f340c5f5ce05ba6cd643506b8b96ffa644/springfox-schema-2.9.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-schema/2.9.2/47e5bc544e04858d4509c46d0aba1b937e758b1e/springfox-schema-2.9.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-spi/2.9.2/6ac686190a6ceaccdae8b50d03b0501d144a6666/springfox-spi-2.9.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-spi/2.9.2/ad8666d696677b37c76c3bd58cc4887dfd73cc97/springfox-spi-2.9.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-spi/2.9.2/4944f3419fe88345469b383cefee50fa952af70e/springfox-spi-2.9.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-core/2.9.2/2e26f58939c594fb5c958c3a1c7bedf83d2f2702/springfox-core-2.9.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-core/2.9.2/2b99090e9ad470490b47172cc5f88de0a9d9950c/springfox-core-2.9.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.springfox/springfox-core/2.9.2/1249a80c52653c1400a70b9245f8832c833bc26c/springfox-core-2.9.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-metadata/1.2.0.RELEASE/97223fc496b6cab31602eedbd4202aa4fff0d44f/spring-plugin-metadata-1.2.0.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-metadata/1.2.0.RELEASE/7ff286b0fe6ee25b1b26f2746a077e91b31c96d/spring-plugin-metadata-1.2.0.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-metadata/1.2.0.RELEASE/6551604dd9c0619bae2f5a244580fa9a0dc646bf/spring-plugin-metadata-1.2.0.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/1.2.0.RELEASE/f380e7760032e7d929184f8ad8a33716b75c0657/spring-plugin-core-1.2.0.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/1.2.0.RELEASE/7e56605d8355ff80ab0e3b3659ce0fa5a096ef5c/spring-plugin-core-1.2.0.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.plugin/spring-plugin-core/1.2.0.RELEASE/112d82259202fa909d51cf7ccefae0c5523f1373/spring-plugin-core-1.2.0.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-websocket/2.1.3.RELEASE/d2b160e64a1415251817794efc9701c07ee30dbc/spring-boot-starter-websocket-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-web/2.1.3.RELEASE/e65a0538c3075a0910e7273a9dbedb189761b1ae/spring-boot-starter-web-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.1.5.RELEASE/236e3bfdbdc6c86629237a74f0f11414adb4e211/spring-webmvc-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.1.5.RELEASE/e47eb9930ae01f72a01f2f8686eac26d9f72a0a/spring-webmvc-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-webmvc/5.1.5.RELEASE/b2338b40c93e2f46df679a1a5a1ddca913dd111f/spring-webmvc-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-websocket/5.1.5.RELEASE/4d150cc48adaf39cf28bc09a88dd68e4f9f007cf/spring-websocket-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-websocket/5.1.5.RELEASE/d3720e6def1f521141dafa22cedd52559c0ea4ff/spring-websocket-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-websocket/5.1.5.RELEASE/4005719b73150838d9883d20ca233b75814456bd/spring-websocket-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-cache/2.1.3.RELEASE/644214acf9446fa1225bbe8aaf8dea0b70daa4b9/spring-boot-starter-cache-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context-support/5.1.5.RELEASE/b6c4877e5cad1cbf72c3ff2c65eb62f2c89e5e8b/spring-context-support-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context-support/5.1.5.RELEASE/599c654ad5f206de2aaa0275066fbcbfab835bee/spring-context-support-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context-support/5.1.5.RELEASE/b09e551b041b206ea184b667b5cfbae919f08154/spring-context-support-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-json/2.1.3.RELEASE/374c3de160f59ee2de2f78f2285ecc9b593caa71/spring-boot-starter-json-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter/2.1.3.RELEASE/bf73ada346b2956cbd10067830ac58aa55c46176/spring-boot-starter-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/2.1.3.RELEASE/58e07f69638a3ca13dffe8a2b68d284af376d105/spring-boot-autoconfigure-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/2.1.3.RELEASE/8d9e1f92ab05f4b4cafccca4f811c0d6d1ac7fe/spring-boot-autoconfigure-2.1.3.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-autoconfigure/2.1.3.RELEASE/6df39e2fbf8757ce2bf084909224e7e78f315ec7/spring-boot-autoconfigure-2.1.3.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/2.1.3.RELEASE/92bb92cd73212cefc1e5112e3bbf1f31c154c3fd/spring-boot-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/2.1.3.RELEASE/6866d14e79c54abd2e5ab7fcdb6226b028bcd869/spring-boot-2.1.3.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot/2.1.3.RELEASE/5759c931e1287f82d132f37fcb14c396836ee42/spring-boot-2.1.3.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.1.5.RELEASE/d39299241a2c8353d83f0f0c84d3677973da7c57/spring-context-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.1.5.RELEASE/7c3ff00f86dd82479cf009d8d35cdd5124a4c301/spring-context-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-context/5.1.5.RELEASE/9f42597b821f59087bf759695992c5ea8a1fcf0d/spring-context-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.1.5.RELEASE/851578f7a47dc3ec6dce071c2688ab3987439142/spring-data-commons-2.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.1.5.RELEASE/d5f3113999bbec9a43ef65145dbd0a34e016a4d0/spring-data-commons-2.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.data/spring-data-commons/2.1.5.RELEASE/8e8ee6b7fbc90aed51973b38c27463739daa6200/spring-data-commons-2.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.joda/joda-money/1.0.1/dd4fc861d008d852abeb56994b603f33f7bd481a/joda-money-1.0.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.joda/joda-money/1.0.1/267e210a6c3ed762aeff0bdf2e1add5c017bb76f/joda-money-1.0.1-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.joda/joda-money/1.0.1/b917e486861b857bb26e29a5cfb33ab6273fb6d1/joda-money-1.0.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.25/f8c32b13ff142a513eeb5b6330b1588dcb2c0461/jcl-over-slf4j-1.7.25.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.25/6ffb2ee76a022f5057517e865360873f483ff594/jcl-over-slf4j-1.7.25-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/jcl-over-slf4j/1.7.25/ffd0827a7c67d5915b7dc611afbda56a1f247191/jcl-over-slf4j-1.7.25-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.7.25/110cefe2df103412849d72ef7a67e4e91e4266b4/slf4j-log4j12-1.7.25.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.7.25/96a1fadadec11de44fdf8f0e20f3f61160f0b109/slf4j-log4j12-1.7.25-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-log4j12/1.7.25/d6f907c4254a49f40fa46005b65bc97261ad9e46/slf4j-log4j12-1.7.25-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-models/1.5.20/fb3a23bad80c5ed84db9dd150db2cba699531458/swagger-models-1.5.20.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-models/1.5.20/ac6e011b0ac83a212bf14dec384f88c900559546/swagger-models-1.5.20-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-models/1.5.20/645ed024a639bba92570cde6d93b87b575a6b58e/swagger-models-1.5.20-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/da76ca59f6a57ee3102f8f9bd9cee742973efa8a/slf4j-api-1.7.25.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/f003e89ddebdbaca5cf3fc7cc0c67c88c2ca1a3c/slf4j-api-1.7.25-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.slf4j/slf4j-api/1.7.25/962153db4a9ea71b79d047dfd1b2a0d80d8f4739/slf4j-api-1.7.25-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/5af35056b4d257e4b64b9e8069c0746e8b08629f/log4j-1.2.17.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/c10c20168206896442f3192d5417815df7fcbf9a/log4j-1.2.17-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/log4j/log4j/1.2.17/677abe279b68c5e7490d6d50c6951376238d7d3e/log4j-1.2.17-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.6/1afe5621985efe90a92d0fbc9be86271efbe796f/httpclient-4.5.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.6/9f4a30702f433fbb99765e85812d6c33d5214ad2/httpclient-4.5.6-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.6/bda84e42670536453ecd61ee70349c2493445994/httpclient-4.5.6-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.github.ben-manes.caffeine/caffeine/2.6.2/c8fd8817f9d2b2ced82f8968e0dd943aab557de0/caffeine-2.6.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.github.ben-manes.caffeine/caffeine/2.6.2/16f5a429a576dfddc7bb25efdd37638acc4e40df/caffeine-2.6.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.github.ben-manes.caffeine/caffeine/2.6.2/89c874f15f8a475614fb95bbb82db47ed84dd6db/caffeine-2.6.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-jetty/2.1.3.RELEASE/777ead932a2cd79b3b347d6942ca78071537d733/spring-boot-starter-jetty-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.javapos/javapos/1.14.2/e839410db1ec74fd5cd608fde947a90b47517ccd/javapos-1.14.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.javapos/javapos/1.14.2/5c11ca922707c8703c377b0c8aa245ba61fdee00/javapos-1.14.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.javapos/javapos/1.14.2/25337a17fb8461e554b055a0aa2f67a96a0c9121/javapos-1.14.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="PROVIDED">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.6/616105b0831250a2e443447508e6a8b26bc466fb/lombok-1.18.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.6/69ad878e52d3a7df530e3ff4a502e9d9c3a6027d/lombok-1.18.6-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.6/2908ec27909c1929a9f2e031e4ae27e54d268860/lombok-1.18.6-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.1.5.RELEASE/5e6ab23bc14369b0e29881afd85ad13b79846a0e/spring-aop-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.1.5.RELEASE/479d74921d0fd7d3908cea452bc44679fa03955a/spring-aop-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-aop/5.1.5.RELEASE/992ff1c4ce798a61c8d060c3edc7b08742fa36a/spring-aop-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.1.5.RELEASE/c37c4363be4ad6c5f67e3f9f020497e2d599e325/spring-web-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.1.5.RELEASE/6ace79b6e8126892e2c85d7cc44f86fca2187569/spring-web-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-web/5.1.5.RELEASE/46673f1424ad8dc3a9fc39a96730e1ee2663fc18/spring-web-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-messaging/5.1.5.RELEASE/5874e45679c566deaaa00bb09ff786581eb56e26/spring-messaging-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-messaging/5.1.5.RELEASE/8aaf7256af239fb1e426252022abff123180857d/spring-messaging-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-messaging/5.1.5.RELEASE/85e15f1fb730dfe611b1ae975bee2c4a1810a626/spring-messaging-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.1.5.RELEASE/58b10c61f6bf2362909d884813c4049b657735f5/spring-beans-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.1.5.RELEASE/d9b74c33100728f068afc8177032ef6ea8e67fea/spring-beans-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-beans/5.1.5.RELEASE/65b8846a1d79cfff2bcd44e0d40c5f95c5cb2d14/spring-beans-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.1.5.RELEASE/b728a06924560ee69307a52d100e6b156d9a4a80/spring-expression-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.1.5.RELEASE/77d025de0f0d21b905640e2882ec497aabb43473/spring-expression-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-expression/5.1.5.RELEASE/f03464511a63a756a470827c890de12b733412ba/spring-expression-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.1.5.RELEASE/aacc4555108f3da913a58114b2aebc819f58cce4/spring-core-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.1.5.RELEASE/3b6f02e51d83556569c92723ff2da840fb092e00/spring-core-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-core/5.1.5.RELEASE/407c8f57c15605a13c76a869357181825a7a5db1/spring-core-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.10/acc54d9b28bdffe4bbde89ed2e4a1e86b5285e2b/httpcore-4.4.10.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.10/4703dee0b11db83b64f8a5fea549dfccbb7bcfeb/httpcore-4.4.10-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.10/35dcae32cc1c3bfb62546e64b90fc6359183b3b5/httpcore-4.4.10-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.9.4/d52b9abcd97f38c81342bb7e7ae1eee9b73cba51/commons-beanutils-1.9.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.9.4/6daf5afaab5f8d1c578d72c548d84b4e15b91c6c/commons-beanutils-1.9.4-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.9.4/f00e0ba867d1810f255876631ab440e0725a9af0/commons-beanutils-1.9.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/4bfc12adfe4842bf07b657f0369c4cb522955686/commons-logging-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/83033ee697035dfb9ce3503e1ac0c5a33021e503/commons-logging-1.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-logging/commons-logging/1.2/ecf26c7507d67782a3bbd148d170b31dfad001aa/commons-logging-1.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/8176f1eb181cde7c9e4b5290f0365652777b3b87/commons-codec-1.10-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/11fb3d88ae7e3b757d70237064210ceb954a5a04/commons-codec-1.10-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-annotations/1.5.20/16051f93ce11ca489a5313775d825f82fcc2cd6c/swagger-annotations-1.5.20.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-annotations/1.5.20/da0398219a347973e4ec0c7b8a2403594a1ef5fe/swagger-annotations-1.5.20-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/io.swagger/swagger-annotations/1.5.20/fff338e626738539b51ab0eb747f5fd4bdaf4d71/swagger-annotations-1.5.20-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/20.0/89507701249388e1ed5ddcf8c41f4ce1be7831ef/guava-20.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/20.0/fcf063ba2bcd1f6866d09feeef65a181bf32da0d/guava-20.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.google.guava/guava/20.0/9c8493c7991464839b612d7547d6c263adf08f75/guava-20.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.0.14.Final/c424524aa7718c564d9199ac5892b05901cabae6/hibernate-validator-6.0.14.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hibernate.validator/hibernate-validator/6.0.14.Final/1d6c97c1b8db71501d6539e323a9e361544e590f/hibernate-validator-6.0.14.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.4.0/291658ac2ce2476256c7115943652c0accb5c857/classmate-1.4.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.4.0/252d61c432a1f766373310362a4b5ce38c939588/classmate-1.4.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml/classmate/1.4.0/5fa1f08842f94c146ecfd17b39cb80632ccd1c68/classmate-1.4.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct/1.2.0.Final/8609d6eb044e9f6c73cb24c8f2f4ed5c72a249c7/mapstruct-1.2.0.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct/1.2.0.Final/d81120ad2ab88d217668c724d2c3c7419ab366a1/mapstruct-1.2.0.Final-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mapstruct/mapstruct/1.2.0.Final/e7558cc36061a3a7d189c44b1ab146c9bb585b65/mapstruct-1.2.0.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlets/9.4.14.v20181114/38cfc07b53e5d285bb2fca78bb2531565ed9c9e5/jetty-servlets-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlets/9.4.14.v20181114/14e7fcb3af013640ca48be9cb0537ac894d58530/jetty-servlets-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlets/9.4.14.v20181114/5f06fed8d1f7987ea64036751e1f886df221c8b/jetty-servlets-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-server-impl/9.4.14.v20181114/7861a9c4733f79b76a219306e950ab53f7b5d822/javax-websocket-server-impl-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-server-impl/9.4.14.v20181114/5430a63493b4f7e0e32e0a8bef0a691a77b13cba/javax-websocket-server-impl-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-server-impl/9.4.14.v20181114/b46b422626dba481b631377fa5c3fe7407620c2b/javax-websocket-server-impl-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-annotations/9.4.14.v20181114/3bbcbc5279b1be81ef41ab1c1d186fb432c3c779/jetty-annotations-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-annotations/9.4.14.v20181114/72f821c6f3cdd5cc91dbb41b7aac48cd9b8fa113/jetty-annotations-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-annotations/9.4.14.v20181114/d89c46caa9a3c75a1bbcf29418e0d86e6b7c5e00/jetty-annotations-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-plus/9.4.14.v20181114/58ca362753581c0a71d048b7892f0f3baa294762/jetty-plus-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-plus/9.4.14.v20181114/decb789c4d1790badcda0c12bbdd5906ff17442c/jetty-plus-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-plus/9.4.14.v20181114/7aa18a53135a030d3249b63a289f320d84d82bee/jetty-plus-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-webapp/9.4.14.v20181114/88a04172b5e7736bc3e95eb58623aa9ccdb475/jetty-webapp-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-webapp/9.4.14.v20181114/d37ce0afde57bb2dbff0d32aa980bbdc3a45932c/jetty-webapp-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-webapp/9.4.14.v20181114/e4f912d0ed235738e2902718ffc1951def50ccc0/jetty-webapp-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-server/9.4.14.v20181114/88b202e1fa02c79b9522930d2526435b3c77bd96/websocket-server-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-server/9.4.14.v20181114/135d32031ce897b0afeecf469240d9653678555c/websocket-server-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-server/9.4.14.v20181114/5dc9950704633a67e66ac4932a1999730d1a1a22/websocket-server-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mortbay.jasper/apache-el/8.5.35.1/e89dd4e0d4f396b07fc5b7dc8d430493bc54d4c/apache-el-8.5.35.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mortbay.jasper/apache-el/8.5.35.1/d8ca2ae9ab676d6a6dadf204af297c6fe2e938c0/apache-el-8.5.35.1-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mortbay.jasper/apache-el/8.5.35.1/dfffb29e039e033fcec086389f309a1f69247905/apache-el-8.5.35.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/934c04d3cfef185a8008e7bf34331b79730a9d43/javax.annotation-api-1.3.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/cbbe0a4445e038f75c4c8aea3179bd17108ec57e/javax.annotation-api-1.3.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/65dfd2c47380bf72ec62a5b8c4ceb78a4eda1a53/javax.annotation-api-1.3.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.12/1c9d44c563eebe9b8a3afebd29ed5c4646db800c/reflections-0.9.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.12/966c4cd9b2c387f0868539314dc199c8d688adec/reflections-0.9.12-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.12/bce0f060e07c97ee9a04f6bdc4fd940adc4debcb/reflections-0.9.12-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.9.8/bcd02aa9195390e23747ed40bf76be869ad3a2fb/jackson-datatype-jdk8-2.9.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.9.8/694225fc9d4424f3b0afeee1ff6017395b4a2f5f/jackson-datatype-jdk8-2.9.8-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jdk8/2.9.8/d82c445cc6e5745e7d6eb94b14ca5c2c895369d2/jackson-datatype-jdk8-2.9.8-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.9.8/28ad1bced632ba338e51c825a652f6e11a8e6eac/jackson-datatype-jsr310-2.9.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.9.8/bb73e3b246582efb6d012d09a7d20c7a48a32167/jackson-datatype-jsr310-2.9.8-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.datatype/jackson-datatype-jsr310/2.9.8/b452bf6ebfe953921def884eb2e746218d6e2489/jackson-datatype-jsr310-2.9.8-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-parameter-names/2.9.8/c4eef0e6e20d60fb27af4bc4770dba7bcc3f6de6/jackson-module-parameter-names-2.9.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-parameter-names/2.9.8/fd4768b180aaa6cd1ca1e45cef595a9eb99870da/jackson-module-parameter-names-2.9.8-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.module/jackson-module-parameter-names/2.9.8/8d2358499bdaa73ab525ce9cbce90fd8dedb2f0c/jackson-module-parameter-names-2.9.8-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.9.8/11283f21cc480aa86c4df7a0a3243ec508372ed2/jackson-databind-2.9.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.9.8/a1dea243882227fc27c350a5b25ca76ef4ecb7d7/jackson-databind-2.9.8-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-databind/2.9.8/f66792d499a6fea6c7a743558f940e0ebf775ce3/jackson-databind-2.9.8-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.usb/usb-api/1.0.2/f0ae0d322a99811cf79d508d37f3dc2d82753070/usb-api-1.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.usb/usb-api/1.0.2/c0bc03446978d12d8b5b3e8a136a181936f61015/usb-api-1.0.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.usb/usb-api/1.0.2/4b6337e574535ac803bbc05f3f22808d8bdba0d0/usb-api-1.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.1.5.RELEASE/5cbd44d11a031c64c788edf1f99706b31c434469/spring-jcl-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.1.5.RELEASE/789964151341f2467ede547032c24d52983d49c1/spring-jcl-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-jcl/5.1.5.RELEASE/6f3212c91ac78f8cc4bcaf600f624f92a6287ca6/spring-jcl-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.9.5/9056ec9db21c57d43219a84bb18c129ae51c6a5d/jackson-annotations-2.9.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.9.5/c41253312be156741fe97479b84a238cff323de8/jackson-annotations-2.9.5-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-annotations/2.9.5/2fc22732b6e1e7b6ed5eebfab8866766bb3a84d/jackson-annotations-2.9.5-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.validation/validation-api/2.0.1.Final/cb855558e6271b1b32e716d24cb85c7f583ce09e/validation-api-2.0.1.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.validation/validation-api/2.0.1.Final/7200cee3f81566cdf641c85a53df141034e3b603/validation-api-2.0.1.Final-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.validation/validation-api/2.0.1.Final/4b714a5167580122e46ead3317ffcdcdbd67c5f0/validation-api-2.0.1.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.2.Final/3789d00e859632e6c6206adc0c71625559e6e3b0/jboss-logging-3.3.2.Final.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.2.Final/a80380191944969c164a9604016ba60f58422d92/jboss-logging-3.3.2.Final-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.jboss.logging/jboss-logging/3.3.2.Final/a44f0f22bbd9ccb96952806e73f6cc16ef7d2f67/jboss-logging-3.3.2.Final-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-continuation/9.4.14.v20181114/ac4981a61bcaf4e2538de6270300a870224a16b8/jetty-continuation-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-continuation/9.4.14.v20181114/f906e7ab9951d81c603143f5acd87d94c4e65707/jetty-continuation-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-continuation/9.4.14.v20181114/77bf4359e05ff0dd7708ae27e37432c1665fd6af/jetty-continuation-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-client-impl/9.4.14.v20181114/c733f5269977232d1d415c144663c9b037793617/javax-websocket-client-impl-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-client-impl/9.4.14.v20181114/1aff7574eec912c053e22f0e91bbdc3ede1721e8/javax-websocket-client-impl-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/javax-websocket-client-impl/9.4.14.v20181114/ad307eab6e3559d0fbe55c1392477fe0cbae44e0/javax-websocket-client-impl-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-client/9.4.14.v20181114/94530cdbf47fdb14706ad82945dc2c24f93b6934/websocket-client-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-client/9.4.14.v20181114/8606760c70eb242902896eabfafbf011e6a6e4d/websocket-client-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-client/9.4.14.v20181114/4b20f6b90fa3bd7dcc1203ecebef6a84c3c70645/websocket-client-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-client/9.4.14.v20181114/1c46b088e1119928d54ff704fe38fe1b6b6700d0/jetty-client-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-client/9.4.14.v20181114/49b35fd203f0b99fff60de128ca5120dd97d543f/jetty-client-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-client/9.4.14.v20181114/7125d61e7d772051ab631e6ecbb40a745d30e80/jetty-client-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlet/9.4.14.v20181114/96f501462af425190ff7b63e387692c1aa3af2c8/jetty-servlet-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlet/9.4.14.v20181114/79bf6760310872e72f7e4d09ec36245bf2ee6e34/jetty-servlet-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-servlet/9.4.14.v20181114/204b8a84adf3ce354138509c42638b5b2d223d1f/jetty-servlet-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-security/9.4.14.v20181114/6cbeb2fe9b3cc4f88a7ea040b8a0c4f703cd72ce/jetty-security-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-security/9.4.14.v20181114/cdb3694872e6f5282f929d29f01c438cd76fb22a/jetty-security-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-security/9.4.14.v20181114/33555125c5988fca12273f60a0aa545d848de54a/jetty-security-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.4.14.v20181114/b36a3d52d78a1df6406f6fa236a6eeff48cbfef6/jetty-server-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.4.14.v20181114/306119a432bda6d9f1780fa38c928184c46307bc/jetty-server-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-server/9.4.14.v20181114/55db20ea68c9c1b0ed264d80e7d75b4988da87a6/jetty-server-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.4.14.v20181114/6d0c8ac42e9894ae7b5032438eb4579c2a47f4fe/jetty-http-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.4.14.v20181114/93d768cc7941d2130598336c7adb62e1a4167ec0/jetty-http-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-http/9.4.14.v20181114/3c4f8a942909cabe6d029f835c185207eb91af75/jetty-http-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-common/9.4.14.v20181114/1d13b027da4b72d46144e19f1dd2a974e0980ac5/websocket-common-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-common/9.4.14.v20181114/1dc675ab0431f9de09cf9b5b4311cd24f306b92a/websocket-common-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-common/9.4.14.v20181114/5761431515532868117ab4822d6bb638f10bc661/websocket-common-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.4.14.v20181114/a8c6a705ddb9f83a75777d89b0be59fcef3f7637/jetty-io-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.4.14.v20181114/2976a76d68820af31ea51350fa2b58b3aa85f332/jetty-io-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-io/9.4.14.v20181114/6132108ccabbe181707af911e5a68fd8e8806ff/jetty-io-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-xml/9.4.14.v20181114/65cd197bc8082a1007130c8b644cea7938133568/jetty-xml-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-xml/9.4.14.v20181114/a9f47c2a06da747e9bdce2788d05ec83b4634d8e/jetty-xml-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-xml/9.4.14.v20181114/8b54971142b421adfc12e71c4f8a0c4507180d56/jetty-xml-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.14.v20181114/5bb3d7a38f7ea54138336591d89dd5867b806c02/jetty-util-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.14.v20181114/c8ab6e2d43436bd978d609f0d2831e21062fb81d/jetty-util-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty/jetty-util/9.4.14.v20181114/94e89a8c9f82e38555e95b9f7f58344a247e862c/jetty-util-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-servlet/9.4.14.v20181114/ca89f0b7eb8eb68a8d701d10df9742bed9eda4a9/websocket-servlet-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-servlet/9.4.14.v20181114/fe27f8d76e25d4616d1e3d50cea283085e96495b/websocket-servlet-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-servlet/9.4.14.v20181114/9ba6cc5e71a0b5bbfe41d74481d97653cfbcf533/websocket-servlet-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.websocket/javax.websocket-api/1.0/fc843b649d4a1dcb0497669d262befa3918c7ba8/javax.websocket-api-1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.websocket/javax.websocket-api/1.0/8aa4533fdb53724128633cdf0b184cd69c2e0714/javax.websocket-api-1.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.websocket/javax.websocket-api/1.0/107b0fdc7ca320b54dc1393e01585be5883ff348/javax.websocket-api-1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/3.2.2/8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5/commons-collections-3.2.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/3.2.2/ea9a113ab0147c4d48dda62dff207be07374c590/commons-collections-3.2.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/3.2.2/78c50ebda5784937ca1615fc0e1d0cb35857d572/commons-collections-3.2.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.26.0-GA/bb2890849968d8d8311ffba8c37b0ce16ce284dc/javassist-3.26.0-GA.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.26.0-GA/42202c3357a1175ecaa0ff366b24a13865ed93ed/javassist-3.26.0-GA-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.26.0-GA/61e272d124cd95493e7d621ca9db1d46e7e4bb17/javassist-3.26.0-GA-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/libusb4java/1.3.0/7abf7240bcd7c26cb1ea5265eec5e6d703b71b4e/libusb4java-1.3.0-linux-x86.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/libusb4java/1.3.0/9514c818fc97f831277873f082dcefd5394045e4/libusb4java-1.3.0-linux-x86-64.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/libusb4java/1.3.0/9cb97c4b8317d8dae0401f80438fde5bfd910b2c/libusb4java-1.3.0-win32-x86.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/libusb4java/1.3.0/8cd521a203404d65f4bc59c2a8a38eb4dcd302da/libusb4java-1.3.0-win32-x86-64.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/libusb4java/1.3.0/1fdaa8ec7cfad158be58fbc8e2867d05f2b5fe63/libusb4java-1.3.0-darwin-x86-64.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/libusb4java/1.3.0/504de50cc979b1f19b76ba1154d298632ff1be4e/libusb4java-1.3.0-linux-arm.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.usb4java/libusb4java/1.3.0/bb5924dfb86c27ca5d91ccc975c11da2caa3c82d/libusb4java-1.3.0-linux-aarch64.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.8.12/82a340b11ea0a55e5d51b3ae559003454b8bf320/byte-buddy-1.8.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.8.12/a0ea6a20b6aa112dd1de16b9c90c2d56a220d15f/byte-buddy-1.8.12-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.8.12/5b123e3849e096d66440787f2add9e1726252f91/byte-buddy-1.8.12-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.9.8/f5a654e4675769c716e5b387830d19b501ca191/jackson-core-2.9.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.9.8/acc65b3b6e07784dc1760fa4e460238eb2a9073a/jackson-core-2.9.8-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.fasterxml.jackson.core/jackson-core/2.9.8/ecaea301e166a0b48f11615864246de739b6619b/jackson-core-2.9.8-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-api/9.4.14.v20181114/ad5adb45ec91d156ba229b32d82cead27b35d6a5/websocket-api-9.4.14.v20181114.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-api/9.4.14.v20181114/ad1ea4396fc4cb456fe7324c1a4f38699e5fd01c/websocket-api-9.4.14.v20181114-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-api/9.4.14.v20181114/928a884cd342ec415f0740b437dcdf57d427e2a2/websocket-api-9.4.14.v20181114-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/3cd63d075497751784b2fa84be59432f4905bf7c/javax.servlet-api-3.1.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/7898c2d7d0779c852dea51cb75a446eeb932eb1b/javax.servlet-api-3.1.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/javax.servlet/javax.servlet-api/3.1.0/ab3976d4574c48d22dc1abf6a9e8bd0fdf928223/javax.servlet-api-3.1.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/7.0/478006d07b7c561ae3a92ddc1829bca81ae0cdd1/asm-commons-7.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/7.0/fba10c5b62f77dfafdfcc5e2f5a0821b8f500c5e/asm-commons-7.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-commons/7.0/6a7ca89b189929d4eb4349c6f075fc345b055e0/asm-commons-7.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/7.0/4b310d20d6f1c6b7197a75f1b5d69f169bc8ac1f/asm-analysis-7.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/7.0/db637784a9c52779aaa0de50157cc2586c637d88/asm-analysis-7.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-analysis/7.0/70608c6f4ee3c2073ccd43f1e4a359783334f86f/asm-analysis-7.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/7.0/29bc62dcb85573af6e62e5b2d735ef65966c4180/asm-tree-7.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/7.0/c7db32de4a06826acb7c8c08deef8038ee0d66cf/asm-tree-7.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm-tree/7.0/6064bf57bbce12aebc8ab96f32efe3f1c6cdd5fc/asm-tree-7.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/7.0/d74d4ba0dee443f68fb2dcb7fcdb945a2cd89912/asm-7.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/7.0/f8319aca10715668cc3b7e52a1327b073daf389b/asm-7.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.ow2.asm/asm/7.0/1e0eab03ec196dea229ea637e523b9c016e66b42/asm-7.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$MODULE_DIR$/lib/rxtxSerial.dll"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/RXTXcomm.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.vmlens/concurrent-junit/1.0.2/b9d66446aeda627270b83429bb51bec540dfca37/concurrent-junit-1.0.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.vmlens/concurrent-junit/1.0.2/8e2292785491400615414898bb75f976fbe6860f/concurrent-junit-1.0.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.vmlens/concurrent-junit/1.0.2/278ba9603c466a2157e46c30143f2d4bba28b42b/concurrent-junit-1.0.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-starter-test/2.1.3.RELEASE/79ccc36b5cf5ee197e3bde7fc5ed91fa6bed594a/spring-boot-starter-test-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES/>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test-autoconfigure/2.1.3.RELEASE/f667520b788e87a38bcee2538fce16d3d1a484a5/spring-boot-test-autoconfigure-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test-autoconfigure/2.1.3.RELEASE/1da3c9d7b9d4793ad0bd261ed4e341da2e8ff32c/spring-boot-test-autoconfigure-2.1.3.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test-autoconfigure/2.1.3.RELEASE/8e7fbe82abd4e83b213a6045cb691861156668bb/spring-boot-test-autoconfigure-2.1.3.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/2.1.3.RELEASE/3615e9ac8c032ff246d6f30fe36642333e45881d/spring-boot-test-2.1.3.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/2.1.3.RELEASE/4164d0cbc30235a6b19322515ffe5c1b2766b264/spring-boot-test-2.1.3.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework.boot/spring-boot-test/2.1.3.RELEASE/8dc9577a4c20058f6ff101a4c664d9ceecc903fd/spring-boot-test-2.1.3.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.4.0/765a4401ceb2dc8d40553c2075eb80a8fa35c2ae/json-path-2.4.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.4.0/dcaf0ab878bffa45f5dee15a1bb6761df526c215/json-path-2.4.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.jayway.jsonpath/json-path/2.4.0/c43fc506196089da87a7bb36ec847b57072a818b/json-path-2.4.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-all/1.9.5/79a8984096fc6591c1e3690e07d41be506356fa5/mockito-all-1.9.5.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-all/1.9.5/982f4a74cbff61f56c0868b2fdf71fe63b646794/mockito-all-1.9.5-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-all/1.9.5/b8086d4e4daa361fc746abea62f77a2ae55d3ed9/mockito-all-1.9.5-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/941a8be4506c65f0a9001c08812fb7da1e505e21/junit-4.12-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/a6c32b40bf3d76eca54e3c601e5d1470c86fcdfa/junit-4.12-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.1.5.RELEASE/693fac3c64b4617b7c2b207e45e93529f6594bd/spring-test-5.1.5.RELEASE.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.1.5.RELEASE/e66cbaca8140b39965249149a9017709eb44f0e9/spring-test-5.1.5.RELEASE-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.springframework/spring-test/5.1.5.RELEASE/914fe3553db493413746a350230c4300f6d5d910/spring-test-5.1.5.RELEASE-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-library/1.3/4785a3c21320980282f9f33d0d1264a69040538f/hamcrest-library-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-library/1.3/4324046c5f99f3dc91b5370899fa3ae65fd137d2/hamcrest-library-1.3-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-library/1.3/47a7ee46628ab7133129cd7cef1e92657bc275e/hamcrest-library-1.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/ad09811315f1d4f5756986575b0ea16b99cd686f/hamcrest-core-1.3-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/1dc37250fbc78e23a65a67fbbaf71d2e9cbc3c0b/hamcrest-core-1.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.11.1/fdac3217b804d6900fa3650f17b5cb48e620b140/assertj-core-3.11.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.11.1/c73ba1a8d0f6283e32837a7d2d35d385bb71664c/assertj-core-3.11.1-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.assertj/assertj-core/3.11.1/55362d8f04018b1140c5a370057bf8cd4a63c3de/assertj-core-3.11.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/2.23.4/a35b6f8ffcfa786771eac7d7d903429e790fdf3f/mockito-core-2.23.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/2.23.4/4a77f24f836319487ab5ae29702e4e4f9aec876d/mockito-core-2.23.4-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.mockito/mockito-core/2.23.4/6878fee8002a77fc3d29d2407d9cb059e3792827/mockito-core-2.23.4-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.0/6c9d5fe2f59da598d9aefc1cfc6528ff3cf32df3/jsonassert-1.5.0.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.0/a4a6622b2914260f85954ba4dd314573d6d1efd5/jsonassert-1.5.0-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.0/d729b258165a2fd9b5d6156c05c4c4f7ca053117/jsonassert-1.5.0-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.6.2/b0461888cdd8d3975ea8a57df96520409cadcb6c/xmlunit-core-2.6.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.6.2/b18481cdc7e8edb3af30736bcae3f96a7e741d7a/xmlunit-core-2.6.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.6.2/d5002e03c5ecf84d06ce2f2ce714e025b288f327/xmlunit-core-2.6.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.minidev/json-smart/2.3/7396407491352ce4fa30de92efb158adb76b5b/json-smart-2.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.minidev/json-smart/2.3/fa8ba51c389a08f55ce3efd3fd92226dacd87355/json-smart-2.3-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.minidev/json-smart/2.3/36c61f1b839bde5b284528cb76f6811efbe0f08b/json-smart-2.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.9.3/f32e510b239620852fc9a2387fac41fd053d6a4d/byte-buddy-1.9.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.9.3/412bdb18af8a848780fd0cfaaa242a3430316a74/byte-buddy-1.9.3-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy/1.9.3/ef8bdb760633510eed72e262193d6afbc451cc72/byte-buddy-1.9.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.9.3/f5b78c16cf4060664d80b6ca32d80dca4bd3d264/byte-buddy-agent-1.9.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.9.3/21cd061606654fabf73ce44cff4c39d6a505b271/byte-buddy-agent-1.9.3-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.bytebuddy/byte-buddy-agent/1.9.3/331129f3735b57bdb899a4e73731cf5f3322cff4/byte-buddy-agent-1.9.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.6/639033469776fd37c08358c6b92a4761feb2af4b/objenesis-2.6.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.6/27c490ca18fcdfb94e28387e04ae37c4aa1abb23/objenesis-2.6-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/org.objenesis/objenesis/2.6/96614f514a1031296657bf0dde452dc15e42fcb8/objenesis-2.6-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.vaadin.external.google/android-json/0.0.20131108.vaadin1/fa26d351fe62a6a17f5cda1287c1c6110dec413f/android-json-0.0.20131108.vaadin1.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.vaadin.external.google/android-json/0.0.20131108.vaadin1/a65eb5b1114f68e57996a48a05997708aa9f78b4/android-json-0.0.20131108.vaadin1-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/com.vaadin.external.google/android-json/0.0.20131108.vaadin1/bf42d7e47a3228513b626dd7d37ac6f072aeca4f/android-json-0.0.20131108.vaadin1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" scope="TEST">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.minidev/accessors-smart/1.2/c592b500269bfde36096641b01238a8350f8aa31/accessors-smart-1.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.minidev/accessors-smart/1.2/7d0aacafb464959be4dec1736ae50c3992a9d944/accessors-smart-1.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/mmichalek/.gradle/caches/modules-2/files-2.1/net.minidev/accessors-smart/1.2/c837e3903ff07b478041f761915d764b98e71e05/accessors-smart-1.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+  </component>
+  <component name="ModuleRootManager"/>
+</module>

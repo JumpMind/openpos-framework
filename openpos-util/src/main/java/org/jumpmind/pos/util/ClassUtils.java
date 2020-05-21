@@ -17,6 +17,14 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 public class ClassUtils {
     protected static final Logger logger = LoggerFactory.getLogger(ClassUtils.class);
 
+    public static Class loadClass(String className) {
+        try {
+            return Thread.currentThread().getContextClassLoader().loadClass(className);
+        } catch (ClassNotFoundException ex) {
+            throw new ReflectionException("Failed to load class named \"" + className + "\"", ex);
+        }
+    }
+
     /**
      * This method first attempts to check the given targetObject's class for an 
      * annotation of the given type.  If that fails, then it uses a Spring AOP

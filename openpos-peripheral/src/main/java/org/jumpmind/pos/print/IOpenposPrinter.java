@@ -3,7 +3,6 @@ package org.jumpmind.pos.print;
 import jpos.services.POSPrinterService19;
 
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 public interface IOpenposPrinter extends POSPrinterService19 {
@@ -20,7 +19,7 @@ public interface IOpenposPrinter extends POSPrinterService19 {
 
     public String getPrinterName();
 
-    public PrinterConnection getPrinterConnection();
+    public PeripheralConnection getPeripheralConnection();
 
     public void beginSlipMode();
 

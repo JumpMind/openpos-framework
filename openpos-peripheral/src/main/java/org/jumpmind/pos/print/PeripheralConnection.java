@@ -11,10 +11,11 @@ import java.io.OutputStream;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PrinterConnection {
+public class PeripheralConnection {
 
     OutputStream out;  // write to printer.
     InputStream in;  // read status, etc. from printer.
+    Object rawConnection;
 
     public void close() {
         IOUtils.closeQuietly(in, out);
