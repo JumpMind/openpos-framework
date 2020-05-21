@@ -6,7 +6,7 @@ import org.jumpmind.pos.persist.*;
 @Data
 @TableDef(name = "device_auth")
 @IndexDefs({
-        @IndexDef(name = "idx_devices_auth_token", columns = {"authToken"})
+        @IndexDef(name = "idx_devices_auth_token", column = "authToken")
 })
 public class DeviceAuthModel extends AbstractModel {
     @ColumnDef(primaryKey = true)

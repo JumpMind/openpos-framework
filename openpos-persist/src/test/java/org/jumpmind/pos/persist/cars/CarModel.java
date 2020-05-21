@@ -11,7 +11,7 @@ import org.jumpmind.pos.persist.model.ITaggedModel;
 @TableDef(name="car",
         description = "A basic concept of an automobile fit to drive down the road.")
 @IndexDefs({
-        @IndexDef(name = "idx_car_year", columns = {"modelYear"}),
+        @IndexDef(name = "idx_car_year", column = "modelYear"),
         @IndexDef(name = "idx_car_make_model", columns = {"make", "model"})
 })
 public class CarModel extends AbstractTaggedModel implements ITaggedModel {

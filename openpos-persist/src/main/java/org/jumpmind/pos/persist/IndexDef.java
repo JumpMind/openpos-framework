@@ -26,9 +26,25 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Repeatable(IndexDefs.class)
 public @interface IndexDef {
+
+    /**
+     * Name of the index that will be created.
+     */
     String name();
 
-    String[] columns();
+    /**
+     * Column name for the index. Implies only a single column will be used. Overrides columns() property.
+     */
+    String column() default "";
 
+    /**
+     * Column names for the index. Implies multiple columns will be used.
+     */
+    String[] columns() default {};
+
+    /**
+     * True if the IndexDef represents a unique index.
+     */
     boolean unique() default false;
+
 }

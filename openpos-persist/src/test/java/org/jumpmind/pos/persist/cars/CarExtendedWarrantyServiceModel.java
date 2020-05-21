@@ -11,8 +11,8 @@ import org.jumpmind.pos.persist.*;
 @Setter
 @TableDef(name="extended_warranty_service")
 @IndexDefs({
-        @IndexDef(name = "idx_currency_code_term", columns = {"isoCurrencyCode", "termInMonths"}),
-        @IndexDef(name = "idx_vin", columns = {"vin", "model"})
+        @IndexDef(name = "idx_currency_code_term", columns = {"isoCurrencyCode", "effectiveStartDate"}),
+        @IndexDef(name = "idx_vin", column = "vin")
 })
 public class CarExtendedWarrantyServiceModel extends AbstractModel {
 
