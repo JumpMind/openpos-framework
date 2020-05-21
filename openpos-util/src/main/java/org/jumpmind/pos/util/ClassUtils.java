@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
@@ -18,10 +19,25 @@ public class ClassUtils {
     protected static final Logger logger = LoggerFactory.getLogger(ClassUtils.class);
 
     public static Class loadClass(String className) {
+        if (className == null) {
+            throw new ReflectionException("className cannot be null.");
+        }
         try {
             return Thread.currentThread().getContextClassLoader().loadClass(className);
-        } catch (ClassNotFoundException ex) {
+        } catch (Exception ex) {
             throw new ReflectionException("Failed to load class named \"" + className + "\"", ex);
+        }
+    }
+
+    public static <T> T instantiate(String className) {
+        Class clazz = loadClass(className);
+        if (clazz == null) {
+            throw new ReflectionException("No class found for className:\"" + className + "\"");
+        }
+        try {
+            return (T)clazz.newInstance();
+        } catch (Exception ex) {
+            throw new ReflectionException("Failed to instansitate class named \"" + className + "\"", ex);
         }
     }
 
