@@ -7,7 +7,6 @@ import org.jumpmind.pos.core.flow.ScopeType;
 import org.jumpmind.pos.core.service.IKeyMappingService;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIDataMessage;
-import org.jumpmind.pos.core.ui.UIMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
@@ -40,6 +39,8 @@ public class KeyMappingUIDataMessagePropertyStrategy implements IMessageProperty
                 String keyMapping = keyMappingService.getKeyMapping(message, item.getAction());
                 if (!StringUtils.isEmpty(keyMapping)) {
                     item.setKeybind(keyMapping);
+                    String keyMappingDisplayName = keyMappingService.getDisplayName(message.getDataType(), keyMapping);
+                    item.setKeybindDisplayName(keyMappingDisplayName);
                 }
             }
         }

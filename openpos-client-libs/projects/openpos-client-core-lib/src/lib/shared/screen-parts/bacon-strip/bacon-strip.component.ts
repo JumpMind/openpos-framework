@@ -41,7 +41,7 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
         ]));
 
         this.subscriptions.add(
-          this.keyPresses.subscribe( 'Escape', 1, (event: KeyboardEvent) => {
+          this.keyPresses.subscribe( 'Escape', 100, (event: KeyboardEvent) => {
             // ignore repeats and check configuration
             if ( event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
               return;

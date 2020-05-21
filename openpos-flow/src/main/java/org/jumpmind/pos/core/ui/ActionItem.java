@@ -20,13 +20,13 @@
  */
 package org.jumpmind.pos.core.ui;
 
-import java.io.Serializable;
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
+import java.util.List;
 
 @Builder
 @AllArgsConstructor
@@ -45,6 +45,7 @@ public class ActionItem implements Serializable {
     protected String buttonSize;
     protected String fontSize;
     protected String keybind;
+    protected String keybindDisplayName;
     protected boolean queueIfBlocked;
     protected boolean doNotBlockForResponse;
     protected ActionTimer actionTimer;
@@ -260,6 +261,15 @@ public class ActionItem implements Serializable {
 
     public boolean isQueueIfBlocked() {
         return queueIfBlocked;
+    }
+
+    public String getKeybindDisplayName() {
+        return keybindDisplayName;
+    }
+
+
+    public void setKeybindDisplayName(String keybindDisplayName) {
+        this.keybindDisplayName = keybindDisplayName;
     }
 
     public String getKeybind() {

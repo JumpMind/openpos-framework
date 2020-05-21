@@ -1,5 +1,5 @@
-import { IConfirmationDialog } from './confirmation-dialog.interface';
-import { IActionTimer } from './action-timer.interface';
+import {IConfirmationDialog} from './confirmation-dialog.interface';
+import {IActionTimer} from './action-timer.interface';
 
 export interface IActionItem {
     // Action to be sent to the server when the ActionItem is performed
@@ -14,6 +14,8 @@ export interface IActionItem {
     confirmationDialog?: IConfirmationDialog;
     // If supported this would be a keybinding to use for activating this action
     keybind?: string;
+    // If set this will be the display name to show for a given key. For example, Ctrl+F12 could be displayed as "Verify Price"
+    keybindDisplayName?: string;
     // If set to true the client will not wait for a response from the server before allowing more actions
     doNotBlockForResponse?: boolean;
     /**

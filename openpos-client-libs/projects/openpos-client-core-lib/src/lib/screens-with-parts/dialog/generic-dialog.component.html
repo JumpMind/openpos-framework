@@ -15,7 +15,7 @@
             <app-secondary-button *ngFor="let m of otherButtons; let i = index" [id]="'button-' + i" (click)="doAction(m)" 
                 [disabled]="!m.enabled" [actionItem]="m">
                 {{m.title}}
-                <span *ngIf="m.keybind && m.keybind !== 'Escape' && m.keybind !== 'Enter'" class="muted-color">({{m.keybind}})</span>
+                <span *ngIf="m.keybind && m.keybind !== 'Escape' && m.keybind !== 'Enter'" class="muted-color">({{m.keybindDisplayName}})</span>
                 <app-button-action-timer [action]="m" class="muted-color"></app-button-action-timer>
             </app-secondary-button>
             <app-primary-button *ngIf="primaryButton" (click)="doAction(primaryButton)" id="primaryButton"

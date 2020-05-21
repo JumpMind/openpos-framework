@@ -47,7 +47,7 @@
             <img [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
             <span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
             <span *ngIf="keybindsEnabled(screenData.loyaltyButton)"
-                  class="muted-color">{{screenData.loyaltyButton.keybind}}</span>
+                  class="muted-color">{{screenData.loyaltyButton.keybindDisplayName}}</span>
         </app-secondary-button>
         <app-secondary-button responsive-class *ngIf="screenData.helpButton"
                               [actionItem]="screenData.helpButton"
@@ -57,7 +57,7 @@
             </app-icon>
             <span *ngIf="screenData.helpButton.icon && screenData.helpButton.title">&nbsp;</span>{{screenData.helpButton.title}}
             <span *ngIf="keybindsEnabled(screenData.helpButton)"
-                  class="muted-color">{{screenData.helpButton.keybind}}</span>
+                  class="muted-color">{{screenData.helpButton.keybindDisplayName}}</span>
         </app-secondary-button>
         <app-secondary-button *ngIf="screenData.customer && screenData.loyaltyButton" responsive-class
             class="sale-total-customer-button" [actionItem]="screenData.loyaltyButton"
@@ -80,7 +80,7 @@
                             (click)="doMenuItemAction(screenData.checkoutButton)" class="sale-total-button">
             {{screenData.checkoutButton.title}}
             <span *ngIf="keybindsEnabled(screenData.checkoutButton)"
-                  class="muted-color">{{screenData.checkoutButton.keybind}}</span>
+                  class="muted-color">{{screenData.checkoutButton.keybindDisplayName}}</span>
         </app-primary-button>
         <app-secondary-button responsive-class *ngIf="!screenData.readOnly && screenData.logoutButton"
                               [actionItem]="screenData.logoutButton"
@@ -90,7 +90,7 @@
             </app-icon>
             <span *ngIf="screenData.logoutButton.icon && screenData.logoutButton.title">&nbsp;</span>{{screenData.logoutButton.title}}
             <span *ngIf="keybindsEnabled(screenData.logoutButton)"
-                  class="muted-color">{{screenData.logoutButton.keybind}}</span>
+                  class="muted-color">{{screenData.logoutButton.keybindDisplayName}}</span>
         </app-secondary-button>
     </div>
 </mat-card>

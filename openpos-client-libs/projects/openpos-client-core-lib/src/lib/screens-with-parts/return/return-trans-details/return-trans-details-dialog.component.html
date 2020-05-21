@@ -18,7 +18,7 @@
             <app-primary-button cdkFocusInitial [disabled]="index<0"
                 [actionItem]="selectionButton" (actionClick)="doMenuItemAction(selectionButton)" (click)="doMenuItemAction(selectionButton)">
                 <span>{{selectionButton.title}}</span>&nbsp;
-                <span *ngIf="keybindsEnabled(selectionButton)" class="muted-color">{{selectionButton.keybind}}</span>
+                <span *ngIf="keybindsEnabled(selectionButton)" class="muted-color">{{selectionButton.keybindDisplayName}}</span>
             </app-primary-button>
         </mat-dialog-actions>
     </div>

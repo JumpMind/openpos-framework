@@ -19,7 +19,7 @@
                     <div class="menu-button-content">
                         <app-icon iconName="{{menuItem.icon}}" [iconClass]="(iconClass | async)"></app-icon>
                         <div class="menu-button-title">{{menuItem.title}}</div>
-                        <div *ngIf="menuItem.keybind && keybindsEnabled()" style="padding-bottom: 8px;" class="text-xs">{{menuItem.keybind}}</div>
+                        <div *ngIf="menuItem.keybind && keybindsEnabled()" style="padding-bottom: 8px;" class="text-xs">{{menuItem.keybindDisplayName}}</div>
                     </div>
                 </button>
             </div>
