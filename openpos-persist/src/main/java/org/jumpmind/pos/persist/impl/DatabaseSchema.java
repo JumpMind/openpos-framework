@@ -161,7 +161,7 @@ public class DatabaseSchema {
             classToModelMetaData.put(entityClass, modelMetaData);
             for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
                 validateTable(tablePrefix, meta.getTable());
-                Table exists = tables.stream().filter(p -> p.equals(meta.getTable())).findFirst().orElse(null);
+                Table exists = tables.stream().filter(p -> p.getName().equals(meta.getTable().getName())).findFirst().orElse(null);
                 if (exists != null) {
                     meta.setTable(exists);
                 } else {
