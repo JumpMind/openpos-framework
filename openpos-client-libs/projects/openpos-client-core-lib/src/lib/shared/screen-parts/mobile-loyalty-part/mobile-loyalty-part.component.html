@@ -7,8 +7,8 @@
         <app-icon class="mobile-loyalty-button-icon" [iconName]="'Increment'" [iconClass]="'primary md'"></app-icon>
     </div>
 </button>
-<button *ngIf="screenData.customer && screenData.mobileLoyaltyButton" mat-raised-button
-    class="mobile-loyalty-customer-outer" (click)="doAction(screenData.mobileLoyaltyButton)">
+<button *ngIf="screenData.customer && screenData.linkedCustomerButton" mat-raised-button
+    class="mobile-loyalty-customer-outer" (click)="doAction(screenData.linkedCustomerButton)">
     <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="mobile-loyalty-image">
     <div class="mobile-loyalty-customer-name">
         <div responsive-class *ngIf="screenData.customer.name" class="mobile-loyalty-name">

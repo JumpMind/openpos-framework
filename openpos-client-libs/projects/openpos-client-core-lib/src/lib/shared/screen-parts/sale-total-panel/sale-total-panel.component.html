@@ -59,9 +59,9 @@
             <span *ngIf="keybindsEnabled(screenData.helpButton)"
                   class="muted-color">{{screenData.helpButton.keybindDisplayName}}</span>
         </app-secondary-button>
-        <app-secondary-button *ngIf="screenData.customer && screenData.loyaltyButton" responsive-class
-            class="sale-total-customer-button" [actionItem]="screenData.loyaltyButton"
-            (actionClick)="doMenuItemAction(screenData.loyaltyButton)" (click)="doMenuItemAction(screenData.loyaltyButton)">
+        <app-secondary-button *ngIf="screenData.customer && screenData.linkedCustomerButton" responsive-class
+            class="sale-total-customer-button" [actionItem]="screenData.linkedCustomerButton"
+            (actionClick)="doMenuItemAction(screenData.linkedCustomerButton)" (click)="doMenuItemAction(screenData.linkedCustomerButton)">
             <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon"
                 responsive-class>
             <div *ngIf="screenData.customer.name" class="muted-color">{{screenData.customer.name}}</div>

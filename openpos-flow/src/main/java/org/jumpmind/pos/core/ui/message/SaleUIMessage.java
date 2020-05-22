@@ -29,6 +29,7 @@ public class SaleUIMessage extends UIMessage {
     private ActionItem logoutButton;
     private ActionItem loyaltyButton;
     private ActionItem mobileLoyaltyButton;
+    private ActionItem linkedCustomerButton;
     private ActionItem promoButton;
 
     private boolean transactionActive = false;
@@ -216,4 +217,11 @@ public class SaleUIMessage extends UIMessage {
         this.enableCollapsibleItems = enableCollapsibleItems;
     }
 
+    public ActionItem getLinkedCustomerButton() {
+        return linkedCustomerButton;
+    }
+
+    public void setLinkedCustomerButton(ActionItem linkedCustomerButton) {
+        this.linkedCustomerButton = linkedCustomerButton;
+    }
 }
