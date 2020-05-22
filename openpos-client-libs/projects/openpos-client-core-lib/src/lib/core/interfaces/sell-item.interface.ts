@@ -14,6 +14,8 @@ export interface ISellItem extends IItem {
     type: string;
     prop65Item: boolean;
     prop65WarningText: string;
+    noReceiptReturnPriceAdjustmentItem: boolean;
+    noReceiptReturnPriceAdjustmentText: string;
     styleNumber: string;
     isGiftReceipt: boolean;
     originalAmount: string;

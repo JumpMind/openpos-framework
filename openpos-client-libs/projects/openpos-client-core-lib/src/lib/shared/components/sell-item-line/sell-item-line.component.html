@@ -1,6 +1,7 @@
 <div gdAreas="  description description specialTags cost kebab |
                                 subtitle labels giftReceipt cost kebab |
-                                prop65Item prop65Item prop65Item prop65Item prop65Item"
+                                prop65Item prop65Item prop65Item prop65Item prop65Item |
+                                noReceiptReturnItem noReceiptReturnItem noReceiptReturnItem noReceiptReturnItem noReceiptReturnItem"
     gdColumns="auto 1fr auto auto auto" gdGap="4px" [ngClass]="item.type">
     <div gdArea="description" [ngClass]="item.prop65Item ? 'warn' : ''">
         {{item.description}}
@@ -18,6 +19,14 @@
                     <div class="prop65Image"></div>
                 </td>
                 <td style="text-align: left; vertical-align: middle;">{{item.prop65WarningText}}</td>
+            </tr>
+        </table>
+    </div>
+    <div gdArea="noReceiptReturnItem" *ngIf="item.noReceiptReturnPriceAdjustmentItem" class="muted-color">
+        <table>
+            <tr>
+                <mat-icon color="primary">info_outline</mat-icon>
+                <td style="text-align: left; vertical-align: middle;">{{item.noReceiptReturnPriceAdjustmentText}}</td>
             </tr>
         </table>
     </div>
