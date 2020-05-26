@@ -15,14 +15,15 @@ public class FileConnectionFactory implements IConnectionFactory {
     public PeripheralConnection open(Map<String, Object> settings) {
 
         String fileName = "";
-        if (settings.containsKey("filename")) {
-            fileName = (String)settings.get("filename");
+        if (settings.containsKey(PROPERTY_FILENAME)) {
+            fileName = (String)settings.get(PROPERTY_FILENAME);
         } else {
-            fileName = (String)settings.get("portName");
+            fileName = (String)settings.get(PROPERTY_PORTNAME);
         }
 
         if (StringUtils.isEmpty(fileName)) {
-            throw new PrintException("No filename could be determined for this connection factory. A filename or portName property is required.");
+            throw new PrintException("No filename could be determined for this connection factory. A " +
+                    PROPERTY_FILENAME + " or " + PROPERTY_PORTNAME + " property is required.");
         }
 
         PeripheralConnection peripheralConnection = new PeripheralConnection();
