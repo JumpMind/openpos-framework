@@ -1,13 +1,13 @@
 package org.jumpmind.pos.core.ui.message;
 
-import java.math.BigDecimal;
-import java.util.*;
-
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.model.KeyboardType;
 import org.jumpmind.pos.core.model.Validator;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 public class PromptUIMessage extends UIMessage {
     
@@ -23,6 +23,7 @@ public class PromptUIMessage extends UIMessage {
     public static final String TYPE_ONOFF = "ONOFF";
     public static final String TYPE_EMAIL = "EMAIL";
     public static final String TYPE_MONEY = "MONEY";
+    public static final String TYPE_WEIGHT = "WEIGHT";
 
     private String promptIcon;
     private String placeholderText;

@@ -1,23 +1,24 @@
-import { Injectable } from '@angular/core';
-import { LocaleService } from './locale.service';
-import { IFormatter } from '../../shared/formatters/formatter.interface';
-import { PhoneUSFormatter } from '../../shared/formatters/phone-us.formatter';
-import { PhoneCAFormatter } from '../../shared/formatters/phone-ca.formatter';
-import { DateTimeCAFormatter } from '../../shared/formatters/datetime-ca.formatter';
-import { PostalCodeCAFormatter } from '../../shared/formatters/postal-code-ca.formatter';
-import { NumericFormatter } from '../../shared/formatters/numeric.formatter';
-import { GiftCodeFormatter } from '../../shared/formatters/gift-code.formatter';
-import { MoneyFormatter } from '../../shared/formatters/money.formatter';
-import { PercentageFormatter } from '../../shared/formatters/percentage.formatter';
-import { PostalCodeFormatter } from '../../shared/formatters/postal-code.formatter';
-import { IncomeFormatter } from '../../shared/formatters/income.formatter';
-import { StateIDNumberFormatter } from '../../shared/formatters/state-id-number.formatter';
-import { DecimalFormatter } from '../../shared/formatters/decimal.formatter';
-import { WordTextFormatter } from '../../shared/formatters/word-text.formatter';
-import { DateTimeFormatter } from '../../shared/formatters/datetime.formatter';
-import { TimeFormatter, TimeFormat } from '../../shared/formatters/time.formatter';
-import { DoNothingFormatter } from '../../shared/formatters/do-nothing.formatter';
-import { NonNumericFormatter } from '../../shared/formatters/non-numeric.formatter';
+import {Injectable} from '@angular/core';
+import {LocaleService} from './locale.service';
+import {IFormatter} from '../../shared/formatters/formatter.interface';
+import {PhoneUSFormatter} from '../../shared/formatters/phone-us.formatter';
+import {PhoneCAFormatter} from '../../shared/formatters/phone-ca.formatter';
+import {DateTimeCAFormatter} from '../../shared/formatters/datetime-ca.formatter';
+import {PostalCodeCAFormatter} from '../../shared/formatters/postal-code-ca.formatter';
+import {NumericFormatter} from '../../shared/formatters/numeric.formatter';
+import {GiftCodeFormatter} from '../../shared/formatters/gift-code.formatter';
+import {MoneyFormatter} from '../../shared/formatters/money.formatter';
+import {PercentageFormatter} from '../../shared/formatters/percentage.formatter';
+import {PostalCodeFormatter} from '../../shared/formatters/postal-code.formatter';
+import {IncomeFormatter} from '../../shared/formatters/income.formatter';
+import {StateIDNumberFormatter} from '../../shared/formatters/state-id-number.formatter';
+import {DecimalFormatter} from '../../shared/formatters/decimal.formatter';
+import {WordTextFormatter} from '../../shared/formatters/word-text.formatter';
+import {DateTimeFormatter} from '../../shared/formatters/datetime.formatter';
+import {TimeFormat, TimeFormatter} from '../../shared/formatters/time.formatter';
+import {DoNothingFormatter} from '../../shared/formatters/do-nothing.formatter';
+import {NonNumericFormatter} from '../../shared/formatters/non-numeric.formatter';
+import {WeightFormatter} from '../../shared/formatters/weight.formatter';
 
 
 @Injectable({
@@ -68,6 +69,7 @@ export class FormattersService {
         NOLOCALEFormatters.set('income', new IncomeFormatter());
         NOLOCALEFormatters.set('stateidnumber', new StateIDNumberFormatter());
         NOLOCALEFormatters.set('decimal', new DecimalFormatter());
+        NOLOCALEFormatters.set('weight', new WeightFormatter());
         NOLOCALEFormatters.set('wordtext', new WordTextFormatter());
         NOLOCALEFormatters.set('datetime', new DateTimeFormatter());
         NOLOCALEFormatters.set('hour', new TimeFormatter(TimeFormat.HOUR));
