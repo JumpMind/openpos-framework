@@ -7,17 +7,28 @@ import org.jumpmind.pos.print.PeripheralConnection;
 import org.jumpmind.pos.print.PrintException;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.ReflectionException;
+import org.jumpmind.pos.util.status.IStatusManager;
+import org.jumpmind.pos.util.status.IStatusReporter;
+import org.jumpmind.pos.util.status.Status;
+import org.jumpmind.pos.util.status.StatusReport;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.stereotype.Component;
 
 import java.util.Map;
 
 @Slf4j
-public class PoleDisplay {
+@Component
+public class PoleDisplay implements IStatusReporter {
+
+    final static String STATUS_NAME = "DEVICE.POLE_DISPLAY";
 
     final static byte CLEAR_DISPLAY = 0x0C; // NCR
 
     Map<String, Object> settings;
     PeripheralConnection peripheralConnection;
     IConnectionFactory connectionFactory;
+
+    IStatusManager statusManager;
 
     public PoleDisplay() {
 
@@ -32,6 +43,9 @@ public class PoleDisplay {
             }
             this.connectionFactory = ClassUtils.instantiate(className);
         } catch (Exception ex) {
+            if (statusManager != null) {
+                statusManager.reportStatus(new StatusReport(STATUS_NAME, Status.Offline, ex.getMessage()));
+            }
             throw new PrintException("Failed to create the connection factory for " + getClass().getName(), ex);
         }
         this.peripheralConnection = connectionFactory.open(this.settings);
@@ -50,7 +64,21 @@ public class PoleDisplay {
             peripheralConnection.getOut().write(CLEAR_DISPLAY);
             peripheralConnection.getOut().write(text.getBytes());
         } catch (Exception ex) {
+            if (statusManager != null) {
+                statusManager.reportStatus(new StatusReport(STATUS_NAME, Status.Error, ex.getMessage()));
+            }
             log.warn("Failed to write text to the PoleDisplay \"" + text + "\"", ex);
         }
+    }
+
+    @Override
+    public StatusReport getStatus(IStatusManager statusManager) {
+        this.statusManager = statusManager;
+
+        Status status = (peripheralConnection != null && peripheralConnection.getOut() != null)
+                ? Status.Online : Status.Offline;
+
+        StatusReport report = new StatusReport(STATUS_NAME, status);
+        return report;
     }
 }

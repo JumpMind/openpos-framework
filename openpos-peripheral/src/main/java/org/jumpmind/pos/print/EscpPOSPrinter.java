@@ -6,6 +6,8 @@ import jpos.services.EventCallbacks;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.ClassUtils;
+import org.jumpmind.pos.util.status.Status;
+import org.jumpmind.pos.util.status.StatusReport;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -35,6 +37,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
+    private PrinterStatusReporter printerStatusReporter;
 
     public EscpPOSPrinter() {
 
@@ -92,8 +95,15 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                 }
                 writer.print(data);
                 writer.flush();
+                if (printerStatusReporter != null) {
+                    printerStatusReporter.reportStatus(Status.Online, "Ok.");
+                }
+
             }
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, "Failed to print. ");
+            }
             if (ex instanceof PrintException) {
                 throw (PrintException)ex;
             } else {
@@ -213,7 +223,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         return printerCommands.get(commandName);
     }
 
-    public void init(Map<String, Object> settings) {
+    public void init(Map<String, Object> settings, PrinterStatusReporter printerStatusReporter) {
+        this.printerStatusReporter = printerStatusReporter;
         this.settings = settings;
         this.refreshConnectionFactoryFromSettings();
         this.refreshPrinterCommandsFromSettings();
@@ -233,6 +244,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         try {
             this.connectionFactory = (IConnectionFactory) ClassUtils.loadClass((String) this.settings.get("connectionClass")).newInstance();
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Offline, ex.getMessage());
+            }
             throw new PrintException("Failed to create the connection factory for " + getClass().getName(), ex);
         }
     }
@@ -269,6 +283,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             }
             return statusByte;
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
+            }
             throw new PrintException("getCoverOpen() failed ", ex);
         }
     }
@@ -279,6 +296,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             printNormal(POSPrinterConst.PTR_S_SLIP, text);
             endSlipMode();
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
+            }
             throw new PrintException("Failed to print to slip station " + text, ex);
         }
     }
@@ -290,6 +310,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
+            printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
             throw new PrintException("Failed to begingSlipMode", ex);
         }
     }
@@ -303,6 +324,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
+            }
             throw new PrintException("Failed to begingSlipMode", ex);
         }
     }

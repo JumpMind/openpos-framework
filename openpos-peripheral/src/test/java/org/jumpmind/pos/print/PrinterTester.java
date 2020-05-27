@@ -28,7 +28,7 @@ public class PrinterTester {
         IOpenposPrinter printer = null;
         try {
             printer = (IOpenposPrinter) Class.forName(EscpPOSPrinter.class.getName()).newInstance();
-            printer.init(settings);
+            printer.init(settings, null);
             printer.open("printerName", null);
         } catch (Exception ex) {
             ex.printStackTrace();;
