@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 public class PromptUIMessage extends UIMessage {
-    
+
     private static final long serialVersionUID = 1L;
 
     public static final String TYPE_ALPHANUMERICTEXT = "ALPHANUMERICTEXT";
@@ -23,7 +23,6 @@ public class PromptUIMessage extends UIMessage {
     public static final String TYPE_ONOFF = "ONOFF";
     public static final String TYPE_EMAIL = "EMAIL";
     public static final String TYPE_MONEY = "MONEY";
-    public static final String TYPE_WEIGHT = "WEIGHT";
 
     private String promptIcon;
     private String placeholderText;
