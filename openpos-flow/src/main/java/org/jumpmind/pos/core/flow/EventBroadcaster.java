@@ -38,7 +38,7 @@ public class EventBroadcaster {
                         processEvent = true;
                     } else {
                         // if an appevent then only receive events from the same device id
-                        if (!(event instanceof AppEvent) || ((AppEvent) event).getDeviceId().equals(stateManager.getDeviceId())) {
+                        if (!(event instanceof AppEvent) || stateManager.getDeviceId().equals(((AppEvent) event).getDeviceId())) {
                             if (onEvent.receiveEventsFromSelf() ||
                                     !event.getSource().equals(AppEvent.createSourceString(stateManager.getAppId(), stateManager.getDeviceId()))) {
                                 processEvent = true;
