@@ -267,6 +267,7 @@ export * from './lib/shared/layout-components/waffle/waffle.component';
 export * from './lib/shared/formatters/datetime-ca.formatter';
 export * from './lib/shared/formatters/datetime.formatter';
 export * from './lib/shared/formatters/decimal.formatter';
+export * from './lib/shared/formatters/weight.formatter';
 export * from './lib/shared/formatters/do-nothing.formatter';
 export * from './lib/shared/formatters/formatter.interface';
 export * from './lib/shared/formatters/gift-code.formatter';

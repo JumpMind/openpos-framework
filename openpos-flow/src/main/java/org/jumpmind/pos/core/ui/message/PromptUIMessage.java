@@ -1,16 +1,16 @@
 package org.jumpmind.pos.core.ui.message;
 
-import java.math.BigDecimal;
-import java.util.*;
-
 import org.jumpmind.pos.core.model.FieldInputType;
 import org.jumpmind.pos.core.model.KeyboardType;
 import org.jumpmind.pos.core.model.Validator;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 
+import java.math.BigDecimal;
+import java.util.*;
+
 public class PromptUIMessage extends UIMessage {
-    
+
     private static final long serialVersionUID = 1L;
 
     public static final String TYPE_ALPHANUMERICTEXT = "ALPHANUMERICTEXT";
