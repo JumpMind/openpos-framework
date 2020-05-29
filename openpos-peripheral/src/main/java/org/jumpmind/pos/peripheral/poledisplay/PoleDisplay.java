@@ -20,7 +20,8 @@ import java.util.Map;
 @Component
 public class PoleDisplay implements IStatusReporter {
 
-    final static String STATUS_NAME = "DEVICE.POLE_DISPLAY";
+    public final static String STATUS_NAME = "DEVICE.POLE_DISPLAY";
+    public final static String STATUS_ICON = "pole-display";
 
     final static byte CLEAR_DISPLAY = 0x0C; // NCR
 
@@ -44,7 +45,7 @@ public class PoleDisplay implements IStatusReporter {
             this.connectionFactory = ClassUtils.instantiate(className);
         } catch (Exception ex) {
             if (statusManager != null) {
-                statusManager.reportStatus(new StatusReport(STATUS_NAME, Status.Offline, ex.getMessage()));
+                statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, Status.Offline, ex.getMessage()));
             }
             throw new PrintException("Failed to create the connection factory for " + getClass().getName(), ex);
         }
@@ -65,7 +66,7 @@ public class PoleDisplay implements IStatusReporter {
             peripheralConnection.getOut().write(text.getBytes());
         } catch (Exception ex) {
             if (statusManager != null) {
-                statusManager.reportStatus(new StatusReport(STATUS_NAME, Status.Error, ex.getMessage()));
+                statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, Status.Error, ex.getMessage()));
             }
             log.warn("Failed to write text to the PoleDisplay \"" + text + "\"", ex);
         }
@@ -78,7 +79,7 @@ public class PoleDisplay implements IStatusReporter {
         Status status = (peripheralConnection != null && peripheralConnection.getOut() != null)
                 ? Status.Online : Status.Offline;
 
-        StatusReport report = new StatusReport(STATUS_NAME, status);
+        StatusReport report = new StatusReport(STATUS_NAME, STATUS_ICON, status);
         return report;
     }
 }

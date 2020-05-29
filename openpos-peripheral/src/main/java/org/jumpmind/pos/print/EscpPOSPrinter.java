@@ -87,7 +87,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void printNormal(int station, String data) {
         try {
-//            setPrintStation(station);
             if (data != null && data.length() > 0) {
                 if (writer == null) {
                     throw new PrintException("The output stream for the printer driver cannot be null " +
@@ -111,23 +110,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             }
         }
     }
-
-    // see printSlip() instead for now.
-//    private void setPrintStation(int station) throws Exception {
-//        if (station != currentPrintStation) {
-//            writer.flush();
-//            switch (station) {
-//                case POSPrinterConst.PTR_S_SLIP:
-//                    printerConnection.getOut().write((byte)0x1C); // select slip station.
-//                    break;
-//                case POSPrinterConst.PTR_S_RECEIPT:
-//                default:
-//                    printerConnection.getOut().write((byte)0x10); // clear printer/receipt to receipt mode.
-//                    break;
-//            }
-//         }
-//        currentPrintStation = station;
-//    }
 
     @Override
     public void cutPaper(int percentage) {
@@ -269,11 +251,14 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         return printWidth;
     }
 
+    @Override
     public int readPrinterStatus() {
         try {
+            // for now, do non-
+            getPeripheralConnection().getOut().flush();
             // TODO this needs work on NCR. Calling this more than a few times puts the printer in a bad state.
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
-//            getPrinterConnection().getOut().write(new byte[] {0x1D, 0x04, 5});// realtime status request
+////            getPrinterConnection().getOut().write(new byte[] {0x1D, 0x04, 5});// realtime status request
 
             getPeripheralConnection().getOut().flush();
             Thread.sleep(500);
@@ -281,12 +266,12 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             if (statusByte == -1) {
                 throw new PrinterException("Can't read printer status.");
             }
-            return statusByte;
+            return 0;
         } catch (Exception ex) {
             if (printerStatusReporter != null) {
                 printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
             }
-            throw new PrintException("getCoverOpen() failed ", ex);
+            throw new PrintException("readPrinterStatus() failed ", ex);
         }
     }
 
@@ -311,7 +296,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
             printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
-            throw new PrintException("Failed to begingSlipMode", ex);
+            throw new PrintException("Failed to beginSlipMode", ex);
         }
     }
 
@@ -327,7 +312,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             if (printerStatusReporter != null) {
                 printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
             }
-            throw new PrintException("Failed to begingSlipMode", ex);
+            throw new PrintException("Failed to endSlipMode", ex);
         }
     }
 
