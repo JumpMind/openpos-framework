@@ -30,7 +30,7 @@ public class YamlConfigConverter {
     }
 
     public FlowConfig convertToFlowConfig(List<YamlFlowConfig> loadedYamlFlowConfigs, YamlFlowConfig yamlFlowConfig) {
-        FlowConfig flowConfig = converFlowConfig(loadedYamlFlowConfigs, yamlFlowConfig);
+        FlowConfig flowConfig = convertFlowConfig(loadedYamlFlowConfigs, yamlFlowConfig);
         return flowConfig;
     }
     
@@ -38,7 +38,7 @@ public class YamlConfigConverter {
         List<FlowConfig> flowConfigs = new ArrayList<FlowConfig>();
         
         for (YamlFlowConfig yamlFlowConfig : yamlFlowConfigs) {            
-            FlowConfig flowConfig = converFlowConfig(yamlFlowConfigs, yamlFlowConfig);
+            FlowConfig flowConfig = convertFlowConfig(yamlFlowConfigs, yamlFlowConfig);
             flowConfigs.add(flowConfig);
         }
         
@@ -48,13 +48,13 @@ public class YamlConfigConverter {
     public List<FlowConfig> convertFlowConfigs(List<YamlFlowConfig> loadedYamlFlowConfigs, List<YamlFlowConfig> yamlFlowConfigs) {
         List<FlowConfig> flowConfigs = new ArrayList<FlowConfig>();
         for (YamlFlowConfig yamlFlowConfig : yamlFlowConfigs) {
-            flowConfigs.add(converFlowConfig(loadedYamlFlowConfigs, yamlFlowConfig));
+            flowConfigs.add(convertFlowConfig(loadedYamlFlowConfigs, yamlFlowConfig));
         }
         
         return flowConfigs;
     }
 
-    private FlowConfig converFlowConfig(List<YamlFlowConfig> yamlFlowConfigs, YamlFlowConfig yamlFlowConfig) {
+    private FlowConfig convertFlowConfig(List<YamlFlowConfig> yamlFlowConfigs, YamlFlowConfig yamlFlowConfig) {
         FlowConfig flowConfig = new FlowConfig(yamlFlowConfig.getFlowName());
 
         yamlFlowConfig.getGlobalEventHandlers().forEach((s)->{

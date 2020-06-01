@@ -1,11 +1,7 @@
 package org.jumpmind.pos.core.flow.config;
 
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.flow.FlowException;
@@ -51,7 +47,7 @@ public class YamlConfigProvider implements IFlowConfigProvider {
 
             // Loop these backwards since most specific will be first in the class path an we want those
             // last so they win the override
-            for( int i = resources.length - 1; i >= 0 ; --i){
+            for (int i = resources.length - 1; i >= 0; --i) {
                 Resource resource = resources[i];
                 // first pass needs to load all raw YAML.
                 yamlFlowConfigs.addAll(loadYamlResource(appId, path, resource));
@@ -102,19 +98,39 @@ public class YamlConfigProvider implements IFlowConfigProvider {
             }
         }
     }
-    
-    protected List<YamlFlowConfig> loadYamlResource(String appId, InputStream resource) {      
+
+    protected void updateSubflowsWithParentConfigScope(FlowConfig flowConfig) {
+        updateSubflowsWithParentConfigScope(flowConfig, flowConfig.getConfigScope());
+    }
+
+    protected void updateSubflowsWithParentConfigScope(FlowConfig flowConfig, Map<String, Object> inheritedConfigScope) {
+        flowConfig.getStateConfigs().values().forEach(sc -> {
+            updateSubflowsWithParentConfigScope(flowConfig, sc.getActionToSubStateMapping().values(), inheritedConfigScope);
+        });
+        updateSubflowsWithParentConfigScope(flowConfig, flowConfig.getActionToSubStateMapping().values(), inheritedConfigScope);
+    }
+
+    protected void updateSubflowsWithParentConfigScope(FlowConfig flowConfig, Collection<SubFlowConfig> configs, Map<String, Object> inheritedConfigScope) {
+        configs.forEach(sf -> {
+            Map<String, Object> currentScope = new HashMap<>(inheritedConfigScope);
+            currentScope.putAll(sf.getSubFlowConfig().getConfigScope());
+            sf.getSubFlowConfig().setConfigScope(currentScope);
+            updateSubflowsWithParentConfigScope(sf.getSubFlowConfig(), currentScope);
+        });
+    }
+
+    protected List<YamlFlowConfig> loadYamlResource(String appId, InputStream resource) {
         List<YamlFlowConfig> yamlFlowConfigs = flowConfigLoader.loadYamlFlowConfigs(resource);
         List<YamlFlowConfig> existingYamlFlowConfigs = loadedYamlFlowConfigs.get(appId);
-        
+
         if (existingYamlFlowConfigs == null) {
             existingYamlFlowConfigs = new ArrayList<YamlFlowConfig>();
             loadedYamlFlowConfigs.put(appId, existingYamlFlowConfigs);
         }
 
-        for( YamlFlowConfig flowConfig: yamlFlowConfigs){
+        for (YamlFlowConfig flowConfig : yamlFlowConfigs) {
             YamlFlowConfig match = existingYamlFlowConfigs.stream().filter(flowConfig1 -> flowConfig.getFlowName().equals(flowConfig1.getFlowName())).findFirst().orElse(null);
-            if(match == null){
+            if (match == null) {
                 existingYamlFlowConfigs.add(flowConfig);
             } else {
                 match.merge(flowConfig);
@@ -146,6 +162,9 @@ public class YamlConfigProvider implements IFlowConfigProvider {
 
         List<FlowConfig> flowConfigs = flowConfigConverter.convertFlowConfigs(existingYamlFlowConfigs, yamlFlowConfigs);
         existingFlowConfigs.addAll(flowConfigs);
+
+        // inherit config scope down through child sub flows
+        existingFlowConfigs.forEach(f -> updateSubflowsWithParentConfigScope(f));
 
     }
 

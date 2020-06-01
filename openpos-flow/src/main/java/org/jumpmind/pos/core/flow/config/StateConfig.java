@@ -34,7 +34,7 @@ public class StateConfig {
     private Map<String, SubFlowConfig> actionToSubStateMapping = new HashMap<>();
 
     public StateConfig() {
-        actionToStateMapping.put("EndConverstation", CompleteState.class);
+        actionToStateMapping.put("EndConversation", CompleteState.class);
     }
     
     public String getStateName() {
