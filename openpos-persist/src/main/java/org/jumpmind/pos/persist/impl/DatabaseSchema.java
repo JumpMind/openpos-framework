@@ -16,7 +16,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import lombok.Delegate;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
@@ -266,17 +265,23 @@ public class DatabaseSchema {
                     dbTable.addColumn(column);
                 }
 
-                IndexDefs indexDefs = clazz.getAnnotation(IndexDefs.class);
-                Map<String, IIndex> indices = createIndices(indexDefs, dbTable, meta, databasePlatform);
-                for (IIndex index : indices.values()) {
-                    dbTable.addIndex(index);
-                }
                 meta.setTable(dbTable);
                 modelClassValidator.validate(meta);
                 list.add(meta);
             }
             entityClass = entityClass.getSuperclass();
         }
+
+        for (ModelClassMetaData meta: list) {
+            Class<?> currentClass = meta.getClazz();
+            Table dbTable = meta.getTable();
+            IndexDefs indexDefs = currentClass.getAnnotation(IndexDefs.class);
+            Map<String, IIndex> indices = createIndices(indexDefs, dbTable, meta, databasePlatform);
+            for (IIndex index : indices.values()) {
+                dbTable.addIndex(index);
+            }
+        }
+
         ModelMetaData metaData = new ModelMetaData();
         metaData.setModelClassMetaData(list);
         metaData.init();

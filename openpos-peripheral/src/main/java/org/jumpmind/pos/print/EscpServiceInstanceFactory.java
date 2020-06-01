@@ -76,7 +76,7 @@ public class EscpServiceInstanceFactory implements JposServiceInstanceFactory {
         settings.put("printerCommandLocations", getJposProperty(jposentry, PRINTER_COMMAND_LOCATIONS, "esc_p.properties"));
         settings.put("printWidth", getJposProperty(jposentry, "printWidth", "48"));
         settings.put("connectionClass", SocketConnectionFactory.class.getName());
-        printer.init(settings);
+        printer.init(settings, null);
     }
 
     protected String getRequiredJposProperty(JposEntry jposentry, String name) {

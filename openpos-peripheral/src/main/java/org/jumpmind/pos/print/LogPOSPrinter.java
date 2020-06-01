@@ -4,6 +4,7 @@ import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
 import org.apache.log4j.Logger;
+import org.jumpmind.pos.util.status.Status;
 
 import java.io.InputStream;
 import java.util.Map;
@@ -14,6 +15,8 @@ public class LogPOSPrinter implements IOpenposPrinter {
     private static final Logger log = Logger.getLogger(LogPOSPrinter.class);
 
     private StringBuilder buff = new StringBuilder(128);
+
+    private PrinterStatusReporter printerStatusReporter;
 
     @Override
     public void printImage(InputStream image) {
@@ -40,8 +43,8 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public void init(Map<String, Object> settings) {
-
+    public void init(Map<String, Object> settings, PrinterStatusReporter printerStatusReporter) {
+        printerStatusReporter.reportStatus(Status.Online, "LogPOSPrinter Ok.");
     }
 
     @Override
@@ -52,6 +55,15 @@ public class LogPOSPrinter implements IOpenposPrinter {
     @Override
     public PeripheralConnection getPeripheralConnection() {
         return new PeripheralConnection();
+    }
+
+    @Override
+    public int readPrinterStatus() {
+        if (printerStatusReporter != null) {
+            printerStatusReporter.reportStatus(Status.Online, "LogPOSPrinter Ok.");
+        }
+
+        return 0;
     }
 
     @Override

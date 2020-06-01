@@ -6,6 +6,8 @@ import jpos.services.EventCallbacks;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.ClassUtils;
+import org.jumpmind.pos.util.status.Status;
+import org.jumpmind.pos.util.status.StatusReport;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -35,6 +37,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
+    private PrinterStatusReporter printerStatusReporter;
 
     public EscpPOSPrinter() {
 
@@ -84,7 +87,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void printNormal(int station, String data) {
         try {
-//            setPrintStation(station);
             if (data != null && data.length() > 0) {
                 if (writer == null) {
                     throw new PrintException("The output stream for the printer driver cannot be null " +
@@ -92,8 +94,15 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                 }
                 writer.print(data);
                 writer.flush();
+                if (printerStatusReporter != null) {
+                    printerStatusReporter.reportStatus(Status.Online, "Ok.");
+                }
+
             }
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, "Failed to print. ");
+            }
             if (ex instanceof PrintException) {
                 throw (PrintException)ex;
             } else {
@@ -101,23 +110,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             }
         }
     }
-
-    // see printSlip() instead for now.
-//    private void setPrintStation(int station) throws Exception {
-//        if (station != currentPrintStation) {
-//            writer.flush();
-//            switch (station) {
-//                case POSPrinterConst.PTR_S_SLIP:
-//                    printerConnection.getOut().write((byte)0x1C); // select slip station.
-//                    break;
-//                case POSPrinterConst.PTR_S_RECEIPT:
-//                default:
-//                    printerConnection.getOut().write((byte)0x10); // clear printer/receipt to receipt mode.
-//                    break;
-//            }
-//         }
-//        currentPrintStation = station;
-//    }
 
     @Override
     public void cutPaper(int percentage) {
@@ -213,7 +205,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         return printerCommands.get(commandName);
     }
 
-    public void init(Map<String, Object> settings) {
+    public void init(Map<String, Object> settings, PrinterStatusReporter printerStatusReporter) {
+        this.printerStatusReporter = printerStatusReporter;
         this.settings = settings;
         this.refreshConnectionFactoryFromSettings();
         this.refreshPrinterCommandsFromSettings();
@@ -233,6 +226,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         try {
             this.connectionFactory = (IConnectionFactory) ClassUtils.loadClass((String) this.settings.get("connectionClass")).newInstance();
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Offline, ex.getMessage());
+            }
             throw new PrintException("Failed to create the connection factory for " + getClass().getName(), ex);
         }
     }
@@ -255,11 +251,14 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         return printWidth;
     }
 
+    @Override
     public int readPrinterStatus() {
         try {
+            // for now, do non-
+            getPeripheralConnection().getOut().flush();
             // TODO this needs work on NCR. Calling this more than a few times puts the printer in a bad state.
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
-//            getPrinterConnection().getOut().write(new byte[] {0x1D, 0x04, 5});// realtime status request
+////            getPrinterConnection().getOut().write(new byte[] {0x1D, 0x04, 5});// realtime status request
 
             getPeripheralConnection().getOut().flush();
             Thread.sleep(500);
@@ -267,9 +266,12 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             if (statusByte == -1) {
                 throw new PrinterException("Can't read printer status.");
             }
-            return statusByte;
+            return 0;
         } catch (Exception ex) {
-            throw new PrintException("getCoverOpen() failed ", ex);
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
+            }
+            throw new PrintException("readPrinterStatus() failed ", ex);
         }
     }
 
@@ -279,6 +281,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             printNormal(POSPrinterConst.PTR_S_SLIP, text);
             endSlipMode();
         } catch (Exception ex) {
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
+            }
             throw new PrintException("Failed to print to slip station " + text, ex);
         }
     }
@@ -290,7 +295,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
-            throw new PrintException("Failed to begingSlipMode", ex);
+            printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
+            throw new PrintException("Failed to beginSlipMode", ex);
         }
     }
 
@@ -303,7 +309,10 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
-            throw new PrintException("Failed to begingSlipMode", ex);
+            if (printerStatusReporter != null) {
+                printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
+            }
+            throw new PrintException("Failed to endSlipMode", ex);
         }
     }
 

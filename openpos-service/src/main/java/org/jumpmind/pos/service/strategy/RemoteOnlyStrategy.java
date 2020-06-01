@@ -3,6 +3,10 @@ package org.jumpmind.pos.service.strategy;
 import org.jumpmind.pos.service.PosServerException;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
+import org.jumpmind.pos.util.status.IStatusManager;
+import org.jumpmind.pos.util.status.IStatusReporter;
+import org.jumpmind.pos.util.status.Status;
+import org.jumpmind.pos.util.status.StatusReport;
 import org.jumpmind.pos.util.web.ConfiguredRestTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -22,7 +26,7 @@ import java.util.Map;
 import java.util.UUID;
 
 @Component(RemoteOnlyStrategy.REMOTE_ONLY_STRATEGY)
-public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements IInvocationStrategy {
+public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements IInvocationStrategy, IStatusReporter {
 
     static final String REMOTE_ONLY_STRATEGY = "REMOTE_ONLY";
 
@@ -31,6 +35,13 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
 
     @Autowired
     private ClientContext clientContext;
+
+    private IStatusManager statusManager;
+
+    private StatusReport lastStatus;
+
+    public static final String STATUS_NAME = "NETWORK.REMOTE";
+    public static final String STATUS_ICON = "cloud";
 
     public String getStrategyName() {
         return REMOTE_ONLY_STRATEGY;
@@ -53,30 +64,48 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         }
         
         if (requestMethods != null && requestMethods.length > 0) {
-            HttpMethod requestMethod = translate(requestMethods[0]);
-            String serverUrl = buildUrl(config, proxy, method, args);
-            Object[] newArgs = findArgs(method, args);
-            if (isMultiPartUpload(method, args)) {
-                headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-                MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-                body.add(getRequestParamName(method), new FileSystemResource(getMultiPartFile(method, args)));
-                HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-                ResponseEntity<String> response = template.postForEntity(serverUrl, requestEntity, String.class, newArgs);
-                if (response.getStatusCode() != HttpStatus.OK) {
-                    throw new PosServerException();
-                }
-            } else {
-                Object requestBody = findRequestBody(method, args);
-                if (method.getReturnType().equals(Void.TYPE)) {
-                    template.execute(serverUrl, requestBody, requestMethod, headers, newArgs);
+            try {
+                HttpMethod requestMethod = translate(requestMethods[0]);
+                String serverUrl = buildUrl(config, proxy, method, args);
+                Object[] newArgs = findArgs(method, args);
+                if (isMultiPartUpload(method, args)) {
+                    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+                    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+                    body.add(getRequestParamName(method), new FileSystemResource(getMultiPartFile(method, args)));
+                    HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+                    ResponseEntity<String> response = template.postForEntity(serverUrl, requestEntity, String.class, newArgs);
+                    if (response.getStatusCode() != HttpStatus.OK) {
+                        throw new PosServerException();
+                    }
                 } else {
-                    return template.execute(serverUrl, requestBody, method.getReturnType(), requestMethod, headers, newArgs);
+                    Object requestBody = findRequestBody(method, args);
+                    if (method.getReturnType().equals(Void.TYPE)) {
+                        template.execute(serverUrl, requestBody, requestMethod, headers, newArgs);
+                    } else {
+                        Object result =  template.execute(serverUrl, requestBody, method.getReturnType(), requestMethod, headers, newArgs);
+                        reportStatus(Status.Online);
+                        return result;
+                    }
                 }
+            } catch (Throwable ex) {
+                reportStatus(Status.Offline, ex.getMessage());
+                throw ex;
             }
+
         } else {
             throw new IllegalStateException("A method must be specified on the @RequestMapping");
         }
         return null;
+    }
+
+    private void reportStatus(Status status) {
+        reportStatus(status, "");
+    }
+    private void reportStatus(Status status, String message) {
+        this.lastStatus = new StatusReport(STATUS_NAME, STATUS_ICON, status, message);
+        if (this.statusManager != null) {
+            this.statusManager.reportStatus(lastStatus);
+        }
     }
 
     protected String buildUrl(ServiceSpecificConfig config, Object proxy, Method method, Object[] args) {
@@ -155,4 +184,12 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         return HttpMethod.valueOf(method.name());
     }
 
+    @Override
+    public StatusReport getStatus(IStatusManager statusManager) {
+        this.statusManager = statusManager;
+        if (lastStatus == null) {
+            this.lastStatus = new StatusReport(STATUS_NAME, STATUS_ICON, Status.Unknown, "");
+        }
+        return lastStatus;
+    }
 }
