@@ -265,17 +265,23 @@ public class DatabaseSchema {
                     dbTable.addColumn(column);
                 }
 
-                IndexDefs indexDefs = clazz.getAnnotation(IndexDefs.class);
-                Map<String, IIndex> indices = createIndices(indexDefs, dbTable, meta, databasePlatform);
-                for (IIndex index : indices.values()) {
-                    dbTable.addIndex(index);
-                }
                 meta.setTable(dbTable);
                 modelClassValidator.validate(meta);
                 list.add(meta);
             }
             entityClass = entityClass.getSuperclass();
         }
+
+        for (ModelClassMetaData meta: list) {
+            Class<?> currentClass = meta.getClazz();
+            Table dbTable = meta.getTable();
+            IndexDefs indexDefs = currentClass.getAnnotation(IndexDefs.class);
+            Map<String, IIndex> indices = createIndices(indexDefs, dbTable, meta, databasePlatform);
+            for (IIndex index : indices.values()) {
+                dbTable.addIndex(index);
+            }
+        }
+
         ModelMetaData metaData = new ModelMetaData();
         metaData.setModelClassMetaData(list);
         metaData.init();
