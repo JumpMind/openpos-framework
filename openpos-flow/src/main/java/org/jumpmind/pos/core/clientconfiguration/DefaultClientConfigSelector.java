@@ -19,6 +19,8 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
 
     private List<String> propertiesForTags = new ArrayList<>();
     private List<ClientConfigurationSet> clientConfigSets = new ArrayList<>();
+    private Map<String, Map<String, String>> defaultConfigs = new HashMap<>();
+
 
     @Override
     public Map<String, Map<String, String>> getConfigurations(Map<String, String> properties, List<String> additionalTags) {
@@ -55,6 +57,9 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
         tagGroups.addAll(uniquePermuations);
 
         Map<List<String>, Map<String, Map<String,String>>> clientConfigsByTagsAndName = new HashMap<>();
+
+        clientConfigsByTagsAndName.put(Arrays.asList("default"), defaultConfigs);
+
         clientConfigSets.forEach(clientConfigurationSet -> {
             clientConfigurationSet.getTags().sort(String::compareTo);
             clientConfigsByTagsAndName.put(clientConfigurationSet.getTags(), clientConfigurationSet.getConfigsForTags());
@@ -99,4 +104,7 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
     public void setPropertiesForTags(List<String> propertiesForTags) {
         this.propertiesForTags = propertiesForTags;
     }
+
+    public Map<String, Map<String, String>> getDefaultConfigs() { return defaultConfigs; }
+    public void setDefaultConfigs( Map<String, Map<String, String>> defaultConfigs ) { this.defaultConfigs = defaultConfigs;  }
 }
