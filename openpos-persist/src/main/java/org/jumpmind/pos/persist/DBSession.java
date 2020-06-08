@@ -663,7 +663,7 @@ public class DBSession {
         if (model instanceof ITaggedModel) {
             Map<String, Object> tagValues = new HashMap<>();
             for (String columnName : row.keySet()) {
-                if (columnName.startsWith(TagModel.TAG_PREFIX)) {
+                if (columnName.toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
                     matchedColumns.put(columnName, null);
                     tagValues.put(columnName, row.getString(columnName));
                 }
