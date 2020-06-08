@@ -22,6 +22,8 @@
 .menu-button {
   min-width: 160px;
   min-height: 160px;
+  justify-content: center;
+  align-content: center;
 
   &.mobile {
     min-width: 96px;
