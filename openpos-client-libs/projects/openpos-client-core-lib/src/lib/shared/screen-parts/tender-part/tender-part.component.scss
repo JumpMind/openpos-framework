@@ -88,8 +88,17 @@
     column-gap: 16px;
 }
 
+.void-tender-row {
+    grid-template-columns: auto 1fr 1fr;
+}
+
 .tender-amount {
     justify-self: end;
+    align-self: center;
+}
+
+.tender-amount-name {
+    align-self: center;
 }
 
 .tender-remaining-balance {

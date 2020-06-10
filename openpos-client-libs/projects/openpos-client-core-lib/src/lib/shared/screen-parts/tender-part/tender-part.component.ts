@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { TenderPartInterface } from './tender-part.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
+import { ITender } from './tender.interface';
 
 
 @ScreenPart({
@@ -35,6 +36,10 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
                 });
             }
         }
+    }
+
+    voidTender(tender: ITender, index: number) {
+        this.doAction(tender.voidButton, index);
     }
 
 }
