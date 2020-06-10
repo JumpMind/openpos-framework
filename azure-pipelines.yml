@@ -42,7 +42,7 @@ steps:
     jdkArchitectureOption: 'x64'
     publishJUnitResults: true
     testResultsFiles: '**/TEST*.xml'
-    tasks: 'deploy generateSourceArtifact'
+    tasks: 'test deploy generateSourceArtifact'
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish Client Code Coverage'
   inputs: 
