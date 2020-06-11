@@ -63,7 +63,7 @@ public class PersonalizationEndpointTest {
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00100-001")
+                                        .deviceId("00145-001")
                                         .appId("customer-display")
                                         .build()
                         )
@@ -83,7 +83,7 @@ public class PersonalizationEndpointTest {
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00100-001")
+                                        .deviceId("00145-001")
                                         .appId("pos")
                                         .deviceToken("123456789")
                                         .deviceType("WORKSTATION")
@@ -105,7 +105,7 @@ public class PersonalizationEndpointTest {
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00100-001")
+                                        .deviceId("00145-001")
                                         .appId("pos")
                                         .build()
                         )
@@ -120,7 +120,7 @@ public class PersonalizationEndpointTest {
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00100-001")
+                                        .deviceId("00145-001")
                                         .deviceToken("foo")
                                         .appId("pos")
                                         .build()
@@ -137,7 +137,7 @@ public class PersonalizationEndpointTest {
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00100-001")
+                                        .deviceId("00145-001")
                                         .deviceToken("123456789")
                                         .appId("pos")
                                         .deviceType("WORKSTATION")
@@ -147,7 +147,7 @@ public class PersonalizationEndpointTest {
                         .build()
         ).andDo(result -> {
             String response = mvc.perform(
-                    new MockGetRequestBuilder("/devices/myDevice").deviceId("00100-001").appId("pos").build()
+                    new MockGetRequestBuilder("/devices/myDevice").deviceId("00145-001").appId("pos").build()
             ).andReturn().getResponse().getContentAsString();
 
             assertTrue(mapper.readValue(response, GetDeviceResponse.class)
