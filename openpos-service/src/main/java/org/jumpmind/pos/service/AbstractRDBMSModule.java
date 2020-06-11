@@ -182,7 +182,19 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public String getURL() {
-        return getDbProperties(DB_POOL_URL, "jdbc:h2:mem:" + getName());
+        String url = getDbProperties(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName() + ";DB_CLOSE_ON_EXIT=FALSE");
+        if (url.contains("openpos")) {
+            loadJumpMindDriver();
+        }
+        return url;
+    }
+
+    protected static void loadJumpMindDriver() {
+        try {
+            Class.forName(Driver.class.getName());
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
     }
 
     @Override

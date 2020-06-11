@@ -11,7 +11,6 @@ import org.jumpmind.pos.util.status.IStatusManager;
 import org.jumpmind.pos.util.status.IStatusReporter;
 import org.jumpmind.pos.util.status.Status;
 import org.jumpmind.pos.util.status.StatusReport;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -81,6 +80,10 @@ public class PoleDisplay implements IStatusReporter {
 
         Status status = (peripheralConnection != null && peripheralConnection.getOut() != null)
                 ? Status.Online : Status.Offline;
+
+        if (this.settings == null) {
+            status = Status.Disabled;
+        }
 
         StatusReport report = new StatusReport(STATUS_NAME, STATUS_ICON, status);
         return report;

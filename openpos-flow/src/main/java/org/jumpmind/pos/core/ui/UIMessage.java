@@ -9,7 +9,7 @@ public class UIMessage extends Message {
     private static final long serialVersionUID = 1L;
     private String screenType;
     private String id;
-    private int sessionTimeoutMillis;
+    private Integer sessionTimeoutMillis;
     private Action sessionTimeoutAction;
     private boolean disabled = false;
 
@@ -39,11 +39,11 @@ public class UIMessage extends Message {
         this.id = id;
     }
 
-    public int getSessionTimeoutMillis() {
+    public Integer getSessionTimeoutMillis() {
         return sessionTimeoutMillis;
     }
 
-    public void setSessionTimeoutMillis(int sessionTimeoutMillis) {
+    public void setSessionTimeoutMillis(Integer sessionTimeoutMillis) {
         this.sessionTimeoutMillis = sessionTimeoutMillis;
     }
 

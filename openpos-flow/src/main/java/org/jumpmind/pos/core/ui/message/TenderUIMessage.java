@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.ui.message;
 
 import org.jumpmind.pos.core.model.Form;
+import org.jumpmind.pos.core.model.Tender;
 import org.jumpmind.pos.core.model.Total;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.IHasForm;
@@ -18,7 +19,7 @@ public class TenderUIMessage extends UIMessage implements IHasForm {
     private String title;
     private String prompt;
     private Total amountDue;
-    private List<Total> amounts;
+    private List<Tender> amounts;
     private OptionsListPart optionsList;
     private String imageUrl;
 
@@ -60,15 +61,15 @@ public class TenderUIMessage extends UIMessage implements IHasForm {
         this.amountDue = amountDue;
     }
 
-    public List<Total> getAmounts() {
+    public List<Tender> getAmounts() {
         return amounts;
     }
 
-    public void setAmounts(List<Total> amounts) {
+    public void setAmounts(List<Tender> amounts) {
         this.amounts = amounts;
     }
 
-    public void addAmount(Total amount) {
+    public void addAmount(Tender amount) {
         if (this.amounts == null) {
             this.amounts = new ArrayList<>();
         }

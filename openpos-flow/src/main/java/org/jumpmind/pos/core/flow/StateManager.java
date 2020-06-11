@@ -32,7 +32,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import static java.lang.String.*;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
@@ -59,6 +58,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -109,6 +109,9 @@ public class StateManager implements IStateManager {
 
     @Autowired
     StateManagerContainer stateManagerContainer;
+
+    @Value("${openpos.screens.config.defaultSessionTimeoutMills:240000}")
+    private long defaultSessionTimeoutMillis;
 
     private ApplicationState applicationState = new ApplicationState();
 
@@ -966,7 +969,7 @@ public class StateManager implements IStateManager {
         }
 
         if (screen != null) {
-            sessionTimeoutMillis = screen.getSessionTimeoutMillis();
+            sessionTimeoutMillis = screen.getSessionTimeoutMillis() == null ? defaultSessionTimeoutMillis : screen.getSessionTimeoutMillis();
             sessionTimeoutAction = screen.getSessionTimeoutAction();
         } else {
             sessionTimeoutMillis = 0;
