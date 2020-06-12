@@ -19,7 +19,7 @@ export class LoaderComponent implements OnInit, OnDestroy, IMessageHandler<ILoad
     time: Date = new Date();
     reconnecting = false;
     interval: any;
-
+    updateLoadingTimerId: number;
     loading = false;
 
     constructor(
@@ -34,11 +34,13 @@ export class LoaderComponent implements OnInit, OnDestroy, IMessageHandler<ILoad
 
     handle(message: ILoading) {
         console.info(`received loading message.  queue: ${message.queue}, cancel: ${message.cancel}, title: ${message.title}`);
+        window.clearTimeout(this.updateLoadingTimerId);
         if (message.queue) {
             this.loading = true;
-            setTimeout(() => {
-                this.updateLoading(message, false);
-            }, Configuration.loadingDialogDelay);
+            this.updateLoadingTimerId = window.setTimeout(
+                () => this.updateLoading(message, false),
+                Configuration.loadingDialogDelay
+            );
         } else {
             this.updateLoading(message, true);
         }
