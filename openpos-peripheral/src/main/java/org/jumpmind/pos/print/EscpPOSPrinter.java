@@ -113,6 +113,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public void cutPaper(int percentage) {
+        printNormal(0, printerCommands.get(PrinterCommands.CUT_FEED));  // epson will cut through barcode without some feed
         printNormal(0, printerCommands.get(PrinterCommands.CUT_PAPER));
     }
 
@@ -126,7 +127,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         String printBarcodeCommand = buildBarcodeCommand(station, data, symbology, height, width, alignment, textPosition);
         printNormal(0, printerCommands.get(PrinterCommands.ALIGN_CENTER));
         printNormal(0, printBarcodeCommand);
-        printNormal(0, printerCommands.get(PrinterCommands.BARCODE_FEED));  // epson will cut through barcode without some feed
         printNormal(0, printerCommands.get(PrinterCommands.ALIGN_LEFT));
     }
 

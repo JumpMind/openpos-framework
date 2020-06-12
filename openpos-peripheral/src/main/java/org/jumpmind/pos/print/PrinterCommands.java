@@ -27,7 +27,7 @@ public class PrinterCommands {
     public static final String BARCODE_TYPE_CODE_128_CODEA = "BARCODE_TYPE_CODE_128_CODEA";
     public static final String IMAGE_START_BYTE = "IMAGE_START_BYTE";
     public static final String BARCODE_TYPE_CODE_39 = "BARCODE_TYPE_CODE_39";
-    public static final String BARCODE_FEED = "BARCODE_FEED";
+    public static final String CUT_FEED = "CUT_FEED";
     public static final String CASH_DRAWER_OPEN = "CASH_DRAWER_OPEN";
     public static final String ESC_P_RESET = "ESC_P_RESET";
 
