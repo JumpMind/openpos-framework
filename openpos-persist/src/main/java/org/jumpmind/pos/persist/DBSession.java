@@ -216,6 +216,10 @@ public class DBSession {
         }
     }
 
+    public int[] executeBatchSql(String sql, List<Object[]> batchArgs) {
+        return jdbcTemplate.getJdbcOperations().batchUpdate(sql, batchArgs);
+    }
+
     public int executeSql(String sql, Object... params) {
         return jdbcTemplate.getJdbcOperations().update(sql, params);
     }
