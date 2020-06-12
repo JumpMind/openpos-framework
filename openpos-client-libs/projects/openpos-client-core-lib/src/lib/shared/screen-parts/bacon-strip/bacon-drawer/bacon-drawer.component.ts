@@ -5,8 +5,8 @@ import {ScreenPartComponent} from '../../screen-part';
 import {BaconStripInterface} from '../bacon-strip.interface';
 import {KeyPressProvider} from '../../../providers/keypress.provider';
 import {Configuration} from '../../../../configuration/configuration';
-import {fromEvent, merge} from 'rxjs';
-import {filter, map, takeUntil} from 'rxjs/operators';
+import {merge} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 @ScreenPart({name: 'baconStrip'})
 @Component({
@@ -23,7 +23,6 @@ export class BaconDrawerComponent extends ScreenPartComponent<BaconStripInterfac
 
   constructor(injector: Injector) {
     super(injector);
-    this.keyPressProvider = injector.get(KeyPressProvider);
   }
 
   screenDataUpdated() {
