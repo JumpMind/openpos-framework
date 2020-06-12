@@ -2,6 +2,7 @@ import {Injectable, OnDestroy} from '@angular/core';
 import {fromEvent, merge, Observable, Subject, Subscription} from 'rxjs';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
 import {IActionItem} from '../../core/actions/action-item.interface';
+import {LockScreenService} from '../../core/lock-screen/lock-screen.service';
 
 /**
  * How to subscribe to keys, and keys with modifiers:
@@ -33,7 +34,7 @@ export class KeyPressProvider implements OnDestroy {
     // ctrl+p
     keyRegex = new RegExp(/(?<key>(\\\+|[^+])+)/, 'g');
 
-    constructor() {
+    constructor(private lockScreenService: LockScreenService) {
         merge(
             this.keypressSourceRegistered$,
             this.keypressSourceUnregistered$
@@ -48,12 +49,26 @@ export class KeyPressProvider implements OnDestroy {
             console.log(`[KeyPressProvider]: Globally subscribed to "${key}: ${action.action}"`);
         });
 
+        console.log('[KeyPressProvider]: Subscriptions', this.subscribers);
+
         return fromEvent(window, 'keydown').pipe(
             map((event: KeyboardEvent) => this.findMatchingAction(actionList, event)),
             // Only notify if a matching action was found
             filter(action => !!action),
+            filter(action => this.shouldRunGlobalAction(action)),
             takeUntil(this.destroyed$)
         );
+    }
+
+    shouldRunGlobalAction(action: IActionItem): boolean {
+        const isLockScreenEnabled = this.lockScreenService.enabled.getValue();
+
+        if(isLockScreenEnabled) {
+            const key = this.getNormalizedKey(action.keybind);
+            console.warn(`[KeyPressProvider]: Blocking global action "${key}: ${action.action}" because the lock screen is active`);
+        }
+
+        return !isLockScreenEnabled;
     }
 
     findMatchingAction(actions: IActionItem[], event: KeyboardEvent): IActionItem {
@@ -118,6 +133,8 @@ export class KeyPressProvider implements OnDestroy {
         if (stop$) {
             stop$.pipe(take(1)).subscribe(() => mainSubscription.unsubscribe());
         }
+
+        console.log('[KeyPressProvider]: Subscriptions', this.subscribers);
 
         return mainSubscription;
     }
