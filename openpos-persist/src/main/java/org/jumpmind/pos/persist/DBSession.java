@@ -496,7 +496,6 @@ public class DBSession {
                 DmlStatement statement = databasePlatform.createDmlStatement(dmlType, table.getCatalog(), table.getSchema(), table.getName(),
                         primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
                 String sql = statement.getSql();
-                Object[] values = statement.getValueArray(model.getColumnNamesToValues());
                 jdbcTemplate.getJdbcOperations().batchUpdate(sql, getValueArray(statement, models));
             }
         }
@@ -522,6 +521,7 @@ public class DBSession {
             setMaintenanceValues(model);
             setTagValues(model);
             model.load();
+            model.loadValues();
             values.add(statement.getValueArray(model.getColumnNamesToValues()));
         });
         return values;
