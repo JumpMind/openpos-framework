@@ -204,6 +204,10 @@ export class KeyPressProvider implements OnDestroy {
         let keyBinding = typeof obj === 'string' ? this.parse(obj as string)[0] : obj as Keybinding;
         let normalizedKey = '';
 
+        if(!keyBinding) {
+            return normalizedKey;
+        }
+
         if(keyBinding.key !== 'Control') {
             normalizedKey += (keyBinding.ctrlKey ? 'ctrl+' : '');
         }
