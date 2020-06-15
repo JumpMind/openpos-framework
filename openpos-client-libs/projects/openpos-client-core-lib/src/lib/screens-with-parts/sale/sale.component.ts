@@ -5,11 +5,13 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { ITotal } from '../../core/interfaces/total.interface';
 
-import { Subscription, Observable } from 'rxjs';
+import {Subscription, Observable, merge, Subject} from 'rxjs';
 import { IActionItem } from '../../core/actions/action-item.interface';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 import { Configuration } from './../../configuration/configuration';
 import { MobileSaleOrdersSheetComponent } from './mobile-sale-orders-sheet/mobile-sale-orders-sheet.component';
+import {KeyPressProvider} from '../../shared/providers/keypress.provider';
+import {takeUntil} from 'rxjs/operators';
 
 
 @ScreenComponent({
@@ -21,19 +23,19 @@ import { MobileSaleOrdersSheetComponent } from './mobile-sale-orders-sheet/mobil
     styleUrls: ['./sale.component.scss']
 })
 export class SaleComponent extends PosScreen<SaleInterface> {
-
     isMobile: Observable<boolean>;
-
     totals: ITotal[];
-
     Configuration = Configuration;
-
     initialized = false;
-
     removeOrderAction: IActionItem;
+    buildScreen$ = new Subject();
+    stop$: Observable<any>;
 
-    constructor(protected dialog: MatDialog, injector: Injector,
-                media: OpenposMediaService,  private bottomSheet: MatBottomSheet) {
+    constructor(protected dialog: MatDialog,
+                injector: Injector,
+                media: OpenposMediaService,
+                private bottomSheet: MatBottomSheet,
+                private keyPressProvider: KeyPressProvider) {
         super(injector);
         this.isMobile = media.observe(new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -43,15 +45,23 @@ export class SaleComponent extends PosScreen<SaleInterface> {
             [MediaBreakpoints.DESKTOP_PORTRAIT, false],
             [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
         ]));
+        this.stop$ = merge(this.destroyed$, this.buildScreen$);
     }
 
     buildScreen() {
+        this.buildScreen$.next();
         // Reallocate totals array to force change detection in child app-overflow-list
         this.totals = this.screen.totals ? this.screen.totals.slice() : [];
         this.screen.customerName = this.screen.customerName != null && this.screen.customerName.length > 10 ?
             this.screen.customerName.substring(0, 10) + '...' : this.screen.customerName;
         this.removeOrderAction = this.screen.removeOrderAction;
         this.dialog.closeAll();
+
+        if(this.screen.logoutButton) {
+            this.keyPressProvider.globalSubscribe(this.screen.logoutButton).pipe(
+                takeUntil(this.stop$)
+            ).subscribe(action => this.doAction(action));
+        }
     }
 
     onEnter(value: string) {

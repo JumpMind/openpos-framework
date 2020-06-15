@@ -6,6 +6,7 @@ import { IOrderSummary } from '../../core/interfaces/order-summary.interface';
 
 export interface SaleInterface extends IAbstractScreen {
     totals: ITotal[];
+    logoutButton: IActionItem;
     transactionActive: boolean;
     customerName: string;
     noCustomerText: string;
