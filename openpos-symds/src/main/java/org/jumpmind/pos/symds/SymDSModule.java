@@ -49,7 +49,7 @@ import static org.jumpmind.symmetric.common.Constants.*;
 @Configuration("SymDSModule")
 @EnableTransactionManagement
 @Conditional(ModuleEnabledCondition.class)
-@Order(200)
+@Order(20000)
 @Slf4j
 public class SymDSModule extends AbstractRDBMSModule {
 
