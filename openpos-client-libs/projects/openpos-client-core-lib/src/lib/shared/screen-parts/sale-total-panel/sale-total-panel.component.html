@@ -80,7 +80,7 @@
                             (click)="doMenuItemAction(screenData.checkoutButton)" class="sale-total-button">
             {{screenData.checkoutButton.title}}
             <span *ngIf="keybindsEnabled(screenData.checkoutButton)"
-                  class="muted-color">{{screenData.checkoutButton.keybindDisplayName}}</span>
+                  class="muted-color checkout-keybind">{{screenData.checkoutButton.keybindDisplayName}}</span>
         </app-primary-button>
         <app-secondary-button responsive-class *ngIf="!screenData.readOnly && screenData.logoutButton"
                               [actionItem]="screenData.logoutButton"
