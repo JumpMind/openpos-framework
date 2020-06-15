@@ -204,13 +204,21 @@ export class KeyPressProvider implements OnDestroy {
         let keyBinding = typeof obj === 'string' ? this.parse(obj as string)[0] : obj as Keybinding;
         let normalizedKey = '';
 
-        normalizedKey += (keyBinding.ctrlKey ? 'ctrl+' : '');
-        normalizedKey += (keyBinding.altKey ? 'alt+' : '');
-        normalizedKey += (keyBinding.shiftKey ? 'shift+' : '');
-        normalizedKey += (keyBinding.metaKey ? 'meta+' : '');
-        normalizedKey += keyBinding.key.toLowerCase();
+        if(keyBinding.key !== 'Control') {
+            normalizedKey += (keyBinding.ctrlKey ? 'ctrl+' : '');
+        }
+        if(keyBinding.key !== 'Alt') {
+            normalizedKey += (keyBinding.altKey ? 'alt+' : '');
+        }
+        if(keyBinding.key !== 'Shift') {
+            normalizedKey += (keyBinding.shiftKey ? 'shift+' : '');
+        }
+        if(keyBinding.key !== 'Meta') {
+            normalizedKey += (keyBinding.metaKey ? 'meta+' : '');
+        }
+        normalizedKey += keyBinding.key;
 
-        return normalizedKey;
+        return normalizedKey.toLowerCase();
     }
 
     parse(key: string): Keybinding[] {
