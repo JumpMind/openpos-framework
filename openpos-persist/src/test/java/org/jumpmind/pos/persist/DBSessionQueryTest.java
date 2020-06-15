@@ -346,9 +346,9 @@ public class DBSessionQueryTest {
         {
             List<CarModel> cars = db.query(allCars);
             assertEquals(3, cars.size());
-            assertNull(cars.get(0).getAdditionalField("color"));
-            assertEquals("grey", cars.get(1).getAdditionalField("color"));
-            assertEquals("blue", cars.get(2).getAdditionalField("color"));
+            assertEquals("grey", cars.get(0).getAdditionalField("color"));
+            assertEquals("blue", cars.get(1).getAdditionalField("color"));
+            assertNull(cars.get(2).getAdditionalField("color"));
         }        
     }
     
