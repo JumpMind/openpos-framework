@@ -1083,6 +1083,9 @@ public class StateManager implements IStateManager {
         List<Class> classes = initialFlowConfig.getEventHandlers();
         classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
 
+        applicationState.getScope().getDeviceScope().values().
+                forEach(obj->eventBroadcaster.postEventToObject(obj, event));
+
         Object state = getCurrentState();
         if (state != null) {
             eventBroadcaster.postEventToObject(state, event);
