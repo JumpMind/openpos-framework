@@ -17,7 +17,6 @@ import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_URL;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_USER;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_VALIDATION_QUERY;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
-import static org.apache.commons.lang3.StringUtils.*;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -25,9 +24,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URL;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.sql.DataSource;
 
@@ -129,7 +126,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             String configDbUrl = getDbProperties(DB_POOL_URL, "jdbc:h2:mem:config");
             if (h2Server == null && configDbUrl.contains("h2:tcp")) {
                 try {
-                    h2Server = Server.createTcpServer("-tcpPort", env.getProperty("db.h2.port", "1973"));
+                    h2Server = Server.createTcpServer("-tcpPort", env.getProperty("db.h2.port", "1973"), "-ifNotExists");
                     ((Server) h2Server).start();
                 } catch (SQLException e) {
                     throw new SqlException(e);
