@@ -26,7 +26,7 @@ public class RS232ConnectionFactory implements IConnectionFactory {
         checkRxTxDll(settings);
         String portName = (String) settings.get(PORT_NAME);
         if (StringUtils.isEmpty(portName)) {
-            throw new PrintException("No PORT_NAME was specified.  Something like COM1 needs " +
+            throw new PrintException("No portName was specified.  Something like COM1 needs " +
                     "to be specified for RS232 connections. " + settings);
         }
 
