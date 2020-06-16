@@ -35,6 +35,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
     public screenTypeName: string;
     private screenName: string;
+    private screenId: string;
 
     //public classes = '';
 
@@ -130,11 +131,13 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         if (screen &&
             (screen.refreshAlways
                 || screen.screenType !== this.screenTypeName
-                || screen.name !== this.screenName)
+                || screen.name !== this.screenName
+                || screen.id !== this.screenId)
         ) {
             this.logSwitchScreens(screen);
 
             this.screenName = screen.name;
+            this.screenId = screen.id;
             this.screenTypeName = screen.screenType;
 
             this.viewContainerRef.clear();
