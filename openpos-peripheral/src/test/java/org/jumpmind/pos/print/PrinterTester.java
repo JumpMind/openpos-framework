@@ -2,6 +2,7 @@ package org.jumpmind.pos.print;
 
 import jpos.JposException;
 
+import javax.xml.transform.sax.SAXSource;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -88,9 +89,11 @@ public class PrinterTester {
 
             while ((b = printer.getPeripheralConnection().getIn().read()) != -1) {
 
-                System.out.println((char)b);
+                System.out.print((char)b);
             }
 
+
+            System.out.println();
 
 
 //            printer.printSlip(BOLD + "FOR DEPOSIT ONLY" + NORMAL + "\nPrinting on the slip printer.\n A second line here.\n\nAccount #12342346456\n", 30000);
