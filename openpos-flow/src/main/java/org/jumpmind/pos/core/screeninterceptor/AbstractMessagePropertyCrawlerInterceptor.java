@@ -3,15 +3,12 @@ package org.jumpmind.pos.core.screeninterceptor;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.math.BigDecimal;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
+import org.joda.money.Money;
 import org.jumpmind.pos.core.flow.IMessageInterceptor;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
@@ -52,6 +49,10 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
 
     private final void processFields(String appId, String deviceId, Object obj, T message, Map<String, Object> messageContext) {
         Class<?> clazz = obj.getClass();
+        if (isSimpleType(clazz)) {
+            return;
+        }
+
         while (clazz != null && obj != null) {
             Field[] fields = clazz.getDeclaredFields();
             for (Field field : fields) {
@@ -83,6 +84,18 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
             clazz = clazz.getSuperclass();
         }
 
+    }
+
+    private boolean isSimpleType(Class<?> clazz) {
+        if (clazz.isPrimitive()
+                || String.class == clazz
+                || BigDecimal.class == clazz
+                || Money.class == clazz
+                || Date.class == clazz) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean processCollections(String appId, String deviceId, Object value, T message, Map<String, Object> messageContext) {
