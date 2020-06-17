@@ -4,3 +4,7 @@
     display: grid;
     @extend %page-spaced-content; 
 }
+
+::ng-deep .content {
+    max-height: 50vh;
+}

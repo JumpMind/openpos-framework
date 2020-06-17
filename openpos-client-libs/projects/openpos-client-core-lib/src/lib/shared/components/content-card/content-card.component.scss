@@ -4,7 +4,7 @@
     min-height: 100px;
 }
 
-section {
+.content {
     @extend %sub-element;
     display: block;
     overflow-y: auto;
