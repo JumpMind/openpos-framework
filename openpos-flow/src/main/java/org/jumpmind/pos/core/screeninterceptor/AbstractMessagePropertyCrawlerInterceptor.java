@@ -6,7 +6,6 @@ import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.Map.Entry;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.joda.money.Money;
 import org.jumpmind.pos.core.flow.IMessageInterceptor;
