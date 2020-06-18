@@ -110,6 +110,8 @@ export class IconService {
         this.icons.set('SuspendAction', ['pause.svg', this.defaultIconProvider]);
         this.icons.set('Tax', ['account_balance.svg', this.defaultIconProvider]);
         this.icons.set('Till', ['till.svg', this.defaultIconProvider]);
+        this.icons.set('RoutingSymbol', ['routing-symbol.svg', this.defaultIconProvider]);
+        this.icons.set('AccountSymbol', ['account-symbol.svg', this.defaultIconProvider]);
         this.icons.set('Training', ['school.svg', this.defaultIconProvider]);
         this.icons.set('Trash', ['delete.svg', this.defaultIconProvider]);
         this.icons.set('UnitedStates', ['united-states.svg', this.defaultIconProvider]);
