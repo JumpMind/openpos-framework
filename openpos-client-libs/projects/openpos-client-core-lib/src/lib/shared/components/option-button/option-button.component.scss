@@ -56,11 +56,15 @@
     }
 }
 
+.option-right {
+    min-width: 64px;
+}
+
 ::ng-deep .option-item {
     column-gap: 16px;
 
     .mat-button-wrapper {
-        grid-template-columns: 64px 1fr .2fr;
+        grid-template-columns: 64px 1fr auto;
         display: grid !important;
     }
 
@@ -72,4 +76,3 @@
         }
     }
 }
-

@@ -1,23 +1,15 @@
-<button responsive-class
-    #button
-    mat-flat-button
-    [disabled]="disabled"
-    (click)="clickFn()"
-    [type]="inputType"
-    color=primary-inverse
-    class="option-item"
-    
->
-    <app-icon [iconName]="optionIcon"
-        [iconClass]="optionSize"
-        [class.muted-color]="disabled"
-        [class.primary]="!disabled"
-        class="option-icon"></app-icon>
+<button responsive-class #button mat-flat-button [disabled]="disabled" (click)="clickFn()" [type]="inputType"
+    color=primary-inverse class="option-item">
+
+    <app-icon [iconName]="optionIcon" [iconClass]="optionSize" [class.muted-color]="disabled"
+        [class.primary]="!disabled" class="option-icon"></app-icon>
     <div class="option-content">
-        <span responsive-class class="option-line" [class.muted-color]="disabled" [ngClass]="optionSize">{{optionTitle}}</span>
+        <span responsive-class class="option-line" [class.muted-color]="disabled"
+            [ngClass]="optionSize">{{optionTitle}}</span>
         <ng-content></ng-content>
     </div>
-    <div *ngIf="keybindsEnabled()">
-        <span responsive-class class="option-keybind muted-color" [ngClass]="optionSize">{{keybind}}</span>
+    <div class="option-right">
+        <span *ngIf="keybindsEnabled()" responsive-class class="option-keybind muted-color"
+            [ngClass]="optionSize">{{keybind}}</span>
     </div>
 </button>
