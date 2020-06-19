@@ -1,6 +1,6 @@
 package org.jumpmind.pos.service;
 
-public class ServiceCommonConfig implements Cloneable {
+public class ProfileConfig implements Cloneable {
 
     protected int httpTimeout;
     protected String url;

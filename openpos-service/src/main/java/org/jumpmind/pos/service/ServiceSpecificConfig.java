@@ -5,22 +5,18 @@ import org.jumpmind.pos.service.strategy.InvocationStrategy;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ServiceSpecificConfig extends ServiceCommonConfig implements Cloneable {
+public class ServiceSpecificConfig implements Cloneable {
 
-    protected String profile = ServiceConfig.LOCAL_PROFILE;
+    protected List<String> profileIds = null;
     protected InvocationStrategy strategy = InvocationStrategy.LOCAL_ONLY;
     protected List<EndpointSpecificConfig> endpoints = new ArrayList<>();
 
-    public String getProfile() {
-        return profile;
+    public List<String> getProfileIds() {
+        return profileIds;
     }
 
-    public void setProfile(String profile) {
-        this.profile = profile;
-    }
-    
-    public boolean isLocal() {
-        return ServiceConfig.LOCAL_PROFILE.equals(profile);
+    public void setProfileIds(List<String> profileIds) {
+        this.profileIds = profileIds;
     }
 
     public InvocationStrategy getStrategy() {
@@ -34,7 +30,7 @@ public class ServiceSpecificConfig extends ServiceCommonConfig implements Clonea
     public List<EndpointSpecificConfig> getEndpoints() { return endpoints; }
 
     public void setEndpoints(List<EndpointSpecificConfig> endpoints) { this.endpoints = endpoints; }
-    
+
     public ServiceSpecificConfig copy() {
         ServiceSpecificConfig copy;
         try {

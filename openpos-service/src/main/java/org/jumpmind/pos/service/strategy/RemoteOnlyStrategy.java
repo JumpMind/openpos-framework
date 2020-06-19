@@ -1,6 +1,8 @@
 package org.jumpmind.pos.service.strategy;
 
 import org.jumpmind.pos.service.PosServerException;
+import org.jumpmind.pos.service.ProfileConfig;
+import org.jumpmind.pos.service.ServiceConfig;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.status.IStatusManager;
@@ -8,6 +10,8 @@ import org.jumpmind.pos.util.status.IStatusReporter;
 import org.jumpmind.pos.util.status.Status;
 import org.jumpmind.pos.util.status.StatusReport;
 import org.jumpmind.pos.util.web.ConfiguredRestTemplate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.io.FileSystemResource;
@@ -16,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.lang.annotation.Annotation;
@@ -28,6 +33,8 @@ import java.util.UUID;
 @Component(RemoteOnlyStrategy.REMOTE_ONLY_STRATEGY)
 public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements IInvocationStrategy, IStatusReporter {
 
+    final Logger logger = LoggerFactory.getLogger(getClass());
+
     static final String REMOTE_ONLY_STRATEGY = "REMOTE_ONLY";
 
     @Autowired
@@ -35,6 +42,9 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
 
     @Autowired
     private ClientContext clientContext;
+
+    @Autowired
+    private ServiceConfig serviceConfig;
 
     private IStatusManager statusManager;
 
@@ -47,9 +57,29 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         return REMOTE_ONLY_STRATEGY;
     }
 
+    public void setServiceConfig(ServiceConfig serviceConfig) {
+        this.serviceConfig = serviceConfig;
+    }
+
     @Override
     public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
-        int httpTimeoutInSecond = config.getHttpTimeout();
+
+        ResourceAccessException lastException=null;
+        for (String profileId : config.getProfileIds()) {
+            try {
+                return invokeProfile(serviceConfig.getProfiles().get(profileId), proxy, method, endpoints, args);
+            } catch (ResourceAccessException ex) {
+                lastException = ex;
+                logger.warn(String.format("Remote service %s unavailable.",profileId));
+            }
+        }
+        throw lastException;
+    }
+
+    private Object invokeProfile(ProfileConfig profileConfig, Object proxy, Method method,
+                                 Map<String, Object> endpoints, Object[] args) throws ResourceAccessException {
+
+        int httpTimeoutInSecond = profileConfig.getHttpTimeout();
         ConfiguredRestTemplate template = new ConfiguredRestTemplate(httpTimeoutInSecond);
         RequestMapping mapping = method.getAnnotation(RequestMapping.class);
         RequestMethod[] requestMethods = mapping.method();
@@ -62,11 +92,11 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
                 headers.set("ClientContext-" + propertyName, clientContext.get(propertyName));
             }
         }
-        
+
         if (requestMethods != null && requestMethods.length > 0) {
             try {
                 HttpMethod requestMethod = translate(requestMethods[0]);
-                String serverUrl = buildUrl(config, proxy, method, args);
+                String serverUrl = buildUrl(profileConfig, proxy, method, args);
                 Object[] newArgs = findArgs(method, args);
                 if (isMultiPartUpload(method, args)) {
                     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -96,6 +126,7 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
             throw new IllegalStateException("A method must be specified on the @RequestMapping");
         }
         return null;
+
     }
 
     private void reportStatus(Status status) {
@@ -108,8 +139,8 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         }
     }
 
-    protected String buildUrl(ServiceSpecificConfig config, Object proxy, Method method, Object[] args) {
-        String url = config.getUrl();
+    protected String buildUrl(ProfileConfig profileConfig, Object proxy, Method method, Object[] args) {
+        String url = profileConfig.getUrl();
         String path = buildPath(method);
         url = String.format("%s%s", url, path);
         return url;

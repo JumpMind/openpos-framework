@@ -10,11 +10,13 @@ import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 
 import static com.github.tomakehurst.wiremock.client.WireMock.*;
 import static com.github.tomakehurst.wiremock.core.WireMockConfiguration.options;
@@ -29,9 +31,10 @@ public class RemoteOnlyStrategyTest {
     public WireMockRule wireMockRule = new WireMockRule(options().notifier(new ConsoleNotifier(true)));
 
     ObjectMapper mapper = new ConfiguredRestTemplate().getMapper();
-    
+
     RemoteOnlyStrategy handler = new RemoteOnlyStrategy();
 
+    ServiceConfig serviceConfig = new ServiceConfig();
 
     @Test
     public void testInvokeRemotePostWithResponseNoRequest() throws Throwable {
@@ -74,7 +77,7 @@ public class RemoteOnlyStrategyTest {
         ErrorResult result = new ErrorResult("this was a test", new NullPointerException());
         stubFor(put(urlEqualTo("/check/deviceid/test001/nuttin")).willReturn(aResponse().withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(result)).withStatus(501)));
-        
+
         handler.invoke(config(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class), null,
                 new Object[] { "test001", new TestRequest("one", 1) });
 
@@ -93,9 +96,14 @@ public class RemoteOnlyStrategyTest {
     }
 
     private ServiceSpecificConfig config() {
+        ProfileConfig profileConfig = new ProfileConfig();
+        profileConfig.setHttpTimeout(30);
+        profileConfig.setUrl("http://localhost:8080");
+        serviceConfig.getProfiles().put("local",profileConfig);
+        handler.setServiceConfig(serviceConfig);
+
         ServiceSpecificConfig config = new ServiceSpecificConfig();
-        config.setHttpTimeout(30);
-        config.setUrl("http://localhost:8080");
+        config.setProfileIds(Arrays.asList("local"));
         return config;
     }
 
@@ -167,13 +175,13 @@ public class RemoteOnlyStrategyTest {
 
         @RequestMapping(path = "/deviceid/{deviceid}/version", method = RequestMethod.POST)
         public TestResponse testPost(@PathVariable("deviceid") String deviceId);
-        
+
         @RequestMapping(path = "/deviceid/{deviceid}/yada", method = RequestMethod.PUT)
         public TestResponse testPut(@PathVariable("deviceid") String deviceId, @RequestBody TestRequest request);
-        
+
         @RequestMapping(path = "/deviceid/{deviceid}/nuttin", method = RequestMethod.PUT)
         public void testPutNuttin(@PathVariable("deviceid") String deviceId, @RequestBody TestRequest request);
-        
+
         @RequestMapping(path = "/getmesomeofthat", method = RequestMethod.GET)
         public TestResponse testGet();
     }

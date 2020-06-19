@@ -15,7 +15,7 @@ import java.util.Map;
 public class RemoteFirstStrategy implements IInvocationStrategy {
 
     final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     static final String REMOTE_FIRST_STRATEGY = "REMOTE_FIRST";
 
     @Autowired
@@ -31,7 +31,7 @@ public class RemoteFirstStrategy implements IInvocationStrategy {
             return remoteStrategy.invoke(config, proxy, method, endpoints, args);
         } catch (ResourceAccessException ex) {
             try {
-                logger.info("Remote service unavailable.  Trying local");
+                logger.info("Remote service(s) unavailable.  Trying local");
                 return localStrategy.invoke(config, proxy, method, endpoints, args);
             } catch (Exception e) {
                 logger.info("Local call failed (this was the error).  Throwing original exception", e);
