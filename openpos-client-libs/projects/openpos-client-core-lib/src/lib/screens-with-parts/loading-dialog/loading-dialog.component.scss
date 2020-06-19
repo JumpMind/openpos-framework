@@ -1,0 +1,11 @@
+@import "../../styles/mixins/typography";
+
+.loading-dialog-actions {
+    display: grid;
+    justify-content: end;
+}
+
+.cancel-button {
+    @extend %text-md;
+    padding-right: 4px;
+}
