@@ -330,7 +330,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public boolean getJrnEmpty() throws JposException {
-        return (readPrinterStatus() & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0;
+        int printerStatus = readPrinterStatus();
+        return ((printerStatus & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0
+                && (printerStatus & SLIP_TRAILING_EDGE_SENSOR_COVERED) == 0);
     }
 
     @Override

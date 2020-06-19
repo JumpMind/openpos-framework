@@ -3,6 +3,7 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 
 import javax.xml.transform.sax.SAXSource;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
@@ -13,6 +14,10 @@ import java.util.Map;
 public class PrinterTester {
 
     private static IOpenposPrinter createPrinter() {
+
+        File pwd = new File(".");
+        System.out.println(pwd.getAbsolutePath());
+
         Map<String, Object> settings = new HashMap<>();
         settings.put("printerCommandLocations", "esc_p.properties, epson.properties");
         settings.put("connectionClass", "org.jumpmind.pos.print.RS232ConnectionFactory");
@@ -51,6 +56,24 @@ public class PrinterTester {
 
             printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x40}); // ESCP reset.
             printer.getPeripheralConnection().getOut().flush();
+
+            long start = System.currentTimeMillis();
+
+            try {
+                while (printer.getJrnEmpty() && System.currentTimeMillis()-start < 6000) {
+                    System.out.print("no slip ");
+                }
+            }
+            catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            if (printer.getJrnEmpty()) {
+                System.out.println("TIMED OUT WAITING FOR SLIP");
+                System.exit(1);
+            }
+
+
 
             printer.printNormal(0, "A long string. A long string. 234567890234567890234567890234567890234567890234567890234567890234567890");
 
