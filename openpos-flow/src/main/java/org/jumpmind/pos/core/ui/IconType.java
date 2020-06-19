@@ -96,5 +96,6 @@ public interface IconType {
     public static final String AddNote = "AddNote"; //note_add
     public static final String CheckRoutingSymbol = "CheckRoutingSymbol";
     public static final String CheckAccountSymbol = "CheckAccountSymbol";
-            
+    public static final String Number = "Number";
+
 }

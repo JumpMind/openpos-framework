@@ -76,6 +76,11 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     }
 
+    @Override
+    public String readMicr() {
+        return " (1098765432( )321270742) 012547854(";
+    }
+
     public void printSlip(String text, int timeoutInMillis) {
         try {
             printNormal(0, text);

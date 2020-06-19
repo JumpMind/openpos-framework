@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -292,7 +294,44 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public String readMicr() {
-        return null;
+        try {
+//        printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
+            getPeripheralConnection().getOut().write(printerCommands.get(PrinterCommands.READ_MICR).getBytes());
+            getPeripheralConnection().getOut().flush();
+            long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "1000").toString());
+            long micrTimeout = Long.valueOf(settings.getOrDefault("micrTimeout", "20000").toString());
+            Thread.sleep(micrWaitTime);
+
+            long start = System.currentTimeMillis();
+
+            List<Integer> bytes = new ArrayList<Integer>();
+            int firstRead = -1;
+
+            while (System.currentTimeMillis()-start < micrTimeout
+                && (firstRead = getPeripheralConnection().getIn().read()) == -1) {
+                Thread.sleep(100);
+            }
+
+            if (firstRead == -1) {
+                throw new PrintException("MICR read timed out.");
+            }
+            if (firstRead != 0) {
+                throw new PrintException("MICR read failed with error code: " + firstRead);
+            }
+
+            int current;
+            StringBuilder buff = new StringBuilder(32);
+            while ((current = getPeripheralConnection().getIn().read()) != -1) {
+                buff.append((char)current);
+            }
+
+            return buff.toString();
+        } catch (Exception ex) {
+            if (ex instanceof PrintException) {
+                throw (PrintException)ex;
+            }
+            throw new PrintException("Failed to read MICR", ex);
+        }
     }
 
     @Override
