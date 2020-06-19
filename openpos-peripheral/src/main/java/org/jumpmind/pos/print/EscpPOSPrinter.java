@@ -291,6 +291,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public String readMicr() {
+        return null;
+    }
+
+    @Override
     public void beginSlipMode() {
         try {
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.

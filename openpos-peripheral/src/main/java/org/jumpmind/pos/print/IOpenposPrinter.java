@@ -11,7 +11,7 @@ public interface IOpenposPrinter extends POSPrinterService19 {
 
     public void openCashDrawer(String cashDrawerId);
 
-    public String getCommand(String fontSizeMedium);
+    public String getCommand(String commandName);
 
     public int getPrintWidth();
 
@@ -26,4 +26,11 @@ public interface IOpenposPrinter extends POSPrinterService19 {
     public void beginSlipMode();
 
     public void endSlipMode();
+
+    /**
+     * this execpts the slip to be in the printer at the point this is called.
+     * Use !getJrnlEmpty() to determine when the slip is in place.
+     * @return raw MICR string as read from the document.
+     */
+    public String readMicr();
 }
