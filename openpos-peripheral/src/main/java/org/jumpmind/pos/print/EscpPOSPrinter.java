@@ -296,7 +296,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public String readMicr() {
         try {
 //        printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
-            getPeripheralConnection().getOut().write(printerCommands.get(PrinterCommands.READ_MICR).getBytes());
+            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().flush();
             long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "1000").toString());
             long micrTimeout = Long.valueOf(settings.getOrDefault("micrTimeout", "20000").toString());
