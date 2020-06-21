@@ -27,6 +27,8 @@ public interface IOpenposPrinter extends POSPrinterService19 {
 
     public void endSlipMode();
 
+    public void printSlip(String text, int timeoutInMillis);
+
     /**
      * this execpts the slip to be in the printer at the point this is called.
      * Use !getJrnlEmpty() to determine when the slip is in place.

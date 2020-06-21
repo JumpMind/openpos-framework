@@ -279,6 +279,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         }
     }
 
+    @Override
     public void printSlip(String text, int timeoutInMillis) {
         try {
             beginSlipMode();
@@ -298,7 +299,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 //        printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().flush();
-            long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "1000").toString());
+            long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "2000").toString());
             long micrTimeout = Long.valueOf(settings.getOrDefault("micrTimeout", "20000").toString());
             Thread.sleep(micrWaitTime);
 
@@ -311,6 +312,10 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                 && (firstRead = getPeripheralConnection().getIn().read()) == -1) {
                 Thread.sleep(100);
             }
+
+            Thread.sleep(micrWaitTime);
+
+            endSlipMode(); // kick the slip out no matter what happenens.
 
             if (firstRead == -1) {
                 throw new PrintException("MICR read timed out.");
@@ -337,8 +342,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void beginSlipMode() {
         try {
-            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
+//            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
             printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
@@ -370,8 +375,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public boolean getJrnEmpty() throws JposException {
         int printerStatus = readPrinterStatus();
-        return ((printerStatus & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0
-                && (printerStatus & SLIP_TRAILING_EDGE_SENSOR_COVERED) == 0);
+        return (printerStatus & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0;
     }
 
     @Override

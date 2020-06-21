@@ -59,23 +59,21 @@ public class PrinterTester {
 
             long start = System.currentTimeMillis();
 
-            try {
-                while (printer.getJrnEmpty() && System.currentTimeMillis()-start < 6000) {
-                    System.out.print("no slip ");
-                }
-            }
-            catch (Exception ex) {
-                ex.printStackTrace();
-            }
+//            try {
+//                while (printer.getJrnEmpty() && System.currentTimeMillis()-start < 6000) {
+//                    System.out.print("no slip ");
+//                }
+//            }
+//            catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//
+//            if (printer.getJrnEmpty()) {
+//                System.out.println("TIMED OUT WAITING FOR SLIP");
+//                System.exit(1);
+//            }
 
-            if (printer.getJrnEmpty()) {
-                System.out.println("TIMED OUT WAITING FOR SLIP");
-                System.exit(1);
-            }
-
-
-
-            printer.printNormal(0, "A long string. A long string. 234567890234567890234567890234567890234567890234567890234567890234567890");
+            printer.printNormal(0, "A long string. A long string. 234567890234567890234567890234567890234567890234567890234567890234567890\n");
 
 
 //            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Initial print on receipt printer.\n");
@@ -97,9 +95,18 @@ public class PrinterTester {
 //            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
 //            printer.getPrinterConnection().getOut().flush();
 
+//            while (true) {
+//                int printerStatus = printer.readPrinterStatus();
+//                System.out.println("LEADING EDGE " + (printerStatus & EscpPOSPrinter.SLIP_LEADING_EDGE_SENSOR_COVERED));
+//                System.out.println("TRAILING EDGE " + (printerStatus & EscpPOSPrinter.SLIP_TRAILING_EDGE_SENSOR_COVERED));
+//                if (System.currentTimeMillis() > System.currentTimeMillis()+1000) {
+//                    break;
+//                }
+//            }
+
             printer.printNormal(0, "This is for the receipt.");
 
-            printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
+            printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01}); // READ MICR
             printer.getPeripheralConnection().getOut().flush();
             Thread.sleep(5000);
             int b;
@@ -111,12 +118,19 @@ public class PrinterTester {
 //            System.out.println(new String(bytesTrimmed));
 
             while ((b = printer.getPeripheralConnection().getIn().read()) != -1) {
-
                 System.out.print((char)b);
             }
 
-
             System.out.println();
+
+            printer.endSlipMode();
+
+
+            while (printer.getJrnEmpty() && System.currentTimeMillis()-start < 60000) {
+                System.out.print("no slip ");
+            }
+            System.out.println("Print SLip");
+            printer.printSlip("Hello", 20000);
 
 
 //            printer.printSlip(BOLD + "FOR DEPOSIT ONLY" + NORMAL + "\nPrinting on the slip printer.\n A second line here.\n\nAccount #12342346456\n", 30000);
