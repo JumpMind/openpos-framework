@@ -21,4 +21,14 @@ public class ProfileConfig implements Cloneable {
         this.url = url;
     }
 
+    public ProfileConfig copy() {
+        ProfileConfig copy;
+        try {
+            copy = (ProfileConfig)this.clone();
+            return copy;
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

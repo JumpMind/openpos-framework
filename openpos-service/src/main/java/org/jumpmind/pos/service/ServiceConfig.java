@@ -45,7 +45,6 @@ public class ServiceConfig {
         return specificConfig;
     }
 
-    //TODO: add this for profile
     public ServiceSpecificConfig getServiceConfig(String serviceId) {
         ServiceSpecificConfig config = getSpecificConfig().get(serviceId);
         if (config == null) {
@@ -53,11 +52,22 @@ public class ServiceConfig {
         } else {
             config = config.copy();
         }
-
         if (additionalConfigSource != null) {
             additionalConfigSource.applyAdditionalConfiguration(String.format("openpos.services.specificConfig.%s", serviceId), config);
         }
+        return config;
+    }
 
+    public ProfileConfig getProfileConfig(String profileId) {
+        ProfileConfig config = getProfiles().get(profileId);
+        if (config == null) {
+            config = new ProfileConfig();
+        } else {
+            config = config.copy();
+        }
+        if (additionalConfigSource != null) {
+            additionalConfigSource.applyAdditionalConfiguration(String.format("openpos.services.profiles.%s", profileId), config);
+        }
         return config;
     }
 

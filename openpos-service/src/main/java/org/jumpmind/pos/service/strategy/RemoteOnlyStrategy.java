@@ -67,7 +67,7 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         ResourceAccessException lastException=null;
         for (String profileId : config.getProfileIds()) {
             try {
-                return invokeProfile(serviceConfig.getProfiles().get(profileId), proxy, method, endpoints, args);
+                return invokeProfile(serviceConfig.getProfileConfig(profileId), proxy, method, endpoints, args);
             } catch (ResourceAccessException ex) {
                 lastException = ex;
                 logger.warn(String.format("Remote service %s unavailable.",profileId));
