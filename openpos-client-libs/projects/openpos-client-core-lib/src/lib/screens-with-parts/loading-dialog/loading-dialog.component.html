@@ -4,4 +4,11 @@
         <div [innerHTML]="screen.message | markdownFormatter"></div>
         <mat-progress-bar mode="indeterminate" color="primary"></mat-progress-bar>
     </mat-dialog-content>
+    <mat-dialog-actions *ngIf="screen.cancelButton" class="loading-dialog-actions">
+        <app-secondary-button (click)="doAction(screen.cancelButton)">
+            <span responsive-class class="cancel-button">{{screen.cancelButton.title}}</span>
+            <app-icon *ngIf="screen.cancelButton.icon" [iconClass]="'md'" [iconName]="screen.cancelButton.icon">
+            </app-icon>
+        </app-secondary-button>
+    </mat-dialog-actions>
 </div>
