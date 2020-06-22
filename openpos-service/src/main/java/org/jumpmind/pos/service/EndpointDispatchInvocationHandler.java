@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.jumpmind.pos.service.strategy.AbstractInvocationStrategy.buildPath;
@@ -60,7 +62,8 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     Environment env;
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
-
+    private final static Pattern serviceNamePattern = Pattern.compile("^(?<service>[^_]+)(_(?<version>\\d(_\\d)*))?$");
+    private final static String implementationConfigPath = "openpos.services.specificConfig.%s.implementation";
     Map<String, Object> endPointsByPath;
 
     static BasicThreadFactory factory = new BasicThreadFactory.Builder().namingPattern("service-instrumentation-thread-%d").daemon(true)
@@ -84,8 +87,8 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
                         RestController controller = i.getAnnotation(RestController.class);
                         if (controller != null) {
                             String serviceName = controller.value();
-                            String implementation = env
-                                    .getProperty(String.format("openpos.services.specificConfig.%s.implementation", serviceName), "default");
+                            String implementation = getServiceImplementation(serviceName);
+
                             log.debug("Loading endpoints for the '{}' implementation of {}({})", implementation, i.getSimpleName(),
                                     serviceName);
                             Method[] methods = i.getMethods();
@@ -120,6 +123,20 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
                 }
             }
         }
+    }
+
+    protected String getServiceImplementation(String serviceName) {
+        String implementation = env.getProperty(String.format(implementationConfigPath, serviceName));
+
+        if(StringUtils.isBlank(implementation)) {
+            Matcher serviceNameMatcher = serviceNamePattern.matcher(serviceName);
+            serviceNameMatcher.matches();
+            String versionlessServiceName = serviceNameMatcher.group("service");
+            implementation = env
+                    .getProperty(String.format(implementationConfigPath, versionlessServiceName), "default");
+        }
+
+        return implementation;
     }
 
     protected Object findMatch(String path, Collection<Object> endpoints, String implementation) {
