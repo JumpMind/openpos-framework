@@ -94,5 +94,5 @@ public interface IconType {
     public static final String ViewAction = "ViewAction"; //pageview
     public static final String WebOrder = "WebOrder"; //computer
     public static final String AddNote = "AddNote"; //note_add
-            
+    public static final String License = "License"; //picture_in_picture
 }

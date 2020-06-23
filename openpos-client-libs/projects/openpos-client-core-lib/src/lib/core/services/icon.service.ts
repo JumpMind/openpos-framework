@@ -117,6 +117,7 @@ export class IconService {
         this.icons.set('ViewAction', ['pageview.svg', this.defaultIconProvider]);
         this.icons.set('WebOrder', ['computer.svg', this.defaultIconProvider]);
         this.icons.set('AddNote', ['note_add.svg', this.defaultIconProvider]);
+        this.icons.set('License', ['picture_in_picture.svg', this.defaultIconProvider]);
     }
 
     public addIconMapping(name: string, icon: string, provider?: string) {
