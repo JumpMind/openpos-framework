@@ -73,17 +73,20 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap, Membershi
     @Override
     public synchronized void update(AppEvent event) {
         // FYI: map.compute() method doesn't work with hazelcast or I'd use it.
-        
-        DeviceStatus status = get().get(event.getDeviceId());
-        if (status == null) {
-            status = new DeviceStatus(event.getDeviceId(), hz.getLocalEndpoint().getUuid().toString());
+        if (event.getDeviceId() != null) {
+            DeviceStatus status = get().get(event.getDeviceId());
+            if (status == null) {
+                status = new DeviceStatus(event.getDeviceId(), hz.getLocalEndpoint().getUuid().toString());
+            } else {
+                status = status.shallowCopy();
+            }
+            status.setLastActiveTimeMs(System.currentTimeMillis());
+            status.setLatestEvent(event);
+
+            get().put(event.getDeviceId(), status);
         } else {
-            status = status.shallowCopy();
+            log.warn("Received an event with a null device id.  {}", event);
         }
-        status.setLastActiveTimeMs(System.currentTimeMillis());
-        status.setLatestEvent(event);
-        
-        get().put(event.getDeviceId(), status);
     }
 
     @Override

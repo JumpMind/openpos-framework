@@ -22,6 +22,7 @@ package org.jumpmind.pos.core.flow;
 
 import java.util.Map;
 
+import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
@@ -67,6 +68,7 @@ public interface IStateManager {
     public void registerPersonalizationProperties(Map<String, String> personalizationProperties);
     public Injector getInjector();
     public boolean isAtRest();
+    public void setErrorHandler(IErrorHandler errorHandler);
     public void sendConfigurationChangedMessage();
     public void setClientContext(Map<String,String> context);
     public Map<String, String> getClientContext();
