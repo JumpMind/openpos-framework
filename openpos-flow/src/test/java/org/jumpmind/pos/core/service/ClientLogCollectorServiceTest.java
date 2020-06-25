@@ -1,13 +1,15 @@
 package org.jumpmind.pos.core.service;
 
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.AppenderBase;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.PatternLayout;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
@@ -19,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -72,38 +75,43 @@ public class ClientLogCollectorServiceTest {
      */
     @Test
     public void dateFormatTest() throws Exception {
-        Logger oldLogger = clientLogCollector.logger;
-        TestingBufferAppender appender = new TestingBufferAppender();
-        appender.setLayout(new PatternLayout("%X{timestamp} [%X{deviceId}] %p %m%n")); 
-        appender.setThreshold(Level.ALL);
-        appender.setImmediateFlush(true);
-        org.apache.log4j.Logger.getLogger(ClientLogCollectorService.class).addAppender(appender);
-        org.apache.log4j.Logger.getLogger(ClientLogCollectorService.class).setLevel(Level.ALL);
+        ch.qos.logback.classic.Logger clientLogger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger(ClientLogCollectorService.class);
 
-        try {
-            Date testDate = new Date();
-            Calendar testCal = Calendar.getInstance();
-            testCal.setTime(testDate);
-            SimpleDateFormat expectedDateFormat = new SimpleDateFormat(clientLogCollector.timestampFormat);
-            String expectedDateStr = expectedDateFormat.format(testDate);
-            
-            ClientLogEntry[] entries = {
-                    new ClientLogEntry(ClientLogType.log, testDate, "Message 1~"),
-                    new ClientLogEntry(ClientLogType.debug, testDate, "Message 2")
-            };
-            
-            clientLogCollector.clientLogs("foo", "111-22222", Arrays.asList(entries));
-            String expectedLogOutput = String.format("%s [111-22222] INFO Message 1~%s%s [111-22222] DEBUG Message 2%s", 
-                    expectedDateStr, System.getProperty("line.separator"), 
-                    expectedDateStr, System.getProperty("line.separator")
-            );
-            assertThat(appender.buffer.toString()).isEqualTo(expectedLogOutput);
-        } finally {
-            clientLogCollector.logger = oldLogger;
-            org.apache.log4j.Logger.getLogger(ClientLogCollectorService.class).removeAppender(appender);
-        }
-        
-        
+        final java.util.List<ILoggingEvent> results = new ArrayList<>();
+
+        AppenderBase testingAppender = new AppenderBase<ILoggingEvent>() {
+            @Override
+            protected void append(ILoggingEvent eventObject) {
+                results.add(eventObject);
+            }
+        };
+
+        testingAppender.start();
+        testingAppender.setName("TESTING");
+
+        clientLogger.addAppender(testingAppender);
+        clientLogger.setLevel(Level.ALL);
+
+        Date testDate1 = new Date(System.currentTimeMillis()-10);
+        Date testDate2 = new Date(System.currentTimeMillis());
+
+        SimpleDateFormat expectedDateFormat = new SimpleDateFormat(clientLogCollector.timestampFormat);
+        String expectedDateStr1 = expectedDateFormat.format(testDate1);
+        String expectedDateStr2 = expectedDateFormat.format(testDate2);
+
+        ClientLogEntry[] entries = {
+                new ClientLogEntry(ClientLogType.log, testDate1, "Message 1~"),
+                new ClientLogEntry(ClientLogType.debug, testDate2, "Message 2")
+        };
+
+        clientLogCollector.clientLogs("foo", "111-22222", Arrays.asList(entries));
+
+        System.out.println(results);
+        assertThat(results.get(0).getMessage()).isEqualTo("Message 1~");
+        assertThat(results.get(0).getMDCPropertyMap().get("timestamp")).isEqualTo(expectedDateStr1);
+
+        assertThat(results.get(1).getMessage()).isEqualTo("Message 2");
+        assertThat(results.get(1).getMDCPropertyMap().get("timestamp")).isEqualTo(expectedDateStr2);
     }
     
 

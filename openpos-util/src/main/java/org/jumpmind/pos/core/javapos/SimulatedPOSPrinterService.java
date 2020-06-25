@@ -2,18 +2,16 @@ package org.jumpmind.pos.core.javapos;
 
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.POSPrinterService19;
+import org.apache.commons.lang3.StringUtils;
 
+
+@Slf4j
 public class SimulatedPOSPrinterService extends AbstractSimulatedService implements POSPrinterService19 {
-    static final Log logger = LogFactory.getLog(SimulatedPOSPrinterService.class);
-    protected Logger printerLogger = Logger.getLogger(SimulatedPOSPrinterService.class);
 
     protected boolean asyncMode = true;
     protected int slpLineChars;
@@ -41,7 +39,7 @@ public class SimulatedPOSPrinterService extends AbstractSimulatedService impleme
     public static SimulatedPOSPrinterService instance;
 
     public SimulatedPOSPrinterService() {
-        logger.trace(String.format("%s created", this.getClass()));
+        log.trace(String.format("%s created", this.getClass()));
         instance = this;
     }
 
@@ -83,7 +81,7 @@ public class SimulatedPOSPrinterService extends AbstractSimulatedService impleme
 
     protected void flush() {
         if (receipt.length() > 0) {
-            printerLogger.info("\n" + receipt);
+            log.info("\n" + receipt);
         }
         reset();
     }
@@ -984,7 +982,7 @@ public class SimulatedPOSPrinterService extends AbstractSimulatedService impleme
         public void print(SimulatedPOSPrinterService printerService, int station) throws JposException {
             if (printerService.getInMemoryBitmaps() == null || !printerService.getInMemoryBitmaps().containsKey(new Integer(bitmapNumber))) {
 
-                logger.error("Unable to print bitmap from memory, it was not found.  " + "Ensure setBitmap() was called to load it.");
+                log.error("Unable to print bitmap from memory, it was not found.  " + "Ensure setBitmap() was called to load it.");
             } else {
                 InMemoryBitmap memoryBMap = printerService.getInMemoryBitmaps().get(new Integer(bitmapNumber));
                 printerService.printBitmap(memoryBMap.getStation(), memoryBMap.getFileName(), memoryBMap.getWidth(),

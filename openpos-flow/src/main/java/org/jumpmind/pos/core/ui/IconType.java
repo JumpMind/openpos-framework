@@ -97,5 +97,5 @@ public interface IconType {
     public static final String CheckRoutingSymbol = "CheckRoutingSymbol";
     public static final String CheckAccountSymbol = "CheckAccountSymbol";
     public static final String Number = "Number";
-
+    public static final String License = "License"; //picture_in_picture
 }

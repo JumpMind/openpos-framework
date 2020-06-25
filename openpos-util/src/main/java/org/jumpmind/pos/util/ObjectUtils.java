@@ -8,11 +8,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ObjectUtils {
-
-    private static Logger log = Logger.getLogger(ObjectUtils.class);
 
     public static <T> T deepClone(T object) {
         byte[] bytes = serialize(object);

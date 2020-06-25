@@ -2,17 +2,16 @@ package org.jumpmind.pos.core.flow;
 
 import java.util.Timer;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 @Component
+@Slf4j
 public class SessionTimer {
 
     private Timer timer;
-
-    private static final Logger log = Logger.getLogger(SessionTimer.class);
 
     @Autowired
     private StateManagerContainer stateManagerContainer;

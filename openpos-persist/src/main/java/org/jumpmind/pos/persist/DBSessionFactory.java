@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
@@ -28,9 +28,8 @@ import org.jumpmind.properties.TypedProperties;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
 
+@Slf4j
 public class DBSessionFactory {
-
-    static Logger log = Logger.getLogger(DBSessionFactory.class);
 
     DatabaseSchema databaseSchema;
     Map<String, QueryTemplate> queryTemplates;

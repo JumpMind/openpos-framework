@@ -1,21 +1,22 @@
 package org.jumpmind.pos.util;
 
+import java.io.File;
 import java.net.InetAddress;
 import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
+import java.net.URL;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import static org.apache.commons.lang3.StringUtils.*;
+
+@Slf4j
 public final class AppUtils {
-    
-    static final Logger logger = LoggerFactory.getLogger(AppUtils.class);
-    
+
     static AtomicReference<String> HOST_NAME = new AtomicReference<String>(null);
 
     private static FastDateFormat timezoneFormatter = FastDateFormat.getInstance("Z");
@@ -75,7 +76,7 @@ public final class AppUtils {
                 }
                 HOST_NAME.compareAndSet(null, hostName);
             } catch (Exception ex) {
-                logger.info("Unable to lookup hostname: " + ex);
+                log.info("Unable to lookup hostname: " + ex);
             }
         }
         return HOST_NAME.get();
@@ -85,9 +86,7 @@ public final class AppUtils {
         try {
             Thread.sleep(millis);
         } catch (InterruptedException ex) {
-            logger.debug("Thread sleep interrupted.", ex);
+            log.debug("Thread sleep interrupted.", ex);
         }
     }
-    
-    
 }

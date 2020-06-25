@@ -34,7 +34,7 @@ public class ClientLogCollectorService {
             try {
                 this.timestampFormatter = DateTimeFormatter.ofPattern(timestampFormat).withZone(ZoneId.systemDefault());
             } catch (Exception ex) {
-                logger.error("openpos.clientLogCollector.timestampFormat value of '{}' is not valid. Reason: {}", this.timestampFormat, ex.getMessage());
+                logger.error("openpos.clientLogCollector.timestampFormat value of '{}' is not valid.", this.timestampFormat);
             }
         }
     }

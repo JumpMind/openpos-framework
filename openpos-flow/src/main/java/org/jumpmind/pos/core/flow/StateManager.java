@@ -190,7 +190,7 @@ public class StateManager implements IStateManager {
     }
 
     protected void startActionLoop(final String startupAction, final StateConfig initialState) {
-        String threadName = "StateManagerThread" + threadCounter.incrementAndGet() + "(" + applicationState.getDeviceId() + ":" + applicationState.getAppId() + ")";
+        String threadName = "StateManagerThread" + threadCounter.incrementAndGet() + "(" + applicationState.getAppId() + ":" + applicationState.getDeviceId() + ")";
         Thread stateManagerThread = new Thread(threadName) {
             public void run() {
                 try {

@@ -2,7 +2,7 @@ package org.jumpmind.pos.core.util;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.AppUtils;
 import org.springframework.context.annotation.Scope;
@@ -20,6 +20,7 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 
 @Component
 @Scope("prototype")
+@Slf4j
 public class LogFormatter {
     
     public static String[] SENSITIVE_FIELDS = new String[] {
@@ -27,8 +28,7 @@ public class LogFormatter {
             "cardNumber", "driverLicense", "pinblock", "routingnumber", "walletidentifier", 
             "emvdata", "track1", "track2", "track3", "approvalcode", "ksnblock", "cardexpirydate", "referralnum",
             "ecomtoken", "issuernumber", "socialsec" };
-    
-    private static Logger log = Logger.getLogger(LogFormatter.class);
+
     
     private ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
     

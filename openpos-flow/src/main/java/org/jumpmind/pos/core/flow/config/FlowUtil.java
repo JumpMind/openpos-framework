@@ -23,17 +23,16 @@ package org.jumpmind.pos.core.flow.config;
 import java.lang.reflect.Method;
 import java.util.List;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.reflect.MethodUtils;
-import org.apache.log4j.Logger;
 import org.jumpmind.pos.core.flow.IState;
 import org.jumpmind.pos.core.flow.ITransitionStep;
 import org.jumpmind.pos.core.flow.OnArrive;
 import org.jumpmind.pos.util.event.OnEvent;
 import org.jumpmind.pos.core.flow.OnGlobalAction;
 
+@Slf4j
 public class FlowUtil {
-
-    private static final Logger log = Logger.getLogger(FlowUtil.class);
 
     public static String getStateName(Class<? extends Object> state) {
         // TODO may consider annotation in the future.

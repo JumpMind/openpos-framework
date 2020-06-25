@@ -3,16 +3,16 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
-import org.apache.log4j.Logger;
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.util.status.Status;
 
 import java.io.InputStream;
 import java.util.Map;
 
+@Slf4j
 public class LogPOSPrinter implements IOpenposPrinter {
 
     private PrinterCommands printerCommands = new PrinterCommandPlaceholders();
-    private static final Logger log = Logger.getLogger(LogPOSPrinter.class);
 
     private StringBuilder buff = new StringBuilder(128);
 
