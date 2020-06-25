@@ -101,8 +101,20 @@ public class StatementInterceptor extends WrapperInterceptor {
         if (statement.startsWith("CREATE TABLE") && (!statement.contains(" \"SYM_") && !statement.contains("_SAMPLE("))) {
             FileOutputStream stream = null;
             try {
+                String[] lines = statement.split("\n");
                 stream = new FileOutputStream(new File("CREATE.sql"), true);
-                stream.write((statement + "\n").getBytes());
+                for (String line : lines) {
+                    if ((line.trim().startsWith("CREATE TABLE")
+                            || line.trim().startsWith("PRIMARY KEY"))) {
+                        line = line.replace("CREATE TABLE ", "");
+                        line = line.replace("PRIMARY KEY ", "");
+                        if (line.endsWith("(")) {
+                            line = line.substring(0, line.length()-1);
+                        }
+                        stream.write((line + "\n").getBytes());
+                    }
+                }
+
                 stream.close();
             } catch (Exception e) {
                 e.printStackTrace();
