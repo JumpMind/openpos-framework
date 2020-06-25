@@ -27,13 +27,13 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
 
     @ToString.Include
     @EqualsAndHashCode.Include
-    @ColumnDef(primaryKey = true)
-    private String appId;
+    @ColumnDef(primaryKey = true, description = "A unique identifier for this Device")
+    private String deviceId;
 
     @ToString.Include
     @EqualsAndHashCode.Include
-    @ColumnDef(primaryKey = true, description = "A unique identifier for this Device")
-    private String deviceId;
+    @ColumnDef(primaryKey = true)
+    private String appId;
 
     @ColumnDef(description = "The type of the Device.  Store/DC workstation or handheld, Customer handheld, website, etc.")
     private String deviceType; // STORE/DC/WORKSTATION/HANDELD/CUSTOMER

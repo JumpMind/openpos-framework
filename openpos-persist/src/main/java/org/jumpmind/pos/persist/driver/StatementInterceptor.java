@@ -20,6 +20,9 @@
  */
 package org.jumpmind.pos.persist.driver;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -94,6 +97,17 @@ public class StatementInterceptor extends WrapperInterceptor {
     }
     
     public void statementExecute(String methodName, long elapsed, Object... parameters) {
+        String statement = parameters[0].toString();
+        if (statement.startsWith("CREATE TABLE") && (!statement.contains(" \"SYM_") && !statement.contains("_SAMPLE("))) {
+            FileOutputStream stream = null;
+            try {
+                stream = new FileOutputStream(new File("CREATE.sql"), true);
+                stream.write((statement + "\n").getBytes());
+                stream.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         log.info("Statement." + methodName + " (" + elapsed + "ms.) " + Arrays.toString(parameters)) ;          
     }
 
