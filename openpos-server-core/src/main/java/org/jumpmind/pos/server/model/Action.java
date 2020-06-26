@@ -23,6 +23,7 @@ package org.jumpmind.pos.server.model;
 import java.io.Serializable;
 import java.util.concurrent.CountDownLatch;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.jumpmind.pos.util.DefaultObjectMapper;
 
@@ -46,6 +47,7 @@ public class Action implements Serializable, Cloneable {
     @ToString.Include
     private boolean doNotBlockForResponse;
     private transient Action causedBy; // Used when renaming an action during a substate return.
+    @JsonIgnore
     private transient CountDownLatch latch = new CountDownLatch(1);
     
     static ObjectMapper mapper = DefaultObjectMapper.build();

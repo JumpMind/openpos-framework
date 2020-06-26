@@ -1,6 +1,7 @@
 package org.jumpmind.pos.hazelcast;
 
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.HazelcastInstanceNotActiveException;
 import com.hazelcast.topic.ITopic;
 import lombok.extern.slf4j.Slf4j;
 
@@ -11,6 +12,8 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 @Slf4j
 @Component
@@ -25,14 +28,18 @@ public class HazelcastPublisher implements IEventDistributor, ApplicationListene
 
     public void onApplicationEvent(AppEvent event) {
         // DeviceHeartbeats are handled in the DeviceStatusMapHazelcastImpl
-        if (! (event instanceof DeviceHeartbeatEvent)) {
-            if (!event.isRemote()) {
-                log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
-                // then share it with the world
-                ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
-                topic.publish(event);
-            } else {
-                log.info("{} received an event {},{} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
+        if (!(event instanceof DeviceHeartbeatEvent)) {
+            try {
+                if (!event.isRemote()) {
+                    log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
+                    // then share it with the world
+                    ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
+                    topic.publish(event);
+                } else {
+                    log.info("{} received an event {},{} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
+                }
+            } catch (HazelcastInstanceNotActiveException e) {
+                log.info("Hazelcast was not active.  This is probably because we are shutting down");
             }
         }
     }
