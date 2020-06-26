@@ -9,7 +9,7 @@ abstract public class AbstractEffectiveTaggedModel extends AbstractTaggedModel i
     @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
 
-    @ColumnDef(primaryKey=true)
+    @ColumnDef
     Date effectiveStartTime;
     
     @ColumnDef 

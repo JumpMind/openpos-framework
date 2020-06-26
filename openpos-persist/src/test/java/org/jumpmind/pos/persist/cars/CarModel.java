@@ -9,7 +9,8 @@ import org.jumpmind.pos.persist.model.AbstractTaggedModel;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 
 @TableDef(name="car",
-        description = "A basic concept of an automobile fit to drive down the road.")
+        description = "A basic concept of an automobile fit to drive down the road.",
+        primaryKey = "vin")
 @IndexDefs({
         @IndexDef(name = "idx_car_year", column = "modelYear"),
         @IndexDef(name = "idx_car_make_model", columns = {"make", "model"})
@@ -19,7 +20,7 @@ public class CarModel extends AbstractTaggedModel implements ITaggedModel {
     @SuppressWarnings("unused")
     private static final long serialVersionUID = 1L;
     
-    @ColumnDef(primaryKey=true)
+    @ColumnDef
     private String vin;
     @ColumnDef    
     private String modelYear;

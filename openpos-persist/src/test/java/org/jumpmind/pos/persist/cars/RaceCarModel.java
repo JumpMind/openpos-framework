@@ -3,7 +3,8 @@ package org.jumpmind.pos.persist.cars;
 import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.TableDef;
 
-@TableDef(name="race_car")
+@TableDef(name="race_car",
+        primaryKey = "vin")
 public class RaceCarModel extends CarModel {
 
     private static final long serialVersionUID = 1L;

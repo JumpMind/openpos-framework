@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Setter
 public class ServiceDefn {
 
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     String effectiveStartDate;
 
     @ColumnDef

@@ -273,8 +273,10 @@ public class DBSession {
         }
     }
 
-    public ModelWrapper wrap(AbstractModel model){
-       return new ModelWrapper(model, databaseSchema.getModelMetaData(model.getClass()));
+    public ModelWrapper wrap(AbstractModel model) {
+        ModelWrapper wrapper = new ModelWrapper(model, databaseSchema.getModelMetaData(model.getClass()));
+        System.out.println("returning wrapper: " + wrapper);
+        return wrapper;
     }
 
     @SuppressWarnings("unchecked")

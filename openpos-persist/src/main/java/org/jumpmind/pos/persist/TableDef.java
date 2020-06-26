@@ -24,10 +24,12 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.lang.reflect.Field;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE, ElementType.FIELD})
 public @interface TableDef {
+
     String name();
     String description() default "";
 
@@ -35,4 +37,6 @@ public @interface TableDef {
      * Set to true if the super class has an @TableDef that should be ignored for this module
      */
     boolean ignoreSuperTableDef() default false;
+
+    String primaryKey();
 }
