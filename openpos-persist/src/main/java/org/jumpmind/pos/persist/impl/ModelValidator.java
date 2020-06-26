@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
@@ -19,6 +20,7 @@ public class ModelValidator {
     public static void validate(ModelClassMetaData meta) {
         checkOrphanedFields(meta);
         checkCrossRefFields(meta);
+        checkPrimaryKeyFields(meta);
     }
 
     protected static void checkOrphanedFields(ModelClassMetaData meta) {
@@ -76,6 +78,19 @@ public class ModelValidator {
                 }
             }
         }    
+    }
+
+    private static void checkPrimaryKeyFields(ModelClassMetaData meta) {
+        Set<String> pkFieldNames = meta.getPrimaryKeyFieldNames();
+
+        for (String pkFieldName : pkFieldNames) {
+            FieldMetaData fieldMetaData = meta.getFieldMetaData(pkFieldName);
+            if (fieldMetaData == null) {
+                throw new PersistException("Model class " + meta.getClazz().getSimpleName() +
+                        " declares a primary key field called \"" + pkFieldName + "\" but does not define a field by that name.");
+            }
+
+        }
     }
 
     private static Field getCrossReferenceField(Class<?> modelClass, ColumnDef columnAnnotation) throws NoSuchFieldException{

@@ -38,5 +38,5 @@ public @interface TableDef {
      */
     boolean ignoreSuperTableDef() default false;
 
-    String primaryKey();
+    String[] primaryKey();
 }

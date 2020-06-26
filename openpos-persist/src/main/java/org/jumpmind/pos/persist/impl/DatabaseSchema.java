@@ -271,7 +271,17 @@ public class DatabaseSchema {
     }
 
     public static Set<String> getPrimaryKeyNames(TableDef tblAnnotation) {
-        String[] pkFieldNames = tblAnnotation.primaryKey().split("\\,");
+        Set<String> pks = new LinkedHashSet<>();
+
+        for (String element : tblAnnotation.primaryKey()) {
+            pks.addAll(getPrimaryKeyNames(element));
+        }
+
+        return pks;
+    }
+
+    private static Set<String> getPrimaryKeyNames(String element) {
+        String[] pkFieldNames = element.split("\\,");
         Set<String> pks = new LinkedHashSet<>();
         for (String pkFieldName : pkFieldNames) {
             pkFieldName = pkFieldName.trim();

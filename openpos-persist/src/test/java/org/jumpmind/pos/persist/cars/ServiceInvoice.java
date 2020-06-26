@@ -8,7 +8,7 @@ import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.TableDef;
 
 @TableDef(name="service_invoice",
-    primaryKey = "invoiceDate, invoiceLocation, invoiceNumber")
+    primaryKey = {"invoiceDate", "invoiceLocation", "invoiceNumber"})
 public class ServiceInvoice extends AbstractModel {
     
     private static final long serialVersionUID = 1L;
