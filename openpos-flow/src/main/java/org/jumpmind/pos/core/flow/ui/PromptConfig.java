@@ -223,4 +223,8 @@ public class PromptConfig {
         this.id = id;
     }
 
+    public PromptConfig id(String id) {
+        this.setId(id);
+        return this;
+    }
 }
