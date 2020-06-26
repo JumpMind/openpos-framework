@@ -43,14 +43,8 @@ public class DatabaseSchema {
     private static ModelValidator modelClassValidator = new ModelValidator();
     private String tablePrefix;
 
-    static FileOutputStream codeGen = null;
-
     @SneakyThrows
     public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses) {
-        if (codeGen == null) {
-            codeGen = new FileOutputStream(new File("pk-annotations.txt"), false);
-        }
-
         this.platform = platform;
         this.tablePrefix = tablePrefix;
         this.entityClasses = entityClasses;
@@ -158,7 +152,6 @@ public class DatabaseSchema {
     protected Collection<Table> loadTables(String tablePrefix) {
         Set<Table> tables = new TreeSet<>();
         for (Class<?> entityClass : entityClasses) {
-            //List<ModelClassMetaData> metas = createMetaDatas(entityClass);
             ModelMetaData modelMetaData = createMetaData(entityClass, entityExtensionClasses, platform);
             classToModelMetaData.put(entityClass, modelMetaData);
             for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
@@ -223,13 +216,6 @@ public class DatabaseSchema {
         }
     }
 
-//    protected void extendTable(Table dbTable, Class<?> clazz) {
-//        Field[] fields = clazz.getDeclaredFields();
-//        for (Field field : fields) {
-//            dbTable.addColumn(createColumn(field, platform));
-//        }
-//    }
-
     public static ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses) {
         return createMetaData(clazz, entityExtensionClasses, null);
     }
@@ -276,37 +262,6 @@ public class DatabaseSchema {
                 list.add(meta);
             }
             entityClass = entityClass.getSuperclass();
-        }
-
-        for (ModelClassMetaData meta: list) {
-
-            StringBuilder buff = new StringBuilder();
-
-            for (FieldMetaData fieldMetaData : meta.getEntityIdFieldMetaDatas().values()) {
-                buff.append(fieldMetaData.getField().getName() + ", ");
-            }
-
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            TableDef tableAnnotation = meta.getClazz().getAnnotation(TableDef.class);
-
-            if (buff.length() > 0
-                    && !clazz.getSimpleName().equals("ServiceSample")
-                    && !clazz.getSimpleName().equals("ModuleModel")
-                    && tableAnnotation != null
-                    && StringUtils.isEmpty(tableAnnotation.primaryKey())) {
-
-                buff.setLength(buff.length()-2);
-                codeGen.write((meta.getClazz().getSimpleName()+"\n").getBytes());
-                codeGen.write(("primaryKey = \"" + buff.toString() + "\"\n").getBytes());
-                codeGen.flush();
-            }
-
-            Class<?> currentClass = meta.getClazz();
-            Table dbTable = meta.getTable();
-            IndexDefs indexDefs = currentClass.getAnnotation(IndexDefs.class);
-            Map<String, IIndex> indices = createIndices(indexDefs, dbTable, meta, databasePlatform);
-            for (IIndex index : indices.values()) {
-                dbTable.addIndex(index);
-            }
         }
 
         ModelMetaData metaData = new ModelMetaData();
