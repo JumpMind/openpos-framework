@@ -4,12 +4,12 @@ import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.TableDef;
 
-@TableDef(name="table")
+@TableDef(name="table", primaryKey="id")
 public class TestTableModel extends AbstractModel {
 
     private static final long serialVersionUID = 1L;
 
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     int id;
 
     @ColumnDef
