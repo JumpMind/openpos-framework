@@ -6,6 +6,7 @@ import java.util.*;
 import lombok.Data;
 import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
+import org.jumpmind.pos.persist.PersistException;
 
 import javax.annotation.sql.DataSourceDefinition;
 
@@ -36,16 +37,27 @@ public class ModelClassMetaData {
         entityFieldMetaDatas.put(name, fieldMetaData);
     }
 
-    public void addPrimaryKeyColumn(Column column) {
-        primaryKeyColumns.add(column);
-    }
-
     public boolean isPrimaryKey(Field field) {
         return isPrimaryKey(field.getName());
     }
 
     public boolean isPrimaryKey(String fieldName) {
         return primaryKeyFieldNames.contains(fieldName);
+    }
+
+    public void init() {
+        initPrimaryKeyColumns();
+    }
+
+    private void initPrimaryKeyColumns() {
+        for (String primaryKeyFieldName : primaryKeyFieldNames) {
+            FieldMetaData fieldMetaData = entityIdFieldMetaDatas.get(primaryKeyFieldName);
+            if (fieldMetaData == null) {
+                throw new PersistException("There is no field meta data for field name '" + primaryKeyFieldName + "' for model " + getClazz().getSimpleName());
+            }
+
+            primaryKeyColumns.add(fieldMetaData.getColumn());
+        }
     }
 
     @Override

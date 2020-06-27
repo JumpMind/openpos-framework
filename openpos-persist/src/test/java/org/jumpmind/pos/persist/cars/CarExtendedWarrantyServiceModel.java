@@ -10,7 +10,7 @@ import org.jumpmind.pos.persist.*;
 @Getter
 @Setter
 @TableDef(name="extended_warranty_service",
-        primaryKey = "warrantyId")
+        primaryKey = {"warrantyId", "effectiveStartDate"})
 @IndexDefs({
         @IndexDef(name = "idx_currency_code_term", columns = {"isoCurrencyCode", "effectiveStartDate"}),
         @IndexDef(name = "idx_vin", column = "vin")

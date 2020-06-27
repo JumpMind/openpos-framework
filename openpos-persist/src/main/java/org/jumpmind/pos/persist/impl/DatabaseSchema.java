@@ -237,20 +237,22 @@ public class DatabaseSchema {
 
                 Table dbTable = new Table();
                 List<Column> columns = new ArrayList<>();
-                List<Column> pkColumns = new ArrayList<>();
                 dbTable.setName(tblAnnotation.name());
                 dbTable.setDescription(tblAnnotation.description());
                 Class<?> currentClass = entityClass;
                 boolean includeAllFields = true;
                 while (currentClass != null && currentClass != Object.class) {
-                    createClassFieldsMetadata(currentClass, meta, includeAllFields, columns, pkColumns, databasePlatform);
+                    createClassFieldsMetadata(currentClass, meta, includeAllFields, columns, databasePlatform);
                     currentClass = currentClass.getSuperclass();
                     includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
                 }
                 for (Class<?> extensionClass : myExtensions) {
-                    createClassFieldsMetadata(extensionClass, meta, true, columns, pkColumns, databasePlatform);
+                    createClassFieldsMetadata(extensionClass, meta, true, columns, databasePlatform);
                 }
-                for (Column column : pkColumns) {
+
+                meta.init();
+
+                for (Column column : meta.getPrimaryKeyColumns()) {
                     dbTable.addColumn(column);
                 }
                 for (Column column : columns) {
@@ -262,6 +264,16 @@ public class DatabaseSchema {
                 list.add(meta);
             }
             entityClass = entityClass.getSuperclass();
+        }
+
+        for (ModelClassMetaData meta: list) {
+            Class<?> currentClass = meta.getClazz();
+            Table dbTable = meta.getTable();
+            IndexDefs indexDefs = currentClass.getAnnotation(IndexDefs.class);
+            Map<String, IIndex> indices = createIndices(indexDefs, dbTable, meta, databasePlatform);
+            for (IIndex index : indices.values()) {
+                dbTable.addIndex(index);
+            }
         }
 
         ModelMetaData metaData = new ModelMetaData();
@@ -295,7 +307,7 @@ public class DatabaseSchema {
 
     @SneakyThrows
     private static void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
-                                                  boolean includeAllFields, List<Column> columns, List<Column> pkColumns, IDatabasePlatform platform) {
+                                                  boolean includeAllFields, List<Column> columns, IDatabasePlatform platform) {
 
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
@@ -304,8 +316,6 @@ public class DatabaseSchema {
             if (column != null && (includeAllFields || column.isPrimaryKey())) {
                 if (isPrimaryKey(field, metaData)) {
                     metaData.addEntityIdFieldMetadata(field.getName(), new FieldMetaData(clazz, field, column));
-                    metaData.addPrimaryKeyColumn(column);
-                    pkColumns.add(column);
                 } else {
                     columns.add(column);
                 }
@@ -314,10 +324,9 @@ public class DatabaseSchema {
             CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
             if (compositeDefAnnotation != null) {
                 metaData.setIdxPrefix(compositeDefAnnotation.prefix());
-                createClassFieldsMetadata(field.getType(), metaData, includeAllFields, columns, pkColumns, platform);
+                createClassFieldsMetadata(field.getType(), metaData, includeAllFields, columns, platform);
             }
         }
-
     }
 
     private static Map<String, IIndex> createIndices(IndexDefs indexDefs, Table table,
