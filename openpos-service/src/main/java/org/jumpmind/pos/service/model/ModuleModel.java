@@ -4,12 +4,13 @@ import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.TableDef;
 
-@TableDef(name="module", description="This table is used to track runtime information about the module.")
+@TableDef(name="module", description="This table is used to track runtime information about the module.",
+        primaryKey="installationId")
 public class ModuleModel extends AbstractModel {
 
     private static final long serialVersionUID = 1L;
 
-    @ColumnDef(primaryKey=true) 
+    @ColumnDef
     String installationId;
     
     @ColumnDef

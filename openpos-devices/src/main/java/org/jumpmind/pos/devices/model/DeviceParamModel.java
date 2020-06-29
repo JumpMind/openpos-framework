@@ -12,16 +12,17 @@ import org.jumpmind.pos.persist.TableDef;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableDef(name="device_param")
+@TableDef(name="device_param",
+        primaryKey = {"deviceId", "appId", "paramName"})
 public class DeviceParamModel extends AbstractModel {
 
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     private String deviceId;
 
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     private String appId;
 
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     private String paramName;
 
     @ColumnDef

@@ -3,6 +3,7 @@ package org.jumpmind.pos.hazelcast;
 import com.hazelcast.cluster.MembershipEvent;
 import com.hazelcast.cluster.MembershipListener;
 import com.hazelcast.core.HazelcastInstance;
+import com.hazelcast.core.HazelcastInstanceNotActiveException;
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.event.DeviceHeartbeatEvent;
 import org.jumpmind.pos.util.event.AppEvent;
@@ -13,6 +14,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.Consumer;
 
@@ -39,7 +41,12 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap, Membershi
     
     @Override
     public ConcurrentMap<String, DeviceStatus> get() {
-        return mapProvider.getMap(DEVICES_MAP_NAME, String.class, DeviceStatus.class);
+        try {
+            return mapProvider.getMap(DEVICES_MAP_NAME, String.class, DeviceStatus.class);
+        } catch (HazelcastInstanceNotActiveException e) {
+            log.info("Hazelcast was not active.  This is probably because we are shutting down.  Returning a dummy map");
+            return new ConcurrentHashMap<>();
+        }
     }
 
     @EventListener(classes = AppEvent.class)

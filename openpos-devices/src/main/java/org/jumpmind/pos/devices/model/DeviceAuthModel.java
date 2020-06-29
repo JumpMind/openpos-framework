@@ -4,15 +4,16 @@ import lombok.Data;
 import org.jumpmind.pos.persist.*;
 
 @Data
-@TableDef(name = "device_auth")
+@TableDef(name = "device_auth",
+        primaryKey = {"deviceId", "appId"})
 @IndexDefs({
         @IndexDef(name = "idx_devices_auth_token", column = "authToken")
 })
 public class DeviceAuthModel extends AbstractModel {
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     private String deviceId;
 
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     private String appId;
 
     @ColumnDef()

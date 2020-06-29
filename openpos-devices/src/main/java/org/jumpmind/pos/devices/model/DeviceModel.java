@@ -14,7 +14,6 @@ import org.springframework.core.env.AbstractEnvironment;
 import org.springframework.core.env.EnumerablePropertySource;
 import org.springframework.core.env.MutablePropertySources;
 
-@TableDef(name = "device", description = "A device used to transaction commerce for a Business Unit")
 @Tagged(includeTagsInPrimaryKey = false)
 @Getter
 @Setter
@@ -23,17 +22,19 @@ import org.springframework.core.env.MutablePropertySources;
 @AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@TableDef(name = "device", description = "A device used to transaction commerce for a Business Unit",
+        primaryKey = {"deviceId", "appId"})
 public class DeviceModel extends AbstractModel implements ITaggedModel {
 
     @ToString.Include
     @EqualsAndHashCode.Include
-    @ColumnDef(primaryKey = true)
-    private String appId;
+    @ColumnDef(description = "A unique identifier for this Device")
+    private String deviceId;
 
     @ToString.Include
     @EqualsAndHashCode.Include
-    @ColumnDef(primaryKey = true, description = "A unique identifier for this Device")
-    private String deviceId;
+    @ColumnDef
+    private String appId;
 
     @ColumnDef(description = "The type of the Device.  Store/DC workstation or handheld, Customer handheld, website, etc.")
     private String deviceType; // STORE/DC/WORKSTATION/HANDELD/CUSTOMER

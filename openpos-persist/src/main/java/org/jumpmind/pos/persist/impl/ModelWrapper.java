@@ -30,7 +30,7 @@ import org.jumpmind.pos.util.model.ITypeCode;
 public class ModelWrapper {
 
     public static final String ENTITY_RETRIEVAL_TIME = "entity.retrieval.time";
-    
+
     private ModelMetaData modelMetaData;
     private AbstractModel model;
     
@@ -224,7 +224,7 @@ public class ModelWrapper {
         }
     }    
 
-    protected Object getFieldValue(String fieldName) {
+    public Object getFieldValue(String fieldName) {
         Object fieldValue=null;
         Object obj = model;
 
@@ -236,9 +236,8 @@ public class ModelWrapper {
 
         try {
             fieldValue = PropertyUtils.getProperty(obj, fieldName);
-        } catch (NoSuchMethodException |
-                IllegalAccessException | InvocationTargetException ex) {
-            throw new PersistException("Failed to getFieldValue on " + obj + "fieldName " + fieldName, ex);
+        } catch (Exception ex) {
+            throw new PersistException("Failed to getFieldValue on " + obj + " fieldName " + fieldName, ex);
         }
         return fieldValue;
     }
@@ -458,5 +457,23 @@ public class ModelWrapper {
             }
         }
         return equals;
+    }
+
+    public ModelMetaData getModelMetaData() {
+        return modelMetaData;
+    }
+
+    public List<Field> getPrimaryKeyFields() {
+        ModelClassMetaData classMetaData = modelMetaData.getModelClassMetaData().get(modelMetaData.getModelClassMetaData().size()-1);
+
+        Set<String> pkFieldNames = classMetaData.getPrimaryKeyFieldNames();
+
+        List<Field> pkFields = new ArrayList<>();
+
+        for (String pkFieldName : pkFieldNames) {
+            pkFields.add(classMetaData.getFieldMetaData(pkFieldName).getField());
+        }
+
+        return pkFields;
     }
 }

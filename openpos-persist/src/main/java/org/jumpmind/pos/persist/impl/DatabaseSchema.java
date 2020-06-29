@@ -2,20 +2,16 @@ package org.jumpmind.pos.persist.impl;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.SneakyThrows;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
@@ -47,6 +43,7 @@ public class DatabaseSchema {
     private static ModelValidator modelClassValidator = new ModelValidator();
     private String tablePrefix;
 
+    @SneakyThrows
     public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses) {
         this.platform = platform;
         this.tablePrefix = tablePrefix;
@@ -155,7 +152,6 @@ public class DatabaseSchema {
     protected Collection<Table> loadTables(String tablePrefix) {
         Set<Table> tables = new TreeSet<>();
         for (Class<?> entityClass : entityClasses) {
-            //List<ModelClassMetaData> metas = createMetaDatas(entityClass);
             ModelMetaData modelMetaData = createMetaData(entityClass, entityExtensionClasses, platform);
             classToModelMetaData.put(entityClass, modelMetaData);
             for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
@@ -201,7 +197,7 @@ public class DatabaseSchema {
         }
         if (!hasPk) {
             throw new PersistException(
-                    String.format("Table '%s' must define at least 1 primary key field with @Column(primaryKey=true)", tableName));
+                    String.format("Table '%s' must define at least 1 primary key field in @Table(primaryKey=\"fieldName\")", tableName));
         }
     }
 
@@ -220,17 +216,11 @@ public class DatabaseSchema {
         }
     }
 
-    protected void extendTable(Table dbTable, Class<?> clazz) {
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            dbTable.addColumn(createColumn(field, platform));
-        }
-    }
-
     public static ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses) {
         return createMetaData(clazz, entityExtensionClasses, null);
     }
 
+    @SneakyThrows
     public static ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses, IDatabasePlatform databasePlatform) {
         List<ModelClassMetaData> list = new ArrayList<>();
         Class<?> entityClass = clazz;
@@ -243,22 +233,26 @@ public class DatabaseSchema {
                 ModelClassMetaData meta = new ModelClassMetaData();
                 meta.setClazz(entityClass);
                 meta.setExtensionClazzes(myExtensions);
+                meta.setPrimaryKeyFieldNames(getPrimaryKeyNames(tblAnnotation));
+
                 Table dbTable = new Table();
                 List<Column> columns = new ArrayList<>();
-                List<Column> pkColumns = new ArrayList<>();
                 dbTable.setName(tblAnnotation.name());
                 dbTable.setDescription(tblAnnotation.description());
                 Class<?> currentClass = entityClass;
                 boolean includeAllFields = true;
                 while (currentClass != null && currentClass != Object.class) {
-                    createClassFieldsMetadata(currentClass, meta, includeAllFields, columns, pkColumns, databasePlatform);
+                    createClassFieldsMetadata(currentClass, meta, includeAllFields, columns, databasePlatform);
                     currentClass = currentClass.getSuperclass();
                     includeAllFields = currentClass != null && (currentClass.getAnnotation(TableDef.class) == null || ignoreSuperClasses);
                 }
                 for (Class<?> extensionClass : myExtensions) {
-                    createClassFieldsMetadata(extensionClass, meta, true, columns, pkColumns, databasePlatform);
+                    createClassFieldsMetadata(extensionClass, meta, true, columns, databasePlatform);
                 }
-                for (Column column : pkColumns) {
+
+                meta.init();
+
+                for (Column column : meta.getPrimaryKeyColumns()) {
                     dbTable.addColumn(column);
                 }
                 for (Column column : columns) {
@@ -288,21 +282,40 @@ public class DatabaseSchema {
         return metaData;
     }
 
+    public static Set<String> getPrimaryKeyNames(TableDef tblAnnotation) {
+        Set<String> pks = new LinkedHashSet<>();
+
+        for (String element : tblAnnotation.primaryKey()) {
+            pks.addAll(getPrimaryKeyNames(element));
+        }
+
+        return pks;
+    }
+
+    private static Set<String> getPrimaryKeyNames(String element) {
+        String[] pkFieldNames = element.split("\\,");
+        Set<String> pks = new LinkedHashSet<>();
+        for (String pkFieldName : pkFieldNames) {
+            pkFieldName = pkFieldName.trim();
+            if (!StringUtils.isEmpty(pkFieldName)) {
+                pks.add(pkFieldName);
+            }
+        }
+
+        return pks;
+    }
+
+    @SneakyThrows
     private static void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
-                                                  boolean includeAllFields, List<Column> columns, List<Column> pkColumns, IDatabasePlatform platform) {
+                                                  boolean includeAllFields, List<Column> columns, IDatabasePlatform platform) {
 
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            Column column = createColumn(field, platform);
+            Column column = createColumn(field, platform, metaData);
             if (column != null && (includeAllFields || column.isPrimaryKey())) {
-                if (isPrimaryKey(field)) {
+                if (isPrimaryKey(field, metaData)) {
                     metaData.addEntityIdFieldMetadata(field.getName(), new FieldMetaData(clazz, field, column));
-                    metaData.addPrimaryKeyColumn(column);
-                    // We want parent PK columns first. Because of this reverse ordering,
-                    // primary key columns will appear in reverse order in the SQL from how they appear in the java
-                    // source file.
-                    pkColumns.add(0, column); // NOTE reverse ordering here.
                 } else {
                     columns.add(column);
                 }
@@ -311,7 +324,7 @@ public class DatabaseSchema {
             CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
             if (compositeDefAnnotation != null) {
                 metaData.setIdxPrefix(compositeDefAnnotation.prefix());
-                createClassFieldsMetadata(field.getType(), metaData, includeAllFields, columns, pkColumns, platform);
+                createClassFieldsMetadata(field.getType(), metaData, includeAllFields, columns, platform);
             }
         }
     }
@@ -365,11 +378,11 @@ public class DatabaseSchema {
         }
     }
 
-    private static boolean isPrimaryKey(Field field) {
+    private static boolean isPrimaryKey(Field field, ModelClassMetaData metaData) {
         if (field != null) {
             ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
             if (colAnnotation != null) {
-                return colAnnotation.primaryKey();
+                return (metaData.getPrimaryKeyFieldNames().contains(field.getName()));
             }
         }
 
@@ -383,9 +396,11 @@ public class DatabaseSchema {
         return name;
     }
 
-    private static Column createColumn(Field field, IDatabasePlatform platform) {
+    private static Column createColumn(Field field, IDatabasePlatform platform, ModelClassMetaData metaData) {
         Column dbCol = null;
         ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
+
+
         if (colAnnotation != null) {
             dbCol = new Column();
 
@@ -416,9 +431,9 @@ public class DatabaseSchema {
             } else {
                 dbCol.setSize(getDefaultSize(field, dbCol));
             }
-            dbCol.setPrimaryKey(colAnnotation.primaryKey());
+            dbCol.setPrimaryKey(metaData.isPrimaryKey(field));
 
-            if (colAnnotation.primaryKey()) {
+            if (metaData.isPrimaryKey(field)) {
                 dbCol.setRequired(true);
             } else {
                 dbCol.setRequired(colAnnotation.required());

@@ -9,7 +9,8 @@ import org.jumpmind.pos.persist.*;
 
 @Getter
 @Setter
-@TableDef(name="extended_warranty_service")
+@TableDef(name="extended_warranty_service",
+        primaryKey = {"warrantyId", "effectiveStartDate"})
 @IndexDefs({
         @IndexDef(name = "idx_currency_code_term", columns = {"isoCurrencyCode", "effectiveStartDate"}),
         @IndexDef(name = "idx_vin", column = "vin")
@@ -21,7 +22,7 @@ public class CarExtendedWarrantyServiceModel extends AbstractModel {
     @JsonIgnore
     ServiceDefn serviceDefn;
 
-    @ColumnDef(primaryKey = true)
+    @ColumnDef
     String warrantyId;
 
     @ColumnDef

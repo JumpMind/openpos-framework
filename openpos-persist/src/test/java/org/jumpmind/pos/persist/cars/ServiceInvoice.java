@@ -7,15 +7,17 @@ import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.TableDef;
 
-@TableDef(name="service_invoice")
+@TableDef(name="service_invoice",
+    primaryKey = {"invoiceDate", "invoiceLocation", "invoiceNumber"})
 public class ServiceInvoice extends AbstractModel {
     
     private static final long serialVersionUID = 1L;
-    @ColumnDef(primaryKey=true)
+
+    @ColumnDef
     private Date invoiceDate;
-    @ColumnDef(primaryKey=true)
+    @ColumnDef
     private long invoiceLocation;
-    @ColumnDef(primaryKey=true)
+    @ColumnDef
     private long invoiceNumber;
     @ColumnDef
     private BigDecimal invoiceTotal;

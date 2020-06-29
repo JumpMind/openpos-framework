@@ -34,7 +34,6 @@ public @interface ColumnDef {
     String size() default "";
     boolean required() default false;
     String defaultValue() default "";
-    boolean primaryKey() default false;
     boolean autoIncrement() default false;
     String description() default "";
     CrossReference[] crossReferences() default {};

@@ -6,10 +6,11 @@ import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.TableDef;
 
-@TableDef(name = "service_sample", description="This table records statistics about service calls within openpos.")
+@TableDef(name = "service_sample", description="This table records statistics about service calls within openpos.",
+        primaryKey = "sampleId")
 public class ServiceSample extends AbstractModel {
 
-    @ColumnDef(primaryKey=true) 
+    @ColumnDef
     String sampleId; // TODO need sequence generator for deviceId+sequence.
     @ColumnDef
     String installationId;

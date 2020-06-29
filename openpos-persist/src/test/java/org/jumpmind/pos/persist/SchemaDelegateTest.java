@@ -41,17 +41,17 @@ public class SchemaDelegateTest {
         assertEquals(table.getName(),"CAR_EXTENDED_WARRANTY_SERVICE");
         Column[] pkColumns = table.getPrimaryKeyColumns();
         assertEquals(pkColumns.length,2);
-        assertEquals(pkColumns[0].getName(),"WARRANTY_ID");
-        assertEquals(pkColumns[1].getName(),"EFFECTIVE_START_DATE");
+        assertEquals("WARRANTY_ID", pkColumns[0].getName());
+        assertEquals("EFFECTIVE_START_DATE", pkColumns[1].getName());
         Column[] nonPKColumns = table.getNonPrimaryKeyColumns();
         assertEquals(nonPKColumns.length,11);
-        assertEquals(nonPKColumns[0].getName(),"EFFECTIVE_END_DATE");
-        assertEquals(nonPKColumns[1].getName(),"ISO_CURRENCY_CODE");
-        assertEquals(nonPKColumns[2].getName(),"RETAIL_PRICE");
-        assertEquals(nonPKColumns[3].getName(),"COST");
-        assertEquals(nonPKColumns[4].getName(),"TERM_IN_MONTHS");
-        assertEquals(nonPKColumns[5].getName(),"VIN");
-        assertEquals(nonPKColumns[6].getName(),"CROSS_REF_FIELD");
+        assertEquals("EFFECTIVE_END_DATE", nonPKColumns[0].getName());
+        assertEquals("ISO_CURRENCY_CODE", nonPKColumns[1].getName());
+        assertEquals("RETAIL_PRICE", nonPKColumns[2].getName());
+        assertEquals("COST", nonPKColumns[3].getName());
+        assertEquals("TERM_IN_MONTHS", nonPKColumns[4].getName());
+        assertEquals("VIN", nonPKColumns[5].getName());
+        assertEquals("CROSS_REF_FIELD", nonPKColumns[6].getName());
     }
 
     @Test
@@ -126,14 +126,14 @@ public class SchemaDelegateTest {
     @Test
     public void testIndexCreation() {
         Table table = sessionFactory.getTables().get(0);
-        assertEquals(table.getName(),"CAR_EXTENDED_WARRANTY_SERVICE");
-        assertEquals(table.getIndexCount(), 2);
+        assertEquals("CAR_EXTENDED_WARRANTY_SERVICE", table.getName());
+        assertEquals(2, table.getIndexCount());
         IIndex idxCurrencyCodeTerm = table.getIndex(0);
-        assertEquals(idxCurrencyCodeTerm.getName(), "CAR_IDX_CURRENCY_CODE_TERM");
-        assertEquals(idxCurrencyCodeTerm.getColumnCount(), 2);
+        assertEquals("CAR_IDX_CURRENCY_CODE_TERM", idxCurrencyCodeTerm.getName());
+        assertEquals(2, idxCurrencyCodeTerm.getColumnCount());
 
         IIndex idxVin = table.getIndex(1);
-        assertEquals(idxVin.getName(), "CAR_IDX_VIN");
-        assertEquals(idxVin.getColumnCount(), 1);
+        assertEquals("CAR_IDX_VIN", idxVin.getName());
+        assertEquals(1, idxVin.getColumnCount());
     }
 }
