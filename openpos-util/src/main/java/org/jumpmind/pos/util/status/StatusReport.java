@@ -13,6 +13,7 @@ public class StatusReport {
 
     public final static String DEFAULT_ICON_NAME = "apps"; // grid of squares
 
+    @EqualsAndHashCode.Exclude
     private Date timestamp;
     private String name;
     private String iconName = DEFAULT_ICON_NAME;
