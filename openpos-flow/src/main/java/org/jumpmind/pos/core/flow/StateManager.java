@@ -59,6 +59,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -109,6 +110,9 @@ public class StateManager implements IStateManager {
 
     @Autowired
     StateManagerContainer stateManagerContainer;
+
+    @Autowired
+    Environment env;
 
     @Value("${openpos.screens.config.defaultSessionTimeoutMills:240000}")
     private long defaultSessionTimeoutMillis;
@@ -536,7 +540,13 @@ public class StateManager implements IStateManager {
 
     @Override
     public Object getCurrentState() {
-        return applicationState.getCurrentContext().getState();
+        if (applicationState.getCurrentContext() != null) {
+            return applicationState.getCurrentContext().getState();
+        } else {
+            throw new FlowException("applicationState.getCurrentContext() is null. This StateManager is likely misconfigured. " +
+                    "Check your appId and Spring profiles. (appId=\"" + this.getAppId() +
+                    "\") profiles=" + Arrays.toString(env.getActiveProfiles()));
+        }
     }
 
     @Override
@@ -1080,6 +1090,12 @@ public class StateManager implements IStateManager {
     }
 
     protected void onEvent(Event event) {
+        if (initialFlowConfig == null) {
+            throw new FlowException("initialFlowConfig is null. This StateManager is likely misconfigured. " +
+                    "Check your appId and Spring profiles. (appId=\"" + this.getAppId() +
+                    "\") profiles=" + Arrays.toString(env.getActiveProfiles()));
+        }
+
         List<Class> classes = initialFlowConfig.getEventHandlers();
         classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
 
