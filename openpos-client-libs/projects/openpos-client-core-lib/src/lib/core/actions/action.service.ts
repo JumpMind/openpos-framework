@@ -24,15 +24,15 @@ export class ActionService implements OnDestroy {
         private dialogService: MatDialog,
         private messageProvider: MessageProvider) {
         this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
-            if (message.disabled) {
+            if (message.willUnblock) {
+                this.unblock();
+            } else {
                 console.log('creating a screen that is disabled');
                 this.blockActions = true;
-            } else {
-                this.unblock();
             }
         }));
         this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe(message => {
-            if (message.type === MessageTypes.TOAST && !message.disabled) {
+            if (message.type === MessageTypes.TOAST && message.willUnblock) {
                 this.unblock();
             }
         }));
