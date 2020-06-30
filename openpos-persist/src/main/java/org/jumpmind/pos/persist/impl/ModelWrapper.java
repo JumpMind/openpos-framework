@@ -435,6 +435,15 @@ public class ModelWrapper {
         return columnNamesToValues;
     }
 
+    public int[] getColumnTypes(Table table) {
+        Column[] columns = getColumns(table);
+        int types[] = new int[columns.length];
+        for (int i = 0; i < columns.length; i++) {
+            types[i] = columns[i].getMappedTypeCode();
+        }
+        return types;
+    }
+
     public Column[] getColumns(Table table) {
         List<Column> columns = new ArrayList<>();
         for (Column modelColumn : fieldsToColumns.values()) {

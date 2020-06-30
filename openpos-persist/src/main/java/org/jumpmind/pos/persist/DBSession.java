@@ -502,7 +502,7 @@ public class DBSession {
                 DmlStatement statement = databasePlatform.createDmlStatement(dmlType, table.getCatalog(), table.getSchema(), table.getName(),
                         primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
                 String sql = statement.getSql();
-                jdbcTemplate.getJdbcOperations().batchUpdate(sql, getValueArray(statement, models));
+                jdbcTemplate.getJdbcOperations().batchUpdate(sql, getValueArray(statement, models), model.getColumnTypes(table));
             }
         }
     }
