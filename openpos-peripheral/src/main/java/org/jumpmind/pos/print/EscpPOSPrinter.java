@@ -13,6 +13,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.*;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -277,6 +279,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         }
     }
 
+    @Override
     public void printSlip(String text, int timeoutInMillis) {
         try {
             beginSlipMode();
@@ -291,10 +294,56 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public String readMicr() {
+        try {
+//        printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
+            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
+            getPeripheralConnection().getOut().flush();
+            long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "2000").toString());
+            long micrTimeout = Long.valueOf(settings.getOrDefault("micrTimeout", "20000").toString());
+            Thread.sleep(micrWaitTime);
+
+            long start = System.currentTimeMillis();
+
+            List<Integer> bytes = new ArrayList<Integer>();
+            int firstRead = -1;
+
+            while (System.currentTimeMillis()-start < micrTimeout
+                && (firstRead = getPeripheralConnection().getIn().read()) == -1) {
+                Thread.sleep(100);
+            }
+
+            Thread.sleep(micrWaitTime);
+
+            endSlipMode(); // kick the slip out no matter what happenens.
+
+            if (firstRead == -1) {
+                throw new PrintException("MICR read timed out.");
+            }
+            if (firstRead != 0) {
+                throw new PrintException("MICR read failed with error code: " + firstRead);
+            }
+
+            int current;
+            StringBuilder buff = new StringBuilder(32);
+            while ((current = getPeripheralConnection().getIn().read()) != -1) {
+                buff.append((char)current);
+            }
+
+            return buff.toString();
+        } catch (Exception ex) {
+            if (ex instanceof PrintException) {
+                throw (PrintException)ex;
+            }
+            throw new PrintException("Failed to read MICR", ex);
+        }
+    }
+
+    @Override
     public void beginSlipMode() {
         try {
-            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
+//            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
             printerStatusReporter.reportStatus(Status.Error, ex.getMessage());
@@ -325,7 +374,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public boolean getJrnEmpty() throws JposException {
-        return (readPrinterStatus() & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0;
+        int printerStatus = readPrinterStatus();
+        return (printerStatus & SLIP_LEADING_EDGE_SENSOR_COVERED) == 0;
     }
 
     @Override

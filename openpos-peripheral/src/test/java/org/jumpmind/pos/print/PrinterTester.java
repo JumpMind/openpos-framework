@@ -2,6 +2,9 @@ package org.jumpmind.pos.print;
 
 import jpos.JposException;
 
+import javax.xml.transform.sax.SAXSource;
+import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -11,15 +14,18 @@ import java.util.Map;
 public class PrinterTester {
 
     private static IOpenposPrinter createPrinter() {
+
+        File pwd = new File(".");
+        System.out.println(pwd.getAbsolutePath());
+
         Map<String, Object> settings = new HashMap<>();
         settings.put("printerCommandLocations", "esc_p.properties, epson.properties");
-        settings.put("printerCommandLocations", "esc_p.properties,epson.properties");
         settings.put("connectionClass", "org.jumpmind.pos.print.RS232ConnectionFactory");
 //        settings.put("connectionClass", "org.jumpmind.pos.print.SocketConnectionFactory");
 //        settings.put("hostName", "192.168.42.181");
-//        settings.put("port", "9100");
+        settings.put("portName", "COM7");
         settings.put("printWidth", "46");
-        settings.put("usbVendorId", 0x0404); // NCR
+//        settings.put("usbVendorId", 0x0404); // NCR
 //        settings.put("usbVendorId", 0x04b8); // EPSON
 //        settings.put("usbVendorId", 0x08a6); // TOSHIBA
         settings.put("usbProductId", "ANY");
@@ -51,6 +57,24 @@ public class PrinterTester {
             printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x40}); // ESCP reset.
             printer.getPeripheralConnection().getOut().flush();
 
+            long start = System.currentTimeMillis();
+
+//            try {
+//                while (printer.getJrnEmpty() && System.currentTimeMillis()-start < 6000) {
+//                    System.out.print("no slip ");
+//                }
+//            }
+//            catch (Exception ex) {
+//                ex.printStackTrace();
+//            }
+//
+//            if (printer.getJrnEmpty()) {
+//                System.out.println("TIMED OUT WAITING FOR SLIP");
+//                System.exit(1);
+//            }
+
+            printer.printNormal(0, "A long string. A long string. 234567890234567890234567890234567890234567890234567890234567890234567890\n");
+
 
 //            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Initial print on receipt printer.\n");
 
@@ -71,7 +95,42 @@ public class PrinterTester {
 //            printer.getPrinterConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
 //            printer.getPrinterConnection().getOut().flush();
 
+//            while (true) {
+//                int printerStatus = printer.readPrinterStatus();
+//                System.out.println("LEADING EDGE " + (printerStatus & EscpPOSPrinter.SLIP_LEADING_EDGE_SENSOR_COVERED));
+//                System.out.println("TRAILING EDGE " + (printerStatus & EscpPOSPrinter.SLIP_TRAILING_EDGE_SENSOR_COVERED));
+//                if (System.currentTimeMillis() > System.currentTimeMillis()+1000) {
+//                    break;
+//                }
+//            }
+
             printer.printNormal(0, "This is for the receipt.");
+
+            printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01}); // READ MICR
+            printer.getPeripheralConnection().getOut().flush();
+            Thread.sleep(5000);
+            int b;
+//            byte[] bytes = new byte[128];
+//            printer.getPeripheralConnection().getIn().read(bytes);
+//
+//            byte[] bytesTrimmed = Arrays.copyOfRange(bytes, 1, bytes.length);
+//
+//            System.out.println(new String(bytesTrimmed));
+
+            while ((b = printer.getPeripheralConnection().getIn().read()) != -1) {
+                System.out.print((char)b);
+            }
+
+            System.out.println();
+
+            printer.endSlipMode();
+
+
+            while (printer.getJrnEmpty() && System.currentTimeMillis()-start < 60000) {
+                System.out.print("no slip ");
+            }
+            System.out.println("Print SLip");
+            printer.printSlip("Hello", 20000);
 
 
 //            printer.printSlip(BOLD + "FOR DEPOSIT ONLY" + NORMAL + "\nPrinting on the slip printer.\n A second line here.\n\nAccount #12342346456\n", 30000);
@@ -79,12 +138,12 @@ public class PrinterTester {
 //            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Back to receipt printer.\n");
 
 
-            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
+//            printer.printImage(Thread.currentThread().getContextClassLoader().getResourceAsStream("images/header-image.png"));
 
 //            StringBuilder buffer = new StringBuilder(128);
 //
 
-//
+//  
 //            buffer.append(BOLD).append("6/18/2019 5:03PM");
 //            buffer.append(NORMAL).append(" Helped by ");
 //            buffer.append(BOLD).append("Sara ");
@@ -189,7 +248,7 @@ public class PrinterTester {
 //            printer.printBarCode(POSPrinterConst.PTR_S_RECEIPT,"380502001835720192324", POSPrinterConst.PTR_BCS_Code128, 50, 150,
 //                    POSPrinterConst.PTR_BC_CENTER, POSPrinterConst.PTR_BC_TEXT_BELOW);
 
-            printer.printNormal(0, "\n\n\n\n\n\n");
+//            printer.printNormal(0, "\n\n\n\n\n\n");
             printer.cutPaper(100);
             printer.close();
 

@@ -30,6 +30,7 @@ public class PrinterCommands {
     public static final String CUT_FEED = "CUT_FEED";
     public static final String CASH_DRAWER_OPEN = "CASH_DRAWER_OPEN";
     public static final String ESC_P_RESET = "ESC_P_RESET";
+    public static final String READ_MICR = "READ_MICR";
 
     private Map<String, String> printCommands;
 

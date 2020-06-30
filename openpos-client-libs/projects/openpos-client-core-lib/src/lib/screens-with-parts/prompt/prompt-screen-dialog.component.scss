@@ -15,7 +15,9 @@
         @extend %page-spaced-content; 
     
         .prompt-image {
-            max-height: 4em;
+            &.mobile {
+                max-height: 4em;
+            }
             justify-self: center;
         }
     }
