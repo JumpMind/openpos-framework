@@ -40,7 +40,7 @@ export class SelfCheckoutSaleComponent extends PosScreen<any> implements AfterVi
     }
 
     hasItems(): Observable<boolean> {
-        return !!this.saleItemCardList.items && this.saleItemCardList.items.pipe(map(items => !!items && items.length > 0));
+        return !!this.saleItemCardList.items$ && this.saleItemCardList.items$.pipe(map(items => !!items && items.length > 0));
     }
 
     scrollToBottom(): void {

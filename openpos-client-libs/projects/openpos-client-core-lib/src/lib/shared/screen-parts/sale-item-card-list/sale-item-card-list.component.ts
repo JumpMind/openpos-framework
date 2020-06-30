@@ -3,10 +3,11 @@ import { SaleItemCardListInterface } from './sale-item-card-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
 import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-message.service';
-import { Observable } from 'rxjs';
+import {merge, Observable} from 'rxjs';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
+import {takeUntil} from 'rxjs/operators';
 
 
 @ScreenPart({
@@ -18,15 +19,17 @@ import { Configuration } from '../../../configuration/configuration';
   styleUrls: ['./sale-item-card-list.component.scss']
 })
 export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardListInterface> implements AfterViewInit {
-
+  stop$: Observable<any>;
   expandedIndex = -1;
   numItems = 0;
-  items: Observable<ISellItem[]>;
+  items$: Observable<ISellItem[]>;
   @ViewChildren('items', {read: ElementRef }) private itemsRef: QueryList<ElementRef>;
 
   constructor(injector: Injector, private dataMessageService: UIDataMessageService,
               protected keyPresses: KeyPressProvider) {
     super(injector);
+    this.stop$ = merge(this.beforeScreenDataUpdated$, this.destroyed$);
+
     this.subscriptions.add(
       this.keyPresses.subscribe( 'ArrowDown', 1, (event: KeyboardEvent) => {
         // ignore repeats and check configuration
@@ -58,9 +61,11 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
   }
 
   screenDataUpdated() {
-    this.items = this.dataMessageService.getData$(this.screenData.providerKey);
-    this.items.subscribe(() => {
-      this.items.forEach(i => {
+    this.items$ = this.dataMessageService.getData$(this.screenData.providerKey);
+    this.items$.subscribe(sellItems => {
+      this.addSellItemsGlobalKeybinds(sellItems);
+
+      this.items$.forEach(i => {
         this.numItems = i.length;
         this.expandedIndex = i.length - 1;
       });
@@ -70,6 +75,19 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
   ngAfterViewInit() {
     this.scrollToView(this.expandedIndex);
+  }
+
+    addSellItemsGlobalKeybinds(sellItems: ISellItem[]): void {
+      const uniqueKeybinds = sellItems.reduce((allActions, sellItem) => {
+          sellItem.menuItems.forEach(menuItem => allActions[menuItem.keybind] = menuItem);
+          return allActions;
+      }, {});
+
+      const allActions = Object.keys(uniqueKeybinds).map(key => uniqueKeybinds[key]);
+
+      this.keyPressProvider.globalSubscribe(allActions).pipe(
+          takeUntil(this.stop$)
+      ).subscribe(action => this.doAction(action, [this.expandedIndex]));
   }
 
   scrollToView(index: number): void {

@@ -1,5 +1,5 @@
 <div class="sale-item-list-outer">
-<app-item-card *ngFor="let item of (items | async); index as i; trackBy: itemsTrackByFn" 
+<app-item-card *ngFor="let item of (items$ | async); index as i; trackBy: itemsTrackByFn"
 #items
 [item]="item" 
 [isReadOnly]="screenData.readOnly" 
