@@ -77,17 +77,17 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
     this.scrollToView(this.expandedIndex);
   }
 
-    addSellItemsGlobalKeybinds(sellItems: ISellItem[]): void {
-      const uniqueKeybinds = sellItems.reduce((allActions, sellItem) => {
-          sellItem.menuItems.forEach(menuItem => allActions[menuItem.keybind] = menuItem);
-          return allActions;
-      }, {});
+  addSellItemsGlobalKeybinds(sellItems: ISellItem[]): void {
+    const uniqueKeybinds = sellItems.reduce((allActions, sellItem) => {
+        sellItem.menuItems.forEach(menuItem => allActions[menuItem.keybind] = menuItem);
+        return allActions;
+    }, {});
 
-      const allActions = Object.keys(uniqueKeybinds).map(key => uniqueKeybinds[key]);
+    const allActions = Object.keys(uniqueKeybinds).map(key => uniqueKeybinds[key]);
 
-      this.keyPressProvider.globalSubscribe(allActions).pipe(
-          takeUntil(this.stop$)
-      ).subscribe(action => this.doAction(action, [this.expandedIndex]));
+    this.keyPressProvider.globalSubscribe(allActions).pipe(
+        takeUntil(this.stop$)
+    ).subscribe(action => this.doAction(action, [this.expandedIndex]));
   }
 
   scrollToView(index: number): void {
