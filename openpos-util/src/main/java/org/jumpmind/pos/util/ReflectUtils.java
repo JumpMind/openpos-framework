@@ -11,6 +11,7 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
@@ -66,9 +67,11 @@ public class ReflectUtils {
                     throw new ReflectionException("Failed to parse this string " + value + " to a date value.  You might need to add a new date pattern to the list", e);
                 }
             }
-        }
-
-        if ((field.getType().equals(Boolean.class) || field.getType().equals(boolean.class))
+        } else if (field.getType().equals(Integer.class) && value instanceof Number) {
+            value = ((Number)value).intValue();
+        } else if (field.getType().equals(BigDecimal.class) && value instanceof Number) {
+            value = new BigDecimal(value.toString());
+        } else if ((field.getType().equals(Boolean.class) || field.getType().equals(boolean.class))
                 && (value instanceof Number)    ) {
             Number number = (Number) value;
             if (number.intValue() != 0) {
