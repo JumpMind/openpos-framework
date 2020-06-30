@@ -690,7 +690,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     @Override
     public boolean getJrnEmpty() throws JposException {
-        return true;
+        return false;
     }
 
     @Override
