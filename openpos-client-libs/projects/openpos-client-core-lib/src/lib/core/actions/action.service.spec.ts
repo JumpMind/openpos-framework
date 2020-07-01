@@ -78,7 +78,7 @@ describe('ActionService', () => {
 
             expect(messageProvider.sendMessage).not.toHaveBeenCalledWith(jasmine.objectContaining({actionName: 'Test2'}));
 
-            scopedMessages$.next({});
+            scopedMessages$.next({willUnblock: true});
 
             tick();
 
@@ -174,7 +174,7 @@ describe('ActionService', () => {
 
             tick();
 
-            scopedMessages$.next({});
+            scopedMessages$.next({willUnblock:true});
 
             tick();
 
@@ -194,8 +194,9 @@ describe('ActionService', () => {
             actionService.doAction(action1);
 
             tick();
-
-            allMessages$.next(new ToastMessage());
+            let toast = new ToastMessage()
+            toast.willUnblock = true;
+            allMessages$.next(toast);
 
             tick();
 

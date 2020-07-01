@@ -26,7 +26,7 @@ export class ActionService implements OnDestroy {
         this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
             if (message.willUnblock) {
                 this.unblock();
-            } else {
+            } else if(message.willUnblock === false){
                 console.log('creating a screen that is disabled');
                 this.blockActions = true;
             }
