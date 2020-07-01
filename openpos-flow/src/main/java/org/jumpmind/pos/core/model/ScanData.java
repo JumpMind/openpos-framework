@@ -1,6 +1,8 @@
 package org.jumpmind.pos.core.model;
 
-public class ScanData {
+import java.io.Serializable;
+
+public class ScanData implements Serializable {
     
     private OpenposBarcodeType type;
     private String data;
