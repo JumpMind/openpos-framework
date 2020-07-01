@@ -1,14 +1,13 @@
-import { Injectable, Type, ComponentFactoryResolver, ComponentFactory } from '@angular/core';
+import {ComponentFactory, ComponentFactoryResolver, Injectable, Type} from '@angular/core';
+import {MatDialog, MatDialogRef} from '@angular/material';
+import {IScreen} from '../../shared/components/dynamic-screen/screen.interface';
 import {MessageProvider} from '../../shared/providers/message.provider';
-import {MessageType} from '../../shared/screen-parts/banner/banner.interface';
+import {DialogContentComponent} from '../components/dialog-content/dialog-content.component';
+import {OpenPOSDialogConfig} from '../interfaces/open-pos-dialog-config.interface';
+import {LifeCycleEvents} from '../messages/life-cycle-events.enum';
+import {LifeCycleMessage} from '../messages/life-cycle-message';
 import {MessageTypes} from '../messages/message-types';
-import { SessionService } from './session.service';
-import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
-import { DialogContentComponent } from '../components/dialog-content/dialog-content.component';
-import { MatDialogRef, MatDialog } from '@angular/material';
-import { OpenPOSDialogConfig } from '../interfaces/open-pos-dialog-config.interface';
-import { LifeCycleMessage } from '../messages/life-cycle-message';
-import { LifeCycleEvents } from '../messages/life-cycle-events.enum';
+import {SessionService} from './session.service';
 
 @Injectable({
     providedIn: 'root',
@@ -88,7 +87,7 @@ export class DialogService {
             this.dialogRef = null;
             this.closingDialogRef.close();
 
-            this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogClosing));
+            this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogClosing, null));
 
             // Wait for the dialog to fully close before moving on
             await this.closingDialogRef.afterClosed().toPromise();
@@ -160,7 +159,7 @@ export class DialogService {
 
                 if (!this.dialogRef || !this.dialogRef.componentInstance) {
                     console.info('[DialogService] Dialog \'' + dialog.screenType + '\' opening...');
-                    this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogOpening));
+                    this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogOpening, dialog));
                     this.dialogRef = this.dialog.open(DialogContentComponent, dialogProperties);
                 } else {
                     // I don't think this code will ever run
@@ -185,6 +184,8 @@ export class DialogService {
         } finally {
             this.dialogOpening = false;
         }
+        console.log("screen updated");
+        this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.ScreenUpdated, dialog));
     }
 
 }

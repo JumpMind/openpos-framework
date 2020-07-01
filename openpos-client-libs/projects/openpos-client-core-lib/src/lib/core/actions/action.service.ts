@@ -1,4 +1,5 @@
 import {Injectable, OnDestroy} from '@angular/core';
+import {LifeCycleMessage} from '../messages/life-cycle-message';
 import {IActionItem} from './action-item.interface';
 import {ConfirmationDialogComponent} from '../components/confirmation-dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
@@ -23,17 +24,23 @@ export class ActionService implements OnDestroy {
     constructor(
         private dialogService: MatDialog,
         private messageProvider: MessageProvider) {
+        console.log("Creating new Action Service")
         this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
-            if (message.willUnblock) {
-                this.unblock();
-            } else if(message.willUnblock === false){
+            if(message.willUnblock === false){
                 console.log('creating a screen that is disabled');
                 this.blockActions = true;
             }
         }));
         this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe(message => {
             if (message.type === MessageTypes.TOAST && message.willUnblock) {
+                console.log('unblocking action because message:', message);
                 this.unblock();
+            } else if( message.type === MessageTypes.LIFE_CYCLE_EVENT ){
+                const lfm = message as LifeCycleMessage;
+                if(lfm.screen && lfm.screen.willUnblock){
+                    console.log('unblocking actions because message:', lfm.screen);
+                    this.unblock();
+                }
             }
         }));
     }

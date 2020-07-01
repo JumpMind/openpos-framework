@@ -40,12 +40,12 @@ export class MessageProvider {
                     switch ( lfMessage.eventType ) {
                         case LifeCycleEvents.DialogOpening:
                             return this.messageType === MessageTypes.DIALOG ?
-                                new LifeCycleMessage(LifeCycleEvents.BecomingActive) :
-                                new LifeCycleMessage(LifeCycleEvents.LeavingActive);
+                                new LifeCycleMessage(LifeCycleEvents.BecomingActive, lfMessage.screen) :
+                                new LifeCycleMessage(LifeCycleEvents.LeavingActive, lfMessage.screen);
                         case LifeCycleEvents.DialogClosing:
                             return this.messageType === MessageTypes.DIALOG ?
-                                new LifeCycleMessage(LifeCycleEvents.LeavingActive) :
-                                new LifeCycleMessage(LifeCycleEvents.BecomingActive);
+                                new LifeCycleMessage(LifeCycleEvents.LeavingActive, lfMessage.screen) :
+                                new LifeCycleMessage(LifeCycleEvents.BecomingActive, lfMessage.screen);
                     }
                 }
                 return m;

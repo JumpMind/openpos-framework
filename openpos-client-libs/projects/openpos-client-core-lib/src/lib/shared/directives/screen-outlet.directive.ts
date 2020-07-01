@@ -176,6 +176,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
         // Output the componentRef and screen to the training-wrapper
         this.componentEmitter.emit({ componentRef: this.componentRef, screen });
+        this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.ScreenUpdated, screen));
 
     }
 
