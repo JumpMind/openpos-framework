@@ -8,7 +8,8 @@ import {LOCK_SCREEN_DATA} from './lock-screen.service';
 @Component({
   selector: 'app-lock-screen',
   templateUrl: './lock-screen.component.html',
-  styleUrls: ['./lock-screen.component.scss']
+  styleUrls: ['./lock-screen.component.scss'],
+  providers: [ActionService]
 })
 export class LockScreenComponent implements OnDestroy{
 

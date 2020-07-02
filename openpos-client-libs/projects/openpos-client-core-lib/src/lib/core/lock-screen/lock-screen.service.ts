@@ -55,6 +55,7 @@ export class LockScreenService {
             this.lockScreenOverlayRef.dispose();
             this.lockScreenOverlayRef = null;
         }
+
     }
 
     private createInjector(): PortalInjector {
@@ -63,14 +64,8 @@ export class LockScreenService {
 
         // Set custom injection tokens
         injectionTokens.set(LOCK_SCREEN_DATA, this.lockScreenData);
-        const componentInjector = Injector.create(
-            {
-                providers: [{ provide: ActionService, useClass: ActionService, deps: [MatDialog, MessageProvider] }],
-                parent: this.injector
-            }
-        );
         // Instantiate new PortalInjector
-        return new PortalInjector(componentInjector, injectionTokens);
+        return new PortalInjector(this.injector, injectionTokens);
     }
 
 }

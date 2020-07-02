@@ -386,7 +386,7 @@ public class ScreenService implements IScreenService, IActionListener {
                     }
                 }
             } catch (IllegalArgumentException ex) {
-                logger.error(ex.getMessage(), ex);
+                logger.debug(ex.getMessage(), ex);
                 // We should not assume a form will always be returned by
                 // the DynamicFormScreen.
                 // The barcode scanner can also return a value.

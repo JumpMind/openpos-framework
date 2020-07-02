@@ -23,8 +23,13 @@ export class MessageProvider {
             this.subscription.unsubscribe();
         }
         // Update state withe the latest message
-        this.subscription  = this.sessionService.getMessages( messageType )
-          .pipe(filter(m => m.screenType !== 'NoOp')).subscribe( m => this.messages$.next(m));
+        this.subscription  = this.sessionService.getMessages( MessageTypes.LIFE_CYCLE_EVENT )
+          .pipe(filter(m =>
+              m instanceof LifeCycleMessage &&
+              (m as LifeCycleMessage).screen !== null &&
+              (m as LifeCycleMessage).screen.type === messageType &&
+              (m as LifeCycleMessage).screen.screenType !== 'NoOp'))
+            .subscribe( m => this.messages$.next((m as LifeCycleMessage).screen));
         this.messageType = messageType;
     }
 
@@ -40,12 +45,12 @@ export class MessageProvider {
                     switch ( lfMessage.eventType ) {
                         case LifeCycleEvents.DialogOpening:
                             return this.messageType === MessageTypes.DIALOG ?
-                                new LifeCycleMessage(LifeCycleEvents.BecomingActive) :
-                                new LifeCycleMessage(LifeCycleEvents.LeavingActive);
+                                new LifeCycleMessage(LifeCycleEvents.BecomingActive, lfMessage.screen) :
+                                new LifeCycleMessage(LifeCycleEvents.LeavingActive, lfMessage.screen);
                         case LifeCycleEvents.DialogClosing:
                             return this.messageType === MessageTypes.DIALOG ?
-                                new LifeCycleMessage(LifeCycleEvents.LeavingActive) :
-                                new LifeCycleMessage(LifeCycleEvents.BecomingActive);
+                                new LifeCycleMessage(LifeCycleEvents.LeavingActive, lfMessage.screen) :
+                                new LifeCycleMessage(LifeCycleEvents.BecomingActive, lfMessage.screen);
                     }
                 }
                 return m;

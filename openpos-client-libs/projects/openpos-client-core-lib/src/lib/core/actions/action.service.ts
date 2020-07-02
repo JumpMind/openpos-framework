@@ -1,15 +1,17 @@
 import {Injectable, OnDestroy} from '@angular/core';
-import {IActionItem} from './action-item.interface';
-import {ConfirmationDialogComponent} from '../components/confirmation-dialog/confirmation-dialog.component';
 import {MatDialog} from '@angular/material';
-import {QueueLoadingMessage} from '../services/session.service';
-import {ActionMessage} from '../messages/action-message';
+import {BehaviorSubject, Observable, Subscription} from 'rxjs';
 import {LoaderState} from '../../shared/components/loader/loader-state';
 import {MessageProvider} from '../../shared/providers/message.provider';
-import {BehaviorSubject, Observable, Subscription} from 'rxjs';
-import {IUrlMenuItem} from './url-menu-item.interface';
+import {ConfirmationDialogComponent} from '../components/confirmation-dialog/confirmation-dialog.component';
+import {ActionMessage} from '../messages/action-message';
+import {LifeCycleEvents} from '../messages/life-cycle-events.enum';
+import {LifeCycleMessage} from '../messages/life-cycle-message';
 import {OpenposMessage} from '../messages/message';
 import {MessageTypes} from '../messages/message-types';
+import {QueueLoadingMessage} from '../services/session.service';
+import {IActionItem} from './action-item.interface';
+import {IUrlMenuItem} from './url-menu-item.interface';
 
 @Injectable()
 export class ActionService implements OnDestroy {
@@ -23,16 +25,19 @@ export class ActionService implements OnDestroy {
     constructor(
         private dialogService: MatDialog,
         private messageProvider: MessageProvider) {
+        console.log("Creating new Action Service")
         this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
-            if (message.willUnblock) {
-                this.unblock();
-            } else if(message.willUnblock === false){
+            if(message.willUnblock === false){
                 console.log('creating a screen that is disabled');
                 this.blockActions = true;
+            } else if( message.willUnblock){
+                console.log('unblocking actions because message:', message);
+                this.unblock();
             }
         }));
         this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe(message => {
             if (message.type === MessageTypes.TOAST && message.willUnblock) {
+                console.log('unblocking action because toast:', message);
                 this.unblock();
             }
         }));
