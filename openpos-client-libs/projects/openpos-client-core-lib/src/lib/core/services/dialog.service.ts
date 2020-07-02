@@ -1,5 +1,6 @@
 import {ComponentFactory, ComponentFactoryResolver, Injectable, Type} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
+import {filter} from 'rxjs/operators';
 import {IScreen} from '../../shared/components/dynamic-screen/screen.interface';
 import {MessageProvider} from '../../shared/providers/message.provider';
 import {DialogContentComponent} from '../components/dialog-content/dialog-content.component';
@@ -40,8 +41,7 @@ export class DialogService {
 
         // Pipe all the messages for dialog updates
         this.messageProvider.setMessageType(MessageTypes.DIALOG);
-        this.messageProvider.getScopedMessages$().subscribe(m => this.updateDialog(m));
-
+        this.session.getMessages(MessageTypes.DIALOG).subscribe(m => this.updateDialog(m));
     }
 
     public addDialog(name: string, type: Type<IScreen>): void {
