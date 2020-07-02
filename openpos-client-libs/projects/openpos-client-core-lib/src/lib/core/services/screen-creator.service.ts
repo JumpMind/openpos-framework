@@ -8,12 +8,9 @@ import { MessageProvider } from '../../shared/providers/message.provider';
 export class ScreenCreatorService {
 
     createScreenComponent( factory: ComponentFactory<IScreen>, viewContainer: ViewContainerRef): ComponentRef<IScreen> {
-        // Create our own injector and add the action service to it.
-        const componentInjector = Injector.create(
-            {   providers: [ { provide: ActionService, useClass: ActionService, deps: [MatDialog, MessageProvider] }],
-                parent: viewContainer.parentInjector }
-            );
-        const componentRef = viewContainer.createComponent(factory, viewContainer.length, componentInjector);
+
+        const componentRef = viewContainer.createComponent(factory);
+
         return componentRef;
     }
 }
