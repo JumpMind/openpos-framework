@@ -3,4 +3,5 @@ import { OpenposMessage } from './message';
 
 export class ToastMessage implements OpenposMessage {
     type = MessageTypes.TOAST;
+    willUnblock: boolean;
 }

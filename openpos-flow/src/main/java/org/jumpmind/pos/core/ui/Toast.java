@@ -11,15 +11,14 @@ public class Toast extends Message {
     private ToastType toastType;
     private int duration = 2500;
     private String verticalPosition = "bottom";
-    private boolean disabled;
 
     public static Toast createSuccessToast(String message) {
-        return createSuccessToast(message, false);
+        return createSuccessToast(message, true);
     }
 
-    public static Toast createSuccessToast(String message, boolean disabled) {
+    public static Toast createSuccessToast(String message, boolean willUnblock) {
         Toast toast = new Toast(message);
-        toast.setDisabled(disabled);
+        toast.setWillUnblock(willUnblock);
         toast.setToastType(ToastType.Success);
         return toast;
     }
@@ -33,6 +32,7 @@ public class Toast extends Message {
 
     public Toast() {
         setType(MessageType.Toast);
+        setWillUnblock(true);
     }
 
     public Toast(String message) {
@@ -52,12 +52,9 @@ public class Toast extends Message {
         this.verticalPosition = verticalPosition;
     }
 
-    public void setDisabled(boolean disabled) {
-        this.disabled = disabled;
-    }
-
-    public boolean isDisabled() {
-        return disabled;
+    public Toast(String message, ToastType toastType, int duration, String verticalPosition, boolean willUnblock){
+        this(message, toastType, duration, verticalPosition);
+        this.setWillUnblock(willUnblock);
     }
 
     public String getMessage() {
