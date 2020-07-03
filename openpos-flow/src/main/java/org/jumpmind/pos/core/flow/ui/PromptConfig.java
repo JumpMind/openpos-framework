@@ -28,6 +28,7 @@ public class PromptConfig {
     private List<ActionItem> otherActions = new ArrayList<>();
     private String id;
     private boolean allowScan;
+    private boolean editable = true;
 
     public PromptConfig named(String name) {
         this.name = name;
@@ -226,5 +227,18 @@ public class PromptConfig {
     public PromptConfig id(String id) {
         this.setId(id);
         return this;
+    }
+
+    public PromptConfig editable(boolean editable) {
+        setEditable(editable);
+        return this;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public boolean isEditable() {
+        return this.editable;
     }
 }
