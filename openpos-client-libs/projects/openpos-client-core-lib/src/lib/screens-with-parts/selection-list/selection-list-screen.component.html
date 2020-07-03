@@ -43,22 +43,22 @@
         </app-content-card>
         <div class="buttons">
             <app-secondary-button *ngFor="let m of screen.nonSelectionButtons" [actionItem]="m"
-                (actionClick)="doMenuItemAction(m)"
-                (click)="doMenuItemAction(m)" [disabled]="!isSelectionDisabled()">
+                (actionClick)="doNonSelectionButtonAction(m)"
+                (click)="doNonSelectionButtonAction(m)" [disabled]="!isSelectionDisabled()">
                 <span>{{m.title}}</span>&nbsp;
                 <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
             </app-secondary-button>
             <div *ngFor="let m of screen.selectionButtons;  let i = index">
                 <app-secondary-button *ngIf="screen.selectionButtons.length-1 !== i"
                     [disabled]="isSelectionDisabled()"
-                    [actionItem]="m" (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)">
+                    [actionItem]="m" (actionClick)="doSelectionButtonAction(m)" (click)="doSelectionButtonAction(m)">
                     <span>{{m.title}}</span>&nbsp;
                     <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
                 </app-secondary-button>
                 <app-primary-button *ngIf="screen.selectionButtons.length-1 == i" 
                     [attr.cdkFocusInitial]="screen.selectionButtons.length-1 == i ? '' : null"
                     [disabled]="isSelectionDisabled()"
-                    [actionItem]="m" (actionClick)="doMenuItemAction(m)" (click)="doMenuItemAction(m)">
+                    [actionItem]="m" (actionClick)="doSelectionButtonAction(m)" (click)="doSelectionButtonAction(m)">
                     <span>{{m.title}}</span>&nbsp;
                     <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
                 </app-primary-button>

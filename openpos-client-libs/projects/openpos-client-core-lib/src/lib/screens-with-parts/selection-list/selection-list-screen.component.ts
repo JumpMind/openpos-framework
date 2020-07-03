@@ -124,7 +124,19 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
         }
     }
 
-    public doMenuItemAction(menuItem: IActionItem) {
+    public doSelectionButtonAction(menuItem: IActionItem) {
+        if (! this.isSelectionDisabled()) {
+            this.doMenuItemAction(menuItem);
+        }
+    }
+
+    public doNonSelectionButtonAction(menuItem: IActionItem) {
+        if (this.isSelectionDisabled()) {
+            this.doMenuItemAction(menuItem);
+        }
+    }
+
+    protected doMenuItemAction(menuItem: IActionItem) {
         if (this.screen.multiSelect) {
             this.doAction(menuItem, this.indexes);
         } else {
