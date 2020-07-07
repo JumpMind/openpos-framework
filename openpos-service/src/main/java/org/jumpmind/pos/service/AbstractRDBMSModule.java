@@ -91,6 +91,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.dataModelExtensionPackages:#{null}}")
     protected String additionalPackages;
 
+    @Value("${openpos.general.failStartupOnModuleLoadFailure:false}")
+    boolean failStartupOnModuleLoadFailure;
+
     protected DataSource dataSource;
 
     protected ISecurityService securityService;
@@ -306,15 +309,14 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                 fromVersion, currentVersion, sqlScriptProfile);
         DatabaseScriptContainer scripts = new DatabaseScriptContainer(String.format("%s/sql/%s", getName(), sqlScriptProfile),
                 getDatabasePlatform());
-
         IDBSchemaListener schemaListener = getDbSchemaListener();
 
-        scripts.executePreInstallScripts(fromVersion, currentVersion);
+        scripts.executePreInstallScripts(fromVersion, currentVersion, failStartupOnModuleLoadFailure);
         schemaListener.beforeSchemaCreate(sessionFactory);
         sessionFactory.createAndUpgrade();
         upgradeDbFromXml();
         schemaListener.afterSchemaCreate(sessionFactory);
-        scripts.executePostInstallScripts(fromVersion, currentVersion);
+        scripts.executePostInstallScripts(fromVersion, currentVersion, failStartupOnModuleLoadFailure);
 
         ModuleModel moduleModel = session.findByNaturalId(ModuleModel.class, installationId);
         if (moduleModel == null) {
