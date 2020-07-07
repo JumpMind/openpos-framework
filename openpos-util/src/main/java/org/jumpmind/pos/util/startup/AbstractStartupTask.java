@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.ApplicationListener;
+import org.springframework.core.env.Environment;
 
 abstract public class AbstractStartupTask implements ApplicationListener<ApplicationReadyEvent> {
 
@@ -18,10 +19,18 @@ abstract public class AbstractStartupTask implements ApplicationListener<Applica
             doTask();
         } catch (Exception e) {
             this.taskException = e;
-            logger.error("Failed to execute " + getClass().getName(), e);
+            String message = "Failed to execute " + getClass().getName();
+            if (isFailOnExceptionEnabled(event.getApplicationContext().getEnvironment())) {
+                throw new RuntimeException(message, e);
+            }
+            logger.error(message, e);
         } finally {
             logger.info("{} is complete", getClass().getSimpleName());
         }
+    }
+
+    protected boolean isFailOnExceptionEnabled(Environment env) {
+        return Boolean.parseBoolean(env.getProperty("openpos.general.failStartupOnModuleLoadFailure", "false"));
     }
 
     public boolean hasException() {
