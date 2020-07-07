@@ -21,6 +21,7 @@ public class PromotionSummary implements Serializable {
     private DisplayProperty usedTime;
     private DisplayProperty autoApply;
     private DisplayProperty promptUser;
+    private DisplayProperty status;
     private String icon;
     private List<ActionItem> actions;
 
