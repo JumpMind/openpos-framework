@@ -68,42 +68,42 @@ public class StateManager implements IStateManager {
 
     final Logger log = LoggerFactory.getLogger(getClass());
     final Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
-    private final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
+    final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
 
     final static AtomicInteger threadCounter = new AtomicInteger(1);
 
     @Autowired
-    private IScreenService screenService;
+    IScreenService screenService;
 
     @Autowired
-    private ActionHandlerImpl actionHandler;
+    ActionHandlerImpl actionHandler;
 
     @Autowired
-    private Injector injector;
+    Injector injector;
 
     @Autowired
-    private Outjector outjector;
+    Outjector outjector;
 
     @Autowired(required = false)
-    private List<? extends ISessionListener> sessionListeners;
+    List<? extends ISessionListener> sessionListeners;
 
     @Autowired
-    private IMessageService messageService;
+    IMessageService messageService;
 
     @Autowired
-    private UIDataMessageProviderService uiDataMessageProviderService;
+    UIDataMessageProviderService uiDataMessageProviderService;
 
     @Autowired
-    private IClientConfigSelector clientConfigSelector;
+    IClientConfigSelector clientConfigSelector;
 
     @Autowired
-    private StateLifecycle stateLifecycle;
+    StateLifecycle stateLifecycle;
 
     @Autowired
     LocaleMessageFactory localeMessageFactory;
 
     @Autowired
-    private ActionHandlerHelper helper;
+    ActionHandlerHelper helper;
 
     @Autowired
     DeviceStartupTaskConfig deviceStartupTaskConfig;
@@ -115,43 +115,43 @@ public class StateManager implements IStateManager {
     Environment env;
 
     @Value("${openpos.screens.config.defaultSessionTimeoutMills:240000}")
-    private long defaultSessionTimeoutMillis;
+    long defaultSessionTimeoutMillis;
 
     @Value("${openpos.general.failOnUnmatchedAction:false}")
-    private boolean failOnUnmatchedAction;
+    boolean failOnUnmatchedAction;
 
-    private ApplicationState applicationState = new ApplicationState();
+    ApplicationState applicationState = new ApplicationState();
 
-    private List<TransitionStepConfig> transitionStepConfigs;
+    List<TransitionStepConfig> transitionStepConfigs;
 
-    private FlowConfig initialFlowConfig;
+    FlowConfig initialFlowConfig;
 
-    private long sessionTimeoutMillis = 0;
+    long sessionTimeoutMillis = 0;
 
-    private Action sessionTimeoutAction;
+    Action sessionTimeoutAction;
 
-    private Map<String, Boolean> sessionAuthenticated = new HashMap<>();
+    Map<String, Boolean> sessionAuthenticated = new HashMap<>();
 
-    private Map<String, Boolean> sessionCompatible = new HashMap<>();
+    Map<String, Boolean> sessionCompatible = new HashMap<>();
 
-    private Map<String, String> clientContext = new HashMap<>();
+    Map<String, String> clientContext = new HashMap<>();
 
-    private IErrorHandler errorHandler;
+    IErrorHandler errorHandler;
 
-    private EventBroadcaster eventBroadcaster;
+    EventBroadcaster eventBroadcaster;
 
     final String STATE_MANAGER_RESET_ACTION = "StateManagerReset";
     final String STATE_MANAGER_STOP_ACTION = "StateManagerStop";
 
-    private AtomicBoolean runningFlag = new AtomicBoolean(false);
-    private AtomicBoolean busyFlag = new AtomicBoolean(false);
+    AtomicBoolean runningFlag = new AtomicBoolean(false);
+    AtomicBoolean busyFlag = new AtomicBoolean(false);
 
-    private AtomicReference<Date> lastInteractionTime = new AtomicReference<Date>(new Date());
-    private AtomicInteger activeCalls = new AtomicInteger(0);
-    private AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
-    private AtomicLong lastActionTimeInMs = new AtomicLong(0);
-    private AtomicLong lastShowTimeInMs = new AtomicLong(0);
-    private AtomicReference<Thread> activeThread = new AtomicReference<>();
+    AtomicReference<Date> lastInteractionTime = new AtomicReference<Date>(new Date());
+    AtomicInteger activeCalls = new AtomicInteger(0);
+    AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
+    AtomicLong lastActionTimeInMs = new AtomicLong(0);
+    AtomicLong lastShowTimeInMs = new AtomicLong(0);
+    AtomicReference<Thread> activeThread = new AtomicReference<>();
 
     @Override
     public void reset() {
@@ -274,7 +274,7 @@ public class StateManager implements IStateManager {
         this.transitionStepConfigs = transitionStepConfigs;
     }
 
-    private void initDefaultScopeObjects() {
+    void initDefaultScopeObjects() {
         applicationState.getScope().setDeviceScope("additionalTagsForConfiguration", new ArrayList<String>());
     }
 
@@ -452,7 +452,7 @@ public class StateManager implements IStateManager {
         checkTransitionEnd(transition.getOriginalAction());
     }
 
-    private void continueTransition(Action action) {
+    void continueTransition(Action action) {
         Transition transition = applicationState.getCurrentTransition();
         boolean handled = applicationState.getCurrentTransition().handleAction(action);
         if (!handled) {
@@ -462,7 +462,7 @@ public class StateManager implements IStateManager {
         checkTransitionEnd(transition.getOriginalAction());
     }
 
-    private void checkTransitionEnd(Action action) {
+    void checkTransitionEnd(Action action) {
         if (applicationState.getCurrentTransition().getTransitionResult()
                 != TransitionResult.TransitionResultCode.IN_PROGRESS) {
             TransitionResult transitionResult = new TransitionResult();
@@ -478,7 +478,7 @@ public class StateManager implements IStateManager {
         }
     }
 
-    private void completeTransition(TransitionResult transitionResult, Action action) {
+    void completeTransition(TransitionResult transitionResult, Action action) {
         Transition transition = transitionResult.getTransition();
         boolean exitSubState = transition.getResumeSuspendedState() != null;
         String returnActionName = null;
@@ -520,7 +520,7 @@ public class StateManager implements IStateManager {
         }
     }
 
-    private void cancelTransition(TransitionResult transitionResult, Action action) {
+    void cancelTransition(TransitionResult transitionResult, Action action) {
         //TODO: discuss whether this is how we want to handle cancelled transitions
         Action cancelAction = new Action(StateManagerActionConstants.TRANSITION_CANCELLED_ACTION);
         cancelAction.setCausedBy(action);
@@ -631,7 +631,7 @@ public class StateManager implements IStateManager {
         actionQueue.offer(actionContext);
     }
 
-    private boolean isOnStateManagerThread() {
+    boolean isOnStateManagerThread() {
         return Thread.currentThread().getName().startsWith("StateManager");
     }
 
@@ -743,7 +743,7 @@ public class StateManager implements IStateManager {
         return false;
     }
 
-    private void callGlobalActionHandler(Action action, Class<? extends Object> globalActionHandler) {
+    void callGlobalActionHandler(Action action, Class<? extends Object> globalActionHandler) {
         log.debug("Calling global action handler: {}", globalActionHandler.getName());
 
         if (isState(globalActionHandler) && isActionHandler(globalActionHandler)) {
@@ -927,7 +927,7 @@ public class StateManager implements IStateManager {
         refreshDeviceScope();
     }
 
-    private void clearScopeOnStates(ScopeType scopeType) {
+    void clearScopeOnStates(ScopeType scopeType) {
         List<StateContext> stack = applicationState.getStateStack();
         for (StateContext stateContext : stack) {
             Object state = stateContext.getState();
@@ -937,7 +937,7 @@ public class StateManager implements IStateManager {
         injector.resetInjections(applicationState.getCurrentContext().getState(), scopeType);
     }
 
-    private void clearScopeOnDeviceScopeBeans(ScopeType scopeType) {
+    void clearScopeOnDeviceScopeBeans(ScopeType scopeType) {
         for (String name : new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
             Object value = applicationState.getScopeValue(ScopeType.Device, name);
             injector.resetInjections(value, scopeType);
