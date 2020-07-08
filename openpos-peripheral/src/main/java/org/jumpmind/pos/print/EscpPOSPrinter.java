@@ -295,8 +295,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public String readMicr() {
+        StringBuilder buff = new StringBuilder(32);
+
+        int status = -1;
+
         try {
-//        printer.getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().flush();
             long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "2000").toString());
@@ -305,11 +308,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
             long start = System.currentTimeMillis();
 
-            List<Integer> bytes = new ArrayList<Integer>();
-            int firstRead = -1;
-
             while (System.currentTimeMillis()-start < micrTimeout
-                && (firstRead = getPeripheralConnection().getIn().read()) == -1) {
+                && (status = getPeripheralConnection().getIn().read()) == -1) {
                 Thread.sleep(100);
             }
 
@@ -317,25 +317,23 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
             endSlipMode(); // kick the slip out no matter what happenens.
 
-            if (firstRead == -1) {
+            if (status == -1) {
                 throw new PrintException("MICR read timed out.");
-            }
-            if (firstRead != 0) {
-                throw new PrintException("MICR read failed with error code: " + firstRead);
             }
 
             int current;
-            StringBuilder buff = new StringBuilder(32);
+
             while ((current = getPeripheralConnection().getIn().read()) != -1) {
                 buff.append((char)current);
             }
 
+            if (status != 0) {
+                throw new PrintException("MICR read failed with error code: " + status);
+            }
+
             return buff.toString();
         } catch (Exception ex) {
-            if (ex instanceof PrintException) {
-                throw (PrintException)ex;
-            }
-            throw new PrintException("Failed to read MICR", ex);
+            throw new PrintException("Failed to read MICR. status=" + status + " data read: '" + buff + "'", ex);
         }
     }
 
