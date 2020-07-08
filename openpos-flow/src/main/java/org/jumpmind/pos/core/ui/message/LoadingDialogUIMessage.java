@@ -1,8 +1,11 @@
 package org.jumpmind.pos.core.ui.message;
 
+import lombok.Builder;
+import lombok.Data;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 
+@Data
 public class LoadingDialogUIMessage extends UIMessage {
 
     private String message;
@@ -14,19 +17,11 @@ public class LoadingDialogUIMessage extends UIMessage {
         this.asDialog();
     }
 
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
+    @Builder
+    public LoadingDialogUIMessage(String message, ActionItem cancelButton) {
+        this();
         this.message = message;
-    }
-
-    public ActionItem getCancelButton() {
-        return cancelButton;
-    }
-
-    public void setCancelButton(ActionItem cancelButton) {
         this.cancelButton = cancelButton;
     }
+
 }

@@ -117,6 +117,9 @@ public class StateManager implements IStateManager {
     @Value("${openpos.screens.config.defaultSessionTimeoutMills:240000}")
     private long defaultSessionTimeoutMillis;
 
+    @Value("${openpos.general.failOnUnmatchedAction:false}")
+    private boolean failOnUnmatchedAction;
+
     private ApplicationState applicationState = new ApplicationState();
 
     private List<TransitionStepConfig> transitionStepConfigs;
@@ -680,10 +683,15 @@ public class StateManager implements IStateManager {
                 // Execute global sub-state transition
                 transitionToSubState(action, globalSubStateConfig);
             } else {
-                throw new FlowException(String.format(
+                String msg = String.format(
                         "Unexpected action \"%s\". Either no @ActionHandler %s.on%s() method found, or no withTransition(\"%s\"...) defined in the \"%s\" flow config.",
                         action.getName(), applicationState.getCurrentContext().getState().getClass().getName(), action.getName(),
-                        action.getName(), applicationState.getCurrentContext().getFlowConfig().getName()));
+                        action.getName(), applicationState.getCurrentContext().getFlowConfig().getName());
+                if (failOnUnmatchedAction) {
+                    throw new FlowException(msg);
+                } else {
+                    log.warn(msg);
+                }
             }
         } finally {
             if (action.isDoNotBlockForResponse()) {
