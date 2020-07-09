@@ -65,7 +65,7 @@ export class ChooseOptionsPartComponent extends ScreenPartComponent<IFormOptionI
     onFieldChanged(formElement: IFormElement, option: IFormOptionItem, group: FormGroup) {
         if (formElement.valueChangedAction) {
             this.formBuilder.buildFormPayload(group, option.form);
-            this.doAction({action: formElement.valueChangedAction, doNotBlockForResponse: true}, this.screenData);
+            this.doAction(formElement.valueChangedAction.title, this.screenData);
         }
     }
 

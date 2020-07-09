@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.ArrayUtils;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.validator.IValidatorSpec;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
@@ -227,13 +229,17 @@ public class FormField implements IFormElement, IField, Serializable {
      * as the one given
      * @param valueChangedAction The name of an action to generate when the Combo box selected value changes.
      */
-    public void setValueChangedAction(String valueChangedAction) {
-        this.put("valueChangedAction", valueChangedAction);
+
+
+    public void setValueChangedAction(ActionItem action){
+        this.put("valueChangedAction", action);
     }
-    
-    public FormField valueChangedAction(String valueChangedAction) {
-        this.setValueChangedAction(valueChangedAction);
-        return this;
+
+    @JsonIgnore
+    public void setValueChangedAction(String valueChangedAction) {
+        ActionItem action = new ActionItem(valueChangedAction);
+        action.setDoNotBlockForResponse(true);
+        setValueChangedAction(action);
     }
     
     public void setIconName(String iconName) {

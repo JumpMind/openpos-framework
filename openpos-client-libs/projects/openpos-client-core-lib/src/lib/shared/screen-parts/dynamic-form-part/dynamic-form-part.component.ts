@@ -1,5 +1,4 @@
 import {
-    AfterContentInit,
     AfterViewInit,
     Component,
     EventEmitter,
@@ -11,8 +10,6 @@ import {
     ViewChildren
 } from '@angular/core';
 import {FormGroup} from '@angular/forms';
-import {timeout} from 'rxjs/operators';
-import {ScannerService} from '../../../core/platform-plugins/scanners/scanner.service';
 import {ScreenPartComponent} from '../screen-part';
 import {FormBuilder} from '../../../core/services/form-builder.service';
 import {DynamicFormFieldComponent} from '../../components/dynamic-form-field/dynamic-form-field.component';
@@ -123,8 +120,8 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
 
     onFieldChanged(formElement: IFormElement) {
         if (formElement.valueChangedAction) {
-            this.formBuilder.buildFormPayload(this.form, this.screenData);
-            this.doAction( {action:formElement.valueChangedAction, doNotBlockForResponse: true}, this.screenData);
+            let form = this.formBuilder.buildFormPayload(this.form, this.screenData);
+            this.doAction( formElement.valueChangedAction, form);
         }
     }
 }
