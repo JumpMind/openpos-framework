@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, Injector, Input } from '@angular/core';
+import {ActionService} from '../../../core/actions/action.service';
 import { OptionsListInterface } from './options-list.interface';
 import { ScreenPart } from '../../../shared/decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../../../shared/screen-parts/screen-part';
@@ -72,7 +73,7 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     }
 
     public openKebabMenu() {
-        if (this.dialog.openDialogs.length < 1) {
+        if (this.dialog.openDialogs.length < 1 && !this.actionService.actionBlocked()) {
             const dialogRef = this.dialog.open(KebabMenuComponent, {
                 data: {
                     menuItems: this.overflowOptions,

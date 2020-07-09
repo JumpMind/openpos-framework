@@ -139,7 +139,7 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
     onFieldChanged(formElement: IFormElement) {
         if (formElement.valueChangedAction) {
             this.formBuilder.buildFormPayload(this.form, this.screenData);
-            this.doAction({ action: formElement.valueChangedAction, doNotBlockForResponse: true }, this.screenData);
+            this.doAction(formElement.valueChangedAction, this.screenData);
         }
     }
 

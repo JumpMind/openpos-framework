@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, OnDestroy, Output} from '@angular/core';
 import {MatDialog, MatDialogRef} from '@angular/material';
 import {Subscription} from 'rxjs';
 import {finalize} from 'rxjs/operators';
+import {ActionService} from '../../../core/actions/action.service';
 import {KeyPressProvider} from '../../providers/keypress.provider';
 import {Configuration} from '../../../configuration/configuration';
 import {KebabMenuComponent} from '../kebab-menu/kebab-menu.component';
@@ -53,7 +54,7 @@ export class KebabButtonComponent implements OnDestroy {
 
     protected subscription: Subscription;
 
-    constructor(protected dialog: MatDialog, protected keyPresses: KeyPressProvider, protected focusService: FocusService) {
+    constructor(protected dialog: MatDialog, protected keyPresses: KeyPressProvider, protected focusService: FocusService, protected actionService: ActionService) {
     }
 
     ngOnDestroy(): void {
@@ -69,7 +70,7 @@ export class KebabButtonComponent implements OnDestroy {
     }
 
     public openKebabMenu() {
-        if (this.dialog.openDialogs.length < 1) {
+        if (this.dialog.openDialogs.length < 1 && !this.actionService.actionBlocked()) {
             this.dialogRef = this.dialog.open(KebabMenuComponent, {
                 data: {
                     menuItems: this.menuItems,
