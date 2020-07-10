@@ -29,13 +29,15 @@ public class ActionSerializer extends JsonSerializer<Action> {
     public void serialize(Action value, JsonGenerator gen, SerializerProvider serializers) throws IOException, JsonProcessingException {
 
         Action clone = ObjectUtils.deepClone(value);
-        
-        if (StringUtils.containsAny(clone.getName().toLowerCase(), LogFormatter.SENSITIVE_FIELDS)) {
-            if (clone.getData() instanceof String) {
-                clone.setData(MASKED_STRING);
+
+        if (clone.getName() != null) {
+            if (StringUtils.containsAny(clone.getName().toLowerCase(), LogFormatter.SENSITIVE_FIELDS)) {
+                if (clone.getData() instanceof String) {
+                    clone.setData(MASKED_STRING);
+                }
             }
         }
-        
+
         if (clone.getData() instanceof Form) {
             Form form = clone.getData();
             for (IFormElement formElement : form.getFormElements()) {
@@ -44,7 +46,7 @@ public class ActionSerializer extends JsonSerializer<Action> {
                     
                     String fieldId = field.getId() != null ? field.getId().toLowerCase() : "";
                     String fieldLabel = field.getLabel() != null ? field.getLabel().toLowerCase() : "";
-                    
+
                     if (field.isSensitive()
                             || StringUtils.containsAny(fieldId, LogFormatter.SENSITIVE_FIELDS)
                             || StringUtils.containsAny(fieldLabel, LogFormatter.SENSITIVE_FIELDS)

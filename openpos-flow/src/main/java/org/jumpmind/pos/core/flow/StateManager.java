@@ -622,6 +622,11 @@ public class StateManager implements IStateManager {
 
     @Override
     public void doAction(Action action) {
+        boolean valid = validateAction(action);
+        if (!valid) {
+            log.warn("Discarding invalid action: " + action);
+            return;
+        }
         ActionContext actionContext = null;
         if (isOnStateManagerThread()) {
             actionContext = new ActionContext(action, Thread.currentThread().getStackTrace());
@@ -629,6 +634,18 @@ public class StateManager implements IStateManager {
             actionContext = new ActionContext(action);
         }
         actionQueue.offer(actionContext);
+    }
+
+    private boolean validateAction(Action action) {
+        if (action == null) {
+            log.warn("action passed to state manager was null.");
+            return false;
+        } else if (action.getName() == null) {
+            log.warn("An action was passed with a null name. An action must have a name. Data: " + action.getData());
+            return false;
+        }
+
+        return true;
     }
 
     boolean isOnStateManagerThread() {
