@@ -1,4 +1,6 @@
 import {AndroidContentProviderPlugin} from './platform-plugins/cordova-plugins/android-content-provider-plugin';
+import {BrowserPrinterPlugin} from './platform-plugins/printers/browser-printer.plugin';
+import {PRINTERS} from './platform-plugins/printers/printer.service';
 import {ConsoleScannerPlugin} from './platform-plugins/scanners/console-scanner/console-scanner.plugin';
 import {ScanditScannerCordovaPlugin} from './platform-plugins/scanners/scandit-scanner-cordova/scandit-scanner-cordova.plugin';
 import { SessionService } from './services/session.service';
@@ -126,6 +128,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLUGINS, useExisting: AndroidContentProviderPlugin, multi: true },
         { provide: PLUGINS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
+        BrowserPrinterPlugin,
+        { provide: PRINTERS, useExisting: BrowserPrinterPlugin, multi: true},
         LocationService,
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
         TrainingOverlayService,

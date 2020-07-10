@@ -13,4 +13,5 @@ export class MessageTypes {
     static LOCK_SCREEN = 'LockScreen';
     static UNLOCK_SCREEN = 'UnlockScreen';
     static STARTUP = 'Startup';
+    static PRINT = 'Print';
 }
