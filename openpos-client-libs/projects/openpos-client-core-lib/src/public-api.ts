@@ -105,6 +105,7 @@ export * from './lib/core/services/image.service';
 export * from './lib/core/services/locale.constants';
 export * from './lib/core/services/locale.service';
 export * from './lib/core/services/markdown.service';
+export * from './lib/core/platform-plugins/printers/printer.service';
 export * from './lib/core/media/openpos-media.service';
 export * from './lib/core/personalization/personalization.service';
 export * from './lib/core/discovery/discovery.service';
