@@ -8,18 +8,14 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
-import com.github.dozermapper.core.DozerBeanMapper;
-import com.github.dozermapper.core.DozerBeanMapperBuilder;
-import com.github.dozermapper.core.Mapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 
 @Slf4j
 public class ObjectUtils {
 
-    private static Mapper mapper = DozerBeanMapperBuilder.buildDefault();
-
     public static void mapFields(Object source, Object desination) {
-        mapper.map(source, desination);
+        BeanUtils.copyProperties(source, desination);
     }
 
     public static <T> T deepClone(T object) {
