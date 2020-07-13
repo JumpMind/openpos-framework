@@ -36,8 +36,8 @@ export class ActionService implements OnDestroy {
             }
         }));
         this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe(message => {
-            if (message.type === MessageTypes.TOAST && message.willUnblock) {
-                console.log('unblocking action because toast:', message);
+            if (message.type !== MessageTypes.SCREEN  && message.willUnblock) {
+                console.log('unblocking action because not a screen and willUnblock is true:', message);
                 this.unblock();
             }
         }));
