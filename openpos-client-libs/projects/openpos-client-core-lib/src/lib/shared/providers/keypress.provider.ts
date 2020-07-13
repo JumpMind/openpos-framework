@@ -75,7 +75,9 @@ export class KeyPressProvider implements OnDestroy {
         const eventKey = this.getNormalizedKey(event);
         const eventKeyBinding = this.parse(eventKey)[0];
 
-        return actions.find(action => {
+        return actions
+            .filter(action => action.keybind)
+            .find(action => {
             // There can be multiple key bindings per action (comma separated, example: ctrl+p,ctrl+a)
             const actionKeyBindings = this.parse(action.keybind);
             return actionKeyBindings.some(keyBinding => this.areEqual(eventKeyBinding, keyBinding));
