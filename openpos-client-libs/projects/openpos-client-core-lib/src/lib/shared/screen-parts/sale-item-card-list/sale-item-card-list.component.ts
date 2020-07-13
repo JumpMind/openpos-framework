@@ -87,7 +87,11 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
     this.keyPressProvider.globalSubscribe(allActions).pipe(
         takeUntil(this.stop$)
-    ).subscribe(action => this.doAction(action, [this.expandedIndex]));
+    ).subscribe(action => {
+        if (this.expandedIndex >= 0) {
+            this.doAction(action, [this.expandedIndex]);
+        }
+    });
   }
 
   scrollToView(index: number): void {

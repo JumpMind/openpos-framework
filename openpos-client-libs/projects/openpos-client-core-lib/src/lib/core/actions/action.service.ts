@@ -90,6 +90,10 @@ export class ActionService implements OnDestroy {
         window.open(urlItem.url, urlItem.targetMode, urlItem.options);
     }
 
+    public actionBlocked(): boolean {
+        return this.blockActions;
+    }
+
 
     public registerActionPayload(actionName: string, actionValue: () => void) {
         this.actionPayloads.set(actionName, actionValue);

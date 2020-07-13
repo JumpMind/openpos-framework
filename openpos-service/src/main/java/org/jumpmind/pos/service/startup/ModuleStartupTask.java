@@ -9,6 +9,7 @@ import org.jumpmind.pos.service.IModule;
 import org.jumpmind.pos.util.BoxLogging;
 import org.jumpmind.pos.util.startup.AbstractStartupTask;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +19,9 @@ public class ModuleStartupTask extends AbstractStartupTask {
 
     @Autowired
     ModuleRegistry moduleRegistry;
+
+    @Value("${openpos.general.failStartupOnModuleLoadFailure:false}")
+    boolean failStartupOnModuleLoadFailure;
 
     @Override
     protected void doTask() throws Exception {
@@ -31,6 +35,9 @@ public class ModuleStartupTask extends AbstractStartupTask {
                     module.initialize();
                 } catch (Exception ex) {
                     logger.error(logMessage("Failed to initialize module: ", module), ex);
+                    if (failStartupOnModuleLoadFailure) {
+                        throw ex;
+                    }
                     i.remove();
                 }
             }
@@ -40,6 +47,9 @@ public class ModuleStartupTask extends AbstractStartupTask {
                     module.start();
                 } catch (Exception ex) {
                     logger.error(logMessage("Failed to start module: ", module), ex);
+                    if (failStartupOnModuleLoadFailure) {
+                        throw ex;
+                    }
                 }
             }
 

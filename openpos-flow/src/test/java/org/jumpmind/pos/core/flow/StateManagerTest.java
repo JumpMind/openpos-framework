@@ -433,7 +433,7 @@ public class StateManagerTest {
     @Test
     public void testUnhandledAction_WithErrorHandler() {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
-        
+        stateManager.failOnUnmatchedAction = true;
         stateManager.setErrorHandler(errorHandler);
         stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());

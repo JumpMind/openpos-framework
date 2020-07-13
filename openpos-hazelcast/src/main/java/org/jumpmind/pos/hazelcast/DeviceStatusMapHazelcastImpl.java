@@ -52,7 +52,11 @@ public class DeviceStatusMapHazelcastImpl implements IDeviceStatusMap, Membershi
     @EventListener(classes = AppEvent.class)
     protected void updateDeviceStatus(AppEvent event) {
         if (!event.isRemote() && !(event instanceof ITransientEvent)) {
-            update(event);
+            try {
+                update(event);
+            } catch (HazelcastInstanceNotActiveException e) {
+                log.info("Hazelcast was not active.  This is probably because we are shutting down");
+            }
         }
     }
     

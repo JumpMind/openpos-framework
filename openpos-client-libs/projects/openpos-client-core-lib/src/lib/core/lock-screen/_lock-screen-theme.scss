@@ -1,6 +1,10 @@
 @mixin lock-screen-theme($theme){
   $app-warn: mat-color(map-get($theme, warn));
 
+  .lockscreen-overlay{
+    z-index: 1001;
+  }
+
   app-lock-screen{
     section{
       background-color: rgba(0,0,0,.5);

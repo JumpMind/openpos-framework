@@ -73,11 +73,11 @@ public class TestPersistCarsConfig {
 
         DatabaseScriptContainer scripts = new DatabaseScriptContainer("persist-test/sql", PersistTestUtil.testDbPlatform());
 
-        scripts.executePreInstallScripts(fromVersion, "0.0.1");
+        scripts.executePreInstallScripts(fromVersion, "0.0.1", true);
 
         sessionFactory.createAndUpgrade();
 
-        scripts.executePostInstallScripts(fromVersion, "0.0.1");
+        scripts.executePostInstallScripts(fromVersion, "0.0.1", true);
     }
 
 

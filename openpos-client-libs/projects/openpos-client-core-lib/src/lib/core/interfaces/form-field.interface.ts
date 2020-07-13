@@ -1,4 +1,5 @@
 import { IMaskSpec } from '../../shared/textmask';
+import {IActionItem} from '../actions/action-item.interface';
 import { IConfirmationDialog } from '../actions/confirmation-dialog.interface';
 import { ValidatorFn } from '@angular/forms';
 export interface IFormElement {
@@ -14,7 +15,7 @@ export interface IFormElement {
     required: boolean;
     selectedIndex: number;
     selectedIndexes: number[];
-    valueChangedAction: string;
+    valueChangedAction: IActionItem;
     mask: IMaskSpec;
     pattern: string;
     minValue: number;

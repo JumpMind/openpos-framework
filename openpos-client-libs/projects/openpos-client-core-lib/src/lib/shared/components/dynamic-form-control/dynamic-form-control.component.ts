@@ -127,7 +127,7 @@ export class DynamicFormControlComponent implements AfterViewInit {
   onFieldChanged(formElement: IFormElement) {
     if (formElement.valueChangedAction) {
         this.formBuilder.buildFormPayload(this.form, this._screenForm);
-        this.actionService.doAction({action: formElement.valueChangedAction}, this._screenForm );
+        this.actionService.doAction(formElement.valueChangedAction, this._screenForm );
     }
   }
 

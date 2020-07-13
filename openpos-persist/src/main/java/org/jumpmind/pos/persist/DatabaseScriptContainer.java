@@ -68,15 +68,15 @@ public class DatabaseScriptContainer {
         }
     }
 
-    public void executePreInstallScripts(String fromVersion, String toVersion) {
-        executeScripts(fromVersion, toVersion, this.preInstallScripts);
+    public void executePreInstallScripts(String fromVersion, String toVersion, boolean failOnError) {
+        executeScripts(fromVersion, toVersion, this.preInstallScripts, failOnError);
     }
 
-    public void executePostInstallScripts(String fromVersion, String toVersion) {
-        executeScripts(fromVersion, toVersion, this.postInstallScripts);
+    public void executePostInstallScripts(String fromVersion, String toVersion, boolean failOnError) {
+        executeScripts(fromVersion, toVersion, this.postInstallScripts, failOnError);
     }
 
-    public void executeScripts(String fromVersion, String toVersion, List<DatabaseScript> scripts) {
+    public void executeScripts(String fromVersion, String toVersion, List<DatabaseScript> scripts, boolean failOnError) {
         if (scripts != null) {
             Collections.sort(scripts);
             DatabaseScript from = new DatabaseScript();
@@ -88,8 +88,8 @@ public class DatabaseScriptContainer {
             for (DatabaseScript s : scripts) {
                 if (isDatabaseMatch(s) && ((s.compareVersionTo(from) > 0 && s.compareVersionTo(to) <= 0) || s.getMajor() == 999)) {
                     try {
-                        executeImports(s.getResource());
-                        execute(s.getResource().getURL());
+                        executeImports(s.getResource(), failOnError);
+                        execute(s.getResource().getURL(), failOnError);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -98,9 +98,9 @@ public class DatabaseScriptContainer {
         }
     }
 
-    protected void executeImports(Resource resource) throws IOException {
+    protected void executeImports(Resource resource, boolean failOnError) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-            
+
             String line = reader.readLine();
             while (line != null) {
                 if (line.startsWith(IMPORT_PREFIX)) {
@@ -108,7 +108,7 @@ public class DatabaseScriptContainer {
                     Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
                             .getResources(String.format("classpath*:%s/%s", scriptLocation, file));
                     for (Resource resource2 : resources) {
-                        execute(resource2.getURL());
+                        execute(resource2.getURL(), failOnError);
                     }
                 }
                 line = reader.readLine();
@@ -116,7 +116,7 @@ public class DatabaseScriptContainer {
         }
     }
 
-    public void execute(final URL script) {
+    public void execute(final URL script, boolean failOnError) {
         logger.info("Executing script " + script.toString());
 
         jdbcTemplate.execute(new ConnectionCallback<Object>() {
@@ -126,10 +126,14 @@ public class DatabaseScriptContainer {
                 sqlscript.setFailOnSequenceCreate(true);
                 sqlscript.setFailOnDrop(false);
                 sqlscript.setFailOnError(true);
-                try {                    
+                try {
                     sqlscript.execute();
                 } catch (Exception ex) {
-                    logger.warn("Failed to execute script: " + script, ex);
+                    String message = "Failed to execute script: " + script;
+                    if (failOnError) {
+                        throw new SQLException(message, ex);
+                    }
+                    logger.warn(message, ex);
                 }
                 return null;
             }

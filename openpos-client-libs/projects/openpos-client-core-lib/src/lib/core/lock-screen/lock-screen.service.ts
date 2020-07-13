@@ -43,7 +43,8 @@ export class LockScreenService {
 
         this.lockScreenOverlayRef = this.overlay.create({
             height: '100%',
-            width: '100%'
+            width: '100%',
+            panelClass: 'lockscreen-overlay'
         });
         const lockScreenPortal = new ComponentPortal(LockScreenComponent, null, this.createInjector());
         this.lockScreenOverlayRef.attach(lockScreenPortal);

@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.IMessageInterceptor;
 import org.jumpmind.pos.core.ui.UIDataMessage;
@@ -8,6 +9,7 @@ import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProviderPropertyChangeEvent;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.service.PosServerException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.ResolvableType;
@@ -18,6 +20,7 @@ import java.beans.PropertyChangeListener;
 import java.util.*;
 
 @Component
+@Slf4j
 public class UIDataMessageProviderService implements PropertyChangeListener {
 
     @Autowired
@@ -74,6 +77,10 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
         Map<String, UIDataMessageProvider<?>> dataMessageProviderMap = applicationState.getDataMessageProviderMap();
         Optional<String> providerKey = null;
         if(dataMessageProviderMap != null){
+            if (action.getName() == null) {
+                log.warn("Action has a null name. Cannot process.");
+                return false;
+            }
             providerKey = dataMessageProviderMap.keySet().stream().filter(key -> action.getName().contains(key)).findFirst();
         }
 

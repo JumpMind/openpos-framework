@@ -9,9 +9,14 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 
 @Slf4j
 public class ObjectUtils {
+
+    public static void mapFields(Object source, Object desination) {
+        BeanUtils.copyProperties(source, desination);
+    }
 
     public static <T> T deepClone(T object) {
         byte[] bytes = serialize(object);
