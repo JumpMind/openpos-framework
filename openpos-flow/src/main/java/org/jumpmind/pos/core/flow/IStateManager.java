@@ -27,6 +27,7 @@ import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
+import org.jumpmind.pos.util.model.PrintMessage;
 
 
 public interface IStateManager {
@@ -74,4 +75,5 @@ public interface IStateManager {
     public Map<String, String> getClientContext();
     public long getLastActionTimeInMs();
     public void sendStartupCompleteMessage();
+    public void sendPrintMessage(PrintMessage message);
 }
