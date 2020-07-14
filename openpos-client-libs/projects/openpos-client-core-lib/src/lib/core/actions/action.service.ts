@@ -10,6 +10,7 @@ import {LifeCycleMessage} from '../messages/life-cycle-message';
 import {OpenposMessage} from '../messages/message';
 import {MessageTypes} from '../messages/message-types';
 import {QueueLoadingMessage} from '../services/session.service';
+import {CancelLoadingMessage} from '../services/session.service';
 import {IActionItem} from './action-item.interface';
 import {IUrlMenuItem} from './url-menu-item.interface';
 
@@ -45,6 +46,7 @@ export class ActionService implements OnDestroy {
 
     private unblock() {
         this.blockActions = false;
+        this.messageProvider.sendMessage(new CancelLoadingMessage());
         const queued = this.actionQueue.pop();
         if (queued) {
             console.log('Dequeued an action to send')
