@@ -28,17 +28,17 @@ export class ActionService implements OnDestroy {
         private messageProvider: MessageProvider) {
         console.log("Creating new Action Service")
         this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
-            if(message.willUnblock === false){
+            if(message.willUnblock === false) {
                 console.log('creating a screen that is disabled');
                 this.blockActions = true;
-            } else if( message.willUnblock){
+            } else if( message.willUnblock) {
                 console.log('unblocking actions because message:', message);
                 this.unblock();
             }
         }));
         this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe(message => {
-            if (message.type !== MessageTypes.SCREEN  && message.willUnblock) {
-                console.log('unblocking action because not a screen and willUnblock is true:', message);
+            if (message.type === MessageTypes.TOAST && message.willUnblock) {
+                console.log('unblocking action because toast:', message);
                 this.unblock();
             }
         }));
@@ -46,10 +46,9 @@ export class ActionService implements OnDestroy {
 
     private unblock() {
         this.blockActions = false;
-        this.messageProvider.sendMessage(new CancelLoadingMessage());
         const queued = this.actionQueue.pop();
         if (queued) {
-            console.log('Dequeued an action to send')
+            console.log('Dequeued an action to send');
             this.doAction(queued.item, queued.payload);
         }
     }
