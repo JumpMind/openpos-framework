@@ -44,9 +44,11 @@ export class KeyPressProvider implements OnDestroy {
     globalSubscribe(actions: IActionItem[] | IActionItem): Observable<IActionItem> {
         const actionList = Array.isArray(actions) ? actions : [actions];
 
-        actionList.forEach(action => {
-            const key = this.getNormalizedKey(action.keybind);
-            console.log(`[KeyPressProvider]: Globally subscribed to "${key}: ${action.action}"`);
+        actionList
+            .filter(action => action.keybind)
+            .forEach(action => {
+                const key = this.getNormalizedKey(action.keybind);
+                console.log(`[KeyPressProvider]: Globally subscribed to "${key}: ${action.action}"`);
         });
 
         console.log('[KeyPressProvider]: Subscriptions', this.subscribers);
@@ -114,7 +116,7 @@ export class KeyPressProvider implements OnDestroy {
     subscribe(keyOrActionList: string | string[] | IActionItem | IActionItem[], priority: number, next: (KeyboardEvent, IActionItem?) => void, stop$?: Observable<any>): Subscription {
         if (!keyOrActionList) {
             console.warn('[KeyPressProvider]: Cannot subscribe to null or undefined or empty string keybinding');
-            return;
+            return null;
         }
 
         let subscriptions;
@@ -142,6 +144,10 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     registerKeyBindings(keyBindings: Keybinding[], action: IActionItem, priority: number, next: (KeyboardEvent, IActionItem?) => void): Subscription[] {
+        if(!keyBindings) {
+            return [];
+        }
+
         const subscriptions = [];
 
         keyBindings.forEach(keyBinding => {
