@@ -6,6 +6,7 @@ import java.util.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.jumpmind.pos.persist.model.IAuditableModel;
+import org.jumpmind.pos.util.ClassUtils;
 
 
 public abstract class AbstractModel implements IAuditableModel, Serializable {
@@ -102,5 +103,10 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
             }
         }
         return (T)extensions.get(clazz);
+    }
+
+    public <T> T getExtension(String className) {
+        Class<T> clazz = ClassUtils.loadClass(className);
+        return getExtension(clazz);
     }
 }
