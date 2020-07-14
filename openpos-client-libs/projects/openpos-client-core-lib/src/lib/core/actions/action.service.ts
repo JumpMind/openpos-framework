@@ -5,12 +5,9 @@ import {LoaderState} from '../../shared/components/loader/loader-state';
 import {MessageProvider} from '../../shared/providers/message.provider';
 import {ConfirmationDialogComponent} from '../components/confirmation-dialog/confirmation-dialog.component';
 import {ActionMessage} from '../messages/action-message';
-import {LifeCycleEvents} from '../messages/life-cycle-events.enum';
-import {LifeCycleMessage} from '../messages/life-cycle-message';
 import {OpenposMessage} from '../messages/message';
 import {MessageTypes} from '../messages/message-types';
 import {QueueLoadingMessage} from '../services/session.service';
-import {CancelLoadingMessage} from '../services/session.service';
 import {IActionItem} from './action-item.interface';
 import {IUrlMenuItem} from './url-menu-item.interface';
 
