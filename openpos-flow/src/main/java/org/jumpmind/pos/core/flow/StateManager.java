@@ -53,6 +53,7 @@ import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.model.Message;
+import org.jumpmind.pos.util.model.PrintMessage;
 import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -268,6 +269,12 @@ public class StateManager implements IStateManager {
         String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
         messageService.sendMessage(appId, deviceId, new StartupMessage(true, "StateManager Startup Complete"));
+    }
+
+    public void sendPrintMessage(PrintMessage message) {
+        String appId = applicationState.getAppId();
+        String deviceId = applicationState.getDeviceId();
+        messageService.sendMessage(appId, deviceId, message);
     }
 
     protected void setTransitionSteps(List<TransitionStepConfig> transitionStepConfigs) {

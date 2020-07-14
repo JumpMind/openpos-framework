@@ -27,15 +27,15 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     Map<String, Object> settings;
     EscpImagePrinter imagePrinter;
     IConnectionFactory connectionFactory;
-    boolean deviceEnabled  = true;
+    boolean deviceEnabled = true;
     private String printerName;
 
-    static final int STATUS_RECEIPT_PAPER_LOW             = 0b00000001;
-    static final int STATUS_COVER_OPEN                    = 0b00000010;
-    static final int STATUS_RECEIPT_PAPER_OUT             = 0b00000100;
-    static final int STATUS_JAM                           = 0b00001000;
-    static final int SLIP_LEADING_EDGE_SENSOR_COVERED     = 0b00100000;
-    static final int SLIP_TRAILING_EDGE_SENSOR_COVERED    = 0b01000000;
+    static final int STATUS_RECEIPT_PAPER_LOW = 0b00000001;
+    static final int STATUS_COVER_OPEN = 0b00000010;
+    static final int STATUS_RECEIPT_PAPER_OUT = 0b00000100;
+    static final int STATUS_JAM = 0b00001000;
+    static final int SLIP_LEADING_EDGE_SENSOR_COVERED = 0b00100000;
+    static final int SLIP_TRAILING_EDGE_SENSOR_COVERED = 0b01000000;
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
@@ -45,7 +45,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     }
 
-    public EscpPOSPrinter(Map<String,Object> settings) {
+    public EscpPOSPrinter(Map<String, Object> settings) {
         this.settings = settings;
     }
 
@@ -70,6 +70,15 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         printNormal(0, getCommand(PrinterCommands.ALIGN_LEFT));
         printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
         printNormal(0, getCommand(PrinterCommands.ESC_P_RESET));
+
+        // Petco format: ESC w p T '/ A '/ C '/ S <CR>
+        // String resetFormat = new String(new char[] { 0x1B, 0x77, 0x70, 0x54, 0x27, 0x2f, 0x41, 0x27, 0x2f, 0x43, 0x27, 0x2f, 0x53, 0x0D });
+
+        // Default format: ESC w p <CR>
+        String resetFormat = new String(new char[]{0x1B, 0x77, 0x70, 0x0D});
+
+        // Set the MICR read format
+        printNormal(0, resetFormat);
     }
 
     @Override
@@ -106,7 +115,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                 printerStatusReporter.reportStatus(Status.Error, "Failed to print. ");
             }
             if (ex instanceof PrintException) {
-                throw (PrintException)ex;
+                throw (PrintException) ex;
             } else {
                 throw new PrintException("Failed to print " + data, ex);
             }
@@ -148,7 +157,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                 throw new PrintException("Unsupported barcode symbology: " + symbology);
         }
 
-        substitutions.put("barcodeLength", String.valueOf((char)barcodeData.length()));
+        substitutions.put("barcodeLength", String.valueOf((char) barcodeData.length()));
 
         substitutions.put("barcodeData", barcodeData);
 
@@ -237,7 +246,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     private void refreshPrinterCommandsFromSettings() {
         this.printerCommands = new PrinterCommands();
-        String printerCommandLocations = (String)settings.get("printerCommandLocations");
+        String printerCommandLocations = (String) settings.get("printerCommandLocations");
         String[] locationsSplit = printerCommandLocations.split(",");
         for (String printerCommandLocation : locationsSplit) {
             printerCommands.load(Thread.currentThread().getContextClassLoader().getResource(printerCommandLocation.trim()));
@@ -246,7 +255,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public int getPrintWidth() {
-        Integer printWidth = (Integer)settings.get("printWidth");
+        Integer printWidth = (Integer) settings.get("printWidth");
         if (printWidth == null) {
             printWidth = 48;
         }
@@ -258,7 +267,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         try {
             getPeripheralConnection().getOut().flush();
             // TODO this needs work on NCR. Calling this more than a few times puts the printer in a bad state.
-            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x76}); // request status.
+            getPeripheralConnection().getOut().write(new byte[]{0x1B, 0x76}); // request status.
 
             getPeripheralConnection().getOut().flush();
             if (getPeripheralConnection().getIn() != null) {
@@ -300,7 +309,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         int status = -1;
 
         try {
-            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x77, 0x01});
+            getPeripheralConnection().getOut().write(new byte[]{0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().flush();
             long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "2000").toString());
             long micrTimeout = Long.valueOf(settings.getOrDefault("micrTimeout", "20000").toString());
@@ -308,8 +317,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
             long start = System.currentTimeMillis();
 
-            while (System.currentTimeMillis()-start < micrTimeout
-                && (status = getPeripheralConnection().getIn().read()) == -1) {
+            while (System.currentTimeMillis() - start < micrTimeout
+                    && (status = getPeripheralConnection().getIn().read()) == -1) {
                 Thread.sleep(100);
             }
 
@@ -324,7 +333,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             int current;
 
             while ((current = getPeripheralConnection().getIn().read()) != -1) {
-                buff.append((char)current);
+                buff.append((char) current);
             }
 
             if (status != 0) {
@@ -340,7 +349,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void beginSlipMode() {
         try {
-            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 4}); // select slip
+            getPeripheralConnection().getOut().write(new byte[]{0x1B, 0x63, 0x30, 4}); // select slip
 //            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x66, 1, 2}); // wait for one minute for a slip, and start printing .2 seconds after slip detected.
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
@@ -353,9 +362,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public void endSlipMode() {
         try {
             // beginRemoval(-1);
-            getPeripheralConnection().getOut().write(new byte[] {0x0C}); // print and eject slip
+            getPeripheralConnection().getOut().write(new byte[]{0x0C}); // print and eject slip
             getPeripheralConnection().getOut().flush();
-            getPeripheralConnection().getOut().write(new byte[] {0x1B, 0x63, 0x30, 1}); // select receipt
+            getPeripheralConnection().getOut().write(new byte[]{0x1B, 0x63, 0x30, 1}); // select receipt
             getPeripheralConnection().getOut().flush();
         } catch (Exception ex) {
             if (printerStatusReporter != null) {
@@ -1296,7 +1305,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public int getDeviceServiceVersion() throws JposException {
-        final int deviceVersion19  = 1009000; // 1.9.0
+        final int deviceVersion19 = 1009000; // 1.9.0
         return deviceVersion19;
     }
 

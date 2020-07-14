@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.annotation.PostConstruct;
 
-import org.jumpmind.pos.devices.service.model.PersonalizationParameters;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.web.ServerException;
 import org.slf4j.Logger;
@@ -95,10 +94,6 @@ public class MessageService implements IMessageService {
             String jsonString = messageToJson(message);
 
             byte[] json = jsonString.getBytes("UTF-8");
-
-            if (jsonString.contains("\"type\" : \"UIData\"")) {
-                logger.info("Sending message to client: \n" + jsonString);
-            }
 
             if( json.length <= websocketSendBufferLimit ){
                 this.template.send(topic.toString(), MessageBuilder.withPayload(json).build());

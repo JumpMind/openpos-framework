@@ -5,8 +5,6 @@ import {LoaderState} from '../../shared/components/loader/loader-state';
 import {MessageProvider} from '../../shared/providers/message.provider';
 import {ConfirmationDialogComponent} from '../components/confirmation-dialog/confirmation-dialog.component';
 import {ActionMessage} from '../messages/action-message';
-import {LifeCycleEvents} from '../messages/life-cycle-events.enum';
-import {LifeCycleMessage} from '../messages/life-cycle-message';
 import {OpenposMessage} from '../messages/message';
 import {MessageTypes} from '../messages/message-types';
 import {QueueLoadingMessage} from '../services/session.service';
@@ -27,10 +25,10 @@ export class ActionService implements OnDestroy {
         private messageProvider: MessageProvider) {
         console.log("Creating new Action Service")
         this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
-            if(message.willUnblock === false){
+            if(message.willUnblock === false) {
                 console.log('creating a screen that is disabled');
                 this.blockActions = true;
-            } else if( message.willUnblock){
+            } else if( message.willUnblock) {
                 console.log('unblocking actions because message:', message);
                 this.unblock();
             }
@@ -47,7 +45,7 @@ export class ActionService implements OnDestroy {
         this.blockActions = false;
         const queued = this.actionQueue.pop();
         if (queued) {
-            console.log('Dequeued an action to send')
+            console.log('Dequeued an action to send');
             this.doAction(queued.item, queued.payload);
         }
     }
