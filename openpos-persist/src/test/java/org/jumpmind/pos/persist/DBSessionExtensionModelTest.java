@@ -2,8 +2,8 @@ package org.jumpmind.pos.persist;
 
 import org.jumpmind.pos.persist.cars.CarModel;
 import org.jumpmind.pos.persist.cars.CarModelExtension;
-import org.jumpmind.pos.persist.cars.ServiceInvoice;
 import org.jumpmind.pos.persist.cars.TestPersistCarsConfig;
+import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -11,10 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
-import static org.jumpmind.pos.persist.DBSessionNaturalIdTest.clearTime;
 import static org.junit.Assert.*;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -82,4 +78,21 @@ public class DBSessionExtensionModelTest {
 
         }
     }
+
+    @Test
+    public void testExtensionSerialization() throws Exception {
+        final String VIN = "KMHCN46C58U242743";
+        DBSession db = sessionFactory.createDbSession();
+        CarModel hyundaiLookupedUp = db.findByNaturalId(CarModel.class, VIN);
+        CarModelExtension carModelExtension = ((CarModelExtension)hyundaiLookupedUp.getExtension(CarModelExtension.class));
+
+        assertNotNull(carModelExtension);
+        assertTrue(carModelExtension.isTrailerHitch());
+
+        String serializedCarModel = DefaultObjectMapper.defaultObjectMapper().writeValueAsString(hyundaiLookupedUp);
+        CarModel carModel = DefaultObjectMapper.defaultObjectMapper().readValue(serializedCarModel, CarModel.class);
+        CarModelExtension deserialized = carModel.getExtension(CarModelExtension.class);
+        assertTrue(deserialized.isTrailerHitch());
+    }
+
 }

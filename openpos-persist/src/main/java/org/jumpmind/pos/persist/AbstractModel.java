@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.jumpmind.pos.persist.model.IAuditableModel;
 import org.jumpmind.pos.util.ClassUtils;
@@ -33,7 +34,8 @@ public abstract class AbstractModel implements IAuditableModel, Serializable {
 
     @JsonIgnore
     private Map<String, Object> additionalFields = new CaseInsensitiveMap<String, Object>();
-    
+
+    @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "__extensionClass")
     private Map<Class, Object> extensions = new HashMap<>();
 
     @Override
