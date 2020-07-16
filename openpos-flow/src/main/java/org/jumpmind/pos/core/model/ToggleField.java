@@ -11,8 +11,7 @@ public class ToggleField extends FormField implements IDynamicListField {
     private static final long serialVersionUID = 1L;
 
     private List<String> values;
-    
-    private String valueChangedAction;
+
     private boolean dynamicListEnabled = true;
 
     public ToggleField() {
@@ -63,19 +62,6 @@ public class ToggleField extends FormField implements IDynamicListField {
     @JsonSetter("values")
     public void setValues(List<String> values) {
         this.values = values;
-    }
-
-    public String getValueChangedAction() {
-        return valueChangedAction;
-    }
-
-    /**
-     * When this value is set, the client will call back upon the selected value changing with an action whose name is the same 
-     * as the one given
-     * @param valueChangedAction The name of an action to generate when the Combo box selected value changes.
-     */
-    public void setValueChangedAction(String valueChangedAction) {
-        this.valueChangedAction = valueChangedAction;
     }
     
     @Override

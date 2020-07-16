@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
+import java.util.List;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -55,5 +56,19 @@ public class ObjectUtils {
         }      
         return null;
     }
+
+    /**
+     * Recursively searches the given object for all fields of the given type.
+     * @param ofType The type of object to search for
+     * @param parent The object to search recursively
+     * @param <T> The type of object to search for
+     * @return A list of objects found either directly on the given parent object or as a descendant.
+     */
+    public static <T> List<T> findRecursive(Class<T> ofType, Object parent) {
+        ObjectFinder<T> finder = new ObjectFinder<>(ofType);
+        finder.searchRecursive(parent);
+        return finder.getResults();
+    }
+
 
 }
