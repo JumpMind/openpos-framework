@@ -3,11 +3,11 @@ import { SaleItemCardListInterface } from './sale-item-card-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
 import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-message.service';
-import {merge, Observable} from 'rxjs';
+import {merge, Observable, Subject} from 'rxjs';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
-import {takeUntil} from 'rxjs/operators';
+import {filter, takeUntil} from 'rxjs/operators';
 
 
 @ScreenPart({
@@ -53,7 +53,6 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
         }
       })
     );
-
   }
 
   itemsTrackByFn(index, item: ISellItem) {
@@ -62,15 +61,19 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
   screenDataUpdated() {
     this.items$ = this.dataMessageService.getData$(this.screenData.providerKey);
-    this.items$.subscribe(sellItems => {
-      this.addSellItemsGlobalKeybinds(sellItems);
+    this.items$.pipe(
+        takeUntil(this.stop$)
+    ).subscribe(sellItems => this.onSellItemsChange(sellItems));
+  }
 
-      this.items$.forEach(i => {
-        this.numItems = i.length;
-        this.expandedIndex = i.length - 1;
-      });
-      this.scrollToView(this.expandedIndex);
+  onSellItemsChange(sellItems: ISellItem[]): void {
+    this.addSellItemsGlobalKeybinds(sellItems);
+
+    this.items$.forEach(i => {
+      this.numItems = i.length;
+      this.expandedIndex = i.length - 1;
     });
+    this.scrollToView(this.expandedIndex);
   }
 
   ngAfterViewInit() {
@@ -83,15 +86,12 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
         return allActions;
     }, {});
 
-    const allActions = Object.keys(uniqueKeybinds).map(key => uniqueKeybinds[key]);
+    const uniqueActions = Object.keys(uniqueKeybinds).map(key => uniqueKeybinds[key]);
 
-    this.keyPressProvider.globalSubscribe(allActions).pipe(
+    this.keyPressProvider.globalSubscribe(uniqueActions).pipe(
+        filter(() => this.expandedIndex >= 0),
         takeUntil(this.stop$)
-    ).subscribe(action => {
-        if (this.expandedIndex >= 0) {
-            this.doAction(action, [this.expandedIndex]);
-        }
-    });
+    ).subscribe(action => this.doAction(action, [this.expandedIndex]));
   }
 
   scrollToView(index: number): void {
