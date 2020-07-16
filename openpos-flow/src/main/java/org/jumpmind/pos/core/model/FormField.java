@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.validator.IValidatorSpec;
@@ -232,14 +233,21 @@ public class FormField implements IFormElement, IField, Serializable {
 
 
     public void setValueChangedAction(ActionItem action){
-        this.put("valueChangedAction", action);
+        if (action == null) {
+            this.optionalProperties.remove("valueChangedAction");
+        }
+        else if (action.getAction() != null) {
+            this.put("valueChangedAction", action);
+        }
     }
 
     @JsonIgnore
     public void setValueChangedAction(String valueChangedAction) {
-        ActionItem action = new ActionItem(valueChangedAction);
-        action.setDoNotBlockForResponse(true);
-        setValueChangedAction(action);
+        if (StringUtils.isNotEmpty(valueChangedAction)) {
+            ActionItem action = new ActionItem(valueChangedAction);
+            action.setDoNotBlockForResponse(true);
+            setValueChangedAction(action);
+        }
     }
     
     public void setIconName(String iconName) {
