@@ -51,7 +51,7 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Value("${openpos.general.compatibility.version:v1}")
     String serverCompatibilityVersion;
 
-    @Value("${openpos.general.websocket.messageSizeLimit:80000}")
+    @Value("${openpos.general.websocket.messageSizeLimit:8192000}")
     int messageSizeLimit;
 
     @Value("${openpos.general.websocket.sendBufferSizeLimit:8192000}")
