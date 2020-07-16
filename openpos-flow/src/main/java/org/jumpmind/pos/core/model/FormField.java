@@ -7,7 +7,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.validator.IValidatorSpec;
@@ -228,15 +228,13 @@ public class FormField implements IFormElement, IField, Serializable {
     /**
      * When this value is set, the client will call back upon the selected value changing with an action whose name is the same 
      * as the one given
-     * @param valueChangedAction The name of an action to generate when the Combo box selected value changes.
+     * @param action The name of an action to generate when the selected value changes.
      */
-
-
     public void setValueChangedAction(ActionItem action){
         if (action == null) {
             this.optionalProperties.remove("valueChangedAction");
         }
-        else if (action.getAction() != null) {
+        else if (StringUtils.isNotEmpty(action.getAction())) {
             this.put("valueChangedAction", action);
         }
     }
