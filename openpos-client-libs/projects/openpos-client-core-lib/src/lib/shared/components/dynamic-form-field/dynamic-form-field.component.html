@@ -12,7 +12,7 @@
             <mat-hint *ngIf="formField.hintText">{{formField.hintText}}</mat-hint>
             <input *ngSwitchDefault matInput cdkFocusInitial id="{{formField.id}}" [formControlName]="formField.id" [formControl]="formGroup.controls[formField.id]" [placeholder]="getPlaceholderText(formField)"
                 [formatterName]="formField.inputType" [required]="formField.required" (change)="onFormElementChanged(formField)"
-                [attr.minlength]="formField.minLength" [attr.maxlength]="formField.maxLength" [readonly]="formField.disabled" [attr.tabindex]="formField.tabindex"
+                [attr.minlength]="formField.minLength" [attr.maxlength]="formField.maxLength" [attr.pattern]="formField.pattern" [readonly]="formField.disabled" [attr.tabindex]="formField.tabindex"
                 [keyboardLayout]="keyboardLayout" [attr.type]="isNumericField() ? 'tel' : 'text'"
                 autoSelectOnFocus>
             <button *ngIf="isScanAllowed()" type="button" mat-button matSuffix mat-icon-button (click)="onScan(formField)">
