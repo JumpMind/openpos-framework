@@ -38,6 +38,7 @@ public interface IconType {
     public static final String Device = "Device"; //device
     public static final String Discount = "Discount"; //local_offer
     public static final String DollarSign = "DollarSign"; //attach_money
+    public static final String Edit = "Edit"; //edit
     public static final String Email = "Email"; //email
     public static final String Employee = "Employee"; //person
     public static final String EmployeeEnter = "EmployeeEnter"; //keyboard
