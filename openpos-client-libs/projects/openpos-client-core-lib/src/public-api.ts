@@ -117,6 +117,7 @@ export * from './lib/core/services/toast.service';
 export * from './lib/core/services/training-overlay.service';
 export * from './lib/core/services/validators.service';
 export * from './lib/core/services/location.service';
+export * from './lib/core/services/fetch-message.service';
 export * from './lib/core/personalization/client-url.service';
 export * from './lib/core/focus/focus.service';
 export * from './lib/core/ui-data-message/ui-data-message.service';

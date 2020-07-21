@@ -1,4 +1,4 @@
-package org.jumpmind.pos.core.error;
+package org.jumpmind.pos.server.service;
 
 public class IncidentContext {
 

@@ -3,6 +3,8 @@ package org.jumpmind.pos.core.error;
 import org.jumpmind.pos.core.flow.ErrorGlobalActionHandler;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.message.ErrorDialogUIMessage;
+import org.jumpmind.pos.server.service.IIncidentService;
+import org.jumpmind.pos.server.service.IncidentContext;
 import org.jumpmind.pos.util.model.Message;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -24,7 +26,7 @@ public class DefaultIncidentService implements IIncidentService {
     private static final String INCIDENT_ID_FILENAME = ".incident_id";
 
     private String incidentIdFileLocation;
-    private BiFunction<IncidentContext, String, String> incidentMessageFn = 
+    private BiFunction<IncidentContext, String, String> incidentMessageFn =
         (ctx, incId) -> String.format("Unfortunately, an unexpected error has occurred. Please report this incident using the following id: %s.", incId);
 
     private String incidentTitle = "An Unexpected Error Occurred";
