@@ -3,8 +3,6 @@ package org.jumpmind.pos.core.error;
 import org.jumpmind.pos.core.flow.ErrorGlobalActionHandler;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.message.ErrorDialogUIMessage;
-import org.jumpmind.pos.server.service.IIncidentService;
-import org.jumpmind.pos.server.service.IncidentContext;
 import org.jumpmind.pos.util.model.Message;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;

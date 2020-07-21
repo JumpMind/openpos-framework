@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.model.CachedMessage;
-import org.jumpmind.pos.server.model.CachedMessageNotFoundException;
 import org.jumpmind.pos.server.model.FetchMessage;
 import org.jumpmind.pos.util.web.NotFoundException;
 import org.jumpmind.pos.util.web.ServerException;
@@ -51,14 +50,11 @@ public class MessageService implements IMessageService {
     @Value("${openpos.general.websocket.sendBufferSizeLimit:8192000}")
     int websocketSendBufferLimit;
 
-    @Value("${openpos.general.message.cacheTimeout:300000}")
+    @Value("${openpos.general.message.cacheTimeout:100}")
     int messageCacheTimeout;
 
     @Autowired(required=false)
     List<IActionListener> actionListeners;
-
-    @Autowired
-    private IIncidentService incidentService;
 
     private Map<String, CachedMessage> cachedMessageMap;
 
@@ -142,8 +138,9 @@ public class MessageService implements IMessageService {
                 throw new NotFoundException();
             }
         } catch (Exception e){
-            org.jumpmind.pos.util.model.Message message = incidentService.createIncident(e, new IncidentContext(deviceId));
-            sendMessage(appId, deviceId, message);
+            Action errorAction = new Action("GlobalError", e);
+            errorAction.setType("Screen");
+            action(appId, deviceId, errorAction, null);
             throw e;
         }
     }
