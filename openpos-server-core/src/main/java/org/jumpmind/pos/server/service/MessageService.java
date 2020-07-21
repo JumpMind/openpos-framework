@@ -2,15 +2,14 @@ package org.jumpmind.pos.server.service;
 
 import java.sql.Date;
 import java.time.Instant;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import javax.annotation.PostConstruct;
 
+import org.apache.commons.collections4.map.PassiveExpiringMap;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.model.CachedMessage;
+import org.jumpmind.pos.server.model.CachedMessageNotFoundException;
 import org.jumpmind.pos.server.model.FetchMessage;
 import org.jumpmind.pos.util.web.NotFoundException;
 import org.jumpmind.pos.util.web.ServerException;
@@ -53,16 +52,22 @@ public class MessageService implements IMessageService {
     int websocketSendBufferLimit;
 
     @Value("${openpos.general.message.cacheTimeout:300000}")
-    int messageCachTimeout;
+    int messageCacheTimeout;
 
     @Autowired(required=false)
     List<IActionListener> actionListeners;
 
-    private Map<String, CachedMessage> cachedMessageMap = new HashMap<>();
+    @Autowired
+    private IIncidentService incidentService;
+
+    private Map<String, CachedMessage> cachedMessageMap;
 
 
     @PostConstruct
     public void init() {
+
+        cachedMessageMap = Collections.synchronizedMap( new PassiveExpiringMap<>(messageCacheTimeout));
+
         if (!jsonIncludeNulls) {
             mapper.setSerializationInclusion(Include.NON_NULL);
         }
@@ -120,19 +125,26 @@ public class MessageService implements IMessageService {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET,  value = "api/message/{id}")
+    @RequestMapping(method = RequestMethod.GET,  value = "api/app/{appId}/node/{deviceId}/message/{id}")
     @ResponseBody
-    public String getCachedMessage(@PathVariable("id") String id){
-        if(cachedMessageMap.containsKey(id)){
-            try {
-                org.jumpmind.pos.util.model.Message m = cachedMessageMap.get(id).getMessage();
-                cachedMessageMap.remove(id);
-                return messageToJson(m);
-            } catch (JsonProcessingException e) {
-                throw new RuntimeException("Failed to fetch cached message" + id, e);
+    public String getCachedMessage(@PathVariable("appId") String appId, @PathVariable("deviceId") String deviceId, @PathVariable("id") String id){
+
+        try{
+            if(cachedMessageMap.containsKey(id)){
+                try {
+                    org.jumpmind.pos.util.model.Message m = cachedMessageMap.get(id).getMessage();
+                    cachedMessageMap.remove(id);
+                    return messageToJson(m);
+                } catch (JsonProcessingException e) {
+                    throw new RuntimeException("Failed to fetch cached message" + id, e);
+                }
+            } else {
+                throw new NotFoundException();
             }
-        } else {
-            throw new NotFoundException();
+        } catch (Exception e){
+            org.jumpmind.pos.util.model.Message message = incidentService.createIncident(e, new IncidentContext(deviceId));
+            sendMessage(appId, deviceId, message);
+            throw e;
         }
     }
     

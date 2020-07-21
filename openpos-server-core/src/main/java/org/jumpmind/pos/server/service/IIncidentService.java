@@ -1,4 +1,4 @@
-package org.jumpmind.pos.core.error;
+package org.jumpmind.pos.server.service;
 
 import org.jumpmind.pos.util.model.Message;
 
