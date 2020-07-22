@@ -58,7 +58,6 @@ export class IconService {
         this.icons.set('Device', ['device.svg', this.defaultIconProvider]);
         this.icons.set('Discount', ['local_offer.svg', this.defaultIconProvider]);
         this.icons.set('DollarSign', ['attach_money.svg', this.defaultIconProvider]);
-        this.icons.set('Edit', ['edit.svg', this.defaultIconProvider]);
         this.icons.set('Email', ['email.svg', this.defaultIconProvider]);
         this.icons.set('Employee', ['person.svg', this.defaultIconProvider]);
         this.icons.set('EmployeeEnter', ['keyboard.svg', this.defaultIconProvider]);
