@@ -64,7 +64,11 @@ jar {
                 "Implementation-Version": project.hasProperty('version') && version ? version : '0.0',
                 "Project-Artifact": project.name,
                 "Build-Version": project.hasProperty('version') && version ? version : '0.0',
-                "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()))
+                "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date())),
+                "Build-Name": buildName,
+                "Build-Number": buildNumber,
+                "Git-Hash": gitHash,
+                "Git-Branch": gitBranch
     }
 }
 
