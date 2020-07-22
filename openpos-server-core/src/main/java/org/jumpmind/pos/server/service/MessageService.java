@@ -50,7 +50,7 @@ public class MessageService implements IMessageService {
     @Value("${openpos.general.websocket.sendBufferSizeLimit:8192000}")
     int websocketSendBufferLimit;
 
-    @Value("${openpos.general.message.cacheTimeout:100}")
+    @Value("${openpos.general.message.cacheTimeout:300000}")
     int messageCacheTimeout;
 
     @Autowired(required=false)
