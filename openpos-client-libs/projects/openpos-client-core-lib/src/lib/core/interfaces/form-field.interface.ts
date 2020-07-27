@@ -45,6 +45,7 @@ export interface IFormElement {
     startAtDate: any;
     hintText: string;
     hideButtons: boolean;
+    readOnly: boolean;
 }
 
 export interface IDynamicListField {
