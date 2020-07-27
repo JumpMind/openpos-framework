@@ -34,6 +34,7 @@ p{
     grid-template: "image title" auto
                     "image summary" auto
                     "image properties" 1fr
+                    "image promotions" 1fr
                     "actions actions" auto/ auto 1fr;
     &.mobile,
     &.tablet-portrait{
@@ -54,6 +55,17 @@ app-options-list {
 .carousel {
     grid-area: image;
     justify-self: center;
+}
+
+.promotions {
+    grid-area: promotions;
+    align-self: end;
+    ul{
+        list-style-type: none;
+        padding-inline-start: 0;
+    }
+
+    @extend %text-md;
 }
 
 .properties {

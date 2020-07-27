@@ -4,8 +4,12 @@ import { DisplayProperty } from '../../shared/components/display-property/displa
 
 export interface ItemDetailInterface extends IAbstractScreen {
     imageUrls: string[];
+    alternateImageUrl: string;
     itemName: string;
     summary: string;
     itemProperties: DisplayProperty[];
     itemActions: IActionItem[];
+    itemPromotionsTitle: string;
+    promotions: string[];
+
 }
