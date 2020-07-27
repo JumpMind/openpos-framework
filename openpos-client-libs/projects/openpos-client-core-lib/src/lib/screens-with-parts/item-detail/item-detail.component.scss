@@ -60,12 +60,22 @@ app-options-list {
 .promotions {
     grid-area: promotions;
     align-self: end;
-    ul{
-        list-style-type: none;
-        padding-inline-start: 0;
-    }
 
     @extend %text-md;
+}
+
+.promotion-list {
+    list-style-type: none;
+    padding-inline-start: 0;
+
+    > li {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.promotion-icon {
+    margin-right: 1rem;
 }
 
 .properties {

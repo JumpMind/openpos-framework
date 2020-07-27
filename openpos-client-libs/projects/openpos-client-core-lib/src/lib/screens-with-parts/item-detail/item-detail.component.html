@@ -16,11 +16,12 @@
 
     <section class="promotions">
         <h3>
-            {{screen.itemPromotionsTitle}}
+            {{screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
         </h3>
-        <ul responsive-class>
+        <ul responsive-class class="promotion-list">
             <li *ngFor="let promo of screen.promotions">
-                {{promo}}
+                <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="material-icons md"></app-icon>
+                {{promo.promotionName}}
             </li>
         </ul>
     </section>
