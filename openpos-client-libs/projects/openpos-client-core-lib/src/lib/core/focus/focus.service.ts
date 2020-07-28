@@ -33,4 +33,11 @@ export class FocusService {
             element.focus();
         }
     }
+
+    blurCurrentElement() {
+        if( document.activeElement instanceof HTMLElement){
+            document.activeElement.blur();
+        }
+    }
+
 }
