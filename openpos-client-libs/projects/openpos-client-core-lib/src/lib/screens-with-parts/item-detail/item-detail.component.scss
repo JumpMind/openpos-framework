@@ -42,6 +42,7 @@ p{
                         "image" auto
                         "summary" auto
                         "properties" auto
+                        "promotions" auto
                         "actions" auto/auto;
         width: 100%;
         align-self: start;
@@ -59,7 +60,7 @@ app-options-list {
 
 .promotions {
     grid-area: promotions;
-    align-self: end;
+    align-self: start;
 
     @extend %text-md;
 }
@@ -72,6 +73,20 @@ app-options-list {
         display: flex;
         align-items: center;
     }
+}
+
+.promotion-items {
+    display: grid;
+    grid-template-columns: auto 65% 1fr;
+}
+
+.promotion-item-price {
+    justify-self: end;
+    align-self: center;
+}
+
+.promotion-item-name {
+    align-self: center;
 }
 
 .promotion-icon {
