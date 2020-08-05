@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
 import org.jumpmind.db.model.Column;
@@ -319,7 +320,15 @@ public class DatabaseSchema {
                 } else {
                     columns.add(column);
                 }
-                metaData.addEntityFieldMetaData(field.getName(), new FieldMetaData(clazz, field, column));
+                FieldMetaData fieldMetaData = new FieldMetaData(clazz, field, column);
+                metaData.addEntityFieldMetaData(field.getName(), fieldMetaData);
+                ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
+                if (colAnnotation != null && ArrayUtils.isNotEmpty(colAnnotation.propertyAliases())) {
+                    for (String alias: colAnnotation.propertyAliases()) {
+                        // Add a mapping entry for each optional propertyAlias for the column
+                        metaData.addEntityFieldMetaData(alias, fieldMetaData);
+                    }
+                }
             }
             CompositeDef compositeDefAnnotation = field.getAnnotation(CompositeDef.class);
             if (compositeDefAnnotation != null) {
