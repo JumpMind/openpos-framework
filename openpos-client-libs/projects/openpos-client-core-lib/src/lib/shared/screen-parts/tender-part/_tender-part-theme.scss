@@ -5,6 +5,7 @@
 
     $foreground: map-get($theme, foreground);
     $border: map-get($mat-grey, 800);
+    $tendertext: map-get($mat-green, 500);
 
     app-tender-part {
 
@@ -17,6 +18,22 @@
 
         .tender-border-color {
             $border-color: $border;
+        }
+
+        .tender-options {
+            .option-content {
+                .option-post-line-text {
+                    text-align: left;
+                    white-space: pre-line;
+                    font-size: $text-sm !important;
+                    border: 1px solid $tendertext;
+                    color: $tendertext;
+                    border-radius: 5px;
+                    &:empty {
+                        border: none;
+                    }
+                }
+            }
         }
     }
 

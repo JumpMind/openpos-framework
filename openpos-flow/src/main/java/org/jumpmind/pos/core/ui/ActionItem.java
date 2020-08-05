@@ -48,6 +48,8 @@ public class ActionItem implements Serializable {
     protected String keybindDisplayName;
     protected boolean queueIfBlocked;
     protected boolean doNotBlockForResponse;
+    protected String preTitleText;
+    protected String postTitleText;
     protected ActionTimer actionTimer;
 
     @JsonIgnore
@@ -310,5 +312,20 @@ public class ActionItem implements Serializable {
     public void setActionTimer(ActionTimer actionTimer) {
         this.actionTimer = actionTimer;
     }
-    
+
+    public String getPreTitleText() {
+        return preTitleText;
+    }
+
+    public void setPreTitleText(String preTitleText) {
+        this.preTitleText = preTitleText;
+    }
+
+    public String getPostTitleText() {
+        return postTitleText;
+    }
+
+    public void setPostTitleText(String postTitleText) {
+        this.postTitleText = postTitleText;
+    }
 }

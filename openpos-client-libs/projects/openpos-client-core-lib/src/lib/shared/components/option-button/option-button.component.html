@@ -4,8 +4,12 @@
     <app-icon [iconName]="optionIcon" [iconClass]="optionSize" [class.muted-color]="disabled"
         [class.primary]="!disabled" class="option-icon"></app-icon>
     <div class="option-content">
+        <span responsive-class class="option-pre-line-text" [class.muted-color]="disabled"
+              [ngClass]="optionSize">{{optionTextPreTitle}}</span>
         <span responsive-class class="option-line" [class.muted-color]="disabled"
             [ngClass]="optionSize">{{optionTitle}}</span>
+        <span responsive-class class="option-post-line-text" [class.muted-color]="disabled"
+            [ngClass]="optionSize">{{optionTextPostTitle}}</span>
         <ng-content></ng-content>
     </div>
     <div class="option-right">
