@@ -17,8 +17,15 @@ import { ITender } from './tender.interface';
 export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface> {
     alternateSubmitActions: IActionItem[] = [];
     alternateSubmitActionNames: string[] = [];
+    amountCss: string = '';
 
     screenDataUpdated() {
+        if (parseFloat(this.screenData.amountDue.amount) < 0) {
+            this.amountCss = 'negative';
+        }
+        else {
+            this.amountCss = '';
+        }
         // Register form data with possible actions
         if (this.screenData.optionsList) {
             if (this.screenData.optionsList.options) {
