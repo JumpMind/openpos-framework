@@ -60,6 +60,7 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
                 }
             }
         } else {
+            this.overflowOptions = [];
             this.options = this.screenData.options;
         }
     }
