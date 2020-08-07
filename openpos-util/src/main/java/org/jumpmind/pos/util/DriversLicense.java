@@ -18,6 +18,8 @@ public class DriversLicense {
 
     private String firstLine;
 
+    private String complianceIndicator;
+
     private String fileType;
 
     private String issuerIDNumber;
@@ -27,6 +29,8 @@ public class DriversLicense {
     private String jurisdictionBarCodeVersion;
 
     private String numberOfSubFiles;
+    
+    private String subfileDesignators;
 
     private String jurisdictionVehicleClass;
 
@@ -141,15 +145,23 @@ public class DriversLicense {
     public void parse(String data)  {
         elements.clear();
         String[] lines = data.split("\r\n|\n|\r");
-        for (String line : lines) {
+        complianceIndicator = lines[0];
+        fileType = lines[1].substring(0, 5);
+        issuerIDNumber = lines[1].substring(5, 11);
+        AAMVABarCodeVersion = lines[1].substring(11, 13);
+        jurisdictionBarCodeVersion = lines[1].substring(13, 15);
+        numberOfSubFiles = lines[1].substring(15, 17);
+        int lengthOfSubfileDesignators = 10 * Integer.parseInt(numberOfSubFiles);
+        subfileDesignators = lines[1].substring(17, 17 + lengthOfSubfileDesignators);
+        //skip subfile name and put in the first element
+        elements.put(
+                lines[1].substring(17 + lengthOfSubfileDesignators + 2, 17 + lengthOfSubfileDesignators + 5),
+                lines[1].substring(17 + lengthOfSubfileDesignators + 5)
+                );
+        for (int i = 2; i < lines.length; ++i) {
+            String line = lines[i];
             if (line.length() > 2) {
-                if (line.startsWith("\u001E")) {
-                    firstLine = line.substring(1);
-                    String[] splitFirstLine = line.split("DL");
-                    elements.put(splitFirstLine[splitFirstLine.length-1].substring(0, 3), splitFirstLine[splitFirstLine.length-1].substring(3));
-                } else {
-                    elements.put(line.substring(0, 3), line.substring(3));
-                }
+               elements.put(line.substring(0, 3), line.substring(3));
             }
         }
         setAttributes();
@@ -157,71 +169,75 @@ public class DriversLicense {
 
     private void setAttributes() {
         try {
-            fileType = firstLine.substring(0, 5);
-            issuerIDNumber = firstLine.substring(5, 11);
-            AAMVABarCodeVersion = firstLine.substring(11, 13);
-            jurisdictionBarCodeVersion = firstLine.substring(13, 15);
-            numberOfSubFiles = firstLine.substring(15, 17);
-            jurisdictionVehicleClass = elements.get("DCA");
-            jurisdictionRestrictionCode = elements.get("DCB");
-            jurisdictionEndorsementCode = elements.get("DCD");
+
+            jurisdictionVehicleClass = getString("DCA");
+            jurisdictionRestrictionCode = getString("DCB");
+            jurisdictionEndorsementCode = getString("DCD");
             expirationDate = parseDate("DBA");
-            lastName = elements.get("DCS");
-            firstName = elements.get("DAC");
-            middleNames = elements.get("DAD").split(",");
+            lastName = getString("DCS");
+            firstName = getString("DAC");
+            middleNames = getString("DAD").split(",");
             issueDate = parseDate("DBD");
-            sex = Objects.equals(elements.get("DBC"), "9") ? 'U' : (Objects.equals(elements.get("DBC"),"1")) ? 'M' : 'F';
+            sex = Objects.equals(getString("DBC"), "9") ? 'U' : (Objects.equals(getString("DBC"),"1")) ? 'M' : 'F';
             dateOfBirth = parseDate("DDB");
-            eyeColor = elements.get("DAY");
-            height = elements.get("DAU");
-            addressStreet1 = elements.get("DAG");
-            city = elements.get("DAI");
-            stateCode = elements.get("DAJ");
-            postalCode = elements.get("DAK");
-            idNumber = elements.get("DAQ");
-            documentDiscriminator = elements.get("DCF");
-            countryID = elements.get("DCG");
-            lastNameTruncationStatus = StringUtils.isNotEmpty(elements.get("DDE")) ? elements.get("DDE").charAt(0) : null;
-            firstNameTruncationStatus = StringUtils.isNotEmpty(elements.get("DDF")) ? elements.get("DDF").charAt(0) : null;
-            middleNameTruncationStatus = StringUtils.isNotEmpty(elements.get("DDG")) ? elements.get("DDG").charAt(0) : null;
+            eyeColor = getString("DAY");
+            height = getString("DAU");
+            addressStreet1 = getString("DAG");
+            city = getString("DAI");
+            stateCode = getString("DAJ");
+            postalCode = getString("DAK");
+            idNumber = getString("DAQ");
+            documentDiscriminator = getString("DCF");
+            countryID = getString("DCG");
+            lastNameTruncationStatus = StringUtils.isNotEmpty(getString("DDE")) ? getString("DDE").charAt(0) : null;
+            firstNameTruncationStatus = StringUtils.isNotEmpty(getString("DDF")) ? getString("DDF").charAt(0) : null;
+            middleNameTruncationStatus = StringUtils.isNotEmpty(getString("DDG")) ? getString("DDG").charAt(0) : null;
 
             //optional
-            addressStreet2 = elements.get("DAH");
-            hairColor = elements.get("DAZ");
-            placeOfBirth = elements.get("DCI");
-            auditInformation = elements.get("DCJ");
-            inventoryControlNumber = elements.get("DCK");
-            lastNameAlias = elements.get("DBN");
-            firstNameAlias = elements.get("DBG");
-            nameSuffixAlias = elements.get("DBS");
-            nameSuffix = elements.get("DCU");
+            addressStreet2 = getString("DAH");
+            hairColor = getString("DAZ");
+            placeOfBirth = getString("DCI");
+            auditInformation = getString("DCJ");
+            inventoryControlNumber = getString("DCK");
+            lastNameAlias = getString("DBN");
+            firstNameAlias = getString("DBG");
+            nameSuffixAlias = getString("DBS");
+            nameSuffix = getString("DCU");
             weightRange = parseInt("DCE");
-            raceOrEthnicity = elements.get("DCL");
-            standardVehicleClassification = elements.get("DCM");
-            standardEndorsementCode = elements.get("DCN");
-            standardRestrictionCode = elements.get("DCO");
-            jurisdictionVehicleClassDescription = elements.get("DCP");
-            jurisdictionEndorsementCodeDescription = elements.get("DCQ");
-            jurisdictionRestrictionCodeDescription = elements.get("DCR");
-            complianceType = (elements.get("DDA") != null && elements.get("DDA").length() > 1) ? elements.get("DDA").charAt(0) : null;
+            raceOrEthnicity = getString("DCL");
+            standardVehicleClassification = getString("DCM");
+            standardEndorsementCode = getString("DCN");
+            standardRestrictionCode = getString("DCO");
+            jurisdictionVehicleClassDescription = getString("DCP");
+            jurisdictionEndorsementCodeDescription = getString("DCQ");
+            jurisdictionRestrictionCodeDescription = getString("DCR");
+            complianceType = (getString("DDA") != null && getString("DDA").length() > 1) ? getString("DDA").charAt(0) : null;
             cardRevisionDate = parseDate("DDB");
             hazmatEndorsementExpirationDate = parseDate("DDC");
-            limitedDurationIndicator = elements.get("DDD") != null && elements.get("DDD").contains("1");
+            limitedDurationIndicator = getString("DDD") != null && getString("DDD").contains("1");
             weightInPounds = parseInt("DAW");
             weightInKilograms = parseInt("DAX");
             under18Until = parseDate("DDH");
             under19Until = parseDate("DDI");
             under21Until = parseDate("DDJ");
-            organDonorIndicator = elements.get("DDK") != null && elements.get("DDK").contains("1");
-            veteranIndicator = elements.get("DDL") != null && elements.get("DDL").contains("1");
+            organDonorIndicator = getString("DDK") != null && getString("DDK").contains("1");
+            veteranIndicator = getString("DDL") != null && getString("DDL").contains("1");
         } catch (Exception e) {
             log.warn("Failed to parse Driver's License, most likely due to an incorrectly formatted value.", e);
         }
 
     }
 
+    private String getString(String elementName) {
+        if(elements.containsKey(elementName)){
+            return elements.get(elementName);
+        }
+
+        return null;
+    }
+
     private Integer parseInt(String elementName) {
-        String value = elements.get(elementName);
+        String value = getString(elementName);
         try {
             return StringUtils.isNotEmpty(value) ? Integer.parseInt(value) : null;
         }
@@ -233,7 +249,7 @@ public class DriversLicense {
 
     private Date parseDate(String elementName) {
         Date parsedDate = null;
-        String value = elements.get(elementName);
+        String value = getString(elementName);
         if (StringUtils.isNotEmpty(value)) {
             try {
                 parsedDate = DATE_FORMAT.parse(value);
