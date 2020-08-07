@@ -42,11 +42,12 @@ public class CarModel extends AbstractTaggedModel implements ITaggedModel {
     /*
      This tests deprecating a field and mapping to a new field, while keeping the column name the same.  The subModel
      attribute used to be mapped to the sub_model column (by default), but I changed the mapping to the subModelCode
-     property in order to test use of the 'name' attribute on a ColumnDef.
+     property in order to test use of the 'name' attribute on a ColumnDef.  Also tests use of propertyAliases
+     which allows for alternate names that can be used when querying with criteria using the property name.
      */
     @Deprecated
     private String subModel;
-    @ColumnDef(name="sub_model")
+    @ColumnDef(name="sub_model", propertyAliases = {"subModel", "sub_model"})
     private SubModelCode subModelCode;
     
     public String getModelYear() {
@@ -128,5 +129,4 @@ public class CarModel extends AbstractTaggedModel implements ITaggedModel {
         }
         return subModelCode;
     }
-
 }

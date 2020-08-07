@@ -12,6 +12,7 @@ import org.joda.money.Money;
 import org.jumpmind.pos.persist.cars.CarModel;
 import org.jumpmind.pos.persist.cars.CarTrimTypeCode;
 import org.jumpmind.pos.persist.cars.RaceCarModel;
+import org.jumpmind.pos.persist.cars.SubModelCode;
 import org.jumpmind.pos.persist.cars.TestPersistCarsConfig;
 import org.junit.After;
 import org.junit.Before;
@@ -385,12 +386,60 @@ public class DBSessionTest {
             db.close();
         }
     }
-    
+
+    @Test
+    public void testFindByFieldsWithAliasedColumnDef() {
+        final String VIN1 = "TACO12335R980975874872";
+        {
+            DBSession db = sessionFactory.createDbSession();
+            CarModel someToyota = new CarModel();
+            someToyota.setVin(VIN1);
+            someToyota.setMake("Toyota");
+            someToyota.setModel("Tacoma");
+            someToyota.setModelYear("2007");
+            someToyota.setSubModelCode(SubModelCode.HD);
+            db.save(someToyota);
+            db.close();
+        }
+
+        {
+            Map<String, Object> fieldValues = new HashMap<>();
+            // subModel does not have a Column def and is deprecated, but the @ColumnDef annotation for subModelCode,
+            // has a property alias of "subModel"
+            fieldValues.put("subModel", "HD");
+            fieldValues.put("vin", VIN1);
+
+            DBSession db = sessionFactory.createDbSession();
+            List<CarModel> cars = db.findByFields(CarModel.class, fieldValues, 100);
+            assertNotNull(cars);
+            assertEquals(1, cars.size());
+            assertEquals(VIN1, cars.get(0).getVin());
+
+            db.close();
+        }
+
+        {
+            Map<String, Object> fieldValues = new HashMap<>();
+            // subModel does not have a Column def and is deprecated, but the @ColumnDef annotation for subModelCode,
+            // has a property alias of "sub_model"
+            fieldValues.put("sub_model", "HD");
+            fieldValues.put("vin", VIN1);
+
+            DBSession db = sessionFactory.createDbSession();
+            List<CarModel> cars = db.findByFields(CarModel.class, fieldValues, 100);
+            assertNotNull(cars);
+            assertEquals(1, cars.size());
+            assertEquals(VIN1, cars.get(0).getVin());
+
+            db.close();
+        }
+
+    }
     @Test
     public void testFindByFields() {
         final String VIN1 = "KMHCN46C58U242743";
         final String VIN2 = "KMHCN46C58U2427432342";
-        
+
         {
             DBSession db = sessionFactory.createDbSession();
             CarModel someHyundai = new CarModel();
@@ -410,8 +459,8 @@ public class DBSessionTest {
             someHyundai.setModelYear("2005");
             db.save(someHyundai);
             db.close();
-        }        
-        
+        }
+
         Map<String, Object> fieldValues = new HashMap<>();
         fieldValues.put("vin", VIN1);
         

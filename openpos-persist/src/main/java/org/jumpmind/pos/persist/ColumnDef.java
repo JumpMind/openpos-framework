@@ -38,4 +38,10 @@ public @interface ColumnDef {
     String description() default "";
     CrossReference[] crossReferences() default {};
     String crossReference() default "";
+    /**
+     * An optional list of alternate property names for this column that can be used when querying by criteria.
+     * Useful for providing backward compatibility for properties and columns whose names have changed.
+     * @return The list of alternate property names for the column.
+     */
+    String[] propertyAliases() default {};
 }
