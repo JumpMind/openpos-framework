@@ -24,49 +24,13 @@
 
     .option-content {
         width: 100%;
-        display: grid;
-        grid-template-columns: 25% 50% 25%;
-        grid-template-rows: auto;
-        grid-template-areas: "pre-line line post-line";
-        align-items: center;
-
-        .option-pre-line-text {
-            grid-area: pre-line;
-            &.sm {
-                @extend %text-sm;
-            }
-
-            &.md {
-                @extend %text-md;
-            }
-
-            &.lg {
-                @extend %text-lg;
-            }
-        }
 
         .option-line {
-            grid-area: line;
 
             &.sm {
                 @extend %text-sm;
             }
         
-            &.md {
-                @extend %text-md;
-            }
-        
-            &.lg {
-                @extend %text-lg;
-            }
-        }
-
-        .option-post-line-text {
-            grid-area: post-line;
-            &.sm {
-                @extend %text-sm;
-            }
-
             &.md {
                 @extend %text-md;
             }

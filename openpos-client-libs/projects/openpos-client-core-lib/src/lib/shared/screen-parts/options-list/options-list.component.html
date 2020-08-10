@@ -16,12 +16,12 @@
             [optionTitle]="o.title" 
             [optionIcon]="o.icon" 
             [optionSize]="optionListSizeClass"
-            [optionTextPreTitle]="o.preTitleText"
-            [optionTextPostTitle]="o.postTitleText"
             [keybind]="o.keybindDisplayName"
             [actionItem]="o"
             (actionClick)="onOptionClick(o)"
             (click)="onOptionClick(o)">
+            <app-icon *ngIf="o.additionalIcon" [iconName]="o.additionalIcon" [iconClass]="'material-icons'" class="additional-icon"></app-icon>
+            <span *ngIf="o.additionalText" class="additional-text">{{o.additionalText}}</span>
         </app-option-button>
         <app-option-button *ngIf="overflowOptions && overflowOptions.length > 0 && screenData.overflowButton"
             appArrowTabItem

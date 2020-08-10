@@ -19,9 +19,9 @@ export interface IActionItem {
     // If set to true the client will not wait for a response from the server before allowing more actions
     doNotBlockForResponse?: boolean;
     // If set will display additional text before the title
-    preTitleText?: string;
+    additionalIcon?: string;
     // If set will display additional text after the title
-    postTitleText?: string;
+    additionalText?: string;
     /**
      * If set the action service will queue up the action if the action service is currently blocked
      */

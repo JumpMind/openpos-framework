@@ -25,8 +25,8 @@
         }
 
         .tender-options {
-            .option-content {
-                .option-post-line-text {
+            app-option-button {
+                .additional-text {
                     text-align: left;
                     white-space: pre-line;
                     font-size: $text-sm !important;
