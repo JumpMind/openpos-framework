@@ -127,7 +127,13 @@ describe('WedgeScanner', () => {
         queueEvent( '4', false, false );
         queueEvent( 'A', false, false );
         queueEvent( 'B', false, false );
+        queueEvent('ALT', false, true);
+        queueEvent( '0', false, true);
+        queueEvent( '0', false, true);
         queueEvent( '1', false, true);
+        queueEvent( '0', false, true);
+        queueEvent('ALT', false, true);
+        queueEvent( '0', false, true);
         queueEvent( '0', false, true);
         queueEvent( '3', false, true);
         queueEvent( '0', false, true);

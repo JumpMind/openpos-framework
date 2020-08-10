@@ -159,7 +159,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
     }
 
     private convertKeyEventsToChars( events: KeyboardEvent[] ): string[] {
-        // We need to look for 2 character sequences with the alt key pressed and convert them into the
+        // We need to look for 4 character sequences with the alt key pressed and convert them into the
         // special characters they represent
         // We also want to filter out keys that are not in our list of accepted keys
         const charList = [];
@@ -178,13 +178,16 @@ interface ControlSequence { modifiers: string[]; key: string; }
 
             if ( e.altKey && i < events.length - 1 ) {
                 // get the next number
-                const e2 = events[i + 1];
+                const e1 = events[i + 1]
+                const e2 = events[i + 2];
+                const e3 = events[i + 3];
+                const e4 = events[i + 4];
 
                 // convert the char code into a string
-                charList.push(String.fromCharCode( parseInt(e.key + e2.key, 10) ));
+                charList.push(String.fromCharCode( parseInt(e1.key + e2.key + e3.key + e4.key, 10) ));
 
                 // skip the next value since we already accounted for it.
-                i++;
+                i+=4;
             } else if ( WEDGE_SCANNER_ACCEPTED_KEYS.includes(e.key)) {
                 charList.push(e.key);
             }
