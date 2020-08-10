@@ -176,7 +176,7 @@ public class DriversLicense {
             expirationDate = parseDate("DBA");
             lastName = getString("DCS");
             firstName = getString("DAC");
-            middleNames = getString("DAD").split(",");
+            middleNames = StringUtils.split(getString("DAD"),",");
             issueDate = parseDate("DBD");
             sex = Objects.equals(getString("DBC"), "9") ? 'U' : (Objects.equals(getString("DBC"),"1")) ? 'M' : 'F';
             dateOfBirth = parseDate("DDB");
