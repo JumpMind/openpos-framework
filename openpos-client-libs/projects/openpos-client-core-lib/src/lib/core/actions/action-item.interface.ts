@@ -18,7 +18,7 @@ export interface IActionItem {
     keybindDisplayName?: string;
     // If set to true the client will not wait for a response from the server before allowing more actions
     doNotBlockForResponse?: boolean;
-    // If set will display additional text before the title
+    // If set will display additional icon after the title
     additionalIcon?: string;
     // If set will display additional text after the title
     additionalText?: string;
