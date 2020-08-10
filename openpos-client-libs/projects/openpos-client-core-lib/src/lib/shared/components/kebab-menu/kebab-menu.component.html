@@ -9,9 +9,9 @@
         [optionTitle]="o.title"
         [optionIcon]="o.icon"
         [optionSize]="'md'"
+        [additionalText]="o.additionalText"
+        [additionalIcon]="o.additionalIcon"
         [keybind]="o.keybindDisplayName"
         (buttonClick)="closeMenu(o)">
-        <app-icon *ngIf="o.additionalIcon" [iconName]="o.additionalIcon" [iconClass]="'material-icons'"></app-icon>
-        <span *ngIf="o.additionalText">{{o.additionalText}}</span>
     </app-option-button>
 </mat-dialog-content>

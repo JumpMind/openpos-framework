@@ -25,7 +25,17 @@
     .option-content {
         width: 100%;
 
+        &.additional-content {
+            display: grid;
+            grid-template-columns: 25% auto 25%;
+            grid-template-rows: auto;
+            grid-template-areas: ". line additional";
+            place-items: center;
+            justify-content: stretch;
+            gap: 5px;
+        }
         .option-line {
+            grid-area: line;
 
             &.sm {
                 @extend %text-sm;
@@ -38,6 +48,10 @@
             &.lg {
                 @extend %text-lg;
             }
+        }
+
+        .option-additional {
+            grid-area: additional;
         }
     }
 }

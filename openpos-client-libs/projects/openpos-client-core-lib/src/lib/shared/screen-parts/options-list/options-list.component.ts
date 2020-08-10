@@ -29,6 +29,12 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     @Input()
     optionListSizeClass = 'lg';
 
+    @Input()
+    overflowPanelClass = '';
+
+    @Input()
+    overflowPanelWidth = '';
+
     options: IActionItem[] = [];
     overflowOptions: IActionItem[] = [];
 
@@ -83,6 +89,8 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
                     autoFocus: false,
                     restoreFocus: false
                 },
+                panelClass: this.overflowPanelClass,
+                width: this.overflowPanelWidth,
                 autoFocus: false
             });
 

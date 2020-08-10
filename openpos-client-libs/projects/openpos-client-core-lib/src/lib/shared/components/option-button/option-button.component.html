@@ -3,9 +3,11 @@
 
     <app-icon [iconName]="optionIcon" [iconClass]="optionSize" [class.muted-color]="disabled"
         [class.primary]="!disabled" class="option-icon"></app-icon>
-    <div class="option-content">
+    <div class="option-content" [ngClass]="{'additional-content':additionalText || additionalIcon}">
         <span responsive-class class="option-line" [class.muted-color]="disabled"
             [ngClass]="optionSize">{{optionTitle}}</span>
+        <span *ngIf="additionalText" class="option-additional additional-text">{{additionalText}}</span>
+        <app-icon *ngIf="additionalIcon" [iconName]="additionalIcon" [iconClass]="optionSize" class="option-additional additional-icon muted-color"></app-icon>
         <ng-content></ng-content>
     </div>
     <div class="option-right">

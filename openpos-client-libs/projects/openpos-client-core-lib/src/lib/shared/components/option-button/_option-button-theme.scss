@@ -2,6 +2,7 @@
     $border: map-get(map-get($theme, foreground), border);
     $disabled-border: map-get(map-get($theme, foreground), disabled-button);
     $focused-color: map-get(map-get($theme, background), focused-button);
+    $success-color: mat-color(map-get($theme, success));
 
     app-option-button {
         button {
@@ -10,6 +11,24 @@
             border-width: 2px;
             &[disabled] {
                 border-color: $disabled-border;
+            }
+
+            .option-content {
+                .additional-text {
+                    text-align: left;
+                    white-space: pre-line;
+                    font-size: $text-sm !important;
+                    border: 1px solid $success-color;
+                    color: $success-color;
+                    border-radius: 5px;
+                    line-height: 1.5rem;
+                    padding: .25rem;
+                    display: inline-block;
+                    width: 100%;
+                    &:empty {
+                        border: none;
+                    }
+                }
             }
         }
     }

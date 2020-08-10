@@ -2,7 +2,6 @@
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
-    $success-color: mat-color(map-get($theme, success));
 
     $foreground: map-get($theme, foreground);
     $border: map-get($mat-grey, 800);
@@ -22,24 +21,6 @@
 
         .tender-border-color {
             $border-color: $border;
-        }
-
-        .tender-options {
-            app-option-button {
-                .additional-text {
-                    text-align: left;
-                    white-space: pre-line;
-                    font-size: $text-sm !important;
-                    border: 1px solid $success-color;
-                    color: $success-color;
-                    border-radius: 5px;
-                    line-height: 1.5rem;
-                    padding: .25rem;
-                    &:empty {
-                        border: none;
-                    }
-                }
-            }
         }
     }
 
