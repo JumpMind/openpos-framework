@@ -4,13 +4,32 @@
     <p responsive-class>{{screen.summary}}</p>
     <app-carousel class="carousel" carouselSize="xl" [carouselItemClass]="'rounded-edge'">
         <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
-            <img [src]="image | imageUrl">
+            <app-image [imageUrl]="image | imageUrl" [altImageUrl]="screen.alternateImageUrl" [altText]="'Image NotFound'"></app-image>
         </ng-template>
     </app-carousel>
+
     <ul responsive-class class="properties">
         <li *ngFor="let prop of screen.itemProperties">
             <app-display-property [property]="prop"></app-display-property>
         </li>
     </ul>
+
+    <section responsive-class class="promotions">
+        <h3 responsive-class>
+            {{screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
+        </h3>
+        <div class="promotion-items">
+            <ng-container *ngFor="let promo of screen.promotions">
+                <div class="promotion-item-icon">
+                    <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon> 
+                </div>
+                <div class="promotion-item-name">
+                    {{promo.promotionName}}
+                </div>
+                <div class="promotion-item-price"><app-currency-text [amountText]="promo.promotionPrice"></app-currency-text></div>
+            </ng-container>
+        </div>
+    </section>
+
     <app-options-list optionListSizeClass="md"></app-options-list>
 </section>

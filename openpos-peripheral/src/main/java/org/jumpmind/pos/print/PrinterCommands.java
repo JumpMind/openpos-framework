@@ -31,6 +31,7 @@ public class PrinterCommands {
     public static final String CASH_DRAWER_OPEN = "CASH_DRAWER_OPEN";
     public static final String ESC_P_RESET = "ESC_P_RESET";
     public static final String READ_MICR = "READ_MICR";
+    public static final String MICR_RESET_TO_DEFAULT_SETTINGS = "MICR_RESET_TO_DEFAULT_SETTINGS";
 
     private Map<String, String> printCommands;
 

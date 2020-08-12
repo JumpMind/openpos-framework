@@ -34,6 +34,7 @@ p{
     grid-template: "image title" auto
                     "image summary" auto
                     "image properties" 1fr
+                    "image promotions" 1fr
                     "actions actions" auto/ auto 1fr;
     &.mobile,
     &.tablet-portrait{
@@ -41,6 +42,7 @@ p{
                         "image" auto
                         "summary" auto
                         "properties" auto
+                        "promotions" auto
                         "actions" auto/auto;
         width: 100%;
         align-self: start;
@@ -54,6 +56,41 @@ app-options-list {
 .carousel {
     grid-area: image;
     justify-self: center;
+}
+
+.promotions {
+    grid-area: promotions;
+    align-self: start;
+
+    @extend %text-md;
+}
+
+.promotion-list {
+    list-style-type: none;
+    padding-inline-start: 0;
+
+    > li {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.promotion-items {
+    display: grid;
+    grid-template-columns: auto 65% 1fr;
+}
+
+.promotion-item-price {
+    justify-self: end;
+    align-self: center;
+}
+
+.promotion-item-name {
+    align-self: center;
+}
+
+.promotion-icon {
+    margin-right: 1rem;
 }
 
 .properties {

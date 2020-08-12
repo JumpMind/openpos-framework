@@ -2,6 +2,7 @@ package org.jumpmind.pos.persist;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.Connection;
@@ -20,6 +21,7 @@ import org.jumpmind.db.platform.oracle.OracleDatabasePlatform;
 import org.jumpmind.db.sql.ISqlTemplate;
 import org.jumpmind.db.sql.SqlScript;
 import org.jumpmind.exception.IoException;
+import org.jumpmind.symmetric.io.data.DbImport;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternUtils;
@@ -52,7 +54,7 @@ public class DatabaseScriptContainer {
             // Add any replacement tokens
 
             Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
-                    .getResources(String.format("classpath*:%s/*.sql", scriptLocation));
+                    .getResources(String.format("classpath*:%s/*.*", scriptLocation));
             for (Resource r : resources) {
                 DatabaseScript script = new DatabaseScript(r.getFilename());
                 script.setResource(r);
@@ -88,8 +90,8 @@ public class DatabaseScriptContainer {
             for (DatabaseScript s : scripts) {
                 if (isDatabaseMatch(s) && ((s.compareVersionTo(from) > 0 && s.compareVersionTo(to) <= 0) || s.getMajor() == 999)) {
                     try {
-                        executeImports(s.getResource(), failOnError);
-                        execute(s.getResource().getURL(), failOnError);
+                        executeImports(s, s.getResource(), failOnError);
+                        execute(s, s.getResource(), failOnError);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -98,7 +100,7 @@ public class DatabaseScriptContainer {
         }
     }
 
-    protected void executeImports(Resource resource, boolean failOnError) throws IOException {
+    protected void executeImports(DatabaseScript databaseScript, Resource resource, boolean failOnError) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
 
             String line = reader.readLine();
@@ -108,7 +110,7 @@ public class DatabaseScriptContainer {
                     Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
                             .getResources(String.format("classpath*:%s/%s", scriptLocation, file));
                     for (Resource resource2 : resources) {
-                        execute(resource2.getURL(), failOnError);
+                        execute(databaseScript, resource2, failOnError);
                     }
                 }
                 line = reader.readLine();
@@ -116,9 +118,17 @@ public class DatabaseScriptContainer {
         }
     }
 
-    public void execute(final URL script, boolean failOnError) {
-        logger.info("Executing script " + script.toString());
+    public void execute(DatabaseScript databaseScript, final Resource resource, boolean failOnError) throws IOException {
+        String compareString = resource.getFilename().toLowerCase();
+        if (compareString.endsWith(".sql")) {
+            loadSql(resource.getURL(), failOnError);
+        } else if (compareString.endsWith(".csv")) {
+            loadCsv(databaseScript, resource, failOnError);
+        }
+    }
 
+    void loadSql(URL script, boolean failOnError) {
+        logger.info("Executing script " + script.toString());
         jdbcTemplate.execute(new ConnectionCallback<Object>() {
             public Object doInConnection(Connection c) throws SQLException, DataAccessException {
                 ISqlTemplate template = platform.getSqlTemplate();
@@ -138,6 +148,18 @@ public class DatabaseScriptContainer {
                 return null;
             }
         });
+    }
+
+    void loadCsv(DatabaseScript script, Resource resource, boolean failOnError) throws IOException {
+        logger.info("Loading file " + script.toString());
+        try (InputStream is = resource.getInputStream()) {
+            DbImport importer = new DbImport(platform);
+            importer.setFormat(DbImport.Format.CSV);
+            importer.setCommitRate(1000);
+            importer.setForceImport(!failOnError);
+            importer.setAlterCaseToMatchDatabaseDefaultCase(true);
+            importer.importTables(is, script.getDescription().replaceAll("-", "_"));
+        }
     }
 
     public boolean isDatabaseMatch(DatabaseScript script) {

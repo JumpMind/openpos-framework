@@ -19,7 +19,9 @@ export class FormBuilder {
         const group: any = {};
         if (form.formElements) {
             form.formElements.forEach((element) => {
-                group[element.id] = new FormControl(element.value, this.createControlValidators(element));
+                group[element.id] = new FormControl(element.value,
+                    ! this.isReadOnlyElement(element) ? this.createControlValidators(element) : []
+                );
 
                 // For a DATE type element, there is also a hidden field to handle picking of dates using
                 // a date picker, need to add a FormControl for that hidden input also.
@@ -30,6 +32,10 @@ export class FormBuilder {
         }
 
         return new FormGroup(group, this.createFormLevelValidators(form, extraValidators));
+    }
+
+    isReadOnlyElement(element: IFormElement): boolean {
+        return element.elementType === 'Display' || element.disabled || element.readOnly;
     }
 
     buildFormPayload(formGroup: FormGroup, form: IForm): IForm {

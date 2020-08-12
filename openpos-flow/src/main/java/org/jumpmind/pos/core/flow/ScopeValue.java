@@ -32,7 +32,6 @@ public class ScopeValue {
 
     public ScopeValue() {
         createdTime = new Date();
-        createdStackTrace = ExceptionUtils.getStackTrace(new Throwable());
     }
 
     public ScopeValue(Object value) {

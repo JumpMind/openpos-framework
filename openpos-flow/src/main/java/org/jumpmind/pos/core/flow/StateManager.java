@@ -50,6 +50,8 @@ import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.ClassUtils;
+import org.jumpmind.pos.util.ObjectUtils;
 import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.model.Message;
@@ -438,13 +440,45 @@ public class StateManager implements IStateManager {
 
     protected void refreshDeviceScope() {
         for (String name : new HashSet<>(applicationState.getScope().getDeviceScope().keySet())) {
+            if (!shouldWireDeviceBeanNamed(name)) {
+                continue;
+            }
             Object value = applicationState.getScopeValue(ScopeType.Device, name);
+            if (value == null || !shouldWireDeviceBean(value)) {
+                continue;
+            }
+
             performOutjections(value);
             if (DeviceScope.isDeviceScope(name)) {
                 performInjectionsOnSpringBean(value);
             } else {
                 injector.performInjections(value, applicationState.getScope(), applicationState.getCurrentContext());
             }
+        }
+    }
+
+    protected boolean shouldWireDeviceBean(Object value) {
+        Class<?> clazz = value.getClass();
+        if (ClassUtils.isSimpleType(clazz)
+            || Collection.class.isAssignableFrom(clazz)
+            || Map.class.isAssignableFrom(clazz)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    protected boolean shouldWireDeviceBeanNamed(String name) {
+        switch (name) {
+            case "stateManager":
+            case "queryParams":
+            case "device":
+            case "businessUnit":
+            case "deviceId":
+            case "personalizationProperties":
+                return false;
+            default:
+                return true;
         }
     }
 

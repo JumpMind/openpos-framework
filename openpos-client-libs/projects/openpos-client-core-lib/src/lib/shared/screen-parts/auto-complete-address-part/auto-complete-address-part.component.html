@@ -46,11 +46,11 @@
             </div>
         </app-content-card>
 
-        <div responsive-class class="auto-complete-address-buttons">
+        <div class="auto-complete-address-buttons">
             <app-primary-button *ngIf="submitButton" (click)="submitForm()" [disabled]="!form.valid"
                 [actionItem]="submitButton">
-                <span>{{submitButton.title}}</span>
-                <app-icon [iconName]="submitButton.icon" [iconClass]="'material-icons'"></app-icon>
+                <span responsive-class>{{submitButton.title}}</span>
+                <app-icon [iconName]="submitButton.icon" [iconClass]="'md'"></app-icon>
             </app-primary-button>
         </div>
     </div>

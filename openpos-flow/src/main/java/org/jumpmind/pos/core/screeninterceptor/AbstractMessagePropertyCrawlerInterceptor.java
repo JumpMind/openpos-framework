@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.joda.money.Money;
 import org.jumpmind.pos.core.flow.IMessageInterceptor;
+import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +49,7 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
 
     private final void processFields(String appId, String deviceId, Object obj, T message, Map<String, Object> messageContext) {
         Class<?> clazz = obj.getClass();
-        if (isSimpleType(clazz)) {
+        if (ClassUtils.isSimpleType(clazz)) {
             return;
         }
 
@@ -83,18 +84,6 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
             clazz = clazz.getSuperclass();
         }
 
-    }
-
-    private boolean isSimpleType(Class<?> clazz) {
-        if (clazz.isPrimitive()
-                || String.class == clazz
-                || BigDecimal.class == clazz
-                || Money.class == clazz
-                || Date.class == clazz) {
-            return true;
-        } else {
-            return false;
-        }
     }
 
     private boolean processCollections(String appId, String deviceId, Object value, T message, Map<String, Object> messageContext) {

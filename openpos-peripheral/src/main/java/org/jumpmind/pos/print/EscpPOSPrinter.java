@@ -73,12 +73,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
         // Petco format: ESC w p T '/ A '/ C '/ S <CR>
         // String resetFormat = new String(new char[] { 0x1B, 0x77, 0x70, 0x54, 0x27, 0x2f, 0x41, 0x27, 0x2f, 0x43, 0x27, 0x2f, 0x53, 0x0D });
-
         // Default format: ESC w p <CR>
-        String resetFormat = new String(new char[]{0x1B, 0x77, 0x70, 0x0D});
+//        String resetFormat = new String(new char[]{0x1B, 0x77, 0x70, 0x0D});
 
         // Set the MICR read format
-        printNormal(0, resetFormat);
+        printNormal(0, getCommand(PrinterCommands.MICR_RESET_TO_DEFAULT_SETTINGS));
     }
 
     @Override

@@ -45,12 +45,10 @@ public class OpenposPatternLayoutEncoder extends PatternLayoutEncoder {
         return super.encode(event);
     }
 
-    protected long getThrowableHash(StackTraceElementProxy[] elements) throws UnsupportedEncodingException {
+    protected long getThrowableHash(IThrowableProxy throwable) throws UnsupportedEncodingException {
         CRC32 crc = new CRC32();
-        for (StackTraceElementProxy element : elements) {
-            StackTraceElement stackTraceElement = element.getStackTraceElement();
-            crc.update((stackTraceElement.getClassName() + stackTraceElement.getMethodName()).getBytes("UTF8"));
-        }
+        String stackTraceString = ThrowableProxyUtil.asString(throwable);
+        crc.update(stackTraceString.getBytes("UTF8"));
         return crc.getValue();
     }
 
@@ -111,7 +109,7 @@ public class OpenposPatternLayoutEncoder extends PatternLayoutEncoder {
                 buff.append("-jvm-optimized");
             }
             buff.append(":");
-            buff.append(getThrowableHash(stackTraceElements));
+            buff.append(getThrowableHash(throwable));
             return buff.toString();
         } catch (Exception ex) {
             System.err.println("Failed to hash stack trace for " + ex.toString());

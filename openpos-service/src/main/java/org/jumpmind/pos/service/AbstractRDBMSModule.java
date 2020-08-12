@@ -1,33 +1,5 @@
 package org.jumpmind.pos.service;
 
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_CONNECTION_PROPERTIES;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_DRIVER;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_INITIAL_SIZE;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_INIT_SQL;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_MAX_ACTIVE;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_MAX_IDLE;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_MAX_WAIT;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_MIN_EVICTABLE_IDLE_TIME_MILLIS;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_MIN_IDLE;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_PASSWORD;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_TEST_ON_BORROW;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_TEST_ON_RETURN;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_TEST_WHILE_IDLE;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_URL;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_USER;
-import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.DB_POOL_VALIDATION_QUERY;
-import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
-import java.sql.SQLException;
-import java.util.List;
-
-import javax.sql.DataSource;
-
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
@@ -55,9 +27,19 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+
+import javax.sql.DataSource;
+import java.io.*;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.List;
+
+import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.*;
+import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
 
 @EnableTransactionManagement
 @DependsOn({"tagConfig"})
@@ -252,7 +234,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             List<Class<?>> tableClasses = getClassesForPackageAndAnnotation(packageName, TableDef.class);
             List<Class<?>> tableExtensionClasses = getClassesForPackageAndAnnotation(packageName, Extends.class);
 
-            if(additionalPackages != null){
+            if (additionalPackages != null) {
                 tableExtensionClasses.addAll(getClassesForPackageAndAnnotation(additionalPackages, Extends.class));
             }
 
@@ -277,18 +259,25 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     }
 
     public void exportData(String format, String dir, boolean includeModuleTables) {
-        try (OutputStream os = new BufferedOutputStream(
-                new FileOutputStream(new File(dir, String.format("%s_post_01_%s.sql", getVersion(), getName().toLowerCase()))))) {
-            List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[]{ModuleModel.class});
-            DbExport dbExport = new DbExport(this.databasePlatform);
-            dbExport.setCompatible(Compatible.H2);
-            dbExport.setUseQuotedIdentifiers(false);
-            dbExport.setNoData(false);
-            dbExport.setFormat(Format.valueOf(format));
-            dbExport.setNoCreateInfo(true);
-            dbExport.exportTables(os, tables.toArray(new Table[tables.size()]));
-        } catch (IOException e) {
-            throw new IoException(e);
+        List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[]{ModuleModel.class});
+        for (Table table : tables) {
+            if (includeModuleTables || !(
+                    table.getName().toLowerCase().endsWith("module") ||
+                    table.getName().toLowerCase().endsWith("sample")))
+                if (new JdbcTemplate(dataSource).queryForObject("select count(*) from " + table.getName(), Integer.class) > 0) {
+                    try (OutputStream os = new BufferedOutputStream(
+                            new FileOutputStream(new File(dir, String.format("%s_post_01_%s.%s", getVersion(), table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase()))))) {
+                        DbExport dbExport = new DbExport(this.databasePlatform);
+                        dbExport.setCompatible(Compatible.H2);
+                        dbExport.setUseQuotedIdentifiers(false);
+                        dbExport.setNoData(false);
+                        dbExport.setFormat(Format.valueOf(format));
+                        dbExport.setNoCreateInfo(true);
+                        dbExport.exportTable(os, table.getName(), null);
+                    } catch (IOException e) {
+                        throw new IoException(e);
+                    }
+                }
         }
     }
 
@@ -328,7 +317,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         }
         session.save(moduleModel);
     }
-    
+
     protected void upgradeDbFromXml() {
         String path = "/" + getName() + "-schema.xml";
         URL resource = getClass().getResource(path);

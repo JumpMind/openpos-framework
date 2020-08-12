@@ -2,10 +2,13 @@ package org.jumpmind.pos.util;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.money.Money;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.aop.support.AopUtils;
@@ -121,6 +124,17 @@ public class ClassUtils {
         }
         return classes;
     }
-    
-    
+
+
+    public static boolean isSimpleType(Class<?> clazz) {
+        if (clazz.isPrimitive()
+                || String.class == clazz
+                || BigDecimal.class == clazz
+                || Money.class == clazz
+                || Date.class == clazz) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
