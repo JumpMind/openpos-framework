@@ -101,6 +101,20 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     }
 
     private String findDevelopmentVersion() {
+        File dir = new File("../");
+        File[] files = dir.listFiles();
+        for (File file: files) {
+            if (file.isDirectory() && file.getName().endsWith("-assemble")) {
+                File gradleProperties = new File(file, "gradle.properties");
+                if (gradleProperties.exists()) {
+                    TypedProperties props = new TypedProperties(gradleProperties);
+                    String version = props.get("version");
+                    if (version.endsWith("-SNAPSHOT")) {
+                        return version.substring(0, version.length()-"-SNAPSHOT".length());
+                    }
+                }
+            }
+        }
         return "1000.0.0";
     }
 
