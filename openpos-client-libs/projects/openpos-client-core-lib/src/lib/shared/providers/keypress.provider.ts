@@ -14,8 +14,8 @@ import {LockScreenService} from '../../core/lock-screen/lock-screen.service';
  * keyPressProvider.subscribe('ctrl+p,ctrl+a', 1, () => this.doAction(...))
  *
  * // Escape special keys "," and "+"
- * keyPressProvider.subscribe('shift+\+', 1, () => this.doAction(...))
- * keyPressProvider.subscribe('shift+\,', 1, () => this.doAction(...))
+ * keyPressProvider.subscribe('shift+\\+', 1, () => this.doAction(...))
+ * keyPressProvider.subscribe('shift+\\,', 1, () => this.doAction(...))
  */
 @Injectable()
 export class KeyPressProvider implements OnDestroy {
@@ -27,6 +27,7 @@ export class KeyPressProvider implements OnDestroy {
     stopObserver$ = merge(this.destroyed$, this.keypressSourceRegistered$, this.keypressSourceUnregistered$);
     keyDelimiter = ',';
     keyEscape = '\\';
+    keyCombinationChar = '+';
     // Matches a single key
     // p
     // ctrl+p
@@ -85,7 +86,7 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     areEqual(keyBindingA: Keybinding, keyBindingB: Keybinding): boolean {
-        return keyBindingA.key === keyBindingB.key &&
+        return this.unescapeKey(keyBindingA.key) === this.unescapeKey(keyBindingB.key) &&
             keyBindingA.altKey === keyBindingB.altKey &&
             keyBindingA.ctrlKey === keyBindingB.ctrlKey &&
             keyBindingA.metaKey === keyBindingB.metaKey &&
@@ -226,10 +227,7 @@ export class KeyPressProvider implements OnDestroy {
         if(keyBinding.key !== 'Meta') {
             normalizedKey += (keyBinding.metaKey ? 'meta+' : '');
         }
-        if(keyBinding.key === this.keyDelimiter) {
-            normalizedKey += this.keyEscape;
-        }
-        normalizedKey += keyBinding.key;
+        normalizedKey += this.escapeKey(keyBinding.key);
 
         return normalizedKey.toLowerCase();
     }
@@ -244,6 +242,11 @@ export class KeyPressProvider implements OnDestroy {
 
         keys.forEach(theKey => {
             const keyParts = Array.from(theKey['matchAll'](this.keyRegex)).map((value: RegExpMatchArray) => value.groups.key);
+
+            if(keyParts.length === 0) {
+                return;
+            }
+
             const keyBinding: Keybinding = {
                 key: this.unescapeKey(keyParts[keyParts.length - 1].toLowerCase())
             };
@@ -303,8 +306,8 @@ export class KeyPressProvider implements OnDestroy {
             const nextChar = keys[i + 1];
 
             // If the delimiter is escaped, treat it as a key
-            if(char === this.keyEscape && nextChar === this.keyDelimiter) {
-                keyBuffer += nextChar;
+            if(char === this.keyEscape && (nextChar === this.keyDelimiter || nextChar == this.keyCombinationChar)) {
+                keyBuffer += this.keyEscape + nextChar;
                 i++;
             // If we've reached the delimiter, and there's stuff in the buffer, add the buffer to the key list and flush buffer
             } else if(char === this.keyDelimiter && keyBuffer) {
@@ -329,7 +332,11 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     escapeKey(key: string): string {
-        return !key.startsWith('\\') ? `\\${key}` : key;
+        if(!key.startsWith(this.keyEscape) && (key === this.keyCombinationChar || key === this.keyDelimiter)) {
+            return this.keyEscape + key;
+        }
+
+        return key;
     }
 }
 
