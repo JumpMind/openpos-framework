@@ -1,6 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {fromEvent, merge, Observable, Subject, Subscription} from 'rxjs';
 import {filter, map, take, takeUntil, tap} from 'rxjs/operators';
+import {Configuration} from '../../configuration/configuration';
 import {IActionItem} from '../../core/actions/action-item.interface';
 import {LockScreenService} from '../../core/lock-screen/lock-screen.service';
 
@@ -116,6 +117,11 @@ export class KeyPressProvider implements OnDestroy {
         if (!keyOrActionList) {
             console.warn('[KeyPressProvider]: Cannot subscribe to null or undefined or empty string keybinding');
             return null;
+        }
+
+        if( !Configuration.enableKeybinds ){
+            console.info('KeyBinds not enabled skipping subscription');
+            return new Subscription();
         }
 
         let subscriptions;
