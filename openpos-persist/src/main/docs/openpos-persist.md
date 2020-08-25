@@ -5,7 +5,7 @@ title: Persistence Framework
 
 # Overview
 
-The openpos persist framework is designed to be a simple OR/M (Object Relational mapping) framework, designed to provide convenience and consistency for persisting Java objects to a relational database, and retrieving objects back into memory.  The openpos-persist framework plays a similiar role that the Hiberate framework would play in a Java application (although openpos does not use Hiberate in any way).
+The openpos persist framework is designed to be a simple OR/M (Object Relational mapping) framework, designed to provide convenience and consistency for persisting Java objects to a relational database, and retrieving objects back into memory.  The openpos-persist framework plays a similar role that the Hibernate framework would play in a Java application (although openpos does not use Hibernate in any way).
 
 openpos-persist is compatible with virtually any SQL based database that provides a complete JDBC driver.  
 
@@ -14,8 +14,8 @@ openpos-persist is compatible with virtually any SQL based database that provide
 * JDBC connection pool management.
 * JDBC driver wrapper provides statement logging and logging for statements that run longer than expected.
 * Persist and retrieve Model objects without any additional configuration required.
-* Flexible query framework which allows for named paramters and optional parts to build more specific queries based on what parameters are provided.
-* Support for "tagged" data.  Any data model can be marked with the the **@Tagged** interface which allows for a very flexible tailoring of data for different regions, stores, or devices, for example.
+* Flexible query framework which allows for named parameters and optional parts to build more specific queries based on what parameters are provided.
+* Support for "tagged" data.  Any data model can be marked with the **@Tagged** interface which allows for a very flexible tailoring of data for different regions, stores, or devices, for example.
 * Ability to run SQL scripts.
 
 openpos-persist does not try to hide the fact that it works with a SQL based datasource, so certain API's accept SQL directly.  However, the cross-platform nature (Oracle, MSSQL, MySQL, Postgres, etc.) should always be considered when writing statements that work with openpos-persist.
@@ -24,7 +24,7 @@ openpos-persist does not try to hide the fact that it works with a SQL based dat
  * **DBSessionFactory**: there is normally one DBSessionFactory per openpos service module. DBSessionFactory knows about the database configuration for a given module, and manages the JDBC connection pool.  Mainly, DBSessionFactory **creates DBSession instances**.
  * **DBSession**: The DBSession represents live interaction with a database. Use a DBSession to save data, run queries, etc. It wraps a JDBC connection, which can be acquired with the **getConnection()** method.  Normally DBSession objects are injected directly into "Repository" classes within an openpos service module.  
  * **TableDef**: The class level annotation that defines a data model.
- * **Query**: Defines a named query and expected result type class.  Named queries can be used to retrieve eithe data models or arbitratry objects, and may or may not be mapped to more detailed configuration in a *-query.yml.
+ * **Query**: Defines a named query and expected result type class.  Named queries can be used to retrieve either data models or arbitrary objects, and may or may not be mapped to more detailed configuration in a *-query.yml.
 
 # Typical Usage Overview
 
@@ -33,7 +33,7 @@ This section will refer to other openpos modules and explain how openpos-persist
 General Rules for using openpos-persist within complete openpos framework application:
 * A State should never refer to openpos-persist.
 * Each **module should define 1 DBSessionFactory** and db credentials (See subclasses of AbstractModule).  The Module class (e.g. CustomerModule) will define a "prefix" which is used to prefix tables within that module (e.g. "cust" for customer.)
-* Typically, an **Endpoint implemention should also not reference DBSession** directly but rather should go through a "Repository" object.
+* Typically, an **Endpoint implementation should also not reference DBSession** directly but rather should go through a "Repository" object.
 * The **Repository** object defines higher level database retrieval and persistence and should not expose SQL details.  Think of a repository object as something that could be replaced by a non-SQL database, such as a rest service call or using a noSQL database.
 
 ![eclipse](assets/openpos-persist-in-context.png)
@@ -46,7 +46,7 @@ An openpos-persist **model** is a java bean with the following attributes:
 2. Has a class level annotation of **@TableDef**
 
 ### The TableDef annotation
-The TableDef annotation declares that the given class is a data model that particpates in openpos-persist. It defines the following attributes:
+The TableDef annotation declares that the given class is a data model that participates in openpos-persist. It defines the following attributes:
 
 * **name**: this is the base table name for the model (e.g. "customer"). When used in the context of a module, this will be prefixed with the module prefix.  So, assuming a module prefix of "cust", the final table would be cust_customer, for example.
 * **description**: this is used for generating technical documentation for the data model.
@@ -55,8 +55,8 @@ The TableDef annotation declares that the given class is a data model that parti
 
 ColumnDef is a field level annotation which maps a Java field to a database table field. It defines the following attributes:
 
-* **name**: The full name of the field. This is optional; by default the camelCase name of the java field will be converted into "snake" case (words seperated by undderscores). So a field called **itemId** in the code will be represented as **item_id** in the database table.
-* **primaryKey**: Each data model needs to have at least one field marked as a primary key. Adding the primaryKey=true attribute to muplitple fields will generate a composite primary key and is a common practice in the openpos framework.
+* **name**: The full name of the field. This is optional; by default the camelCase name of the java field will be converted into "snake" case (words separated by underscores). So a field called **itemId** in the code will be represented as **item_id** in the database table.
+* **primaryKey**: Each data model needs to have at least one field marked as a primary key. Adding the primaryKey=true attribute to multiple fields will generate a composite primary key and is a common practice in the openpos framework.
 * **type**: This is optional and should not normally be specified. openpos-persist will determine the JDBC type based on the Java field type. One common use for this is to specify that a **String** should map to a **clob**, as in:
 type = Types.CLOB
 ~~~
@@ -87,20 +87,20 @@ This is an optional, field-level annotation used to define database indexes for 
 
 Marks the given data model as "tagged" which will add the configured tagged elements (e.g. Brand, Region, Store, etc.) to the model and use those tagged elements to filter results.  See Tagging System below.
 
-* **includeTagsInPrimaryKey**: defaluts to true, and makes the tag values part of the primary key. This should be set to false in the case that you need data to be uniquely identifiable across your tags (e.g. a Device may have a unique device ID which spans brand, region, etc.)
+* **includeTagsInPrimaryKey**: defaults to true, and makes the tag values part of the primary key. This should be set to false in the case that you need data to be uniquely identifiable across your tags (e.g. a Device may have a unique device ID which spans brand, region, etc.)
 
 ### Control Fields
-Every table in openpos should have the following control fields/meta fields, which are extremely valuable in auditing data sync and distrbution issues.
-* **create_time**: when the row was originally created in openpos. This field should not be modified by synchroniztion
+Every table in openpos should have the following control fields/meta fields, which are extremely valuable in auditing data sync and distribution issues.
+* **create_time**: when the row was originally created in openpos. This field should not be modified by synchronization
 * **update_time**: when the row was last modified by the retail application.  Initially, this value should be the same as the create_time.  When an update is later applied, then this update_time should be modified. Using a database standard function such as CURRENT_TIMESTAMP is encouraged for this function.
 * **create_user**: ideally this is set to the application user instead of just the database user if possible.  
 * **update_user**: initially the same value as the create_user.  If an application user later update a row, than the update_user should reflect the user who modified the row.
 
 ## Inserting and Updating Data
 
-Data is typically inserted or updated by **DBSession.save(model)**.  Note that openpos-persist does not currently provide automatic support for relationships, so it is the developer's responsibility to save the child components of a data model to the database in a transation. 
+Data is typically inserted or updated by **DBSession.save(model)**.  Note that openpos-persist does not currently provide automatic support for relationships, so it is the developer's responsibility to save the child components of a data model to the database in a transaction. 
 
-**Database transactionality** is currently delegated to Spring and not made explicit by openpos-persist.  Specfically, when you need to make transactional calls to DBSession.save(), they should me made from a Spring managed context marked with the Spring **@Transactional** annotation.
+**Database transactionality** is currently delegated to Spring and not made explicit by openpos-persist.  Specifically, when you need to make transactional calls to DBSession.save(), they should me made from a Spring managed context marked with the Spring **@Transactional** annotation.
 
 Example of decomposing and persisted elements of a transaction object graph:
 ~~~
@@ -147,7 +147,7 @@ queries:
     - c.other_identification = ${otherIdentification}
 ~~~
 
-Then the correponding Java code (in the CustomerRepository):
+Then the corresponding Java code (in the CustomerRepository):
 ~~~
 Query<String> searchCustomerQuery = new Query<String>().named("searchCustomer").result(String.class).useAnd(criteria.isUseAnd());
 
@@ -158,8 +158,8 @@ Parts of a query definition:
 
 * **name**: The name of the query.  Used by the code to reference the query.
 * **select**: The select portion of the query.  If you are querying and your result class is a data model (with @TableDef) then you can omit the select portion of the query. 
-* **where**: the main, required where clause.  Any named paramters in this portion are considered to be required and an exception will be thrown if not all paramters are provided (in the example above, an exception would be thrown if customerGropuId were not provided)
-* **optionalWhereClauses**: These are where clauses that are only added to the final query statement if the named paramters they reference are present.  By default, optionalWhereClauses are added on to the statement as a OR clause.  So for the example above, if the loyaltyNumber parameter is provided when running the query, then the framework will add " OR c.loyalty_number = ?' to the generated query.
+* **where**: the main, required where clause.  Any named parameters in this portion are considered to be required and an exception will be thrown if not all parameters are provided (in the example above, an exception would be thrown if customerGroupId were not provided)
+* **optionalWhereClauses**: These are where clauses that are only added to the final query statement if the named parameters they reference are present.  By default, optionalWhereClauses are added on to the statement as a OR clause.  So for the example above, if the loyaltyNumber parameter is provided when running the query, then the framework will add " OR c.loyalty_number = ?' to the generated query.
 * **orderBy**: It's also possible to add an order by clause which will be appended after all the where clauses.  E.g.:
 
 ```orderBy: model_year, make, model```
@@ -178,7 +178,7 @@ It's also possible to define a query that specifies arbitrary SQL, as in:
     order by model
 ~~~
 
-The framework will always try hard to match up query result fields with fields on the result class specified in code.  **A result class does not have to be a data model class** but can be any java bean typep class. In the carCountByModel, "count" and "model" could be matched up with a simple result class like:
+The framework will always try hard to match up query result fields with fields on the result class specified in code.  **A result class does not have to be a data model class** but can be any java bean type class. In the carCountByModel, "count" and "model" could be matched up with a simple result class like:
 
 ~~~
 public class CarStats {
@@ -198,18 +198,18 @@ Query<CarStats> modelCounts = new Query<CarStats>()
 List<CarStats> carStats = db.query(modelCounts, "Hyundai");
 ~~~
 
-In the preceeding example: 
+In the preceding example: 
 * The result class is specified a **CarStats.class**.  A result class could be a data model or any arbitrary java bean.
 * **named**: Defines the query name which will match up with a query name in from a *-query.yml.
-* **useAnd**: default to false. This determines how the framwork logically combintes the optional where clauses.  The default is to use OR (useAnd=false), but if useAnd(true) is added to the query declaring, then the where clauses will be combined using the AND operator.  This setting does not affected the internals of any of the SQL components at all, but only how certain clauses are combined.
+* **useAnd**: default to false. This determines how the framework logically combines the optional where clauses.  The default is to use OR (useAnd=false), but if useAnd(true) is added to the query declaring, then the where clauses will be combined using the AND operator.  This setting does not affect the internals of any of the SQL components at all, but only how certain clauses are combined.
 
 ## Tagging System
 
-Often, an enterprise retail system has the need to segment data different ways.  Some may want to segement by brand, some may want to segment by geogrphical location, or both. Some may need to segement data by store type (regular vs. outlet, or store vs. warehouse).  
+Often, an enterprise retail system has the need to segment data different ways.  Some may want to segment by brand, some may want to segment by geographical location, or both. Some may need to segment data by store type (regular vs. outlet, or store vs. warehouse).  
 
 In an effort to be completely flexible and robust for these requirements, openpos-persist suppose the notion of **tagging** data.  
 
-The set of tags to be used by a system are defined through configurion.  Tags should be planned out as much as possible and not changed on the fly, as often changing tags will effect the data model and primary keys.  A user of DBSessionFactory must supply a TagHelper instance, which has a reference to a TagConfig.  Example tag configuration:
+The set of tags to be used by a system are defined through configuration.  Tags should be planned out as much as possible and not changed on the fly, as often changing tags will affect the data model and primary keys.  A user of DBSessionFactory must supply a TagHelper instance, which has a reference to a TagConfig.  Example tag configuration:
 
 ~~~
   tagconfig:
@@ -243,8 +243,8 @@ The set of tags to be used by a system are defined through configurion.  Tags sh
 ~~~
 
 Each tag element has the following attributes:
-* name: the name of the tag. Upper-case, underscore seperated is encouraged for this name. These names will be used for database fields.
-* group: more than one tag can be grouped together to indicate a a relationship beween the tags.
+* name: the name of the tag. Upper-case, underscore separated is encouraged for this name. These names will be used for database fields.
+* group: more than one tag can be grouped together to indicate a relationship between the tags.
 * level: related to a group: a tag can be given a level.  In the example above, we are defining the store hierarchy structure through tags. Regions have countries.   Countries have states, and finally states have store numbers.
 * size: size reference to the database column size. VARCHAR fields typically default to 128 characters in openpos-persist, but that could lead to a primary key that is too wide. So it makes sense if you know some of the tag code values will not be longer then 20 or 30 characters, to specify the length in the tag configuration.
 
