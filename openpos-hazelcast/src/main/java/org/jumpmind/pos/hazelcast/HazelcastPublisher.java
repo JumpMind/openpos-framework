@@ -33,7 +33,7 @@ public class HazelcastPublisher implements IEventDistributor, ApplicationListene
                 if (!event.isRemote()) {
                     log.info("{} received an event {},{} from {}. PUBLISHING IT ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());
                     // then share it with the world
-                    ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
+                    ITopic<AppEvent> topic = hz.getTopic("commerce/events");
                     topic.publish(event);
                 } else {
                     log.info("{} received an event {},{} from {}.  It was from a remote node already.  NOT PUBLISHING ", this.getClass().getSimpleName(), event.toString(), System.identityHashCode(event), event.getSource());

@@ -26,7 +26,7 @@ public class HazelcastSubscriber {
 
     @PostConstruct
     protected void subscribe() {
-        ITopic<AppEvent> topic = hz.getTopic("nucommerce/events");
+        ITopic<AppEvent> topic = hz.getTopic("commerce/events");
         topic.addMessageListener(new LocalListener());
     }
 
