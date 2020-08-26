@@ -56,9 +56,9 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
 
     ngOnInit(): void {
         this.subscriptions.add(this.messageProvider.getScopedMessages$<UIMessage>()
-            .pipe(filter(s => s.screenType !== 'Loading')).subscribe(s => {
+            .pipe(filter(s => s.screenType !== 'Loading' && s.screenType !== 'SplashScreen')).subscribe(s => {
                 // We want to save off the type of the first screen we got data from and
-                // only get data from screens of this type in the furture. This will prevent
+                // only get data from screens of this type in the future. This will prevent
                 // getting data from the next screen if we are not already cleaned up.
                 if (!this.initialScreenType.length) {
                     this.initialScreenType = s.screenType;
