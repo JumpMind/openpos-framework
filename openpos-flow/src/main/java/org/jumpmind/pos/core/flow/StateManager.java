@@ -382,12 +382,12 @@ public class StateManager implements IStateManager {
                             + "exiting a subState. These two should not be happening at the same time.");
         }
 
+        boolean enterSubState = enterSubStateConfig != null;
+        stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
+
         if (applicationState.getCurrentContext().getState() != null) {
             performOutjections(applicationState.getCurrentContext().getState());
         }
-
-        boolean enterSubState = enterSubStateConfig != null;
-        stateLifecycle.executeDepart(applicationState.getCurrentContext().getState(), newState, enterSubState, action);
 
         Transition transition = new Transition(transitionStepConfigs,
                 applicationState.getCurrentContext(), newState, enterSubStateConfig, resumeSuspendedState, autoTransition);
