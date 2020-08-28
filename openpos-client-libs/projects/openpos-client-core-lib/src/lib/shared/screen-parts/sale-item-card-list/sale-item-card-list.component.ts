@@ -3,11 +3,12 @@ import { SaleItemCardListInterface } from './sale-item-card-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
 import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-message.service';
-import {merge, Observable, Subject} from 'rxjs';
+import {merge, Observable} from 'rxjs';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
 import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
 import {filter, takeUntil} from 'rxjs/operators';
+import {IActionItem} from "../../../core/actions/action-item.interface";
 
 
 @ScreenPart({
@@ -90,8 +91,15 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
 
     this.keyPressProvider.globalSubscribe(uniqueActions).pipe(
         filter(() => this.expandedIndex >= 0),
+        filter(action => this.doesExpandedItemHaveAction(sellItems,action)),
         takeUntil(this.stop$)
     ).subscribe(action => this.doAction(action, [this.expandedIndex]));
+  }
+
+  doesExpandedItemHaveAction(sellItems: ISellItem[], action: IActionItem): boolean {
+    return !!sellItems[this.expandedIndex]
+        .menuItems
+        .find(menuItem=>menuItem.action === action.action);
   }
 
   scrollToView(index: number): void {
