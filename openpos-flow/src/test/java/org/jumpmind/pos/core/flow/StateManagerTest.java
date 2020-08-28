@@ -6,11 +6,9 @@ import static org.mockito.Mockito.doNothing;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.TestStates.AboutState;
 import org.jumpmind.pos.core.flow.TestStates.ActionTestingState;
@@ -39,16 +37,17 @@ import org.jumpmind.pos.core.flow.TestStates.SubStateReturnsWithTransitionState;
 import org.jumpmind.pos.core.flow.TestStates.TestScopesState;
 import org.jumpmind.pos.core.flow.TestStates.TransitionInterceptionState;
 import org.jumpmind.pos.core.flow.TestStates.StateWithHandlerForTerminatingAction;
+import org.jumpmind.pos.core.flow.TestStates.SetVariablesState;
+import org.jumpmind.pos.core.flow.TestStates.UnsetVariablesState;
+import org.jumpmind.pos.core.flow.TestStates.CheckVariablesState;
 import org.jumpmind.pos.core.flow.config.FlowBuilder;
 import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.service.ScreenService;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
-import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
-import org.jumpmind.symmetric.io.data.reader.IExtractDataReaderSource;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -139,8 +138,14 @@ public class StateManagerTest {
                 .withTransition("TestExceptionOnDepartAction", ExceptionOnDepartState.class)
                 .withTransition("GoToExceptionInActionHandlerState", ExceptionInActionHandlerState.class)
                 .withSubTransition( "ToSubFlowWithActionActionHandlerForTerminatingState", terminatingActionHandlerSubFlow)
+                .withTransition("SetVariables", SetVariablesState.class)
+                .withTransition("UnsetVariables", UnsetVariablesState.class)
+                .withTransition("CheckVariables", CheckVariablesState.class)
                 .build()
         );
+        config.add(FlowBuilder.addState(SetVariablesState.class).withTransition("UnsetVariables", UnsetVariablesState.class).build());
+        config.add(FlowBuilder.addState(UnsetVariablesState.class).withTransition("CheckVariables", CheckVariablesState.class).build());
+        config.add(FlowBuilder.addState(CheckVariablesState.class).build());
         config.add(FlowBuilder.addState(ExceptionInActionHandlerState.class).withTransition("ThrowsExceptionAction", HomeState.class).build());
         config.add(FlowBuilder.addState(TestScopesState.class).withTransition("Done", HomeState.class).build());
         config.add(FlowBuilder.addState(SellState.class).withSubTransition("Customer", customerFlow, "CustomerLookupComplete").build());
@@ -801,6 +806,27 @@ public class StateManagerTest {
         assertEquals(FlowException.class, exArgument.getValue().getClass());
         assertEquals(NullPointerException.class, exArgument.getValue().getCause().getCause().getClass());
         assertTrue(exArgument.getValue().getCause().getCause().getMessage().contains("departure"));
+    }
+
+    /**
+     *  Ensure that a flow variable which is cleared in the onDepart method of a state, is still cleared upon arrival
+     *  at a subsequent state.
+     */
+    @Test
+    public void testFlowVariableClearOnDepart() {
+        stateManagerInit();
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        doAction("SetVariables");
+        assertEquals(SetVariablesState.class, stateManager.getCurrentState().getClass());
+        assertEquals("value-1", ((SetVariablesState) stateManager.getCurrentState()).variableToClear);
+        doAction("UnsetVariables");
+        assertEquals(UnsetVariablesState.class, stateManager.getCurrentState().getClass());
+        assertEquals("value-1", ((UnsetVariablesState) stateManager.getCurrentState()).variableToClear);
+        assertEquals("keep-me", ((UnsetVariablesState) stateManager.getCurrentState()).variableToKeep);
+        doAction("CheckVariables");
+        assertEquals(CheckVariablesState.class, stateManager.getCurrentState().getClass());
+        assertNull("variableToClear should be null after OnDepart of UnsetVariablesState", ((CheckVariablesState) stateManager.getCurrentState()).variableToClear);
+        assertEquals("keep-me", ((CheckVariablesState) stateManager.getCurrentState()).variableToKeep);
     }
 
     @Test

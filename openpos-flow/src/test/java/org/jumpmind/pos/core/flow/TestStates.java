@@ -362,7 +362,50 @@ public class TestStates {
             
         }
     }
-    
+    public static class SetVariablesState {
+        @InOut(scope = ScopeType.Flow, required = false)
+        String variableToClear;
+
+        @InOut(scope = ScopeType.Flow, required = false)
+        String variableToKeep;
+
+
+        @OnArrive
+        void init() {
+            variableToClear = "value-1";
+            variableToKeep = "keep-me";
+        }
+    }
+
+    public static class UnsetVariablesState {
+        @InOut(scope = ScopeType.Flow)
+        String variableToClear;
+
+        @InOut(scope = ScopeType.Flow)
+        String variableToKeep;
+
+        @OnArrive
+        void init() {
+        }
+
+        @OnDepart
+        void doOnDepart() {
+            variableToClear = null;
+        }
+    }
+
+    public static class CheckVariablesState {
+        @InOut(scope = ScopeType.Flow, required = false)
+        String variableToClear;
+        @InOut(scope = ScopeType.Flow)
+        String variableToKeep;
+
+        @OnArrive
+        void init() {
+        }
+
+    }
+
     public static class StateWithBeforeActionMethod {
         
         boolean onAction1Invoked = false;
