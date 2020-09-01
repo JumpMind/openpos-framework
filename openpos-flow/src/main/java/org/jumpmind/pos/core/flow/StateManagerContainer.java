@@ -110,6 +110,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
             setCurrentStateManager(stateManager);
             clientContext.put("deviceId", deviceId);
             clientContext.put("appId", appId);
+            personalizationProperties.entrySet().forEach(entry -> clientContext.put(entry.getKey(), entry.getValue()) );
 
             stateManager.setTransitionSteps(createTransitionSteps(appId, deviceId));
             stateManager.registerQueryParams(queryParams);
@@ -187,6 +188,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
             for (String property : stateManager.getClientContext().keySet()) {
                 clientContext.put(property, stateManager.getClientContext().get(property));
             }
+
             clientContext.put("deviceId", stateManager.getDeviceId());
             clientContext.put("appId", stateManager.getAppId());
         } else {

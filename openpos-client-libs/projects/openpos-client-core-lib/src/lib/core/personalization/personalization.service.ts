@@ -64,6 +64,11 @@ export class PersonalizationService {
                 this.setDeviceId(response.deviceModel.deviceId);
                 this.setDeviceToken(response.authToken);
                 this.setAppId(response.deviceModel.appId);
+                if( !personalizationParameters ){
+                    personalizationParameters = new Map<string, string>();
+                }
+                response.deviceModel.deviceParamModels.forEach(value => personalizationParameters.set(value.paramName, value.paramValue));
+
                 this.setPersonalizationProperties(personalizationParameters);
 
                 if (sslEnabled) {
