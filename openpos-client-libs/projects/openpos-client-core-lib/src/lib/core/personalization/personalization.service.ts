@@ -67,7 +67,9 @@ export class PersonalizationService {
                 if( !personalizationParameters ){
                     personalizationParameters = new Map<string, string>();
                 }
-                response.deviceModel.deviceParamModels.forEach(value => personalizationParameters.set(value.paramName, value.paramValue));
+                if(response.deviceModel.deviceParamModels){
+                    response.deviceModel.deviceParamModels.forEach(value => personalizationParameters.set(value.paramName, value.paramValue));
+                }
 
                 this.setPersonalizationProperties(personalizationParameters);
 
