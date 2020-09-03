@@ -28,6 +28,7 @@ public class TransactionSummary implements Serializable {
     private String businessDate;
     private String status;
     private String username;
+    private String transactionType;
     private List<ActionItem> actions;
 
     private Map<String, String> labels;
