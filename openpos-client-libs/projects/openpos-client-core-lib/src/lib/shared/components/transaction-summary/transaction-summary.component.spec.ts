@@ -2,6 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { TransactionSummaryComponent } from './transaction-summary.component';
 import { Component, Input } from '@angular/core';
 import { ActionService } from '../../../core/actions/action.service';
+import { MatChipsModule } from '@angular/material';
 
 describe('TransactionSummaryComponent', () => {
   let component: TransactionSummaryComponent;
@@ -10,6 +11,7 @@ describe('TransactionSummaryComponent', () => {
   beforeEach(async(() => {
 
     TestBed.configureTestingModule({
+      imports: [MatChipsModule],
       declarations: [
         TransactionSummaryComponent,
         MockIconComponent,
