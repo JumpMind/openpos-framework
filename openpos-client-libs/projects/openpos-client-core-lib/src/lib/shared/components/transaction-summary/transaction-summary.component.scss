@@ -4,28 +4,58 @@
     margin: 0px 16px;
     padding: 16px 0px;
     display: grid;
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr;
     gap: 8px;
 }
 
-.summary-left-side {
+.summary-icon {
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    justify-items: center;
+    display: grid;
+}
+
+.summary-main {
+    display: grid;
+    grid-template-columns: auto .5fr auto .5fr auto;
+    grid-template-rows: auto auto;
+    grid-template-areas: 
+        "trans .       details .       total"
+        "trans buttons buttons buttons buttons"
+    ;
+    column-gap: 8px;
+
+}
+
+.summary-tendertype-icons {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: left;
+    column-gap: 4px;
+}
+
+
+.summary-status {
     @extend %text-md;
+    margin-left: .5em;
+    padding-left: 4px;
+    padding-right: 4px;
+}
+
+.summary-trans {
+    @extend %text-md;
+    grid-area: trans;
     display: grid;
     grid-template-rows: auto auto auto;
     gap: 8px;
 }
 
-.summary-right-side {
-    @extend %text-md;
-    display: grid;
-    grid-template-rows: auto auto;
-    gap: 8px;
-}
-
 .summary-details {
     @extend %text-sm;
+    grid-area: details;
     display: grid;
-    grid-template-columns: auto auto auto;
+    grid-template-columns: auto auto;
     gap: 16px;
 }
 
@@ -33,6 +63,19 @@
     display: grid;
     grid-template-rows: auto auto;
     gap: 16px 32px;
+}
+
+.summary-details-info {
+    display: grid;
+    grid-template-columns: auto auto;
+}
+
+.summary-details-total-group {
+    grid-area: total;
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: auto auto;
+    justify-items: right;
 }
 
 .summary-total {
@@ -47,6 +90,11 @@
 
 .summary-items-label {
     padding-left: 4px;
+}
+
+.transaction-buttons {
+    grid-area: buttons;
+    justify-self: right;
 }
 
 .transaction-button {

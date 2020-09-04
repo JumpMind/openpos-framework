@@ -16,4 +16,6 @@ export interface ITransactionSummary {
     username: string;
     actions: IActionItem[];
     labels: any;
+    transactionType: string;
+    tenderTypeIcons: string[];
 }
