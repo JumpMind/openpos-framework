@@ -9,12 +9,12 @@
             <app-content-card>
                 <div class="content">
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText"
-                        [responseType]="screenData.responseType" [promptIcon]="screenData.promptIcon"
-                        [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
-                        [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
-                        [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
-                        [validationMessages]="screenData.validationMessages"
-                        [readOnly]="!screenData.editable">
+                                      [responseType]="screenData.responseType" [promptIcon]="screenData.promptIcon"
+                                      [responseText]="screenData.responseText" [hintText]="screenData.hintText" [minLength]="screenData.minLength"
+                                      [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
+                                      [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
+                                      [validationMessages]="screenData.validationMessages"
+                                      [readOnly]="!screenData.editable">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
                     <div #optionsRef>
@@ -29,14 +29,14 @@
             </app-content-card>
 
             <div *ngIf="screenData.otherActions || screenData.actionButton" class="prompt-buttons">
-                <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
-                        <span responsive-class>{{menuItem.title}}</span>
-                        <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
+                <app-secondary-button inputType="button" *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
+                    <span responsive-class>{{menuItem.title}}</span>
+                    <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
                 </app-secondary-button>
                 <app-primary-button (click)="onFormSubmit()">
                     <span responsive-class>{{screenData.actionButton.title}}</span>
                     <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'md'"
-                        [iconName]="screenData.actionButton.icon"></app-icon>
+                              [iconName]="screenData.actionButton.icon"></app-icon>
                 </app-primary-button>
             </div>
         </div>
@@ -44,7 +44,7 @@
 </ng-template>
 
 <ng-template #dialogForm>
-    <form [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup" class="form">
+    <form appKeypressSource [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()" novalidate [markDirtyOnSubmit]="promptFormGroup" class="form">
         <div responsive-class class="form-part-body">
             <app-content-card *ngIf="screenData.info && screenData.promptPosition === 'Bottom'">
                 <div class="content">
@@ -54,10 +54,10 @@
             <app-content-card>
                 <mat-dialog-content class="content">
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
-                        [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
-                        [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
-                        [validationMessages]="screenData.validationMessages"
-                        [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable">
+                                      [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
+                                      [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
+                                      [validationMessages]="screenData.validationMessages"
+                                      [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
                     <div #optionsRef>
@@ -72,19 +72,22 @@
             </app-content-card>
 
             <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" class="prompt-buttons">
-                <app-secondary-button *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
+                <app-secondary-button inputType="button" *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
                     <span>{{menuItem.title}}</span>
                     <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
+                    <div class="muted-color keybind-display-name-secondary" *ngIf="menuItem.keybind && keybindsEnabled()">{{menuItem.keybindDisplayName}}</div>
                 </app-secondary-button>
                 <app-primary-button>
                     <span>{{screenData.actionButton.title}}</span>
                     <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'md'" [iconName]="screenData.actionButton.icon"></app-icon>
+                    <div class="muted-color keybind-display-name-primary" *ngIf="screenData.actionButton.keybind && keybindsEnabled()">{{screenData.actionButton.keybindDisplayName}}</div>
                 </app-primary-button>
             </mat-dialog-actions>
             <mat-dialog-actions *ngIf="(!screenData.otherActions || screenData.otherActions && screenData.otherActions.length == 0) && screenData.actionButton" align="end">
                 <app-primary-button>
                     <span>{{screenData.actionButton.title}}</span>
                     <app-icon *ngIf="screenData.actionButton.icon" [iconClass]="'md'" [iconName]="screenData.actionButton.icon"></app-icon>
+                    <div class="muted-color keybind-display-name-primary" *ngIf="screenData.actionButton.keybind && keybindsEnabled()">{{screenData.actionButton.keybindDisplayName}}</div>
                 </app-primary-button>
             </mat-dialog-actions>
         </div>
