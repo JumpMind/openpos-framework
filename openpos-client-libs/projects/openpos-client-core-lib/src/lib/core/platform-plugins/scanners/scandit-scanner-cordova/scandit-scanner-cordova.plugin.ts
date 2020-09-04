@@ -25,41 +25,16 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
     private viewFinderType: string;
     private enableVibrate: boolean;
     private enableBeep: boolean;
+    private config: any;
 
     constructor(sessionService: SessionService, private matDialog: MatDialog) {
-
-        if (typeof Scandit !== 'undefined') {
-            this.settings = new Scandit.BarcodeCaptureSettings();
-
-        }
 
         sessionService.getMessages('ConfigChanged').pipe(
             filter(m => m.configType === 'ScanditCordova')
         ).subscribe(m => {
             console.log(m);
+            this.config = m;
 
-            if (m.licenseKey) {
-                this.licenseKey = m.licenseKey;
-            }
-            Object.getOwnPropertyNames(m).forEach(propName => {
-                if (this.settings.hasOwnProperty(propName)) {
-                    this.settings[propName] = m[propName];
-                }
-            });
-
-            if (m.enabledCodes) {
-                const codes = m.enabledCodes.split(',');
-                codes.forEach(code => this.settings.enableSymbology(ScanditBarcodeUtils.convertFromOpenposType(code.trim()), true));
-            }
-            if (m.viewFinderType) {
-                this.viewFinderType = m.viewFinderType;
-            }
-            if (m.enableVibrate) {
-                this.enableVibrate = m.enableVibrate;
-            }
-            if (m.enableBeep) {
-                this.enableBeep = m.enableBeep;
-            }
         });
 
         sessionService.getMessages('Screen', 'Dialog').subscribe(m => {
@@ -71,7 +46,39 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
 
     initialize(): Observable<string> {
         return Observable.create((initialized: Subject<string>) => {
+
+            this.settings = new Scandit.BarcodeCaptureSettings();
+
+            if(!this.settings){
+                initialized.error('Failed to create Scandit BarcodeCaptureSettings object');
+            }
+
+            if (this.config.licenseKey) {
+                this.licenseKey = this.config.licenseKey;
+            }
+
+            Object.getOwnPropertyNames(this.config).forEach(propName => {
+                if (this.settings.hasOwnProperty(propName)) {
+                    this.settings[propName] = this.config[propName];
+                }
+            });
+
+            if (this.config.enabledCodes) {
+                const codes = this.config.enabledCodes.split(',');
+                codes.forEach(code => this.settings.enableSymbology(ScanditBarcodeUtils.convertFromOpenposType(code.trim()), true));
+            }
+            if (this.config.viewFinderType) {
+                this.viewFinderType = this.config.viewFinderType;
+            }
+            if (this.config.enableVibrate) {
+                this.enableVibrate = this.config.enableVibrate;
+            }
+            if (this.config.enableBeep) {
+                this.enableBeep = this.config.enableBeep;
+            }
+
             this.context = Scandit.DataCaptureContext.forLicenseKey(this.licenseKey);
+            console.log('Initializing Scandit with settings', this.settings);
             this.barcodeCapture = Scandit.BarcodeCapture.forContext(this.context, this.settings);
             this.barcodeCapture.feedback = this.getFeedback();
             this.barcodeCapture.isEnabled = false;
