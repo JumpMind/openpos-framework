@@ -6,7 +6,7 @@
             <div *ngIf="item.description" responsive-class class="item-card-title">
                 {{item.description}}
             </div>
-            <section class="return-info warn" *ngIf="item.returnItemLabels && expanded">
+            <section class="return-info return-color" *ngIf="item.returnItemLabels && expanded">
                 <app-icon [iconName]="item.isOrderItem ? 'assignment': 'receipt'"></app-icon>
                 <ul responsive-class class="return-info-text">
                     <li *ngFor="let returnItemLabel of item.returnItemLabels">
