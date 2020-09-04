@@ -56,7 +56,8 @@
         background: map-merge($mat-light-theme-background, $openpos-background),
         selected: $selected,
         success: mat-palette($mat-green),
-        orders: mat-palette($mat-orange, 800)
+        orders: mat-palette($mat-orange, 800),
+        returns: mat-palette($mat-red, 900)
     );
     @return map-merge(map-merge($openpos-mat-theme, $openpos-addons), $addons);
 }
@@ -84,6 +85,7 @@
     $background: map-get($theme, background);
     $success-color: mat-color(map-get($theme, success));
     $order-color: mat-color(map-get($theme, orders));
+    $return-color: mat-color(map-get($theme, returns));
 
 
     // this is a hack to get around a default value in angular material that they removed in future versions
@@ -115,6 +117,10 @@
 
     .order-color {
         color: $order-color;
+    }
+
+    .return-color {
+        color: $return-color;
     }
 
     .order-background {
