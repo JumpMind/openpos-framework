@@ -1,25 +1,27 @@
 <div *ngIf="transactionSummary" class="transaction-summary-outer">
-    <app-icon *ngIf="transactionSummary.icon" [iconName]="transactionSummary.icon" iconClass="mat-64"></app-icon>
-
-    <div responsive-class class="summary-left-side">
-        <div>
-            <span *ngIf="transactionSummary.labels"
-                class="summary-label">{{transactionSummary.labels.sequenceNumber}}</span>
-            <span>{{transactionSummary.sequenceNumber}}</span>
-        </div>
-        <div>
-            <span *ngIf="transactionSummary.labels"
-                class="summary-label">{{transactionSummary.labels.customerName}}</span>
-            <span>{{transactionSummary.customerName}}</span>
-        </div>
-        <div>
-            <span>{{transactionSummary.items}}</span>
-            <span *ngIf="transactionSummary.labels"
-                class="summary-items-label">{{transactionSummary.labels.items}}</span>
-        </div>
+    <div class="summary-icon">
+        <app-icon *ngIf="transactionSummary.icon" [iconName]="transactionSummary.icon" iconClass="mat-64"></app-icon>
+        <span *ngIf="transactionSummary.transactionType">{{transactionSummary.transactionType}}</span>
     </div>
-
-    <div responsive-class class="summary-right-side">
+    <div class="summary-main">
+        <div responsive-class class="summary-trans">
+            <div>
+                <span *ngIf="transactionSummary.labels"
+                    class="summary-label">{{transactionSummary.labels.sequenceNumber}}</span>
+                <span>{{transactionSummary.sequenceNumber}}</span>
+                <mat-chip *ngIf="transactionSummary.status" responsive-class class="summary-status">{{transactionSummary.status}}</mat-chip>
+            </div>
+            <div>
+                <span *ngIf="transactionSummary.labels"
+                    class="summary-label">{{transactionSummary.labels.customerName}}</span>
+                <span>{{transactionSummary.customerName}}</span>
+            </div>
+            <div>
+                <span>{{transactionSummary.items}}</span>
+                <span *ngIf="transactionSummary.labels"
+                    class="summary-items-label">{{transactionSummary.labels.items}}</span>
+            </div>
+        </div>
         <div responsive-class class="summary-details">
             <div class="summary-detail-column">
                 <div>
@@ -45,7 +47,10 @@
                     <span>{{transactionSummary.storeId}}</span>
                 </div>
             </div>
+        </div>
+        <div class="summary-details-total-group">
             <app-currency-text [amountText]="transactionSummary.total" responsive-class class="summary-total"></app-currency-text>
+            <div class="summary-tendertype-icons"><app-icon *ngFor="let tenderTypeIcon of transactionSummary.tenderTypeIcons" [iconName]="tenderTypeIcon" iconClass="mat-24"></app-icon></div>
         </div>
         <div responsive-class class="transaction-buttons">
             <button *ngFor="let button of transactionSummary.actions" mat-button color="primary" responsive-class
