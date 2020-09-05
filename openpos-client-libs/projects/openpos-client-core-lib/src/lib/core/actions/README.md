@@ -23,7 +23,7 @@ _**Note** only one playload can be registered with an action so last one to regi
 
 ## Action Disablers
 
-Sometimes the logic for disabling a UIElement associated with an ActionItem is on a seperate component than the UIElement. Instead of coupling the 2 component we can use an ActionDisabler. An ActionDisabler is an Observable that represents the current state of the action. Create an ActionDisabler by calling `registerActionDisabler` passing in the name of the action to control and a boolean Observable that will take updates to the disabled state. `registerActionDisabler` returns a subscription to be used to clean up when your component is destroyed.
+Sometimes the logic for disabling a UIElement associated with an ActionItem is on a separate component than the UIElement. Instead of coupling the 2 component we can use an ActionDisabler. An ActionDisabler is an Observable that represents the current state of the action. Create an ActionDisabler by calling `registerActionDisabler` passing in the name of the action to control and a boolean Observable that will take updates to the disabled state. `registerActionDisabler` returns a subscription to be used to clean up when your component is destroyed.
 
 ```typescript
 actionDisabled$ = new BehaviorSubject<boolean>(false);

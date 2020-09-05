@@ -63,6 +63,7 @@ import { CLIENTCONTEXT } from './client-context/client-context-provider.interfac
 import { TimeZoneContext } from './client-context/time-zone-context';
 import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
+import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -137,7 +138,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         KeyPressProvider,
         { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
         HelpTextService,
-        { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true }
+        { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true },
+        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }
     ]
 })
 export class CoreModule {

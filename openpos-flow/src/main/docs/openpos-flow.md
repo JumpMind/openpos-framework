@@ -7,9 +7,9 @@ title: Flow Framework
 
 Overall, openpos-core provides the infrastructure for defining the "flow" of a client-side retail application. It understands the steps and transitions though an application, as well as what screens to display in an abstract level.  It is **not aware** of a particular UI technology.  It says "display the sales screen with the following items" and allows the client to decide how to render that information as a screen on the UI. 
 
-The openpos-core project contains much of what is considered the "controller" logic that resides in between the web front end client (the "view") and the business logic service code (the "model").  The core project provicdes   Specifically, core contains:
+The openpos-core project contains much of what is considered the "controller" logic that resides in between the web front end client (the "view") and the business logic service code (the "model").  The core project provides   Specifically, core contains:
 
-* The openpos state mahine. (The `org.jumpmind.pos.core.flow` package.)
+* The openpos state machine. (The `org.jumpmind.pos.core.flow` package.)
 * UIMessages such as HomeUIMessage, DialogUIMessage are abstracted screen types.
 * Abstracted UI component models which make up the form screens (e.g. FormField, DateField, RadioField, etc., in the `org.jumpmind.pos.core.model` package)
 * ScreenInterceptors are like filters which get run on each screen model before it is passed to the client.
@@ -121,8 +121,8 @@ public class SaleState {
 
 #### @In annotation options:
 * **name** - defaults to the name of the field. In the example above, the system will look for a value named businessDate and a value named currentTransaction.
-* **autoCreate** - defaults to false.  If if's true and no context value is found for the given name, then try to create and a supply a new object that matches the target type. The newly created object will then be in the contect and available for injection into other states per the scope rules.
-* **required** - defaults to true, it is a pre-condition of the state the named value must exist in the context prior to arriving at this state. For example all states that assume a transaciton and operate on the currentTransaction can leave this as the default of true and assume that there will be  a non-null currentTransaction when the state runs.
+* **autoCreate** - defaults to false.  If it's true and no context value is found for the given name, then try to create and supply a new object that matches the target type. The newly created object will then be in the contect and available for injection into other states per the scope rules.
+* **required** - defaults to true, it is a pre-condition of the state the named value must exist in the context prior to arriving at this state. For example all states that assume a transaction and operate on the currentTransaction can leave this as the default of true and assume that there will be  a non-null currentTransaction when the state runs.
 * **scope** - scope defines how long a particular value will live and is useful for making sure that stale values don't bleed between flows, transactions, etc.  Each context value must be assigned to a specific scope.
 
 ![eclipse](assets/openpos-scopes.png)
@@ -206,7 +206,7 @@ SaleFlow:
       ...
 ```
 
-A subflow does not require a seperate flow config.  You can configure a subflow to transition to single state.  For example:
+A subflow does not require a separate flow config.  You can configure a subflow to transition to single state.  For example:
 
 ```
 SaleFlow:

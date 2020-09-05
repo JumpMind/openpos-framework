@@ -8,7 +8,7 @@ import { Component, Input, EventEmitter, Output } from '@angular/core';
 export class SecondaryButtonComponent {
 
   @Input() disabled: boolean;
-  @Input() inputType: string;
+  @Input() inputType = 'button';
   @Output() buttonClick = new EventEmitter();
   constructor() {
     this.disabled = false;

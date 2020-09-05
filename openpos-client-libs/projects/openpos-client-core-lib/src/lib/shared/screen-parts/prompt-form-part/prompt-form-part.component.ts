@@ -4,6 +4,8 @@ import { Validators, FormControl, FormGroup, ValidatorFn } from '@angular/forms'
 import { ValidatorsService } from '../../../core/services/validators.service';
 import { IActionItem } from '../../../core/actions/action-item.interface';
 import { PromptFormPartInterface } from './prompt-form-part.interface';
+import {Configuration} from "../../../configuration/configuration";
+import {merge} from "rxjs";
 
 @Component({
     selector: 'app-prompt-form-part',
@@ -14,6 +16,7 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
 
     @ViewChild('optionsRef') options;
 
+    stop$ = merge(this.beforeScreenDataUpdated$, this.destroyed$);
     promptFormGroup: FormGroup;
     initialized = false;
     instructions: string;
@@ -68,6 +71,13 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
             group[this.hiddenInputControlName] = new FormControl();
         }
         this.promptFormGroup = new FormGroup(group);
+
+        this.keyPressProvider.subscribe(this.screenData.actionButton, 100,() => this.onFormSubmit(), this.stop$);
+        this.keyPressProvider.subscribe(this.screenData.otherActions, 100,(event, action) => this.doAction(action), this.stop$);
+    }
+
+    public keybindsEnabled() {
+        return Configuration.enableKeybinds;
     }
 
     ngAfterViewInit(): void {

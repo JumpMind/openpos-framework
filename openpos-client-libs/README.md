@@ -82,7 +82,7 @@ It is worth noting that you are not required to have a layout component on your 
 
 #### Components (for lack of a better name)
 
-These components define re-usable peices of UI logic, but again know nothing about the data from the server. They are also 100% purely UI behavior. They are really very similar to Layout Components, but seperate purely for organization. Examples of these are Buttons, TabControl, a list. They are more focused on how the component looks and operates and again know nothing about the data they will be presenting.
+These components define re-usable pieces of UI logic, but again know nothing about the data from the server. They are also 100% purely UI behavior. They are really very similar to Layout Components, but separate purely for organization. Examples of these are Buttons, TabControl, a list. They are more focused on how the component looks and operates and again know nothing about the data they will be presenting.
 
 #### Screen Parts
 

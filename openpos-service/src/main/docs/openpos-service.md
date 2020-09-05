@@ -33,9 +33,9 @@ The high level logic of openpos-service is this:
 
 ## How to add a new module
 
-Each module should be a seperate Java project which depends on openpos-service.
+Each module should be a separate Java project which depends on openpos-service.
 
-A module starts with the module declration class, which is a subclass of AbstractModule.  Spring is used to discover and configure the module declarations.
+A module starts with the module declaration class, which is a subclass of AbstractModule.  Spring is used to discover and configure the module declarations.
 
 ~~~
 @Configuration("CustomerModule")
