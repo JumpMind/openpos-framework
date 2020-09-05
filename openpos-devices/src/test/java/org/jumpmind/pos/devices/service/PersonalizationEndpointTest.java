@@ -20,8 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
 
-import static org.hibernate.validator.internal.util.Contracts.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNotNull;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
