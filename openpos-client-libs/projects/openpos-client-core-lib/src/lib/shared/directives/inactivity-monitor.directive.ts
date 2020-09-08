@@ -25,7 +25,7 @@ export class InactivityMonitorDirective implements OnDestroy {
         const throttledEvents = merge(
             // Scroll events don't bubble, so we need to get them top-down to handle them globally
             fromEvent(window, 'scroll', {capture: true}),
-            // Capture move move, instead of bubble, so we'll still be notified if nested components stop propagation of event bubbling
+            // Get mouse move event on capture, instead of bubble, so we'll still be notified if nested components stop propagation of event bubbling
             fromEvent(window,'mousemove', {capture: true})
         );
 
