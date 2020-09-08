@@ -22,7 +22,8 @@ export class InactivityMonitorDirective implements OnDestroy {
                 .pipe(takeUntil(this.destroyed$)).subscribe((event: TouchEvent) => this.touchEvent(event));
         }
 
-        const throttledEvents = merge(
+        // Throttle events that can fire very rapidly to prevent too much unnecessary processing
+        const throttledEvents = merge (
             // Scroll events don't bubble, so we need to get them top-down to handle them globally
             fromEvent(window, 'scroll', {capture: true}),
             // Get mouse move event on capture, instead of bubble, so we'll still be notified if nested components stop propagation of event bubbling
@@ -30,11 +31,11 @@ export class InactivityMonitorDirective implements OnDestroy {
         );
 
         throttledEvents.pipe(
-                // leading: get notified at start of throttle interval (as opposed to debounceTime, which waits xxx ms after first event)
-                // trailing: get notified at end of throttle interval too
-                throttleTime(this.eventThrottleTime, undefined, { leading: true, trailing: true }),
-                takeUntil(this.destroyed$)
-            ).subscribe(event => this.throttledEvent(event));
+            // leading: get notified at start of throttle interval (as opposed to debounceTime, which waits xxx ms after first event)
+            // trailing: get notified at end of throttle interval too
+            throttleTime(this.eventThrottleTime, undefined, { leading: true, trailing: true }),
+            takeUntil(this.destroyed$)
+        ).subscribe(event => this.throttledEvent(event));
     }
 
     ngOnDestroy(): void {
