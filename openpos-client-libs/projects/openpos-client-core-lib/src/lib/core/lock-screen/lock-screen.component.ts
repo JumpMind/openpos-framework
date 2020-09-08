@@ -39,7 +39,7 @@ export class LockScreenComponent implements OnDestroy{
 
   @HostListener('keydown', ['$event'])
   onKeyDown(event: KeyboardEvent) {
-    // Stop the key press events from bubbling up out of the lock screen, so they don't trigger any actions
+    // Stop the key press events from bubbling up out of the lock screen so they don't trigger any actions
     // on the page behind the lock screen
     event.stopPropagation();
   }
