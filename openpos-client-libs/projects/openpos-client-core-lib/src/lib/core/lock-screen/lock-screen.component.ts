@@ -1,4 +1,4 @@
-import {Component, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 import {ActionService} from '../actions/action.service';
@@ -35,6 +35,13 @@ export class LockScreenComponent implements OnDestroy{
     }else{
       this.submitPassword();
     }
+  }
+
+  @HostListener('keydown', ['$event'])
+  onKeyDown(event: KeyboardEvent) {
+    // Stop the key presses from bubbling up out of the lock screen, so it doesn't trigger any actions
+    // on the page behind the lock screen
+    event.stopPropagation();
   }
 
   submitPassword(){
