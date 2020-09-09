@@ -26,6 +26,7 @@ import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
 import org.jumpmind.db.sql.DmlStatement;
 import org.jumpmind.db.sql.DmlStatement.DmlType;
+import org.jumpmind.db.sql.LogSqlBuilder;
 import org.jumpmind.db.sql.Row;
 import org.jumpmind.pos.persist.impl.*;
 import org.jumpmind.pos.persist.model.ITaggedModel;
@@ -270,11 +271,14 @@ public class DBSession {
 
     @SuppressWarnings("unchecked")
     public <T> List<T> query(Query<T> query, QueryTemplate queryTemplate, Map<String, Object> params, int maxResults) {
+        SqlStatement sqlStatement;
+
         try {
-            SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
+            sqlStatement = queryTemplate.generateSQL(query, params);
             return (List<T>) queryInternal(query.getResultClass(), sqlStatement, maxResults);
         } catch (Exception ex) {
-            throw new PersistException("Failed to query result class " + query.getResultClass(), ex);
+            throw new PersistException("Failed to execute query. Name: " + query.getName() + " result class: " +
+                    query.getResultClass() + " Parameters: " + params, ex);
         }
     }
 
@@ -399,11 +403,11 @@ public class DBSession {
 
                 if (! isPropertyMapped) {
                     throw new PersistException(
-                        String.format("A @ColumnDef mapping for property '%s' could not be " +
-                            "found in any of the following classes: %s",
-                            property,
-                            entityModelClasses.stream().map(c -> c.getSimpleName()).collect(Collectors.joining(", "))
-                        )
+                            String.format("A @ColumnDef mapping for property '%s' could not be " +
+                                            "found in any of the following classes: %s",
+                                    property,
+                                    entityModelClasses.stream().map(c -> c.getSimpleName()).collect(Collectors.joining(", "))
+                            )
                     );
                 }
             }
@@ -552,57 +556,89 @@ public class DBSession {
     @SuppressWarnings("unchecked")
     protected <T> List<T> queryInternal(Class<T> resultClass, SqlStatement statement, int maxResults) throws Exception {
         List<T> objects = new ArrayList<T>();
-        ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(statement.getSql());
-        String sqlToUse = NamedParameterUtils.substituteNamedParameters(parsedSql, statement.getParameters());
-        List<SqlParameter> declaredParameters = NamedParameterUtils.buildSqlParameterList(parsedSql, statement.getParameters());
-        Object[] args = NamedParameterUtils.buildValueArray(parsedSql, statement.getParameters(), declaredParameters);
-        PreparedStatementCreator psc = new PreparedStatementCreatorFactory(sqlToUse, declaredParameters).newPreparedStatementCreator(args);
-        List<Row> rows = jdbcTemplate.getJdbcOperations().execute(psc, new PreparedStatementCallback<List<Row>>() {
-            @Override
-            public List<Row> doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
-                Connection con = ps.getConnection();
-                boolean autoCommitBefore = con.getAutoCommit();
-                List<Row> results = new ArrayList<>();
-                DefaultMapper mapper = new DefaultMapper();
-                try {
-                    ps.setFetchSize(maxResults);
-                    ps.setMaxRows(maxResults);
-                    // jumped through all these hoops just to set auto commit to false for postgres
-                    con.setAutoCommit(false);
-                    ResultSet rs = ps.executeQuery();
-                    int rowCount = 0;
-                    while (rs.next() && rowCount < maxResults) {
-                        Row row = mapper.mapRow(rs, ++rowCount);
-                        if (row != null) {
-                            results.add(row);
+        String sqlToUse = null;
+        Object[] args = null;
+        try {
+            ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(statement.getSql());
+            sqlToUse = NamedParameterUtils.substituteNamedParameters(parsedSql, statement.getParameters());
+            List<SqlParameter> declaredParameters = NamedParameterUtils.buildSqlParameterList(parsedSql, statement.getParameters());
+            args = NamedParameterUtils.buildValueArray(parsedSql, statement.getParameters(), declaredParameters);
+            PreparedStatementCreator psc = new PreparedStatementCreatorFactory(sqlToUse, declaredParameters).newPreparedStatementCreator(args);
+            List<Row> rows = jdbcTemplate.getJdbcOperations().execute(psc, new PreparedStatementCallback<List<Row>>() {
+                @Override
+                public List<Row> doInPreparedStatement(PreparedStatement ps) throws SQLException, DataAccessException {
+                    Connection con = ps.getConnection();
+                    boolean autoCommitBefore = con.getAutoCommit();
+                    List<Row> results = new ArrayList<>();
+                    DefaultMapper mapper = new DefaultMapper();
+                    try {
+                        ps.setFetchSize(maxResults);
+                        ps.setMaxRows(maxResults);
+                        // jumped through all these hoops just to set auto commit to false for postgres
+                        con.setAutoCommit(false);
+                        ResultSet rs = ps.executeQuery();
+                        int rowCount = 0;
+                        while (rs.next() && rowCount < maxResults) {
+                            Row row = mapper.mapRow(rs, ++rowCount);
+                            if (row != null) {
+                                results.add(row);
+                            }
                         }
+                        rs.close();
+                        return results;
+                    } finally {
+                        con.setAutoCommit(autoCommitBefore);
                     }
-                    rs.close();
-                    return results;
-                } finally {
-                    con.setAutoCommit(autoCommitBefore);
                 }
-            }
-        });
-        for (int j = 0; j < rows.size(); j++) {
-            Row row = rows.get(j);
-            T object = null;
+            });
+            for (int j = 0; j < rows.size(); j++) {
+                Row row = rows.get(j);
+                T object = null;
 
-            if (resultClass != null) {
-                if (resultClass.equals(String.class)) {
-                    object = (T) row.stringValue();
-                } else if (isModel(resultClass)) {
-                    object = mapModel(resultClass, row);
+                if (resultClass != null) {
+                    if (resultClass.equals(String.class)) {
+                        object = (T) row.stringValue();
+                    } else if (isModel(resultClass)) {
+                        object = mapModel(resultClass, row);
+                    } else {
+                        object = mapNonModel(resultClass, row);
+                    }
                 } else {
-                    object = mapNonModel(resultClass, row);
+                    object = (T) mapNonModel(row);
                 }
-            } else {
-                object = (T) mapNonModel(row);
+                objects.add(object);
             }
-            objects.add(object);
+        } catch (Exception ex) {
+            try {
+                LogSqlBuilder builder = new LogSqlBuilder();
+                Object[] rawArgs = cleanArgs(args);
+                String sql = builder.buildDynamicSqlForLog(sqlToUse, rawArgs, null);
+                throw new PersistException("Failed to execute sql: " + sql, ex);
+            } catch (Exception ex2) {
+                if (ex2 instanceof PersistException) {
+                    throw (PersistException)ex2;
+                } else {
+                    log.warn("Could not generate dynamic sql to log.", ex2);
+                    throw ex; // throw the first.
+                }
+            }
+
         }
 
         return objects;
+    }
+
+    protected Object[] cleanArgs(Object[] args) {
+        Object[] newArgs = new Object[args.length];
+        for (int i = 0; i < args.length; i++) {
+            Object value = args[i];
+            if (value instanceof  SqlParameterValue) {
+                value = ((SqlParameterValue)value).getValue();
+            }
+            newArgs[i] = value;
+        }
+
+        return newArgs;
     }
 
     protected boolean isModel(Class<?> resultClass) {
