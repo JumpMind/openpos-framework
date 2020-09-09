@@ -2,6 +2,8 @@ package org.jumpmind.pos.devices.service;
 
 import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
+import org.jumpmind.pos.devices.model.DeviceModel;
+import org.jumpmind.pos.devices.model.DeviceStatusConstants;
 import org.jumpmind.pos.devices.model.DevicesRepository;
 import org.jumpmind.pos.devices.service.model.AuthenticateDeviceRequest;
 import org.jumpmind.pos.devices.service.model.AuthenticateDeviceResponse;
@@ -18,8 +20,12 @@ public class AuthenticateDeviceEndpoint {
     public AuthenticateDeviceResponse authenticateDevice(@RequestBody AuthenticateDeviceRequest request){
 
         try{
+            DeviceModel device = devicesRepository.getDeviceByAuth(request.getAuthToken());
+
+            devicesRepository.updateDeviceStatus(device.getDeviceId(), device.getAppId(), DeviceStatusConstants.CONNECTED);
+
             return AuthenticateDeviceResponse.builder()
-                    .deviceModel(devicesRepository.getDeviceByAuth(request.getAuthToken()))
+                    .deviceModel(device)
                     .build();
         } catch (DeviceNotFoundException ex) {
             throw new DeviceNotAuthorizedException();

@@ -18,6 +18,7 @@ import { DiscoveryResponse } from '../discovery/discovery-response.interface';
 export class PersonalizationComponent implements IScreen, OnInit {
 
     navigateExternal = false;
+    manualPersonalization = false;
     openposMgmtServerPresent = false;
     discoveryStatus: DiscoveryStatus;
     discoveryResponse: DiscoveryResponse;
@@ -28,6 +29,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
     lastFormGroup: FormGroup;
     clientResponse: any;
     serverResponse: PersonalizationConfigResponse;
+    availableDevices: {key:string, value:string}[];
     clientTimeout: any;
     serverTimeout: any;
     errorMessage: string;
@@ -74,15 +76,32 @@ export class PersonalizationComponent implements IScreen, OnInit {
             if (this.serverResponse.devicePattern) {
                 devicePattern = this.serverResponse.devicePattern;
             }
+            if(this.serverResponse.availableDevices){
+                this.availableDevices = [];
+                const availableDeviceMap = this.serverResponse.availableDevices;
+                Object.entries(availableDeviceMap).forEach(entry => {
+                    let key = entry[0];
+                    let value = entry[1];
+                    this.availableDevices.push({key, value});
+                });
+            }
             this.openposMgmtServerPresent = !!this.serverResponse.openposManagementServer;
         }
 
-        const formGroup = {
-            deviceId: ['', [Validators.required, Validators.pattern(devicePattern)]],
-            appId: ['', [Validators.required]]
-        };
+        if( this.manualPersonalization ) {
+            const formGroup = {
+                deviceId: ['', [Validators.required, Validators.pattern(devicePattern)]],
+                appId: ['', [Validators.required]]
+            };
 
-        this.thirdFormGroup = this.formBuilder.group(formGroup);
+            this.thirdFormGroup = this.formBuilder.group(formGroup);
+        } else {
+            const formGroup = {
+                device: ['', [Validators.required]]
+            }
+
+            this.thirdFormGroup = this.formBuilder.group(formGroup);
+        }
     }
 
     updateLastFormGroup() {
@@ -109,6 +128,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
         const serverName = this.secondFormGroup.get('serverName').value;
         const serverPort = this.secondFormGroup.get('serverPort').value;
         const serverSslEnabled = this.secondFormGroup.get('sslEnabled').value;
+
 
         const deviceId = this.thirdFormGroup.get('deviceId').value;
         const appId = this.thirdFormGroup.get('appId').value;
@@ -138,14 +158,26 @@ export class PersonalizationComponent implements IScreen, OnInit {
             personalizationProperties.set(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY, 'true');
         }
 
-        return  this.personalizationService.personalize(
-            server, 
-            port,
-            this.thirdFormGroup.get('deviceId').value,
-            this.thirdFormGroup.get('appId').value,
-            personalizationProperties,
-            this.secondFormGroup.get('sslEnabled').value
-        );
+        if( this.manualPersonalization ){
+            return  this.personalizationService.personalize(
+                server,
+                port,
+                this.thirdFormGroup.get('deviceId').value,
+                this.thirdFormGroup.get('appId').value,
+                personalizationProperties,
+                this.secondFormGroup.get('sslEnabled').value
+            );
+        } else {
+            return this.personalizationService.personalizeWithToken(
+                server,
+                port,
+                this.thirdFormGroup.get('device').value,
+                this.secondFormGroup.get('sslEnabled').value
+            );
+        }
+
+
+
     }
 
     public discoveryBack() {
