@@ -1,0 +1,26 @@
+<div class="data-table-outer">
+    <app-dialog-header></app-dialog-header>
+    <div class="data-table-body" responsive-class>
+        <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
+        <app-content-card>
+            <mat-dialog-content class="dialog-content">
+                <app-grid-table [rows]="rows" [columnHeaders]="columnHeaders"></app-grid-table>
+            </mat-dialog-content>
+        </app-content-card>
+        <mat-dialog-actions class="buttons">
+            <div *ngFor="let m of screen.actionButtons;  let i = index">
+                <app-secondary-button *ngIf="screen.actionButtons.length-1 !== i"
+                    [actionItem]="m" (actionClick)="doAction(m)" (click)="doAction(m)">
+                    <span>{{m.title}}</span>&nbsp;
+                    <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
+                </app-secondary-button>
+                <app-primary-button *ngIf="screen.actionButtons.length-1 == i" 
+                    [attr.cdkFocusInitial]="screen.actionButtons.length-1 == i ? '' : null"
+                    [actionItem]="m" (actionClick)="doAction(m)" (click)="doAction(m)">
+                    <span>{{m.title}}</span>&nbsp;
+                    <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
+                </app-primary-button>
+            </div>
+        </mat-dialog-actions>
+    </div>
+</div>
