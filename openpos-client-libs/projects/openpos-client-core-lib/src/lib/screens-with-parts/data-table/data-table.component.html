@@ -1,29 +1,26 @@
-<app-waffle>
-    <app-bacon-strip waffle-header></app-bacon-strip>
-
-    <div waffle-drawer-content class="drawer-content" fxFlex="1 1 100%" fxLayout="column" fxLayoutAlign="start stretch"
-        fxLayoutGap="4px" fxLayoutGap.lg="20px">
-        <app-sausage-links waffle-drawer-content></app-sausage-links>
-    </div>
-
-    <div waffle-body class="body-content">
-        <mat-card fxLayout="column" class="page-content-card data-table-card">
-
-            <mat-card-content fxFlex="1 1 100%">
+<div class="data-table-outer">
+    <app-bacon-strip></app-bacon-strip>
+    <div class="data-table-body" responsive-class>
+        <app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions" [instructionsSize]="'text-md'"></app-instructions>
+        <app-content-card>
+            <div class="content">
                 <app-grid-table [rows]="rows" [columnHeaders]="columnHeaders"></app-grid-table>
-            </mat-card-content>
-
-            <mat-card-actions *ngIf="screen.actionButton" align="end">
-                <button mat-button color="primary-inverse" (click)="doAction(screen.actionButton)">
-                    <span *ngIf="screen.actionButton.title">{{screen.actionButton.title}}</span>
-                    <app-icon *ngIf="screen.actionButton.icon" [iconName]="screen.actionButton.icon"
-                        [iconClass]="'material-icons'"></app-icon>
-                </button>
-            </mat-card-actions>
-
-        </mat-card>
-
-        <app-status-strip waffle-footer></app-status-strip>
+            </div>
+        </app-content-card>
+        <section class="buttons">
+            <div *ngFor="let m of screen.actionButtons;  let i = index">
+                <app-secondary-button *ngIf="screen.actionButtons.length-1 !== i"
+                    [actionItem]="m" (actionClick)="doAction(m)" (click)="doAction(m)">
+                    <span>{{m.title}}</span>&nbsp;
+                    <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
+                </app-secondary-button>
+                <app-primary-button *ngIf="screen.actionButtons.length-1 == i" 
+                    [attr.cdkFocusInitial]="screen.actionButtons.length-1 == i ? '' : null"
+                    [actionItem]="m" (actionClick)="doAction(m)" (click)="doAction(m)">
+                    <span>{{m.title}}</span>&nbsp;
+                    <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
+                </app-primary-button>
+            </div>
+        </section>
     </div>
-
-</app-waffle>
+</div>
