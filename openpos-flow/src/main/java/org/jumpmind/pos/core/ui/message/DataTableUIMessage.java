@@ -9,13 +9,23 @@ import java.util.List;
 
 public class DataTableUIMessage extends UIMessage {
 
+    private String instructions;
+
     private List<String> columnHeaders = new ArrayList<String>();
     private List<DataTableRow> rows = new ArrayList<>();
 
-    private ActionItem actionButton;
+    private List<ActionItem> actionButtons;
 
     public DataTableUIMessage() {
         this.setScreenType(UIMessageType.DATA_TABLE);
+    }
+
+    public String getInstructions() {
+        return instructions;
+    }
+
+    public void setInstructions(String instructions) {
+        this.instructions = instructions;
     }
 
     public List<String> getColumnHeaders() {
@@ -53,12 +63,19 @@ public class DataTableUIMessage extends UIMessage {
         this.rows.add(row);
     }
 
-    public ActionItem getActionButton() {
-        return actionButton;
+    public List<ActionItem> getActionButtons() {
+        return actionButtons;
     }
 
-    public void setActionButton(ActionItem actionButton) {
-        this.actionButton = actionButton;
+    public void setActionButtons(List<ActionItem> actionButtons) {
+        this.actionButtons = actionButtons;
+    }
+
+    public void addActionButton(ActionItem actionButton) {
+        if(this.actionButtons == null) {
+            this.actionButtons = new ArrayList<>();
+        }
+        this.actionButtons.add(actionButton);
     }
 
 }
