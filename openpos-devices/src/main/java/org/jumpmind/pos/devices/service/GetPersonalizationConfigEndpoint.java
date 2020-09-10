@@ -26,6 +26,9 @@ public class GetPersonalizationConfigEndpoint {
     @Autowired
     DevicesRepository repository;
 
+    @Autowired
+    List<String> loadedAppIds;
+
     public PersonalizationConfigResponse getPersonalizationConfig(){
         logger.info("Received a personalization request");
 
@@ -46,6 +49,7 @@ public class GetPersonalizationConfigEndpoint {
                 .devicePattern(personalizationParameters.getDevicePattern())
                 .parameters(personalizationParameters.getParameters())
                 .availableDevices(availableDevices)
+                .loadedAppIds(loadedAppIds)
                 .build();
     }
 }

@@ -71,7 +71,10 @@
                     The Device ID must match openpos.ui.personalization.devicePattern
                 </div>
                 <mat-form-field>
-                    <input matInput placeholder="App ID" formControlName="appId" required novalidate>
+                    <mat-select *ngIf="appIds" formControlName="appId" placeholder="App ID" required>
+                        <mat-option *ngFor="let appId of appIds" [value]="appId">{{appId}}</mat-option>
+                    </mat-select>
+                    <input *ngIf="!appIds" matInput placeholder="App ID" formControlName="appId" required novalidate>
                 </mat-form-field>
             </form>
             <form *ngIf="thirdFormGroup && !manualPersonalization" [formGroup]="thirdFormGroup">

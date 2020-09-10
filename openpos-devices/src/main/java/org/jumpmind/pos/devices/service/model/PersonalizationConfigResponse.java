@@ -19,5 +19,6 @@ public class PersonalizationConfigResponse {
     private String devicePattern;
     private List<PersonalizationParameter> parameters = new ArrayList<>();
     private Map<String, String> availableDevices;
+    private List<String> loadedAppIds;
 
 }
