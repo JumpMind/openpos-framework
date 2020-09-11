@@ -26,7 +26,7 @@ public class GetPersonalizationConfigEndpoint {
     @Autowired
     DevicesRepository repository;
 
-    @Autowired
+    @Autowired(required = false)
     List<String> loadedAppIds;
 
     public PersonalizationConfigResponse getPersonalizationConfig(){
