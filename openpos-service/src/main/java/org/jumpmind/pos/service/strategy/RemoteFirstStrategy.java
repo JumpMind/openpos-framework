@@ -1,6 +1,9 @@
 package org.jumpmind.pos.service.strategy;
 
 import org.jumpmind.pos.service.ServiceSpecificConfig;
+import org.jumpmind.pos.util.model.ServiceException;
+import org.jumpmind.pos.util.model.ServiceResult;
+import org.jumpmind.pos.util.model.ServiceVisit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,12 +32,22 @@ public class RemoteFirstStrategy implements IInvocationStrategy {
     public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
         try {
             return remoteStrategy.invoke(config, proxy, method, endpoints, args);
-        } catch (ResourceAccessException ex) {
+        } catch (Throwable ex) {
             try {
-                logger.info("Remote service(s) unavailable.  Trying local");
-                return localStrategy.invoke(config, proxy, method, endpoints, args);
+                logger.info("Remote service(s) unavailable. Trying local");
+                long start = System.currentTimeMillis();
+                Object result = localStrategy.invoke(config, proxy, method, endpoints, args);
+                long end = System.currentTimeMillis();
+                if (result instanceof ServiceResult && ex instanceof ServiceException) {
+                    ((ServiceResult) result).setServiceVisits(((ServiceException) ex).getServiceVisits());
+                    ServiceVisit serviceVisit = new ServiceVisit();
+                    serviceVisit.setElapsedTimeMillis(end - start);
+                    serviceVisit.setProfileId("local");
+                    ((ServiceResult) result).getServiceVisits().add(serviceVisit);
+                }
+                return result;
             } catch (Exception e) {
-                logger.info("Local call failed (this was the error).  Throwing original exception", e);
+                logger.error("Local service call failed - logging stack trace now and throwing original exception from remote service after this.", e);
                 throw ex;
             }
         }

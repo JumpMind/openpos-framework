@@ -43,7 +43,7 @@ public class StatementDelayInterceptor extends StatementInterceptor {
     }
     
     @Override
-    public void preparedStatementExecute(String methodName, long elapsed, String sql) {
+    public void preparedStatementExecute(String methodName, long elapsed, String sql, Object[] objects) {
         if (sql.toLowerCase().startsWith("insert") || sql.toLowerCase().startsWith("update")) {
             try {
                 Thread.sleep(delay);
