@@ -64,5 +64,9 @@ public abstract class WrapperInterceptor {
         return wrapped;
     }
 
+    public void cleanupExecute(String methodName, Exception thrownException) {
+
+    }
+
     
 }

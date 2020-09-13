@@ -54,7 +54,7 @@ public class RandomErrorInterceptor extends StatementInterceptor {
     }
     
     @Override
-    public void preparedStatementExecute(String methodName, long elapsed, String sql) {
+    public void preparedStatementExecute(String methodName, long elapsed, String sql, Object[] objects) {
         // no op.
     }
     
