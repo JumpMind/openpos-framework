@@ -21,22 +21,23 @@ public class DialogBuilderTest {
 
     /**
      * Ensure that if the dialog type is set to OK_CANCEL_TYPE, and no customizations
-     * are made, that the dialog generated just has Ok and Cancel buttons with 
+     * are made, that the dialog generated just has Ok and Cancel buttons with
      * default titles (Ok, Cancel) and actions (Ok, Cancel).
      */
     @Test
     public void testDefaultOkCancelDialogBuild() {
         DialogBuilder config = new DialogBuilder(DialogBuilder.OK_CANCEL_TYPE, "Message Line 1");
         DialogUIMessage screen = config.build();
-        
-        assertEquals(2, screen.getButtons().size());
-        assertEquals(1, screen.getButtons().stream().filter(
-            m -> DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getAction())).count()
+
+        assertEquals(1, screen.getPromptButtonRow().getSecondaryButtons().size());
+        assertEquals(1, screen.getPromptButtonRow().getSecondaryButtons().stream().filter(
+                m -> DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getAction())).count()
         );
-        assertEquals(1, screen.getButtons().stream().filter(
-                m -> DialogBuilder.OK_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.OK_BUTTON_KEY.equals(m.getAction())).count()
-        );
-        DialogHeaderPart headerPart = (DialogHeaderPart)screen.get(MessagePartConstants.DialogHeader);
+        assertEquals(DialogBuilder.OK_BUTTON_KEY, screen.getPromptButtonRow().getPrimaryButton().getTitle());
+        assertEquals(DialogBuilder.OK_BUTTON_KEY, screen.getPromptButtonRow().getPrimaryButton().getAction());
+
+
+        DialogHeaderPart headerPart = (DialogHeaderPart) screen.get(MessagePartConstants.DialogHeader);
         assertNull(headerPart.getHeaderText());
         assertEquals(1, screen.getMessage().size());
         assertEquals("Message Line 1", screen.getMessage().get(0));
@@ -44,26 +45,25 @@ public class DialogBuilderTest {
 
     /**
      * Ensure that if the dialog type is set to OK_TYPE, and no customizations
-     * are made, that the dialog generated just has Ok button with 
+     * are made, that the dialog generated just has Ok button with
      * default title (Ok) and actions (Ok).
      */
+
     @Test
     public void testDefaultOkDialogBuild() {
         DialogBuilder config = new DialogBuilder(DialogBuilder.OK_TYPE, "Message Line 1", "Message Line 2");
         DialogUIMessage screen = config.build();
-        
-        assertEquals(1, screen.getButtons().size());
-        assertEquals(1, screen.getButtons().stream().filter(
-                m -> DialogBuilder.OK_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.OK_BUTTON_KEY.equals(m.getAction())).count()
-        );
 
-        DialogHeaderPart headerPart = (DialogHeaderPart)screen.get(MessagePartConstants.DialogHeader);
+        assertEquals(0, screen.getPromptButtonRow().getSecondaryButtons().size());
+        assertEquals(DialogBuilder.OK_BUTTON_KEY, screen.getPromptButtonRow().getPrimaryButton().getTitle());
+
+        DialogHeaderPart headerPart = (DialogHeaderPart) screen.get(MessagePartConstants.DialogHeader);
         assertNull(headerPart.getHeaderText());
         assertEquals(2, screen.getMessage().size());
         assertEquals("Message Line 1", screen.getMessage().get(0));
         assertEquals("Message Line 2", screen.getMessage().get(1));
     }
-    
+
     /**
      * Ensure that if the dialog type is set to OK_CANCEL_TYPE, and the Ok button is customized
      * with a custom action name, that the dialog generated has the custom
@@ -74,24 +74,24 @@ public class DialogBuilderTest {
         DialogBuilder config = new DialogBuilder(DialogBuilder.OK_CANCEL_TYPE, "Message Line 1")
                 .title("My title").putAction(DialogBuilder.OK_BUTTON_KEY, "customOkAction");
         DialogUIMessage screen = config.build();
-        
-        assertEquals(2, screen.getButtons().size());
-        assertEquals(1, screen.getButtons().stream().filter(
-            m -> DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getAction())).count()
+
+        assertEquals(1, screen.getPromptButtonRow().getSecondaryButtons().size());
+        assertEquals(1, screen.getPromptButtonRow().getSecondaryButtons().stream().filter(
+                m -> DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getTitle()) && DialogBuilder.CANCEL_BUTTON_KEY.equals(m.getAction())).count()
         );
-        assertEquals(1, screen.getButtons().stream().filter(
-                m -> DialogBuilder.OK_BUTTON_KEY.equals(m.getTitle()) && "customOkAction".equals(m.getAction())).count()
-        );
-        DialogHeaderPart headerPart = (DialogHeaderPart)screen.get(MessagePartConstants.DialogHeader);
+        assertEquals(DialogBuilder.OK_BUTTON_KEY, screen.getPromptButtonRow().getPrimaryButton().getTitle());
+        assertEquals("customOkAction", screen.getPromptButtonRow().getPrimaryButton().getAction());
+
+        DialogHeaderPart headerPart = (DialogHeaderPart) screen.get(MessagePartConstants.DialogHeader);
         assertEquals("My title", headerPart.getHeaderText());
         assertEquals(1, screen.getMessage().size());
         assertEquals("Message Line 1", screen.getMessage().get(0));
-        
+
     }
-    
+
     /**
      * Ensure that if the dialog type is set to OK_CANCEL_TYPE, and the Ok button is customized
-     * with a custom action title and action, that the ok button in the  dialog generated has
+     * with a custom action title and action, that the ok button in the dialog generated has
      * both custom title and action.
      */
     @Test
@@ -100,10 +100,9 @@ public class DialogBuilderTest {
                 .title("My title").putAction(DialogBuilder.OK_BUTTON_KEY, "Yes", "customOkAction");
         DialogUIMessage screen = config.build();
 
-        assertEquals(1, screen.getButtons().stream().filter(
-                m -> "Yes".equals(m.getTitle()) && "customOkAction".equals(m.getAction())).count()
-        );
+        assertEquals("Yes", screen.getPromptButtonRow().getPrimaryButton().getTitle());
+        assertEquals("customOkAction", screen.getPromptButtonRow().getPrimaryButton().getAction());
 
     }
-    
+
 }

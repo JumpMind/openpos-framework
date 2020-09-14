@@ -13,4 +13,5 @@ export interface ScanOrSearchInterface {
     scanType: ScanType;
     scanIcon: string;
     keyboardLayout: string;
+    willUnblock: boolean;
 }

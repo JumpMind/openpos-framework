@@ -84,7 +84,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     private registerScanner() {
-        if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
+        if ((typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) && this.screenData.willUnblock) {
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
                 this.doAction(this.screenData.scanAction, scanData);
             });
