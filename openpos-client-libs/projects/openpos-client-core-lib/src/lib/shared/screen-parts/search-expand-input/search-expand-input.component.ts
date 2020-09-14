@@ -78,7 +78,6 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
     }
 
     private unregisterScanner() {
-        console.log("Search Expand unregistering scanner");
         if (this.scanServiceSubscription) {
             this.scanServiceSubscription.unsubscribe();
             this.scanServiceSubscription = null;
