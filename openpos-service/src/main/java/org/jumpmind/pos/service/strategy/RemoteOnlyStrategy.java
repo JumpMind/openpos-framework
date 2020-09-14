@@ -103,7 +103,8 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
             throw serviceException;
         }
 
-        throw new RuntimeException("We should not have gotten here - there should be a result or lastException");
+        log.warn("We should not have gotten here - there should be a result or lastException");
+        return null;
     }
 
     private void populateServiceVisits(Object result, List<ServiceVisit> serviceVisits) {
