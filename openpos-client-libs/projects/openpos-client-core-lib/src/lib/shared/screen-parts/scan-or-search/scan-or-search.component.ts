@@ -63,6 +63,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     ngOnInit(): void {
         super.ngOnInit();
         this.registerScanner();
+        console.log("ScanOrSearch inited");
 
         if (this.screenData.keyboardLayout) {
             this.keyboardLayout = this.screenData.keyboardLayout;
@@ -92,6 +93,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     private unregisterScanner() {
+        console.log('Scan or Search unregistering Scanner');
         if (this.scanServiceSubscription) {
             this.scanServiceSubscription.unsubscribe();
             this.scanServiceSubscription = null;

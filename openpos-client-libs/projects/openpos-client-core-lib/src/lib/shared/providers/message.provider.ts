@@ -44,6 +44,9 @@ export class MessageProvider {
                     const lfMessage = m as LifeCycleMessage;
                     switch ( lfMessage.eventType ) {
                         case LifeCycleEvents.DialogOpening:
+                            if(MessageTypes.DIALOG !== this.messageType){
+                                console.log("Dialog Opening", lfMessage);
+                            }
                             return this.messageType === MessageTypes.DIALOG ?
                                 new LifeCycleMessage(LifeCycleEvents.BecomingActive, lfMessage.screen) :
                                 new LifeCycleMessage(LifeCycleEvents.LeavingActive, lfMessage.screen);
