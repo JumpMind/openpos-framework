@@ -11,7 +11,7 @@ public class SqlWatchdog {
 
     public static final String THREAD_NAME = "Commerce-SqlWatchdog-Thread";
 
-    private static java.util.Map<InProgressSqlKey, InProgressSqlStatement> inProgressSql = new ConcurrentHashMap<>();
+    private static java.util.Map<String, InProgressSqlStatement> inProgressSql = new ConcurrentHashMap<>();
 
     private static AtomicBoolean running = new AtomicBoolean(false);
 
@@ -39,11 +39,11 @@ public class SqlWatchdog {
         running.set(false);
     }
 
-    public static void sqlBegin(InProgressSqlKey key, InProgressSqlStatement sqlStatement) {
+    public static void sqlBegin(String key, InProgressSqlStatement sqlStatement) {
         inProgressSql.put(key, sqlStatement);
     }
 
-    public static void sqlEnd(InProgressSqlKey key) {
+    public static void sqlEnd(String key) {
         inProgressSql.remove(key);
     }
 

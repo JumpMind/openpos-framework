@@ -39,7 +39,7 @@ public class StatementInterceptor extends WrapperInterceptor {
 
     protected long longRunningThreshold = 20000;
 
-    private InProgressSqlKey sqlKey;
+    private String sqlKey;
 
     public StatementInterceptor(Object wrapped, TypedProperties systemPlusEngineProperties) {
         super(wrapped);
@@ -78,12 +78,8 @@ public class StatementInterceptor extends WrapperInterceptor {
         return new InterceptResult();
     }
 
-    private InProgressSqlKey generateKey(PreparedStatementWrapper ps) {
-        InProgressSqlKey key = new InProgressSqlKey();
-        key.setPsWrapper(ps);
-        key.setThreadName(Thread.currentThread().getName());
-        key.setSalt(new Random().nextLong());
-        return key;
+    private String generateKey(PreparedStatementWrapper ps) {
+        return Thread.currentThread().getId()+ps.getStatement();
     }
 
     @Override
@@ -101,6 +97,7 @@ public class StatementInterceptor extends WrapperInterceptor {
         if (methodName.startsWith("execute")) {
             long elapsed = endTime-startTime;
             preparedStatementExecute(methodName, elapsed, ps.getStatement(), psArgs.toArray());
+            psArgs.clear();
         }
 
         return new InterceptResult();
