@@ -99,6 +99,9 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     screenDataUpdated() {
+        //Since we are checking if the screen is disabled (willUnblock set to false) we need to try and register the scanner
+        //on every update just in case we go from disabled to enabled.
+        this.registerScanner();
     }
 
     public onEnter($event: any): void {
