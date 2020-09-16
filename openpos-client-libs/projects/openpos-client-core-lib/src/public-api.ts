@@ -128,6 +128,7 @@ export * from './lib/core/messages/ui-message';
 export * from './lib/core/messages/message';
 export * from './lib/core/help-text/help-text.service';
 export * from './lib/core/lock-screen/lock-screen.service';
+export * from './lib/core/services/simulated-peripheral-service';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';
@@ -174,6 +175,7 @@ export * from './lib/screens-with-parts/selection-list/selection-list-screen.com
 export * from './lib/screens-with-parts/selection-list/selection-list.interface';
 export * from './lib/screens-with-parts/return/return.component';
 export * from './lib/screens-with-parts/confirm-dialog/confirm-dialog.component';
+export * from './lib/screens-with-parts/simulated-peripheral-viewer/simulated-peripheral-viewer.component';
 
 export * from './lib/screens-with-parts/prompt/prompt-screen.component';
 export * from './lib/screens-with-parts/prompt/prompt-screen-dialog.component';
