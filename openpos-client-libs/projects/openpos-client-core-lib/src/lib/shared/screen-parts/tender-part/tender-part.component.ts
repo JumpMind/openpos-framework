@@ -20,7 +20,7 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
     amountCss: string = '';
 
     screenDataUpdated() {
-        if (parseFloat(this.screenData.amountDue.amount) < 0) {
+        if (this.screenData.amountDue && parseFloat(this.screenData.amountDue.amount) < 0) {
             this.amountCss = 'negative';
         }
         else {

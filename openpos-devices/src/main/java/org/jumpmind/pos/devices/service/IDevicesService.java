@@ -28,4 +28,7 @@ public interface IDevicesService {
     @RequestMapping(path="/authenticate", method = RequestMethod.GET)
     @ResponseBody
     public AuthenticateDeviceResponse authenticateDevice(@RequestBody AuthenticateDeviceRequest request);
+
+    @RequestMapping(path="/disconnectDevice", method = RequestMethod.POST)
+    public void disconnectDevice(@RequestBody DisconnectDeviceRequest request);
 }

@@ -3,6 +3,8 @@ package org.jumpmind.pos.core.service;
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.devices.model.DeviceModel;
+import org.jumpmind.pos.devices.service.IDevicesService;
+import org.jumpmind.pos.devices.service.model.DisconnectDeviceRequest;
 import org.jumpmind.pos.server.service.SessionConnectListener;
 import org.jumpmind.pos.util.event.DeviceDisconnectedEvent;
 import org.jumpmind.pos.util.event.EventPublisher;
@@ -24,6 +26,9 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
 
     @Autowired
     EventPublisher eventPublisher;
+
+    @Autowired
+    IDevicesService devicesService;
     
     @Override
     public void onApplicationEvent(SessionDisconnectEvent event) {        
@@ -32,6 +37,7 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
         log.info("session disconnected: {}", sessionId);
         
         DeviceModel deviceModel = sessionAuthTracker.getDeviceModel(sessionId);
+        devicesService.disconnectDevice(new DisconnectDeviceRequest(deviceModel.getDeviceId(), deviceModel.getAppId()));
 
         if (deviceModel != null) {
             try {

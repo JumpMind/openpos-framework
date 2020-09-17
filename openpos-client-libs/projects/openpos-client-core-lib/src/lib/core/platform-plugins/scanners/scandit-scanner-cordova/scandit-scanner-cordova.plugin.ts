@@ -82,7 +82,16 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
             this.barcodeCapture = Scandit.BarcodeCapture.forContext(this.context, this.settings);
             this.barcodeCapture.feedback = this.getFeedback();
             this.barcodeCapture.isEnabled = false;
-            const camera = Scandit.Camera.default;
+
+            let camera;
+            if(this.config.camera === 'front'){
+                camera = Scandit.Camera.atPosition(Scandit.CameraPosition.UserFacing);
+            } else if( this.config.camera === 'rear'){
+                camera = Scandit.Camera.atPosition(Scandit.CameraPosition.WorldFacing);
+
+            } else {
+                camera = Scandit.Camera.default;
+            }
 
             if (!this.cameraSettings) {
                 this.cameraSettings = Scandit.BarcodeCapture.recommendedCameraSettings;

@@ -59,24 +59,37 @@
             </form>
         </mat-step>
         <mat-step [stepControl]="thirdFormGroup">
-            <form *ngIf="thirdFormGroup" [formGroup]="thirdFormGroup">
+            <mat-slide-toggle [(ngModel)]="manualPersonalization" (change)="updateThirdFormGroup()">Manual Personalization</mat-slide-toggle>
+            <form *ngIf="thirdFormGroup && manualPersonalization" [formGroup]="thirdFormGroup">
                 <ng-template matStepLabel>Enter device information</ng-template>
                 <mat-form-field>
                     <input matInput placeholder="Device ID" formControlName="deviceId" required novalidate
                         pattern="[a-zA-Z0-9\-]+">
                 </mat-form-field>
-                <div class="warn"
-                    *ngIf="thirdFormGroup.get('deviceId').errors && thirdFormGroup.get('deviceId').errors.pattern">
-                    The Device ID must match openpos.ui.personalization.devicePattern
-                </div>
                 <mat-form-field>
-                    <input matInput placeholder="App ID" formControlName="appId" required novalidate>
+                    <mat-select *ngIf="appIds" formControlName="appId" placeholder="App ID" required>
+                        <mat-option *ngFor="let appId of appIds" [value]="appId">{{appId}}</mat-option>
+                    </mat-select>
+                    <input *ngIf="!appIds" matInput placeholder="App ID" formControlName="appId" required novalidate>
                 </mat-form-field>
-                <div>
-                    <button mat-button matStepperPrevious>Back</button>
-                    <button mat-button matStepperNext color='primary'>Next</button>
-                </div>
-            </form>                        
+            </form>
+            <form *ngIf="thirdFormGroup && !manualPersonalization" [formGroup]="thirdFormGroup">
+                <ng-template matStepLabel>Select Device</ng-template>
+                <mat-form-field>
+                    <mat-select formControlName="device" required >
+                        <mat-option *ngFor="let value of availableDevices" [value]="value.key">{{value.value}}</mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </form>
+            <div class="warn"
+                 *ngIf="thirdFormGroup.get('deviceId') && thirdFormGroup.get('deviceId').errors && thirdFormGroup.get('deviceId').errors.pattern">
+                The Device ID must match openpos.ui.personalization.devicePattern
+            </div>
+            <div>
+                <button mat-button matStepperPrevious>Back</button>
+                <button mat-button matStepperNext color='primary'>Next</button>
+            </div>
         </mat-step>
 
         <mat-step *ngIf="openposMgmtServerPresent" [completed]="isDiscoveryCompleted()">
@@ -101,7 +114,7 @@
             </div>
         </mat-step>
 
-        <mat-step [stepControl]="lastFormGroup">
+        <mat-step *ngIf="manualPersonalization" [stepControl]="lastFormGroup">
             <ng-template matStepLabel>Additional configuration</ng-template>
             <form *ngIf="lastFormGroup" [formGroup]="lastFormGroup">
                 <ng-container *ngIf="serverResponse && serverResponse.parameters">

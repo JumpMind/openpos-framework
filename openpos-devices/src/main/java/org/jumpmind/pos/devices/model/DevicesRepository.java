@@ -46,6 +46,13 @@ public class DevicesRepository {
         }
     }
 
+    public List<DeviceStatusModel> getDevicesByStatus(String status) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("deviceStatus", status);
+
+        return devSession.findByFields(DeviceStatusModel.class, params, 10000);
+    }
+
     public DeviceModel getDeviceByAuth(String auth) {
         Map<String, Object> params = new HashMap();
         params.put("authToken", auth);
@@ -101,6 +108,10 @@ public class DevicesRepository {
         params.put("appId", appId);
 
         return devSession.findByFields(DeviceParamModel.class, params, 10000);
+    }
+
+    public void updateDeviceStatus(String deviceId, String appId, String status) {
+        devSession.save(new DeviceStatusModel(deviceId, appId, status));
     }
 
 }

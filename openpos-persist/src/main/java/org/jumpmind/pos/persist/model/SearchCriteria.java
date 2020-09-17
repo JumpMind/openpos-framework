@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.jumpmind.pos.persist.AbstractModel;
+import org.jumpmind.pos.util.model.ITypeCode;
 
 public class SearchCriteria {
 
@@ -39,6 +40,10 @@ public class SearchCriteria {
     public SearchCriteria addCriteria(String field, Object value) {
         if (this.criteria == null) {
             this.criteria = new HashMap<String, Object>();
+        }
+
+        if (value instanceof ITypeCode) {
+            value = ((ITypeCode) value).value();
         }
 
         this.criteria.put(field, value);

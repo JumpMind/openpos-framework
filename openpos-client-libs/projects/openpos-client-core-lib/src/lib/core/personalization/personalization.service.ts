@@ -45,7 +45,16 @@ export class PersonalizationService {
 
         let request = new PersonalizationRequest(this.deviceToken$.getValue(), deviceId, appId, null);
         return this.sendPersonalizationRequest( sslEnabled, serverName, serverPort, request, personalizationProperties);
+    }
 
+    public personalizeWithToken(
+        serverName: string,
+        serverPort: string,
+        deviceToken: string,
+        sslEnabled?: boolean
+    ){
+        let request = new PersonalizationRequest(deviceToken, null, null, null);
+        return this.sendPersonalizationRequest( sslEnabled, serverName, serverPort, request, null);
     }
 
     private sendPersonalizationRequest( sslEnabled: boolean, serverName: string, serverPort: string, request: PersonalizationRequest, personalizationParameters: Map<string, string> ) : Observable<string> {

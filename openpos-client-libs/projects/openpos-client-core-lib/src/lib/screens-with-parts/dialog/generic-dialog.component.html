@@ -13,17 +13,7 @@
             <app-scan-part></app-scan-part>
         </mat-dialog-content>
         <mat-dialog-actions class="buttons">
-            <app-secondary-button *ngFor="let m of otherButtons; let i = index" [id]="'button-' + i" (click)="doAction(m)" 
-                [disabled]="!m.enabled" [actionItem]="m">
-                {{m.title}}
-                <span *ngIf="m.keybind && m.keybind !== 'Escape' && m.keybind !== 'Enter'" class="muted-color">({{m.keybindDisplayName}})</span>
-                <app-button-action-timer [action]="m" class="muted-color"></app-button-action-timer>
-            </app-secondary-button>
-            <app-primary-button *ngIf="primaryButton" (click)="doAction(primaryButton)" id="primaryButton"
-                [actionItem]="primaryButton">
-                {{primaryButton.title}}
-                <app-button-action-timer [action]="primaryButton" class="primary-inverse"></app-button-action-timer>
-            </app-primary-button>
+            <app-prompt-button-row></app-prompt-button-row>
         </mat-dialog-actions>
     </div>
 </div>

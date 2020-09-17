@@ -1,7 +1,5 @@
 package org.jumpmind.pos.management;
 
-import javax.validation.constraints.NotNull;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,11 +17,9 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class OpenposManagementServerConfig {
 
-    @NotNull
     private String mainWorkDirPath;
     private ClientConnect clientConnect;
     private String devicePattern;
-    @NotNull 
     private String statusUrlTemplate;
     private long statusMaxWaitMillis = 1000;
     private long statusCheckPeriodMillis = 5000;
@@ -108,7 +104,7 @@ public class OpenposManagementServerConfig {
         public static final String DEFAULT_PROCESS_PORT_ARG_TEMPLATE = "-Dserver.port=%d";
         public static final String DEFAULT_JAVA_REMOTE_DEBUG_ARG_TEMPLATE = "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=%d";
         
-        @NotNull @Value("${java.home}")
+        @Value("${java.home}")
         private String javaExecutablePath;
 
         private String[] classpathEntries = new String[0];

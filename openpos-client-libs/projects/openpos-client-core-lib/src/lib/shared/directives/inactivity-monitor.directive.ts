@@ -1,6 +1,8 @@
 import { Directive, HostListener, Input, Renderer2, ElementRef, OnDestroy } from '@angular/core';
 import { Configuration } from '../../configuration/configuration';
 import { SessionService } from '../../core/services/session.service';
+import {fromEvent, merge, Subject} from 'rxjs';
+import {takeUntil, throttleTime} from 'rxjs/operators';
 
 
 @Directive({
@@ -8,26 +10,36 @@ import { SessionService } from '../../core/services/session.service';
     selector: '[inactivityMonitor]'
 })
 export class InactivityMonitorDirective implements OnDestroy {
-
+    private destroyed$ = new Subject();
     static lastKeepAliveFlushTime: number = new Date().getTime();
+    private eventThrottleTime = 500;
 
     @Input() keepAliveMillis = Configuration.keepAliveMillis;
 
-    private timerHandle: any;
-    private _timeoutActive;
-
-    private unlisten = () => {};
-
     constructor(private elRef: ElementRef, public renderer: Renderer2, private session: SessionService) {
         if (Configuration.useTouchListener) {
-            this.unlisten = this.renderer.listen(elRef.nativeElement, 'touchstart', (event) => {
-                this.touchEvent(event);
-            });
+            fromEvent(elRef.nativeElement, 'touchstart')
+                .pipe(takeUntil(this.destroyed$)).subscribe((event: TouchEvent) => this.touchEvent(event));
         }
+
+        // Throttle events that can fire very rapidly to prevent too much unnecessary processing
+        const throttledEvents = merge (
+            // Scroll events don't bubble, so we need to get them top-down to handle them globally
+            fromEvent(window, 'scroll', {capture: true}),
+            // Get mouse move event on capture, instead of bubble, so we'll still be notified if nested components stop propagation of event bubbling
+            fromEvent(window,'mousemove', {capture: true})
+        );
+
+        throttledEvents.pipe(
+            // leading: get notified at start of throttle interval (as opposed to debounceTime, which waits xxx ms after first event)
+            // trailing: get notified at end of throttle interval too
+            throttleTime(this.eventThrottleTime, undefined, { leading: true, trailing: true }),
+            takeUntil(this.destroyed$)
+        ).subscribe(event => this.throttledEvent(event));
     }
 
     ngOnDestroy(): void {
-        this.unlisten();
+        this.destroyed$.next();
     }
 
 
@@ -37,11 +49,15 @@ export class InactivityMonitorDirective implements OnDestroy {
     }
 
     @HostListener('window:click', ['$event'])
-    mouseEvent(event: MouseEvent) {
+    mouseClickEvent(event: MouseEvent) {
         this.keepAlive();
     }
 
     touchEvent(event: TouchEvent) {
+        this.keepAlive();
+    }
+
+    throttledEvent(event: Event) {
         this.keepAlive();
     }
 

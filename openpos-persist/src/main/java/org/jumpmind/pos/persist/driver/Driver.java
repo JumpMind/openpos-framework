@@ -42,11 +42,14 @@ import org.jumpmind.properties.TypedProperties;
  */
 public class Driver implements java.sql.Driver {
     
-    private static final String DRIVER_PREFIX = "jdbc:openpos:";
+    public static final String DRIVER_PREFIX = "jdbc:openpos:";
     
     public static void register(TypedProperties properties) {
         try {
             DriverManager.registerDriver(new Driver());
+            if (System.getProperty("jumpmind.commerce.disableSqlWatchdog") == null) {
+                SqlWatchdog.start();
+            }
         } catch (Exception ex) {
             throw new RuntimeException("Failed to register openpos driver", ex);
         } 

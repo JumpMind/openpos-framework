@@ -19,5 +19,6 @@ public final class MessageType {
     public static final String LockScreen = "LockScreen";
     public static final String UnlockScreen = "UnlockScreen";
     public static final String Startup = "Startup";
-    
+    public static final String Scan = "Scan";
+    public static final String SimulatedPeripheral = "SimulatedPeripheral";
 }
