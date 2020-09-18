@@ -40,6 +40,13 @@ main{
       display: grid;
       row-gap: 8px;
     };
-  }
 
+    &.mobile {
+      .user {
+        ::ng-deep input {
+          max-width: 30vw;
+        }
+      }
+    }
+  }
 }

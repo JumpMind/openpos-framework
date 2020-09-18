@@ -1,5 +1,5 @@
 <main [ngStyle]=" data?.imageUrl | backgroundImageUrl">
-    <section>
+    <section responsive-class>
         <div class="user">
             <app-icon [iconName]="data?.iconName" iconClass="xl"></app-icon>
             <h1>{{override ? data?.overrideText : data?.userText}}</h1>
