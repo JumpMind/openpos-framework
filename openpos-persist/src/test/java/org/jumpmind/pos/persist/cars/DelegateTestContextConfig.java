@@ -47,7 +47,7 @@ public class DelegateTestContextConfig {
 
             AugmenterConfigs augmenterConfigs = new AugmenterConfigs();
             AugmenterConfig augmenterConfig = new AugmenterConfig();
-            augmenterConfig.setGroup("options");
+            augmenterConfig.setName("options");
             augmenterConfig.setPrefix("OPTION_");
 
             List<AugmenterModel> augmenterModels = new ArrayList<>();
@@ -58,6 +58,7 @@ public class DelegateTestContextConfig {
             augmenterModel = new AugmenterModel();
             augmenterModel.setName("transmission");
             augmenterModel.setOrder(1);
+            augmenterModel.setDefaultValue("standard");
             augmenterModels.add(augmenterModel);
             augmenterConfig.setAugmenters(augmenterModels);
             augmenterConfigs.setConfigs(Arrays.asList(augmenterConfig));

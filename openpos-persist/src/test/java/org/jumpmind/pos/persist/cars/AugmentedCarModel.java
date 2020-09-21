@@ -11,13 +11,13 @@ import org.jumpmind.pos.persist.model.IAugmentedModel;
 @Data
 @NoArgsConstructor
 @TableDef(name="augmented_car",
-        description = "A basic concept of an automobile fit to drive down the road, with optional augments.",
+        description = "A basic concept of an automobile fit to drive down the road, with options augments.",
         primaryKey = "vin")
 @IndexDefs({
         @IndexDef(name = "idx_aug_car_year", column = "modelYear"),
         @IndexDef(name = "idx_aug_car_make_model", columns = {"make", "model"})
 })
-@Augmented(group = "options")
+@Augmented(name = "options")
 public class AugmentedCarModel extends AbstractAugmentedModel implements IAugmentedModel {
 
     @ColumnDef

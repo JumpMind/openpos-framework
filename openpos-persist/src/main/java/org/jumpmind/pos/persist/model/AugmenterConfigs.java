@@ -15,25 +15,21 @@ import java.util.stream.Collectors;
 public class AugmenterConfigs {
     private List<AugmenterConfig> configs;
 
-    public List<String> getGroups() {
+    public List<String> getConfigsNames() {
         return Optional.ofNullable(configs).orElse(Collections.emptyList())
                 .stream()
-                .map(AugmenterConfig::getGroup)
+                .map(AugmenterConfig::getName)
                 .collect(Collectors.toList());
     }
 
-    public List<AugmenterConfig> getConfigsByGroups(String... groups) {
+    public List<AugmenterConfig> getConfigsByNames(String... names) {
         return Optional.ofNullable(configs).orElse(Collections.emptyList())
                 .stream()
-                .filter(group -> Arrays.stream(groups).anyMatch(g -> g.equals(group.getGroup())))
+                .filter(config -> Arrays.stream(names).anyMatch(g -> g.equals(config.getName())))
                 .collect(Collectors.toList());
     }
 
-    public AugmenterConfig getConfig(String group) {
-        return Optional.ofNullable(configs).orElse(Collections.emptyList())
-                .stream()
-                .filter(config -> Objects.equals(config.getGroup(), group))
-                .findFirst()
-                .orElse(null);
+    public AugmenterConfig getConfigByName(String name) {
+        return getConfigsByNames(name).stream().findFirst().orElse(null);
     }
 }

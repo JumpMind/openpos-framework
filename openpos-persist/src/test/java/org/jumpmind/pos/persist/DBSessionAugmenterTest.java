@@ -86,4 +86,11 @@ public class DBSessionAugmenterTest {
         List<CarModel> cars = db.findByCriteria(searchCriteria);
         assertEquals(0, cars.size());
     }
+
+    @Test
+    public void testDefaultValueIsSetWhenCreatingNewItem() {
+        DBSession db = sessionFactory.createDbSession();
+        AugmentedCarModel car = db.findByNaturalId(AugmentedCarModel.class, VIN);
+        assertEquals("standard", car.getAugmentValue("transmission"));
+    }
 }

@@ -47,7 +47,7 @@ public class TestPersistCarsConfig {
 
             AugmenterConfigs augmenterConfigs = new AugmenterConfigs();
             AugmenterConfig augmenterConfig = new AugmenterConfig();
-            augmenterConfig.setGroup("options");
+            augmenterConfig.setName("options");
             augmenterConfig.setPrefix("OPTION_");
 
             List<AugmenterModel> augmenterModels = new ArrayList<>();

@@ -23,7 +23,7 @@ public class AugmenterHelper {
     private AugmenterConfigs augmenterConfigs;
 
     public AugmenterConfig getAugmenterConfig(String group) {
-        return augmenterConfigs.getConfig(group);
+        return augmenterConfigs.getConfigByName(group);
     }
 
     public AugmenterConfig getAugmenterConfig(Object object) {
@@ -33,7 +33,7 @@ public class AugmenterHelper {
     public AugmenterConfig getAugmenterConfig(Class<?> clazz) {
         Augmented augmented = clazz.getAnnotation(Augmented.class);
         if (augmented != null) {
-            return augmenterConfigs.getConfig(augmented.group());
+            return augmenterConfigs.getConfigByName(augmented.name());
         }
         return null;
     }

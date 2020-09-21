@@ -8,6 +8,6 @@ import lombok.NoArgsConstructor;
 public class AugmenterModel {
     private String name;
     private String defaultValue;
-    private int size;
+    private Integer size;
     private int order;
 }

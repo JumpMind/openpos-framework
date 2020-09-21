@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Data
 @NoArgsConstructor
 public class AugmenterConfig {
-    private String group;
+    private String name;
     private String prefix;
     private List<AugmenterModel> augmenters;
 

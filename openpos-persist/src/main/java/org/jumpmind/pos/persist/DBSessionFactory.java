@@ -39,6 +39,8 @@ public class DBSessionFactory {
     TagHelper tagHelper;
     AugmenterHelper augmenterHelper;
 
+    private static final String DEFAULT_COLUMN_SIZE = "32";
+
     public void init(IDatabasePlatform databasePlatform, TypedProperties sessionContext, List<Class<?>> entities, List<Class<?>> extensionEntities, TagHelper tagHelper, AugmenterHelper augmenterHelper) {
 
         QueryTemplates queryTemplates = getQueryTemplates(sessionContext.get("module.tablePrefix"));
@@ -163,12 +165,12 @@ public class DBSessionFactory {
             for (Class<?> clazz : modelClazzes) {
                 Augmented[] annotations = clazz.getAnnotationsByType(Augmented.class);
                 if (annotations.length > 0) {
-                    AugmenterConfig augmenterConfig = augmenterConfigs.getConfig(annotations[0].group());
+                    AugmenterConfig augmenterConfig = augmenterConfigs.getConfigByName(annotations[0].name());
                     if (augmenterConfig != null) {
                         augmentTable(clazz, augmenterConfig);
                     }
                     else {
-                        log.warn("Missing group " + annotations[0].group() + " defined in augmenter configuration");
+                        log.info("Missing augmenter name " + annotations[0].name() + " defined in augmenter configuration");
                     }
                 }
             }
@@ -208,12 +210,12 @@ public class DBSessionFactory {
 
     protected Column setColumnInfo(Column column, String prefix, AugmenterModel augmenter) {
         column.setName(getColumnName(prefix, augmenter));
-        column.setDefaultValue(prefix);
+        column.setDefaultValue(augmenter.getDefaultValue());
         column.setTypeCode(Types.VARCHAR);
-        if (augmenter.getSize() > 0) {
+        if (augmenter.getSize() != null && augmenter.getSize() > 0) {
             column.setSize(String.valueOf(augmenter.getSize()));
         } else {
-            column.setSize("32");
+            column.setSize(DEFAULT_COLUMN_SIZE);
         }
         return column;
     }
@@ -315,7 +317,7 @@ public class DBSessionFactory {
         if (tag.getSize() > 0) {
             column.setSize(String.valueOf(tag.getSize()));
         } else {
-            column.setSize("32");
+            column.setSize(DEFAULT_COLUMN_SIZE);
         }
         return column;
     }

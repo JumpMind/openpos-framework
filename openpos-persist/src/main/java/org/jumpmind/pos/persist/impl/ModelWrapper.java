@@ -160,7 +160,7 @@ public class ModelWrapper {
                 }
             }
             if (IAugmentedModel.class.isAssignableFrom(clazz) && clazz.getAnnotation(Augmented.class) != null) {
-                AugmenterConfig config = augmenterHelper.getAugmenterConfig(clazz.getAnnotation(Augmented.class).group());
+                AugmenterConfig config = augmenterHelper.getAugmenterConfig(clazz.getAnnotation(Augmented.class).name());
                 if (config != null && config.getPrefix() != null) {
                     Column[] columns = classMetaData.getTable().getColumns();
                     for (Column column : columns) {
@@ -170,7 +170,7 @@ public class ModelWrapper {
                     }
                 }
                 else {
-                    log.warn("Missing augmenterConfig for " + clazz.getAnnotation(Augmented.class).group() + " skipping columns");
+                    log.info("Missing augmenterConfig for name: " + clazz.getAnnotation(Augmented.class).name() + " skipping columns");
                 }
 
             }
@@ -237,9 +237,12 @@ public class ModelWrapper {
     }
 
     protected AugmenterConfig getAugmenterConfig(AbstractModel model) {
-        AugmenterConfig config = augmenterHelper.getAugmenterConfig(model);
-        if (config == null) {
-            log.warn("Missing augmenter config for class " + model.getClass().getSimpleName());
+        AugmenterConfig config = null;
+        if (model.getClass().getAnnotation(Augmented.class) != null) {
+            config = augmenterHelper.getAugmenterConfig(model);
+            if (config == null) {
+                log.info("Missing augmenter config for class " + model.getClass().getSimpleName());
+            }
         }
         return config;
     }
