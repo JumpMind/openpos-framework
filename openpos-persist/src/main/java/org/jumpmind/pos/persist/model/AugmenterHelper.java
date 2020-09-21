@@ -22,8 +22,8 @@ public class AugmenterHelper {
     @Autowired
     private AugmenterConfigs augmenterConfigs;
 
-    public AugmenterConfig getAugmenterConfig(String group) {
-        return augmenterConfigs.getConfigByName(group);
+    public AugmenterConfig getAugmenterConfig(String name) {
+        return augmenterConfigs.getConfigByName(name);
     }
 
     public AugmenterConfig getAugmenterConfig(Object object) {
@@ -77,6 +77,4 @@ public class AugmenterHelper {
         }
         return null;
     }
-
-//    public Map<String, String>
 }

@@ -60,6 +60,19 @@ public class TestPersistCarsConfig {
             augmenterModel.setDefaultValue("standard");
             augmenterModel.setOrder(1);
             augmenterModels.add(augmenterModel);
+
+            List<AugmenterIndexConfig> indexConfigs = new ArrayList<>();
+
+            AugmenterIndexConfig indexConfig = new AugmenterIndexConfig();
+            indexConfig.setName("idx_option_color");
+            indexConfig.setColumnNames(Arrays.asList("color"));
+            indexConfigs.add(indexConfig);
+
+            indexConfig = new AugmenterIndexConfig();
+            indexConfig.setName("idx_make_model_color");
+            indexConfig.setColumnNames(Arrays.asList("make", "model", "color"));
+            indexConfigs.add(indexConfig);
+            augmenterConfig.setIndexConfigs(indexConfigs);
             augmenterConfig.setAugmenters(augmenterModels);
             augmenterConfigs.setConfigs(Arrays.asList(augmenterConfig));
 

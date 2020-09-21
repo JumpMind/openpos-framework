@@ -15,6 +15,7 @@ public class AugmenterConfig {
     private String name;
     private String prefix;
     private List<AugmenterModel> augmenters;
+    private List<AugmenterIndexConfig> indexConfigs;
 
     public AugmenterModel getAugmenter(String name) {
         return Optional.ofNullable(augmenters).orElse(Collections.emptyList()).stream()
