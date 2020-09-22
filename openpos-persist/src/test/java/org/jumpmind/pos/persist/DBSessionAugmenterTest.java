@@ -1,5 +1,6 @@
 package org.jumpmind.pos.persist;
 
+import org.jumpmind.db.sql.Row;
 import org.jumpmind.pos.persist.cars.AugmentedCarModel;
 import org.jumpmind.pos.persist.cars.CarModel;
 import org.jumpmind.pos.persist.cars.TestPersistCarsConfig;
@@ -11,7 +12,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 import static org.junit.Assert.*;
 
@@ -92,5 +96,35 @@ public class DBSessionAugmenterTest {
         DBSession db = sessionFactory.createDbSession();
         AugmentedCarModel car = db.findByNaturalId(AugmentedCarModel.class, VIN);
         assertEquals("standard", car.getAugmentValue("transmission"));
+    }
+
+    @Test
+    public void testIndexCreationSingleColumnIndex() {
+        DBSession db = sessionFactory.createDbSession();
+        Map<String, Object> params = new HashMap<>();
+        params.put("tableName", "CAR_AUGMENTED_CAR");
+        params.put("indexName", "CAR_IDX_OPTION_COLOR");
+        List<Row> results = db.query("select * from INFORMATION_SCHEMA.INDEXES where " +
+                "TABLE_NAME = :tableName and INDEX_NAME = :indexName", params);
+        assertEquals(1, results.size());
+        assertEquals("OPTION_COLOR", results.get(0).getString("COLUMN_NAME"));
+    }
+
+    @Test
+    public void testIndexCreationMultipleColumnIndex() {
+        DBSession db = sessionFactory.createDbSession();
+        Map<String, Object> params = new HashMap<>();
+        params.put("tableName", "CAR_AUGMENTED_CAR");
+        params.put("indexName", "CAR_IDX_MAKE_MODEL_COLOR");
+        List<Row> results = db.query("select * from INFORMATION_SCHEMA.INDEXES where " +
+                "TABLE_NAME = :tableName and INDEX_NAME = :indexName", params);
+        assertEquals(3, results.size());
+        assertNotNull("Expecting OPTION_COLOR to be indexed", findRowByColumn(results, "COLUMN_NAME", "OPTION_COLOR"));
+        assertNotNull("Expecting MAKE to be indexed", findRowByColumn(results, "COLUMN_NAME", "MAKE"));
+        assertNotNull("Expecting MODEL to be indexed", findRowByColumn(results, "COLUMN_NAME", "MODEL"));
+    }
+
+    private Row findRowByColumn(List<Row> results, String columnName, String value) {
+        return results.stream().filter(row -> Objects.equals(value, row.getString(columnName))).findFirst().orElse(null);
     }
 }
