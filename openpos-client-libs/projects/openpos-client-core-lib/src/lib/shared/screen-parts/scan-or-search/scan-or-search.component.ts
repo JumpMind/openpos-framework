@@ -62,6 +62,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     ngOnInit(): void {
         super.ngOnInit();
+        console.log("Scanner registered in screenDataUpdated");
         this.registerScanner();
 
         if (this.screenData.keyboardLayout) {
@@ -70,24 +71,30 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     onBecomingActive() {
+        console.log("Scanner registered in onBecomingActive");
         this.registerScanner();
     }
 
     onLeavingActive() {
+        console.log("Scanner unregistered in onLeavingActive");
         this.unregisterScanner();
     }
 
     ngOnDestroy(): void {
         this.unregisterScanner();
+        console.log("Scanner unregistered in ngOnDestroy");
         // this.scannerService.stopScanning();
         super.ngOnDestroy();
     }
 
     private registerScanner() {
         if ((typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) && this.screenData.willUnblock) {
+            console.log("REGISTERED SCANNER, willUnblock: ", this.screenData.willUnblock );
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
                 this.doAction(this.screenData.scanAction, scanData);
             });
+        } else {
+            console.log("DID NOT REGISTER SCANNER, willUnblock: ", this.screenData.willUnblock );
         }
     }
 
@@ -101,6 +108,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     screenDataUpdated() {
         //Since we are checking if the screen is disabled (willUnblock set to false) we need to try and register the scanner
         //on every update just in case we go from disabled to enabled.
+        console.log("Scanner registered in screenDataUpdated");
         this.registerScanner();
     }
 
