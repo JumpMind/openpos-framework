@@ -103,7 +103,7 @@ public class DBSessionAugmenterTest {
         DBSession db = sessionFactory.createDbSession();
         Map<String, Object> params = new HashMap<>();
         params.put("tableName", "CAR_AUGMENTED_CAR");
-        params.put("indexName", "CAR_IDX_OPTION_COLOR");
+        params.put("indexName", "CAR_AUG_IDX_OPTION_COLOR");
         List<Row> results = db.query("select * from INFORMATION_SCHEMA.INDEXES where " +
                 "TABLE_NAME = :tableName and INDEX_NAME = :indexName", params);
         assertEquals(1, results.size());
@@ -115,7 +115,7 @@ public class DBSessionAugmenterTest {
         DBSession db = sessionFactory.createDbSession();
         Map<String, Object> params = new HashMap<>();
         params.put("tableName", "CAR_AUGMENTED_CAR");
-        params.put("indexName", "CAR_IDX_MAKE_MODEL_COLOR");
+        params.put("indexName", "CAR_AUG_IDX_MAKE_MODEL_COLOR");
         List<Row> results = db.query("select * from INFORMATION_SCHEMA.INDEXES where " +
                 "TABLE_NAME = :tableName and INDEX_NAME = :indexName", params);
         assertEquals(3, results.size());

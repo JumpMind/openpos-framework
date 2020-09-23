@@ -655,7 +655,7 @@ public class DatabaseSchema {
             if (config != null && config.getIndexConfigs() != null) {
                 List<AugmenterIndexConfig> indexConfigs = config.getIndexConfigs();
                 for (AugmenterIndexConfig indexConfig : indexConfigs) {
-                    createIndex(indexConfig, table, indices, metaData.getIdxPrefix(), platform, config.getPrefix());
+                    createIndex(indexConfig, table, indices, augmented.indexPrefix(), platform, config.getPrefix());
                 }
             }
         }
@@ -667,7 +667,7 @@ public class DatabaseSchema {
         indexName += (indexConfig.isUnique() ? "_unq" : "");
         IIndex index = indices.get(indexName);
         if (index == null) {
-            index = indexConfig.isUnique() ? new UniqueIndex(indexConfig.getName()) : new NonUniqueIndex(indexConfig.getName());
+            index = indexConfig.isUnique() ? new UniqueIndex(indexName) : new NonUniqueIndex(indexName);
             indices.put(indexName, index);
         }
         for (String columnName : indexConfig.getColumnNames()) {

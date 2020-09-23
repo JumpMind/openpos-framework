@@ -17,7 +17,7 @@ import org.jumpmind.pos.persist.model.IAugmentedModel;
         @IndexDef(name = "idx_aug_car_year", column = "modelYear"),
         @IndexDef(name = "idx_aug_car_make_model", columns = {"make", "model"})
 })
-@Augmented(name = "options")
+@Augmented(name = "options", indexPrefix = "aug")
 public class AugmentedCarModel extends AbstractAugmentedModel implements IAugmentedModel {
 
     @ColumnDef
