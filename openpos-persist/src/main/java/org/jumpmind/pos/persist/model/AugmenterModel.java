@@ -9,5 +9,4 @@ public class AugmenterModel {
     private String name;
     private String defaultValue;
     private Integer size;
-    private int order;
 }

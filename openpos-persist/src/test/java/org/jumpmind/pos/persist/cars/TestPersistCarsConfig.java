@@ -53,12 +53,10 @@ public class TestPersistCarsConfig {
             List<AugmenterModel> augmenterModels = new ArrayList<>();
             AugmenterModel augmenterModel = new AugmenterModel();
             augmenterModel.setName("color");
-            augmenterModel.setOrder(0);
             augmenterModels.add(augmenterModel);
             augmenterModel = new AugmenterModel();
             augmenterModel.setName("transmission");
             augmenterModel.setDefaultValue("standard");
-            augmenterModel.setOrder(1);
             augmenterModels.add(augmenterModel);
 
             List<AugmenterIndexConfig> indexConfigs = new ArrayList<>();

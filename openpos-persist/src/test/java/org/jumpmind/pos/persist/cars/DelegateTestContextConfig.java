@@ -53,11 +53,9 @@ public class DelegateTestContextConfig {
             List<AugmenterModel> augmenterModels = new ArrayList<>();
             AugmenterModel augmenterModel = new AugmenterModel();
             augmenterModel.setName("color");
-            augmenterModel.setOrder(0);
             augmenterModels.add(augmenterModel);
             augmenterModel = new AugmenterModel();
             augmenterModel.setName("transmission");
-            augmenterModel.setOrder(1);
             augmenterModel.setDefaultValue("standard");
             augmenterModels.add(augmenterModel);
             augmenterConfig.setAugmenters(augmenterModels);

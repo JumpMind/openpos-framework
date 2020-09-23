@@ -23,11 +23,9 @@ public class AugmenterConfigTest {
         augmenters = new ArrayList<>();
         AugmenterModel augmenter1 = new AugmenterModel();
         augmenter1.setName("aug1");
-        augmenter1.setOrder(1);
         augmenters.add(augmenter1);
         AugmenterModel augmenter2 = new AugmenterModel();
         augmenter2.setName("aug2");
-        augmenter2.setOrder(2);
         augmenters.add(augmenter2);
         augmenterConfig.setAugmenters(augmenters);
     }
