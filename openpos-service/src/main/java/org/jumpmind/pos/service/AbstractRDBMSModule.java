@@ -83,6 +83,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.failStartupOnModuleLoadFailure:false}")
     boolean failStartupOnModuleLoadFailure;
 
+    @Autowired(required = false)
     protected DataSource dataSource;
 
     protected ISecurityService securityService;
