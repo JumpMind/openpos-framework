@@ -11,6 +11,8 @@ import org.jumpmind.db.util.ConfigDatabaseUpgrader;
 import org.jumpmind.exception.IoException;
 import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.persist.driver.Driver;
+import org.jumpmind.pos.persist.model.AugmenterConfigs;
+import org.jumpmind.pos.persist.model.AugmenterHelper;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.service.model.ModuleModel;
 import org.jumpmind.properties.TypedProperties;
@@ -42,7 +44,7 @@ import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.*;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
 
 @EnableTransactionManagement
-@DependsOn({"tagConfig"})
+@DependsOn({"tagConfig", "augmenterConfigs"})
 abstract public class AbstractRDBMSModule extends AbstractServiceFactory implements IModule, IRDBMSModule {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -62,6 +64,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     protected TagHelper tagHelper;
 
     @Autowired
+    protected AugmenterHelper augmenterHelper;
+
+    @Autowired
     protected ApplicationContext applicationContext;
 
     protected IDatabasePlatform databasePlatform;
@@ -78,6 +83,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.failStartupOnModuleLoadFailure:false}")
     boolean failStartupOnModuleLoadFailure;
 
+    @Autowired(required = false)
     protected DataSource dataSource;
 
     protected ISecurityService securityService;
@@ -279,7 +285,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             sessionContext.put(DBSession.JDBC_FETCH_SIZE, env.getProperty(DBSession.JDBC_FETCH_SIZE));
             sessionContext.put(DBSession.JDBC_QUERY_TIMEOUT, env.getProperty(DBSession.JDBC_QUERY_TIMEOUT));
 
-            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper);
+            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper, augmenterHelper);
 
         }
 

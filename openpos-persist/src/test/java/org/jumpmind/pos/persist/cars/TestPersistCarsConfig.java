@@ -1,18 +1,14 @@
 package org.jumpmind.pos.persist.cars;
 
 import java.io.InputStream;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.persist.DatabaseScriptContainer;
 import org.jumpmind.pos.persist.driver.Driver;
 import org.jumpmind.pos.persist.impl.QueryTemplates;
-import org.jumpmind.pos.persist.model.TagConfig;
-import org.jumpmind.pos.persist.model.TagHelper;
-import org.jumpmind.pos.persist.model.TagModel;
+import org.jumpmind.pos.persist.model.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -48,15 +44,48 @@ public class TestPersistCarsConfig {
             
             TagHelper tagHelper = new TagHelper();
             tagHelper.setTagConfig(tagConfig);
-            
-            
+
+            AugmenterConfigs augmenterConfigs = new AugmenterConfigs();
+            AugmenterConfig augmenterConfig = new AugmenterConfig();
+            augmenterConfig.setName("options");
+            augmenterConfig.setPrefix("OPTION_");
+
+            List<AugmenterModel> augmenterModels = new ArrayList<>();
+            AugmenterModel augmenterModel = new AugmenterModel();
+            augmenterModel.setName("color");
+            augmenterModels.add(augmenterModel);
+            augmenterModel = new AugmenterModel();
+            augmenterModel.setName("transmission");
+            augmenterModel.setDefaultValue("standard");
+            augmenterModels.add(augmenterModel);
+
+            List<AugmenterIndexConfig> indexConfigs = new ArrayList<>();
+
+            AugmenterIndexConfig indexConfig = new AugmenterIndexConfig();
+            indexConfig.setName("idx_option_color");
+            indexConfig.setColumnNames(Arrays.asList("color"));
+            indexConfigs.add(indexConfig);
+
+            indexConfig = new AugmenterIndexConfig();
+            indexConfig.setName("idx_make_model_color");
+            indexConfig.setColumnNames(Arrays.asList("make", "model", "color"));
+            indexConfigs.add(indexConfig);
+            augmenterConfig.setIndexConfigs(indexConfigs);
+            augmenterConfig.setAugmenters(augmenterModels);
+            augmenterConfigs.setConfigs(Arrays.asList(augmenterConfig));
+
+            AugmenterHelper augmenterHelper = new AugmenterHelper();
+            augmenterHelper.setAugmenterConfigs(augmenterConfigs);
+
             sessionFactory.init(
                     PersistTestUtil.testDbPlatform(), 
                     PersistTestUtil.getSessionContext(), 
-                    Arrays.asList(CarModel.class, CarStats.class, ServiceInvoice.class, RaceCarModel.class),
+                    Arrays.asList(CarModel.class, CarStats.class, ServiceInvoice.class, RaceCarModel.class, AugmentedCarModel.class),
                     Arrays.asList(CarModelExtension.class),
                     queryTemplates,
-                    DBSessionFactory.getDmlTemplates("persist-test"), tagHelper);
+                    DBSessionFactory.getDmlTemplates("persist-test"),
+                    tagHelper,
+                    augmenterHelper);
             
 
             DBSession session = sessionFactory.createDbSession();

@@ -1,30 +1,22 @@
 package org.jumpmind.pos.persist.impl;
 
-import java.beans.IntrospectionException;
-import java.beans.PropertyDescriptor;
-
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.math.BigDecimal;
-import java.util.*;
-import java.util.Map.Entry;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.CurrencyUnit;
 import org.joda.money.Money;
 import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
-import org.jumpmind.pos.persist.AbstractModel;
-import org.jumpmind.pos.persist.ColumnDef;
-import org.jumpmind.pos.persist.CompositeDef;
-import org.jumpmind.pos.persist.PersistException;
-import org.jumpmind.pos.persist.model.ITaggedModel;
-import org.jumpmind.pos.persist.model.TagModel;
+import org.jumpmind.pos.persist.*;
+import org.jumpmind.pos.persist.model.*;
 import org.jumpmind.pos.util.ReflectUtils;
-import org.jumpmind.pos.util.ReflectionException;
 import org.jumpmind.pos.util.model.ITypeCode;
+
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.*;
+import java.util.Map.Entry;
 
 @Slf4j
 public class ModelWrapper {
@@ -33,6 +25,7 @@ public class ModelWrapper {
 
     private ModelMetaData modelMetaData;
     private AbstractModel model;
+    private AugmenterHelper augmenterHelper;
     
     private Map<String, Object> systemData;
 
@@ -40,9 +33,10 @@ public class ModelWrapper {
     private LinkedHashMap<String, Object> columnNamesToValues;
     
     @SuppressWarnings("unchecked")
-    public ModelWrapper(AbstractModel model, ModelMetaData modelMetaData) {
+    public ModelWrapper(AbstractModel model, ModelMetaData modelMetaData, AugmenterHelper augmenterHelper) {
         this.model = model;
         this.modelMetaData = modelMetaData;
+        this.augmenterHelper = augmenterHelper;
 
         modelMetaData.getModelClassMetaData().forEach( modelClassMetaData -> {
             if(modelClassMetaData.getExtensionClazzes() != null){
@@ -165,6 +159,21 @@ public class ModelWrapper {
                     }
                 }
             }
+            if (IAugmentedModel.class.isAssignableFrom(clazz) && clazz.getAnnotation(Augmented.class) != null) {
+                AugmenterConfig config = augmenterHelper.getAugmenterConfig(clazz.getAnnotation(Augmented.class).name());
+                if (config != null && config.getPrefix() != null) {
+                    Column[] columns = classMetaData.getTable().getColumns();
+                    for (Column column : columns) {
+                        if (column.getName().toUpperCase().startsWith(config.getPrefix())) {
+                            fieldColumnMap.put(column.getName(), column);
+                        }
+                    }
+                }
+                else {
+                    log.info("Missing augmenterConfig for name: " + clazz.getAnnotation(Augmented.class).name() + " skipping columns");
+                }
+
+            }
         }
     }
 
@@ -199,11 +208,14 @@ public class ModelWrapper {
         try {
             LinkedHashMap<String, Object> columnNamesToObjectValues = new LinkedHashMap<String, Object>();
             Set<String> fieldNames = fieldsToColumns.keySet();
+            AugmenterConfig config = getAugmenterConfig(model);
             for (String fieldName : fieldNames) {
-
                 if (fieldName.toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
                     String tagValue = ((ITaggedModel) model).getTagValue(fieldName.substring(TagModel.TAG_PREFIX.length()));
                     columnNamesToObjectValues.put(fieldName, tagValue);
+                } else if (config != null && fieldName.toUpperCase().startsWith(config.getPrefix())) {
+                    String agumentValue = ((IAugmentedModel) model).getAugmentValue(fieldName.substring(config.getPrefix().length()));
+                    columnNamesToObjectValues.put(fieldName, ObjectUtils.defaultIfNull(agumentValue, augmenterHelper.getDefaultValue(fieldName, model)));
                 } else {
                     Column column = fieldsToColumns.get(fieldName);
                     Object value = getFieldValue(fieldName);
@@ -222,7 +234,18 @@ public class ModelWrapper {
             throw new PersistException(
                     "Failed to getObjectValuesByColumnName on model " + model + " fieldsToColumns: " + fieldsToColumns, ex);
         }
-    }    
+    }
+
+    protected AugmenterConfig getAugmenterConfig(AbstractModel model) {
+        AugmenterConfig config = null;
+        if (model.getClass().getAnnotation(Augmented.class) != null) {
+            config = augmenterHelper.getAugmenterConfig(model);
+            if (config == null) {
+                log.info("Missing augmenter config for class " + model.getClass().getSimpleName());
+            }
+        }
+        return config;
+    }
 
     public Object getFieldValue(String fieldName) {
         Object fieldValue=null;

@@ -14,6 +14,7 @@ import org.jumpmind.pos.persist.cars.CarModel;
 import org.jumpmind.pos.persist.impl.DatabaseSchema;
 import org.jumpmind.pos.persist.impl.DmlTemplate;
 import org.jumpmind.pos.persist.impl.QueryTemplate;
+import org.jumpmind.pos.persist.model.AugmenterHelper;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.properties.TypedProperties;
 import org.junit.Test;
@@ -41,6 +42,7 @@ public class DBSessionQueryConcurrentTest {
         DatabaseSchema databaseSchema = Mockito.mock(DatabaseSchema.class);
         IDatabasePlatform databasePlatform = Mockito.mock(IDatabasePlatform.class);
         TagHelper tagHelper = Mockito.mock(TagHelper.class);
+        AugmenterHelper augmenterHelper = Mockito.mock(AugmenterHelper.class);
         DataSource dataSource = Mockito.mock(DataSource.class);
         Connection connection = Mockito.mock(Connection.class);
         PreparedStatement ps = Mockito.mock(PreparedStatement.class);
@@ -59,7 +61,7 @@ public class DBSessionQueryConcurrentTest {
         Map<String, QueryTemplate> queryTemplates = new HashMap<>();
         Map<String, DmlTemplate> dmlTemplates = new HashMap<>();
         
-        DBSession db = new DBSession("catalog", "schema", databaseSchema, databasePlatform, new TypedProperties(), queryTemplates, dmlTemplates, tagHelper);
+        DBSession db = new DBSession("catalog", "schema", databaseSchema, databasePlatform, new TypedProperties(), queryTemplates, dmlTemplates, tagHelper, augmenterHelper);
         
         for (int i = 0; i < 1000; i++) {            
             db.query(carLookup);

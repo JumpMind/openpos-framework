@@ -21,6 +21,7 @@ public class ModelClassMetaData {
     private Map<String, FieldMetaData> entityFieldMetaDatas = new LinkedHashMap<>();
     private List<Column> primaryKeyColumns = new ArrayList<Column>();
     private Set<String> primaryKeyFieldNames = new LinkedHashSet<>();
+    private Set<String> augmentedFieldNames = new LinkedHashSet<>();
 
     public ModelClassMetaData() {
     }
