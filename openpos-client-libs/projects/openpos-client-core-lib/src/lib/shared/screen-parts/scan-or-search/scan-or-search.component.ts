@@ -62,7 +62,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     ngOnInit(): void {
         super.ngOnInit();
-        console.log("Scanner registered in screenDataUpdated");
+        console.log("Scanner registered in ngOnInit");
         this.registerScanner();
 
         if (this.screenData.keyboardLayout) {
