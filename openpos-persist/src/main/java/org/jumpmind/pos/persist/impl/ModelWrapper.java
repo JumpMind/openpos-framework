@@ -170,7 +170,7 @@ public class ModelWrapper {
                     }
                 }
                 else {
-                    log.info("Missing augmenterConfig for name: " + clazz.getAnnotation(Augmented.class).name() + " skipping columns");
+                    log.debug("Missing augmenterConfig for name: " + clazz.getAnnotation(Augmented.class).name() + " skipping columns");
                 }
 
             }
@@ -241,7 +241,7 @@ public class ModelWrapper {
         if (model.getClass().getAnnotation(Augmented.class) != null) {
             config = augmenterHelper.getAugmenterConfig(model);
             if (config == null) {
-                log.info("Missing augmenter config for class " + model.getClass().getSimpleName());
+                log.debug("Missing augmenterConfig for class named " + model.getClass().getSimpleName());
             }
         }
         return config;
