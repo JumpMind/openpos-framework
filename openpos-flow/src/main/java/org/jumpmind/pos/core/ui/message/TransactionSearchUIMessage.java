@@ -12,6 +12,7 @@ public class TransactionSearchUIMessage extends UIMessage {
     private ActionItem clearButton;
 
     private String providerKey;
+    private String noResultsMessage;
 
     public TransactionSearchUIMessage() {
         this.setScreenType(UIMessageType.TRANSACTION_SEARCH);
@@ -41,4 +42,13 @@ public class TransactionSearchUIMessage extends UIMessage {
     public void setProviderKey(String providerKey) {
         this.providerKey = providerKey;
     }
+
+    public String getNoResultsMessage() {
+        return noResultsMessage;
+    }
+
+    public void setNoResultsMessage(String noResultsMessage) {
+        this.noResultsMessage = noResultsMessage;
+    }
+
 }
