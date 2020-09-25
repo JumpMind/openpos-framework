@@ -43,6 +43,8 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     savePoints: string[];
 
+    simAuthToken: string;
+
     firstClickTime = Date.now();
 
     clickCount = 0;
@@ -104,17 +106,17 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     @ViewChild('devMenuPanel') devMenuPanel: MatExpansionPanel;
 
     constructor(
-            private personalization: PersonalizationService,
-            public screenService: ScreenService, public dialogService: DialogService, public session: SessionService,
-            public deviceService: DeviceService, public dialog: MatDialog,
-            public iconService: IconService, public snackBar: MatSnackBar, public overlayContainer: OverlayContainer,
-            private pluginService: OldPluginService,
-            private fileUploadService: FileUploadService,
-            private httpClient: HttpClient, private cd: ChangeDetectorRef,
-            private elRef: ElementRef, public renderer: Renderer2,
-            private electron: ElectronService,
-            private configurationService: ConfigurationService,
-            private discovery: DiscoveryService) {
+        private personalization: PersonalizationService,
+        public screenService: ScreenService, public dialogService: DialogService, public session: SessionService,
+        public deviceService: DeviceService, public dialog: MatDialog,
+        public iconService: IconService, public snackBar: MatSnackBar, public overlayContainer: OverlayContainer,
+        private pluginService: OldPluginService,
+        private fileUploadService: FileUploadService,
+        private httpClient: HttpClient, private cd: ChangeDetectorRef,
+        private elRef: ElementRef, public renderer: Renderer2,
+        private electron: ElectronService,
+        private configurationService: ConfigurationService,
+        private discovery: DiscoveryService) {
 
         if (Configuration.useTouchListener) {
             this.renderer.listen(elRef.nativeElement, 'touchstart', (event) => {
@@ -148,78 +150,80 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                 });
             }
         }
-        if (message.scopes.ConversationScope) {
-            console.info('Pulling Conversation Scope Elements...');
-            this.ConvElements = [];
-            message.scopes.ConversationScope.forEach(element => {
-                if (!this.ConvElements.includes(element, 0)) {
-                    this.ConvElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-        }
-        if (message.scopes.SessionScope) {
-            console.info('Pulling Session Scope Elements...');
-            this.SessElements = [];
-            message.scopes.SessionScope.forEach(element => {
-                if (!this.SessElements.includes(element, 0)) {
-                    this.SessElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-        }
-        if (message.scopes.DeviceScope) {
-            console.info('Pulling Device Scope Elements...');
-            this.DeviceElements = [];
-            message.scopes.DeviceScope.forEach(element => {
-                if (!this.DeviceElements.includes(element, 0)) {
-                    this.DeviceElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-        }
-        if (message.scopes.FlowScope) {
-            console.info('Pulling Flow Scope Elements...');
-            this.FlowElements = [];
-            message.scopes.FlowScope.forEach(element => {
-                if (!this.FlowElements.includes(element, 0)) {
-                    this.FlowElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-            console.info(this.FlowElements);
-        }
+        if (message.scopes) {
+            if (message.scopes.ConversationScope) {
+                console.info('Pulling Conversation Scope Elements...');
+                this.ConvElements = [];
+                message.scopes.ConversationScope.forEach(element => {
+                    if (!this.ConvElements.includes(element, 0)) {
+                        this.ConvElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+            }
+            if (message.scopes.SessionScope) {
+                console.info('Pulling Session Scope Elements...');
+                this.SessElements = [];
+                message.scopes.SessionScope.forEach(element => {
+                    if (!this.SessElements.includes(element, 0)) {
+                        this.SessElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+            }
+            if (message.scopes.DeviceScope) {
+                console.info('Pulling Device Scope Elements...');
+                this.DeviceElements = [];
+                message.scopes.DeviceScope.forEach(element => {
+                    if (!this.DeviceElements.includes(element, 0)) {
+                        this.DeviceElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+            }
+            if (message.scopes.FlowScope) {
+                console.info('Pulling Flow Scope Elements...');
+                this.FlowElements = [];
+                message.scopes.FlowScope.forEach(element => {
+                    if (!this.FlowElements.includes(element, 0)) {
+                        this.FlowElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+                console.info(this.FlowElements);
+            }
 
-        if (message.scopes.ConfigScope) {
-            console.info('Pulling Config Scope Elements...');
-            this.ConfElements = [];
-            message.scopes.ConfigScope.forEach(element => {
-                if (!this.ConfElements.includes(element, 0)) {
-                    this.ConfElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-            console.info(this.ConfElements);
+            if (message.scopes.ConfigScope) {
+                console.info('Pulling Config Scope Elements...');
+                this.ConfElements = [];
+                message.scopes.ConfigScope.forEach(element => {
+                    if (!this.ConfElements.includes(element, 0)) {
+                        this.ConfElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+                console.info(this.ConfElements);
+            }
         }
 
         if (message.saveFiles) {
@@ -229,6 +233,11 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                 this.savePoints.push(saveName);
                 console.info(this.savePoints);
             });
+        }
+
+        if (message.simAuthToken) {
+            console.info('Pulling sim auth token...');
+            this.simAuthToken = message.simAuthToken;
         }
     }
 
@@ -334,7 +343,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             console.info(`DevTools can't fetch server status since device is not yet personalized.`);
         }
         this.showDevMenu = !this.showDevMenu;
-        if (! this.personalization.getPersonalizationSuccessful$().getValue()) {
+        if (!this.personalization.getPersonalizationSuccessful$().getValue()) {
             // Due to a bug in the WKWebview, the below is needed on cordova to get the
             // DevMenu to show on the iPad when personalization has failed.  Without this code,
             // the DevMenu is invisible until the iPad is rotated. With this code, though, there
@@ -432,14 +441,20 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         this.personalization.dePersonalize();
         this.session.unsubscribe();
 
-        const d = this.dialog.open( PersonalizationComponent );
-        d.afterOpened().subscribe( () => this.session.cancelLoading() );
-        d.afterClosed().subscribe( () => this.personalization.refreshApp() );
+        const d = this.dialog.open(PersonalizationComponent);
+        d.afterOpened().subscribe(() => this.session.cancelLoading());
+        d.afterClosed().subscribe(() => this.personalization.refreshApp());
     }
 
     public onDevClearLocalStorage() {
         localStorage.clear();
         this.personalization.refreshApp();
+    }
+
+    public onOpenSimulator() {
+        const serverName = localStorage.getItem('serverName');
+        window.open('http://localhost:7400/#/?serverName=' + serverName +
+            '&serverPort=6140&deviceToken=' + this.simAuthToken);
     }
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {

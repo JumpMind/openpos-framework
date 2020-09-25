@@ -1,13 +1,7 @@
 package org.jumpmind.pos.core.service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.FlowException;
@@ -20,6 +14,14 @@ import org.jumpmind.pos.core.javapos.SimulatedScannerService;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.model.OpenposBarcodeType;
 import org.jumpmind.pos.core.model.ScanData;
+import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
+import org.jumpmind.pos.devices.DeviceNotFoundException;
+import org.jumpmind.pos.devices.model.DeviceModel;
+import org.jumpmind.pos.devices.model.DevicesRepository;
+import org.jumpmind.pos.devices.service.IDevicesService;
+import org.jumpmind.pos.devices.service.model.GetDeviceRequest;
+import org.jumpmind.pos.devices.service.model.PersonalizationRequest;
+import org.jumpmind.pos.devices.service.model.PersonalizationResponse;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
@@ -43,6 +45,9 @@ public class DevToolsActionListener implements IActionListener {
     
     @Autowired
     IMessageService messageService;
+
+    @Autowired
+    DevicesRepository devicesRepository;
     
     @Override
     public Collection<String> getRegisteredTypes() {        
@@ -81,16 +86,27 @@ public class DevToolsActionListener implements IActionListener {
 
         }
 
-        messageService.sendMessage(appId, deviceId, createMessage(stateManager));
+        messageService.sendMessage(appId, deviceId, createMessage(stateManager, deviceId));
     }
     
-    private Message createMessage(IStateManager sm) {
+    private Message createMessage(IStateManager sm, String deviceId) {
         Message message = new Message();
         message.setType(MessageType.DevTools);
         message.put("name", "DevTools::Get");
         setScopes(sm, message);
         setCurrentStateAndActions(sm, message);
+        setSimAuthCode(deviceId, message);
         return message;
+    }
+
+    private void setSimAuthCode(String deviceId, Message message) {
+        String authToken = "";
+        try{
+            authToken = devicesRepository.getDeviceAuth(deviceId, "sim");
+        } catch (DeviceNotFoundException ex){
+            authToken = "";
+        }
+        message.put("simAuthToken", authToken);
     }
 
     private void setCurrentStateAndActions(IStateManager sm, Message message) {
