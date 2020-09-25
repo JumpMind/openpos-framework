@@ -83,6 +83,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.failStartupOnModuleLoadFailure:false}")
     boolean failStartupOnModuleLoadFailure;
 
+    @Autowired(required = false)
     protected DataSource dataSource;
 
     protected ISecurityService securityService;
@@ -216,7 +217,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public DataSource getDataSource() {
-        if (dataSource == null) {
+        if (dataSource == null || dataSource.getClass().getSimpleName().contains("EmbeddedDataSourceProxy")) {
+            this.dataSource = null;
             setupH2Server();
             if (this.dataSourceBeanName != null) {
                 try {

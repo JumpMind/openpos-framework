@@ -51,13 +51,7 @@ public class DevicesModule extends AbstractRDBMSModule {
         return super.securityService();
     }
 
-    @Override
-    @Bean(name = NAME + "DataSource")
-    public DataSource getDataSource() {
-        return super.getDataSource();
-    }
-
-    @Override
+@Override
     @Bean(name = NAME + "SessionFactory")
     protected DBSessionFactory sessionFactory() {
         return super.sessionFactory();

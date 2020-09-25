@@ -5,4 +5,5 @@ export interface TransactionSearchInterface extends IAbstractScreen {
     searchButton: IActionItem;
     clearButton: IActionItem;
     providerKey: string;
+    noResultsMessage: string;
 }
