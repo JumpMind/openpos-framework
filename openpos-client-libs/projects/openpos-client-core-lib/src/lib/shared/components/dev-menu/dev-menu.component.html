@@ -274,7 +274,10 @@
                             <button mat-button (click)="onDevClearLocalStorage()">Clear Local Storage</button>
                         </li>
                         <li>
-                            <button mat-button (click)="onOpenSimulator()">Open Simulator</button>
+                            <div fxFlexFill fxLayout="row"  fxLayoutGap="20px" fxLayoutAlign="left center">
+                            <button mat-button [disabled]="!simAuthTokenAvailable" (click)="onOpenSimulator()">Open Simulator</button>
+                            <div *ngIf="!simAuthTokenAvailable"><p style="color:red">No device auth token found. Ensure SimDeviceStartupTask is enabled for pos devices.</p></div>
+                            </div>
                         </li>
                     </ul>
 

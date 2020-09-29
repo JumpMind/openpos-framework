@@ -45,6 +45,8 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     simAuthToken: string;
 
+    simAuthTokenAvailable = false;
+
     firstClickTime = Date.now();
 
     clickCount = 0;
@@ -238,6 +240,13 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         if (message.simAuthToken) {
             console.info('Pulling sim auth token...');
             this.simAuthToken = message.simAuthToken;
+            if (message.simAuthToken && message.simAuthToken.length > 0) {
+                this.simAuthTokenAvailable = true;
+            } else {
+                this.simAuthTokenAvailable = false;
+            }
+        } else {
+            this.simAuthTokenAvailable = false;
         }
     }
 
