@@ -17,6 +17,8 @@
             </app-primary-button>
         </div>
 
+        <app-instructions *ngIf="screen.noResultsMessage" class="text-center" [instructions]="screen.noResultsMessage"></app-instructions>
+
         <app-infinite-scroll [dataKey]="screen.providerKey" [itemTemplate]="itemTemplate" virtualScrollMinBufferPx="200"
             virtualScrollMaxBufferPx="400" [itemHeightPx]="150">
 

@@ -160,7 +160,7 @@ public class ModelWrapper {
                 }
             }
             if (IAugmentedModel.class.isAssignableFrom(clazz) && clazz.getAnnotation(Augmented.class) != null) {
-                AugmenterConfig config = augmenterHelper.getAugmenterConfig(clazz.getAnnotation(Augmented.class).name());
+                AugmenterConfig config = augmenterHelper.getAugmenterConfig(clazz);
                 if (config != null && config.getPrefix() != null) {
                     Column[] columns = classMetaData.getTable().getColumns();
                     for (Column column : columns) {
@@ -170,7 +170,7 @@ public class ModelWrapper {
                     }
                 }
                 else {
-                    log.info("Missing augmenterConfig for name: " + clazz.getAnnotation(Augmented.class).name() + " skipping columns");
+                    log.debug("Missing augmenterConfig for class named " + clazz.getSimpleName());
                 }
 
             }
@@ -208,7 +208,7 @@ public class ModelWrapper {
         try {
             LinkedHashMap<String, Object> columnNamesToObjectValues = new LinkedHashMap<String, Object>();
             Set<String> fieldNames = fieldsToColumns.keySet();
-            AugmenterConfig config = getAugmenterConfig(model);
+            AugmenterConfig config = augmenterHelper.getAugmenterConfig(model);
             for (String fieldName : fieldNames) {
                 if (fieldName.toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
                     String tagValue = ((ITaggedModel) model).getTagValue(fieldName.substring(TagModel.TAG_PREFIX.length()));
@@ -234,17 +234,6 @@ public class ModelWrapper {
             throw new PersistException(
                     "Failed to getObjectValuesByColumnName on model " + model + " fieldsToColumns: " + fieldsToColumns, ex);
         }
-    }
-
-    protected AugmenterConfig getAugmenterConfig(AbstractModel model) {
-        AugmenterConfig config = null;
-        if (model.getClass().getAnnotation(Augmented.class) != null) {
-            config = augmenterHelper.getAugmenterConfig(model);
-            if (config == null) {
-                log.info("Missing augmenter config for class " + model.getClass().getSimpleName());
-            }
-        }
-        return config;
     }
 
     public Object getFieldValue(String fieldName) {

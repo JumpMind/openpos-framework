@@ -27,7 +27,7 @@
 
     <logger name="org" level="WARN" />
     <logger name="org.jumpmind" level="INFO" />
-    <logger name="org.jumpmind.pos.persist.driver" level="INFO" />
+    <logger name="org.jumpmind.pos.persist.driver" level="WARN" />
 
     <logger name="org.springframework" level="WARN" />
     <logger name="org.springframework.web.filter.CommonsRequestLoggingFilter" level="DEBUG" />
