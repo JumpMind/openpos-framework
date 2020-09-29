@@ -12,6 +12,7 @@ import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.persist.model.*;
 import org.jumpmind.pos.util.ReflectUtils;
 import org.jumpmind.pos.util.model.ITypeCode;
+import org.springframework.util.LinkedCaseInsensitiveMap;
 
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
@@ -29,8 +30,8 @@ public class ModelWrapper {
     
     private Map<String, Object> systemData;
 
-    private LinkedHashMap<String, Column> fieldsToColumns;
-    private LinkedHashMap<String, Object> columnNamesToValues;
+    private LinkedCaseInsensitiveMap<Column> fieldsToColumns = new LinkedCaseInsensitiveMap<Column>();
+    private LinkedCaseInsensitiveMap<Object> columnNamesToValues;
     
     @SuppressWarnings("unchecked")
     public ModelWrapper(AbstractModel model, ModelMetaData modelMetaData, AugmenterHelper augmenterHelper) {
@@ -139,15 +140,15 @@ public class ModelWrapper {
         return model.getAdditionalFields();
     }    
     
-    protected LinkedHashMap<String, Column> mapFieldsToColumns(Class<?> resultClass) {
+    protected LinkedCaseInsensitiveMap<Column> mapFieldsToColumns(Class<?> resultClass) {
 
-        fieldsToColumns = new LinkedHashMap<String, Column>();
+        fieldsToColumns = new LinkedCaseInsensitiveMap<Column>();
         buildFieldColumnMap(fieldsToColumns, resultClass);
         fieldsToColumns = orderColumns(fieldsToColumns);
         return fieldsToColumns;
     }
 
-    protected void buildFieldColumnMap(LinkedHashMap<String, Column> fieldColumnMap, Class<?> clazz) {
+    protected void buildFieldColumnMap(LinkedCaseInsensitiveMap<Column> fieldColumnMap, Class<?> clazz) {
         for (ModelClassMetaData classMetaData : modelMetaData.getModelClassMetaData()) {
             Map<String, FieldMetaData> fieldMetaDatas = classMetaData.getEntityFieldMetaDatas();
             fieldMetaDatas.forEach((k,v)->fieldColumnMap.put(v.getField().getName(),v.getColumn()));
@@ -177,8 +178,8 @@ public class ModelWrapper {
         }
     }
 
-    protected LinkedHashMap<String, Column> orderColumns(LinkedHashMap<String, Column> argFieldsToColumns) {
-        LinkedHashMap<String, Column> orderedFieldsToColumns = new LinkedHashMap<>();
+    protected LinkedCaseInsensitiveMap<Column> orderColumns(LinkedCaseInsensitiveMap<Column> argFieldsToColumns) {
+        LinkedCaseInsensitiveMap<Column> orderedFieldsToColumns = new LinkedCaseInsensitiveMap<>();
         
         // Primary keys first.
         for (Entry<String, Column> entry : argFieldsToColumns.entrySet()) {
@@ -204,9 +205,9 @@ public class ModelWrapper {
         return orderedFieldsToColumns;
     }
 
-    protected LinkedHashMap<String, Object> mapColumnNamesToValues() {
+    protected LinkedCaseInsensitiveMap<Object> mapColumnNamesToValues() {
         try {
-            LinkedHashMap<String, Object> columnNamesToObjectValues = new LinkedHashMap<String, Object>();
+            LinkedCaseInsensitiveMap<Object> columnNamesToObjectValues = new LinkedCaseInsensitiveMap<Object>();
             Set<String> fieldNames = fieldsToColumns.keySet();
             AugmenterConfig config = augmenterHelper.getAugmenterConfig(model);
             for (String fieldName : fieldNames) {
@@ -214,8 +215,8 @@ public class ModelWrapper {
                     String tagValue = ((ITaggedModel) model).getTagValue(fieldName.substring(TagModel.TAG_PREFIX.length()));
                     columnNamesToObjectValues.put(fieldName, tagValue);
                 } else if (config != null && fieldName.toUpperCase().startsWith(config.getPrefix())) {
-                    String agumentValue = ((IAugmentedModel) model).getAugmentValue(fieldName.substring(config.getPrefix().length()));
-                    columnNamesToObjectValues.put(fieldName, ObjectUtils.defaultIfNull(agumentValue, augmenterHelper.getDefaultValue(fieldName, model)));
+                    String augmentValue = ((IAugmentedModel) model).getAugmentValue(fieldName.substring(config.getPrefix().length()));
+                    columnNamesToObjectValues.put(fieldName, ObjectUtils.defaultIfNull(augmentValue, augmenterHelper.getDefaultValue(fieldName, model)));
                 } else {
                     Column column = fieldsToColumns.get(fieldName);
                     Object value = getFieldValue(fieldName);
@@ -328,7 +329,7 @@ public class ModelWrapper {
         }
     }
 
-    protected BigDecimal handleMoneyField(LinkedHashMap<String, Object> columnNamesToObjectValues, 
+    protected BigDecimal handleMoneyField(LinkedCaseInsensitiveMap<Object> columnNamesToObjectValues,
             String fieldName, Column moneyDecimalColumn, Money value) {
         if (value != null) {
             String isoCurrencyCode = value.getCurrencyUnit().getCode();
@@ -443,7 +444,7 @@ public class ModelWrapper {
         this.model = model;
     }
     
-    public LinkedHashMap<String, Object> getColumnNamesToValues() {
+    public LinkedCaseInsensitiveMap<Object> getColumnNamesToValues() {
         return columnNamesToValues;
     }
 
