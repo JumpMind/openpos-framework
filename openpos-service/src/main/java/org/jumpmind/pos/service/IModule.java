@@ -20,5 +20,7 @@ public interface IModule {
     String getURL();
 
     String getDriver();
+
+    void rebuildDatabase();
     
 }
