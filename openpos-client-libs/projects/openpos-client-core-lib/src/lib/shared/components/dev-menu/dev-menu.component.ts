@@ -466,8 +466,9 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     public onOpenSimulator() {
         const serverName = this.personalization.getServerName$().getValue();
         const port = this.personalization.getServerPort$().getValue();
-        window.open('http://localhost:' + this.simPort + '/#/?serverName=' + serverName +
-            '&serverPort=' + port + '&deviceToken=' + this.simAuthToken);
+        window.open(window.location.protocol + '//' + window.location.hostname + ':'
+            + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + port
+            + '&deviceToken=' + this.simAuthToken);
     }
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {
