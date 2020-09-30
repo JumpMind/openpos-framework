@@ -29,9 +29,11 @@ import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import jpos.events.DataEvent;
+import sun.awt.AppContext;
 
 @Component
 public class DevToolsActionListener implements IActionListener {
@@ -48,6 +50,9 @@ public class DevToolsActionListener implements IActionListener {
 
     @Autowired
     DevicesRepository devicesRepository;
+
+    @Value("${server.secondary.ports:7400}")
+    String ports[];
     
     @Override
     public Collection<String> getRegisteredTypes() {        
@@ -100,13 +105,16 @@ public class DevToolsActionListener implements IActionListener {
     }
 
     private void setSimAuthCode(String deviceId, Message message) {
+        Map<String, String> simulatorMap = new HashMap<>();
         String authToken = "";
         try{
             authToken = devicesRepository.getDeviceAuth(deviceId, "sim");
         } catch (DeviceNotFoundException ex){
             authToken = "";
         }
-        message.put("simAuthToken", authToken);
+        simulatorMap.put("simAuthToken", authToken);
+        simulatorMap.put("simPort", ports[0]);
+        message.put("simulator", simulatorMap);
     }
 
     private void setCurrentStateAndActions(IStateManager sm, Message message) {

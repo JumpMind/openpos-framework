@@ -45,6 +45,8 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     simAuthToken: string;
 
+    simPort: string;
+
     simAuthTokenAvailable = false;
 
     firstClickTime = Date.now();
@@ -237,10 +239,11 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             });
         }
 
-        if (message.simAuthToken) {
+        if (message.simulator) {
             console.info('Pulling sim auth token...');
-            this.simAuthToken = message.simAuthToken;
-            if (message.simAuthToken && message.simAuthToken.length > 0) {
+            this.simAuthToken = message.simulator.simAuthToken;
+            this.simPort = message.simulator.simPort;
+            if (message.simulator.simPort && message.simulator.simAuthToken && message.simulator.simAuthToken.length > 0) {
                 this.simAuthTokenAvailable = true;
             } else {
                 this.simAuthTokenAvailable = false;
@@ -461,9 +464,10 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     }
 
     public onOpenSimulator() {
-        const serverName = localStorage.getItem('serverName');
-        window.open('http://localhost:7400/#/?serverName=' + serverName +
-            '&serverPort=6140&deviceToken=' + this.simAuthToken);
+        const serverName = this.personalization.getServerName$().getValue();
+        const port = this.personalization.getServerPort$().getValue();
+        window.open('http://localhost:' + this.simPort + '/#/?serverName=' + serverName +
+            '&serverPort=' + port + '&deviceToken=' + this.simAuthToken);
     }
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {
