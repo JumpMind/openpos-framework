@@ -54,7 +54,7 @@
         </div>
         <div responsive-class class="transaction-buttons">
             <button *ngFor="let button of transactionSummary.actions" mat-button color="primary" responsive-class
-                class="transaction-button" (click)="onClick(button)">
+                class="transaction-button" (click)="onClick(button)" [disabled]="! button.enabled">
                 <span class="transaction-button-text">{{button.title}}</span>
                 <app-icon [iconName]="button.icon" iconClass="mat-24"></app-icon>
             </button>
