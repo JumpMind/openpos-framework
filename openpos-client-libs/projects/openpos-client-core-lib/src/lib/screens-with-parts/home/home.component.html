@@ -27,7 +27,7 @@
         <app-notifications *ngIf="!!screen['notifications']" class="notifications"></app-notifications>
     </div>
 
-    <div *ngIf="(isMobile | async) && screen.menuItems.length > 0" class="menu-list" appArrowTab>
+    <div responsive-class *ngIf="(isMobile | async) && screen.menuItems.length > 0" class="menu-list" appArrowTab>
         <app-option-button *ngFor="let o of screen.menuItems; let i = index" 
             appArrowTabItem
             [attr.tabindex]="i"
