@@ -53,6 +53,9 @@ public class DevToolsActionListener implements IActionListener {
 
     @Value("${server.secondary.ports:7400}")
     String ports[];
+
+    @Value("${openpos.peripheralSimulatorViewer.appId:'sim'}")
+    String simAppId;
     
     @Override
     public Collection<String> getRegisteredTypes() {        
@@ -108,7 +111,7 @@ public class DevToolsActionListener implements IActionListener {
         Map<String, String> simulatorMap = new HashMap<>();
         String authToken = "";
         try{
-            authToken = devicesRepository.getDeviceAuth(deviceId, "sim");
+            authToken = devicesRepository.getDeviceAuth(deviceId, simAppId);
         } catch (DeviceNotFoundException ex){
             authToken = "";
         }
