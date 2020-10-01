@@ -49,6 +49,9 @@
 }
 
 .menu-list {
+  &.mobile{
+    overflow-x: scroll;
+  }
   padding: 24px;
   margin-bottom: auto;
 }

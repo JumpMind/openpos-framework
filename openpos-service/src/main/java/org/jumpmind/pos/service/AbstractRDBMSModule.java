@@ -1,5 +1,6 @@
 package org.jumpmind.pos.service;
 
+import bsh.commands.dir;
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
@@ -59,6 +60,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Value("${openpos.businessunitId:undefined}")
     protected String businessUnitId;
+
+    @Value("${openpos.general.rebuildDatabase.enabled:true}")
+    protected boolean rebuildDatabaseEnabled;
 
     @Autowired
     protected TagHelper tagHelper;
@@ -296,6 +300,23 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Override
     public void initialize() {
         updateDataModel(getDBSession());
+    }
+
+    public void rebuildDatabase() {
+        if (rebuildDatabaseEnabled) {
+            List<Table> tables = this.sessionFactory.getTables();
+            for (Table table : tables) {
+                try {
+                    new JdbcTemplate(getDataSource()).execute("drop table " + table.getName());
+                } catch(Exception ex) {
+                    log.warn("Failed to drop {}.  Reason: {}", table.getName(), ex.getMessage());
+                    log.debug("", ex);
+                }
+            }
+            initialize();
+        } else {
+            log.warn("The rebuild database feature is not enabled");
+        }
     }
 
     public void exportData(String format, String dir, boolean includeModuleTables) {

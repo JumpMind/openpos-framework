@@ -19,7 +19,6 @@ import org.springframework.core.env.MutablePropertySources;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @TableDef(name = "device", description = "A device used to transaction commerce for a Business Unit",
@@ -53,6 +52,18 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     private String description;
 
     private Map<String, String> tags = new CaseInsensitiveMap<String, String>();
+
+    public DeviceModel(String deviceId, String appId, String deviceType, String locale, String timezoneOffset, String businessUnitId, String description, Map<String, String> tags, List<DeviceParamModel> deviceParamModels) {
+        this.deviceId = deviceId;
+        this.appId = appId;
+        this.deviceType = deviceType;
+        this.locale = locale;
+        this.timezoneOffset = timezoneOffset;
+        this.businessUnitId = businessUnitId;
+        this.description = description;
+        this.tags = new CaseInsensitiveMap<>(tags);
+        this.deviceParamModels = deviceParamModels;
+    }
 
     @Override
     public String getTagValue(String tagName) {
