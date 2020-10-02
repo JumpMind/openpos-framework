@@ -22,6 +22,10 @@
         &.error{
           color: $app-warn;
         }
+
+        &.unknown {
+          color: black;
+        }
       }
     }
 
