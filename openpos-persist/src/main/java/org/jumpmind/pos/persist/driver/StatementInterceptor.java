@@ -20,26 +20,36 @@
  */
 package org.jumpmind.pos.persist.driver;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
+import io.swagger.models.auth.In;
+import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.db.sql.LogSqlBuilder;
 import org.jumpmind.properties.TypedProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class StatementInterceptor extends WrapperInterceptor {
-    
+
+    public static final String LONG_RUNNING_THRESHOLD_PROPERTY = "jumpmind.commerce.longRunningThreshold";
+
     private final static Logger log = LoggerFactory.getLogger(StatementInterceptor.class);
     protected List<Object> psArgs = new ArrayList<Object>();
     protected LogSqlBuilder sqlBuilder = new LogSqlBuilder();
 
+    protected long longRunningThreshold = 20000;
+
+    private String sqlKey;
+
     public StatementInterceptor(Object wrapped, TypedProperties systemPlusEngineProperties) {
         super(wrapped);
+        String longRunningThresholString = systemPlusEngineProperties.get(LONG_RUNNING_THRESHOLD_PROPERTY);
+        if (!StringUtils.isEmpty(longRunningThresholString)) {
+            longRunningThreshold = Long.parseLong(longRunningThresholString.trim());
+            if (log.isDebugEnabled()) {
+                log.debug("Long Running SQL threshold is: " + longRunningThreshold + "ms.");
+            }
+        }
     }
 
     @Override
@@ -58,9 +68,20 @@ public class StatementInterceptor extends WrapperInterceptor {
                 psArgs.add(parameters[1]);
             }
         }
+
+        if (methodName.startsWith("execute")) {
+            sqlKey = generateKey(ps);
+            SqlWatchdog.sqlBegin(sqlKey,
+                    new InProgressSqlStatement(ps.getStatement(), psArgs, System.currentTimeMillis(), Thread.currentThread().getName() ) );
+        }
+
         return new InterceptResult();
     }
-    
+
+    private String generateKey(PreparedStatementWrapper ps) {
+        return Thread.currentThread().getId()+ps.getStatement();
+    }
+
     @Override
     public InterceptResult postExecute(String methodName, Object result, long startTime, long endTime, Object... parameters) {
         if (getWrapped() instanceof PreparedStatementWrapper) {
@@ -71,33 +92,58 @@ public class StatementInterceptor extends WrapperInterceptor {
             return new InterceptResult();
         }
     }
-    
-    
+
     public InterceptResult preparedStatementPostExecute(PreparedStatementWrapper ps, String methodName, Object result, long startTime, long endTime, Object... parameters) {
         if (methodName.startsWith("execute")) {
             long elapsed = endTime-startTime;
-            String sql = sqlBuilder.buildDynamicSqlForLog(ps.getStatement(), psArgs.toArray(), null);
-            preparedStatementExecute(methodName, elapsed, sql);
+            preparedStatementExecute(methodName, elapsed, ps.getStatement(), psArgs.toArray());
+            psArgs.clear();
         }
-        
+
         return new InterceptResult();
     }
-    
+
     public InterceptResult statementPostExecute(StatementWrapper ps, String methodName, Object result, long startTime, long endTime, Object... parameters) {
         if (methodName.startsWith("execute")) {
             long elapsed = endTime-startTime;
             statementExecute(methodName, elapsed, parameters);
         }
-        
+
         return new InterceptResult();
     }
-    
-    public void preparedStatementExecute(String methodName, long elapsed, String sql) {
-        log.info("PreparedStatement." + methodName + " (" + elapsed + "ms.) " + sql.trim()) ;
-    }
-    
-    public void statementExecute(String methodName, long elapsed, Object... parameters) {
-        log.info("Statement." + methodName + " (" + elapsed + "ms.) " + Arrays.toString(parameters)) ;          
+
+    public void preparedStatementExecute(String methodName, long elapsed, String sql, Object[] args) {
+        if (elapsed > longRunningThreshold) {
+            String dynamicSql = sqlBuilder.buildDynamicSqlForLog(sql, args, null);
+            log.warn("Long Running (" + elapsed + "ms.) " + dynamicSql.trim());
+        }
+        if (log.isInfoEnabled()) {
+            String dynamicSql = sqlBuilder.buildDynamicSqlForLog(sql, args, null);
+            log.info("PreparedStatement." + methodName + " (" + elapsed + "ms.) " + dynamicSql.trim()) ;
+        }
     }
 
+    public void statementExecute(String methodName, long elapsed, Object... parameters) {
+        if (elapsed > longRunningThreshold) {
+            log.warn("Long Running (" + elapsed + "ms.) " + Arrays.toString(parameters));
+        }
+        if (log.isInfoEnabled()) {
+            log.info("Statement." + methodName + " (" + elapsed + "ms.) " + Arrays.toString(parameters));
+        }
+    }
+
+    @Override
+    public void cleanupExecute(String methodName, Exception thrownException) {
+        SqlWatchdog.sqlEnd(sqlKey);
+        if (thrownException != null
+            && log.isDebugEnabled()
+            && (getWrapped() instanceof PreparedStatementWrapper)) {
+
+            PreparedStatementWrapper ps = (PreparedStatementWrapper) getWrapped();
+            String sql = sqlBuilder.buildDynamicSqlForLog(ps.getStatement(), psArgs.toArray(), null);
+
+            log.debug("SQL Caused Exception " + sql, thrownException);
+        }
+    }
 }
+

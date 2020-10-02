@@ -1,5 +1,6 @@
 package org.jumpmind.pos.service;
 
+import bsh.commands.dir;
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
@@ -11,6 +12,8 @@ import org.jumpmind.db.util.ConfigDatabaseUpgrader;
 import org.jumpmind.exception.IoException;
 import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.persist.driver.Driver;
+import org.jumpmind.pos.persist.model.AugmenterConfigs;
+import org.jumpmind.pos.persist.model.AugmenterHelper;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.service.model.ModuleModel;
 import org.jumpmind.properties.TypedProperties;
@@ -42,10 +45,12 @@ import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.*;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
 
 @EnableTransactionManagement
-@DependsOn({"tagConfig"})
+@DependsOn({"tagConfig", "augmenterConfigs"})
 abstract public class AbstractRDBMSModule extends AbstractServiceFactory implements IModule, IRDBMSModule {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    private final static String SYS_PROP_DISABLE_JUMPMIND_DRIVER = "jumpmind.commerce.disable.jdbc.driver";
 
     @Autowired
     protected Environment env;
@@ -56,8 +61,14 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.businessunitId:undefined}")
     protected String businessUnitId;
 
+    @Value("${openpos.general.rebuildDatabase.enabled:true}")
+    protected boolean rebuildDatabaseEnabled;
+
     @Autowired
     protected TagHelper tagHelper;
+
+    @Autowired
+    protected AugmenterHelper augmenterHelper;
 
     @Autowired
     protected ApplicationContext applicationContext;
@@ -76,6 +87,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.failStartupOnModuleLoadFailure:false}")
     boolean failStartupOnModuleLoadFailure;
 
+    @Autowired(required = false)
     protected DataSource dataSource;
 
     protected ISecurityService securityService;
@@ -173,15 +185,29 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public String getDriver() {
-        return getDbProperties(DB_POOL_DRIVER, "org.h2.Driver");
+        String driverClassName = getDbProperties(DB_POOL_DRIVER, "org.h2.Driver");
+        return driverClassName;
     }
 
     @Override
     public String getURL() {
         String url = getDbProperties(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName() + ";DB_CLOSE_ON_EXIT=FALSE");
+
+        final String JDBC_PROTOCOL = "jdbc:";
+
+        if (System.getProperty(SYS_PROP_DISABLE_JUMPMIND_DRIVER) == null
+                && !url.startsWith(Driver.DRIVER_PREFIX)
+                && url.startsWith(JDBC_PROTOCOL)) {
+
+            String modifiedJdbcUrl = url.replace(JDBC_PROTOCOL, Driver.DRIVER_PREFIX);
+            log.info("Modified JDBC URL to include :openpos: protocol. modified='" + modifiedJdbcUrl + "' original= '" + url + "'");
+            url = modifiedJdbcUrl;
+        }
         if (url.contains("openpos")) {
             loadJumpMindDriver();
         }
+
+
         return url;
     }
 
@@ -195,7 +221,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public DataSource getDataSource() {
-        if (dataSource == null) {
+        if (dataSource == null || dataSource.getClass().getSimpleName().contains("EmbeddedDataSourceProxy")) {
+            this.dataSource = null;
             setupH2Server();
             if (this.dataSourceBeanName != null) {
                 try {
@@ -210,7 +237,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             if (dataSource == null) {
                 Driver.class.getName(); // Load openpos driver wrapper.
                 TypedProperties properties = new TypedProperties();
-                properties.put(DB_POOL_DRIVER, getDriver());
+
+                String driverClassName = getDriver();
+
+                properties.put(DB_POOL_DRIVER, driverClassName);
                 properties.put(DB_POOL_URL, getURL());
                 properties.put(DB_POOL_USER, getDbProperties(DB_POOL_USER, null));
                 properties.put(DB_POOL_PASSWORD, getDbProperties(DB_POOL_PASSWORD, null));
@@ -229,7 +259,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                 log.info(String.format(
                         "About to initialize the '%s' module datasource using the following driver:"
                                 + " '%s' and the following url: '%s' and the following user: '%s'",
-                        getName(), properties.get(DB_POOL_DRIVER), properties.get(DB_POOL_URL), properties.get(DB_POOL_USER)));
+                        getName(), driverClassName, properties.get(DB_POOL_URL), properties.get(DB_POOL_USER)));
 
                 dataSource = BasicDataSourceFactory.create(properties, securityService());
             }
@@ -260,7 +290,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             sessionContext.put(DBSession.JDBC_FETCH_SIZE, env.getProperty(DBSession.JDBC_FETCH_SIZE));
             sessionContext.put(DBSession.JDBC_QUERY_TIMEOUT, env.getProperty(DBSession.JDBC_QUERY_TIMEOUT));
 
-            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper);
+            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper, augmenterHelper);
 
         }
 
@@ -270,6 +300,23 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Override
     public void initialize() {
         updateDataModel(getDBSession());
+    }
+
+    public void rebuildDatabase() {
+        if (rebuildDatabaseEnabled) {
+            List<Table> tables = this.sessionFactory.getTables();
+            for (Table table : tables) {
+                try {
+                    new JdbcTemplate(getDataSource()).execute("drop table " + table.getName());
+                } catch(Exception ex) {
+                    log.warn("Failed to drop {}.  Reason: {}", table.getName(), ex.getMessage());
+                    log.debug("", ex);
+                }
+            }
+            initialize();
+        } else {
+            log.warn("The rebuild database feature is not enabled");
+        }
     }
 
     public void exportData(String format, String dir, boolean includeModuleTables) {

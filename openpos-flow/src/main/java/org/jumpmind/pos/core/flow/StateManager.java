@@ -572,9 +572,10 @@ public class StateManager implements IStateManager {
         // resassert the previous state before the cancelled transition
         // Note: this can be a problem if the state doesn't show a screen and just sends an action because
         // the StateManager will be busy.
-        stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         if (transitionResult.getTransition().getQueuedAction() != null) { // allowed cancelled transitions to queue an action.
             doAction(transitionResult.getTransition().getQueuedAction());
+        } else {
+            stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         }
     }
 

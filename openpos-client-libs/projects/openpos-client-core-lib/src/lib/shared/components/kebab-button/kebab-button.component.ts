@@ -8,6 +8,7 @@ import {Configuration} from '../../../configuration/configuration';
 import {KebabMenuComponent} from '../kebab-menu/kebab-menu.component';
 import {FocusService} from '../../../core/focus/focus.service';
 import {IActionItem} from '../../../core/actions/action-item.interface';
+import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
 
 @Component({
     selector: 'app-kebab-button',
@@ -52,9 +53,16 @@ export class KebabButtonComponent implements OnDestroy {
     @Output()
     menuItemClick = new EventEmitter<IActionItem>();
 
+    modalWidth: string = '35vw';
+
     protected subscription: Subscription;
 
-    constructor(protected dialog: MatDialog, protected keyPresses: KeyPressProvider, protected focusService: FocusService, protected actionService: ActionService) {
+    constructor(protected dialog: MatDialog,
+                protected keyPresses: KeyPressProvider,
+                protected focusService: FocusService,
+                protected actionService: ActionService,
+                private mediaService: OpenposMediaService) {
+        this.checkScreenSize();
     }
 
     ngOnDestroy(): void {
@@ -79,7 +87,7 @@ export class KebabButtonComponent implements OnDestroy {
                     autoFocus: false,
                     restoreFocus: false
                 },
-                width: '35vw',
+                width: this.modalWidth,
                 autoFocus: false
             });
 
@@ -90,5 +98,16 @@ export class KebabButtonComponent implements OnDestroy {
                 this.focusService.restoreInitialFocus();
             });
         }
+    }
+
+    checkScreenSize() {
+        this.mediaService.observe(new Map([
+            [MediaBreakpoints.MOBILE_PORTRAIT, "90vw"],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, "50vw"],
+            [MediaBreakpoints.TABLET_PORTRAIT, "70vw"],
+            [MediaBreakpoints.TABLET_LANDSCAPE, "50vw"],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, "50vw"],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, "35vw"]
+        ])).subscribe(res => this.modalWidth = res);
     }
 }

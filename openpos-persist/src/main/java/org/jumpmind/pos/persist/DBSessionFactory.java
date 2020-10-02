@@ -21,9 +21,7 @@ import org.jumpmind.pos.persist.impl.DmlTemplate;
 import org.jumpmind.pos.persist.impl.DmlTemplates;
 import org.jumpmind.pos.persist.impl.QueryTemplate;
 import org.jumpmind.pos.persist.impl.QueryTemplates;
-import org.jumpmind.pos.persist.model.ITaggedModel;
-import org.jumpmind.pos.persist.model.TagHelper;
-import org.jumpmind.pos.persist.model.TagModel;
+import org.jumpmind.pos.persist.model.*;
 import org.jumpmind.properties.TypedProperties;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -39,13 +37,16 @@ public class DBSessionFactory {
     List<Class<?>> modelClazzes;
     List<Class<?>> modelExtensionClasses;
     TagHelper tagHelper;
+    AugmenterHelper augmenterHelper;
 
-    public void init(IDatabasePlatform databasePlatform, TypedProperties sessionContext, List<Class<?>> entities, List<Class<?>> extensionEntities, TagHelper tagHelper) {
+    private static final String DEFAULT_COLUMN_SIZE = "32";
+
+    public void init(IDatabasePlatform databasePlatform, TypedProperties sessionContext, List<Class<?>> entities, List<Class<?>> extensionEntities, TagHelper tagHelper, AugmenterHelper augmenterHelper) {
 
         QueryTemplates queryTemplates = getQueryTemplates(sessionContext.get("module.tablePrefix"));
         DmlTemplates dmlTemplates = getDmlTemplates(sessionContext.get("module.tablePrefix"));
 
-        init(databasePlatform, sessionContext, entities, extensionEntities, queryTemplates, dmlTemplates, tagHelper);
+        init(databasePlatform, sessionContext, entities, extensionEntities, queryTemplates, dmlTemplates, tagHelper, augmenterHelper);
     }
 
     public void init(
@@ -55,7 +56,8 @@ public class DBSessionFactory {
             List<Class<?>> extensionEntities,
             QueryTemplates queryTemplatesObject,
             DmlTemplates dmlTemplates,
-            TagHelper tagHelper) {
+            TagHelper tagHelper,
+            AugmenterHelper augmenterHelper) {
 
         this.queryTemplates = buildQueryTemplatesMap(queryTemplatesObject);
         this.dmlTemplates = buildDmlTemplatesMap(dmlTemplates);
@@ -65,6 +67,7 @@ public class DBSessionFactory {
         this.modelClazzes = entities;
         this.modelExtensionClasses = extensionEntities;
         this.tagHelper = tagHelper;
+        this.augmenterHelper = augmenterHelper;
 
         this.initSchema();
     }
@@ -74,11 +77,13 @@ public class DBSessionFactory {
         databaseSchema.init(sessionContext.get("module.tablePrefix"), databasePlatform,
                 this.modelClazzes.stream().filter(e -> e.getAnnotation(org.jumpmind.pos.persist.TableDef.class) != null)
                         .collect(Collectors.toList()),
-                this.modelExtensionClasses);
+                this.modelExtensionClasses,
+                this.augmenterHelper);
     }
 
     public void createAndUpgrade() {
         enhanceTaggedModels();
+        augmentModels();
         databaseSchema.createAndUpgrade();
     }
 
@@ -95,7 +100,7 @@ public class DBSessionFactory {
     }
 
     public DBSession createDbSession() {
-        return new DBSession(null, null, databaseSchema, databasePlatform, sessionContext, queryTemplates, dmlTemplates, tagHelper);
+        return new DBSession(null, null, databaseSchema, databasePlatform, sessionContext, queryTemplates, dmlTemplates, tagHelper, augmenterHelper);
     }
 
     public org.jumpmind.db.model.Table getTableForEnhancement(Class<?> entityClazz) {
@@ -151,6 +156,88 @@ public class DBSessionFactory {
             dmlTemplates.getDmls().stream().forEach((q) -> dmlTemplatesMap.put(q.getName(), q));
         }
         return dmlTemplatesMap;
+    }
+    
+    protected void augmentModels() {
+        if (augmenterHelper != null) {
+            AugmenterConfigs augmenterConfigs = augmenterHelper.getAugmenterConfigs();
+            
+            for (Class<?> clazz : modelClazzes) {
+                Augmented[] annotations = clazz.getAnnotationsByType(Augmented.class);
+                if (annotations.length > 0) {
+                    AugmenterConfig augmenterConfig = augmenterConfigs.getConfigByName(annotations[0].name());
+                    if (augmenterConfig != null) {
+                        augmentTable(clazz, augmenterConfig);
+                    }
+                    else {
+                        log.info("Missing augmenter name " + annotations[0].name() + " defined in augmenter configuration");
+                    }
+                }
+            }
+        }
+    }
+
+    protected void augmentTable(Class<?> entityClass, AugmenterConfig augmenterConfig) {
+        Table table = getTableForEnhancement(entityClass);
+        warnOrphanedAugmentedColumns(augmenterConfig, table);
+        modifyAugmentColumns(augmenterConfig, table);
+        addAugmentColumns(augmenterConfig, table);
+    }
+
+    protected void addAugmentColumns(AugmenterConfig augmenterConfig, Table table) {
+        for (AugmenterModel augmenter : augmenterConfig.getAugmenters()) {
+            if (table.getColumnIndex(getColumnName(augmenterConfig.getPrefix(), augmenter)) == -1) {
+                Column tagColumn = generateAugmentColumn(augmenterConfig, augmenter);
+                table.addColumn(tagColumn);
+            }
+        }
+    }
+
+    protected Column generateAugmentColumn(AugmenterConfig augmenterConfig, AugmenterModel augmenter) {
+        return setColumnInfo(new Column(), augmenterConfig.getPrefix(), augmenter);
+    }
+
+    protected void modifyAugmentColumns(AugmenterConfig augmenterConfig, Table table) {
+        for (Column existingColumn : table.getColumns()) {
+            for (AugmenterModel augmenter : augmenterConfig.getAugmenters()) {
+                if (StringUtils.equalsIgnoreCase(getColumnName(augmenterConfig.getPrefix(), augmenter), existingColumn.getName())) {
+                    setColumnInfo(existingColumn, augmenterConfig.getPrefix(), augmenter);
+                    break;
+                }
+            }
+        }
+    }
+
+    protected Column setColumnInfo(Column column, String prefix, AugmenterModel augmenter) {
+        column.setName(getColumnName(prefix, augmenter));
+        column.setDefaultValue(augmenter.getDefaultValue());
+        column.setTypeCode(Types.VARCHAR);
+        if (augmenter.getSize() != null && augmenter.getSize() > 0) {
+            column.setSize(String.valueOf(augmenter.getSize()));
+        } else {
+            column.setSize(DEFAULT_COLUMN_SIZE);
+        }
+        return column;
+    }
+
+    private void warnOrphanedAugmentedColumns(AugmenterConfig augmenterConfig, Table table) {
+        for (Column existingColumn : table.getColumns()) {
+            if (!existingColumn.getName().toUpperCase().startsWith(augmenterConfig.getPrefix())) {
+                continue;
+            }
+
+            boolean matched = false;
+            for (AugmenterModel augmenter : augmenterConfig.getAugmenters()) {
+                if (StringUtils.equalsIgnoreCase(getColumnName(augmenterConfig.getPrefix(), augmenter), existingColumn.getName())) {
+                    matched = true;
+                    break;
+                }
+            }
+            if (!matched) {
+                log.info("Orphaned tag column detected.  This column should be manually dropped if no longer needed: " + table + " "
+                        + existingColumn);
+            }
+        }
     }
 
     protected void enhanceTaggedModels() {
@@ -230,13 +317,17 @@ public class DBSessionFactory {
         if (tag.getSize() > 0) {
             column.setSize(String.valueOf(tag.getSize()));
         } else {
-            column.setSize("32");
+            column.setSize(DEFAULT_COLUMN_SIZE);
         }
         return column;
     }
 
     protected String getColumnName(TagModel tag) {
         return databasePlatform.alterCaseToMatchDatabaseDefaultCase(TagModel.TAG_PREFIX + tag.getName().toUpperCase());
+    }
+
+    protected String getColumnName(String prefix, AugmenterModel augmenter) {
+        return databasePlatform.alterCaseToMatchDatabaseDefaultCase(prefix + augmenter.getName().toUpperCase());
     }
 
 }

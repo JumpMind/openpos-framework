@@ -34,6 +34,7 @@ import { MobileSaleOrdersSheetComponent } from './sale/mobile-sale-orders-sheet/
 import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
 import { TransactionSearchComponent } from './transaction-search/transaction-search.component';
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
+import {SimulatedPeripheralViewerComponent} from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
 
 const screens = [
     SelectionListScreenComponent,
@@ -54,7 +55,8 @@ const screens = [
     OptionsScreenComponent,
     OptionsScreenDialogComponent,
     TransactionSearchComponent,
-    TransactionDetailsComponent
+    TransactionDetailsComponent,
+    SimulatedPeripheralViewerComponent
 ];
 
 const dialogs = [

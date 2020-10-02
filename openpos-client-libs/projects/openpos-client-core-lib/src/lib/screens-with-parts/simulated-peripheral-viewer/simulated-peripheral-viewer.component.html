@@ -1,0 +1,12 @@
+<div class="simulator-container">
+    <div class="header">
+    </div>
+    <div class="left"></div>
+    <div class="right">
+        <div class="receipt-container">
+            <div *ngIf="!receiptUrl" class="receipt-placeholder">{{screen.receiptPlaceholder}}</div>
+            <iframe width="400rem" height="100%" *ngIf="receiptUrl" [src]="receiptUrl"></iframe>
+        </div>
+    </div>
+    <div class="footer"></div>
+</div>

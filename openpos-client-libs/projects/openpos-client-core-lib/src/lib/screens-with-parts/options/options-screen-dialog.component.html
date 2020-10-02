@@ -1,5 +1,5 @@
-<div class="options-outer">
-    <app-dialog-header></app-dialog-header>
+<div class="options-outer" responsive-class >
+    <app-dialog-header class="options-header"></app-dialog-header>
     <div class="options-body">
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="options-image">
         <app-instructions *ngIf="screen.prompt" [instructions]="screen.prompt" [instructionsSize]="'text-sm'"></app-instructions>
@@ -7,4 +7,3 @@
         <app-scan-part></app-scan-part>
     </div>
 </div>
-

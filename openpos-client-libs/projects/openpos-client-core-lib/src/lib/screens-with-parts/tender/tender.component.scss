@@ -8,4 +8,16 @@
     padding: 16px 16px;
     flex: 1 1 100%;
     display: grid;
+    &.mobile {
+        padding: 8px;
+        ::ng-deep app-tender-part{
+            row-gap: 4px;
+        }
+        ::ng-deep .option-item.mobile{
+            padding: 6px;
+        }
+        ::ng-deep .tender-amount-due-outer {
+            padding: 4px 0
+        }
+    }
 }
