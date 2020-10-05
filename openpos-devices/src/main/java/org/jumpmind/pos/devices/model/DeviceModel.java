@@ -1,6 +1,7 @@
 package org.jumpmind.pos.devices.model;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
@@ -61,7 +62,7 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
         this.timezoneOffset = timezoneOffset;
         this.businessUnitId = businessUnitId;
         this.description = description;
-        this.tags = new CaseInsensitiveMap<>(tags);
+        this.tags = new CaseInsensitiveMap<>(tags != null ? tags : new HashMap<>());
         this.deviceParamModels = deviceParamModels;
     }
 
