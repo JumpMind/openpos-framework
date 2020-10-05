@@ -59,10 +59,12 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
         }
 
         this.form = this.formBuilder.group(this.screenData);
+
         this.formInit.emit({
             form: this.screenData,
             formGroup: this.form
         });
+
         this.form.valueChanges.subscribe(value => {
             this.formBuilder.buildFormPayload(this.form, this.screenData);
             this.formChanges.emit({
