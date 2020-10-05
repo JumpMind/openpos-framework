@@ -13,7 +13,9 @@ import org.springframework.stereotype.Component;
 @Documented
 @Component
 public @interface EndpointOverride {
+    public static final String IMPLEMENTATION_DEFAULT = "default";
+
     String path();
     String value() default "";    
-    String implementation() default "default";
+    String implementation() default IMPLEMENTATION_DEFAULT;
 }
