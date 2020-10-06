@@ -211,8 +211,9 @@ public class YamlConfigConverter {
         updateOverrideClasses();
 
         Class<? extends Object> stateClass = knownFlowClasses.get(name);
-        if (overrideClassMap.get(name) != null) {
-            stateClass = overrideClassMap.get(name);
+        Class<? extends Object> overrideClass = overrideClassMap.get(name);
+        if (overrideClass != null) {
+            stateClass = overrideClass;
         }
         return stateClass;
     }
@@ -227,7 +228,13 @@ public class YamlConfigConverter {
             overrideClassMap = overrides.stream()
                     .collect(Collectors.toMap(
                             e -> e.getAnnotation(StateOverride.class).originalState().getSimpleName(),
-                            v -> (Class<Object>) v));
+                            v -> (Class<Object>) v)
+                    );
+
+            if (overrideClassMap != null) {
+                overrideClassMap.forEach((k, v) ->
+                        log.info("Overriding original state: {} with new state: {}", k, v.getSimpleName()));
+            }
         }
     }
 
