@@ -10,7 +10,8 @@ TestFlow:
         InlineState2:
           GotoNestedState: 
             NestedState:
-              Back: InitialState              
+              Back: InitialState
+      Override: StateToOverride
       GotoSubstateClass: {subflow: SubstateClassTestState, ReturnAction: SubstateClassReturnAction, 
                          ConfigScope: {testKey1: value1, testKey2: value2}}
       GotoSubstateFlow: {subflow: SubstateFlow, ReturnAction: SubstateFlowReturnAction}
@@ -22,6 +23,9 @@ TestFlow:
       GotoSubstateClass: {subflow: SubstateClassTestState, ReturnActions: SubstateClassReturnAction;SomeOtherAction,
                          ConfigScope: {testKey3: value3, testKey4: value4}}
       GotoSubstateFlow: {subflow: SubstateFlow, ReturnAction: SubstateFlowReturnAction}
+
+  - StateToOverride:
+     Back: InitialState
 
   - Global:
       BackToMain: InitialState
