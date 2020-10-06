@@ -25,6 +25,7 @@ import {IDynamicFormPartEventArg} from './dynamic-form-part-event-arg.interface'
     styleUrls: ['./dynamic-form-part.component.scss']
 })
 export class DynamicFormPartComponent extends ScreenPartComponent<IForm> implements AfterViewInit{
+    @Output() formInit = new EventEmitter<IDynamicFormPartEventArg>();
     @Output() formChanges = new EventEmitter<IDynamicFormPartEventArg>();
     @ViewChildren(DynamicFormFieldComponent) children: QueryList<DynamicFormFieldComponent>;
     @ViewChild('formErrors') formErrors: ShowErrorsComponent;
@@ -58,6 +59,12 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
         }
 
         this.form = this.formBuilder.group(this.screenData);
+
+        this.formInit.emit({
+            form: this.screenData,
+            formGroup: this.form
+        });
+
         this.form.valueChanges.subscribe(value => {
             this.formBuilder.buildFormPayload(this.form, this.screenData);
             this.formChanges.emit({
