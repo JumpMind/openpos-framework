@@ -12,7 +12,6 @@ import org.jumpmind.db.util.ConfigDatabaseUpgrader;
 import org.jumpmind.exception.IoException;
 import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.persist.driver.Driver;
-import org.jumpmind.pos.persist.model.AugmenterConfigs;
 import org.jumpmind.pos.persist.model.AugmenterHelper;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.service.model.ModuleModel;
@@ -326,8 +325,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                     table.getName().toLowerCase().endsWith("module") ||
                     table.getName().toLowerCase().endsWith("sample")))
                 if (new JdbcTemplate(dataSource).queryForObject("select count(*) from " + table.getName(), Integer.class) > 0) {
+                    File out = new File(dir, String.format("%s_post_01_%s.%s", getVersion(), table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase()));
+                    out.getParentFile().mkdirs();
                     try (OutputStream os = new BufferedOutputStream(
-                            new FileOutputStream(new File(dir, String.format("%s_post_01_%s.%s", getVersion(), table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase()))))) {
+                            new FileOutputStream(out))) {
                         DbExport dbExport = new DbExport(this.databasePlatform);
                         dbExport.setCompatible(Compatible.H2);
                         dbExport.setUseQuotedIdentifiers(false);
