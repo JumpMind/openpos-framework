@@ -83,13 +83,15 @@ public class AugmenterHelper {
             int counter = 1;
             for (AugmenterModel augmenter : config.getAugmenters()) {
                 String columnValue = augmentedModel.getAugmentValue(augmenter.getName());
-                String columnName = config.getPrefix() + augmenter.getName();
-                String columnNameKey = String.format("augment%dColumnName", counter);
-                String columnValueKey = String.format("augment%dValue", counter);
+                if (columnValue != null) {
+                    String columnName = config.getPrefix() + augmenter.getName();
+                    String columnNameKey = String.format("augment%dColumnName", counter);
+                    String columnValueKey = String.format("augment%dValue", counter);
 
-                params.put(columnNameKey, columnName);
-                params.put(columnValueKey, columnValue);
-                counter++;
+                    params.put(columnNameKey, columnName);
+                    params.put(columnValueKey, columnValue);
+                    counter++;
+                }
             }
         }
         return params;
