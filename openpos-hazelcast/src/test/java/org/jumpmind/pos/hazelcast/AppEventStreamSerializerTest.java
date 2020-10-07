@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes= {HazelcastConfig.class})
+@ContextConfiguration(classes= {HazelcastConfig.class, HazelcastEnvConfig.class})
 @ActiveProfiles("hazelcast")
 public class AppEventStreamSerializerTest {
 
