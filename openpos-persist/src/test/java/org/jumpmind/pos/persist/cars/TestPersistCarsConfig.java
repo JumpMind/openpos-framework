@@ -98,15 +98,10 @@ public class TestPersistCarsConfig {
     }
     
     public void updateDataModel(DBSession session) {
-        String fromVersion = null;
-
-        DatabaseScriptContainer scripts = new DatabaseScriptContainer("persist-test/sql", PersistTestUtil.testDbPlatform());
-
-        scripts.executePreInstallScripts(fromVersion, "0.0.1", true);
-
+        DatabaseScriptContainer scripts = new DatabaseScriptContainer(Arrays.asList("persist-test/sql"), session, "test");
+        scripts.executePreInstallScripts(true);
         sessionFactory.createAndUpgrade();
-
-        scripts.executePostInstallScripts(fromVersion, "0.0.1", true);
+        scripts.executePostInstallScripts(true);
     }
 
 

@@ -39,7 +39,10 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.*;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
@@ -78,7 +81,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.datasourceBeanName:#{null}}")
     protected String dataSourceBeanName;
 
-    @Value("${openpos.general.sqlScriptProfile:test}")
+    @Deprecated
+    @Value("${openpos.general.sqlScriptProfile:not set}")
     protected String sqlScriptProfile;
 
     @Value("${openpos.general.dataModelExtensionPackages:#{null}}")
@@ -355,26 +359,32 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         }
 
         String currentVersion = getVersion();
-        log.info("The previous version of {} was {} and the current version is {}. sqlScriptProfile: {}", getName(),
-                fromVersion, currentVersion, sqlScriptProfile);
-        DatabaseScriptContainer scripts = new DatabaseScriptContainer(String.format("%s/sql/%s", getName(), sqlScriptProfile),
-                getDatabasePlatform());
+        log.info("The previous version of {} was {} and the current version is {}", getName(),
+                fromVersion, currentVersion);
+
+        List<String> profiles = new ArrayList(Arrays.asList(env.getActiveProfiles()));
+        if (sqlScriptProfile != null && !sqlScriptProfile.equals("not set") &&
+                !profiles.contains(sqlScriptProfile)) {
+            profiles.add(sqlScriptProfile);
+        }
+
+        List<String> scriptLocations = profiles.stream().map(p->String.format("%s/sql/%s", getName(), p)).collect(Collectors.toList());
+        DatabaseScriptContainer scripts = new DatabaseScriptContainer(scriptLocations,
+                getDBSession(), installationId);
         IDBSchemaListener schemaListener = getDbSchemaListener();
 
-        scripts.executePreInstallScripts(fromVersion, currentVersion, failStartupOnModuleLoadFailure);
+        scripts.executePreInstallScripts(failStartupOnModuleLoadFailure);
         schemaListener.beforeSchemaCreate(sessionFactory);
         sessionFactory.createAndUpgrade();
         upgradeDbFromXml();
         schemaListener.afterSchemaCreate(sessionFactory);
-        scripts.executePostInstallScripts(fromVersion, currentVersion, failStartupOnModuleLoadFailure);
+        scripts.executePostInstallScripts(failStartupOnModuleLoadFailure);
 
         ModuleModel moduleModel = session.findByNaturalId(ModuleModel.class, installationId);
         if (moduleModel == null) {
             moduleModel = new ModuleModel(installationId, currentVersion);
-        } else {
-            if (!moduleModel.getCurrentVersion().equals(currentVersion)) {
-                moduleModel.setCurrentVersion(currentVersion);
-            }
+        } else if (!moduleModel.getCurrentVersion().equals(currentVersion)) {
+            moduleModel.setCurrentVersion(currentVersion);
         }
         session.save(moduleModel);
     }
