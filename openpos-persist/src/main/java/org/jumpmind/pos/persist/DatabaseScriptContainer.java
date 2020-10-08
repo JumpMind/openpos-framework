@@ -166,9 +166,8 @@ public class DatabaseScriptContainer {
     void loadCsv(DatabaseScript script, Resource resource, boolean failOnError) throws IOException {
         try (InputStream is = resource.getInputStream()) {
             String tableName = script.getDescription().replaceAll("-", "_");
-            Table table = platform.getTableFromCache(tableName, false);
-            String truncateSql = platform.getTruncateSql(table);
-            jdbcTemplate.execute(truncateSql);
+            // delete versus truncate so symds syncs deletes
+            jdbcTemplate.execute(String.format("delete from %s", tableName));
             DbImport importer = new DbImport(platform);
             importer.setFormat(DbImport.Format.CSV);
             importer.setCommitRate(1000);
