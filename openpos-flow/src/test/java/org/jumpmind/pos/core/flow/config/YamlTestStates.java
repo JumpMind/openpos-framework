@@ -1,6 +1,8 @@
 package org.jumpmind.pos.core.flow.config;
 
 import org.jumpmind.pos.core.flow.IState;
+import org.jumpmind.pos.core.flow.OnArrive;
+import org.jumpmind.pos.core.flow.StateOverride;
 import org.jumpmind.pos.server.model.Action;
 
 public class YamlTestStates {
@@ -52,5 +54,18 @@ public class YamlTestStates {
         public void arrive(Action action) {
         }
     }
+    public static class StateToOverride {
+        @OnArrive
+        public void arrive(){
+        }
+    }
+
+    @StateOverride(originalState = StateToOverride.class)
+    public static class OverrideState {
+        @OnArrive
+        public void arrive(){
+        }
+    }
+
 
 }

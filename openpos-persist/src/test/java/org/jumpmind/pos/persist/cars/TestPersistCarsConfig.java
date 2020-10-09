@@ -80,7 +80,7 @@ public class TestPersistCarsConfig {
             sessionFactory.init(
                     PersistTestUtil.testDbPlatform(), 
                     PersistTestUtil.getSessionContext(), 
-                    Arrays.asList(CarModel.class, CarStats.class, ServiceInvoice.class, RaceCarModel.class, AugmentedCarModel.class),
+                    Arrays.asList(CarModel.class, CarStats.class, ServiceInvoice.class, RaceCarModel.class, AugmentedCarModel.class, ScriptVersionModel.class),
                     Arrays.asList(CarModelExtension.class),
                     queryTemplates,
                     DBSessionFactory.getDmlTemplates("persist-test"),
@@ -98,15 +98,10 @@ public class TestPersistCarsConfig {
     }
     
     public void updateDataModel(DBSession session) {
-        String fromVersion = null;
-
-        DatabaseScriptContainer scripts = new DatabaseScriptContainer("persist-test/sql", PersistTestUtil.testDbPlatform());
-
-        scripts.executePreInstallScripts(fromVersion, "0.0.1", true);
-
+        DatabaseScriptContainer scripts = new DatabaseScriptContainer(Arrays.asList("persist-test/sql"), session, "test");
+        scripts.executePreInstallScripts(true);
         sessionFactory.createAndUpgrade();
-
-        scripts.executePostInstallScripts(fromVersion, "0.0.1", true);
+        scripts.executePostInstallScripts(true);
     }
 
 

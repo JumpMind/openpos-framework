@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 import javax.sql.DataSource;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -48,6 +49,7 @@ public class DBSession {
     public static final String JDBC_FETCH_SIZE = "openpos.jdbc.fetchSize";
 
     private DatabaseSchema databaseSchema;
+    @Getter
     private IDatabasePlatform databasePlatform;
     private TypedProperties sessionContext;
     private NamedParameterJdbcTemplate jdbcTemplate;
