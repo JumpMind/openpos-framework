@@ -4,7 +4,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.service.instrumentation.Sample;
-import org.jumpmind.pos.service.instrumentation.ServiceSample;
+import org.jumpmind.pos.service.instrumentation.ServiceSampleModel;
 import org.jumpmind.pos.service.strategy.AbstractInvocationStrategy;
 import org.jumpmind.pos.service.strategy.IInvocationStrategy;
 import org.jumpmind.pos.util.AppUtils;
@@ -27,11 +27,14 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.AbstractMap.SimpleEntry;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import static org.apache.commons.lang.StringUtils.isNotBlank;
 import static org.jumpmind.pos.service.strategy.AbstractInvocationStrategy.buildPath;
@@ -94,12 +97,9 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
                             Method[] methods = i.getMethods();
                             for (Method method : methods) {
                                 String path = buildPath(method);
-                                for (Object overridenBean : endpointOverrides) {
-                                    EndpointOverride override = ClassUtils.resolveAnnotation(EndpointOverride.class, overridenBean);
-                                    if (override.path().equals(path) && override.implementation().equals(implementation)) {
-                                        endPointsByPath.put(path, overridenBean);
-                                        break;
-                                    }
+                                Object endpointOverride = findBestEndpointOverrideMatch(path, implementation, endpointOverrides);
+                                if (endpointOverride != null) {
+                                    endPointsByPath.put(path, endpointOverride);
                                 }
 
                                 if (!endPointsByPath.containsKey(path)) {
@@ -123,6 +123,44 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
                 }
             }
         }
+    }
+
+    protected Object findBestEndpointOverrideMatch(String path, String implementation, Collection<Object> endpointOverrides) {
+        Object bestMatch = null;
+        List<SimpleEntry<Object,EndpointOverride>> pathMatchedOverrides = endpointOverrides.stream()
+                .map(o -> new SimpleEntry<Object,EndpointOverride>(o, ClassUtils.resolveAnnotation(EndpointOverride.class, o)))
+                .filter(entry -> entry.getValue().path().equals(path)
+                ).collect(Collectors.toList());
+
+        if (pathMatchedOverrides.size() > 0) {
+            List<SimpleEntry<Object, EndpointOverride>> implMatchedOverrides = pathMatchedOverrides.stream()
+                    .filter(entry -> entry.getValue().implementation().equals(implementation)).collect(Collectors.toList());
+            if (implMatchedOverrides.size() > 1) {
+                throw new IllegalStateException(
+                        String.format("Found %d EndpointOverrides having path '%s' and implementation '%s'. Expected only one.",
+                                implMatchedOverrides.size(), path, implementation)
+                );
+            } else if (implMatchedOverrides.size() == 1) {
+                log.debug("Endpoint at path '{}' overridden with {}", path, implMatchedOverrides.get(0).getKey().getClass().getName());
+                bestMatch = implMatchedOverrides.get(0).getKey();
+            } else {
+                List<SimpleEntry<Object, EndpointOverride>> defaultImplOverrides = pathMatchedOverrides.stream()
+                        .filter(entry -> EndpointOverride.IMPLEMENTATION_DEFAULT.equalsIgnoreCase(entry.getValue().implementation()) ||
+                                StringUtils.isBlank(entry.getValue().implementation()))
+                        .collect(Collectors.toList());
+                if (defaultImplOverrides.size() > 1) {
+                    throw new IllegalStateException(
+                            String.format("Found %d EndpointOverrides having path '%s'. Expected only one.",
+                                    defaultImplOverrides.size(), path)
+                    );
+                } else if (defaultImplOverrides.size() == 1) {
+                    log.debug("Endpoint at path '{}' overridden with {}", path, defaultImplOverrides.get(0).getKey().getClass().getName());
+                    bestMatch = defaultImplOverrides.get(0).getKey();
+                }
+            }
+        }
+
+        return bestMatch;
     }
 
     protected String getServiceImplementation(String serviceName) {
@@ -173,7 +211,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
         } else {
             strategy = strategies.get(config.getStrategy().name());
         }
-        ServiceSample sample = startSample(strategy, config, proxy, method, args);
+        ServiceSampleModel sample = startSample(strategy, config, proxy, method, args);
         Object result = null;
         try {
             result = strategy.invoke(config, proxy, method, endPointsByPath, args);
@@ -196,15 +234,15 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
         }
     }
 
-    protected ServiceSample startSample(
+    protected ServiceSampleModel startSample(
             IInvocationStrategy strategy,
             ServiceSpecificConfig config,
             Object proxy,
             Method method,
             Object[] args) {
-        ServiceSample sample = null;
+        ServiceSampleModel sample = null;
         if (method.isAnnotationPresent(Sample.class)) {
-            sample = new ServiceSample();
+            sample = new ServiceSampleModel();
             sample.setSampleId(installationId + System.currentTimeMillis());
             sample.setInstallationId(installationId);
             sample.setHostname(AppUtils.getHostName());
@@ -216,7 +254,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     }
 
     protected void endSampleSuccess(
-            ServiceSample sample,
+            ServiceSampleModel sample,
             ServiceSpecificConfig config,
             Object proxy,
             Method method,
@@ -229,7 +267,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     }
 
     protected void endSampleError(
-            ServiceSample sample,
+            ServiceSampleModel sample,
             ServiceSpecificConfig config,
             Object proxy,
             Method method,
@@ -244,7 +282,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
         }
     }
 
-    protected void endSample(ServiceSample sample, ServiceSpecificConfig config, Object proxy, Method method, Object[] args) {
+    protected void endSample(ServiceSampleModel sample, ServiceSpecificConfig config, Object proxy, Method method, Object[] args) {
         if (sample != null) {
             sample.setEndTime(new Date());
             sample.setDurationMs(sample.getEndTime().getTime() - sample.getStartTime().getTime());

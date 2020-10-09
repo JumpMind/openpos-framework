@@ -9,9 +9,7 @@ import org.jumpmind.pos.persist.Augmented;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Slf4j
 @Component
@@ -66,7 +64,7 @@ public class AugmenterHelper {
 
     public Object getDefaultValue(String fieldName, AbstractModel model) {
         AugmenterConfig config = getAugmenterConfig(model);
-        if (config != null) {
+        if (config != null && fieldName != null && fieldName.length() > config.getPrefix().length()) {
             AugmenterModel augmenter = config.getAugmenter(fieldName.substring(config.getPrefix().length()));
             if (augmenter != null) {
                 return augmenter.getDefaultValue();
@@ -76,5 +74,26 @@ public class AugmenterHelper {
             }
         }
         return null;
+    }
+
+    public Map<String, Object> getParametersForAugmentedModel(IAugmentedModel augmentedModel, Class<? extends IAugmentedModel> clazz) {
+        Map<String, Object> params = new HashMap<>();
+        AugmenterConfig config = getAugmenterConfig(clazz);
+        if (config != null && config.getAugmenters() != null) {
+            int counter = 1;
+            for (AugmenterModel augmenter : config.getAugmenters()) {
+                String columnValue = augmentedModel.getAugmentValue(augmenter.getName());
+                if (columnValue != null) {
+                    String columnName = config.getPrefix() + augmenter.getName();
+                    String columnNameKey = String.format("augment%dColumnName", counter);
+                    String columnValueKey = String.format("augment%dValue", counter);
+
+                    params.put(columnNameKey, columnName);
+                    params.put(columnValueKey, columnValue);
+                    counter++;
+                }
+            }
+        }
+        return params;
     }
 }
