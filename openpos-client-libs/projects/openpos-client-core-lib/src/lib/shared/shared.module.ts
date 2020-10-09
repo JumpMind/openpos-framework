@@ -154,6 +154,7 @@ import {StampComponent} from './components/stamp/stamp.component';
 import {FitTextDirective} from './directives/fit-text.directive';
 import { PromptButtonRowComponent } from './screen-parts/prompt-button-row/prompt-button-row.component';
 import { WarnButtonComponent } from './components/warn-button/warn-button.component';
+import {StayFocusedDirective} from './directives/stay-focused.directive';
 
 const screenParts = [
     TenderPartComponent,
@@ -291,7 +292,8 @@ const directives = [
     ArrowTabItemDirective,
     ResponsiveClassDirective,
     ResponsiveGridDirective,
-    FitTextDirective
+    FitTextDirective,
+    StayFocusedDirective
 ];
 
 const pipes = [
