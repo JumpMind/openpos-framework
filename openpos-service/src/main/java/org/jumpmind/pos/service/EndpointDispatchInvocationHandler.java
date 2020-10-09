@@ -180,7 +180,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     protected Object findMatch(String path, Collection<Object> endpoints, String implementation) {
         for (Object endpointBean : endpoints) {
             Endpoint endPoint = ClassUtils.resolveAnnotation(Endpoint.class, endpointBean);
-            if (endPoint.path().equals(path) && endPoint.implementation().equals(implementation)) {
+            if (endPoint != null && endPoint.path().equals(path) && endPoint.implementation().equals(implementation)) {
                 return endpointBean;
             }
         }
