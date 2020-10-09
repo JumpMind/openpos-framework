@@ -152,6 +152,7 @@ import {TransactionHistoryPartComponent} from './screen-parts/transaction-histor
 import {StatusBarComponent} from '../core/status/status-bar/status-bar.component';
 import {StampComponent} from './components/stamp/stamp.component';
 import {FitTextDirective} from './directives/fit-text.directive';
+import {StayFocusedDirective} from './directives/stay-focused.directive';
 
 const screenParts = [
     TenderPartComponent,
@@ -287,7 +288,8 @@ const directives = [
     ArrowTabItemDirective,
     ResponsiveClassDirective,
     ResponsiveGridDirective,
-    FitTextDirective
+    FitTextDirective,
+    StayFocusedDirective
 ];
 
 const pipes = [
