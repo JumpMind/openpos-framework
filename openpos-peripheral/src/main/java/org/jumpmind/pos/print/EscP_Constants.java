@@ -3,8 +3,6 @@ package org.jumpmind.pos.print;
 
 public class EscP_Constants {
 
-//    public static final int ESC = 0x1b;
-
     public static final int ESC = 27;
     public static final int CHANGE_MODE = 0x21;
     private static final int ALIGN = 97;
@@ -32,21 +30,6 @@ public class EscP_Constants {
     public static final String ALIGN_CENTER = codes(ESC,ALIGN, CENTER);
     public static final String ALIGN_LEFT = codes(ESC,ALIGN, LEFT);
 
-    public static final String EPSON_CODE128_BARCODE = String.valueOf((char)0x1D)+String.valueOf((char)0x48)+String.valueOf((char)2)+
-            String.valueOf((char)0x1D)+String.valueOf((char)0x68)+String.valueOf((char)90)+
-            String.valueOf((char)0x1D)+String.valueOf((char)0x77)+String.valueOf((char)2)+
-            String.valueOf((char)0x1D)+String.valueOf((char)0x6B)+String.valueOf((char)73)+
-            String.valueOf((char)23)+
-            String.valueOf((char)123)+ String.valueOf((char)66)+ "380502001835720192324"+
-            String.valueOf((char)0);
-
-
-
-//    public static final String BARCODE_PARAMETERS = "i";
-////    public static final String BARCODE_TYPE_CODE39 = "t0";
-////    public static final String BARCODE_DATA_START = "B";
-////    public static final String BARCODE_DATA_END = "\\";
-
     private static String codes(int... codes) {
         String s = "";
         for (int i : codes) {
@@ -54,8 +37,5 @@ public class EscP_Constants {
         }
         return s;
     }
-
-
-
 
 }
