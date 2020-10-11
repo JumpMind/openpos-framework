@@ -41,7 +41,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(post(urlEqualTo("/check/deviceid/test001/version")).willReturn(status(200).withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(new TestResponse(new BigDecimal("1.11"), "abcd")))));
 
-        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testPost", String.class), null,
+        TestResponse response = (TestResponse) handler.invoke(config().getProfileIds(), null, ITestService.class.getMethod("testPost", String.class), null,
                 new Object[] { "test001" });
 
         assertNotNull(response);
@@ -54,7 +54,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(put(urlEqualTo("/check/deviceid/test001/yada")).willReturn(status(200).withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(new TestResponse(new BigDecimal("3.14"), "xyz")))));
 
-        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testPut", String.class, TestRequest.class), null,
+        TestResponse response = (TestResponse) handler.invoke(config().getProfileIds(), null, ITestService.class.getMethod("testPut", String.class, TestRequest.class), null,
                 new Object[] { "test001", new TestRequest("one", 1) });
 
         assertNotNull(response);
@@ -66,7 +66,7 @@ public class RemoteOnlyStrategyTest {
     public void testInvokeRemotePutWithNoResponse() throws Throwable {
         stubFor(put(urlEqualTo("/check/deviceid/test001/nuttin")).willReturn(status(200)));
 
-        handler.invoke(config(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class), null,
+        handler.invoke(config().getProfileIds(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class), null,
                 new Object[] { "test001", new TestRequest("one", 1) });
 
     }
@@ -78,7 +78,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(put(urlEqualTo("/check/deviceid/test001/nuttin")).willReturn(aResponse().withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(result)).withStatus(501)));
 
-        handler.invoke(config(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class), null,
+        handler.invoke(config().getProfileIds(), null, ITestService.class.getMethod("testPutNuttin", String.class, TestRequest.class), null,
                 new Object[] { "test001", new TestRequest("one", 1) });
 
     }
@@ -88,7 +88,7 @@ public class RemoteOnlyStrategyTest {
         stubFor(get(urlEqualTo("/check/getmesomeofthat")).willReturn(status(200).withHeader("Content-Type", "application/json")
                 .withBody(mapper.writeValueAsString(new TestResponse(new BigDecimal("3.14"), "xyz")))));
 
-        TestResponse response = (TestResponse) handler.invoke(config(), null, ITestService.class.getMethod("testGet"), null, null);
+        TestResponse response = (TestResponse) handler.invoke(config().getProfileIds(), null, ITestService.class.getMethod("testGet"), null, null);
 
         assertNotNull(response);
         assertEquals(new BigDecimal("3.14"), response.total);

@@ -201,20 +201,28 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
         EndpointSpecificConfig endConfig = null;
         if (obj != null) {
             for (EndpointSpecificConfig aWeirdAcronym : config.getEndpoints()) {
-                if (obj.getClass().getSuperclass().getAnnotation(Endpoint.class).path().equals(aWeirdAcronym.getPath()))
+                Endpoint annotation = obj.getClass().getAnnotation(Endpoint.class);
+                if (annotation != null && annotation.path().equals(aWeirdAcronym.getPath())) {
                     endConfig = aWeirdAcronym;
+                }
             }
         }
         IInvocationStrategy strategy;
+        List<String> profileIds = new ArrayList<>();
         if (endConfig != null) {
             strategy = strategies.get(endConfig.getStrategy().name());
+            profileIds.add(endConfig.getProfile());
         } else {
             strategy = strategies.get(config.getStrategy().name());
+            profileIds.addAll(config.getProfileIds() != null ? config.getProfileIds(): Arrays.asList());
+        }
+        if (profileIds.size() == 0) {
+            profileIds.add("local");
         }
         ServiceSampleModel sample = startSample(strategy, config, proxy, method, args);
         Object result = null;
         try {
-            result = strategy.invoke(config, proxy, method, endPointsByPath, args);
+            result = strategy.invoke(profileIds, proxy, method, endPointsByPath, args);
             endSampleSuccess(sample, config, proxy, method, args, result);
         } catch (Throwable ex) {
             endSampleError(sample, config, proxy, method, args, result, ex);
