@@ -1,6 +1,7 @@
 package org.jumpmind.pos.service;
 
 import bsh.commands.dir;
+import org.apache.commons.lang.StringUtils;
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
@@ -322,14 +323,22 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         }
     }
 
-    public void exportData(String format, String dir, boolean includeModuleTables) {
+    public void exportData(String format, String dir, boolean includeModuleTables, String whereClause, List<String> tableFilter, String batchId) {
         List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[]{ModuleModel.class});
+        if(StringUtils.isEmpty(batchId)){
+            batchId = "01";
+        }
+        if(tableFilter != null){
+        }
         for (Table table : tables) {
-            if (includeModuleTables || !(
+            if (
+                    (tableFilter == null || tableFilter.stream().anyMatch( t -> t.equalsIgnoreCase(table.getName()))) &&
+                    (includeModuleTables || !(
                     table.getName().toLowerCase().endsWith("module") ||
                     table.getName().toLowerCase().endsWith("sample")))
-                if (new JdbcTemplate(dataSource).queryForObject("select count(*) from " + table.getName(), Integer.class) > 0) {
-                    File out = new File(dir, String.format("%s_post_01_%s.%s", getVersion(), table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase()));
+            ){
+                if (new JdbcTemplate(dataSource).queryForObject("select count(*) from " + table.getName() + " " + whereClause, Integer.class) > 0) {
+                    File out = new File(dir, String.format("%s_post_%s_%s.%s", getVersion(), batchId, table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase()));
                     out.getParentFile().mkdirs();
                     try (OutputStream os = new BufferedOutputStream(
                             new FileOutputStream(out))) {
@@ -339,11 +348,14 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                         dbExport.setNoData(false);
                         dbExport.setFormat(Format.valueOf(format));
                         dbExport.setNoCreateInfo(true);
+                        dbExport.setWhereClause(whereClause);
                         dbExport.exportTable(os, table.getName(), null);
                     } catch (IOException e) {
                         throw new IoException(e);
                     }
                 }
+            }
+
         }
     }
 
