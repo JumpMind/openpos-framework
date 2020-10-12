@@ -325,6 +325,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     public void exportData(String format, String dir, boolean includeModuleTables, String whereClause, List<String> tableFilter, String batchId) {
         List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[]{ModuleModel.class});
+        if (whereClause == null) {
+            whereClause = StringUtils.EMPTY;
+        }
         if(StringUtils.isEmpty(batchId)){
             batchId = "01";
         }
