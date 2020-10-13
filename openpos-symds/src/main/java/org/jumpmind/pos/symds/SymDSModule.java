@@ -8,9 +8,8 @@ import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jumpmind.db.model.Table;
-import org.jumpmind.pos.core.flow.StateManager;
-import org.jumpmind.pos.core.flow.StateManagerContainer;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.service.AbstractRDBMSModule;
@@ -52,8 +51,6 @@ import static org.jumpmind.symmetric.common.Constants.*;
 @Slf4j
 public class SymDSModule extends AbstractRDBMSModule {
 
-    public static final String CHANNEL_OPS = "ops";
-
     public final static String NAME = "sym";
     
     @Autowired
@@ -73,8 +70,8 @@ public class SymDSModule extends AbstractRDBMSModule {
     @Autowired
     List<ISymDSConfigurator> configurators;
 
-    @Autowired
-    StateManagerContainer stateManagerContainer;
+    @Autowired(required = false)
+    List<IDataSyncListener> dataSyncListeners;
 
     @Override
     public void initialize() {
@@ -98,10 +95,7 @@ public class SymDSModule extends AbstractRDBMSModule {
 
                 @Override
                 public void afterWrite(DataContext context, Table table, CsvData data) {
-                    Batch batch = context.getBatch();
-                    if (CHANNEL_OPS.equals(batch.getChannelId())) {
-                        clearOpsCacheData(context, table, data);
-                    }
+                    processDataSyncListeners(context, table, data);
                 }
             });
             holder.getEngines().put(properties.getProperty(ParameterConstants.EXTERNAL_ID), serverEngine);
@@ -120,29 +114,36 @@ public class SymDSModule extends AbstractRDBMSModule {
 
     }
 
-    protected void clearOpsCacheData(DataContext context, Table table, CsvData data) {
-        if (table != null && table.getName() != null
-                && table.getName().toUpperCase().equals("OPS_UNIT_STATUS")) {
+    protected void processDataSyncListeners(DataContext context, Table table, CsvData data) {
+        if (CollectionUtils.isEmpty(dataSyncListeners)
+                || table == null
+                || table.getName() == null) {
+            return;
+        }
 
-            int businessUnitColumnIndex = table.getColumnIndex("BUSINESS_UNIT_ID");
-            if (businessUnitColumnIndex != -1) {
-                String[] rowData = data.getParsedData("rowData");
-                if (rowData != null && rowData.length > businessUnitColumnIndex) {
-                    String batchBusinessUnitId = rowData[businessUnitColumnIndex];
-                    clearBusinessDates(batchBusinessUnitId);
-                }
+        String channelId = context.getBatch().getChannelId();
+        String tableName = table.getName().toUpperCase();
+
+        for (IDataSyncListener dataSyncListener : dataSyncListeners) {
+            if (dataSyncListener.isApplicable(channelId, tableName)) {
+                dataSyncListener.onDataWrite(buildSyncData(tableName, context, table, data));
             }
         }
     }
 
-    protected void clearBusinessDates(String batchBusinessUnitId) {
-        List<StateManager> stateManagers = stateManagerContainer.getAllStateManagers();
-        for (StateManager stateManager : stateManagers) {
-            if (stateManager.getDeviceId().startsWith(batchBusinessUnitId)) {
-                log.info("Removing business date from device scope (cache invalidation) due to incoming data for device " + stateManager.getDeviceId());
-                stateManager.getApplicationState().getScope().removeDeviceScope("businessDate");
-            }
+    protected SyncData buildSyncData(String tableName, DataContext context, Table table, CsvData data) {
+        SyncData syncData = new SyncData();
+        syncData.setChannelId(context.getBatch().getChannelId());
+        syncData.setTableName(tableName);
+        syncData.setDataEventType(data.getDataEventType());
+
+        Map<String, String> mappedRowData = new LinkedHashMap<>();
+        String[] rowData = data.getParsedData("rowData");
+        for (String columnName : table.getColumnNames()) {
+            mappedRowData.put(columnName.toUpperCase(), rowData[table.getColumnIndex(columnName)]);
         }
+        syncData.setData(mappedRowData);
+        return syncData;
     }
 
     @Override
