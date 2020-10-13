@@ -134,10 +134,14 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     @Override
     public void printBarCode(int station, String data, int symbology, int height, int width, int alignment, int textPosition) {
-        String printBarcodeCommand = buildBarcodeCommand(station, data, symbology, height, width, alignment, textPosition);
-        printNormal(0, printerCommands.get(PrinterCommands.ALIGN_CENTER));
-        printNormal(0, printBarcodeCommand);
-        printNormal(0, printerCommands.get(PrinterCommands.ALIGN_LEFT));
+        try {
+            printNormal(0, printerCommands.get(PrinterCommands.ALIGN_CENTER));
+            String printBarcodeCommand = buildBarcodeCommand(station, data, symbology, height, width, alignment, textPosition);
+            printNormal(0, printBarcodeCommand);
+            printNormal(0, printerCommands.get(PrinterCommands.ALIGN_LEFT));
+        } catch (Exception ex) {
+            throw new PrintException("Failed to print barcode: " + data + " symbology: " + symbology, ex);
+        }
     }
 
     public String buildBarcodeCommand(int station, String data, int symbology, int height, int width, int alignment, int textPosition) {
@@ -150,20 +154,52 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         switch (symbology) {
             case POSPrinterConst.PTR_BCS_Code128:
                 substitutions.put("barcodeType", printerCommands.get(PrinterCommands.BARCODE_TYPE_CODE_128));
-                barcodeData = printerCommands.get(PrinterCommands.BARCODE_TYPE_CODE_128_CODEA) + data;
+
+                if (StringUtils.isNumeric(data)) {
+                    List<Byte> barcodeCommand = new ArrayList<>();
+                    for (byte b : getCommand(PrinterCommands.BARCODE_TYPE_CODE_128_CODEC).getBytes()) {
+                        barcodeCommand.add(b);
+                    }
+                    for (int i = 0; i < data.length(); i++) {
+                        if (i <= data.length() - 2) {
+                            byte number = (byte) Integer.parseInt(data.substring(i, i + 2));
+                            barcodeCommand.add(number);
+                            i++;
+                        } else {
+                            // switch to code B just for the last (ODD) number.  Code C only support an even number of digits.
+                            for (byte b : getCommand(PrinterCommands.BARCODE_TYPE_CODE_128_CODEB).getBytes()) {
+                                barcodeCommand.add(b);
+                            }
+                            barcodeCommand.add(data.substring(i, i + 1).getBytes()[0]);
+                        }
+                    }
+
+                    barcodeData = new String(toBytes(barcodeCommand));
+                } else {
+                    barcodeData = getCommand(PrinterCommands.BARCODE_TYPE_CODE_128_CODEB) + data;
+
+                }
+                substitutions.put("barcodeLength", new String(new byte[] {(byte)barcodeData.length()}));
+                substitutions.put("barcodeData", barcodeData);
+
                 break;
             default:
                 throw new PrintException("Unsupported barcode symbology: " + symbology);
         }
 
-        substitutions.put("barcodeLength", String.valueOf((char) barcodeData.length()));
-
-        substitutions.put("barcodeData", barcodeData);
 
         StrSubstitutor substitutor = new StrSubstitutor(substitutions);
 
         printBarcodeCommand = substitutor.replace(printBarcodeCommand);
         return printBarcodeCommand;
+    }
+
+    private byte[] toBytes(List<Byte> barcodeCommand) {
+        byte[] bytes = new byte[barcodeCommand.size()];
+        for (int i = 0; i < barcodeCommand.size(); i++) {
+            bytes[i] = barcodeCommand.get(i);
+        }
+        return bytes;
     }
 
     @Override

@@ -47,9 +47,52 @@ public class PrinterCommandsTest {
         printer.connectionFactory = new ByteArrayConnectionFactory();
         printer.open("Printer", null);
 
-        String barcodeCommand = printer.buildBarcodeCommand(0, "380502001835720192324", POSPrinterConst.PTR_BCS_Code128, 0, 0, 0, 0);
+        {
+            String barcodeCommand = printer.buildBarcodeCommand(0, "38050200183572019232", POSPrinterConst.PTR_BCS_Code128, 0, 0, 0, 0);
 
-        assertCommandsEqual(EscP_Constants.EPSON_CODE128_BARCODE, barcodeCommand);
+            byte[] barcodeEvenDigits = new byte[] {
+                    /* set text below barcode */ 0x1D, 0x48, 2,
+                    /* set height=90 */ 0x1D, 0x68, 90,
+                    /* set width=2 */0x1D, 0x77, 2,
+                    /* select CODE128 */ 0x1D, 0x6B, 73,
+                    /** width in byte length of barcode data */ 12,
+                    /* select CODEC */ 123, 67,
+                    /* barcode data */ 38, 5, 2, 0, 18, 35, 72, 1, 92, 32} ;
+
+            assertCommandsEqual(new String(barcodeEvenDigits), barcodeCommand);
+        }
+        {
+            String barcodeCommand = printer.buildBarcodeCommand(0, "380502001835720192324", POSPrinterConst.PTR_BCS_Code128, 0, 0, 0, 0);
+
+            byte[] barcodeOddDigits = new byte[] {
+                    /* set text below barcode */ 0x1D, 0x48, 2,
+                    /* set height=90 */ 0x1D, 0x68, 90,
+                    /* set width=2 */0x1D, 0x77, 2,
+                    /* select CODE128 */ 0x1D, 0x6B, 73,
+                    /** width in byte length of barcode data */ 15,
+                    /* select CODEC */ 123, 67,
+                    /* barcode data */ 38, 5, 2, 0, 18, 35, 72, 1, 92, 32,
+                    /* select CODEB for the last, odd digit*/ 123, 66,
+                    /* barcode data */ (char)'4'
+            } ;
+
+            assertCommandsEqual(new String(barcodeOddDigits), barcodeCommand);
+        }
+        {
+            String barcodeCommand = printer.buildBarcodeCommand(0, "ABC123", POSPrinterConst.PTR_BCS_Code128, 0, 0, 0, 0);
+
+            byte[] barcodeAlphaNumeric = new byte[] {
+                    /* set text below barcode */ 0x1D, 0x48, 2,
+                    /* set height=90 */ 0x1D, 0x68, 90,
+                    /* set width=2 */0x1D, 0x77, 2,
+                    /* select CODE128 */ 0x1D, 0x6B, 73,
+                    /** width in byte length of barcode data */ 8,
+                    /* select CODEB */ 123, 66,
+                    /* barcode data */ 'A', 'B', 'C', '1', '2', '3',
+            } ;
+
+            assertCommandsEqual(new String(barcodeAlphaNumeric), barcodeCommand);
+        }
     }
 
     private void assertCommandsEqual(String expected, String actual) {
