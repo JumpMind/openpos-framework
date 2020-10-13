@@ -123,10 +123,11 @@ public class SymDSModule extends AbstractRDBMSModule {
 
         String channelId = context.getBatch().getChannelId();
         String tableName = table.getName().toUpperCase();
+        SyncData syncData = buildSyncData(tableName, context, table, data);
 
         for (IDataSyncListener dataSyncListener : dataSyncListeners) {
             if (dataSyncListener.isApplicable(channelId, tableName)) {
-                dataSyncListener.onDataWrite(buildSyncData(tableName, context, table, data));
+                dataSyncListener.onDataWrite(syncData);
             }
         }
     }
