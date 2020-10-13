@@ -24,12 +24,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.AbstractMap.SimpleEntry;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -180,7 +176,7 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
     protected Object findMatch(String path, Collection<Object> endpoints, String implementation) {
         for (Object endpointBean : endpoints) {
             Endpoint endPoint = ClassUtils.resolveAnnotation(Endpoint.class, endpointBean);
-            if (endPoint.path().equals(path) && endPoint.implementation().equals(implementation)) {
+            if (endPoint != null && endPoint.path().equals(path) && endPoint.implementation().equals(implementation)) {
                 return endpointBean;
             }
         }
@@ -201,20 +197,28 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
         EndpointSpecificConfig endConfig = null;
         if (obj != null) {
             for (EndpointSpecificConfig aWeirdAcronym : config.getEndpoints()) {
-                if (obj.getClass().getSuperclass().getAnnotation(Endpoint.class).path().equals(aWeirdAcronym.getPath()))
+                Endpoint annotation = obj.getClass().getAnnotation(Endpoint.class);
+                if (annotation != null && annotation.path().equals(aWeirdAcronym.getPath())) {
                     endConfig = aWeirdAcronym;
+                }
             }
         }
         IInvocationStrategy strategy;
+        List<String> profileIds = new ArrayList<>();
         if (endConfig != null) {
             strategy = strategies.get(endConfig.getStrategy().name());
+            profileIds.add(endConfig.getProfile());
         } else {
             strategy = strategies.get(config.getStrategy().name());
+            profileIds.addAll(config.getProfileIds() != null ? config.getProfileIds(): Arrays.asList());
+        }
+        if (profileIds.size() == 0) {
+            profileIds.add("local");
         }
         ServiceSample sample = startSample(strategy, config, proxy, method, args);
         Object result = null;
         try {
-            result = strategy.invoke(config, proxy, method, endPointsByPath, args);
+            result = strategy.invoke(profileIds, proxy, method, endPointsByPath, args);
             endSampleSuccess(sample, config, proxy, method, args, result);
         } catch (Throwable ex) {
             endSampleError(sample, config, proxy, method, args, result, ex);
