@@ -10,5 +10,6 @@ dependencies {
          exclude group: 'net.java.dev.jna'
     }
     compile project(":openpos-service")
+    compile project(":openpos-flow")
     testCompile project(path: ':openpos-util', configuration: 'testArtifacts')
 }
