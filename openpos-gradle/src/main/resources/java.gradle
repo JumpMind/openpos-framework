@@ -120,12 +120,10 @@ eclipse {
 }
 
 test {
-    // ignoreFailures = true
+    if (project.hasProperty('ignoreFailures')) {
+       ignoreFailures = project.property('ignoreFailures').toBoolean
+    }
     testLogging.showStandardStreams = true
-
-//     forkEvery = 1
-//     maxParallelForks = 5
-
     //Dynamic exclude through property defined in the build.gradle file
     if (project.hasProperty('excludeTests')) {
         println('Excluding tests: ' + project.property('excludeTests'))
