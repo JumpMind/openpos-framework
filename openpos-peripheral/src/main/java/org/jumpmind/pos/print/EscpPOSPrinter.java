@@ -133,6 +133,16 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public int readDrawerState() {
+        try {
+            getPeripheralConnection().getOut().write(new byte[] {0x1D, 0x72, 2});
+            return getPeripheralConnection().getIn().read();
+        } catch (Exception e) {
+            throw new PrintException("Failed to get drawer status");
+        }
+    }
+
+    @Override
     public void printBarCode(int station, String data, int symbology, int height, int width, int alignment, int textPosition) {
         try {
             printNormal(0, printerCommands.get(PrinterCommands.ALIGN_CENTER));

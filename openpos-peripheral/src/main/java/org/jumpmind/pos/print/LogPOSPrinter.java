@@ -67,6 +67,11 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public int readDrawerState() {
+        return 0;
+    }
+
+    @Override
     public void beginSlipMode() {
 
     }

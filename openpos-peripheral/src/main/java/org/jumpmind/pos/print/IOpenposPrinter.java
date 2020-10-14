@@ -23,6 +23,8 @@ public interface IOpenposPrinter extends POSPrinterService19 {
 
     int readPrinterStatus();
 
+    int readDrawerState();
+
     public void beginSlipMode();
 
     public void endSlipMode();
