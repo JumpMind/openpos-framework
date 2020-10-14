@@ -48,8 +48,3 @@ steps:
   inputs: 
     codeCoverageTool: Cobertura
     summaryFileLocation: '**/*coverage.xml'
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish server source for downstream pipeline consumption'
-  inputs:
-    pathtoPublish: 'openpos-assemble/build/openpos-server-core-lib'
-    artifactName: 'openpos-server-core-lib'
