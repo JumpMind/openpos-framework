@@ -36,7 +36,7 @@ public class Versions {
     protected synchronized void init() {
         try {
             List<Version> building = new ArrayList<>();
-            List<InputStream> resources = loadResources("openpos-version.properties", null);
+            List<InputStream> resources = loadResources("openpos-version.properties", Thread.currentThread().getContextClassLoader());
             log.info(BoxLogging.box("Versions"));
             for (InputStream is : resources) {
                 Properties properties = new Properties();

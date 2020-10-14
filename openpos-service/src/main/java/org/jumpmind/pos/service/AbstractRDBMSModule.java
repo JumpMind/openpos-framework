@@ -325,6 +325,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     public void exportData(String format, String dir, boolean includeModuleTables, String whereClause, List<String> tableFilter, String batchId) {
         List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[]{ModuleModel.class});
+        if (whereClause == null) {
+            whereClause = StringUtils.EMPTY;
+        }
         if(StringUtils.isEmpty(batchId)){
             batchId = "01";
         }
@@ -338,7 +341,11 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                     table.getName().toLowerCase().endsWith("sample")))
             ){
                 if (new JdbcTemplate(dataSource).queryForObject("select count(*) from " + table.getName() + " " + whereClause, Integer.class) > 0) {
-                    File out = new File(dir, String.format("%s_post_%s_%s.%s", getVersion(), batchId, table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase()));
+                    String filename = String.format("%s_post_01_%s.%s", getVersion(), table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase());
+                    if(Format.SQL.equals(Format.valueOf(format))){
+                        filename = String.format("%s_post_01_%s-%s.%s", getVersion(), batchId, table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase());
+                    }
+                    File out = new File(dir, filename);
                     out.getParentFile().mkdirs();
                     try (OutputStream os = new BufferedOutputStream(
                             new FileOutputStream(out))) {

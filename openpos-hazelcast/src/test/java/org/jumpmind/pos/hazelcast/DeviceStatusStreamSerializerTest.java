@@ -16,7 +16,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @RunWith(SpringRunner.class)
-@ContextConfiguration(classes= {HazelcastConfig.class})
+@ContextConfiguration(classes= {HazelcastConfig.class, HazelcastEnvConfig.class})
 @ActiveProfiles("hazelcast")
 public class DeviceStatusStreamSerializerTest {
 
