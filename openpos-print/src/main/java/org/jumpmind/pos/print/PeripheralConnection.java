@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PeripheralConnection {
-	
-	OutputStream out;  // write to printer.
-    InputStream in;  // read status, etc. from printer.
-    Object rawConnection;
-   
-    public void close() {
-        IOUtils.closeQuietly(in, out);
-    }
+
+	OutputStream out; // write to printer.
+	InputStream in; // read status, etc. from printer.
+	Object rawConnection;
+
+	public void close() {
+		IOUtils.closeQuietly(in, out);
+	}
 }

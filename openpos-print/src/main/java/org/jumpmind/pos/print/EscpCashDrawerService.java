@@ -105,18 +105,6 @@ public class EscpCashDrawerService implements CashDrawerService19 {
         return DEVICE_VERSION;
     }
 
-    protected void invoke(Runnable runnable) throws JposException {
-        try {
-            if (SwingUtilities.isEventDispatchThread()) {
-                runnable.run();
-            } else {
-                SwingUtilities.invokeAndWait(runnable);
-            }
-        } catch (Exception e) {
-            throw new JposException(JposConst.JPOS_E_FAILURE);
-        }
-    }
-
     protected void checkIfOpen() throws JposException {
         if (!open)
             throw new JposException(JposConst.JPOS_E_CLOSED, "Service is not open.");
