@@ -18,7 +18,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     PrinterCommands printerCommands = new PrinterCommandPlaceholders();
     int receiptLineSpacing;
-    OutputStream stream;
+    PeripheralConnection connection;
     PrintWriter writer;
     Map<String, Object> settings;
     EscpImagePrinter imagePrinter;
@@ -42,8 +42,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public void open(String logicalName, EventCallbacks cb) {
         this.printerName = logicalName;
-        this.stream = connectionFactory.open(this.settings);
-        this.writer = new PrintWriter(this.stream);
+        this.connection = connectionFactory.open(this.settings);
+        this.writer = new PrintWriter(this.connection.getOut());
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
         initializePrinter();
     }
@@ -63,7 +63,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             this.writer.close();
             this.writer = null;
         }
-        this.connectionFactory.close();
+        this.connectionFactory.close(connection);
     }
 
     @Override
@@ -99,6 +99,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         printNormal(0, printBarcodeCommand);
         printNormal(0, printerCommands.get(PrinterCommands.BARCODE_FEED));  // epson will cut through barcode without some feed
         printNormal(0, printerCommands.get(PrinterCommands.ALIGN_LEFT));
+    }
+    
+    @Override
+    public PeripheralConnection getPeripheralConnection() {
+        return connection;
     }
 
     public String buildBarcodeCommand(int station, String data, int symbology, int height, int width, int alignment, int textPosition) {
@@ -152,11 +157,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             if (imagePrinter == null) {
                 throw new PrintException("imagePrinter cannot be null here. This printer driver was not initialized properly.");
             }
-            if (stream == null) {
-                throw new PrintException("outputStream cannot be null here. This printer driver was not initialized properly.");
+            if (connection == null) {
+                throw new PrintException("peripheralConnection cannot be null here. This printer driver was not initialized properly.");
             }
             BufferedImage bufferedImage = ImageIO.read(image);
-            imagePrinter.printImage(stream, bufferedImage);
+            imagePrinter.printImage(connection.getOut(), bufferedImage);
             printNormal(0, getCommand(PrinterCommands.LINE_SPACING_SINGLE));
         } catch (Exception ex) {
             throw new PrintException("Failed to read and print buffered image", ex);
@@ -1176,4 +1181,18 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public void directIO(int command, int[] data, Object object) throws JposException {
         throw new PrintNotSupportedException("Method not supported on this driver.");
     }
+
+	@Override
+	public String getDrawerStatus(String cashDrawerId) {
+		String code = "1";
+		try {
+			getPeripheralConnection().getOut().write(new byte[] {0x1D, 0x72, 2});
+			code = Integer.toString(getPeripheralConnection().getIn().read());
+		} catch (IOException e) {
+			String msg = String.format("Failure while closing cash drawer with id '%s'. Reason: %s",
+						cashDrawerId, e.getMessage());
+			throw new PrintException(msg, e);
+		}
+		return code;
+	}
 }

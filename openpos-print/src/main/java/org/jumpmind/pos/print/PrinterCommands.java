@@ -30,6 +30,7 @@ public class PrinterCommands {
     public static final String BARCODE_FEED = "BARCODE_FEED";
     public static final String CASH_DRAWER_OPEN = "CASH_DRAWER_OPEN";
     public static final String PRINTER_RESET = "PRINTER_RESET";
+    public static final String CASH_DRAWER_STATUS = "CASH_DRAWER_STATUS";
 
     private Map<String, String> printCommands;
 

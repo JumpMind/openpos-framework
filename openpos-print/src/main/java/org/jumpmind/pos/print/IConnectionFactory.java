@@ -5,7 +5,7 @@ import java.util.Map;
 
 public interface IConnectionFactory {
 
-    public OutputStream open(Map<String, Object> settings);
-    public void close();
+    public PeripheralConnection open(Map<String, Object> settings);
+    public void close(PeripheralConnection peripheralConnection);
 
 }

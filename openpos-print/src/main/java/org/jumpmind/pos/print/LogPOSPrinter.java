@@ -19,6 +19,11 @@ public class LogPOSPrinter implements IOpenposPrinter {
     @Override
     public void printImage(InputStream image) {
     }
+    
+    @Override
+    public PeripheralConnection getPeripheralConnection() {
+        return new PeripheralConnection();
+    }
 
     @Override
     public String getCommand(String commandName) {
@@ -1075,4 +1080,10 @@ public class LogPOSPrinter implements IOpenposPrinter {
     public void release() throws JposException {
 
     }
+
+	@Override
+	public String getDrawerStatus(String cashDrawerId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

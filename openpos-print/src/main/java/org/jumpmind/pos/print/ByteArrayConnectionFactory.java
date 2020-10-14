@@ -5,25 +5,24 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Map;
 
+import org.apache.commons.io.IOUtils;
+
 public class ByteArrayConnectionFactory implements IConnectionFactory {
 
     ByteArrayOutputStream out;
 
     @Override
-    public OutputStream open(Map<String, Object> settings) {
-        this.out = new ByteArrayOutputStream();
-        return this.out;
+    public PeripheralConnection open(Map<String, Object> settings) {
+        PeripheralConnection peripheralConnection = new PeripheralConnection();
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        peripheralConnection.setOut(out);
+        return peripheralConnection;
     }
 
     @Override
-    public void close() {
-        if (this.out != null) {
-            try {
-                this.out.close();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-            this.out = null;
+    public void close(PeripheralConnection peripheralConnection) {
+        if (peripheralConnection.getOut() instanceof ByteArrayOutputStream) {
+            IOUtils.closeQuietly(peripheralConnection.getOut());
         }
     }
 }

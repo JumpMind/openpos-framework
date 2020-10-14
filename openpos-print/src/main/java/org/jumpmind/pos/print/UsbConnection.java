@@ -5,8 +5,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.usb.UsbDevice;
 import javax.usb.UsbEndpoint;
+import javax.usb.UsbException;
 import javax.usb.UsbInterface;
 import javax.usb.UsbPipe;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class UsbConnection {
@@ -17,6 +21,7 @@ public class UsbConnection {
     private UsbEndpoint usbEndpoint;
     private UsbPipe usbPipe;
     private UsbInterface usbInterface;
+    private List<UsbPipe> inPipes = new ArrayList<>();
 
     public UsbDevice getUsbDevice() {
         return usbDevice;
@@ -49,8 +54,21 @@ public class UsbConnection {
     public void setUsbInterface(UsbInterface usbInterface) {
         this.usbInterface = usbInterface;
     }
+    
+    public List<UsbPipe> getInPipes() {
+    	return inPipes;
+    }
 
     public void close() {
+        for (UsbPipe inPipe : inPipes) {
+            try {
+                inPipe.abortAllSubmissions();
+                inPipe.close();
+            } catch (UsbException ex) {
+                log.warn("Failed to close USB in pipe.", ex);
+            }
+        }
+        
         if (usbPipe != null) {
             try {
                 usbPipe.close();
