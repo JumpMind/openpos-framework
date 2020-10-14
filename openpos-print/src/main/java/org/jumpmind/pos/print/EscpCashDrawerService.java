@@ -31,25 +31,13 @@ public class EscpCashDrawerService implements CashDrawerService19 {
     private boolean enabled;
     private boolean freezeEvents;
     private int powerNotify;
-	
-	public EscpCashDrawerService() {
-		System.out.print(true);
-	}
-
-	public void setPrinter(IOpenposPrinter printer) {
-		this.printer = printer;
-	}
-
-	public IOpenposPrinter getPrinter() {
-		return printer;
-	}
-
-	public static void setPrinterHostname(String printerHostname) {
-		//no op
-	}
 
 	public void setPrinterPort(String printerPort) {
 		this.printerPort = printerPort;
+	}
+	
+	public String getPrinterPort() {
+		return this.printerPort;
 	}
 	
 	public void init() throws JposException {
@@ -226,115 +214,94 @@ public class EscpCashDrawerService implements CashDrawerService19 {
 
 	@Override
 	public boolean getCapStatisticsReporting() throws JposException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean getCapUpdateStatistics() throws JposException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void resetStatistics(String statisticsBuffer) throws JposException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void retrieveStatistics(String[] statisticsBuffer) throws JposException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void updateStatistics(String statisticsBuffer) throws JposException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public boolean getCapStatusMultiDrawerDetect() throws JposException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public int getCapPowerReporting() throws JposException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public int getPowerState() throws JposException {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public boolean getCapStatus() throws JposException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public String getCheckHealthText() throws JposException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getDeviceServiceDescription() throws JposException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getPhysicalDeviceDescription() throws JposException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public String getPhysicalDeviceName() throws JposException {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public void checkHealth(int level) throws JposException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void directIO(int command, int[] data, Object object) throws JposException {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public boolean getCapCompareFirmwareVersion() throws JposException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public boolean getCapUpdateFirmware() throws JposException {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	@Override
 	public void compareFirmwareVersion(String firmwareFileName, int[] result) throws JposException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void updateFirmware(String firmwareFileName) throws JposException {
-		// TODO Auto-generated method stub
-
 	}
 }

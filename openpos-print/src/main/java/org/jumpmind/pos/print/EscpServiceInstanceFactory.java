@@ -21,9 +21,6 @@ public class EscpServiceInstanceFactory implements JposServiceInstanceFactory {
     private final static Logger logger = LoggerFactory.getLogger(EscpServiceInstanceFactory.class);
 
     private final static String PRINTER_COMMAND_LOCATIONS = "PrinterCommandLocations";
-    
-    public static String hostname = "";
-
 
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public JposServiceInstance createInstance(String s, JposEntry jposentry) throws JposException {
@@ -62,10 +59,6 @@ public class EscpServiceInstanceFactory implements JposServiceInstanceFactory {
 
             if (instance instanceof IOpenposPrinter) {
                 configureOpenposPrinter((IOpenposPrinter)instance, jposentry);
-            }
-            
-            if (instance instanceof EscpCashDrawerService) {
-                ((EscpCashDrawerService) instance).setPrinterHostname(hostname);
             }
 
             return instance;
