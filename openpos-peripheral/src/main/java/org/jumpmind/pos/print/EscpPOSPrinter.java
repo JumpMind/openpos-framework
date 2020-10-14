@@ -7,7 +7,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.status.Status;
-import org.jumpmind.pos.util.status.StatusReport;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -133,13 +132,22 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public int readDrawerState() {
+    public int waitForDrawerClose(long timeout) {
+        long startTime = System.currentTimeMillis();
+        int drawerState = 0;
         try {
-            getPeripheralConnection().getOut().write(new byte[] {0x1D, 0x72, 2});
-            return getPeripheralConnection().getIn().read();
+            while (drawerState != 1 && System.currentTimeMillis() - startTime < timeout) {
+                if (System.currentTimeMillis() - startTime > timeout) {
+                    Thread.sleep(1000);
+                    getPeripheralConnection().getOut().write(new byte[]{0x1D, 0x72, 2});
+                    drawerState = getPeripheralConnection().getIn().read() == 1 ? 1 : 0;
+                }
+            }
         } catch (Exception e) {
             throw new PrintException("Failed to get drawer status");
         }
+
+        return drawerState;
     }
 
     @Override

@@ -67,7 +67,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public int readDrawerState() {
+    public int waitForDrawerClose(long timeout) {
         return 0;
     }
 
