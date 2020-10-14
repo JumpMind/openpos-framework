@@ -140,9 +140,15 @@ public class SymDSModule extends AbstractRDBMSModule {
 
         Map<String, String> mappedRowData = new LinkedHashMap<>();
         String[] rowData = data.getParsedData("rowData");
-        for (String columnName : table.getColumnNames()) {
-            mappedRowData.put(columnName.toUpperCase(), rowData[table.getColumnIndex(columnName)]);
+        if (table.getColumnNames() != null && rowData != null) {
+            for (String columnName : table.getColumnNames()) {
+                int index = table.getColumnIndex(columnName);
+                if (index >= 0 && index < rowData.length) {
+                    mappedRowData.put(columnName.toUpperCase(), rowData[index]);
+                }
+            }
         }
+
         syncData.setData(mappedRowData);
         return syncData;
     }
