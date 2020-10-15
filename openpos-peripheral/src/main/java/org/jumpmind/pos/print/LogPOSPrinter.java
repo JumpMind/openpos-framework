@@ -73,7 +73,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
         } catch (InterruptedException e) {
             log.warn(e.getMessage());
         }
-        return 0;
+        return 1;
     }
 
     @Override
