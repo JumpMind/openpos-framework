@@ -140,7 +140,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         try {
             while (drawerState != 1 && System.currentTimeMillis() - startTime < timeout) {
                     Thread.sleep(1000);
-                    drawerState = isDrawerOpen() ? 0 : 1;
+                    drawerState = isDrawerOpen(cashDrawerId) ? 0 : 1;
             }
         } catch (Exception e) {
             log.warn(e.getMessage());
@@ -148,7 +148,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         return drawerState;
     }
 
-    public boolean isDrawerOpen() {
+    public boolean isDrawerOpen(String cashDrawerId) {
         try {
             getPeripheralConnection().getOut().write(new byte[]{0x1D, 0x72, 2});
             return getPeripheralConnection().getIn().read() == 1 ? false : true;
