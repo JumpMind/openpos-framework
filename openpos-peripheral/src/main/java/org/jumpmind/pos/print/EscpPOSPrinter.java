@@ -3,6 +3,7 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.ClassUtils;
@@ -17,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class EscpPOSPrinter implements IOpenposPrinter {
 
     PrinterCommands printerCommands = new PrinterCommandPlaceholders();
@@ -137,17 +139,23 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         int drawerState = 0;
         try {
             while (drawerState != 1 && System.currentTimeMillis() - startTime < timeout) {
-                if (System.currentTimeMillis() - startTime > timeout) {
                     Thread.sleep(1000);
-                    getPeripheralConnection().getOut().write(new byte[]{0x1D, 0x72, 2});
-                    drawerState = getPeripheralConnection().getIn().read() == 1 ? 1 : 0;
-                }
+                    drawerState = isDrawerOpen() ? 0 : 1;
             }
         } catch (Exception e) {
-            throw new PrintException("Failed to get drawer status");
+            log.warn(e.getMessage());
         }
-
         return drawerState;
+    }
+
+    public boolean isDrawerOpen() {
+        try {
+            getPeripheralConnection().getOut().write(new byte[]{0x1D, 0x72, 2});
+            return getPeripheralConnection().getIn().read() == 1 ? false : true;
+        } catch (Exception e) {
+            log.warn(e.getMessage());
+            return false;
+        }
     }
 
     @Override
