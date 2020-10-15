@@ -67,7 +67,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public int waitForDrawerClose(long timeout) {
+    public int waitForDrawerClose(String cashDrawerId, long timeout) {
         try {
             Thread.sleep(timeout);
         } catch (InterruptedException e) {

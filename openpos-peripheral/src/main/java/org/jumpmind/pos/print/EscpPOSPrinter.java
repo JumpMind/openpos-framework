@@ -134,7 +134,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public int waitForDrawerClose(long timeout) {
+    public int waitForDrawerClose(String cashDrawerId, long timeout) {
         long startTime = System.currentTimeMillis();
         int drawerState = 0;
         try {
