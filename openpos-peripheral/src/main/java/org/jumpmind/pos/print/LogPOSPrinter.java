@@ -12,7 +12,7 @@ import java.util.Map;
 @Slf4j
 public class LogPOSPrinter implements IOpenposPrinter {
 
-    private String cashDrawerStatus = "0";
+    private String cashDrawerStatus = EscpCashDrawerService.STATUS_OPEN;
 
     private PrinterCommands printerCommands = new PrinterCommandPlaceholders();
 
