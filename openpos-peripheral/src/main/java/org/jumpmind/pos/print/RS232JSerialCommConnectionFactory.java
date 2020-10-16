@@ -71,8 +71,8 @@ public class RS232JSerialCommConnectionFactory implements IConnectionFactory {
     @Override
     public void close(PeripheralConnection peripheralConnection) {
         if (peripheralConnection.getRawConnection() instanceof SerialPort) {
-            gnu.io.SerialPort serialPort = (gnu.io.SerialPort)peripheralConnection.getRawConnection();
-            serialPort.close();
+            SerialPort serialPort = (SerialPort) peripheralConnection.getRawConnection();
+            serialPort.closePort();
         }
     }
 

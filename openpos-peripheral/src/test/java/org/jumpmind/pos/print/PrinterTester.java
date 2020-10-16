@@ -18,12 +18,12 @@ public class PrinterTester {
         System.out.println(pwd.getAbsolutePath());
 
         Map<String, Object> settings = new HashMap<>();
-        settings.put("printerCommandLocations", "esc_p.properties, toshiba_esc_p.properties");
+        settings.put("printerCommandLocations", "esc_p.properties, epson.properties");
 //        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
-        settings.put("connectionClass", "org.jumpmind.pos.print.SocketConnectionFactory");
-//        settings.put("connectionClass", "org.jumpmind.pos.print.RS232ConnectionFactory");
+//        settings.put("connectionClass", "org.jumpmind.pos.print.SocketConnectionFactory");
+        settings.put("connectionClass", "org.jumpmind.pos.print.RS232ConnectionFactory");
         settings.put("hostName", "192.168.1.26");
-//        settings.put("portName", "COM4");
+        settings.put("portName", "COM3");
 //        settings.put("printWidth", "46");
 //        settings.put("usbVendorId", 0x0404); // NCR
         settings.put("usbVendorId", 0x04b8); // EPSON
