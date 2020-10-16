@@ -69,13 +69,13 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
     }
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
+    public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
 
         Throwable lastException = null;
         Object result = null;
         List<ServiceVisit> serviceVisits = new ArrayList<>();
 
-        for (String profileId : config.getProfileIds()) {
+        for (String profileId : profileIds) {
             ServiceVisit serviceVisit = new ServiceVisit();
             serviceVisit.setProfileId(profileId);
             long startTime = System.currentTimeMillis();

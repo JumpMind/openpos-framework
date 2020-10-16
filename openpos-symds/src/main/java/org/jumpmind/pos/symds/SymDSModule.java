@@ -1,8 +1,5 @@
 package org.jumpmind.pos.symds;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-import static org.apache.commons.lang3.StringUtils.trim;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -11,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.sql.DataSource;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
@@ -72,6 +70,9 @@ public class SymDSModule extends AbstractRDBMSModule {
     @Autowired
     List<ISymDSConfigurator> configurators;
 
+    @Autowired(required = false)
+    List<IDataSyncListener> dataSyncListeners;
+
     @Override
     public void initialize() {
             SymmetricEngineHolder holder = new SymmetricEngineHolder();
@@ -91,6 +92,11 @@ public class SymDSModule extends AbstractRDBMSModule {
                         }
                     }
                 }
+
+                @Override
+                public void afterWrite(DataContext context, Table table, CsvData data) {
+                    processDataSyncListeners(context, table, data);
+                }
             });
             holder.getEngines().put(properties.getProperty(ParameterConstants.EXTERNAL_ID), serverEngine);
             holder.setAutoStart(false);
@@ -106,6 +112,48 @@ public class SymDSModule extends AbstractRDBMSModule {
 
         super.initialize();
 
+    }
+
+    protected void processDataSyncListeners(DataContext context, Table table, CsvData data) {
+        if (CollectionUtils.isEmpty(dataSyncListeners)
+                || table == null
+                || table.getName() == null) {
+            return;
+        }
+
+        String channelId = context.getBatch().getChannelId();
+        String tableName = table.getName().toUpperCase();
+        SyncData syncData = null;
+
+        for (IDataSyncListener dataSyncListener : dataSyncListeners) {
+            if (dataSyncListener.isApplicable(channelId, tableName)) {
+                if (syncData == null) {
+                    syncData = buildSyncData(tableName, context, table, data);
+                }
+                dataSyncListener.onDataWrite(syncData);
+            }
+        }
+    }
+
+    protected SyncData buildSyncData(String tableName, DataContext context, Table table, CsvData data) {
+        SyncData syncData = new SyncData();
+        syncData.setChannelId(context.getBatch().getChannelId());
+        syncData.setTableName(tableName);
+        syncData.setDataEventType(data.getDataEventType());
+
+        Map<String, String> mappedRowData = new LinkedHashMap<>();
+        String[] rowData = data.getParsedData("rowData");
+        if (table.getColumnNames() != null && rowData != null) {
+            for (String columnName : table.getColumnNames()) {
+                int index = table.getColumnIndex(columnName);
+                if (index >= 0 && index < rowData.length) {
+                    mappedRowData.put(columnName.toUpperCase(), rowData[index]);
+                }
+            }
+        }
+
+        syncData.setData(mappedRowData);
+        return syncData;
     }
 
     @Override

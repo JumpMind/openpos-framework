@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 @Component(RemoteFirstStrategy.REMOTE_FIRST_STRATEGY)
@@ -29,14 +30,14 @@ public class RemoteFirstStrategy implements IInvocationStrategy {
     RemoteOnlyStrategy remoteStrategy;
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
+    public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
         try {
-            return remoteStrategy.invoke(config, proxy, method, endpoints, args);
+            return remoteStrategy.invoke(profileIds, proxy, method, endpoints, args);
         } catch (Throwable ex) {
             try {
                 logger.info("Remote service(s) unavailable. Trying local");
                 long start = System.currentTimeMillis();
-                Object result = localStrategy.invoke(config, proxy, method, endpoints, args);
+                Object result = localStrategy.invoke(profileIds, proxy, method, endpoints, args);
                 long end = System.currentTimeMillis();
                 if (result instanceof ServiceResult && ex instanceof ServiceException) {
                     ((ServiceResult) result).setServiceVisits(((ServiceException) ex).getServiceVisits());

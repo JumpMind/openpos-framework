@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Map;
 
 @Component(LocalOnlyStrategy.LOCAL_ONLY_STRATEGY)
@@ -19,7 +20,7 @@ public class LocalOnlyStrategy extends AbstractInvocationStrategy implements IIn
     }
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
+    public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
         String path = buildPath(method);
         Object obj = endpoints.get(path);
         if (obj != null) {
