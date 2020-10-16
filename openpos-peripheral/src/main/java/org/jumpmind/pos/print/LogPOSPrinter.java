@@ -12,6 +12,8 @@ import java.util.Map;
 @Slf4j
 public class LogPOSPrinter implements IOpenposPrinter {
 
+    private String cashDrawerStatus = "0";
+
     private PrinterCommands printerCommands = new PrinterCommandPlaceholders();
 
     private StringBuilder buff = new StringBuilder(128);
@@ -101,6 +103,19 @@ public class LogPOSPrinter implements IOpenposPrinter {
                 "|            ----               | -/  \n" +
                 "|        LogPOSPrinter          |/    \n" +
                 "+-------------------------------+     ");
+    }
+
+    @Override
+    public String getDrawerStatus(String cashDrawerId) {
+        if (cashDrawerStatus.equals(EscpCashDrawerService.STATUS_OPEN)) {
+            log.info("Printer peripheral cash drawer reported a status of \"" + EscpCashDrawerService.STATUS_OPEN + "\" (OPEN)");
+            cashDrawerStatus = EscpCashDrawerService.STATUS_CLOSED;
+            return EscpCashDrawerService.STATUS_OPEN;
+        } else {
+            log.info("Printer peripheral cash drawer reported a status of \"" + EscpCashDrawerService.STATUS_CLOSED + "\" (CLOSED)");
+            cashDrawerStatus = EscpCashDrawerService.STATUS_OPEN;
+            return EscpCashDrawerService.STATUS_CLOSED;
+        }
     }
 
     @Override

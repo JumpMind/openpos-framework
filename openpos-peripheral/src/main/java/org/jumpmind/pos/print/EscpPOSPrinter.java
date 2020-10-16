@@ -128,6 +128,20 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public String getDrawerStatus(String cashDrawerId) {
+        String code = EscpCashDrawerService.STATUS_CLOSED;
+        try {
+            printNormal(0, printerCommands.get(PrinterCommands.CASH_DRAWER_STATE));
+            code = Integer.toString(getPeripheralConnection().getIn().read());
+        } catch (IOException e) {
+            String msg = String.format("Failure while closing cash drawer with id '%s'. Reason: %s",
+                    cashDrawerId, e.getMessage());
+            throw new PrintException(msg, e);
+        }
+        return code;
+    }
+
+    @Override
     public void openCashDrawer(String cashDrawerId) {
         printNormal(0, printerCommands.get(PrinterCommands.CASH_DRAWER_OPEN));
     }
