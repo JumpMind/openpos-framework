@@ -17,7 +17,13 @@ import { KebabLabelButtonComponent } from '../kebab-label-button/kebab-label-but
 })
 export class ItemCardComponent implements OnDestroy {
 
-  @Input() item: ISellItem;
+  item:ISellItem;
+  filteredAdditionalLabels:{label: string, value: string} [];
+
+  @Input() set _item(item: ISellItem){
+    this.item = item;
+    this.filterAdditionalLabels();
+  }
   @Input() isReadOnly = false;
 
   _expanded = true;
@@ -77,6 +83,14 @@ export class ItemCardComponent implements OnDestroy {
       enabled = false;
     }
     return enabled;
+  }
+
+  public filterAdditionalLabels() {
+    this.filteredAdditionalLabels = this.item.additionalLabels.filter(additionalLabel =>
+        this.item.collapsedAdditionalLabels.find(
+            label => label == additionalLabel.label
+        )
+    )
   }
 
   @HostListener('mouseenter')

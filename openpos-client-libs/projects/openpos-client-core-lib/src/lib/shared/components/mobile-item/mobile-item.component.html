@@ -1,7 +1,11 @@
 <div responsive-class class="mobile-item-outer">
     <div class="item-content">
-        <img *ngIf="item.imageUrl" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" class="item-card-image"
-        [ngClass]="{'collapsed': !expanded}" responsive-class>
+        <app-image responsive-class
+                   class="item-card-image"
+                   [imageUrl]="item.imageUrl | imageUrl"
+                   [altText]="item.description"
+                   [ngClass]="{'collapsed': !expanded}">
+        </app-image>
         <div class="left-side">
             <div *ngIf="item.description" responsive-class class="item-card-title">
                 {{item.description}}
@@ -22,6 +26,11 @@
                     </li>
                 </ul>
             </section>
+            <ul responsive-class class="item-card-details" *ngIf="filteredAdditionalLabels && !expanded">
+                <li *ngFor="let additionalLabel of filteredAdditionalLabels" class="muted-color" style="margin-top: 4px">
+                    {{additionalLabel.label}}: {{additionalLabel.value}}
+                </li>
+            </ul>
             <ul responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
                 <li *ngFor="let additionalLabel of item.additionalLabels" class="muted-color" style="margin-top: 4px">
                     {{additionalLabel.label}}: {{additionalLabel.value}}

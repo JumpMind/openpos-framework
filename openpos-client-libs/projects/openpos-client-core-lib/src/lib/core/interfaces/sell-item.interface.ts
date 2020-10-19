@@ -24,6 +24,7 @@ export interface ISellItem extends IItem {
     additionalLabels: {label: string, value: string} [];
     returnItemLabels: {label: string, value: string} [];
     orderItemLabels: {label: string, value: string} [];
+    collapsedAdditionalLabels : [];
     optionsLabel: string;
     isOrderItem: boolean;
     isTender: boolean;
