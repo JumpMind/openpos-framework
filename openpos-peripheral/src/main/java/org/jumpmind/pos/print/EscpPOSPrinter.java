@@ -143,7 +143,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                     drawerState = isDrawerOpen(cashDrawerId) ? 0 : 1;
             }
         } catch (Exception e) {
-            log.warn("Failure to read the status of the drawer: " + e.getMessage());
+            log.warn("Failure to read the status of the drawer: %s Reason: ", cashDrawerId, e.getMessage());
         }
         return drawerState;
     }
@@ -153,7 +153,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             getPeripheralConnection().getOut().write( printerCommands.get(PrinterCommands.CASH_DRAWER_STATE).getBytes());
             return getPeripheralConnection().getIn().read() == 1 ? false : true;
         } catch (Exception e) {
-            log.warn("Failure to read the status of the drawer: " + e.getMessage());
+            log.warn("Failure to read the status of the drawer: %s Reason: ", cashDrawerId, e.getMessage());
             return false;
         }
     }
