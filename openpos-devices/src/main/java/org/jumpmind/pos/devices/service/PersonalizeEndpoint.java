@@ -99,13 +99,14 @@ public class PersonalizeEndpoint {
                     .filter(ps -> ps instanceof EnumerablePropertySource)
                     .map(ps -> ((EnumerablePropertySource<?>) ps).getPropertyNames())
                     .flatMap(Arrays::<String>stream)
-                    .filter(propName -> propName.startsWith("openpos.tags")).map(propName -> propName.substring("openpos.tags".length() + 1))
+                    .filter(propName -> propName.startsWith("openpos.tagconfig.tags") && propName.contains("name"))
                     .forEach(propName -> {
                         for (ITagProvider tagProvider:
                                 this.tagProviders) {
-                            String value = tagProvider.getTagValue(deviceId, businessUnitId, propName);
+                            String name = env.getProperty(propName);
+                            String value = tagProvider.getTagValue(deviceId, businessUnitId, name);
                             if (isNotBlank(value)) {
-                                deviceModel.setTagValue(propName, value);
+                                deviceModel.setTagValue(name, value);
                             }
                         }
                     });

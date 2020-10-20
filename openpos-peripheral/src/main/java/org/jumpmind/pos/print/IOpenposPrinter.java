@@ -11,6 +11,8 @@ public interface IOpenposPrinter extends POSPrinterService19 {
 
     public void openCashDrawer(String cashDrawerId);
 
+    public String getDrawerStatus(String cashDrawerId);
+
     public String getCommand(String commandName);
 
     public int getPrintWidth();
