@@ -135,7 +135,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             printNormal(0, printerCommands.get(PrinterCommands.CASH_DRAWER_STATE));
             code = Integer.toString(getPeripheralConnection().getIn().read());
         } catch (IOException e) {
-            String msg = String.format("Failure while closing cash drawer with id '%s'. Reason: %s",
+            String msg = String.format("Failure while closing cash drawer with id %s'. Reason: %s",
                     cashDrawerId, e.getMessage());
             throw new PrintException(msg, e);
         }
@@ -164,7 +164,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     public boolean isDrawerOpen(String cashDrawerId) {
         try {
-            getPeripheralConnection().getOut().write(printerCommands.get(PrinterCommands.CASH_DRAWER_STATE).getBytes());
+            getPeripheralConnection().getOut().write(getCommand(PrinterCommands.CASH_DRAWER_STATE).getBytes());
             return getPeripheralConnection().getIn().read() == 1 ? false : true;
         } catch (Exception e) {
             log.warn("Failure to read the status of the drawer: %s Reason: ", cashDrawerId, e.getMessage());
