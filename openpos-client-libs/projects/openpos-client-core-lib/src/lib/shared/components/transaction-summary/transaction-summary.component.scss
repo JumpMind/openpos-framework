@@ -1,76 +1,52 @@
 @import "../../../styles/mixins/typography";
 
-.transaction-summary-outer {
-    margin: 0px 16px;
-    padding: 16px 0px;
+.summary-container {
     display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 8px;
+    grid-template-columns: min-content minmax(min-content, 1fr) minmax(min-content, 1fr) .5fr;
+    column-gap: 32px;
+    grid-template-areas:
+        'trans-type trans details total'
+        'trans-type trans actions actions';
+    padding: 16px 0;
+
+    &.tablet-landscape,
+    &.mobile-landscape,
+    &.mobile-portrait,
+    &.desktop-portrait {
+        grid-template-areas:
+            'trans-type trans   details total'
+            'trans-type actions actions actions';
+        column-gap: 16px;
+    }
 }
 
-.summary-icon {
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    justify-items: center;
-    display: grid;
-}
+.summary-trans-type {
+    @extend %text-sm;
 
-.summary-main {
-    display: grid;
-    grid-template-columns: auto .5fr auto .5fr auto;
-    grid-template-rows: auto auto;
-    grid-template-areas: 
-        "trans .       details .       total"
-        "trans buttons buttons buttons buttons"
-    ;
-    column-gap: 8px;
-
-}
-
-.summary-tendertype-icons {
-    display: grid;
-    grid-auto-flow: column;
-    justify-content: left;
-    column-gap: 4px;
-}
-
-
-.summary-status {
-    @extend %text-md;
-    margin-left: .5em;
-    padding-left: 4px;
-    padding-right: 4px;
+    text-align: center;
+    font-weight: bold;
+    grid-area: trans-type;
 }
 
 .summary-trans {
     @extend %text-md;
     grid-area: trans;
-    display: grid;
-    grid-template-rows: auto auto auto;
-    gap: 8px;
 }
 
 .summary-details {
     @extend %text-sm;
+
     grid-area: details;
     display: grid;
     grid-template-columns: auto auto;
     gap: 16px;
 }
 
-.summary-detail-column {
-    display: grid;
-    grid-template-rows: auto auto;
-    gap: 16px 32px;
-}
+.summary-total {
+    @extend %text-lg;
 
-.summary-details-info {
-    display: grid;
-    grid-template-columns: auto auto;
-}
-
-.summary-details-total-group {
+    font-weight: bold;
+    text-align: end;
     grid-area: total;
     display: grid;
     grid-template-columns: auto;
@@ -78,30 +54,93 @@
     justify-items: right;
 }
 
-.summary-total {
-    @extend %text-lg;
+.summary-tender-type-icons {
+    display: grid;
+    grid-auto-flow: column;
+    justify-content: left;
+    column-gap: 4px;
+}
+
+.summary-field {
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    grid-template-areas: 'label value';
+    align-items: center;
+    gap: .5rem;
+    margin-bottom: 4px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+
+    &.mobile-landscape,
+    &.mobile-portrait,
+    &.desktop-portrait {
+        display: block;
+        margin-bottom: 8px;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+    }
+}
+
+.summary-field.with-icon {
+    grid-template-columns: 32px max-content 1fr;
+    grid-template-areas: 'icon label value';
+
+    &.mobile-landscape,
+    &.mobile-portrait,
+    &.desktop-portrait {
+        display: grid;
+        margin-bottom: 0;
+    }
+}
+
+.summary-field-label {
+    display: block;
+    grid-area: label;
+}
+
+.summary-field-value {
+    display: block;
     font-weight: bold;
-    text-align: end;
+    grid-area: value;
 }
 
-.summary-label {
-    padding-right: 4px;
+.summary-important {
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
-.summary-items-label {
-    padding-left: 4px;
-}
-
-.transaction-buttons {
-    grid-area: buttons;
+.summary-actions {
+    grid-area: actions;
     justify-self: right;
+    grid-row: 2;
+    margin-top: 16px;
 }
 
 .transaction-button {
     @extend %text-sm;
-    margin: 0px 4px;
+
+    padding: 0 8px;
+    margin: 0 64px 0 0;
+
+    &:last-child {
+        margin-right: 0;
+    }
 
     .transaction-button-text {
         margin-right: 8px;
+    }
+
+    &.mobile-landscape,
+    &.mobile-portrait,
+    &.desktop-portrait {
+        margin-right: 16px;
+
+        &:last-child {
+            margin-right: 0;
+        }
     }
 }

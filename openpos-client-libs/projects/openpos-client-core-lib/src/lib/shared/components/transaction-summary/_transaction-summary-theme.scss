@@ -1,15 +1,31 @@
 @mixin transaction-summary-theme($theme) {
     $app-primary: mat-color(map-get($theme, primary));
+    $app-primary-light: mat-color(map-get($theme, primary), default, .5);
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
-
-    $foreground: map-get($theme, foreground);
-    $background: map-get($theme, background);
+    $app-disabled: mat-color(map-get($theme, foreground), disabled);
+    $app-text: mat-color(map-get($theme, foreground), text);
+    $app-text-light: mat-color(map-get($theme, foreground), text, .5);
 
     app-transaction-summary {
-        .transaction-summary-outer {
-            border-bottom: solid 1px map_get($foreground, divider);
+        .summary-field-group {
+            color: $app-disabled;
+        }
+
+        .summary-attention {
+            color: $app-text;
+        }
+
+        .summary-icon-text {
+            color: $app-text-light;
+        }
+
+        .trans-icon {
+            color: $app-disabled;
+        }
+
+        .trans-icon-primary {
+            color: $app-primary-light;
         }
     }
-
 }
