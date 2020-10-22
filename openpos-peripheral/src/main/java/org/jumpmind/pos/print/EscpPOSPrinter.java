@@ -38,6 +38,8 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     static final int SLIP_LEADING_EDGE_SENSOR_COVERED = 0b00100000;
     static final int SLIP_TRAILING_EDGE_SENSOR_COVERED = 0b01000000;
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
+    static final int DRAWER_OPEN = 0;
+    static final int DRAWER_CLOSED = 1;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
     private PrinterStatusReporter printerStatusReporter;
@@ -150,11 +152,11 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     @Override
     public int waitForDrawerClose(String cashDrawerId, long timeout) {
         long startTime = System.currentTimeMillis();
-        int drawerState = 0;
+        int drawerState = DRAWER_OPEN;
         try {
-            while (drawerState != 1 && System.currentTimeMillis() - startTime < timeout) {
+            while (drawerState != DRAWER_CLOSED && System.currentTimeMillis() - startTime < timeout) {
                     Thread.sleep(1000);
-                    drawerState = isDrawerOpen(cashDrawerId) ? 0 : 1;
+                    drawerState = isDrawerOpen(cashDrawerId) ? DRAWER_OPEN : DRAWER_CLOSED;
             }
         } catch (Exception e) {
             String msg = String.format("Failure to read the status of the drawer: %s", cashDrawerId);
