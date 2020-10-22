@@ -1,5 +1,5 @@
 <mat-card #scrollList *ngIf="items && (items | async)?.length > 0" class="sale-mobile-items-outer">
-    <app-mobile-item *ngFor="let item of (items | async); index as i; trackBy: itemsTrackByFn" [_item]="item"
+    <app-mobile-item *ngFor="let item of (items | async); index as i; trackBy: itemsTrackByFn" [item]="item"
         [expanded]="isItemExpanded(i)" [ngClass]="{'mobile-item-border' : i != (items | async)?.length - 1}"
         (click)="updateExpandedIndex(i)"></app-mobile-item>
 </mat-card>

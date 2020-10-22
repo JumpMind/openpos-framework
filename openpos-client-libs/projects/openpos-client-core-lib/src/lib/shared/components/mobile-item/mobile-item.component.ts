@@ -11,12 +11,19 @@ import { ActionService } from '../../../core/actions/action.service';
     styleUrls: ['./mobile-item.component.scss']
 })
 export class MobileItemComponent {
-    item: ISellItem;
+
+    private _item: ISellItem;
     filteredAdditionalLabels:{label: string, value: string} [];
-    @Input() set _item(item: ISellItem){
-        this.item = item;
+
+    @Input() set item(item: ISellItem) {
+        this._item = item;
         this.filterAdditionalLabels();
     }
+
+    get item() {
+        return this._item;
+    }
+
     @Input() expanded = true;
 
     constructor(public actionService: ActionService, public session: SessionService) { }

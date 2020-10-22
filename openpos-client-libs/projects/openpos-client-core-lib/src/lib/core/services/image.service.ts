@@ -11,35 +11,40 @@ export class ImageService {
     private baseUrlToken = '${apiServerBaseUrl}';
     private appIdToken = '${appId}';
     private deviceIdToken = '${deviceId}';
-    private imageNotFound;
+    private _imageNotFoundURL;
+
+    get imageNotFoundURL(){
+        return this._imageNotFoundURL;
+    }
 
     constructor(private personalizer: PersonalizationService,
-                private discovery: DiscoveryService,
-                private session: SessionService) {
-       this.setImageNotFoundUrl();
+                private discovery: DiscoveryService, private session: SessionService) {
+        this.setImageNotFoundURL();
     }
 
     replaceImageUrl(originalUrl: string): string {
-        if(!originalUrl){
-            originalUrl = this.imageNotFound;
-        }
-        const apiServerBaseUrl = this.discovery.getApiServerBaseURL();
-        const deviceId = this.personalizer.getDeviceId$().getValue();
-        const appId = this.personalizer.getAppId$().getValue();
+        if (originalUrl) {
+            const apiServerBaseUrl = this.discovery.getApiServerBaseURL();
+            const deviceId = this.personalizer.getDeviceId$().getValue();
+            const appId = this.personalizer.getAppId$().getValue();
 
-        let url = originalUrl.replace(this.baseUrlToken, apiServerBaseUrl);
-        url = url.replace(this.appIdToken, appId);
-        url = url.replace(this.deviceIdToken, deviceId);
-        return url;
+            let url = originalUrl.replace(this.baseUrlToken, apiServerBaseUrl);
+            url = url.replace(this.appIdToken, appId);
+            url = url.replace(this.deviceIdToken, deviceId);
+            return url;
+        } else {
+            return originalUrl;
+        }
+
     }
 
-    setImageNotFoundUrl(){
+    setImageNotFoundURL(){
         this.session.getMessages('ConfigChanged')
             .pipe(
                 filter(message => message.configType === 'MediaService'),
                 map(res => res["image-not-found"] ),
                 take(1)
-            ).subscribe(res => this.imageNotFound = res);
+            ).subscribe(res => this._imageNotFoundURL = res);
     }
 
 }

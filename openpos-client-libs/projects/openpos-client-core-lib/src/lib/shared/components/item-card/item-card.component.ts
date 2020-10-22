@@ -17,13 +17,18 @@ import { KebabLabelButtonComponent } from '../kebab-label-button/kebab-label-but
 })
 export class ItemCardComponent implements OnDestroy {
 
-  item:ISellItem;
+  private _item:ISellItem;
   filteredAdditionalLabels:{label: string, value: string} [];
 
-  @Input() set _item(item: ISellItem){
-    this.item = item;
+  @Input() set item(item: ISellItem) {
+    this._item = item;
     this.filterAdditionalLabels();
   }
+
+  get item() {
+    return this._item;
+  }
+
   @Input() isReadOnly = false;
 
   _expanded = true;

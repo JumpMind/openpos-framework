@@ -51,7 +51,7 @@ export class ImageComponent {
         imgUrl = this.imageService.replaceImageUrl(this.altImageUrl);
         break;
       case ImageSource.DEFAULT_NOT_FOUND_IMG:
-        imgUrl = this.imageService.replaceImageUrl('');
+        imgUrl = this.imageService.replaceImageUrl(this.imageService.imageNotFoundURL);
         break;
       case ImageSource.IMG_FAILED:
           if(this.altImageUrl){
