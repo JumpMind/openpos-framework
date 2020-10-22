@@ -38,8 +38,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     static final int SLIP_LEADING_EDGE_SENSOR_COVERED = 0b00100000;
     static final int SLIP_TRAILING_EDGE_SENSOR_COVERED = 0b01000000;
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
-    static final int DRAWER_OPEN = 0;
-    static final int DRAWER_CLOSED = 1;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
     private PrinterStatusReporter printerStatusReporter;
