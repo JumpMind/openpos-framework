@@ -8,7 +8,7 @@
         <div class="summary-field with-icon" responsive-class>
             <app-icon class="summary-field-icon" iconClass="mat-36 {{statusClass}}"
                       *ngIf="transactionSummary.statusIcon" [iconName]="transactionSummary.statusIcon"></app-icon>
-            <span class="summary-field-label summary-important">
+            <span class="summary-field-label summary-very-important">
                 {{transactionSummary.statusText}}
                 {{transactionSummary.sequenceNumberFormatted}}
             </span>
@@ -16,7 +16,7 @@
         <div class="summary-field with-icon" responsive-class>
             <span class="summary-field-label">
                 <ng-container *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</ng-container>
-                {{transactionSummary.customerName}}
+                <span class="summary-customer">{{transactionSummary.customerName}}</span>
             </span>
         </div>
         <div class="summary-field with-icon" responsive-class>
