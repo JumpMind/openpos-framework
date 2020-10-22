@@ -108,7 +108,12 @@
     grid-area: value;
 }
 
-.summary-important {
+.summary-customer{
+    font-weight: bold;
+    margin-left: 4px;
+}
+
+.summary-very-important {
     font-weight: bold;
     text-transform: uppercase;
 }
