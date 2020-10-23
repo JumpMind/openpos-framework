@@ -166,7 +166,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public boolean isDrawerOpen(String cashDrawerId) {
         try {
             getPeripheralConnection().getOut().write(getCommand(PrinterCommands.CASH_DRAWER_STATE).getBytes());
-            return getPeripheralConnection().getIn().read() == 1 ? false : true;
+            return getPeripheralConnection().getIn().read() == DRAWER_CLOSED ? false : true;
         } catch (Exception e) {
             String msg = String.format("Failure to read the status of the drawer: %s", cashDrawerId);
             throw new PrintException(msg, e);
