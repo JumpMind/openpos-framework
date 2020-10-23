@@ -8,12 +8,12 @@
     $app-text-light: mat-color(map-get($theme, foreground), text, .5);
 
     app-transaction-summary {
-        .summary-field-group {
-            color: $app-disabled;
+        .summary-trans {
+            color: $app-text;
         }
 
-        .summary-attention {
-            color: $app-text;
+        .summary-details {
+            color: $app-disabled;
         }
 
         .summary-icon-text {

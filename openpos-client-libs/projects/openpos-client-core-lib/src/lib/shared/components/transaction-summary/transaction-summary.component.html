@@ -1,32 +1,25 @@
 <div *ngIf="transactionSummary" class="summary-container" responsive-class>
     <div class="summary-trans-type trans-icon-primary" responsive-class>
         <app-icon *ngIf="transactionSummary.transactionTypeIcon" [iconName]="transactionSummary.transactionTypeIcon"
-                  iconClass="mat-64"></app-icon>
+                  iconClass="mat-64" class="trans-type-icon" responsive-class></app-icon>
         <span *ngIf="transactionSummary.transactionType">{{transactionSummary.transactionType}}</span>
     </div>
-    <div class="summary-field-group summary-attention summary-trans">
-        <div class="summary-field with-icon" responsive-class>
-            <app-icon class="summary-field-icon" iconClass="mat-36 {{statusClass}}"
-                      *ngIf="transactionSummary.statusIcon" [iconName]="transactionSummary.statusIcon"></app-icon>
-            <span class="summary-field-label summary-very-important">
-                {{transactionSummary.statusText}}
-                {{transactionSummary.sequenceNumberFormatted}}
-            </span>
+    <div class="summary-attention summary-trans" responsive-class>
+        <app-icon class="summary-trans-status-icon" iconClass="mat-36 {{statusClass}}"
+                  *ngIf="transactionSummary.statusIcon" [iconName]="transactionSummary.statusIcon"></app-icon>
+        <div class="summary-trans-status-text">
+            {{transactionSummary.statusText}} {{transactionSummary.sequenceNumberFormatted}}
         </div>
-        <div class="summary-field with-icon" responsive-class>
-            <span class="summary-field-label">
-                <ng-container *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</ng-container>
-                <span class="summary-customer">{{transactionSummary.customerName}}</span>
-            </span>
-        </div>
-        <div class="summary-field with-icon" responsive-class>
-            <span class="summary-field-label">{{transactionSummary.itemsFormatted}}</span>
+        <div class="summary-trans-properties">
+            <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</span>
+            <span class="summary-customer">{{transactionSummary.customerName}}</span>
+            <div>{{transactionSummary.itemsFormatted}}</div>
         </div>
     </div>
     <div class="summary-details" responsive-class>
-        <div class="summary-field-group">
+        <div>
             <div class="summary-field" responsive-class>
-                <span class="summary-field-label" *ngIf="transactionSummary.labels">{{transactionSummary.labels.transactionDate}}</span>
+                <span class="summary-field-label"  *ngIf="transactionSummary.labels">{{transactionSummary.labels.transactionDate}}</span>
                 <span class="summary-field-value">{{transactionSummary.transactionDate | date:'M/d/yyy h:mm a'}}</span>
             </div>
             <div class="summary-field" responsive-class>
@@ -34,7 +27,7 @@
                 <span class="summary-field-value">{{transactionSummary.username}}</span>
             </div>
         </div>
-        <div class="summary-field-group">
+        <div>
             <div class="summary-field" responsive-class>
                 <span class="summary-field-label" *ngIf="transactionSummary.labels">{{transactionSummary.labels.deviceId}}</span>
                 <span class="summary-field-value">{{transactionSummary.deviceId}}</span>
