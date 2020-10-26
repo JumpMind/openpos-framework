@@ -9,7 +9,6 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.status.Status;
-import org.jumpmind.pos.util.status.StatusReport;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -104,6 +103,10 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                 if (writer == null) {
                     throw new PrintException("The output stream for the printer driver cannot be null " +
                             "at this point. It probably was not initialized properly. (Hint: you may need to call open()");
+                }
+                if (data.contains(printerCommands.get(PrinterCommands.CASH_DRAWER_OPEN))) {
+                    log.info("Sending printer command to OPEN cash drawer '{}'", station);
+                    log.trace("Command sent: {}", data);
                 }
                 writer.print(data);
                 writer.flush();
