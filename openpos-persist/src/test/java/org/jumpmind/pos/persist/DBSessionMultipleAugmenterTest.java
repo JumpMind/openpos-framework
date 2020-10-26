@@ -68,11 +68,14 @@ public class DBSessionMultipleAugmenterTest {
         MultiAugmentedCarModel hyundaiLookedUp = db.findByNaturalId(MultiAugmentedCarModel.class, VIN);
         assertNotNull(hyundaiLookedUp);
         assertEquals("blue", hyundaiLookedUp.getAugmentValue("color"));
+        assertEquals("new", hyundaiLookedUp.getAugmentValue("department"));
         hyundaiLookedUp.setAugmentValue("color", "green");
+        hyundaiLookedUp.setAugmentValue("department", "preowned");
         db.save(hyundaiLookedUp);
         MultiAugmentedCarModel relookupModel = db.findByNaturalId(MultiAugmentedCarModel.class, VIN);
         assertNotNull(relookupModel);
         assertEquals("green", relookupModel.getAugmentValue("color"));
+        assertEquals("preowned", relookupModel.getAugmentValue("department"));
     }
 
     @Test
@@ -94,6 +97,7 @@ public class DBSessionMultipleAugmenterTest {
         DBSession db = sessionFactory.createDbSession();
         SearchCriteria searchCriteria = new SearchCriteria(MultiAugmentedCarModel.class);
         searchCriteria.addCriteria("color", "green");
+        searchCriteria.addCriteria("department", "new");
         List<MultiAugmentedCarModel> cars = db.findByCriteria(searchCriteria);
         assertEquals(0, cars.size());
     }
