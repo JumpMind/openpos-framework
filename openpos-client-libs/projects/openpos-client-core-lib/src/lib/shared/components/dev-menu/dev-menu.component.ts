@@ -47,6 +47,10 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     simPort: string;
 
+    simUrl: string;
+
+    simProtocol: string;
+
     simAuthTokenAvailable = false;
 
     firstClickTime = Date.now();
@@ -466,9 +470,16 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     public onOpenSimulator() {
         const serverName = this.personalization.getServerName$().getValue();
         const port = this.personalization.getServerPort$().getValue();
-        window.open(window.location.protocol + '//' + window.location.hostname + ':'
-            + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + port
-            + '&deviceToken=' + this.simAuthToken);
+
+        if (this.simUrl == undefined) {
+            window.open(window.location.protocol + '//' + window.location.hostname + ':'
+                + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + port
+                + '&deviceToken=' + this.simAuthToken);
+        } else {
+            window.open(this.simProtocol + '//' + this.simUrl + ':'
+                + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + port
+                + '&deviceToken=' + this.simAuthToken);
+        }
     }
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {
