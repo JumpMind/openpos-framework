@@ -8,6 +8,7 @@ import java.util.Map;
 public interface IOpenposPrinter extends POSPrinterService19 {
 
     static final int DRAWER_OPEN = 0;
+    static final int DRAWER_CLOSED = 1;
 
     public void printImage(InputStream image);
 
