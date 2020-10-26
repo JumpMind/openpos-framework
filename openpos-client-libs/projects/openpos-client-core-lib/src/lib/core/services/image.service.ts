@@ -41,7 +41,7 @@ export class ImageService {
     setImageNotFoundURL(){
         this.session.getMessages('ConfigChanged')
             .pipe(
-                filter(message => message.configType === 'MediaService'),
+                filter(message => message.configType === 'ImageService'),
                 map(res => res["image-not-found"] ),
                 take(1)
             ).subscribe(res => this._imageNotFoundURL = res);
