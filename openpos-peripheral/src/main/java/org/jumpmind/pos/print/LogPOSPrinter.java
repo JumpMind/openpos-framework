@@ -104,6 +104,11 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public boolean isDrawerOpen(String cashDrawerId) {
+        return false;
+    }
+
+    @Override
     public boolean getCapRecPageMode() throws JposException {
         return false;
     }

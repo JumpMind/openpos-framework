@@ -5,6 +5,7 @@ import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.status.Status;
 import org.jumpmind.pos.util.status.StatusReport;
