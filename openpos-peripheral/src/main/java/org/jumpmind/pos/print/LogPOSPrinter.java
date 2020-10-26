@@ -4,6 +4,7 @@ import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
 import lombok.extern.slf4j.Slf4j;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.status.Status;
 
 import java.io.InputStream;
@@ -106,6 +107,12 @@ public class LogPOSPrinter implements IOpenposPrinter {
     @Override
     public boolean isDrawerOpen(String cashDrawerId) {
         return false;
+    }
+
+    @Override
+    public int waitForDrawerClose(String cashDrawerId, long timeout) {
+        AppUtils.sleep(1000);
+        return DRAWER_CLOSED;
     }
 
     @Override

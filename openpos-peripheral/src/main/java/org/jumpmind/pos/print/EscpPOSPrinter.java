@@ -3,6 +3,7 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.AppUtils;
@@ -19,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class EscpPOSPrinter implements IOpenposPrinter {
 
     PrinterCommands printerCommands = new PrinterCommandPlaceholders();

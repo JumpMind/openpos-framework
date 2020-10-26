@@ -34,6 +34,7 @@ public class PrinterCommands {
     public static final String MICR_RESET_TO_DEFAULT_SETTINGS = "MICR_RESET_TO_DEFAULT_SETTINGS";
     public static final String BARCODE_TYPE_CODE_128_CODEB = "BARCODE_TYPE_CODE_128_CODEB";
     public static final String BARCODE_TYPE_CODE_128_CODEC = "BARCODE_TYPE_CODE_128_CODEC";
+    public static final String CASH_DRAWER_STATE = "CASH_DRAWER_STATE";
 
     private Map<String, String> printCommands;
 
