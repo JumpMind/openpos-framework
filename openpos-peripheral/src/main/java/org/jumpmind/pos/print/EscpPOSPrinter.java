@@ -3,6 +3,7 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.ClassUtils;
@@ -18,6 +19,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class EscpPOSPrinter implements IOpenposPrinter {
 
     PrinterCommands printerCommands = new PrinterCommandPlaceholders();
@@ -101,6 +103,10 @@ public class EscpPOSPrinter implements IOpenposPrinter {
                 if (writer == null) {
                     throw new PrintException("The output stream for the printer driver cannot be null " +
                             "at this point. It probably was not initialized properly. (Hint: you may need to call open()");
+                }
+                if (StringUtils.containsIgnoreCase(data, printerCommands.get(PrinterCommands.CASH_DRAWER_OPEN))) {
+                    log.info("Sending printer command to OPEN cash drawer '{}'", station);
+                    log.trace("Command sent: {}", data);
                 }
                 writer.print(data);
                 writer.flush();
