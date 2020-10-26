@@ -78,11 +78,11 @@ public class EscpCashDrawerService implements CashDrawerService19 {
     }
 
     public boolean getDrawerOpened() throws JposException {
-        String returnCode = STATUS_CLOSED;
+        boolean drawerOpened = false;
         if (printer != null) {
             try {
                 openPrinter();
-                returnCode = printer.getDrawerStatus("");
+                drawerOpened = printer.isDrawerOpen("");
                 closePrinter();
             } catch (JposException e) {
                 logger.error("Could not check drawer", e);
@@ -90,7 +90,7 @@ public class EscpCashDrawerService implements CashDrawerService19 {
         } else {
             logger.error("Could not check drawer. Printer not found");
         }
-        return Integer.parseInt(returnCode) == Integer.parseInt(STATUS_OPEN);
+        return drawerOpened;
     }
 
     public void waitForDrawerClose(int arg0, int arg1, int arg2, int arg3) throws JposException {
