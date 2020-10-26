@@ -1,19 +1,16 @@
 package org.jumpmind.pos.persist.impl;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
-import org.jumpmind.db.model.Column;
-import org.jumpmind.db.model.IIndex;
 import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.CompositeDef;
 import org.jumpmind.pos.persist.PersistException;
+import org.jumpmind.pos.persist.model.AugmenterConfig;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.util.*;
 
 public class ModelValidator {
 
@@ -21,6 +18,7 @@ public class ModelValidator {
         checkOrphanedFields(meta);
         checkCrossRefFields(meta);
         checkPrimaryKeyFields(meta);
+        checkAugmentedFields(meta);
     }
 
     protected static void checkOrphanedFields(ModelClassMetaData meta) {
@@ -78,6 +76,29 @@ public class ModelValidator {
                 }
             }
         }    
+    }
+
+    protected static void checkAugmentedFields(ModelClassMetaData meta) {
+        if (CollectionUtils.size(meta.getAugmenterConfigs()) > 1) {
+            Map<String, Integer> augmenterNameCounts = new HashMap<>();
+            for (AugmenterConfig config : meta.getAugmenterConfigs()) {
+                for (String name : config.getAugmenterNames()) {
+                    Integer count = augmenterNameCounts.get(name);
+                    if (count == null) {
+                        count = 1;
+                    }
+                    else {
+                        count++;
+                    }
+                    augmenterNameCounts.put(name, count);
+                }
+            }
+            for (Map.Entry<String, Integer> entry : augmenterNameCounts.entrySet()) {
+                if (entry.getValue() > 1) {
+                    throw new PersistException("Duplicate augmenter name " + entry.getKey() + " found on model " + meta.getClazz());
+                }
+            }
+        }
     }
 
     private static void checkPrimaryKeyFields(ModelClassMetaData meta) {

@@ -72,7 +72,20 @@ public class TestPersistCarsConfig {
             indexConfigs.add(indexConfig);
             augmenterConfig.setIndexConfigs(indexConfigs);
             augmenterConfig.setAugmenters(augmenterModels);
-            augmenterConfigs.setConfigs(Arrays.asList(augmenterConfig));
+
+            AugmenterConfig classifierAugmenterConfig = new AugmenterConfig();
+            classifierAugmenterConfig.setName("classifiers");
+            classifierAugmenterConfig.setPrefix("CLASS_");
+            List<AugmenterModel> classifierAugmenters = new ArrayList<>();
+            augmenterModel = new AugmenterModel();
+            augmenterModel.setName("department");
+            classifierAugmenters.add(augmenterModel);
+            augmenterModel = new AugmenterModel();
+            augmenterModel.setName("section");
+            classifierAugmenters.add(augmenterModel);
+            classifierAugmenterConfig.setAugmenters(classifierAugmenters);
+
+            augmenterConfigs.setConfigs(Arrays.asList(augmenterConfig, classifierAugmenterConfig));
 
             AugmenterHelper augmenterHelper = new AugmenterHelper();
             augmenterHelper.setAugmenterConfigs(augmenterConfigs);
@@ -80,7 +93,7 @@ public class TestPersistCarsConfig {
             sessionFactory.init(
                     PersistTestUtil.testDbPlatform(), 
                     PersistTestUtil.getSessionContext(), 
-                    Arrays.asList(CarModel.class, CarStats.class, ServiceInvoice.class, RaceCarModel.class, AugmentedCarModel.class, ScriptVersionModel.class),
+                    Arrays.asList(CarModel.class, CarStats.class, ServiceInvoice.class, RaceCarModel.class, AugmentedCarModel.class, ScriptVersionModel.class, MultiAugmentedCarModel.class),
                     Arrays.asList(CarModelExtension.class),
                     queryTemplates,
                     DBSessionFactory.getDmlTemplates("persist-test"),
