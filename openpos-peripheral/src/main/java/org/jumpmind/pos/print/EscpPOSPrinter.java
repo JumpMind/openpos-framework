@@ -6,6 +6,7 @@ import jpos.services.EventCallbacks;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.status.Status;
 
@@ -129,20 +130,6 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public String getDrawerStatus(String cashDrawerId) {
-        String code = EscpCashDrawerService.STATUS_CLOSED;
-        try {
-            printNormal(0, printerCommands.get(PrinterCommands.CASH_DRAWER_STATE));
-            code = Integer.toString(getPeripheralConnection().getIn().read());
-        } catch (IOException e) {
-            String msg = String.format("Failure while closing cash drawer with id %s'. Reason: %s",
-                    cashDrawerId, e.getMessage());
-            throw new PrintException(msg, e);
-        }
-        return code;
-    }
-
-    @Override
     public void openCashDrawer(String cashDrawerId) {
         printNormal(0, printerCommands.get(PrinterCommands.CASH_DRAWER_OPEN));
     }
@@ -165,8 +152,13 @@ public class EscpPOSPrinter implements IOpenposPrinter {
 
     public boolean isDrawerOpen(String cashDrawerId) {
         try {
-            getPeripheralConnection().getOut().write(getCommand(PrinterCommands.CASH_DRAWER_STATE).getBytes());
-            return getPeripheralConnection().getIn().read() == DRAWER_CLOSED ? false : true;
+            PeripheralConnection connection = getPeripheralConnection();
+            connection.getOut().write(getCommand(PrinterCommands.CASH_DRAWER_STATE).getBytes());
+            connection.getOut().flush();
+            AppUtils.sleep(500);
+            int cashDrawerState = connection.getIn().read();
+            log.debug("cash drawer state was: {}", cashDrawerState);
+            return cashDrawerState == DRAWER_OPEN ? true : false;
         } catch (Exception e) {
             String msg = String.format("Failure to read the status of the drawer: %s", cashDrawerId);
             throw new PrintException(msg, e);
