@@ -41,6 +41,7 @@ describe('TransactionSummaryComponent', () => {
 })
 class MockIconComponent {
   @Input() iconName: string;
+  @Input() iconClass: string;
 }
 
 @Component({
