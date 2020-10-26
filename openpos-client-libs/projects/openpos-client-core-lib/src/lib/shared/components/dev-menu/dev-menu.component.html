@@ -18,6 +18,32 @@
         </mat-expansion-panel-header>
 
         <mat-tab-group dynamicHeight>
+            <mat-tab label="Options">
+                <div>
+                    <h1>Options</h1>
+                    <ul [style.height.px]="'250'">
+                        <li>
+                            <button mat-button (click)="onPersonalize()">Personalize</button>
+                        </li>
+                        <li>
+                            <button mat-button (click)="onDevRefreshView()">Refresh View</button>
+                        </li>
+                        <li>
+                            <button mat-button (click)="onDevClearLocalStorage()">Clear Local Storage</button>
+                        </li>
+                        <li>
+                            <div fxFlexFill fxLayout="row"  fxLayoutGap="20px" fxLayoutAlign="left center">
+                                <button mat-button [disabled]="!simAuthTokenAvailable" (click)="onOpenSimulator()">Open Simulator</button>
+                                <div *ngIf="!simAuthTokenAvailable"><p style="color:red">No device auth token found. Ensure SimDeviceStartupTask is enabled for pos devices.</p></div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div fxFlexFill fxLayout="row" fxLayoutAlign="left start" fxLayoutAlign.xs="left">
+                        <button mat-raised-button color="primary" (click)="onDevRestartNode()">Restart Node</button>
+                    </div>
+                </div>
+            </mat-tab>
             <mat-tab label="State">
                 <div class="stateTab">
                     <div [style.width.px]="'30vw'">
@@ -260,33 +286,6 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Local Storage">
-                <div>
-                    <h1>Local Storage</h1>
-                    <ul [style.height.px]="'250'">
-                        <li>
-                            <button mat-button (click)="onPersonalize()">Personalize</button>
-                        </li>
-                        <li>
-                            <button mat-button (click)="onDevRefreshView()">Refresh View</button>
-                        </li>
-                        <li>
-                            <button mat-button (click)="onDevClearLocalStorage()">Clear Local Storage</button>
-                        </li>
-                        <li>
-                            <div fxFlexFill fxLayout="row"  fxLayoutGap="20px" fxLayoutAlign="left center">
-                            <button mat-button [disabled]="!simAuthTokenAvailable" (click)="onOpenSimulator()">Open Simulator</button>
-                            <div *ngIf="!simAuthTokenAvailable"><p style="color:red">No device auth token found. Ensure SimDeviceStartupTask is enabled for pos devices.</p></div>
-                            </div>
-                        </li>
-                    </ul>
-
-                    <div fxFlexFill fxLayout="row" fxLayoutAlign="left start" fxLayoutAlign.xs="left">
-                        <button mat-raised-button color="primary" (click)="onDevRestartNode()">Restart Node</button>
-                    </div>
-                </div>
-            </mat-tab>
-
             <mat-tab *ngIf="logFilenames && logFilenames.length > 0" label="Logs">
                 <h1>Logs</h1>
                 <div class="logs">
