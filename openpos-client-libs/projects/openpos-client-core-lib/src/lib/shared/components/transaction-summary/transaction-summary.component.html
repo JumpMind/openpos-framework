@@ -1,5 +1,5 @@
 <div *ngIf="transactionSummary" class="summary-container" responsive-class>
-    <div class="summary-trans-type trans-icon-primary" responsive-class>
+    <div class="summary-trans-type trans-icon-secondary" responsive-class>
         <app-icon *ngIf="transactionSummary.transactionTypeIcon" [iconName]="transactionSummary.transactionTypeIcon"
                   iconClass="mat-64" class="trans-type-icon" responsive-class></app-icon>
         <span *ngIf="transactionSummary.transactionType">{{transactionSummary.transactionType}}</span>
@@ -42,7 +42,7 @@
         <app-currency-text [amountText]="transactionSummary.total" class="summary-total-amount" responsive-class></app-currency-text>
         <div class="summary-tender-type-icons">
             <app-icon *ngFor="let tenderTypeIcon of transactionSummary.tenderTypeIcons" [iconName]="tenderTypeIcon"
-                      iconClass="trans-icon-primary mat-36"></app-icon>
+                      iconClass="trans-icon-secondary mat-36"></app-icon>
         </div>
     </div>
     <div class="summary-actions" responsive-class>
