@@ -153,6 +153,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public boolean isDrawerOpen(String cashDrawerId) {
         try {
             PeripheralConnection connection = getPeripheralConnection();
+            connection.resetInput();
             connection.getOut().write(getCommand(PrinterCommands.CASH_DRAWER_STATE).getBytes());
             connection.getOut().flush();
             AppUtils.sleep(500);
@@ -374,35 +375,49 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public String readMicr() {
         StringBuilder buff = new StringBuilder(32);
 
-        int status = -1;
+        byte status = -1;
+
+        getPeripheralConnection().resetInput();
 
         try {
             getPeripheralConnection().getOut().write(new byte[]{0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().flush();
             long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "2000").toString());
             long micrTimeout = Long.valueOf(settings.getOrDefault("micrTimeout", "20000").toString());
+
             Thread.sleep(micrWaitTime);
+
+            int available = 0, lastAvailable = 0;
 
             long start = System.currentTimeMillis();
 
-            while (System.currentTimeMillis() - start < micrTimeout
-                    && (status = getPeripheralConnection().getIn().read()) == -1) {
-                Thread.sleep(100);
+            while ((System.currentTimeMillis() - start) < micrTimeout)  {
+                available = getPeripheralConnection().getIn().available();
+                if (available > 0 && available == lastAvailable) { // looking for available bytes to stabilize.
+                    break;
+                }
+                lastAvailable = available;
+                Thread.sleep(500);
             }
 
-            Thread.sleep(micrWaitTime);
+            if (available == 0) {
+                throw new PrintException("Could not read micr data.");
+            }
+
+            byte[] micrBytes = new byte[available];
+
+            int bytesRead = getPeripheralConnection().getIn().read(micrBytes);
+
+            status = micrBytes[0];
+
+            for (int i = 1; i < bytesRead; i++) {
+                if (micrBytes[i] == '\r') { // MICR read is spec'd to end in carriage return
+                    break;
+                }
+                buff.append((char) micrBytes[i]);
+            }
 
             endSlipMode(); // kick the slip out no matter what happenens.
-
-            if (status == -1) {
-                throw new PrintException("MICR read timed out.");
-            }
-
-            int current;
-
-            while ((current = getPeripheralConnection().getIn().read()) != -1) {
-                buff.append((char) current);
-            }
 
             if (status != 0) {
                 throw new PrintException("MICR read failed with error code: " + status);
