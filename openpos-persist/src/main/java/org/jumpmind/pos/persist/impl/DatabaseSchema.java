@@ -292,8 +292,9 @@ public class DatabaseSchema {
     }
 
     private void createAugmentedFieldsMetaData(ModelClassMetaData meta, List<Column> columns, IDatabasePlatform databasePlatform) {
-        AugmenterConfig config = augmenterHelper.getAugmenterConfig(meta.getClazz());
-        if (config != null) {
+        List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(meta.getClazz());
+        for (AugmenterConfig config : configs) {
+            meta.getAugmenterConfigs().add(config);
             for (AugmenterModel augmenterModel : config.getAugmenters()) {
                 meta.getAugmentedFieldNames().add(augmenterModel.getName());
                 Column column = new Column();
@@ -532,8 +533,8 @@ public class DatabaseSchema {
 
     private Map<String, String> getAugmentedColumnsToFields(Class<?> entityClass) {
         Map<String, String> columnsToAugmentedFields = new CaseInsensitiveMap<>();
-        AugmenterConfig config = augmenterHelper.getAugmenterConfig(entityClass);
-        if (config != null) {
+        List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(entityClass);
+        for (AugmenterConfig config : configs) {
             for (String augmenterName: config.getAugmenterNames()) {
                 columnsToAugmentedFields.put(config.getPrefix() + camelToSnakeCase(augmenterName), augmenterName);
             }

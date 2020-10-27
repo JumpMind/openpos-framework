@@ -62,9 +62,10 @@ public class AugmenterHelperTest {
 
     @Test
     public void testGetAugmenterConfigByObjectWhenObjectIsAugmented() {
-        AugmenterConfig augmenterConfig = augmenterHelper.getAugmenterConfig(new AugmentedCarModel());
-        assertNotNull(augmenterConfig);
-        assertEquals("options", augmenterConfig.getName());
+        List<AugmenterConfig> augmenterConfigs = augmenterHelper.getAugmenterConfigs(new AugmentedCarModel());
+        assertNotNull(augmenterConfigs);
+        assertEquals(1, augmenterConfigs.size());
+        assertEquals("options", augmenterConfigs.get(0).getName());
     }
 
     @Test
@@ -75,15 +76,16 @@ public class AugmenterHelperTest {
 
     @Test
     public void testGetAugmenterConfigByClassWhenClassIsAugmented() {
-        AugmenterConfig augmenterConfig = augmenterHelper.getAugmenterConfig(AugmentedCarModel.class);
-        assertNotNull(augmenterConfig);
-        assertEquals("options", augmenterConfig.getName());
+        List<AugmenterConfig> augmenterConfigs = augmenterHelper.getAugmenterConfigs(AugmentedCarModel.class);
+        assertNotNull(augmenterConfigs);
+        assertEquals(1, augmenterConfigs.size());
+        assertEquals("options", augmenterConfigs.get(0).getName());
     }
 
     @Test
     public void testGetAugmenterConfigByClassWhenClassIsNotAugmented() {
-        AugmenterConfig augmenterConfig = augmenterHelper.getAugmenterConfig(String.class);
-        assertNull(augmenterConfig);
+        List<AugmenterConfig> augmenterConfigs = augmenterHelper.getAugmenterConfigs(String.class);
+        assertEquals(0, augmenterConfigs.size());
     }
 
     @Test

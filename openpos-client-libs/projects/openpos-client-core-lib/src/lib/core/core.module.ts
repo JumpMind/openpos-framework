@@ -65,6 +65,7 @@ import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
 import { ServerScannerPlugin } from './platform-plugins/scanners/server-scanner/server-scanner.service';
+import {TransactionService} from './services/transaction.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -141,7 +142,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
         HelpTextService,
         { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true },
-        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }
+        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
+        TransactionService
     ]
 })
 export class CoreModule {

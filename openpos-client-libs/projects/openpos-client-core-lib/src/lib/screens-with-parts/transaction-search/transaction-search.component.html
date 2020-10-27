@@ -23,7 +23,7 @@
             virtualScrollMaxBufferPx="400" [itemHeightPx]="150">
 
             <ng-template #itemTemplate let-item>
-                <app-transaction-summary [transactionSummary]="item" class="transaction-summary-list">
+                <app-transaction-summary [transactionSummary]="item" class="transaction-summary" responsive-class>
                 </app-transaction-summary>
             </ng-template>
 

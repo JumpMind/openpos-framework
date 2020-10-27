@@ -1,63 +1,55 @@
-<div *ngIf="transactionSummary" class="transaction-summary-outer">
-    <div class="summary-icon">
-        <app-icon *ngIf="transactionSummary.icon" [iconName]="transactionSummary.icon" iconClass="mat-64"></app-icon>
+<div *ngIf="transactionSummary" class="summary-container" responsive-class>
+    <div class="summary-trans-type trans-icon-secondary" responsive-class>
+        <app-icon *ngIf="transactionSummary.transactionTypeIcon" [iconName]="transactionSummary.transactionTypeIcon"
+                  iconClass="mat-64" class="trans-type-icon" responsive-class></app-icon>
         <span *ngIf="transactionSummary.transactionType">{{transactionSummary.transactionType}}</span>
     </div>
-    <div class="summary-main">
-        <div responsive-class class="summary-trans">
-            <div>
-                <span *ngIf="transactionSummary.labels"
-                    class="summary-label">{{transactionSummary.labels.sequenceNumber}}</span>
-                <span>{{transactionSummary.sequenceNumber}}</span>
-                <mat-chip *ngIf="transactionSummary.status" responsive-class class="summary-status">{{transactionSummary.status}}</mat-chip>
+    <div class="summary-attention summary-trans" responsive-class>
+        <app-icon class="summary-trans-status-icon" iconClass="mat-36 {{statusClass}}"
+                  *ngIf="transactionSummary.statusIcon" [iconName]="transactionSummary.statusIcon"></app-icon>
+        <div class="summary-trans-status-text">
+            {{transactionSummary.statusText}} {{transactionSummary.sequenceNumberFormatted}}
+        </div>
+        <div class="summary-trans-properties">
+            <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</span>
+            <span class="summary-customer">{{transactionSummary.customerName}}</span>
+            <div>{{transactionSummary.itemsFormatted}}</div>
+        </div>
+    </div>
+    <div class="summary-details" responsive-class>
+        <div>
+            <div class="summary-field" responsive-class>
+                <span class="summary-field-label"  *ngIf="transactionSummary.labels">{{transactionSummary.labels.transactionDate}}</span>
+                <span class="summary-field-value">{{transactionSummary.transactionDate | date:'M/d/yyy h:mm a'}}</span>
             </div>
-            <div>
-                <span *ngIf="transactionSummary.labels"
-                    class="summary-label">{{transactionSummary.labels.customerName}}</span>
-                <span>{{transactionSummary.customerName}}</span>
-            </div>
-            <div>
-                <span>{{transactionSummary.items}}</span>
-                <span *ngIf="transactionSummary.labels"
-                    class="summary-items-label">{{transactionSummary.labels.items}}</span>
+            <div class="summary-field" responsive-class>
+                <span class="summary-field-label" *ngIf="transactionSummary.labels">{{transactionSummary.labels.username}}</span>
+                <span class="summary-field-value">{{transactionSummary.username}}</span>
             </div>
         </div>
-        <div responsive-class class="summary-details">
-            <div class="summary-detail-column">
-                <div>
-                    <span *ngIf="transactionSummary.labels"
-                        class="summary-label">{{transactionSummary.labels.transactionDate}}:</span>
-                    <span>{{transactionSummary.transactionDate}}</span>
-                </div>
-                <div>
-                    <span *ngIf="transactionSummary.labels"
-                        class="summary-label">{{transactionSummary.labels.username}}:</span>
-                    <span>{{transactionSummary.username}}</span>
-                </div>
+        <div>
+            <div class="summary-field" responsive-class>
+                <span class="summary-field-label" *ngIf="transactionSummary.labels">{{transactionSummary.labels.deviceId}}</span>
+                <span class="summary-field-value">{{transactionSummary.deviceId}}</span>
             </div>
-            <div class="summary-detail-column">
-                <div>
-                    <span *ngIf="transactionSummary.labels"
-                        class="summary-label">{{transactionSummary.labels.deviceId}}:</span>
-                    <span>{{transactionSummary.deviceId}}</span>
-                </div>
-                <div>
-                    <span *ngIf="transactionSummary.labels"
-                        class="summary-label">{{transactionSummary.labels.storeId}}:</span>
-                    <span>{{transactionSummary.storeId}}</span>
-                </div>
+            <div class="summary-field" responsive-class>
+                <span class="summary-field-label" *ngIf="transactionSummary.labels">{{transactionSummary.labels.storeId}}</span>
+                <span class="summary-field-value">{{transactionSummary.storeId}}</span>
             </div>
         </div>
-        <div class="summary-details-total-group">
-            <app-currency-text [amountText]="transactionSummary.total" responsive-class class="summary-total"></app-currency-text>
-            <div class="summary-tendertype-icons"><app-icon *ngFor="let tenderTypeIcon of transactionSummary.tenderTypeIcons" [iconName]="tenderTypeIcon" iconClass="mat-24"></app-icon></div>
+    </div>
+    <div class="summary-total">
+        <app-currency-text [amountText]="transactionSummary.total" class="summary-total-amount" responsive-class></app-currency-text>
+        <div class="summary-tender-type-icons">
+            <app-icon *ngFor="let tenderTypeIcon of transactionSummary.tenderTypeIcons" [iconName]="tenderTypeIcon"
+                      iconClass="trans-icon-secondary mat-36"></app-icon>
         </div>
-        <div responsive-class class="transaction-buttons">
-            <button *ngFor="let button of transactionSummary.actions" mat-button color="primary" responsive-class
-                class="transaction-button" (click)="onClick(button)" [disabled]="! button.enabled">
-                <span class="transaction-button-text">{{button.title}}</span>
-                <app-icon [iconName]="button.icon" iconClass="mat-24"></app-icon>
-            </button>
-        </div>
+    </div>
+    <div class="summary-actions" responsive-class>
+        <button *ngFor="let button of transactionSummary.actions" (click)="onClick(button)" [disabled]="!button.enabled"
+                class="transaction-button" mat-button color="primary" responsive-class>
+            <span class="transaction-button-text">{{button.title}}</span>
+            <app-icon [iconName]="button.icon" iconClass="mat-24"></app-icon>
+        </button>
     </div>
 </div>

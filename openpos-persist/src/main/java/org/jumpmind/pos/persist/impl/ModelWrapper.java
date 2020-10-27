@@ -2,6 +2,7 @@ package org.jumpmind.pos.persist.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.ObjectUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.CurrencyUnit;
@@ -161,19 +162,22 @@ public class ModelWrapper {
                 }
             }
             if (IAugmentedModel.class.isAssignableFrom(clazz) && clazz.getAnnotation(Augmented.class) != null) {
-                AugmenterConfig config = augmenterHelper.getAugmenterConfig(clazz);
-                if (config != null && config.getPrefix() != null) {
-                    Column[] columns = classMetaData.getTable().getColumns();
-                    for (Column column : columns) {
-                        if (column.getName().toUpperCase().startsWith(config.getPrefix())) {
-                            fieldColumnMap.put(column.getName(), column);
+                List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(clazz);
+                if (CollectionUtils.isNotEmpty(configs)) {
+                    for (AugmenterConfig config : configs) {
+                        if (config != null && config.getPrefix() != null) {
+                            Column[] columns = classMetaData.getTable().getColumns();
+                            for (Column column : columns) {
+                                if (column.getName().toUpperCase().startsWith(config.getPrefix())) {
+                                    fieldColumnMap.put(column.getName(), column);
+                                }
+                            }
+                        }
+                        else {
+                            log.debug("Missing augmenterConfig for class named " + clazz.getSimpleName());
                         }
                     }
                 }
-                else {
-                    log.debug("Missing augmenterConfig for class named " + clazz.getSimpleName());
-                }
-
             }
         }
     }
@@ -209,12 +213,14 @@ public class ModelWrapper {
         try {
             LinkedCaseInsensitiveMap<Object> columnNamesToObjectValues = new LinkedCaseInsensitiveMap<Object>();
             Set<String> fieldNames = fieldsToColumns.keySet();
-            AugmenterConfig config = augmenterHelper.getAugmenterConfig(model);
+            List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(model);
+
             for (String fieldName : fieldNames) {
+                AugmenterConfig config = getAugmentedConfigWithPrefix(configs, fieldName);
                 if (fieldName.toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
                     String tagValue = ((ITaggedModel) model).getTagValue(fieldName.substring(TagModel.TAG_PREFIX.length()));
                     columnNamesToObjectValues.put(fieldName, tagValue);
-                } else if (config != null && fieldName.toUpperCase().startsWith(config.getPrefix())) {
+                } else if (config != null) {
                     String augmentValue = ((IAugmentedModel) model).getAugmentValue(fieldName.substring(config.getPrefix().length()));
                     columnNamesToObjectValues.put(fieldName, ObjectUtils.defaultIfNull(augmentValue, augmenterHelper.getDefaultValue(fieldName, model)));
                 } else {
@@ -222,10 +228,10 @@ public class ModelWrapper {
                     Object value = getFieldValue(fieldName);
 
                     if (value instanceof Money) {
-                        handleMoneyField(columnNamesToObjectValues, fieldName, column, (Money)value);    
+                        handleMoneyField(columnNamesToObjectValues, fieldName, column, (Money) value);
                     } else if (value instanceof ITypeCode) {
                         columnNamesToObjectValues.put(column.getName(), value.toString());
-                    } else {                        
+                    } else {
                         columnNamesToObjectValues.put(column.getName(), value);
                     }
                 }
@@ -235,6 +241,15 @@ public class ModelWrapper {
             throw new PersistException(
                     "Failed to getObjectValuesByColumnName on model " + model + " fieldsToColumns: " + fieldsToColumns, ex);
         }
+    }
+
+    private AugmenterConfig getAugmentedConfigWithPrefix(List<AugmenterConfig> augmenterConfigs, String fieldName) {
+        for (AugmenterConfig config : augmenterConfigs) {
+            if (fieldName.toUpperCase().startsWith(config.getPrefix())) {
+                return config;
+            }
+        }
+        return null;
     }
 
     public Object getFieldValue(String fieldName) {
