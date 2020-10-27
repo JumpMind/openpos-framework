@@ -1,6 +1,5 @@
 export enum Status {
     ONLINE = 'Online',
     OFFLINE = 'Offline',
-    ERROR = 'Error',
-    UNKNOWN = 'Unknown'
+    ERROR = 'Error'
 }
