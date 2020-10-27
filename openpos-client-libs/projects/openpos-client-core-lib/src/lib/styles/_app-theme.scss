@@ -99,6 +99,10 @@
         color: $app-warn;
     }
 
+    .warn-light {
+        color: mat-color(mat-palette($mat-orange, 800));
+    }
+
     .accent {
         color: $app-accent;
     }

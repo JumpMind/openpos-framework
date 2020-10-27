@@ -118,6 +118,7 @@ export * from './lib/core/services/training-overlay.service';
 export * from './lib/core/services/validators.service';
 export * from './lib/core/services/location.service';
 export * from './lib/core/services/fetch-message.service';
+export * from './lib/core/services/transaction.service';
 export * from './lib/core/personalization/client-url.service';
 export * from './lib/core/focus/focus.service';
 export * from './lib/core/ui-data-message/ui-data-message.service';
@@ -190,6 +191,7 @@ export * from './lib/customer-display/customer-display-home/customer-display-hom
 export * from './lib/customer-display/customer-display-sale/customer-display-sale.component';
 
 export * from './lib/shared/shared.module';
+export * from './lib/shared/transaction-status.enum';
 export * from './lib/shared/components/catalog-browser-item/catalog-browser-item.component';
 export * from './lib/shared/components/counter/counter.component';
 export * from './lib/shared/components/currency-text/currency-text.component';
