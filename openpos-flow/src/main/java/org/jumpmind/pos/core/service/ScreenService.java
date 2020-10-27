@@ -37,6 +37,7 @@ import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.DefaultObjectMapper;
+import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -293,7 +294,7 @@ public class ScreenService implements IScreenService, IActionListener {
 
     @Override
     public void showToast(String appId, String deviceId, Toast toast) {
-        interceptToast(appId, deviceId, toast);
+        interceptMessage(appId, deviceId, toast, Toast.class);
         messageService.sendMessage(appId, deviceId, toast);
     }
 
@@ -312,7 +313,7 @@ public class ScreenService implements IScreenService, IActionListener {
             UIMessage preInterceptedScreen = null;
             try {
                 preInterceptedScreen = SerializationUtils.clone(screen);
-                interceptScreen(appId, deviceId, screen);
+                interceptMessage(appId, deviceId, screen, UIMessage.class);
                 logScreenTransition(deviceId, screen);
             } catch (Exception ex) {
                 if (ex.toString().contains("org.jumpmind.pos.core.screen.ChangeScreen")) {
@@ -345,29 +346,21 @@ public class ScreenService implements IScreenService, IActionListener {
         }
     }
 
-    protected void interceptToast(String appId, String deviceId, Toast toast) {
-        String[] toastInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, Toast.class));
-
-        if (toastInterceptorBeanNames != null) {
-            for (String beanName: toastInterceptorBeanNames) {
-                @SuppressWarnings("unchecked")
-                IMessageInterceptor<Toast> toastInterceptor =  (IMessageInterceptor<Toast>) applicationContext.getBean(beanName);
-                toastInterceptor.intercept(appId, deviceId, toast);
-            }
-        }
-    }
-    
-    protected void interceptScreen(String appId, String deviceId, UIMessage screen) {
-        String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, UIMessage.class));
-
+    protected <T extends Message> void interceptMessage(String appId, String deviceId, T message, Class<T> messageType) {
+        String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, messageType));
         if (screenInterceptorBeanNames != null) {
-            for (String beanName: screenInterceptorBeanNames) {
-                @SuppressWarnings("unchecked")
-                IMessageInterceptor<UIMessage> screenInterceptor =  (IMessageInterceptor<UIMessage>) applicationContext.getBean(beanName);
-                screenInterceptor.intercept(appId, deviceId, screen);
-                
-            }
+            Arrays.stream(screenInterceptorBeanNames)
+                .map(beanName -> (IMessageInterceptor<T>) applicationContext.getBean(beanName))
+                .sorted(Comparator.comparingInt(IMessageInterceptor::order))
+                .forEach(interceptor -> {
+                    try {
+                        interceptor.intercept(appId, deviceId, message);
+                    } catch (Exception ex) {
+                        logger.error("Failure when executing interceptor: " + interceptor.getClass(), ex);
+                    }
+                });
         }
+
     }
 
     protected void deserializeForm(ApplicationState applicationState, Action action) {
