@@ -51,16 +51,16 @@ public class DevToolsActionListener implements IActionListener {
     @Autowired
     DevicesRepository devicesRepository;
 
-    @Value("${openpos.peripheralSimulatorViewer.simPort}")
+    @Value("${openpos.peripheralSimulatorViewer.simPort:#{null}}")
     String simPort;
 
     @Value("${openpos.peripheralSimulatorViewer.appId:'sim'}")
     String simAppId;
 
-    @Value("${openpos.peripheralSimulatorViewer.simUrl}")
+    @Value("${openpos.peripheralSimulatorViewer.simUrl:#{null}}")
     String simUrl;
     
-    @Value("${openpos.peripheralSimulatorViewer.simProtocol}")
+    @Value("${openpos.peripheralSimulatorViewer.simProtocol:#{null}}")
     String simProtocol;
     
     @Override
