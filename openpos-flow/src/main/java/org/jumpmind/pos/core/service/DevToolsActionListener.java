@@ -60,7 +60,7 @@ public class DevToolsActionListener implements IActionListener {
     @Value("${openpos.peripheralSimulatorViewer.simUrl}")
     String simUrl;
     
-    @Value("${openpos.peripheralSimulatorViewer.simProtocol'}")
+    @Value("${openpos.peripheralSimulatorViewer.simProtocol}")
     String simProtocol;
     
     @Override
