@@ -39,22 +39,6 @@ public class UIMessage extends Message {
         this.id = id;
     }
 
-    public Integer getSessionTimeoutMillis() {
-        return sessionTimeoutMillis;
-    }
-
-    public void setSessionTimeoutMillis(Integer sessionTimeoutMillis) {
-        this.sessionTimeoutMillis = sessionTimeoutMillis;
-    }
-
-    public Action getSessionTimeoutAction() {
-        return sessionTimeoutAction;
-    }
-
-    public void setSessionTimeoutAction(Action sessionTimeoutAction) {
-        this.sessionTimeoutAction = sessionTimeoutAction;
-    }
-
     public boolean isDialog() {
         String type = getType();
         return type != null && type.equals(MessageType.Dialog);

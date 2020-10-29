@@ -37,15 +37,12 @@ public interface IStateManager {
     void stop();
 
     public void init(String appId, String deviceId);
-    @Deprecated
-    public String getNodeId();
     public String getDeviceId();
     public String getAppId();
     public void doAction(String action);
     public void doAction(String action, Map<String, String> params);
     public void doAction(Action action);    
     public void transitionTo(Action action, Object newState);
-    public void timeout();
     public void endConversation();
     public void endSession();
     public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap);
