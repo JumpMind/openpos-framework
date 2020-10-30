@@ -120,8 +120,8 @@ public class StateManager implements IStateManager {
     @Autowired
     Environment env;
 
-    @Value("${openpos.screens.config.defaultSessionTimeoutMills:240000}")
-    long defaultSessionTimeoutMillis;
+    @Autowired
+    ScreensConfig screensConfig;
 
     @Value("${openpos.general.failOnUnmatchedAction:false}")
     boolean failOnUnmatchedAction;
@@ -1007,18 +1007,6 @@ public class StateManager implements IStateManager {
     }
 
     @Override
-    public void timeout() {
-        FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
-        if (!applicationState.getStateStack().isEmpty()) {
-            StateContext suspendedState = applicationState.getStateStack().pop();
-            transitionTo(Action.ACTION_TIMEOUT, suspendedState.getState(), null, suspendedState);
-        } else {
-            transitionTo(Action.ACTION_TIMEOUT, flowConfig.getInitialState());
-        }
-
-    }
-
-    @Override
     public void endConversation() {
         applicationState.getScope().clearConversationScope();
         clearScopeOnStates(ScopeType.Conversation);
@@ -1114,8 +1102,10 @@ public class StateManager implements IStateManager {
         }
 
         if (screen != null) {
-            sessionTimeoutMillis = screen.getSessionTimeoutMillis() == null ? defaultSessionTimeoutMillis : screen.getSessionTimeoutMillis();
-            sessionTimeoutAction = screen.getSessionTimeoutAction();
+            ScreenConfig screenConfig = screensConfig.getConfig().get(screen.getId());
+            ScreenConfig defaultScreenConfig = screensConfig.getConfig().get("default");
+            sessionTimeoutMillis = screenConfig != null && screenConfig.getTimeout() != null ?  screenConfig.getTimeout()*1000 : defaultScreenConfig.getTimeout()*1000;
+            sessionTimeoutAction = new Action(screenConfig != null && screenConfig.getTimeoutAction() != null ?  screenConfig.getTimeoutAction() : defaultScreenConfig.getTimeoutAction());
         } else {
             sessionTimeoutMillis = 0;
             sessionTimeoutAction = null;
@@ -1130,11 +1120,6 @@ public class StateManager implements IStateManager {
     @Override
     public void showScreen(UIMessage screen) {
         showScreen(screen, null);
-    }
-
-    @Override
-    public String getNodeId() {
-        return applicationState.getDeviceId();
     }
 
     @Override
@@ -1169,7 +1154,7 @@ public class StateManager implements IStateManager {
     }
 
     protected void sessionTimeout() {
-        Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
+        Action localSessionTimeoutAction = sessionTimeoutAction;
         localSessionTimeoutAction.setDoNotBlockForResponse(true);
         doAction(localSessionTimeoutAction);
     }
