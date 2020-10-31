@@ -28,6 +28,7 @@ import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
 /**
  * Responsible for housing all true state data for a node. That is, it should be
@@ -50,9 +51,13 @@ public class ApplicationState {
 
     private Map<String, UIDataMessageProvider<?>> dataMessageProviderMap;
 
-    public void reset() {
+    public void reset(ScheduledAnnotationBeanPostProcessor scheduledAnnotationBeanPostProcessor) {
         Object queryParams = scope.getDeviceScope().get("queryParams");
         Object personalizationProperties = scope.getDeviceScope().get("personalizationProperties");
+
+        scope.getDeviceScope().keySet().forEach(s->
+                scheduledAnnotationBeanPostProcessor.
+                        postProcessBeforeDestruction(scope.getDeviceScope().get(s).getValue(), s));
         scope = new Scope();
         stateStack = new LinkedList<>();
         currentContext = null;

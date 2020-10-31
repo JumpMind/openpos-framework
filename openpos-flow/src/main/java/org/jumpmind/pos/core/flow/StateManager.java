@@ -62,6 +62,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -122,6 +123,9 @@ public class StateManager implements IStateManager {
     @Value("${openpos.general.failOnUnmatchedAction:false}")
     boolean failOnUnmatchedAction;
 
+    @Autowired
+    ScheduledAnnotationBeanPostProcessor scheduledAnnotationBeanPostProcessor;
+
     ApplicationState applicationState = new ApplicationState();
 
     List<TransitionStepConfig> transitionStepConfigs;
@@ -170,7 +174,7 @@ public class StateManager implements IStateManager {
     }
 
     public void init(String appId, String nodeId) {
-        this.applicationState.reset();
+        this.applicationState.reset(scheduledAnnotationBeanPostProcessor);
         this.applicationState.setAppId(appId);
         this.applicationState.setDeviceId(nodeId);
         this.eventBroadcaster = new EventBroadcaster(this);
