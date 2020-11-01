@@ -27,6 +27,8 @@ public class AsyncExecutor {
     @Autowired
     StateManagerContainer stateManagerContainer;
 
+    Runnable beforeCancel;
+
     @PostConstruct
     public void init() {
         this.scheduler = new ThreadPoolTaskScheduler();
@@ -38,13 +40,17 @@ public class AsyncExecutor {
 
     synchronized public void cancel() {
         cancelled = true;
+        if (beforeCancel != null) {
+            this.beforeCancel.run();
+        }
     }
 
     synchronized public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError) {
-       execute(request, doWork, handleResult, handleError, r-> log.info("The executor returned but the results are being ignore because it was cancelled"));
+       execute(request, doWork, handleResult, handleError, r-> log.info("The executor returned but the results are being ignore because it was cancelled"), null);
     }
 
-    synchronized public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError, Consumer<R> handleCancel) {
+    synchronized public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError, Consumer<R> handleCancel, Runnable beforeCancel) {
+        this.beforeCancel = beforeCancel;
         cancelled = false;
         scheduler.execute(() -> {
             try {
