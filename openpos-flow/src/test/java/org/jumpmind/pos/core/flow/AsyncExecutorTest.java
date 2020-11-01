@@ -61,4 +61,30 @@ public class AsyncExecutorTest {
         }
         assertEquals(2, hit.intValue());
     }
+
+    @Test
+    public void testExecuteCancelled() {
+        final Object arg = new Object();
+        final MutableInt result = new MutableInt();
+        final MutableInt hit = new MutableInt(0);
+        asyncExecutor.execute(arg, o -> {
+            assertEquals(o, arg);
+            AppUtils.sleep(200);
+            result.increment();
+            return result;
+        } , o -> {
+            hit.increment();
+        } , throwable -> {
+            hit.increment();
+        }, o -> {
+            assertEquals(result, o);
+        });
+        asyncExecutor.cancel();
+
+        while (result.intValue() == 0) {
+            AppUtils.sleep(100);
+        }
+
+        assertEquals(0, hit.intValue());
+    }
 }

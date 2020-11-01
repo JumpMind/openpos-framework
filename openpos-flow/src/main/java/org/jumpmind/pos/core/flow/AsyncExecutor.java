@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.flow;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
@@ -12,11 +13,13 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+@Slf4j
 @Component
 @Scope("device")
 public class AsyncExecutor {
     private ThreadPoolTaskScheduler scheduler;
     private List<ScheduledFuture<?>> scheduledJobs;
+    private boolean cancelled;
 
     @In(scope = ScopeType.Device)
     IStateManager stateManager;
@@ -33,14 +36,31 @@ public class AsyncExecutor {
         scheduledJobs = new ArrayList<ScheduledFuture<?>>();
     }
 
-    public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError) {
+    synchronized public void cancel() {
+        cancelled = true;
+    }
+
+    synchronized public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError) {
+       execute(request, doWork, handleResult, handleError, r-> log.info("The executor returned but the results are being ignore because it was cancelled"));
+    }
+
+    synchronized public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError, Consumer<R> handleCancel) {
+        cancelled = false;
         scheduler.execute(() -> {
             try {
                 stateManagerContainer.setCurrentStateManager(stateManager);
                 R result = doWork.apply(request);
-                handleResult.accept(result);
+                if (!cancelled) {
+                    handleResult.accept(result);
+                } else if (handleCancel != null) {
+                    handleCancel.accept(result);
+                }
             } catch (Throwable throwable) {
-                handleError.accept(throwable);
+                if (!cancelled) {
+                    handleError.accept(throwable);
+                } else if (handleCancel != null) {
+                    handleCancel.accept(null);
+                }
             }
         });
     }

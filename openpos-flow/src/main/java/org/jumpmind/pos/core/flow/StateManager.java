@@ -166,7 +166,7 @@ public class StateManager implements IStateManager {
 
     @Override
     public void reset() {
-        log.info("StateManager resetting.");
+        log.info("StateManager resetting");
         this.actionQueue.clear();
         this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_RESET_ACTION)));
     }
@@ -185,6 +185,7 @@ public class StateManager implements IStateManager {
         this.eventBroadcaster = new EventBroadcaster(this);
 
         applicationState.getScope().setDeviceScope("stateManager", this);
+
         initDefaultScopeObjects();
 
         if (initialFlowConfig != null) {

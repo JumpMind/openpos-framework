@@ -58,6 +58,12 @@ public class ApplicationState {
         scope.getDeviceScope().keySet().forEach(s->
                 scheduledAnnotationBeanPostProcessor.
                         postProcessBeforeDestruction(scope.getDeviceScope().get(s).getValue(), s));
+
+        scope.getDeviceScope().values().stream().
+                filter(s->s.getValue() instanceof AsyncExecutor).
+                map(s-> (AsyncExecutor)s.getValue()).
+                forEach(a->a.cancel());
+
         scope = new Scope();
         stateStack = new LinkedList<>();
         currentContext = null;
