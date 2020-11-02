@@ -51,11 +51,17 @@ public class DevToolsActionListener implements IActionListener {
     @Autowired
     DevicesRepository devicesRepository;
 
-    @Value("${server.secondary.ports:7400}")
-    String ports[];
+    @Value("${openpos.peripheralSimulatorViewer.simPort:#{null}}")
+    String simPort;
 
     @Value("${openpos.peripheralSimulatorViewer.appId:'sim'}")
     String simAppId;
+
+    @Value("${openpos.peripheralSimulatorViewer.simUrl:#{null}}")
+    String simUrl;
+    
+    @Value("${openpos.peripheralSimulatorViewer.simProtocol:#{null}}")
+    String simProtocol;
     
     @Override
     public Collection<String> getRegisteredTypes() {        
@@ -116,7 +122,9 @@ public class DevToolsActionListener implements IActionListener {
             authToken = "";
         }
         simulatorMap.put("simAuthToken", authToken);
-        simulatorMap.put("simPort", ports[0]);
+        simulatorMap.put("simPort", simPort);
+        simulatorMap.put("simUrl", simUrl);
+        simulatorMap.put("simProtocol", simProtocol);
         message.put("simulator", simulatorMap);
     }
 

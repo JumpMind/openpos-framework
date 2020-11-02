@@ -31,4 +31,21 @@
         margin: 16px;
     }
 
+    .transaction-summary {
+        display: block;
+        border-bottom-width: 1px;
+        border-bottom-style: solid;
+        margin: 0 32px;
+
+        &:last-child {
+            border-bottom: none;
+        }
+
+        &.tablet-landscape,
+        &.mobile-landscape,
+        &.mobile-portrait,
+        &.desktop-portrait {
+            margin: 0 16px;
+        }
+    }
 }

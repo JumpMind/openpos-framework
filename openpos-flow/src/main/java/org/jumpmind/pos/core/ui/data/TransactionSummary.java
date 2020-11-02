@@ -16,19 +16,23 @@ import java.util.Map;
 public class TransactionSummary implements Serializable {
 
     private Long sequenceNumber;
+    private String sequenceNumberFormatted;
     private String customerName;
     private Integer items;
+    private String itemsFormatted;
     private String transactionDate;
     private String deviceId;
     private String storeId;
     private String tillId;
     private String barcode;
     private String total;
-    private String icon;
     private String businessDate;
     private String status;
+    private String statusText;
+    private String statusIcon;
     private String username;
     private String transactionType;
+    private String transactionTypeIcon;
     private List<String> tenderTypeIcons;
     private List<ActionItem> actions;
 

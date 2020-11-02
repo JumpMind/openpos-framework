@@ -47,6 +47,10 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     simPort: string;
 
+    simUrl: string;
+
+    simProtocol: string;
+
     simAuthTokenAvailable = false;
 
     firstClickTime = Date.now();
@@ -243,6 +247,8 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             console.info('Pulling sim auth token...');
             this.simAuthToken = message.simulator.simAuthToken;
             this.simPort = message.simulator.simPort;
+            this.simUrl = message.simulator.simUrl;
+            this.simProtocol = message.simulator.simProtocol;
             if (message.simulator.simPort && message.simulator.simAuthToken && message.simulator.simAuthToken.length > 0) {
                 this.simAuthTokenAvailable = true;
             } else {
@@ -465,10 +471,13 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     public onOpenSimulator() {
         const serverName = this.personalization.getServerName$().getValue();
-        const port = this.personalization.getServerPort$().getValue();
-        window.open(window.location.protocol + '//' + window.location.hostname + ':'
-            + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + port
-            + '&deviceToken=' + this.simAuthToken);
+        const serverPort = this.personalization.getServerPort$().getValue();
+        const protocol = this.simProtocol ? this.simProtocol : window.location.protocol;
+        const url = this.simUrl ? this.simUrl : window.location.hostname;
+        const sim = protocol + '://' + url + ':'
+            + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + serverPort
+            + '&deviceToken=' + this.simAuthToken;
+            window.open(sim);
     }
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {

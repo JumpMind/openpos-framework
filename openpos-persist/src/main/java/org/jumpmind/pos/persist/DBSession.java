@@ -19,6 +19,7 @@ import javax.sql.DataSource;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.h2.tools.RunScript;
 import org.joda.money.Money;
@@ -448,8 +449,15 @@ public class DBSession {
     }
 
     private boolean isAugmentedProperty(Class<?> modelClass, String property) {
-        AugmenterConfig config = augmenterHelper.getAugmenterConfig(modelClass);
-        return config != null && config.getAugmenter(property) != null;
+        boolean hasProperty = false;
+        List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(modelClass);
+        for (AugmenterConfig config : configs) {
+            hasProperty = config.getAugmenter(property) != null;
+            if (hasProperty) {
+                break;
+            }
+        }
+        return hasProperty;
     }
 
     public void save(AbstractModel argModel) {
@@ -758,16 +766,18 @@ public class DBSession {
 
     protected void addAugments(Row row, LinkedCaseInsensitiveMap<String> matchedColumns, AbstractModel model) {
         if (model instanceof IAugmentedModel) {
-            AugmenterConfig config = augmenterHelper.getAugmenterConfig(model);
-            if (config == null) {
+            List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(model);
+            if (CollectionUtils.isEmpty(configs)) {
                 log.warn("Missing config for model class" + model.getClass().getSimpleName());
                 return;
             }
             Map<String, Object> augmentsValues = new HashMap<>();
             for (String columnName : row.keySet()) {
-                if (columnName.toUpperCase().startsWith(config.getPrefix())) {
-                    matchedColumns.put(columnName, null);
-                    augmentsValues.put(columnName, row.getString(columnName));
+                for (AugmenterConfig config : configs) {
+                    if (columnName.toUpperCase().startsWith(config.getPrefix())) {
+                        matchedColumns.put(columnName, null);
+                        augmentsValues.put(columnName, row.getString(columnName));
+                    }
                 }
                 augmenterHelper.addAugments((IAugmentedModel) model, augmentsValues);
             }

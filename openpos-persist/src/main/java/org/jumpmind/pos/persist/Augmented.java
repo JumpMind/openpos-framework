@@ -8,6 +8,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
 public @interface Augmented {
-    String name();
+    String name() default "";
     String indexPrefix() default "";
+    String[] names() default {};
 }

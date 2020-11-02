@@ -12,7 +12,18 @@ import { ActionService } from '../../../core/actions/action.service';
 })
 export class MobileItemComponent {
 
-    @Input() item: ISellItem;
+    private _item: ISellItem;
+    filteredAdditionalLabels:{label: string, value: string} [];
+
+    @Input() set item(item: ISellItem) {
+        this._item = item;
+        this.filterAdditionalLabels();
+    }
+
+    get item() {
+        return this._item;
+    }
+
     @Input() expanded = true;
 
     constructor(public actionService: ActionService, public session: SessionService) { }
@@ -29,4 +40,11 @@ export class MobileItemComponent {
         return enabled;
     }
 
+    public filterAdditionalLabels() {
+        this.filteredAdditionalLabels = this.item.additionalLabels.filter(additionalLabel =>
+            this.item.collapsedAdditionalLabels.find(
+                label => label == additionalLabel.label
+            )
+        )
+    }
 }

@@ -5,6 +5,9 @@
     overflow-y: auto;
     margin: 0px;
     padding: 0px;
+    ::ng-deep .item-card-title {
+        font-weight: 600;
+    }
 }
 
 .sale-item-prompt-outer {

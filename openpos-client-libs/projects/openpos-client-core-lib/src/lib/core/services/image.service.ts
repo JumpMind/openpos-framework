@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {SessionService} from './session.service';
 import {DiscoveryService} from '../discovery/discovery.service';
 import {PersonalizationService} from '../personalization/personalization.service';
+import {filter, map, take} from "rxjs/operators";
 
 @Injectable({
     providedIn: 'root',
@@ -10,9 +11,16 @@ export class ImageService {
     private baseUrlToken = '${apiServerBaseUrl}';
     private appIdToken = '${appId}';
     private deviceIdToken = '${deviceId}';
+    private _imageNotFoundURL;
+
+    get imageNotFoundURL(){
+        return this._imageNotFoundURL;
+    }
 
     constructor(private personalizer: PersonalizationService,
-                private discovery: DiscoveryService, private session: SessionService) { }
+                private discovery: DiscoveryService, private session: SessionService) {
+        this.setImageNotFoundURL();
+    }
 
     replaceImageUrl(originalUrl: string): string {
         if (originalUrl) {
@@ -28,6 +36,15 @@ export class ImageService {
             return originalUrl;
         }
 
+    }
+
+    setImageNotFoundURL(){
+        this.session.getMessages('ConfigChanged')
+            .pipe(
+                filter(message => message.configType === 'ImageService'),
+                map(res => res["image-not-found"] ),
+                take(1)
+            ).subscribe(res => this._imageNotFoundURL = res);
     }
 
 }

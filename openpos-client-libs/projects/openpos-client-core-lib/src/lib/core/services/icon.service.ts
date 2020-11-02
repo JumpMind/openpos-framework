@@ -28,6 +28,7 @@ export class IconService {
         this.icons.set('Back', ['keyboard_arrow_left.svg', this.defaultIconProvider]);
         this.icons.set('BankIn', ['bank_transfer_in.svg', this.defaultIconProvider]);
         this.icons.set('Barcode', ['barcode.svg', this.defaultIconProvider]);
+        this.icons.set('Broken', ['broken_image.svg', this.defaultIconProvider]);
         this.icons.set('BusinessCustomer', ['business.svg', this.defaultIconProvider]);
         this.icons.set('BypassAction', ['low_priority.svg', this.defaultIconProvider]);
         this.icons.set('Calendar', ['today.svg', this.defaultIconProvider]);

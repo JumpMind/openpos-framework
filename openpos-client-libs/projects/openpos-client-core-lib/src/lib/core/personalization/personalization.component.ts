@@ -54,7 +54,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
         this.navigateExternal = this.clientUrlService.navigateExternal;
         this.serverIsSSL = window.location.protocol.includes('https');
         this.appServerAddress = window.location.hostname;
-        this.appServerPort = window.location.port;
+        this.appServerPort = window.location.port? window.location.port : this.serverIsSSL? '443': '';
 
         if (this.navigateExternal && localStorage.getItem('clientUrl')) {
             this.clientUrlService.renavigate();

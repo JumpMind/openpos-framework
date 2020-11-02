@@ -1,6 +1,11 @@
 <mat-card class="item-card" [ngClass]="{'mat-elevation-z5':hover, 'mat-elevation-z1':!hover}">
     <mat-card-content class="item-content">
-        <img responsive-class class="item-card-image" *ngIf="item.imageUrl && !item.svgImage" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" [ngClass]="{'collapsed': !expanded}">
+        <app-image responsive-class
+                   class="item-card-image"
+                   [imageUrl]="item.imageUrl | imageUrl"
+                   [altText]="item.description"
+                   [ngClass]="{'collapsed': !expanded}">
+        </app-image>
         <app-icon *ngIf="item.imageUrl && item.svgImage" [iconName]="item.imageUrl"
             [iconClass]="expanded ? 'material-icons mat-128' : 'material-icons mat-48'" [ngClass]="{'collapsed': !expanded}">
         </app-icon>
@@ -24,6 +29,11 @@
                     </li>
                 </ul>
             </section>
+            <ul responsive-class class="item-card-details" *ngIf="filteredAdditionalLabels && !expanded">
+                <li *ngFor="let additionalLabel of filteredAdditionalLabels" class="muted-color" style="margin-top: 4px">
+                    {{additionalLabel.label}}: {{additionalLabel.value}}
+                </li>
+            </ul>
             <ul responsive-class class="item-card-details" *ngIf="item.additionalLabels && expanded">
                 <li *ngFor="let additionalLabel of item.additionalLabels" class="muted-color">
                     {{additionalLabel.label}}: {{additionalLabel.value}}

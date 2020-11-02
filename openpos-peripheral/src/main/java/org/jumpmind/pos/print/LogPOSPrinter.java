@@ -3,7 +3,9 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.status.Status;
 
 import java.io.InputStream;
@@ -69,6 +71,13 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    @SneakyThrows
+    public int waitForDrawerClose(String cashDrawerId, long timeout) {
+        AppUtils.sleep(1000);
+        return DRAWER_CLOSED;
+    }
+
+    @Override
     public void beginSlipMode() {
 
     }
@@ -106,16 +115,8 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public String getDrawerStatus(String cashDrawerId) {
-        if (cashDrawerStatus.equals(EscpCashDrawerService.STATUS_OPEN)) {
-            log.info("Printer peripheral cash drawer reported a status of \"" + EscpCashDrawerService.STATUS_OPEN + "\" (OPEN)");
-            cashDrawerStatus = EscpCashDrawerService.STATUS_CLOSED;
-            return EscpCashDrawerService.STATUS_OPEN;
-        } else {
-            log.info("Printer peripheral cash drawer reported a status of \"" + EscpCashDrawerService.STATUS_CLOSED + "\" (CLOSED)");
-            cashDrawerStatus = EscpCashDrawerService.STATUS_OPEN;
-            return EscpCashDrawerService.STATUS_CLOSED;
-        }
+    public boolean isDrawerOpen(String cashDrawerId) {
+        return false;
     }
 
     @Override
