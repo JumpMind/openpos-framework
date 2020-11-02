@@ -26,7 +26,7 @@ class ProrationCalculator {
         
         BigDecimal proratedTotal = 0.00;
         for (BigDecimal amount : existingAmounts) {
-            BigDecimal itemPct = amount.divide(amountsTotal,4, RoundingMode.HALF_UP);
+            BigDecimal itemPct = amount.divide(amountsTotal,10, RoundingMode.HALF_UP);
             BigDecimal proratedAmount = amountToBeProrated * itemPct;
             proratedAmount = moneyCalculator.amount(proratedAmount);
             proratedAmounts.add(proratedAmount);
