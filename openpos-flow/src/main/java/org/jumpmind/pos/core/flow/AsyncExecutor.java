@@ -46,7 +46,7 @@ public class AsyncExecutor {
     }
 
     synchronized public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError) {
-       execute(request, doWork, handleResult, handleError, r-> log.info("The executor returned but the results are being ignore because it was cancelled"), null);
+       execute(request, doWork, handleResult, handleError, r-> log.info("The executor returned but the results are being ignored because it was cancelled.  The ignored results were {}", r), null);
     }
 
     synchronized public <T, R> void execute(T request, Function<T, R> doWork, Consumer<R> handleResult, Consumer<Throwable> handleError, Consumer<R> handleCancel, Runnable beforeCancel) {

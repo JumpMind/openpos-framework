@@ -166,7 +166,7 @@ public class StateManager implements IStateManager {
 
     @Override
     public void reset() {
-        log.info("StateManager resetting");
+        log.info("StateManager reset queued");
         this.actionQueue.clear();
         this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_RESET_ACTION)));
     }
@@ -239,13 +239,13 @@ public class StateManager implements IStateManager {
                 if (actionContext != null) {
                     busyFlag.set(true);
                     if (actionContext.getAction().getName().equals(STATE_MANAGER_RESET_ACTION)) {
+                        log.info("StateManager reset queued");
                         actionContext.getAction().markProcessed();
                         runningFlag.set(false);
                         busyFlag.set(false);
                         init(this.getAppId(), this.getDeviceId());
-                        this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
                         log.info("StateManager reset");
-                        eventPublisher.publish(new DeviceResetEvent(getDeviceId(), getAppId()));
+                        this.eventPublisher.publish(new DeviceResetEvent(getDeviceId(), getAppId()));
                         break;
                     } else if (actionContext.getAction().getName().equals(STATE_MANAGER_STOP_ACTION)) {
                         actionContext.getAction().markProcessed();
