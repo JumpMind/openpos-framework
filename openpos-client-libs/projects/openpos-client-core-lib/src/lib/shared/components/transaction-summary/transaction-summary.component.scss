@@ -25,9 +25,13 @@
 .summary-trans-type {
     @extend %text-sm;
 
-    text-align: center;
+    display: grid;
+    justify-content: center;
+    justify-items: center;
     font-weight: bold;
     grid-area: trans-type;
+    align-self: center;
+    text-align: center;
 }
 
 .trans-type-icon {
