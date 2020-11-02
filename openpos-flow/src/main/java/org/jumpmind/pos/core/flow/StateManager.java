@@ -1009,6 +1009,7 @@ public class StateManager implements IStateManager {
         clearScopeOnDeviceScopeBeans(ScopeType.Session);
         refreshDeviceScope();
 
+        applicationState.setStateStack(new LinkedList<>());
         applicationState.setAppId(this.getAppId());
         applicationState.setDeviceId(this.getNodeId());
         applicationState.getScope().setDeviceScope("stateManager", this);
