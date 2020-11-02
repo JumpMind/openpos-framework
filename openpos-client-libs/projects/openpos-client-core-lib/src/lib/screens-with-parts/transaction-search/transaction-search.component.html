@@ -1,30 +1,55 @@
 <app-bacon-strip class="transaction-bacon-strip">
     <div class="transaction-search-outer">
-
-        <div class="transaction-search-top">
-            <app-scan-or-search class="scan-or-search mat-elevation-z1" [focusInitial]="false"></app-scan-or-search>
-
-            <app-secondary-button *ngIf="screen.clearButton" inputType="submit" class="transaction-search-button"
-                (click)="doAction(screen.clearButton)">
-                <span>{{screen.clearButton.title}}</span>
-                <app-icon *ngIf="screen.clearButton.icon" [iconName]="screen.clearButton.icon"></app-icon>
-            </app-secondary-button>
-
-            <app-primary-button *ngIf="screen.searchButton" inputType="submit" class="transaction-search-button"
-                (click)="doAction(screen.searchButton)">
-                <span>{{screen.searchButton.title}}</span>
-                <app-icon *ngIf="screen.searchButton.icon" [iconName]="screen.searchButton.icon"></app-icon>
-            </app-primary-button>
+        <div [ngSwitch]="screen.transactionSearchMode" class="transaction-search-top"
+             [ngClass]="{'change-search-mode-disabled': this.changeSearchModeDisabled}" responsive-class>
+            <div class="transaction-search-mode">
+                <app-icon [iconName]="screen.transSearchModeIcon" iconClass="mat-36"></app-icon>
+                <span class="transaction-search-mode-text">{{screen.transSearchModeText}}</span>
+            </div>
+            <div *ngSwitchCase="TransactionSearchMode.SaleAndReturn"
+                 [ngClass]="{'change-search-mode-disabled': this.changeSearchModeDisabled}"
+                 class="transaction-search-options transaction-search-options-search">
+                <app-scan-or-search class="scan-or-search mat-elevation-z1"
+                                    [focusInitial]="false"></app-scan-or-search>
+                <app-secondary-button *ngIf="screen.clearButton" inputType="submit" class="transaction-search-button"
+                                      (click)="doAction(screen.clearButton)">
+                    <span>{{screen.clearButton.title}}</span>
+                    <app-icon *ngIf="screen.clearButton.icon" [iconName]="screen.clearButton.icon"></app-icon>
+                </app-secondary-button>
+                <app-primary-button *ngIf="screen.searchButton" inputType="submit" class="transaction-search-button"
+                                    (click)="doAction(screen.searchButton)">
+                    <span>{{screen.searchButton.title}}</span>
+                    <app-icon *ngIf="screen.searchButton.icon" [iconName]="screen.searchButton.icon"></app-icon>
+                </app-primary-button>
+            </div>
+            <div *ngSwitchCase="TransactionSearchMode.All"
+                 [ngClass]="{'change-search-mode-disabled': this.changeSearchModeDisabled}"
+                 class="transaction-search-options transaction-search-options-search-all">
+                <app-dynamic-form-part class="transaction-search-all-params-form"
+                        (formInit)="onSearchAllFormChanges($event)"
+                        (formChanges)="onSearchAllFormChanges($event)"
+                        formName="searchAllParamsForm"></app-dynamic-form-part>
+                <app-primary-button *ngIf="screen.searchAllButton" inputType="submit" class="transaction-search-button"
+                                    (click)="searchAll()">
+                    <span>{{screen.searchAllButton.title}}</span>
+                    <app-icon *ngIf="screen.searchAllButton.icon" [iconName]="screen.searchAllButton.icon"></app-icon>
+                </app-primary-button>
+            </div>
+            <button *ngIf="screen.changeSearchModeButton" (click)="doAction(screen.changeSearchModeButton)"
+                    class="transaction-change-search-mode-button" mat-button color="primary" responsive-class>
+                <app-icon *ngIf="screen.changeSearchModeButton.icon"
+                          [iconName]="screen.changeSearchModeButton.icon" iconClass="mat-24"></app-icon>
+                <span class="transaction-change-search-mode-button-text">{{screen.changeSearchModeButton.title}}</span>
+                <app-icon iconName="Forward" iconClass="mat-24"></app-icon>
+            </button>
         </div>
-
-        <app-infinite-scroll [dataKey]="screen.providerKey" [itemTemplate]="itemTemplate" virtualScrollMinBufferPx="200"
-            virtualScrollMaxBufferPx="400" [itemHeightPx]="150">
-
+        <app-instructions *ngIf="resultsCount === 0" [instructions]="screen.noResultsMessage" class="no-results"></app-instructions>
+        <app-infinite-scroll *ngIf="resultsCount !== 0" [dataKey]="screen.providerKey" [itemTemplate]="itemTemplate"
+                             virtualScrollMinBufferPx="200" virtualScrollMaxBufferPx="400" [itemHeightPx]="150">
             <ng-template #itemTemplate let-item>
                 <app-transaction-summary [transactionSummary]="item" class="transaction-summary" responsive-class>
                 </app-transaction-summary>
             </ng-template>
-
         </app-infinite-scroll>
     </div>
 </app-bacon-strip>

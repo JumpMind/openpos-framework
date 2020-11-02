@@ -68,5 +68,17 @@ public final class DateUtils {
         long diffDays = (cal2.getTimeInMillis()-cal1.getTimeInMillis()) / (24 * 60 * 60 * 1000);
         return diffDays;
     }
-    
+
+    public static String changeFormat(String value, String existingFormat, String newFormat) {
+        if(StringUtils.isBlank(value)) {
+            return value;
+        }
+
+        try {
+            Date date = new SimpleDateFormat(existingFormat).parse(value);
+            return new SimpleDateFormat(newFormat).format(date);
+        } catch (ParseException e) {
+            return value;
+        }
+    }
 }

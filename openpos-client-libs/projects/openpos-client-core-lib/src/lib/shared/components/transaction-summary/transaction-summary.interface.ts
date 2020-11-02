@@ -1,9 +1,12 @@
 import { IActionItem } from '../../../core/actions/action-item.interface';
-import {TransactionStatusEnum} from '../../transaction-status.enum';
+import {TransStatusEnum} from '../../trans-status.enum';
+import {TransTypeEnum} from '../../trans-type.enum';
 
 export interface ITransactionSummary {
     sequenceNumber: string;
     sequenceNumberFormatted: string;
+    voidedSequenceNumber: string;
+    voidedSequenceNumberFormatted: string;
     customerName: string;
     items: number;
     itemsFormatted: string;
@@ -14,13 +17,14 @@ export interface ITransactionSummary {
     barcode: string;
     total: string;
     businessDate: string;
-    status: TransactionStatusEnum;
+    status: TransStatusEnum;
     statusText: string;
     statusIcon: string;
     username: string;
     actions: IActionItem[];
     labels: any;
-    transactionType: string;
+    transactionTypeText: string;
+    transactionType: TransTypeEnum;
     transactionTypeIcon: string;
     tenderTypeIcons: string[];
 }

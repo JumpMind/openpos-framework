@@ -1,10 +1,11 @@
 package org.jumpmind.pos.core.ui;
 
+import lombok.Data;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.model.Message;
 
-
+@Data
 public class UIMessage extends Message {
     private static final long serialVersionUID = 1L;
     private String screenType;
@@ -21,38 +22,6 @@ public class UIMessage extends Message {
     public UIMessage() {
         setWillUnblock(true);
         setType(MessageType.Screen);
-    }
-
-    public String getScreenType() {
-        return screenType;
-    }
-
-    public void setScreenType(String screenType) {
-        this.screenType = screenType;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public Integer getSessionTimeoutMillis() {
-        return sessionTimeoutMillis;
-    }
-
-    public void setSessionTimeoutMillis(Integer sessionTimeoutMillis) {
-        this.sessionTimeoutMillis = sessionTimeoutMillis;
-    }
-
-    public Action getSessionTimeoutAction() {
-        return sessionTimeoutAction;
-    }
-
-    public void setSessionTimeoutAction(Action sessionTimeoutAction) {
-        this.sessionTimeoutAction = sessionTimeoutAction;
     }
 
     public boolean isDialog() {

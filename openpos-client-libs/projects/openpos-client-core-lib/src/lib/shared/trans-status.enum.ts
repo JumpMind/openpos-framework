@@ -1,4 +1,4 @@
-export enum TransactionStatusEnum {
+export enum TransStatusEnum {
     InProgress = 'IN_PROGRESS',
     Completed = 'COMPLETED',
     Cancelled = 'CANCELLED',

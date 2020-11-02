@@ -60,6 +60,7 @@ public interface IconType {
     public static final String Journal = "Journal"; //book
     public static final String KebabMenu = "KebabMenu"; //more_vert
     public static final String Lease = "Lease"; // account_balance
+    public static final String LightSolid = "LightSolid"; //ws_incandescent_up
     public static final String Links = "Links"; //link
     public static final String Light = "Light"; //lightbulb_on_outline
     public static final String Location = "Location";//location_on
@@ -67,6 +68,7 @@ public interface IconType {
     public static final String Logout = "Logout"; //input
     public static final String LoyaltyProgram = "LoyaltyProgram"; //loyalty
     public static final String NoReceipt = "NoReceipt"; //block
+    public static final String Notebook = "Notebook"; //notebook
     public static final String OrderHistory = "OrderHistory";
     public static final String OrderSearch = "OrderSearch";//shopping_cart
     public static final String Password = "Password";

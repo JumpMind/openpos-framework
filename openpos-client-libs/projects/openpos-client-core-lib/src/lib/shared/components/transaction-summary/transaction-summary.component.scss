@@ -2,7 +2,7 @@
 
 .summary-container {
     display: grid;
-    grid-template-columns: min-content minmax(min-content, 1fr) minmax(min-content, 1.5fr) .5fr;
+    grid-template-columns: .2fr minmax(min-content, 1fr) minmax(min-content, 1.5fr) .5fr;
     column-gap: 32px;
     grid-template-areas:
         'trans-type trans details total'
@@ -14,7 +14,7 @@
     &.mobile-landscape,
     &.mobile-portrait,
     &.desktop-portrait {
-        grid-template-columns: min-content minmax(min-content, 1fr) minmax(min-content, 1fr) .5fr;
+        grid-template-columns: .2fr minmax(min-content, 1fr) minmax(min-content, 1fr) .5fr;
         column-gap: 16px;
         grid-template-areas:
             'trans-type trans   details total'
@@ -77,10 +77,21 @@
 
 .summary-trans-properties {
     grid-area: properties;
+    align-self: start;
 }
 
 .summary-trans-status-icon {
     grid-area: icon;
+    justify-self: center;
+
+    .tablet-landscape &,
+    .tablet-portrait &,
+    .mobile-landscape &,
+    .mobile-portrait &,
+    .desktop-portrait & {
+        width: 24px;
+        height: 24px;
+    }
 }
 
 .summary-details {
@@ -153,9 +164,10 @@
     }
 }
 
-.summary-customer {
+.summary-customer,
+.summary-username {
     font-weight: bold;
-    margin-left: 4px;
+    margin-left: 6px;
 }
 
 .summary-actions {
