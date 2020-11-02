@@ -11,6 +11,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
     actionService: ActionService;
 
     subscriptions = new Subscription();
+    beforeBuildScreen$ = new Subject();
     destroyed$ = new Subject();
 
     // I don't completely understand why we need @Optional here. I suspect it has something to do with
@@ -24,6 +25,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
 
     show(screen: any) {
         this.screen = deepAssign(this.screen, screen);
+        this.beforeBuildScreen$.next();
         this.buildScreen();
     }
 

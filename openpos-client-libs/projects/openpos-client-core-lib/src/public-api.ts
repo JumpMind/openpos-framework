@@ -191,7 +191,8 @@ export * from './lib/customer-display/customer-display-home/customer-display-hom
 export * from './lib/customer-display/customer-display-sale/customer-display-sale.component';
 
 export * from './lib/shared/shared.module';
-export * from './lib/shared/transaction-status.enum';
+export * from './lib/shared/trans-status.enum';
+export * from './lib/shared/trans-type.enum';
 export * from './lib/shared/components/catalog-browser-item/catalog-browser-item.component';
 export * from './lib/shared/components/counter/counter.component';
 export * from './lib/shared/components/currency-text/currency-text.component';

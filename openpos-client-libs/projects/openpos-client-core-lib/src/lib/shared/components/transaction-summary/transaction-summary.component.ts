@@ -1,8 +1,9 @@
-import {Component, OnInit, Input, OnChanges, SimpleChanges} from '@angular/core';
-import { ITransactionSummary } from './transaction-summary.interface';
-import { IActionItem } from '../../../core/actions/action-item.interface';
-import { ActionService } from '../../../core/actions/action.service';
+import {Component, Input, OnChanges, SimpleChanges} from '@angular/core';
+import {ITransactionSummary} from './transaction-summary.interface';
+import {IActionItem} from '../../../core/actions/action-item.interface';
+import {ActionService} from '../../../core/actions/action.service';
 import {TransactionService} from '../../../core/services/transaction.service';
+import {TransTypeEnum} from '../../trans-type.enum';
 
 @Component({
   selector: 'app-transaction-summary',
@@ -12,7 +13,9 @@ import {TransactionService} from '../../../core/services/transaction.service';
 export class TransactionSummaryComponent implements OnChanges {
   @Input()
   transactionSummary: ITransactionSummary;
+
   statusClass: string;
+  TransTypeEnum = TransTypeEnum;
 
   constructor(private actionService: ActionService, private transactionService: TransactionService) { }
 

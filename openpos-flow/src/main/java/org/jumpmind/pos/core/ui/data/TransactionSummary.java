@@ -17,6 +17,8 @@ public class TransactionSummary implements Serializable {
 
     private Long sequenceNumber;
     private String sequenceNumberFormatted;
+    private Long voidedSequenceNumber;
+    private String voidedSequenceNumberFormatted;
     private String customerName;
     private Integer items;
     private String itemsFormatted;
@@ -32,6 +34,7 @@ public class TransactionSummary implements Serializable {
     private String statusIcon;
     private String username;
     private String transactionType;
+    private String transactionTypeText;
     private String transactionTypeIcon;
     private List<String> tenderTypeIcons;
     private List<ActionItem> actions;
