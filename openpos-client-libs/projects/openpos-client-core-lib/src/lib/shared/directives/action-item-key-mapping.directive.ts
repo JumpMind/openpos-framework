@@ -14,30 +14,19 @@ export class ActionItemKeyMappingDirective implements OnDestroy {
 
     @Input()
     set actionItem(item: IActionItem) {
-        if ( this.subscription ) {
-            this.subscription.unsubscribe();
+        if ( this.keyDownSubscription ) {
+            this.keyDownSubscription.unsubscribe();
+        }
+        if ( this.keyUpSubscription ) {
+            this.keyUpSubscription.unsubscribe();
         }
 
-        this.subscription = this.keyPresses.subscribe( item.keybind, 100, event => {
-            // ignore repeats
-            if ( event.repeat || !Configuration.enableKeybinds ) {
-                return;
-            }
-            if ( event.type === 'keydown') {
-                this.renderer.addClass(this.el.nativeElement, 'key-mapping-active');
-                if (this.actionClick.observers !== null && this.actionClick.observers.length > 0) {
-                    this.actionClick.emit();
-                } else {
-                    this.actionService.doAction(item);
-                }
-                event.preventDefault();
-            } else if ( event.type === 'keyup') {
-                this.renderer.removeClass(this.el.nativeElement, 'key-mapping-active');
-            }
-        });
+        this.keyDownSubscription = this.keyPresses.subscribe( item.keybind, 100, event => this.handleKeypress(event, item));
+        this.keyUpSubscription = this.keyPresses.subscribe(item.keybind, 101, event => this.handleKeypress(event, item), null, 'keyup');
     }
 
-    private subscription: Subscription;
+    private keyDownSubscription: Subscription;
+    private keyUpSubscription: Subscription;
 
     constructor(
         private renderer: Renderer2,
@@ -47,9 +36,30 @@ export class ActionItemKeyMappingDirective implements OnDestroy {
 
     }
 
+    handleKeypress(event: KeyboardEvent, item: IActionItem) {
+        // ignore repeats
+        if ( event.repeat || !Configuration.enableKeybinds ) {
+            return;
+        }
+        if ( event.type === 'keydown') {
+            this.renderer.addClass(this.el.nativeElement, 'key-mapping-active');
+            if (this.actionClick.observers !== null && this.actionClick.observers.length > 0) {
+                this.actionClick.emit();
+            } else {
+                this.actionService.doAction(item);
+            }
+            event.preventDefault();
+        } else if ( event.type === 'keyup') {
+            this.renderer.removeClass(this.el.nativeElement, 'key-mapping-active');
+        }
+}
+
     ngOnDestroy(): void {
-        if ( this.subscription ) {
-            this.subscription.unsubscribe();
+        if ( this.keyDownSubscription ) {
+            this.keyDownSubscription.unsubscribe();
+        }
+        if ( this.keyUpSubscription ) {
+            this.keyUpSubscription.unsubscribe();
         }
     }
 
