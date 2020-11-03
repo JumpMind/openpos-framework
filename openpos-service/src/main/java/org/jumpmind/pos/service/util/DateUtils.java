@@ -7,9 +7,12 @@ import java.util.Date;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.service.PosServerException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class DateUtils {
-    
+    private static final Logger logger = LoggerFactory.getLogger(DateUtils.class);
+
     private static final String ISO_DATE_TIME_MILLIS = "yyyy-MM-dd HH:mm:ss.SSS";
     private static final String ISO_DATE_TIME_MILLIS_T = "yyyy-MM-dd'T'HH:mm:ss.SSS";
     private static final String ISO_DATE_TIME_SECONDS = "yyyy-MM-dd HH:mm:ss";
@@ -68,5 +71,18 @@ public final class DateUtils {
         long diffDays = (cal2.getTimeInMillis()-cal1.getTimeInMillis()) / (24 * 60 * 60 * 1000);
         return diffDays;
     }
-    
+
+    public static String changeFormat(String value, String existingFormat, String newFormat) {
+        if(StringUtils.isBlank(value)) {
+            return value;
+        }
+
+        try {
+            Date date = new SimpleDateFormat(existingFormat).parse(value);
+            return new SimpleDateFormat(newFormat).format(date);
+        } catch (ParseException e) {
+            logger.warn(String.format("Unable to change format of date '%s' from '%s' to '%s'", value, existingFormat, newFormat), e);
+            return value;
+        }
+    }
 }

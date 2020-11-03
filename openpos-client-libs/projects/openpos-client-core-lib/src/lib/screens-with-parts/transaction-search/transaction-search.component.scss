@@ -1,3 +1,5 @@
+@import "../../styles/mixins/typography";
+
 :host {
     height: 100%;
 }
@@ -7,15 +9,33 @@
 
     .transaction-search-top {
         display: grid;
-        grid-template-columns: 1fr auto auto;
-        margin: 16px;
-        margin-bottom: 0px;
-        gap: 16px;
+        grid-template-columns: min-content 1fr auto;
+        grid-template-areas: "searchMode searchOptions searchModeToggle";
+        align-items: center;
+        margin: 16px 16px 0 16px;
+        gap: 48px;
+
+        &.change-search-mode-disabled {
+            grid-template-areas: "searchMode searchOptions";
+            grid-template-columns: min-content 1fr;
+        }
 
         .transaction-search-button {
             span {
                 padding-right: 4px;
             }
+        }
+
+        &.tablet-portrait,
+        &.tablet-landscape,
+        &.mobile-landscape,
+        &.mobile-portrait,
+        &.desktop-portrait {
+            gap: 24px;
+            grid-template-areas:
+                "searchMode searchModeToggle"
+                "searchOptions searchOptions";
+            grid-template-columns: 1fr min-content;
         }
     }
 
@@ -31,6 +51,62 @@
         margin: 16px;
     }
 
+    .transaction-search-options {
+        grid-area: searchOptions;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: 1fr .3fr;
+        grid-column-gap: 24px;
+        align-items: center;
+
+        &.change-search-mode-disabled {
+            grid-auto-columns: 1fr .2fr .2fr;
+        }
+
+        &.tablet-portrait,
+        &.mobile-landscape,
+        &.mobile-portrait,
+        &.desktop-portrait {
+            grid-auto-columns: 1fr .4fr;
+        }
+    }
+
+    .transaction-search-options-search-all {
+        // Keep this vertically centered by adjusting for extra vertical space caused by form field padding
+        // used for material field labels
+        margin: -22px 0;
+    }
+
+    .transaction-search-mode {
+        @extend %text-md;
+
+        grid-area: searchMode;
+        align-items: center;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content auto;
+        font-weight: bold;
+        grid-column-gap: 16px;
+    }
+
+    .transaction-change-search-mode-button {
+        grid-area: searchModeToggle;
+
+        &.tablet-portrait,
+        &.mobile-landscape,
+        &.mobile-portrait,
+        &.desktop-portrait {
+            padding: 0;
+        }
+    }
+
+    .transaction-change-search-mode-button-text {
+        @extend %text-sm;
+
+        font-weight: bold;
+        margin: 0 4px;
+    }
+
     .transaction-summary {
         display: block;
         border-bottom-width: 1px;
@@ -42,10 +118,60 @@
         }
 
         &.tablet-landscape,
+        &.tablet-portrait,
         &.mobile-landscape,
         &.mobile-portrait,
         &.desktop-portrait {
             margin: 0 16px;
         }
+    }
+
+    .no-results {
+        margin: 16px 16px 0;
+        font-weight: bold;
+        text-align: center;
+    }
+}
+
+:host ::ng-deep app-dynamic-form-part {
+    form {
+        height: auto;
+    }
+
+    .content {
+        display: grid;
+        align-items: end;
+    }
+
+    .form-content {
+        display: grid;
+        grid-auto-flow: column;
+        grid-column-gap: 32px;
+    }
+
+    .form-content {
+        padding: 0 !important;
+    }
+
+    section {
+        background: none;
+        border: none;
+        padding: 0 !important;
+    }
+
+    .mat-error {
+        display: none;
+    }
+
+    .mat-form-field-flex {
+        border-radius: 4px;
+        padding: 2px 4px;
+    }
+
+    .tablet-portrait &,
+    .mobile-landscape &,
+    .mobile-portrait &,
+    .desktop-portrait & {
+        grid-column-gap: 24px;
     }
 }

@@ -1,25 +1,30 @@
 import {Injectable} from '@angular/core';
-import {TransactionStatusEnum} from '../../shared/transaction-status.enum';
+import {TransStatusEnum} from '../../shared/trans-status.enum';
+import {TransTypeEnum} from '../../shared/trans-type.enum';
 
 @Injectable({
     providedIn: 'root',
 })
 export class TransactionService {
-    mapStatusToCssClass(status: TransactionStatusEnum): string {
+    mapStatusToCssClass(status: TransStatusEnum): string {
         switch(status) {
-            case TransactionStatusEnum.InProgress:
-            case TransactionStatusEnum.Completed:
+            case TransStatusEnum.InProgress:
+            case TransStatusEnum.Completed:
                 return 'success';
-            case TransactionStatusEnum.Suspended:
-            case TransactionStatusEnum.SuspendRetrieved:
-            case TransactionStatusEnum.SuspendCancelled:
+            case TransStatusEnum.Suspended:
+            case TransStatusEnum.SuspendRetrieved:
+            case TransStatusEnum.SuspendCancelled:
                 return 'warn-light';
-            case TransactionStatusEnum.Orphaned:
-            case TransactionStatusEnum.Aborted:
-            case TransactionStatusEnum.Cancelled:
-            case TransactionStatusEnum.Failed:
-            case TransactionStatusEnum.Voided:
+            case TransStatusEnum.Orphaned:
+            case TransStatusEnum.Aborted:
+            case TransStatusEnum.Cancelled:
+            case TransStatusEnum.Failed:
+            case TransStatusEnum.Voided:
                 return 'warn';
         }
+    }
+
+    isRetailTrans(transType: TransTypeEnum): boolean {
+        return transType === TransTypeEnum.Sale || transType === TransTypeEnum.Return;
     }
 }
