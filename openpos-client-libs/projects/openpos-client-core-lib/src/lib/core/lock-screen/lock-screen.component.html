@@ -4,7 +4,7 @@
             <app-icon [iconName]="data?.iconName" iconClass="xl"></app-icon>
             <h1>{{override ? data?.overrideText : data?.userText}}</h1>
             <app-rounded-input *ngIf="override" [placeholder]="data.usernameHint" [(value)]="username" ></app-rounded-input>
-            <app-rounded-input [placeholder]="data.passwordHint" [(value)]="password" (keydown.enter)="submit()" inputType="password"></app-rounded-input>
+            <app-rounded-input appKeypressSource [placeholder]="data.passwordHint" [(value)]="password" inputType="password"></app-rounded-input>
             <p *ngIf="!!data?.errorMessage" class="error">{{data?.errorMessage}}</p>
         </div>
         <div class="override">
