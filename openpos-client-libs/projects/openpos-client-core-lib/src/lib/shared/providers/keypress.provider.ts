@@ -114,7 +114,7 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     subscribe(keyOrActionList: string | string[] | IActionItem | IActionItem[],
-              priority: number, next: (keyEvent: KeyboardEvent, actionItem?: IActionItem?) => void,
+              priority: number, next: (keyEvent: KeyboardEvent, actionItem?: IActionItem) => void,
               stop$?: Observable<any>, eventType$?: string): Subscription {
         if (!keyOrActionList) {
             console.warn('[KeyPressProvider]: Cannot subscribe to null or undefined or empty string keybinding');
@@ -155,7 +155,7 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     registerKeyBindings(keyBindings: Keybinding[], action: IActionItem, priority: number,
-                        next: (keyEvent: KeyboardEvent, actionItem?: IActionItem?) => void, eventType: string): Subscription[] {
+                        next: (keyEvent: KeyboardEvent, actionItem?: IActionItem) => void, eventType: string): Subscription[] {
 
         if (!keyBindings) {
             return [];
@@ -223,6 +223,7 @@ export class KeyPressProvider implements OnDestroy {
                     keybindSubscription.next(event, keybindSubscription.action);
                     event.stopPropagation();
                     event.preventDefault();
+                    console.log(`[KeyPressProvider]: Handling "${event.type}" event for "${key}" for element`, event.target);
                 }
             } else {
                 return;
@@ -266,7 +267,7 @@ export class KeyPressProvider implements OnDestroy {
         keys.forEach(theKey => {
             const keyParts = Array.from(theKey['matchAll'](this.keyRegex)).map((value: RegExpMatchArray) => value.groups.key);
 
-            if(keyParts.length === 0) {
+            if (keyParts.length === 0) {
                 return;
             }
 
@@ -369,7 +370,7 @@ export interface KeybindSubscription {
     subscription: Subscription;
     priority: number;
     eventType: string;
-    next: (keyEvent: KeyboardEvent, actionItem?: IActionItem?) => void;
+    next: (keyEvent: KeyboardEvent, actionItem?: IActionItem) => void;
 }
 
 export interface Keybinding {
