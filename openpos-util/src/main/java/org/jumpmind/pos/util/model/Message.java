@@ -6,12 +6,14 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
+import lombok.Data;
 
+@Data
 public class Message implements Serializable {
 
     private static final long serialVersionUID = 1L;
         
-    String type;
+    private String type;
     private boolean willUnblock = false;
     
     public Message() {
@@ -48,23 +50,6 @@ public class Message implements Serializable {
     public void clearAdditionalProperties() {
         this.optionalProperties.clear();
     }
-    
-    public void setType(String type) {
-        this.type = type;
-    }
-    
-    public String getType() {
-        return type;
-    }
-
-    public boolean getWillUnblock(){
-        return willUnblock;
-    }
-
-    public void setWillUnblock(boolean willUnblock){
-        this.willUnblock = willUnblock;
-    }
-
 
     public void setSequenceNumber(int sequenceNumber) {
         put("sequenceNumber", sequenceNumber);

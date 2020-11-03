@@ -4,6 +4,7 @@
 
     $app-border: mat-color($foreground, border, .35);
     $app-card-background: map-get($background, card);
+    $app-disabled: mat-color(map-get($theme, foreground), disabled);
 
     app-transaction-search {
         app-infinite-scroll {
@@ -13,6 +14,14 @@
 
         .transaction-summary {
             border-color: $app-border;
+        }
+
+        .transaction-search-mode {
+            color: $app-disabled;
+        }
+
+        .mat-form-field-flex {
+            background: $app-card-background;
         }
     }
 }

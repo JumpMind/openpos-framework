@@ -2,7 +2,7 @@
     <div class="summary-trans-type trans-icon-secondary" responsive-class>
         <app-icon *ngIf="transactionSummary.transactionTypeIcon" [iconName]="transactionSummary.transactionTypeIcon"
                   iconClass="mat-64" class="trans-type-icon" responsive-class></app-icon>
-        <span *ngIf="transactionSummary.transactionType">{{transactionSummary.transactionType}}</span>
+        <span class="trans-type-text">{{transactionSummary.transactionTypeText}}</span>
     </div>
     <div class="summary-attention summary-trans" responsive-class>
         <app-icon class="summary-trans-status-icon" iconClass="mat-36 {{statusClass}}"
@@ -10,10 +10,26 @@
         <div class="summary-trans-status-text">
             {{transactionSummary.statusText}} {{transactionSummary.sequenceNumberFormatted}}
         </div>
-        <div class="summary-trans-properties">
-            <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</span>
-            <span class="summary-customer">{{transactionSummary.customerName}}</span>
-            <div>{{transactionSummary.itemsFormatted}}</div>
+        <div class="summary-trans-properties" [ngSwitch]="transactionSummary.transactionType">
+            <ng-container *ngSwitchCase="TransTypeEnum.Sale">
+                <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</span>
+                <span class="summary-customer">{{transactionSummary.customerName}}</span>
+                <div>{{transactionSummary.itemsFormatted}}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="TransTypeEnum.Return">
+                <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</span>
+                <span class="summary-customer">{{transactionSummary.customerName}}</span>
+                <div>{{transactionSummary.itemsFormatted}}</div>
+            </ng-container>
+            <ng-container *ngSwitchCase="TransTypeEnum.Void">
+                <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.username}}</span>
+                <span class="summary-username">{{transactionSummary.username}}</span>
+                <div>{{transactionSummary.voidedSequenceNumberFormatted}}</div>
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.username}}</span>
+                <span class="summary-username">{{transactionSummary.username}}</span>
+            </ng-container>
         </div>
     </div>
     <div class="summary-details" responsive-class>

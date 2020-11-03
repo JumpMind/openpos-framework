@@ -51,7 +51,6 @@ import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.ClassUtils;
-import org.jumpmind.pos.util.ObjectUtils;
 import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.model.Message;
@@ -1004,12 +1003,20 @@ public class StateManager implements IStateManager {
 
     @Override
     public void endSession() {
+        endConversation();
         applicationState.getScope().clearSessionScope();
         clearScopeOnStates(ScopeType.Session);
         clearScopeOnDeviceScopeBeans(ScopeType.Session);
         refreshDeviceScope();
-    }
 
+        applicationState.setStateStack(new LinkedList<>());
+        applicationState.setAppId(this.getAppId());
+        applicationState.setDeviceId(this.getNodeId());
+        applicationState.getScope().setDeviceScope("stateManager", this);
+        applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
+
+        transitionTo(new Action(StateManagerActionConstants.STARTUP_ACTION), initialFlowConfig.getInitialState());
+    }
 
     public void setInitialFlowConfig(FlowConfig initialFlowConfig) {
         this.initialFlowConfig = initialFlowConfig;

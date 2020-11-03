@@ -82,11 +82,13 @@ export class IconService {
         this.icons.set('Lease', ['account_balance.svg', this.defaultIconProvider]);
         this.icons.set('Links', ['link.svg', this.defaultIconProvider]);
         this.icons.set('Light', ['lightbulb_on_outline.svg', this.defaultIconProvider]);
+        this.icons.set('LightSolid', ['wb_incandescent_up.svg', this.defaultIconProvider]);
         this.icons.set('Location', ['location_on.svg', this.defaultIconProvider]);
         this.icons.set('Login', ['lock.svg', this.defaultIconProvider]);
         this.icons.set('Logout', ['exit_to_app.svg', this.defaultIconProvider]);
         this.icons.set('LoyaltyProgram', ['loyalty.svg', this.defaultIconProvider]);
         this.icons.set('NoReceipt', ['block.svg', this.defaultIconProvider]);
+        this.icons.set('Notebook', ['notebook.svg', this.defaultIconProvider]);
         this.icons.set('OrderSearch', ['shopping_cart.svg', this.defaultIconProvider]);
         this.icons.set('OrderHistory', ['assignment.svg', this.defaultIconProvider]);
         this.icons.set('Password', ['lock.svg', this.defaultIconProvider]);
