@@ -70,7 +70,7 @@ export class KeyPressProvider implements OnDestroy {
             console.warn(`[KeyPressProvider]: Blocking global action "${key}: ${action.action}" because the lock screen is active`);
         }
 
-        return !isLockScreenEnabled;
+        return !isLockScreenEnabled && Configuration.enableKeybinds;
     }
 
     findMatchingAction(actions: IActionItem[], event: KeyboardEvent): IActionItem {
