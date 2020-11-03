@@ -65,7 +65,7 @@ export class KeyPressProvider implements OnDestroy {
     shouldRunGlobalAction(action: IActionItem): boolean {
         const isLockScreenEnabled = this.lockScreenService.enabled.getValue();
 
-        if(isLockScreenEnabled) {
+        if (isLockScreenEnabled) {
             const key = this.getNormalizedKey(action.keybind);
             console.warn(`[KeyPressProvider]: Blocking global action "${key}: ${action.action}" because the lock screen is active`);
         }
@@ -113,13 +113,15 @@ export class KeyPressProvider implements OnDestroy {
         this.keypressSourceUnregistered$.next();
     }
 
-    subscribe(keyOrActionList: string | string[] | IActionItem | IActionItem[], priority: number, next: (KeyboardEvent, IActionItem?) => void, stop$?: Observable<any>): Subscription {
+    subscribe(keyOrActionList: string | string[] | IActionItem | IActionItem[],
+              priority: number, next: (keyEvent: KeyboardEvent, actionItem?: IActionItem?) => void,
+              stop$?: Observable<any>, eventType$?: string): Subscription {
         if (!keyOrActionList) {
             console.warn('[KeyPressProvider]: Cannot subscribe to null or undefined or empty string keybinding');
             return null;
         }
 
-        if( !Configuration.enableKeybinds ){
+        if ( !Configuration.enableKeybinds ) {
             console.info('KeyBinds not enabled skipping subscription');
             return new Subscription();
         }
@@ -127,14 +129,18 @@ export class KeyPressProvider implements OnDestroy {
         let subscriptions;
 
         // Arrays - Recursively call this function with each item
-        if(Array.isArray(keyOrActionList)) {
-            subscriptions = (keyOrActionList as any[]).map(keyOrAction => this.subscribe(keyOrAction, priority, next, stop$));
+        if (Array.isArray(keyOrActionList)) {
+            subscriptions = (keyOrActionList as any[]).map(keyOrAction => this.subscribe(keyOrAction, priority, next, stop$, eventType$));
         } else {
             // Single item - Register the binding
             const key = typeof keyOrActionList === 'string' ? keyOrActionList : keyOrActionList.keybind;
             const action = typeof keyOrActionList === 'string' ? null : keyOrActionList;
             const keyBindings = this.parse(key);
-            subscriptions = this.registerKeyBindings(keyBindings, action, priority, next);
+            if (eventType$) {
+                subscriptions = this.registerKeyBindings(keyBindings, action, priority, next, eventType$);
+            } else {
+                subscriptions = this.registerKeyBindings(keyBindings, action, priority, next, 'keydown');
+            }
         }
 
         const mainSubscription = new Subscription(() => subscriptions.forEach(s => s.unsubscribe()));
@@ -148,8 +154,10 @@ export class KeyPressProvider implements OnDestroy {
         return mainSubscription;
     }
 
-    registerKeyBindings(keyBindings: Keybinding[], action: IActionItem, priority: number, next: (KeyboardEvent, IActionItem?) => void): Subscription[] {
-        if(!keyBindings) {
+    registerKeyBindings(keyBindings: Keybinding[], action: IActionItem, priority: number,
+                        next: (keyEvent: KeyboardEvent, actionItem?: IActionItem?) => void, eventType: string): Subscription[] {
+
+        if (!keyBindings) {
             return [];
         }
 
@@ -174,12 +182,12 @@ export class KeyPressProvider implements OnDestroy {
 
             if (this.subscribers.get(key).has(priority)) {
                 console.warn(`[KeyPressProvider]: Another subscriber already exists with key "${key}" and priority "${priority}"`);
-            } else if(action) {
+            } else if (action) {
                 console.log(`[KeyPressProvider]: Subscribed to "${key}: ${action.action}" with priority "${priority}"`);
             } else {
                 console.log(`[KeyPressProvider]: Subscribed to key "${key}" with priority "${priority}"`);
             }
-            this.subscribers.get(key).set(priority, {key, action, subscription, priority, next});
+            this.subscribers.get(key).set(priority, {key, action, subscription, priority, next, eventType});
 
             subscriptions.push(subscription);
         });
@@ -214,23 +222,23 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     getNormalizedKey(obj: KeyboardEvent | Keybinding | string): string {
-        let keyBinding = typeof obj === 'string' ? this.parse(obj as string)[0] : obj as Keybinding;
+        const keyBinding = typeof obj === 'string' ? this.parse(obj as string)[0] : obj as Keybinding;
         let normalizedKey = '';
 
-        if(!keyBinding) {
+        if (!keyBinding) {
             return normalizedKey;
         }
 
-        if(keyBinding.key !== 'Control') {
+        if (keyBinding.key !== 'Control') {
             normalizedKey += (keyBinding.ctrlKey ? 'ctrl+' : '');
         }
-        if(keyBinding.key !== 'Alt') {
+        if (keyBinding.key !== 'Alt') {
             normalizedKey += (keyBinding.altKey ? 'alt+' : '');
         }
-        if(keyBinding.key !== 'Shift') {
+        if (keyBinding.key !== 'Shift') {
             normalizedKey += (keyBinding.shiftKey ? 'shift+' : '');
         }
-        if(keyBinding.key !== 'Meta') {
+        if (keyBinding.key !== 'Meta') {
             normalizedKey += (keyBinding.metaKey ? 'meta+' : '');
         }
         normalizedKey += this.escapeKey(keyBinding.key);
@@ -307,16 +315,16 @@ export class KeyPressProvider implements OnDestroy {
         const keyPressList = [];
         let keyBuffer = '';
 
-        for(let i = 0; i < keys.length; i++) {
+        for (let i = 0; i < keys.length; i++) {
             const char = keys[i];
             const nextChar = keys[i + 1];
 
             // If the delimiter is escaped, treat it as a key
-            if(char === this.keyEscape && (nextChar === this.keyDelimiter || nextChar == this.keyCombinationChar)) {
+            if (char === this.keyEscape && (nextChar === this.keyDelimiter || nextChar === this.keyCombinationChar)) {
                 keyBuffer += this.keyEscape + nextChar;
                 i++;
             // If we've reached the delimiter, and there's stuff in the buffer, add the buffer to the key list and flush buffer
-            } else if(char === this.keyDelimiter && keyBuffer) {
+            } else if (char === this.keyDelimiter && keyBuffer) {
                 keyPressList.push(keyBuffer);
                 keyBuffer = '';
             // Add the char to the key buffer
@@ -326,7 +334,7 @@ export class KeyPressProvider implements OnDestroy {
         }
 
         // Add what's left in the key buffer to the list
-        if(keyBuffer) {
+        if (keyBuffer) {
             keyPressList.push(keyBuffer);
         }
 
@@ -338,7 +346,7 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     escapeKey(key: string): string {
-        if(!key.startsWith(this.keyEscape) && (key === this.keyCombinationChar || key === this.keyDelimiter)) {
+        if (!key.startsWith(this.keyEscape) && (key === this.keyCombinationChar || key === this.keyDelimiter)) {
             return this.keyEscape + key;
         }
 
@@ -351,7 +359,8 @@ export interface KeybindSubscription {
     action: IActionItem;
     subscription: Subscription;
     priority: number;
-    next: (KeyboardEvent, IActionItem?) => void;
+    eventType: string;
+    next: (keyEvent: KeyboardEvent, actionItem?: IActionItem?) => void;
 }
 
 export interface Keybinding {
