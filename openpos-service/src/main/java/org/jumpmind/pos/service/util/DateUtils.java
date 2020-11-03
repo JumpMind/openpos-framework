@@ -81,7 +81,7 @@ public final class DateUtils {
             Date date = new SimpleDateFormat(existingFormat).parse(value);
             return new SimpleDateFormat(newFormat).format(date);
         } catch (ParseException e) {
-            logger.warn("Unable to change format of date \"{}\" from \"{}\" to \"{}\"", value, existingFormat, newFormat, e);
+            logger.warn(String.format("Unable to change format of date '%s' from '%s' to '%s'", value, existingFormat, newFormat), e);
             return value;
         }
     }
