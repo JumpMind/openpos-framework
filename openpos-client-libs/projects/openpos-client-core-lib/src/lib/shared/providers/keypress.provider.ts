@@ -195,9 +195,15 @@ export class KeyPressProvider implements OnDestroy {
         return subscriptions;
     }
 
-    keyHasSubscribers(obj: KeyboardEvent | Keybinding | string): boolean {
+    keyHasSubscribers(obj: KeyboardEvent): boolean {
         const key = this.getNormalizedKey(obj);
-        return this.subscribers.has(key) && this.subscribers.get(key).size > 0;
+        if (this.subscribers.has(key) && this.subscribers.get(key).size > 0) {
+            const priorityMap = this.subscribers.get(key);
+            const prioritiesList = Array.from(priorityMap.keys())
+                    .filter(priority => priorityMap.get(priority).eventType === obj.type);
+            return prioritiesList.length > 0;
+        }
+        return false;
     }
 
     rebuildKeyPressObserver() {
@@ -206,17 +212,20 @@ export class KeyPressProvider implements OnDestroy {
         ).subscribe(event => {
             const key = this.getNormalizedKey(event);
 
-            if (!this.subscribers.has(key)) {
+            if (this.keyHasSubscribers(event)) {
+                const priorityMap = this.subscribers.get(key);
+                const prioritiesList = Array.from(priorityMap.keys())
+                    .filter(priority => priorityMap.get(priority).eventType === event.type).sort();
+
+                if (prioritiesList.length > 0) {
+                    const priority = prioritiesList[0];
+                    const keybindSubscription = this.subscribers.get(key).get(priority);
+                    keybindSubscription.next(event, keybindSubscription.action);
+                    event.stopPropagation();
+                    event.preventDefault();
+                }
+            } else {
                 return;
-            }
-
-            const priorityMap = this.subscribers.get(key);
-            const prioritiesList = Array.from(priorityMap.keys()).sort();
-
-            if (prioritiesList.length > 0) {
-                const priority = prioritiesList[0];
-                const keybindSubscription = this.subscribers.get(key).get(priority);
-                keybindSubscription.next(event, keybindSubscription.action);
             }
         });
     }
