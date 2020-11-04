@@ -64,6 +64,7 @@ import { TimeZoneContext } from './client-context/time-zone-context';
 import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
+import { ServerScannerPlugin } from './platform-plugins/scanners/server-scanner/server-scanner.service';
 import {TransactionService} from './services/transaction.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
@@ -129,6 +130,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
         { provide: PLUGINS, useExisting: AndroidContentProviderPlugin, multi: true },
         { provide: PLUGINS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         BrowserPrinterPlugin,
         { provide: PRINTERS, useExisting: BrowserPrinterPlugin, multi: true},

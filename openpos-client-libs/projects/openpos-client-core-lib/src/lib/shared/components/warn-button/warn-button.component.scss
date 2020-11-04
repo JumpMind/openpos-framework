@@ -1,0 +1,22 @@
+@import "../../../styles/mixins/typography";
+
+button {
+  @extend %text-md;
+  padding: 8px;
+  min-width: 150px;
+
+  &.desktop-portrait {
+    @extend %text-lg;
+    padding: 16px;
+    min-width: 100px;
+  }
+
+  &.tablet {
+    min-width: 100px;
+  }
+
+  &.mobile {
+    @extend %text-sm;
+    min-width: 75px;
+  }
+}

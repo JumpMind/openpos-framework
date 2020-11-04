@@ -3,10 +3,11 @@ package org.jumpmind.pos.core.model;
 import java.io.Serializable;
 
 public class ScanData implements Serializable {
-    
+
     private OpenposBarcodeType type;
     private String data;
     private String rawType;
+    private String rawData;
 
     public OpenposBarcodeType getType() {
         return type;
@@ -30,5 +31,13 @@ public class ScanData implements Serializable {
 
     public void setRawType(String rawType) {
         this.rawType = rawType;
+    }
+
+    public String getRawData() {
+        return rawData;
+    }
+
+    public void setRawData(String rawData) {
+        this.rawData = rawData;
     }
 }

@@ -1,0 +1,10 @@
+<button fxFlex="1 0 auto"
+    responsive-class
+    mat-flat-button
+    color=warn
+    [disabled]="disabled"
+    (click)="clickFn()"
+    [type]="inputType"
+>
+    <ng-content></ng-content>
+</button>

@@ -152,6 +152,8 @@ import {TransactionHistoryPartComponent} from './screen-parts/transaction-histor
 import {StatusBarComponent} from '../core/status/status-bar/status-bar.component';
 import {StampComponent} from './components/stamp/stamp.component';
 import {FitTextDirective} from './directives/fit-text.directive';
+import { PromptButtonRowComponent } from './screen-parts/prompt-button-row/prompt-button-row.component';
+import { WarnButtonComponent } from './components/warn-button/warn-button.component';
 import {StayFocusedDirective} from './directives/stay-focused.directive';
 
 const screenParts = [
@@ -183,6 +185,7 @@ const screenParts = [
     BasicBaconStripComponent,
     ImageTextPanelComponent,
     TransactionHistoryPartComponent,
+    PromptButtonRowComponent
 ];
 
 const components = [
@@ -211,6 +214,7 @@ const components = [
     DatePartChooserDialogComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
+    WarnButtonComponent,
     SideNavComponent,
     TrainingDialogComponent,
     TrainingWrapperComponent,
