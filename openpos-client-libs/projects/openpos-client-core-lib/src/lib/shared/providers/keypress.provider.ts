@@ -63,6 +63,7 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     shouldRunGlobalAction(action: IActionItem): boolean {
+        // do we need to check if lock screen is enabled now that we stop propagation?
         const isLockScreenEnabled = this.lockScreenService.enabled.getValue();
 
         if (isLockScreenEnabled) {
