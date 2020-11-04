@@ -473,10 +473,11 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         const serverName = this.personalization.getServerName$().getValue();
         const serverPort = this.personalization.getServerPort$().getValue();
         const protocol = this.simProtocol ? this.simProtocol : window.location.protocol;
+        const sslEnabled = this.simProtocol && this.simProtocol === 'https' ? 'true' : 'false';
         const url = this.simUrl ? this.simUrl : window.location.hostname;
         const sim = protocol + '://' + url + ':'
             + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + serverPort
-            + '&deviceToken=' + this.simAuthToken;
+            + '&deviceToken=' + this.simAuthToken + '&sslEnabled=' + sslEnabled;
             window.open(sim);
     }
 
