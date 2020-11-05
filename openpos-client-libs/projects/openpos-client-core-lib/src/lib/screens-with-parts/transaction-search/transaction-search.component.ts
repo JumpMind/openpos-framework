@@ -41,6 +41,6 @@ export class TransactionSearchComponent extends PosScreen<TransactionSearchInter
   }
 
   searchAll(): void {
-    this.doAction('SearchAll', this.searchAllParamsForm);
+    this.doAction(this.screen.searchAllButton.action, this.searchAllParamsForm);
   }
 }

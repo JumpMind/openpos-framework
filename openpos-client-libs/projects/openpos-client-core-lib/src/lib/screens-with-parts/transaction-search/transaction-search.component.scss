@@ -20,12 +20,6 @@
             grid-template-columns: min-content 1fr;
         }
 
-        .transaction-search-button {
-            span {
-                padding-right: 4px;
-            }
-        }
-
         &.tablet-portrait,
         &.tablet-landscape,
         &.mobile-landscape,
@@ -166,6 +160,20 @@
     .mat-form-field-flex {
         border-radius: 4px;
         padding: 2px 4px;
+    }
+
+    .form-part-body {
+        align-items: center;
+        grid-auto-columns: 1fr auto;
+        grid-auto-flow: column;
+        grid-column-gap: 32px;
+
+        .tablet-portrait &,
+        .mobile-landscape &,
+        .mobile-portrait &,
+        .desktop-portrait & {
+            grid-column-gap: 24px;
+        }
     }
 
     .tablet-portrait &,
