@@ -18,25 +18,19 @@ export class LockScreenComponent implements OnDestroy {
   password = '';
   username = '';
   override = false;
-  keyPressProvider: KeyPressProvider;
-  keyPressSubscription: Subscription;
   destroy = new Subject();
 
   constructor(
       @Inject(LOCK_SCREEN_DATA) data: Observable<LockScreenMessage>,
-      private actionService: ActionService,
-      @Optional() injector: Injector) {
+      private actionService: ActionService) {
       data.pipe(
           tap( message => this.data = message),
           takeUntil(this.destroy)
       ).subscribe();
-      if ( !!injector ) {
-        this.keyPressProvider = injector.get(KeyPressProvider);
-      }
-      this.keyPressSubscription = this.keyPressProvider.subscribe('Enter', 10, () => this.submit());
   }
 
-  submit() {
+  submit($event: any) {
+    $event.stopPropagation();
     if (this.override) {
       this.doOverride();
     } else {
@@ -57,7 +51,6 @@ export class LockScreenComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.keyPressSubscription.unsubscribe();
     this.destroy.next();
   }
 
