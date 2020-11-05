@@ -90,7 +90,7 @@ export class PersonalizationStartupTask implements IStartupTask {
         const serverName = queryParams.serverName;
         const deviceToken = queryParams.deviceToken;
         let serverPort = queryParams.serverPort;
-        let sslEnabled = queryParams.sslEnabled;
+        let sslEnabled = queryParams.sslEnabled == 'true';
 
         const personalizationProperties = new Map<string, string>();
         const keys = Object.keys(queryParams);
