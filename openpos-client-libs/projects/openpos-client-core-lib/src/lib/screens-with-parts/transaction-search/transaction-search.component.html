@@ -28,12 +28,8 @@
                 <app-dynamic-form-part class="transaction-search-all-params-form"
                         (formInit)="onSearchAllFormChanges($event)"
                         (formChanges)="onSearchAllFormChanges($event)"
-                        formName="searchAllParamsForm"></app-dynamic-form-part>
-                <app-primary-button *ngIf="screen.searchAllButton" inputType="submit" class="transaction-search-button"
-                                    (click)="searchAll()">
-                    <span>{{screen.searchAllButton.title}}</span>
-                    <app-icon *ngIf="screen.searchAllButton.icon" [iconName]="screen.searchAllButton.icon"></app-icon>
-                </app-primary-button>
+                        formName="searchAllParamsForm"
+                        [submitButton]="screen.searchAllButton"></app-dynamic-form-part>
             </div>
             <button *ngIf="screen.changeSearchModeButton" (click)="doAction(screen.changeSearchModeButton)"
                     class="transaction-change-search-mode-button" mat-button color="primary" responsive-class>
