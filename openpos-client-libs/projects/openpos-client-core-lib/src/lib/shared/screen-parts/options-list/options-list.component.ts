@@ -1,6 +1,7 @@
-import { Component, Output, EventEmitter, Injector, Input } from '@angular/core';
+import { Component, Output, EventEmitter, Injector, Input , QueryList, ViewChildren } from '@angular/core';
 import {ActionService} from '../../../core/actions/action.service';
 import { OptionsListInterface } from './options-list.interface';
+import { OptionButtonComponent } from '../../components/option-button/option-button.component'
 import { ScreenPart } from '../../../shared/decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../../../shared/screen-parts/screen-part';
 import { IActionItem } from '../../../core/actions/action-item.interface';
@@ -39,6 +40,9 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     overflowOptions: IActionItem[] = [];
 
     isMobile: Observable<boolean>;
+    pleaseFocus = 0;
+
+    @ViewChildren(OptionButtonComponent) buttons: QueryList<OptionButtonComponent>;
 
     constructor( injector: Injector, mediaService: OpenposMediaService, protected dialog: MatDialog,
                  protected focusService: FocusService) {
@@ -52,6 +56,14 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
             [MediaBreakpoints.DESKTOP_PORTRAIT, false],
             [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
         ]));
+    }
+
+    ngAfterViewChecked() {
+            if (this.buttons.first && this.pleaseFocus < 10) {
+                //this.buttons.first.focus();
+                //this.pleaseFocus++;
+                //console.info(this.pleaseFocus);
+            }
     }
 
     screenDataUpdated() {

@@ -33,6 +33,15 @@ export class OptionButtonComponent implements OnDestroy{
         this.buttonClick.emit(true);
     }
 
+    public focus(): void {
+      if ( this.button ) {
+          this.button.focus();
+          console.info('Focusing button...');
+      } else {
+          console.info('Could not focus button.');
+      }
+    }
+
     public keybindsEnabled(): boolean {
         return Configuration.enableKeybinds && !!this.keybind;
     }
