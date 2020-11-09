@@ -144,6 +144,7 @@ public class StateManager implements IStateManager {
 
     final String STATE_MANAGER_RESET_ACTION = "StateManagerReset";
     final String STATE_MANAGER_STOP_ACTION = "StateManagerStop";
+    final String STATE_MANAGER_PROCESS_EVENT_ACTION = "StateManagerProcessEvent";
 
     AtomicBoolean runningFlag = new AtomicBoolean(false);
     AtomicBoolean busyFlag = new AtomicBoolean(false);
@@ -242,6 +243,9 @@ public class StateManager implements IStateManager {
                         busyFlag.set(false);
                         log.info("StateManager stopped.");
                         break;
+                    } else if (actionContext.getAction().getName().equals(STATE_MANAGER_PROCESS_EVENT_ACTION)) {
+                        processEvent(actionContext.getAction().getData());
+                        actionContext.getAction().markProcessed();
                     } else {
                         processAction(actionContext);
                         actionContext.getAction().markProcessed();
@@ -757,6 +761,27 @@ public class StateManager implements IStateManager {
         }
     }
 
+    protected void processEvent(Event event) {
+        lastInteractionTime.set(new Date());
+        if (initialFlowConfig == null) {
+            throw new FlowException("initialFlowConfig is null. This StateManager is likely misconfigured. " +
+                    "Check your appId and Spring profiles. (appId=\"" + this.getAppId() +
+                    "\") profiles=" + Arrays.toString(env.getActiveProfiles()));
+        }
+
+        List<Class> classes = initialFlowConfig.getEventHandlers();
+        classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
+
+        applicationState.getScope().getDeviceScope().values().
+                forEach(obj->eventBroadcaster.postEventToObject(obj, event));
+
+        Object state = getCurrentState();
+        if (state != null) {
+            eventBroadcaster.postEventToObject(state, event);
+        }
+
+    }
+
     protected void handleOrRaiseException(Throwable ex) {
         if (this.getErrorHandler() != null) {
             this.getErrorHandler().handleError(this, ex);
@@ -1157,28 +1182,13 @@ public class StateManager implements IStateManager {
             messageService.sendMessage(appId, deviceId, localeMessage);
 
         } catch (NoSuchBeanDefinitionException e) {
-            log.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
+            log.info("An {} is not configured. Will not be sending client configuration to the client",
                     IClientConfigSelector.class.getSimpleName());
         }
     }
 
     protected void onEvent(Event event) {
-        if (initialFlowConfig == null) {
-            throw new FlowException("initialFlowConfig is null. This StateManager is likely misconfigured. " +
-                    "Check your appId and Spring profiles. (appId=\"" + this.getAppId() +
-                    "\") profiles=" + Arrays.toString(env.getActiveProfiles()));
-        }
-
-        List<Class> classes = initialFlowConfig.getEventHandlers();
-        classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
-
-        applicationState.getScope().getDeviceScope().values().
-                forEach(obj->eventBroadcaster.postEventToObject(obj, event));
-
-        Object state = getCurrentState();
-        if (state != null) {
-            eventBroadcaster.postEventToObject(state, event);
-        }
+        this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_PROCESS_EVENT_ACTION, event)));
     }
 
     @Override
