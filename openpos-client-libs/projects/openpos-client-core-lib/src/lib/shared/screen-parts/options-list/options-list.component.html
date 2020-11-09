@@ -9,7 +9,7 @@
     </div>
 
     <div *ngIf="options && options.length > 0" appArrowTab>
-        <app-option-button *ngFor="let o of options; let i = index" 
+        <app-option-button cdkFocusInitial *ngFor="let o of options; let i = index"
             appArrowTabItem
             [attr.tabindex]="i"
             [disabled]="!o.enabled"
