@@ -40,6 +40,8 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
 
     isMobile: Observable<boolean>;
 
+    isFirstElementFocused = false;
+
     constructor( injector: Injector, mediaService: OpenposMediaService, protected dialog: MatDialog,
                  protected focusService: FocusService) {
 
@@ -55,6 +57,7 @@ export class OptionsListComponent extends ScreenPartComponent<OptionsListInterfa
     }
 
     screenDataUpdated() {
+        this.isFirstElementFocused = this.screenData.firstElementFocused;
         if (this.listSize > 0 && this.screenData.options && this.listSize < this.screenData.options.length) {
             this.options = [];
             this.overflowOptions = [];
