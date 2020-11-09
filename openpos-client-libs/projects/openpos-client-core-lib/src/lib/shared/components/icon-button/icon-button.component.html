@@ -1,8 +1,7 @@
-<button responsive-class #button mat-icon-button [ngClass]="iconClass"
+<button mat-icon-button [ngClass]="iconClass"
     class="icon-button"
     [disabled]="disabled"
     [color]="color"
-    (click)="clickFn()"
-    tabindex="-1">
+    (click)="clickFn()">
     <app-icon [iconName]="iconName" [iconClass]="iconClass"></app-icon>
 </button>
