@@ -20,7 +20,7 @@ export const LOCK_SCREEN_DATA = new InjectionToken<Observable<LockScreenMessage>
 export class LockScreenService {
     private lockScreenOverlayRef: OverlayRef;
     private lockScreenData = new ReplaySubject<LockScreenMessage>();
-    public enabled = new BehaviorSubject(false);
+    public enabled$ = new BehaviorSubject(false);
 
     constructor(sessionService: SessionService,
         private overlay: Overlay,
@@ -28,12 +28,12 @@ export class LockScreenService {
         private focusService: FocusService
     ) {
         sessionService.getMessages(MessageTypes.LOCK_SCREEN).pipe(
-            tap(() => this.enabled.next(true)),
+            tap(() => this.enabled$.next(true)),
             tap(() => this.showLockScreen()),
             tap(message => this.lockScreenData.next(message))
         ).subscribe();
         sessionService.getMessages(MessageTypes.UNLOCK_SCREEN).pipe(
-            tap(() => this.enabled.next(false)),
+            tap(() => this.enabled$.next(false)),
             tap(message => this.removeLockScreen(message))
         ).subscribe();
     }
