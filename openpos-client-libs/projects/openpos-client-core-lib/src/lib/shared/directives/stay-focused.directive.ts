@@ -1,20 +1,21 @@
-import {Directive, ElementRef, OnDestroy, OnInit} from '@angular/core';
-import {merge, Subject} from 'rxjs';
-import {debounceTime, filter, takeUntil, tap} from 'rxjs/operators';
+import { Directive, ElementRef, OnDestroy, OnInit } from '@angular/core';
+import { merge, Subject } from 'rxjs';
+import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
+import { LockScreenService } from '../../core/lock-screen/lock-screen.service';
 
 @Directive({
     selector: '[appStayFocused]'
 })
 export class StayFocusedDirective implements OnInit, OnDestroy {
-    contentMutated$ = new Subject();
+    contentMutated$ = new Subject<MutationRecord[]>();
     contentMutationObserver: MutationObserver;
     contentMutationOptions = {childList: true, subtree: true};
 
     destroyed$ = new Subject();
     disabled$ = new Subject();
 
-    constructor(private elementRef: ElementRef) {
-        this.contentMutationObserver = new MutationObserver(() => this.onContentsMutated());
+    constructor(private elementRef: ElementRef, private lockScreenService: LockScreenService) {
+        this.contentMutationObserver = new MutationObserver((mutations: MutationRecord[]) => this.onContentsMutated(mutations));
     }
 
     ngOnInit(): void {
@@ -23,16 +24,19 @@ export class StayFocusedDirective implements OnInit, OnDestroy {
 
     ngOnDestroy(): void {
         this.disable();
+        this.destroyed$.next();
     }
 
     enable(): void {
         // Stop any existing listeners in case this method is called multiple times
         this.disable();
+
+        this.monitorLockScreen();
         this.stayFocused();
     }
 
     disable(): void {
-        this.destroyed$.next();
+        this.disabled$.next();
         this.contentMutationObserver.disconnect();
     }
 
@@ -50,16 +54,33 @@ export class StayFocusedDirective implements OnInit, OnDestroy {
         this.elementRef.nativeElement.focus();
     }
 
-    onContentsMutated(): void {
-        console.log('[appStayFocused]: Host element contents changed');
-        // An observable is used here because so rapidly firing events with can easily be throttled with:
+    private monitorLockScreen(): void {
+        console.log('[appStayFocused]: Monitoring lock screen');
+
+        const stop$ = merge(this.disabled$, this.destroyed$);
+        stop$.subscribe(() => console.log('[appStayFocused]: Stopped monitoring lock screen'));
+
+        this.lockScreenService.enabled$
+            .pipe(
+                tap(enabled => console.log(`[appStayFocused]: Lock screen ${enabled ? 'active' : 'closed'}`)),
+                filter(enabled => !enabled),
+                takeUntil(stop$)
+            ).subscribe(() => this.focus());
+    }
+
+    private onContentsMutated(mutations: MutationRecord[]): void {
+        console.log('[appStayFocused]: Host element contents changed', mutations);
+        // An observable is used here because rapidly firing events can easily be throttled with:
         //
         // this.contentsMutated$.pipe(debounceTime(xxx)).subscribe(...)
-        this.contentMutated$.next();
+        this.contentMutated$.next(mutations);
     }
 
     private stayFocused(): void {
+        console.log('[appStayFocused]: Listening for content changes in', this.elementRef.nativeElement);
+
         const stop$ = merge(this.disabled$, this.destroyed$);
+        stop$.subscribe(() => console.log('[appStayFocused]: Stopped listening for content changes in', this.elementRef.nativeElement));
 
         // ------------------------------------------------------------------------------------------------------------------
         // THE PROBLEM
