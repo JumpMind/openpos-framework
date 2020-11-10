@@ -1,5 +1,6 @@
 import { IActionItem } from '../actions/action-item.interface';
 import { IItem } from './item.interface';
+import { IAdditionalLabel } from './additional-label.interface';
 
 export interface ISellItem extends IItem {
     posItemId: string;
@@ -21,10 +22,10 @@ export interface ISellItem extends IItem {
     labels: string[];
     icon: string;
     showSellingPrice: boolean;
-    additionalLabels: {label: string, value: string} [];
-    returnItemLabels: {label: string, value: string} [];
-    orderItemLabels: {label: string, value: string} [];
-    collapsedAdditionalLabels : {label: string, value: string} [];
+    additionalLabels: IAdditionalLabel [];
+    returnItemLabels: IAdditionalLabel [];
+    orderItemLabels: IAdditionalLabel [];
+    collapsedAdditionalLabels : IAdditionalLabel [];
     optionsLabel: string;
     isOrderItem: boolean;
     isTender: boolean;
