@@ -13,11 +13,9 @@ import { ActionService } from '../../../core/actions/action.service';
 export class MobileItemComponent {
 
     private _item: ISellItem;
-    filteredAdditionalLabels:{label: string, value: string} [];
 
     @Input() set item(item: ISellItem) {
         this._item = item;
-        this.filterAdditionalLabels();
     }
 
     get item() {
@@ -38,13 +36,5 @@ export class MobileItemComponent {
             enabled = false;
         }
         return enabled;
-    }
-
-    public filterAdditionalLabels() {
-        this.filteredAdditionalLabels = this.item.additionalLabels.filter(additionalLabel =>
-            this.item.collapsedAdditionalLabels.find(
-                label => label == additionalLabel.label
-            )
-        )
     }
 }

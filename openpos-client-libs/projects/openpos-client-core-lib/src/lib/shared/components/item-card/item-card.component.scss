@@ -118,6 +118,10 @@
                 >* {
                     margin-top: 4px;
                 }
+
+                .item-card-details-label:not(:empty)::after {
+                    content: ': ';
+                }
             }
         }
 
