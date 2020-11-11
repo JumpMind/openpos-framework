@@ -130,6 +130,10 @@ export * from './lib/core/messages/message';
 export * from './lib/core/help-text/help-text.service';
 export * from './lib/core/lock-screen/lock-screen.service';
 export * from './lib/core/services/simulated-peripheral-service';
+export * from './lib/core/messages/audio-message';
+export * from './lib/core/messages/audio-options';
+export * from './lib/core/messages/audio-event-arg';
+export * from './lib/core/services/audio.service';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';

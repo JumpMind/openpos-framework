@@ -1,0 +1,10 @@
+---
+  openpos:
+    ui:
+      content:
+        providers: classPathContentProvider
+        file:
+          supportedFileTypes: .svg
+          contentVersion: 0.0.1
+        class-path:
+          baseContentPath: content/

@@ -16,4 +16,5 @@ export class MessageTypes {
     static PRINT = 'Print';
     static FETCH = 'Fetch';
     static SIMULATED_PERIPHERAL = 'SimulatedPeripheral';
+    static AUDIO = 'Audio';
 }
