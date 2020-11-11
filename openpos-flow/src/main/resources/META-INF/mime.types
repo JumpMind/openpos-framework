@@ -1,0 +1,13 @@
+# Source: https://www.iana.org/assignments/media-types/media-types.xhtml
+
+# Audio
+audio/mpeg      mp3
+audio/mp4       mp4
+audio/flac      flac
+audio/ogg       ogg
+
+# Images
+image/svg+xml   svg
+image/jpeg      jpeg jpg jpe
+image/png       png
+image/gif       gif

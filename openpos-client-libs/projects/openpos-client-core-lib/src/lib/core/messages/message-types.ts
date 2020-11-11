@@ -15,4 +15,6 @@ export class MessageTypes {
     static STARTUP = 'Startup';
     static PRINT = 'Print';
     static FETCH = 'Fetch';
+    static SIMULATED_PERIPHERAL = 'SimulatedPeripheral';
+    static AUDIO = 'Audio';
 }

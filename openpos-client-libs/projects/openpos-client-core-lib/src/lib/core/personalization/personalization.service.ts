@@ -1,17 +1,20 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {Http} from '@angular/http';
+import { Injectable, Injector } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { PersonalizationConfigResponse } from './personalization-config-response.interface';
-import {Observable, BehaviorSubject, Subject, throwError, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
-import {PersonalizationRequest} from './personalization-request';
-import {PersonalizationResponse} from './personalization-response.interface';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { PersonalizationRequest } from './personalization-request';
+import { PersonalizationResponse } from './personalization-response.interface';
+import { DiscoveryService } from '../discovery/discovery.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PersonalizationService {
     static readonly OPENPOS_MANAGED_SERVER_PROPERTY = 'managedServer';
+    static readonly BASE_URL_TOKEN = '${apiServerBaseUrl}';
+    static readonly APP_ID_TOKEN = '${appId}';
+    static readonly DEVICE_ID_TOKEN = '${deviceId}';
 
     private personalizationProperties$ = new BehaviorSubject<Map<string, string>>(null);
     private deviceId$ = new BehaviorSubject<string>(null);
@@ -23,7 +26,7 @@ export class PersonalizationService {
     private isManagedServer$ = new BehaviorSubject<boolean>('true' === localStorage.getItem(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY));
     private personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private injector: Injector) {
     }
 
     public personalizeFromSavedSession(): Observable<string>{
@@ -189,6 +192,23 @@ export class PersonalizationService {
         window.location.reload();
     }
 
+    public replaceTokens(value: string): string {
+        if(!value) {
+            return value;
+        }
+
+        // Getting the DiscoveryService here using Angular's Injector service prevents an
+        // 'undefined' service reference, that happens when using constructor-based dependency injection,
+        // because of a circular dependency between the PersonalizationService and DiscoveryService.
+        const discoveryService = this.injector.get(DiscoveryService);
+        const apiServerBaseUrl = discoveryService.getApiServerBaseURL();
+        const deviceId = this.getDeviceId$().getValue();
+        const appId = this.getAppId$().getValue();
+
+        let url = value.replace(PersonalizationService.BASE_URL_TOKEN, apiServerBaseUrl);
+        url = url.replace(PersonalizationService.APP_ID_TOKEN, appId);
+        return url.replace(PersonalizationService.DEVICE_ID_TOKEN, deviceId);
+    }
 }
 
 

@@ -66,6 +66,7 @@ import { HelpTextService } from './help-text/help-text.service';
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
 import { ServerScannerPlugin } from './platform-plugins/scanners/server-scanner/server-scanner.service';
 import {TransactionService} from './services/transaction.service';
+import { AudioService } from './services/audio.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -143,7 +144,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         HelpTextService,
         { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true },
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
-        TransactionService
+        TransactionService,
+        AudioService
     ]
 })
 export class CoreModule {
@@ -153,10 +155,12 @@ export class CoreModule {
                 logger: ConsoleIntercepter,
                 toastService: ToastService,
                 uiDataService: UIDataMessageService,
-                keyProvider: KeyPressProvider) {
+                keyProvider: KeyPressProvider,
+                audioService: AudioService) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');
         AppInjector.Instance = this.injector;
         keyProvider.registerKeyPressSource(fromEvent(document, 'keydown') as Observable<KeyboardEvent>);
         keyProvider.registerKeyPressSource(fromEvent(document, 'keyup') as Observable<KeyboardEvent>);
+        audioService.listen();
     }
 }
