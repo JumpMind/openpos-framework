@@ -16,6 +16,8 @@ import org.springframework.stereotype.Repository;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -46,11 +48,16 @@ public class DevicesRepository {
         }
     }
 
-    public List<DeviceStatusModel> getDevicesByStatus(String status) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("deviceStatus", status);
+    public List<DeviceAuthModel> getDisconnectedDevices(String businessUnitId) {
+        Map<String, Object> statusParams = new HashMap<>();
+        statusParams.put("deviceStatus", DeviceStatusConstants.CONNECTED);
+        Set<String> connectedDevices = devSession.findByFields(DeviceStatusModel.class, statusParams, 10000).stream().map(d-> d.getDeviceId()+":"+d.getAppId()).collect(Collectors.toSet());
 
-        return devSession.findByFields(DeviceStatusModel.class, params, 10000);
+        Map<String, Object> deviceParams = new HashMap<>();
+        deviceParams.put("businessUnitId", businessUnitId);
+        final Set<String> devices = devSession.findByFields(DeviceModel.class, deviceParams,10000).stream().map(d-> d.getDeviceId()+":"+d.getAppId()).collect(Collectors.toSet());
+        devices.removeAll(connectedDevices);
+        return devSession.findAll(DeviceAuthModel.class, 10000).stream().filter(d-> devices.contains(d.getDeviceId()+":"+d.getAppId())).sorted().collect(Collectors.toList());
     }
 
     public DeviceModel getDeviceByAuth(String auth) {
