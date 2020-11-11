@@ -6,4 +6,5 @@ export interface OptionsListInterface extends IAbstractScreen {
     additionalButtons: IActionItem[];
     linkButtons: IActionItem[];
     overflowButton: IActionItem;
+    firstElementFocused: boolean
 }
