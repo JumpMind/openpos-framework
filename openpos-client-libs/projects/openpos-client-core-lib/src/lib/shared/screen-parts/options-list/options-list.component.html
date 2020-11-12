@@ -9,12 +9,13 @@
     </div>
 
     <div *ngIf="options && options.length > 0" appArrowTab>
-        <app-option-button *ngFor="let o of options; let i = index" 
+        <app-option-button *ngFor="let o of options; let i = index"
             appArrowTabItem
+            [attr.cdkFocusInitial]="isFirstElementFocused ? '' : null"
             [attr.tabindex]="i"
             [disabled]="!o.enabled"
-            [optionTitle]="o.title" 
-            [optionIcon]="o.icon" 
+            [optionTitle]="o.title"
+            [optionIcon]="o.icon"
             [optionSize]="optionListSizeClass"
             [keybind]="o.keybindDisplayName"
             [actionItem]="o"
