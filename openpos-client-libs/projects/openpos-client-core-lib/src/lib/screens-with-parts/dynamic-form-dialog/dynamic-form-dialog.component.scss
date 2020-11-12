@@ -5,6 +5,6 @@
     @extend %page-spaced-content; 
 }
 
-::ng-deep .content {
+:host ::ng-deep .content {
     max-height: 50vh;
 }
