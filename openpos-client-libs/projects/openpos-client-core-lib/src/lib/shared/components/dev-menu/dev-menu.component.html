@@ -339,30 +339,38 @@
                 </div>
             </mat-tab>
             <mat-tab label="About">
-                <h1>About</h1>
-                <mat-card *ngFor="let v of versions()">
-                    <mat-card-title>{{v.componentName}}</mat-card-title>
-                    <mat-card-content>
-                        <div>
-                            <strong>Version: </strong>{{v.version}}
-                        </div>
-                        <div>
-                            <strong>Build Number: </strong>{{v.buildNumber}}
-                        </div>
-                        <div>
-                            <strong>Build Time: </strong>{{v.buildTime}}
-                        </div>
-                        <div>
-                            <strong>Branch: </strong>{{v.gitBranch}}
-                        </div>
-                        <div>
-                            <strong>Git Hash: </strong>{{v.gitHash}}
-                        </div>
-                        <div>
-                            <strong>Build Name: </strong>{{v.buildName}}
-                        </div>
-                    </mat-card-content>
-                </mat-card>
+                <div>
+                    <h1>About</h1>
+                    <mat-card *ngFor="let v of versions()">
+                        <mat-card-title>{{v.componentName}}</mat-card-title>
+                        <mat-card-content>
+                            <div>
+                                <strong>Version: </strong>{{v.version}}
+                            </div>
+                            <div>
+                                <strong>Build Number: </strong>{{v.buildNumber}}
+                            </div>
+                            <div>
+                                <strong>Build Time: </strong>{{v.buildTime}}
+                            </div>
+                            <div>
+                                <strong>Branch: </strong>{{v.gitBranch}}
+                            </div>
+                            <div>
+                                <strong>Git Hash: </strong>{{v.gitHash}}
+                            </div>
+                            <div>
+                                <strong>Build Name: </strong>{{v.buildName}}
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card>
+                        <mat-card-title>Audio Licenses</mat-card-title>
+                        <app-content-license class="content-license" *ngFor="let audioLicense of audioLicenses"
+                                             [license]="audioLicense" [labels]="audioLicenseLabels"
+                        ></app-content-license>
+                    </mat-card>
+                </div>
             </mat-tab>
         </mat-tab-group>
 

@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.service;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import org.jumpmind.pos.core.flow.ApplicationState;
@@ -25,6 +26,8 @@ import org.jumpmind.pos.devices.service.model.PersonalizationResponse;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.ContentLicense;
+import org.jumpmind.pos.util.ContentLicenseUtil;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -107,10 +110,36 @@ public class DevToolsActionListener implements IActionListener {
         Message message = new Message();
         message.setType(MessageType.DevTools);
         message.put("name", "DevTools::Get");
+        message.put("audioLicenses", getAudioLicenses());
+        message.put("audioLicenseLabels", getAudioLicenseLabels());
         setScopes(sm, message);
         setCurrentStateAndActions(sm, message);
         setSimAuthCode(deviceId, message);
         return message;
+    }
+
+    private List<ContentLicense> getAudioLicenses() {
+        try {
+            return ContentLicenseUtil.getAudioLicenses();
+        } catch(IOException e) {
+            logger.warn("Unable to load audio licenses", e);
+        }
+
+        return null;
+    }
+
+    private Map<String, String> getAudioLicenseLabels() {
+        return new HashMap<String, String>() {
+            {
+                put("key", "Content Key:");
+                put("author", "Author:");
+                put("title", "Title:");
+                put("sourceUri", "Source URI:");
+                put("filename", "File Name:");
+                put("license", "License:");
+                put("licenseUri", "License URI:");
+            }
+        };
     }
 
     private void setSimAuthCode(String deviceId, Message message) {

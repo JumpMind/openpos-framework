@@ -1,11 +1,14 @@
 package org.jumpmind.pos.core.error;
 
-import org.jumpmind.pos.core.flow.IStateManager;
+import org.jumpmind.pos.core.flow.*;
+import org.jumpmind.pos.core.service.AudioOptions;
+import org.jumpmind.pos.core.service.IAudioService;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -26,6 +29,13 @@ public class DefaultErrorHandler implements IErrorHandler {
             stateManager.showToast((Toast)message);
         } else {
             messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+        }
+
+        ApplicationState applicationState = stateManager.getApplicationState();
+        IAudioService audioService = applicationState.getScopeValue("audioService");
+
+        if (audioService != null) {
+            audioService.play("error-alert", AudioOptions.builder().delayTime(.5).build());
         }
     }
 }

@@ -28,7 +28,7 @@ public final class ContentLicenseUtil {
                         .key(csvRecord.get("Key"))
                         .author(csvRecord.get("Author"))
                         .title(csvRecord.get("Title"))
-                        .source(csvRecord.get("Source"))
+                        .sourceUri(csvRecord.get("Source URI"))
                         .filename(csvRecord.get("Filename"))
                         .license(csvRecord.get("License"))
                         .licenseUri(csvRecord.get("License URI"))
