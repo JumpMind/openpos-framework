@@ -8,15 +8,21 @@ import org.jumpmind.pos.core.flow.In;
 import org.jumpmind.pos.core.flow.ScopeType;
 import org.jumpmind.pos.core.ui.message.AudioMessage;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.ContentLicense;
+import org.jumpmind.pos.util.ContentLicenseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 @Slf4j
 @Component
 @Scope("device")
 public class AudioService implements IAudioService {
+    protected final String AUDIO_CONTENT_ROOT = "audio/";
+
     @Value("${openpos.general.enableAudio:true}")
     protected boolean enableAudio;
 
@@ -41,10 +47,10 @@ public class AudioService implements IAudioService {
             return;
         }
 
-        String audioKey = "audio/" + key;
+        String audioKey = AUDIO_CONTENT_ROOT + key;
         String url = contentProviderService.resolveContent(stateManager.getDeviceId(), audioKey);
 
-        if(StringUtils.isBlank(url)) {
+        if (StringUtils.isBlank(url)) {
             log.warn("Unable to find sound '{}' for device '{}'", key, stateManager.getDeviceId());
             return;
         }
