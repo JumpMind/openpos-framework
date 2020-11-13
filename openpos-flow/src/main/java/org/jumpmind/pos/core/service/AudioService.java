@@ -8,14 +8,10 @@ import org.jumpmind.pos.core.flow.In;
 import org.jumpmind.pos.core.flow.ScopeType;
 import org.jumpmind.pos.core.ui.message.AudioMessage;
 import org.jumpmind.pos.server.service.IMessageService;
-import org.jumpmind.pos.util.ContentLicense;
-import org.jumpmind.pos.util.ContentLicenseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Slf4j
 @Component
