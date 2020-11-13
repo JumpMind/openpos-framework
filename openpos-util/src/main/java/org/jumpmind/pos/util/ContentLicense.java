@@ -9,7 +9,7 @@ public class ContentLicense {
     private String key;
     private String author;
     private String title;
-    private String source;
+    private String sourceUri;
     private String filename;
     private String license;
     private String licenseUri;

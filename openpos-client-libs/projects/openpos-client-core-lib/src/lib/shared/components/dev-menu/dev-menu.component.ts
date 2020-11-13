@@ -25,6 +25,7 @@ import { FileUploadService } from '../../../core/services/file-upload.service';
 import { IVersion } from '../../../core/interfaces/version.interface';
 import { Observable } from 'rxjs';
 import { DiscoveryService } from '../../../core/discovery/discovery.service';
+import { ContentLicense, ContentLicenseLabels } from '../content-license/content-license.interface';
 
 @Component({
     selector: 'app-dev-menu',
@@ -62,6 +63,10 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     keyCount = 0;
 
     savePointFileName: string;
+
+    public audioLicenses: ContentLicense[];
+
+    public audioLicenseLabels: ContentLicenseLabels;
 
     public displaySavePoints = false;
 
@@ -135,6 +140,9 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     }
 
     private populateDevTables(message: any) {
+        this.audioLicenses = message.audioLicenses;
+        this.audioLicenseLabels = message.audioLicenseLabels;
+
         if (message.currentState) {
             console.info('Pulling current state actions...');
             this.currentState = message.currentState.stateName;
