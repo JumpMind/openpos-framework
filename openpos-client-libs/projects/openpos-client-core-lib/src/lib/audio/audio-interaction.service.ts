@@ -46,7 +46,9 @@ export class AudioInteractionService implements OnDestroy {
         // Use "capture" so this service hears the event even if propagation is stopped
         const mouseDown$ = fromEvent<MouseEvent>(document.body, 'mousedown', {capture: true});
         const mouseUp$ = fromEvent<MouseEvent>(document.body, 'mouseup', {capture: true});
-        const mouseEvents$ = merge(mouseDown$, mouseUp$);
+        const touchStart$ = fromEvent<MouseEvent>(document.body, 'touchstart', {capture: true});
+        const touchEnd$ = fromEvent<MouseEvent>(document.body, 'touchend', {capture: true});
+        const mouseEvents$ = merge(mouseDown$, mouseUp$, touchStart$, touchEnd$);
 
         mouseEvents$.pipe(
             filter(() => !!this.interactions && !!this.interactions.mouse),
