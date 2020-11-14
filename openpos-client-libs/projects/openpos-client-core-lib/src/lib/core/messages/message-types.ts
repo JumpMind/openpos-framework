@@ -17,4 +17,5 @@ export class MessageTypes {
     static FETCH = 'Fetch';
     static SIMULATED_PERIPHERAL = 'SimulatedPeripheral';
     static AUDIO = 'Audio';
+    static AUDIO_CONFIG = 'AudioConfig';
 }
