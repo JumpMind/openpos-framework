@@ -36,4 +36,5 @@ public final class UIMessageType {
     public static String PROMOTION_SEARCH = "PromotionSearch";
     public static String SIMULATED_PERIPHERAL = "SimulatedPeripheral";
     public static String AUDIO = "Audio";
+    public static String AUDIO_CONFIG = "AudioConfig";
 }
