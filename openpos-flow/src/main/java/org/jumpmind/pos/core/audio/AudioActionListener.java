@@ -35,7 +35,10 @@ public class AudioActionListener implements IActionListener {
 
         if ("GetConfig".equals(action.getName())) {
             AudioConfigMessage message = AudioUtil.getInteractionMessageFromConfig(stateManager, audioConfig);
+            log.warn("Sending audio configuration", message);
             this.messageService.sendMessage(appId, deviceId, message);
+        } else if ("PreLoad".equals(action.getName())) {
+            log.warn("Pre-loading sounds");
         } else if ("Play".equals(action.getName())) {
             if (action.getData() == null) {
                 log.warn("Skipping audio request because there is no data for the request");
@@ -45,7 +48,7 @@ public class AudioActionListener implements IActionListener {
             IAudioService audioService = stateManager.getApplicationState().getScopeValue("audioService");
             AudioRequest audioRequest = Action.convertActionData(action.getData(), AudioRequest.class);
 
-            log.info("Received request to play {}", audioRequest.getSound());
+            log.info(String.format("Received request to play '%s'", audioRequest.getSound()), audioRequest);
             audioService.play(audioRequest);
         }
     }

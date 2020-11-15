@@ -32,6 +32,7 @@ public final class ContentLicenseUtil {
                         .filename(csvRecord.get("Filename"))
                         .license(csvRecord.get("License"))
                         .licenseUri(csvRecord.get("License URI"))
+                        .comments(csvRecord.get("Comments"))
                         .build()
                 );
             }

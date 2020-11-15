@@ -6,6 +6,7 @@ export interface ContentLicense {
     filename: string;
     license: string;
     licenseUri: string;
+    comments: string;
 }
 
 export interface ContentLicenseLabels {
@@ -16,4 +17,5 @@ export interface ContentLicenseLabels {
     filename: string;
     license: string;
     licenseUri: string;
+    comments: string;
 }
