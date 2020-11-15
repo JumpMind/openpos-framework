@@ -130,14 +130,20 @@ export * from './lib/core/messages/message';
 export * from './lib/core/help-text/help-text.service';
 export * from './lib/core/lock-screen/lock-screen.service';
 export * from './lib/core/services/simulated-peripheral-service';
-export * from './lib/audio/audio-interaction.service';
-export * from './lib/audio/audio-config-message.interface';
-export * from './lib/audio/audio.service';
-export * from './lib/audio/audio-event-arg';
-export * from './lib/audio/audio-interaction-set.interface';
-export * from './lib/audio/audio-message.interface';
-export * from './lib/audio/audio.request.interface';
-export * from './lib/audio/audio-startup-task';
+
+export * from './lib/core/audio/audio.request.interface';
+export * from './lib/core/audio/audio.service';
+export * from './lib/core/audio/audio.util';
+export * from './lib/core/audio/audio-cache.interface';
+export * from './lib/core/audio/audio-config.interface';
+export * from './lib/core/audio/audio-config-message.interface';
+export * from './lib/core/audio/audio-event-arg.interface';
+export * from './lib/core/audio/audio-interaction.service';
+export * from './lib/core/audio/audio-interaction-set.interface';
+export * from './lib/core/audio/audio-message.interface';
+export * from './lib/core/audio/audio-preload-message.interface';
+export * from './lib/core/audio/audio-repository.service';
+export * from './lib/core/audio/audio-startup-task';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';

@@ -1,4 +1,4 @@
-export interface ContentLicense {
+export interface AudioLicense {
     key: string;
     author: string;
     title: string;
@@ -9,7 +9,7 @@ export interface ContentLicense {
     comments: string;
 }
 
-export interface ContentLicenseLabels {
+export interface AudioLicenseLabels {
     key: string;
     author: string;
     title: string;

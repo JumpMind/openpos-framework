@@ -20,5 +20,4 @@ public class AudioRequest  implements Serializable {
     private Double volume;
     private Boolean autoplay;
     private Double delayTime;
-    private Boolean reverse;
 }

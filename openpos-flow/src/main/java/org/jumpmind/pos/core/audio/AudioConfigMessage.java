@@ -10,8 +10,7 @@ import org.jumpmind.pos.util.model.Message;
 public class AudioConfigMessage extends Message {
     private static final long serialVersionUID = 1L;
 
-    private boolean enabled;
-    private AudioInteractionSet interactions;
+    private AudioConfig config;
 
     @Override
     public String getType() {

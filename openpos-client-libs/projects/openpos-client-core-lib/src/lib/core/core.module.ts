@@ -66,9 +66,10 @@ import { HelpTextService } from './help-text/help-text.service';
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
 import { ServerScannerPlugin } from './platform-plugins/scanners/server-scanner/server-scanner.service';
 import {TransactionService} from './services/transaction.service';
-import { AudioService } from '../audio/audio.service';
-import { AudioInteractionService } from '../audio/audio-interaction.service';
-import { AudioStartupTask } from '../audio/audio-startup-task';
+import { AudioStartupTask } from './audio/audio-startup-task';
+import { AudioService } from './audio/audio.service';
+import { AudioRepositoryService } from './audio/audio-repository.service';
+import { AudioInteractionService } from './audio/audio-interaction.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -117,7 +118,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
         { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
-        { provide: STARTUP_TASKS, useClass: AudioStartupTask, multi: true, deps: [SessionService, AudioService, AudioInteractionService]},
+        { provide: STARTUP_TASKS, useClass: AudioStartupTask, multi: true, deps: [AudioRepositoryService, AudioService, AudioInteractionService]},
         { provide: STARTUP_TASKS, useClass: FinalStartupTask, multi: true, deps: [SessionService]},
         { provide: STARTUP_TASKS, useClass: PlatformReadyStartupTask, multi: true },
         { provide: STARTUP_TASKS, useClass: PluginStartupTask, multi: true },
@@ -149,7 +150,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
         TransactionService,
         AudioService,
-        AudioInteractionService
+        AudioInteractionService,
+        AudioRepositoryService
     ]
 })
 export class CoreModule {

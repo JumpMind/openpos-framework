@@ -1,5 +1,5 @@
 export interface AudioRequest {
-    sound?: string;
+    sound: string;
     playbackRate?: number;
     startTime?: number;
     endTime?: number;
@@ -7,5 +7,4 @@ export interface AudioRequest {
     volume?: number;
     autoplay?: boolean;
     delayTime?: number;
-    reverse?: boolean;
 }

@@ -25,7 +25,7 @@ import { FileUploadService } from '../../../core/services/file-upload.service';
 import { IVersion } from '../../../core/interfaces/version.interface';
 import { Observable } from 'rxjs';
 import { DiscoveryService } from '../../../core/discovery/discovery.service';
-import { ContentLicense, ContentLicenseLabels } from '../content-license/content-license.interface';
+import { AudioLicense, AudioLicenseLabels } from '../audio-license/audio-license.interface';
 
 @Component({
     selector: 'app-dev-menu',
@@ -74,9 +74,9 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     savePointFileName: string;
 
-    public audioLicenses: ContentLicense[];
+    public audioLicenses: AudioLicense[];
 
-    public audioLicenseLabels: ContentLicenseLabels;
+    public audioLicenseLabels: AudioLicenseLabels;
 
     public displaySavePoints = false;
 
