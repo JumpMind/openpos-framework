@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 @Slf4j
 @Component
@@ -37,8 +38,11 @@ public class AudioActionListener implements IActionListener {
             AudioConfigMessage message = AudioUtil.getInteractionMessageFromConfig(stateManager, audioConfig);
             log.warn("Sending audio configuration", message);
             this.messageService.sendMessage(appId, deviceId, message);
-        } else if ("PreLoad".equals(action.getName())) {
-            log.warn("Pre-loading sounds");
+        } else if ("Preload".equals(action.getName())) {
+            log.warn("Preloading sounds");
+            List<String> contentUrls = AudioUtil.getAllContentUrls(stateManager);
+            AudioPreloadMessage message = AudioPreloadMessage.builder().contentUrls(contentUrls).build();
+            this.messageService.sendMessage(appId, deviceId, message);
         } else if ("Play".equals(action.getName())) {
             if (action.getData() == null) {
                 log.warn("Skipping audio request because there is no data for the request");

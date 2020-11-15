@@ -7,6 +7,7 @@ import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.In;
 import org.jumpmind.pos.core.flow.ScopeType;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
@@ -48,19 +49,11 @@ public class AudioService implements IAudioService {
             return;
         }
 
-        AudioMessage message = AudioMessage.builder()
-                .sound(url)
-                .startTime(request.getStartTime())
-                .endTime(request.getEndTime())
-                .loop(request.getLoop())
-                .playbackRate(request.getPlaybackRate())
-                .autoplay(request.getAutoplay())
-                .volume(request.getVolume())
-                .delayTime(request.getDelayTime())
-                .reverse(request.getReverse())
-                .build();
+        AudioRequest requestCopy = ObjectUtils.deepClone(request);
+        requestCopy.setSound(url);
+        AudioMessage message = new AudioMessage(requestCopy);
 
-        log.info(String.format("Sending sound '%s' to be played on device '%s'", message.getSound(), stateManager.getDeviceId()), message);
-        messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+        log.info(String.format("Sending sound '%s' to be played on device '%s'", url, stateManager.getDeviceId()), message);
+        messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), new AudioMessage(requestCopy));
     }
 }

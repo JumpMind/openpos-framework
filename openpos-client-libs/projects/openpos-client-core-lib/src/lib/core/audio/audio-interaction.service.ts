@@ -1,13 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { fromEvent, merge, Subject } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
-import { SessionService } from '../core/services/session.service';
-import { MessageTypes } from '../core/messages/message-types';
-import { AudioConfigMessage } from './audio-config-message.interface';
 import { AudioInteractionSet } from './audio-interaction-set.interface';
 import { AudioRequest } from './audio.request.interface';
 import { AudioService } from './audio.service';
-import { DialogService } from '../core/services/dialog.service';
+import { AudioConfig } from './audio-config.interface';
+import { AudioRepositoryService } from './audio-repository.service';
+import { DialogService } from '../services/dialog.service';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +17,9 @@ export class AudioInteractionService implements OnDestroy {
     private enabled = true;
     private interactions: AudioInteractionSet
 
-    constructor(private sessionService: SessionService, private dialogService: DialogService, private audioService: AudioService) {
+    constructor(private audioRepositoryService: AudioRepositoryService,
+                private dialogService: DialogService,
+                private audioService: AudioService) {
     }
 
     ngOnDestroy() {
@@ -31,7 +32,11 @@ export class AudioInteractionService implements OnDestroy {
         this.listenForMouseInteractions();
         this.listenForTouchInteractions();
         this.listenForDialogInteractions();
-        this.listenForAudioConfigMessages();
+
+        this.audioRepositoryService.config$
+            .pipe(
+                takeUntil(merge(this.stop$, this.destroyed$))
+            ).subscribe(config => this.onAudioConfig(config));
     }
 
     stopListening(): void {
@@ -93,26 +98,19 @@ export class AudioInteractionService implements OnDestroy {
             ).subscribe(() => this.play(this.interactions.dialog.closing));
     }
 
-    listenForAudioConfigMessages(): void {
-        this.sessionService.getMessages(MessageTypes.AUDIO_CONFIG)
-            .pipe(
-                takeUntil(merge(this.stop$, this.destroyed$))
-            ).subscribe(message => this.onAudioConfigMessage(message));
-    }
+    onAudioConfig(config: AudioConfig): void {
+        console.log('[AudioInteractionService]: Configuration updated', config);
 
-    onAudioConfigMessage(message: AudioConfigMessage): void {
-        console.log('[AudioInteractionService]: Received config message', message);
-
-        if (this.enabled && !message.interactions.enabled) {
+        if (this.enabled && !config.interactions.enabled) {
             this.stopListening();
         }
 
-        if (!this.enabled && message.interactions.enabled) {
+        if (!this.enabled && config.interactions.enabled) {
             this.listen();
         }
 
-        this.enabled = message.interactions.enabled;
-        this.interactions = message.interactions;
+        this.enabled = config.interactions.enabled;
+        this.interactions = config.interactions;
     }
 
     play(audioRequest: AudioRequest): void {

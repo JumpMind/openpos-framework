@@ -361,9 +361,9 @@
                     </mat-card>
                     <mat-card>
                         <mat-card-title>Audio Licenses</mat-card-title>
-                        <app-content-license class="content-license" *ngFor="let audioLicense of audioLicenses"
-                                             [license]="audioLicense" [labels]="audioLicenseLabels"
-                        ></app-content-license>
+                        <app-audio-license class="audio-license" *ngFor="let audioLicense of audioLicenses"
+                                           [license]="audioLicense" [labels]="audioLicenseLabels">
+                        </app-audio-license>
                     </mat-card>
                 </div>
             </mat-tab>

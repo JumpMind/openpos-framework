@@ -5,14 +5,16 @@ import lombok.Data;
 import org.jumpmind.pos.core.ui.message.UIMessageType;
 import org.jumpmind.pos.util.model.Message;
 
+import java.util.List;
+
 @Data
 @Builder
-public class AudioMessage extends Message {
+public class AudioPreloadMessage extends Message {
     private static final long serialVersionUID = 1L;
-    private AudioRequest request;
+    private List<String> contentUrls;
 
     @Override
     public String getType() {
-        return UIMessageType.AUDIO;
+        return UIMessageType.AUDIO_PRELOAD;
     }
 }

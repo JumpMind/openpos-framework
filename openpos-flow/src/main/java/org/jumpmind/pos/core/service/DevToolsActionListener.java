@@ -22,8 +22,8 @@ import org.jumpmind.pos.core.model.ScanData;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
-import org.jumpmind.pos.util.ContentLicense;
-import org.jumpmind.pos.util.ContentLicenseUtil;
+import org.jumpmind.pos.util.AudioLicense;
+import org.jumpmind.pos.util.AudioLicenseUtil;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -96,9 +96,9 @@ public class DevToolsActionListener implements IActionListener {
         return message;
     }
 
-    private List<ContentLicense> getAudioLicenses() {
+    private List<AudioLicense> getAudioLicenses() {
         try {
-            return ContentLicenseUtil.getAudioLicenses();
+            return AudioLicenseUtil.getLicenses();
         } catch(IOException e) {
             logger.warn("Unable to load audio licenses", e);
         }

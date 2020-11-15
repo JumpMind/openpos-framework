@@ -5,7 +5,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ContentLicense {
+public class AudioLicense {
     private String key;
     private String author;
     private String title;

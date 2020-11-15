@@ -18,4 +18,5 @@ export class MessageTypes {
     static SIMULATED_PERIPHERAL = 'SimulatedPeripheral';
     static AUDIO = 'Audio';
     static AUDIO_CONFIG = 'AudioConfig';
+    static AUDIO_PRELOAD = 'AudioPreload';
 }
