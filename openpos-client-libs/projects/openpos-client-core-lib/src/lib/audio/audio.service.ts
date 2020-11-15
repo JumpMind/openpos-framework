@@ -47,8 +47,14 @@ export class AudioService implements OnDestroy {
     }
 
     play(request: AudioRequest | string): HTMLAudioElement {
+        if (!request || !(request as AudioRequest).sound) {
+            console.warn('[AudioService]: Ignoring null request');
+            return;
+        }
+
         if (!this.enabled) {
             console.warn('[AudioService]: Ignoring audio request because the service is disabled', request);
+            return;
         }
 
         request = typeof request === 'string' ? {sound: request} : request;

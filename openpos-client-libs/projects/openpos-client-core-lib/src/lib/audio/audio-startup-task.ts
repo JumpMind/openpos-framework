@@ -29,6 +29,7 @@ export class AudioStartupTask implements IStartupTask {
             message.next('AudioInteractionService started');
 
             this.sessionService.publish('GetConfig', 'Audio');
+            this.sessionService.publish('PreLoad', 'Audio');
             message.complete();
         });
     }

@@ -116,6 +116,7 @@ public class DevToolsActionListener implements IActionListener {
                 put("filename", "File Name:");
                 put("license", "License:");
                 put("licenseUri", "License URI:");
+                put("comments", "Comments:");
             }
         };
     }

@@ -15,8 +15,8 @@ public final class AudioUtil {
                 .build();
 
         if (message.getInteractions() != null && message.getInteractions().getMouse() != null) {
-            updateSoundWithProviderUrl(stateManager, message.getInteractions().getMouse().getClickIn());
-            updateSoundWithProviderUrl(stateManager, message.getInteractions().getMouse().getClickOut());
+            updateSoundWithProviderUrl(stateManager, message.getInteractions().getMouse().getMouseDown());
+            updateSoundWithProviderUrl(stateManager, message.getInteractions().getMouse().getMouseUp());
         }
 
         if (message.getInteractions() != null && message.getInteractions().getDialog() != null) {

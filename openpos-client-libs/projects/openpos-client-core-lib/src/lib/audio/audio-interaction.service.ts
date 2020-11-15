@@ -29,12 +29,9 @@ export class AudioInteractionService implements OnDestroy {
         console.log('[AudioInteractionService]: Listening to the user...');
 
         this.listenForMouseInteractions();
+        this.listenForTouchInteractions();
         this.listenForDialogInteractions();
-
-        this.sessionService.getMessages(MessageTypes.AUDIO_CONFIG)
-            .pipe(
-                takeUntil(merge(this.stop$, this.destroyed$))
-            ).subscribe(message => this.onAudioConfigMessage(message));
+        this.listenForAudioConfigMessages();
     }
 
     stopListening(): void {
@@ -46,20 +43,38 @@ export class AudioInteractionService implements OnDestroy {
         // Use "capture" so this service hears the event even if propagation is stopped
         const mouseDown$ = fromEvent<MouseEvent>(document.body, 'mousedown', {capture: true});
         const mouseUp$ = fromEvent<MouseEvent>(document.body, 'mouseup', {capture: true});
-        const touchStart$ = fromEvent<MouseEvent>(document.body, 'touchstart', {capture: true});
-        const touchEnd$ = fromEvent<MouseEvent>(document.body, 'touchend', {capture: true});
-        const mouseEvents$ = merge(mouseDown$, mouseUp$, touchStart$, touchEnd$);
+        const mouseEvents$ = merge(mouseDown$, mouseUp$);
 
         mouseEvents$.pipe(
             filter(() => !!this.interactions && !!this.interactions.mouse),
             takeUntil(merge(this.stop$, this.destroyed$))
         ).subscribe(event => {
             if (event.type === 'mousedown') {
-                console.log('[AudioInteractionService]: Playing button click-in sound');
-                this.play(this.interactions.mouse.clickIn);
+                console.log('[AudioInteractionService]: Playing button mouse-down sound');
+                this.play(this.interactions.mouse.mouseDown);
             } else if (event.type === 'mouseup') {
-                console.log('[AudioInteractionService]: Playing button click-out sound')
-                this.play(this.interactions.mouse.clickOut);
+                console.log('[AudioInteractionService]: Playing button mouse-up sound')
+                this.play(this.interactions.mouse.mouseUp);
+            }
+        });
+    }
+
+    listenForTouchInteractions(): void {
+        // Use "capture" so this service hears the event even if propagation is stopped
+        const touchStart$ = fromEvent<MouseEvent>(document.body, 'touchstart', {capture: true});
+        const touchEnd$ = fromEvent<MouseEvent>(document.body, 'touchend', {capture: true});
+        const touchEvents$ = merge(touchStart$, touchEnd$);
+
+        touchEvents$.pipe(
+            filter(() => !!this.interactions && !!this.interactions.touch),
+            takeUntil(merge(this.stop$, this.destroyed$))
+        ).subscribe(event => {
+            if (event.type === 'touchstart') {
+                console.log('[AudioInteractionService]: Playing button touch-start sound');
+                this.play(this.interactions.touch.touchStart);
+            } else if (event.type === 'touchend') {
+                console.log('[AudioInteractionService]: Playing button touch-end sound')
+                this.play(this.interactions.touch.touchEnd);
             }
         });
     }
@@ -76,6 +91,13 @@ export class AudioInteractionService implements OnDestroy {
                 tap(() => console.log('[AudioInteractionService]: Playing dialog closing sound')),
                 takeUntil(merge(this.stop$, this.destroyed$))
             ).subscribe(() => this.play(this.interactions.dialog.closing));
+    }
+
+    listenForAudioConfigMessages(): void {
+        this.sessionService.getMessages(MessageTypes.AUDIO_CONFIG)
+            .pipe(
+                takeUntil(merge(this.stop$, this.destroyed$))
+            ).subscribe(message => this.onAudioConfigMessage(message));
     }
 
     onAudioConfigMessage(message: AudioConfigMessage): void {

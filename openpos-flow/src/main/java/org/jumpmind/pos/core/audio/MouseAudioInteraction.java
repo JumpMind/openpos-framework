@@ -12,6 +12,6 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MouseAudioInteraction implements Serializable {
-    private AudioRequest clickIn;
-    private AudioRequest clickOut;
+    private AudioRequest mouseDown;
+    private AudioRequest mouseUp;
 }

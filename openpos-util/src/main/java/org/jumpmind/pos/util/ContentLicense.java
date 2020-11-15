@@ -13,4 +13,5 @@ public class ContentLicense {
     private String filename;
     private String license;
     private String licenseUri;
+    private String comments;
 }
