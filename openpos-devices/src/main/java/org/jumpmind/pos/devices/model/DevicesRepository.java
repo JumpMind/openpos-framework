@@ -27,7 +27,7 @@ public class DevicesRepository {
     @Lazy
     DBSession devSession;
 
-    @Cacheable("/devices/device")
+    @Cacheable(value="/devices/device", key="#deviceId + '-' + #appId")
     public DeviceModel getDevice(String deviceId, String appId) {
         DeviceModel device = devSession.findByNaturalId(DeviceModel.class, new ModelId("deviceId", deviceId, "appId", appId));
         if (device != null) {
@@ -85,7 +85,7 @@ public class DevicesRepository {
         return deviceModel;
     }
 
-    @CacheEvict(value = "/devices/device")
+    @CacheEvict(value = "/devices/device", key="#device.deviceId + '-' + #device.appId")
     public void saveDevice(DeviceModel device) {
 
         devSession.save(device);
