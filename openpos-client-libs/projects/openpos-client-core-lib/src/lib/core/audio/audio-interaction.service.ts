@@ -1,8 +1,8 @@
 import { Injectable, OnDestroy } from '@angular/core';
-import { fromEvent, merge, Subject } from 'rxjs';
+import { fromEvent, merge, Observable, Subject } from 'rxjs';
 import { filter, takeUntil, tap } from 'rxjs/operators';
 import { AudioInteractionSet } from './audio-interaction-set.interface';
-import { AudioRequest } from './audio.request.interface';
+import { AudioRequest } from './audio-request.interface';
 import { AudioService } from './audio.service';
 import { AudioConfig } from './audio-config.interface';
 import { AudioRepositoryService } from './audio-repository.service';
@@ -15,7 +15,7 @@ export class AudioInteractionService implements OnDestroy {
     private destroyed$ = new Subject();
     private stop$ = new Subject();
     private enabled = true;
-    private interactions: AudioInteractionSet
+    private interactions: AudioInteractionSet;
 
     constructor(private audioRepositoryService: AudioRepositoryService,
                 private dialogService: DialogService,
@@ -113,7 +113,7 @@ export class AudioInteractionService implements OnDestroy {
         this.interactions = config.interactions;
     }
 
-    play(audioRequest: AudioRequest): void {
-        this.audioService.play(audioRequest);
+    play(audioRequest: AudioRequest): Observable<HTMLAudioElement> {
+        return this.audioService.play(audioRequest);
     }
 }

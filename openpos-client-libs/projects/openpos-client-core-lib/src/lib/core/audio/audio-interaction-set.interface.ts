@@ -1,4 +1,4 @@
-import { AudioRequest } from './audio.request.interface';
+import { AudioRequest } from './audio-request.interface';
 
 export interface MouseAudioInteraction {
     mouseDown?: AudioRequest;

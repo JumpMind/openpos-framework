@@ -11,7 +11,7 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AudioRequest  implements Serializable {
+public class AudioRequest implements Serializable {
     private String sound;
     private Double playbackRate;
     private Double startTime;
@@ -20,4 +20,19 @@ public class AudioRequest  implements Serializable {
     private Double volume;
     private Boolean autoplay;
     private Double delayTime;
+    private String group;
+
+    public Object clone() {
+        return AudioRequest.builder()
+                .sound(sound)
+                .playbackRate(playbackRate)
+                .startTime(startTime)
+                .endTime(endTime)
+                .loop(loop)
+                .volume(volume)
+                .autoplay(autoplay)
+                .delayTime(delayTime)
+                .group(group)
+                .build();
+    }
 }
