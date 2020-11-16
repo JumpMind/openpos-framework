@@ -73,7 +73,9 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
             return;
         }
 
-        const actualRequest = (typeof request === 'string' ? {sound: request} as AudioRequest : request) as AudioRequest;
+        let actualRequest = (typeof request === 'string' ? {sound: request} as AudioRequest : request) as AudioRequest;
+        actualRequest = AudioUtil.getDefaultRequest(actualRequest);
+
         console.log('[AudioService]: Getting audio from repository', actualRequest);
         const audio$ = this.audioRepositoryService.getAudio(actualRequest);
 
@@ -124,6 +126,7 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
                 this.stop(request.group, audio);
             }
 
+            audio.volume = request.volume * this.config.volume;
             audio.play();
         };
 
