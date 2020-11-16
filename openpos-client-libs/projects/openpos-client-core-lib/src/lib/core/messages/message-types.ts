@@ -19,4 +19,5 @@ export class MessageTypes {
     static AUDIO = 'Audio';
     static AUDIO_CONFIG = 'AudioConfig';
     static AUDIO_PRELOAD = 'AudioPreload';
+    static LOADING = 'Loading';
 }

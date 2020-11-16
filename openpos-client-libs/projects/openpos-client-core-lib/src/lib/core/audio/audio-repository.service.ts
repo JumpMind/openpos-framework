@@ -6,10 +6,10 @@ import { MessageTypes } from '../messages/message-types';
 import { filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
 import { AudioConfigMessage } from './audio-config-message.interface';
 import { AudioCache } from './audio-cache.interface';
-import { AudioRequest } from './audio.request.interface';
+import { AudioRequest } from './audio-request.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
 import { deepAssign } from '../../utilites/deep-assign';
-import { AudioUtil } from './audio.util';
+import { AudioUtil } from './audio-util';
 import { AudioPreloadMessage } from './audio-preload-message.interface';
 
 @Injectable({
@@ -46,20 +46,25 @@ export class AudioRepositoryService implements OnDestroy {
         request = typeof request === 'string' ? {sound: request} : request;
 
         if (this.preloading$.getValue()) {
-            console.log('[AudioRepositoryService]: Queuing request while audio is preloading...', request);
-            return this.getAudioAfterPreloading(request);
+            console.log('[AudioRepositoryService]: Skipping request while audio is preloading...', request);
+            return;
         }
 
         request = AudioUtil.getDefaultRequest(request);
 
-        const cacheKey = AudioUtil.getAudioCacheKey(request);
+        const cacheKey = AudioUtil.getAudioRequestHash(request);
         const audio = this.cache[cacheKey];
 
         if (audio) {
             console.log('[AudioRepositoryService]: Loaded audio from the cache', audio);
+
+            // Pause this instance in case it was in the middle of playing
+            audio.pause();
+
             // Make sure the start time is correct, because if this instance was previously played
             // from the cache, then the start time will not be correct.
             audio.currentTime = request.startTime;
+
             return of(audio);
         }
 
@@ -71,15 +76,6 @@ export class AudioRepositoryService implements OnDestroy {
             );
     }
 
-    getAudioAfterPreloading(request: AudioRequest): Observable<HTMLAudioElement> {
-        return this.preloading$
-            .pipe(
-                filter(preloading => !preloading),
-                first(),
-                switchMap(() => this.createAudio(request))
-            );
-    }
-
     createAudio(request: AudioRequest): Observable<HTMLAudioElement> {
         request = AudioUtil.getDefaultRequest(request);
 
@@ -88,20 +84,16 @@ export class AudioRepositoryService implements OnDestroy {
 
         // Adjust the volume of this sound by the global configuration volume
         audio.volume = request.volume * this.config.volume;
-        audio.autoplay = request.autoplay && !request.delayTime;
+
+        // Only honor autoplay setting if there's no setting that delays the playing
+        audio.autoplay = request.autoplay
+            && !request.delayTime
+            && !request.waitForScreen
+            && !request.waitForDialog;
+
         audio.currentTime = request.startTime;
         audio.playbackRate = request.playbackRate;
         audio.loop = request.loop;
-
-        if (request.endTime) {
-            // Fake the end time by pausing the audio once the end time is reached
-            audio.addEventListener('timeupdate', () => {
-                if (audio.currentTime >= request.endTime) {
-                    console.log(`[AudioService]: Reached end time ${request.endTime}`, audio, request);
-                    audio.pause();
-                }
-            });
-        }
 
         const audio$ = new Subject<HTMLAudioElement>();
         audio.addEventListener('canplay', () => audio$.next(audio));

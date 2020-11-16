@@ -12,7 +12,8 @@ import java.io.Serializable;
 @ConfigurationProperties(prefix = "openpos.audio")
 public class AudioConfig implements Serializable {
     private Boolean enabled;
-    private Integer volume;
+    private Double volume;
+    private Double dialogDelayCompensation;
     private AudioInteractionSet interactions;
 
     @Override

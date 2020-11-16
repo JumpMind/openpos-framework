@@ -1,4 +1,4 @@
-import { AudioRequest } from './audio.request.interface';
+import { AudioRequest } from './audio-request.interface';
 import { AudioConfig } from './audio-config.interface';
 import { deepAssign } from '../../utilites/deep-assign';
 
@@ -28,7 +28,7 @@ export class AudioUtil {
         };
     }
 
-    static getAudioCacheKey(request: AudioRequest): string {
+    static getAudioRequestHash(request: AudioRequest): string {
         return `sound:${request.sound}|`
             + `playbackRate:${request.playbackRate}|`
             + `startTime:${request.startTime}|`
@@ -37,5 +37,13 @@ export class AudioUtil {
             + `volume:${request.volume}|`
             + `autoplay:${request.autoplay}|`
             + `delayTime:${request.delayTime}|`;
+    }
+    
+    static isPlaying(audio: HTMLAudioElement): boolean {
+        return audio
+            && audio.currentTime > 0
+            && !audio.paused
+            && !audio.ended
+            && audio.readyState > HTMLMediaElement.HAVE_CURRENT_DATA;
     }
 }

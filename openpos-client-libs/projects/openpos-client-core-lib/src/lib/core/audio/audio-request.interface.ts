@@ -1,3 +1,7 @@
+export interface AudioGroup {
+    [key: string]: HTMLAudioElement;
+}
+
 export interface AudioRequest {
     sound: string;
     playbackRate?: number;
@@ -7,4 +11,7 @@ export interface AudioRequest {
     volume?: number;
     autoplay?: boolean;
     delayTime?: number;
+    group?: string;
+    waitForScreen?: boolean;
+    waitForDialog?: boolean;
 }
