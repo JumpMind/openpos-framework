@@ -19,7 +19,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -46,8 +45,8 @@ public class PersonalizeEndpoint {
 
     public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request){
         String authToken = request.getDeviceToken();
-        String deviceId = request.getDeviceId();
-        String appId = request.getAppId();
+        final String deviceId = request.getDeviceId();
+        final String appId = request.getAppId();
 
         DeviceModel deviceModel;
 
@@ -104,7 +103,7 @@ public class PersonalizeEndpoint {
                         for (ITagProvider tagProvider:
                                 this.tagProviders) {
                             String name = env.getProperty(propName);
-                            String value = tagProvider.getTagValue(deviceId, businessUnitId, name);
+                            String value = tagProvider.getTagValue(deviceModel.getDeviceId(), deviceModel.getAppId(), name, businessUnitId);
                             if (isNotBlank(value)) {
                                 deviceModel.setTagValue(name, value);
                             }
