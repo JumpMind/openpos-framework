@@ -101,16 +101,12 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
     playRequest(audio: HTMLAudioElement, request: AudioRequest): void {
         this.beforePlay$.next({audio, request: request});
 
-        if (request.autoplay === false) {
-            return;
-        }
-
         let timeupdateCount = 0;
 
         if (request.endTime) {
             // Fake the end time by pausing the audio once the end time is reached
             audio.addEventListener('timeupdate', () => {
-                // For some reason removing this callback would sometimes get called, even after removing it.
+                // For some reason this callback would sometimes get called after removing it.
                 // So a more reliable way to stop responding is with a counter.
                 if (audio.currentTime >= request.endTime && !audio.paused && timeupdateCount === 0) {
                     timeupdateCount++;
@@ -127,7 +123,10 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
             }
 
             audio.volume = request.volume * this.config.volume;
-            audio.play();
+
+            if (request.autoplay !== false) {
+                audio.play();
+            }
         };
 
         if (request.delayTime) {
