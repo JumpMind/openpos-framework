@@ -40,7 +40,7 @@ public class DeviceUpdater implements ApplicationListener<DeviceConnectedEvent> 
     @Autowired
     Environment env;
 
-    @Autowired
+    @Autowired(required = false)
     CacheManager cacheManager;
 
     synchronized public void updateDevice(DeviceModel deviceModel) {
@@ -78,9 +78,11 @@ public class DeviceUpdater implements ApplicationListener<DeviceConnectedEvent> 
     public void onApplicationEvent(DeviceConnectedEvent event) {
         log.info("A device just connected.  Updating the device model in the database");
         updateDevice(devicesRepository.getDevice(event.getDeviceId(), event.getAppId()));
-        cacheManager.getCache("/context/config").clear();
-        cacheManager.getCache("/context/buttons").clear();
-        cacheManager.getCache("/devices/device").clear();
+        if (cacheManager != null) {
+            cacheManager.getCache("/context/config").clear();
+            cacheManager.getCache("/context/buttons").clear();
+            cacheManager.getCache("/devices/device").clear();
+        }
 
     }
 }
