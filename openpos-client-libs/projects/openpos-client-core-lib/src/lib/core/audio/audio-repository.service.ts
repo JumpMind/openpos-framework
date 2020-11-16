@@ -11,6 +11,7 @@ import { PersonalizationService } from '../personalization/personalization.servi
 import { deepAssign } from '../../utilites/deep-assign';
 import { AudioUtil } from './audio-util';
 import { AudioPreloadMessage } from './audio-preload-message.interface';
+import { PersonalizationTokenService } from '../personalization/personalization-token.service';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +24,9 @@ export class AudioRepositoryService implements OnDestroy {
     config: AudioConfig = AudioUtil.getDefaultConfig();
     config$ = new BehaviorSubject<AudioConfig>(AudioUtil.getDefaultConfig());
 
-    constructor(private sessionService: SessionService, private personalizationService: PersonalizationService) {
+    constructor(private sessionService: SessionService,
+                private personalizationService: PersonalizationService,
+                private personalizationTokenService: PersonalizationTokenService) {
         this.listenForMessages();
     }
 
@@ -79,7 +82,7 @@ export class AudioRepositoryService implements OnDestroy {
     createAudio(request: AudioRequest): Observable<HTMLAudioElement> {
         request = AudioUtil.getDefaultRequest(request);
 
-        const url = this.personalizationService.replaceTokens(request.sound);
+        const url = this.personalizationTokenService.replaceTokens(request.sound);
         const audio = new Audio(url);
 
         // Adjust the volume of this sound by the global configuration volume
@@ -117,7 +120,7 @@ export class AudioRepositoryService implements OnDestroy {
         let loadedCount = 0;
 
         contentUrls
-            .map(contentUrl => this.personalizationService.replaceTokens(contentUrl))
+            .map(contentUrl => this.personalizationTokenService.replaceTokens(contentUrl))
             // Loading each audio file will cause the browser to cache subsequent requests
             .map(url => new Audio(url))
             .forEach(audio => {

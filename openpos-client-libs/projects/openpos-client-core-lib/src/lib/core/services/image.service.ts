@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { PersonalizationService } from '../personalization/personalization.service';
 import { filter, map, take } from 'rxjs/operators';
+import { PersonalizationTokenService } from '../personalization/personalization-token.service';
 
 @Injectable({
     providedIn: 'root',
@@ -13,12 +14,12 @@ export class ImageService {
         return this._imageNotFoundURL;
     }
 
-    constructor(private personalizer: PersonalizationService, private session: SessionService) {
+    constructor(private personalizationTokenService: PersonalizationTokenService, private session: SessionService) {
         this.setImageNotFoundURL();
     }
 
     replaceImageUrl(originalUrl: string): string {
-        return this.personalizer.replaceTokens(originalUrl);
+        return this.personalizationTokenService.replaceTokens(originalUrl);
     }
 
     setImageNotFoundURL() {

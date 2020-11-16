@@ -5,16 +5,12 @@ import { Observable, BehaviorSubject, throwError } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { PersonalizationRequest } from './personalization-request';
 import { PersonalizationResponse } from './personalization-response.interface';
-import { DiscoveryService } from '../discovery/discovery.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class PersonalizationService {
     static readonly OPENPOS_MANAGED_SERVER_PROPERTY = 'managedServer';
-    static readonly BASE_URL_TOKEN = '${apiServerBaseUrl}';
-    static readonly APP_ID_TOKEN = '${appId}';
-    static readonly DEVICE_ID_TOKEN = '${deviceId}';
 
     private personalizationProperties$ = new BehaviorSubject<Map<string, string>>(null);
     private deviceId$ = new BehaviorSubject<string>(null);
@@ -199,24 +195,6 @@ export class PersonalizationService {
 
     public refreshApp() {
         window.location.reload();
-    }
-
-    public replaceTokens(value: string): string {
-        if(!value) {
-            return value;
-        }
-
-        // Getting the DiscoveryService here using Angular's Injector service prevents an
-        // 'undefined' service reference, that happens when using constructor-based dependency injection,
-        // because of a circular dependency between the PersonalizationService and DiscoveryService.
-        const discoveryService = this.injector.get(DiscoveryService);
-        const apiServerBaseUrl = discoveryService.getApiServerBaseURL();
-        const deviceId = this.getDeviceId$().getValue();
-        const appId = this.getAppId$().getValue();
-
-        let url = value.replace(PersonalizationService.BASE_URL_TOKEN, apiServerBaseUrl);
-        url = url.replace(PersonalizationService.APP_ID_TOKEN, appId);
-        return url.replace(PersonalizationService.DEVICE_ID_TOKEN, deviceId);
     }
 }
 
