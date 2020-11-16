@@ -49,7 +49,7 @@ public class AudioService implements IAudioService {
             return;
         }
 
-        AudioRequest requestCopy = ObjectUtils.deepClone(request);
+        AudioRequest requestCopy = (AudioRequest)request.clone();
         requestCopy.setSound(url);
         AudioMessage message = new AudioMessage(requestCopy);
 
