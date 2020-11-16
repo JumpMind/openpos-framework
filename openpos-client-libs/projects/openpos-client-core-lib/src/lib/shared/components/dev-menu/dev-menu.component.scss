@@ -12,11 +12,11 @@
     width:100%;
 }
 
-::ng-deep .mat-menu-content {
+:host ::ng-deep .mat-menu-content {
     background-color: white;
 }
 
-::ng-deep .mat-tab-body-content {
+:host ::ng-deep .mat-tab-body-content {
     max-height: 60vh;
     overflow: auto !important;
 }
