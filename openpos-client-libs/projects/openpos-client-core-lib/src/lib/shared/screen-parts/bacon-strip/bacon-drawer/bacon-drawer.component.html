@@ -5,7 +5,8 @@
     responsive-class
     class="button"
     (keydown.enter)="buttonClick(item)"
-    (click)="buttonClick(item)">
+    (click)="buttonClick(item)"
+    [ngClass]="{'muted-color': !item.enabled}">
     <div responsive-class class="button-content">
       <app-icon [iconName]="item.icon" iconClass="md"></app-icon>
       <span>{{item.title}}</span>
