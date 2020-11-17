@@ -97,6 +97,8 @@ export class PersonalizationComponent implements IScreen, OnInit {
                     let value = entry[1];
                     this.availableDevices.push({key, value});
                 });
+                this.availableDevices.sort((deviceOne, deviceTwo) =>
+                    (deviceOne.value > deviceTwo.value) ? 1 : (deviceOne.value === deviceTwo.value) ? ((deviceOne.key > deviceTwo.key) ? 1 : -1) : -1 );
             } else {
                 this.manualPersonalization = true;
             }
