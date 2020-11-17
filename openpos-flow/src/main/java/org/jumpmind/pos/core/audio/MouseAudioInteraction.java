@@ -12,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class MouseAudioInteraction implements Serializable {
+    private Boolean enabled = true;
     private AudioRequest mouseDown;
     private AudioRequest mouseUp;
 }

@@ -1,10 +1,11 @@
-import { Observable, Subject } from 'rxjs';
+import { forkJoin, Observable, Subject } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { AudioService } from './audio.service';
 import { AudioInteractionService } from './audio-interaction.service';
 import { IStartupTask } from '../startup/startup-task.interface';
 import { StartupTaskNames } from '../startup/startup-task-names';
 import { AudioRepositoryService } from './audio-repository.service';
+import { tap } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +13,7 @@ import { AudioRepositoryService } from './audio-repository.service';
 export class AudioStartupTask implements IStartupTask {
     name = StartupTaskNames.AUDIO_STARTUP;
     // This startup task needs to happen late to ensure the session service is ready to publish requests
-    order = 1000;
+    order = 950;
 
     constructor(private audioRepositoryService: AudioRepositoryService,
                 private audioService: AudioService,
@@ -23,18 +24,18 @@ export class AudioStartupTask implements IStartupTask {
         return Observable.create((message: Subject<string>) => {
             message.next('[AudioStartupTask]: Starting AudioService...');
             this.audioService.listen();
-            message.next('[AudioStartupTask]: AudioService started');
 
-            message.next('[AudioStartupTask]: Starting AudioInteractionService...');
+            message.next('[AudioStartupTask]: Starting AudioInteractionService');
             this.audioInteractionService.listen();
-            message.next('[AudioStartupTask]: AudioInteractionService started');
 
-            console.log('[AudioStartupTask]: Loading audio configuration...');
-            this.audioRepositoryService.loadConfig();
-            console.log('[AudioStartupTask]: Preloading audio files...');
-            this.audioRepositoryService.preloadAudio();
-
-            message.complete();
+            message.next('[AudioStartupTask]: Loading audio configuration...');
+            message.next('[AudioStartupTask]: Preloading audio files...');
+            forkJoin(
+                this.audioRepositoryService.loadConfig(),
+                this.audioRepositoryService.preloadAudio()
+            ).pipe(
+                tap(() => message.next('[AudioStartupTask]: Completed loading configuration and preloading audio'))
+            ).subscribe(() => message.complete());
 
             // This allows playing sounds by key name (instead of URL), which helps when experimenting to get
             // your setting just right when configuring a new sound.

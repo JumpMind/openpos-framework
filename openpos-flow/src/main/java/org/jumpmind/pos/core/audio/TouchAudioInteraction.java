@@ -12,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TouchAudioInteraction implements Serializable {
+    private Boolean enabled = true;
     private AudioRequest touchStart;
     private AudioRequest touchEnd;
 }
