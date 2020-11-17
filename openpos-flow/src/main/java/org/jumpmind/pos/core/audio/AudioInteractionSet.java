@@ -11,9 +11,9 @@ import java.io.Serializable;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AudioInteractionSet  implements Serializable {
+public class AudioInteractionSet implements Serializable {
     private Boolean enabled;
     private MouseAudioInteraction mouse;
-    private MouseAudioInteraction touch;
+    private TouchAudioInteraction touch;
     private DialogAudioInteraction dialog;
 }
