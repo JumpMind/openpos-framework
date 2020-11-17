@@ -114,6 +114,10 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
                     audio.pause();
                 }
             });
+            audio.addEventListener('emptied', () => {
+                timeupdateCount = 0;
+                console.log('[AudioService]: Emptied audio file', request);
+            });
         }
 
         const makeSound = () => {
@@ -122,9 +126,8 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
                 this.stop(request.group, audio);
             }
 
-            audio.volume = (request.volume || 1) * (this.config.volume || 1);
-
             if (request.autoplay !== false) {
+                this.updateAudioWithRequest(audio, request);
                 audio.play();
             }
         };
@@ -139,6 +142,24 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
         }
 
         this.playing$.next({audio, request: request});
+    }
+
+    updateAudioWithRequest(audio: HTMLMediaElement, request: AudioRequest): void {
+        // Reset things before updating the properties
+        audio.load();
+
+        // Adjust the volume of this sound by the global configuration volume
+        audio.volume = (request.volume || 1) * (this.config.volume || 1);
+
+        // Only honor autoplay setting if there's no setting that delays the playing
+        audio.autoplay = request.autoplay
+            && !request.delayTime
+            && !request.waitForScreen
+            && !request.waitForDialog;
+
+        audio.currentTime = request.startTime;
+        audio.playbackRate = request.playbackRate;
+        audio.loop = request.loop;
     }
 
     addToAudioGroup(request: AudioRequest, audio: HTMLAudioElement): void {

@@ -3,7 +3,7 @@ import { SessionService } from '../services/session.service';
 import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
 import { AudioConfig } from './audio-config.interface';
 import { MessageTypes } from '../messages/message-types';
-import { filter, first, switchMap, takeUntil, tap } from 'rxjs/operators';
+import { map, skip, takeUntil, tap } from 'rxjs/operators';
 import { AudioConfigMessage } from './audio-config-message.interface';
 import { AudioCache } from './audio-cache.interface';
 import { AudioRequest } from './audio-request.interface';
@@ -34,15 +34,22 @@ export class AudioRepositoryService implements OnDestroy {
         this.destroyed$.next();
     }
 
-    loadConfig(): void {
+    loadConfig(): Observable<AudioConfig> {
         console.log('[AudioRepositoryService]: Loading audio configuration...');
         this.sessionService.publish('GetConfig', 'Audio');
+        return this.config$.pipe(skip(1));
     }
 
-    preloadAudio(): void {
+    preloadAudio(): Observable<AudioCache> {
         this.preloading$.next(true);
         console.log('[AudioRepositoryService]: Preloading audio...');
         this.sessionService.publish('Preload', 'Audio');
+
+        return this.preloading$
+            .pipe(
+                skip(1),
+                map(() => this.cache)
+            );
     }
 
     getAudio(request: string | AudioRequest): Observable<HTMLAudioElement> {
@@ -84,21 +91,8 @@ export class AudioRepositoryService implements OnDestroy {
 
         const url = this.personalizationTokenService.replaceTokens(request.sound);
         const audio = new Audio(url);
-
-        // Adjust the volume of this sound by the global configuration volume
-        audio.volume = request.volume * this.config.volume;
-
-        // Only honor autoplay setting if there's no setting that delays the playing
-        audio.autoplay = request.autoplay
-            && !request.delayTime
-            && !request.waitForScreen
-            && !request.waitForDialog;
-
-        audio.currentTime = request.startTime;
-        audio.playbackRate = request.playbackRate;
-        audio.loop = request.loop;
-
         const audio$ = new Subject<HTMLAudioElement>();
+
         audio.addEventListener('canplay', () => audio$.next(audio));
 
         return audio$;

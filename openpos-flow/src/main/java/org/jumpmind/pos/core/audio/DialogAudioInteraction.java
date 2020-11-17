@@ -12,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DialogAudioInteraction implements Serializable {
+    private Boolean enabled = true;
     private AudioRequest opening;
     private AudioRequest closing;
 }
