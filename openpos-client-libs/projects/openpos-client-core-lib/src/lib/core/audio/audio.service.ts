@@ -122,7 +122,7 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
                 this.stop(request.group, audio);
             }
 
-            audio.volume = request.volume * this.config.volume;
+            audio.volume = (request.volume || 1) * (this.config.volume || 1);
 
             if (request.autoplay !== false) {
                 audio.play();
@@ -160,6 +160,7 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
             .map(group => this.audioGroups[group])
             .forEach(audioGroup => {
                 const audioListInGroup = Object.keys(audioGroup).map(key => audioGroup[key]);
+                // Stop all of the audio in this group
                 audioListInGroup
                     .filter(audio => audio !== skipThisAudio)
                     .forEach(audio => audio.pause());
