@@ -7,6 +7,7 @@ import { AudioConfig } from './audio-config.interface';
 import { AudioRepositoryService } from './audio-repository.service';
 import { DialogService } from '../services/dialog.service';
 import { AudioUtil } from './audio-util';
+import { AudioPlayRequest } from './audio-play-request.interface';
 
 @Injectable({
     providedIn: 'root',
@@ -125,7 +126,7 @@ export class AudioInteractionService implements OnDestroy {
         this.listen();
     }
 
-    play(audioRequest: AudioRequest): Observable<HTMLAudioElement> {
+    play(audioRequest: AudioRequest): Observable<AudioPlayRequest> {
         return this.audioService.play(audioRequest);
     }
 }

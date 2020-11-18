@@ -38,13 +38,6 @@ export class AudioStartupTask implements IStartupTask {
 
                 message.complete();
             });
-
-            // This allows playing sounds by key name (instead of URL), which helps when experimenting to get
-            // your setting just right when configuring a new sound.
-            //
-            // Example:
-            // sessionService.publish('Play', 'Audio', {sound: 'click-in-out-thin', startTime: .1, endTime: .25})
-            // window['sessionService'] = this.audioService['sessionService'];
         });
     }
 }

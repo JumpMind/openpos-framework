@@ -74,7 +74,7 @@ public class AudioActionListener implements IActionListener {
         IAudioService audioService = stateManager.getApplicationState().getScopeValue("audioService");
         AudioRequest audioRequest = Action.convertActionData(action.getData(), AudioRequest.class);
 
-        if (audioConfig.getEnabled() != null && audioConfig.getEnabled()) {
+        if (audioConfig.getEnabled() != null && !audioConfig.getEnabled()) {
             log.info("Not playing sound {} because audio is disabled", audioRequest.getSound());
             return;
         }
