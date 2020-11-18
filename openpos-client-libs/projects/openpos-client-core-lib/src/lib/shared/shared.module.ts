@@ -155,6 +155,7 @@ import {FitTextDirective} from './directives/fit-text.directive';
 import { PromptButtonRowComponent } from './screen-parts/prompt-button-row/prompt-button-row.component';
 import { WarnButtonComponent } from './components/warn-button/warn-button.component';
 import {StayFocusedDirective} from './directives/stay-focused.directive';
+import { AudioLicenseComponent } from './components/audio-license/audio-license.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -259,6 +260,7 @@ const components = [
     InstructionsComponent,
     TitleComponent,
     ContentCardComponent,
+    AudioLicenseComponent,
     OptionButtonComponent,
     OrderCardComponent,
     ButtonActionTimerComponent,
