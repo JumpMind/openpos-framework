@@ -10,13 +10,16 @@
     .transaction-search-top {
         display: grid;
         grid-template-columns: min-content 1fr auto;
-        grid-template-areas: "searchMode searchOptions searchModeToggle";
+        grid-template-areas:
+                "searchMode searchOptions searchModeToggle"
+                "filterOptions filterOptions filterOptions";
         align-items: center;
         margin: 16px 16px 0 16px;
         gap: 48px;
 
         &.change-search-mode-disabled {
-            grid-template-areas: "searchMode searchOptions";
+            grid-template-areas: "searchMode searchOptions"
+                                 "filterOptions filterOptions";
             grid-template-columns: min-content 1fr;
         }
 
@@ -28,7 +31,8 @@
             gap: 24px;
             grid-template-areas:
                 "searchMode searchModeToggle"
-                "searchOptions searchOptions";
+                "searchOptions searchOptions"
+                "filterOptions filterOptions";
             grid-template-columns: 1fr min-content;
         }
     }
@@ -124,6 +128,14 @@
         margin: 16px 16px 0;
         font-weight: bold;
         text-align: center;
+    }
+
+    .transaction-filter-options {
+        .transaction-filter-options-label::after {
+            content: ':';
+            padding-right: 1rem;
+        }
+        grid-area: filterOptions;
     }
 }
 
