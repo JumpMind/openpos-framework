@@ -8,7 +8,6 @@ import { AudioMessage } from './audio-message.interface';
 import { AudioUtil } from './audio-util';
 import { AudioRepositoryService } from './audio-repository.service';
 import { AudioConfig } from './audio-config.interface';
-import { LifeCycleEvents } from '../messages/life-cycle-events.enum';
 import { DialogService } from '../services/dialog.service';
 import { AudioPlayRequest } from './audio-play-request.interface';
 import { PersonalizationTokenService } from '../personalization/personalization-token.service';
@@ -29,7 +28,6 @@ export class AudioService implements OnDestroy {
     playing$ = new BehaviorSubject<AudioPlayRequest>({audio: null, request: null});
 
     waitForDialogQueue: AudioPlayRequest[] = [];
-    waitForScreenQueue: AudioPlayRequest[] = [];
 
     constructor(private sessionService: SessionService,
                 private dialogService: DialogService,
@@ -70,13 +68,6 @@ export class AudioService implements OnDestroy {
                 filter(message => message.type === MessageTypes.AUDIO),
                 takeUntil(merge(this.stop$, this.destroyed$))
             ).subscribe(message => this.onAudioMessage(message));
-
-        // Listen for screen updated messages
-        this.sessionService.getMessages()
-            .pipe(
-                filter(message => message.eventType === LifeCycleEvents.ScreenUpdated),
-                takeUntil(merge(this.stop$, this.destroyed$))
-            ).subscribe(message => this.onScreenUpdated(message));
     }
 
     stopListening(): void {
@@ -127,7 +118,10 @@ export class AudioService implements OnDestroy {
             });
         }
 
-        if (request.delayTime) {
+        if (request.waitForScreen) {
+            console.log('[AudioService]: Waiting for screen before playing...', playRequest.request);
+            setTimeout(() => this.makeSound(playRequest), 0);
+        } else if (request.delayTime) {
             const delaySeconds = request.delayTime * 1000;
             console.log(`[AudioService]: Delayed playing by ${delaySeconds} seconds`, request);
             setTimeout(() => this.makeSound(playRequest), delaySeconds);
@@ -207,9 +201,6 @@ export class AudioService implements OnDestroy {
         if (playRequest.request.waitForDialog) {
             console.log('[AudioService]: Waiting for dialog before playing...', playRequest.request);
             this.waitForDialogQueue.push(playRequest);
-        } else if (playRequest.request.waitForScreen) {
-            console.log('[AudioService]: Waiting for screen before playing...', playRequest.request);
-            this.waitForScreenQueue.push(playRequest);
         } else {
             this.playRequest(playRequest);
         }
@@ -235,15 +226,6 @@ export class AudioService implements OnDestroy {
 
         this.stopListening();
         this.listen();
-    }
-
-    onScreenUpdated(message: any) {
-        if (this.waitForScreenQueue.length > 0) {
-            console.log(`[AudioService]: Playing ${this.waitForScreenQueue.length} audio file(s) after screen rendered`);
-        }
-
-        this.playQueue(this.waitForScreenQueue);
-        this.waitForScreenQueue = [];
     }
 
     onAfterDialogOpened(): void {
