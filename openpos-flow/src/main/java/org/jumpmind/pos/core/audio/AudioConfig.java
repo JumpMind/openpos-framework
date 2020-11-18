@@ -6,6 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @Configuration
@@ -13,7 +14,7 @@ import java.io.Serializable;
 public class AudioConfig implements Serializable {
     private Boolean enabled;
     private Double volume;
-    private Double dialogDelayCompensation;
+    private List<AudioRequest> systemErrorSounds;
     private AudioInteractionSet interactions;
 
     @Override

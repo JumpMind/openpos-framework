@@ -1,12 +1,12 @@
 package org.jumpmind.pos.core.error;
 
+import org.jumpmind.pos.core.audio.AudioConfig;
 import org.jumpmind.pos.core.audio.AudioRequest;
 import org.jumpmind.pos.core.audio.IAudioService;
 import org.jumpmind.pos.core.flow.ApplicationState;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
-import org.jumpmind.pos.core.ui.message.ErrorDialogUIMessage;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.model.Message;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class DefaultErrorHandler implements IErrorHandler {
+    @Autowired
+    private AudioConfig audioConfig;
 
     @Autowired
     private IIncidentService incidentService;
@@ -35,10 +37,8 @@ public class DefaultErrorHandler implements IErrorHandler {
         ApplicationState applicationState = stateManager.getApplicationState();
         IAudioService audioService = applicationState.getScopeValue("audioService");
 
-        if (audioService != null) {
-            audioService.play("sad-trombone");
-            audioService.play(AudioRequest.builder().sound("error-sci-fi").delayTime(1.5).build());
-            audioService.play(AudioRequest.builder().sound("explosion-ultra-bass").delayTime(3.0).build());
+        if (audioService != null && audioConfig.getSystemErrorSounds() != null) {
+            audioConfig.getSystemErrorSounds().forEach(audioService::play);
         }
     }
 }
