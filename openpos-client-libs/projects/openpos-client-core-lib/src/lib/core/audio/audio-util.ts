@@ -5,7 +5,8 @@ import { deepAssign } from '../../utilites/deep-assign';
 export class AudioUtil {
     static getDefaultRequest(request?: AudioRequest): AudioRequest {
         return {
-            sound: '',
+            url: null,
+            sound: null,
             playbackRate: 1,
             startTime: 0,
             endTime: 0,
@@ -19,7 +20,7 @@ export class AudioUtil {
 
     static getDefaultConfig(config?: AudioConfig): AudioConfig {
         return {
-            enabled: true,
+            enabled: false,
             volume: 1,
             interactions: {
                 enabled: true
@@ -36,7 +37,8 @@ export class AudioUtil {
             + `loop:${request.loop}|`
             + `volume:${request.volume}|`
             + `autoplay:${request.autoplay}|`
-            + `delayTime:${request.delayTime}|`;
+            + `delayTime:${request.delayTime}|`
+            + `url:${request.url}|`;
     }
     
     static isPlaying(audio: HTMLAudioElement): boolean {

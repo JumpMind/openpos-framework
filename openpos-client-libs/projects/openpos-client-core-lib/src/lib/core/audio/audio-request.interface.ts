@@ -3,7 +3,8 @@ export interface AudioGroup {
 }
 
 export interface AudioRequest {
-    sound: string;
+    url?: string;
+    sound?: string;
     playbackRate?: number;
     startTime?: number;
     endTime?: number;

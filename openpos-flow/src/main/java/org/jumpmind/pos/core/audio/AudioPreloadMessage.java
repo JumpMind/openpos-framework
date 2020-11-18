@@ -11,7 +11,7 @@ import java.util.List;
 @Builder
 public class AudioPreloadMessage extends Message {
     private static final long serialVersionUID = 1L;
-    private List<String> contentUrls;
+    private List<String> urls;
 
     @Override
     public String getType() {

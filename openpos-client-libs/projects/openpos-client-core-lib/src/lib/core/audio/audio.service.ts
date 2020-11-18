@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
-import { take, takeUntil } from 'rxjs/operators';
+import { filter, skip, take, takeUntil } from 'rxjs/operators';
 import { SessionService } from '../services/session.service';
 import { MessageTypes } from '../messages/message-types';
 import { AudioGroup, AudioRequest } from './audio-request.interface';
@@ -8,15 +8,15 @@ import { AudioMessage } from './audio-message.interface';
 import { AudioUtil } from './audio-util';
 import { AudioRepositoryService } from './audio-repository.service';
 import { AudioConfig } from './audio-config.interface';
-import { IMessageHandler } from '../interfaces/message-handler.interface';
 import { LifeCycleEvents } from '../messages/life-cycle-events.enum';
 import { DialogService } from '../services/dialog.service';
 import { AudioPlayRequest } from './audio-play-request.interface';
+import { PersonalizationTokenService } from '../personalization/personalization-token.service';
 
 @Injectable({
     providedIn: 'root',
 })
-export class AudioService implements OnDestroy, IMessageHandler<any> {
+export class AudioService implements OnDestroy {
     private static readonly NO_GROUP = 'NO_GROUP';
 
     private destroyed$ = new Subject();
@@ -33,10 +33,8 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
 
     constructor(private sessionService: SessionService,
                 private dialogService: DialogService,
+                private personalizationTokenService: PersonalizationTokenService,
                 private audioRepositoryService: AudioRepositoryService) {
-
-        this.sessionService.registerMessageHandler(this);
-        this.dialogService.afterOpened$.pipe(takeUntil(this.destroyed$)).subscribe(() => this.onAfterDialogOpened());
     }
 
     ngOnDestroy() {
@@ -44,17 +42,41 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
     }
 
     listen(): void {
+        this.config = this.audioRepositoryService.config$.getValue();
+
+        if (!this.config.enabled) {
+            console.log(`[AudioService]: Not listening for ${MessageTypes.AUDIO} messages because audio is disabled`);
+            return;
+        }
+
         console.log(`[AudioService]: Listening for ${MessageTypes.AUDIO} messages...`);
 
-        this.sessionService.getMessages(MessageTypes.AUDIO)
+        // Play sounds queued to play after dialog is opened
+        this.dialogService.afterOpened$
             .pipe(
+                takeUntil(merge(this.stop$, this.destroyed$))
+            ).subscribe(() => this.onAfterDialogOpened());
+
+        // Listen for configuration changes
+        this.audioRepositoryService.config$
+            .pipe(
+                skip(1),
+                takeUntil(merge(this.stop$, this.destroyed$))
+            ).subscribe(config => this.onAudioConfig(config));
+
+        // Listen for audio messages
+        this.sessionService.getMessages()
+            .pipe(
+                filter(message => message.type === MessageTypes.AUDIO),
                 takeUntil(merge(this.stop$, this.destroyed$))
             ).subscribe(message => this.onAudioMessage(message));
 
-        this.audioRepositoryService.config$
+        // Listen for screen updated messages
+        this.sessionService.getMessages()
             .pipe(
+                filter(message => message.eventType === LifeCycleEvents.ScreenUpdated),
                 takeUntil(merge(this.stop$, this.destroyed$))
-            ).subscribe(config => this.onAudioConfig(config))
+            ).subscribe(message => this.onScreenUpdated(message));
     }
 
     stopListening(): void {
@@ -81,29 +103,18 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
 
         audio$.pipe(
             take(1)
-        ).subscribe(audio => {
-            this.addToAudioGroup(actualRequest, audio);
-
-            if (actualRequest.waitForDialog) {
-                console.log('[AudioService]: Waiting for dialog before playing...', actualRequest);
-                this.waitForDialogQueue.push({audio, request: actualRequest});
-            } else if (actualRequest.waitForScreen) {
-                console.log('[AudioService]: Waiting for screen before playing...');
-                this.waitForScreenQueue.push({audio, request: actualRequest});
-            } else {
-                this.playRequest(audio, actualRequest);
-            }
-        });
+        ).subscribe(audio => this.onAudioReady({audio, request: actualRequest}));
 
         return audio$;
     }
 
-    playRequest(audio: HTMLAudioElement, request: AudioRequest): void {
-        this.beforePlay$.next({audio, request: request});
-
-        let timeupdateCount = 0;
+    playRequest(playRequest: AudioPlayRequest): void {
+        const audio = playRequest.audio;
+        const request = playRequest.request;
 
         if (request.endTime) {
+            let timeupdateCount = 0;
+
             // Fake the end time by pausing the audio once the end time is reached
             audio.addEventListener('timeupdate', () => {
                 // For some reason this callback would sometimes get called after removing it.
@@ -114,64 +125,42 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
                     audio.pause();
                 }
             });
-            audio.addEventListener('emptied', () => {
-                timeupdateCount = 0;
-                console.log('[AudioService]: Emptied audio file', request);
-            });
         }
-
-        const makeSound = () => {
-            if (request.group) {
-                this.addToAudioGroup(request, audio);
-                this.stop(request.group, audio);
-            }
-
-            if (request.autoplay !== false) {
-                this.updateAudioWithRequest(audio, request);
-                audio.play();
-            }
-        };
 
         if (request.delayTime) {
             const delaySeconds = request.delayTime * 1000;
             console.log(`[AudioService]: Delayed playing by ${delaySeconds} seconds`, request);
-            window.setTimeout(() => makeSound(), delaySeconds);
+            setTimeout(() => this.makeSound(playRequest), delaySeconds);
         } else {
             console.log('[AudioService]: Playing', request);
-            makeSound();
+            this.makeSound(playRequest);
         }
-
-        this.playing$.next({audio, request: request});
     }
 
-    updateAudioWithRequest(audio: HTMLMediaElement, request: AudioRequest): void {
-        // Reset things before updating the properties
-        audio.load();
-
-        // Adjust the volume of this sound by the global configuration volume
-        audio.volume = (request.volume || 1) * (this.config.volume || 1);
-
-        // Only honor autoplay setting if there's no setting that delays the playing
-        audio.autoplay = request.autoplay
-            && !request.delayTime
-            && !request.waitForScreen
-            && !request.waitForDialog;
-
-        audio.currentTime = request.startTime;
-        audio.playbackRate = request.playbackRate;
-        audio.loop = request.loop;
+    playQueue(playRequests: AudioPlayRequest[]): void {
+        playRequests.forEach(playRequest => {
+            setTimeout(() => this.playRequest(playRequest), 0);
+        });
     }
 
-    addToAudioGroup(request: AudioRequest, audio: HTMLAudioElement): void {
-        if (!request.group) {
-            return;
+    makeSound(playRequest: AudioPlayRequest): void {
+        const audio = playRequest.audio;
+        const request = {...playRequest.request};
+
+        request.url = this.personalizationTokenService.replaceTokens(request.url);
+
+        if (request.group) {
+            this.addToAudioGroup(audio, request);
+            this.stop(request.group, audio);
         }
 
-        const group = request.group || AudioService.NO_GROUP;
-        this.audioGroups[group] = this.audioGroups[group] || {};
+        this.updateAudioWithRequest(audio, request);
 
-        const key = AudioUtil.getAudioRequestHash(request);
-        this.audioGroups[group][key] = audio;
+        if (request.autoplay !== false) {
+            this.beforePlay$.next(playRequest);
+            audio.play();
+            this.playing$.next(playRequest);
+        }
     }
 
     stop(group?: string, skipThisAudio?: HTMLMediaElement): void {
@@ -188,6 +177,44 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
             });
     }
 
+    updateAudioWithRequest(audio: HTMLMediaElement, request: AudioRequest): void {
+        // Adjust the volume of this sound by the global configuration volume
+        audio.volume = (request.volume || 1) * (this.config.volume || 1);
+
+        // Only honor autoplay setting if there's no setting that delays the playing
+        audio.autoplay = request.autoplay
+            && !request.delayTime
+            && !request.waitForDialog;
+
+        audio.currentTime = request.startTime || 0;
+        audio.playbackRate = request.playbackRate || 1;
+        audio.loop = request.loop;
+    }
+
+    addToAudioGroup(audio: HTMLAudioElement, request: AudioRequest): void {
+        if (!request.group) {
+            return;
+        }
+
+        const group = request.group || AudioService.NO_GROUP;
+        this.audioGroups[group] = this.audioGroups[group] || {};
+
+        const key = AudioUtil.getAudioRequestHash(request);
+        this.audioGroups[group][key] = audio;
+    }
+
+    onAudioReady(playRequest: AudioPlayRequest): void {
+        if (playRequest.request.waitForDialog) {
+            console.log('[AudioService]: Waiting for dialog before playing...', playRequest.request);
+            this.waitForDialogQueue.push(playRequest);
+        } else if (playRequest.request.waitForScreen) {
+            console.log('[AudioService]: Waiting for screen before playing...', playRequest.request);
+            this.waitForScreenQueue.push(playRequest);
+        } else {
+            this.playRequest(playRequest);
+        }
+    }
+
     onAudioMessage(message: AudioMessage): void {
         console.log('[AudioService]: Received message', message);
 
@@ -196,7 +223,7 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
         if (this.dialogService.isDialogOpening()) {
             request.waitForDialog = true;
         } else if (!this.dialogService.isDialogOpen()) {
-            request.waitForScreen;
+            request.waitForScreen = true;
         }
 
         this.play(request);
@@ -204,27 +231,19 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
 
     onAudioConfig(config: AudioConfig): void {
         console.log('[AudioService]: Configuration updated', config);
+        this.config = AudioUtil.getDefaultConfig(config);
 
-        if (this.config.enabled && !config.enabled) {
-            this.stopListening();
-        }
-
-        if (!this.config.enabled && config.enabled) {
-            this.listen();
-        }
-
-        this.config = config;
+        this.stopListening();
+        this.listen();
     }
 
-    handle(message: any) {
-        if (message.eventType === LifeCycleEvents.ScreenUpdated) {
-            if (this.waitForScreenQueue.length > 0) {
-                console.log(`[AudioService]: Playing ${this.waitForScreenQueue.length} audio file(s) after screen rendered`);
-            }
-
-            this.playQueue(this.waitForScreenQueue);
-            this.waitForScreenQueue = [];
+    onScreenUpdated(message: any) {
+        if (this.waitForScreenQueue.length > 0) {
+            console.log(`[AudioService]: Playing ${this.waitForScreenQueue.length} audio file(s) after screen rendered`);
         }
+
+        this.playQueue(this.waitForScreenQueue);
+        this.waitForScreenQueue = [];
     }
 
     onAfterDialogOpened(): void {
@@ -234,11 +253,5 @@ export class AudioService implements OnDestroy, IMessageHandler<any> {
 
         this.playQueue(this.waitForDialogQueue);
         this.waitForDialogQueue = [];
-    }
-
-    playQueue(playRequests: AudioPlayRequest[]): void {
-        playRequests.forEach(playRequest => {
-            setTimeout(() => this.playRequest(playRequest.audio, playRequest.request), 0);
-        });
     }
 }

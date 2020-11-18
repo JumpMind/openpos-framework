@@ -12,6 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class AudioRequest implements Serializable {
+    private String url;
     private String sound;
     private Double playbackRate;
     private Double startTime;
@@ -24,6 +25,7 @@ public class AudioRequest implements Serializable {
 
     public Object clone() {
         return AudioRequest.builder()
+                .url(url)
                 .sound(sound)
                 .playbackRate(playbackRate)
                 .startTime(startTime)

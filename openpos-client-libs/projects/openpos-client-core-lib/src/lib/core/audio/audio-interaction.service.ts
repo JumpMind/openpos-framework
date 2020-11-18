@@ -1,12 +1,12 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { fromEvent, merge, Observable, Subject } from 'rxjs';
-import { filter, takeUntil, tap } from 'rxjs/operators';
-import { AudioInteractionSet } from './audio-interaction-set.interface';
+import { filter, skip, takeUntil, tap } from 'rxjs/operators';
 import { AudioRequest } from './audio-request.interface';
 import { AudioService } from './audio.service';
 import { AudioConfig } from './audio-config.interface';
 import { AudioRepositoryService } from './audio-repository.service';
 import { DialogService } from '../services/dialog.service';
+import { AudioUtil } from './audio-util';
 
 @Injectable({
     providedIn: 'root',
@@ -14,8 +14,7 @@ import { DialogService } from '../services/dialog.service';
 export class AudioInteractionService implements OnDestroy {
     private destroyed$ = new Subject();
     private stop$ = new Subject();
-    private enabled = true;
-    private interactions: AudioInteractionSet;
+    private config = AudioUtil.getDefaultConfig();
 
     constructor(private audioRepositoryService: AudioRepositoryService,
                 private dialogService: DialogService,
@@ -27,6 +26,13 @@ export class AudioInteractionService implements OnDestroy {
     }
 
     listen(): void {
+        this.config = this.audioRepositoryService.config$.getValue();
+
+        if (!this.isEnabled()) {
+            console.log('[AudioInteractionService]: Not listening to the user because audio interaction is disabled');
+            return;
+        }
+
         console.log('[AudioInteractionService]: Listening to the user...');
 
         this.listenForMouseInteractions();
@@ -35,6 +41,7 @@ export class AudioInteractionService implements OnDestroy {
 
         this.audioRepositoryService.config$
             .pipe(
+                skip(1),
                 takeUntil(merge(this.stop$, this.destroyed$))
             ).subscribe(config => this.onAudioConfig(config));
     }
@@ -44,6 +51,16 @@ export class AudioInteractionService implements OnDestroy {
         this.stop$.next();
     }
 
+    isEnabled(interactionKey?: string): boolean {
+        let enabled = this.config.enabled && this.config.interactions.enabled;
+
+        if (interactionKey && this.config.interactions[interactionKey]) {
+            enabled = this.config.interactions[interactionKey].enabled !== false;
+        }
+
+        return enabled;
+    }
+
     listenForMouseInteractions(): void {
         // Use "capture" so this service hears the event even if propagation is stopped
         const mouseDown$ = fromEvent<MouseEvent>(document.body, 'mousedown', {capture: true});
@@ -51,15 +68,15 @@ export class AudioInteractionService implements OnDestroy {
         const mouseEvents$ = merge(mouseDown$, mouseUp$);
 
         mouseEvents$.pipe(
-            filter(() => !!this.interactions && !!this.interactions.mouse),
+            filter(() => this.isEnabled('mouse')),
             takeUntil(merge(this.stop$, this.destroyed$))
         ).subscribe(event => {
             if (event.type === 'mousedown') {
                 console.log('[AudioInteractionService]: Playing button mouse-down sound');
-                this.play(this.interactions.mouse.mouseDown);
+                this.play(this.config.interactions.mouse.mouseDown);
             } else if (event.type === 'mouseup') {
                 console.log('[AudioInteractionService]: Playing button mouse-up sound')
-                this.play(this.interactions.mouse.mouseUp);
+                this.play(this.config.interactions.mouse.mouseUp);
             }
         });
     }
@@ -71,15 +88,15 @@ export class AudioInteractionService implements OnDestroy {
         const touchEvents$ = merge(touchStart$, touchEnd$);
 
         touchEvents$.pipe(
-            filter(() => !!this.interactions && !!this.interactions.touch),
+            filter(() => this.isEnabled('touch')),
             takeUntil(merge(this.stop$, this.destroyed$))
         ).subscribe(event => {
             if (event.type === 'touchstart') {
                 console.log('[AudioInteractionService]: Playing button touch-start sound');
-                this.play(this.interactions.touch.touchStart);
+                this.play(this.config.interactions.touch.touchStart);
             } else if (event.type === 'touchend') {
                 console.log('[AudioInteractionService]: Playing button touch-end sound')
-                this.play(this.interactions.touch.touchEnd);
+                this.play(this.config.interactions.touch.touchEnd);
             }
         });
     }
@@ -87,30 +104,25 @@ export class AudioInteractionService implements OnDestroy {
     listenForDialogInteractions(): void {
         this.dialogService.beforeOpened$
             .pipe(
+                filter(() => this.isEnabled('dialog')),
                 tap(() => console.log('[AudioInteractionService]: Playing dialog opening sound')),
                 takeUntil(merge(this.stop$, this.destroyed$))
-            ).subscribe(() => this.play(this.interactions.dialog.opening));
+            ).subscribe(() => this.play(this.config.interactions.dialog.opening));
 
         this.dialogService.beforeClosed$
             .pipe(
+                filter(() => this.isEnabled('dialog')),
                 tap(() => console.log('[AudioInteractionService]: Playing dialog closing sound')),
                 takeUntil(merge(this.stop$, this.destroyed$))
-            ).subscribe(() => this.play(this.interactions.dialog.closing));
+            ).subscribe(() => this.play(this.config.interactions.dialog.closing));
     }
 
     onAudioConfig(config: AudioConfig): void {
         console.log('[AudioInteractionService]: Configuration updated', config);
+        this.config = AudioUtil.getDefaultConfig(config);
 
-        if (this.enabled && !config.interactions.enabled) {
-            this.stopListening();
-        }
-
-        if (!this.enabled && config.interactions.enabled) {
-            this.listen();
-        }
-
-        this.enabled = config.interactions.enabled;
-        this.interactions = config.interactions;
+        this.stopListening();
+        this.listen();
     }
 
     play(audioRequest: AudioRequest): Observable<HTMLAudioElement> {

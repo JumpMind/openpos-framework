@@ -1,9 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { SessionService } from '../services/session.service';
-import { BehaviorSubject, Observable, of, Subject } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { AudioConfig } from './audio-config.interface';
 import { MessageTypes } from '../messages/message-types';
-import { map, skip, takeUntil, tap } from 'rxjs/operators';
+import { skip, takeUntil, tap } from 'rxjs/operators';
 import { AudioConfigMessage } from './audio-config-message.interface';
 import { AudioCache } from './audio-cache.interface';
 import { AudioRequest } from './audio-request.interface';
@@ -37,7 +37,13 @@ export class AudioRepositoryService implements OnDestroy {
     loadConfig(): Observable<AudioConfig> {
         console.log('[AudioRepositoryService]: Loading audio configuration...');
         this.sessionService.publish('GetConfig', 'Audio');
-        return this.config$.pipe(skip(1));
+
+        return Observable.create(subscriber => {
+            this.config$.pipe(skip(1)).subscribe(config => {
+                subscriber.next(config);
+                subscriber.complete();
+            });
+        })
     }
 
     preloadAudio(): Observable<AudioCache> {
@@ -45,24 +51,28 @@ export class AudioRepositoryService implements OnDestroy {
         console.log('[AudioRepositoryService]: Preloading audio...');
         this.sessionService.publish('Preload', 'Audio');
 
-        return this.preloading$
-            .pipe(
-                skip(1),
-                map(() => this.cache)
-            );
+        return Observable.create(subscriber => {
+            this.preloading$.pipe(skip(1)).subscribe(config => {
+                subscriber.next(this.cache);
+                subscriber.complete();
+            });
+        });
     }
 
     getAudio(request: string | AudioRequest): Observable<HTMLAudioElement> {
-        request = typeof request === 'string' ? {sound: request} : request;
-
-        if (this.preloading$.getValue()) {
-            console.log('[AudioRepositoryService]: Skipping request while audio is preloading...', request);
-            return;
+        if (!request) {
+            return of(null);
         }
 
-        request = AudioUtil.getDefaultRequest(request);
+        let actualRequest = typeof request === 'string' ? {url: request} : request;
+        actualRequest = AudioUtil.getDefaultRequest(actualRequest);
 
-        const cacheKey = AudioUtil.getAudioRequestHash(request);
+        if (this.preloading$.getValue()) {
+            console.log('[AudioRepositoryService]: Skipping request while audio is preloading...', actualRequest);
+            return EMPTY;
+        }
+
+        const cacheKey = AudioUtil.getAudioRequestHash(actualRequest);
         const audio = this.cache[cacheKey];
 
         if (audio) {
@@ -73,14 +83,14 @@ export class AudioRepositoryService implements OnDestroy {
 
             // Make sure the start time is correct, because if this instance was previously played
             // from the cache, then the start time will not be correct.
-            audio.currentTime = request.startTime;
+            audio.currentTime = actualRequest.startTime;
 
             return of(audio);
         }
 
-        console.log('[AudioRepositoryService]: Creating audio for request', request);
+        console.log('[AudioRepositoryService]: Creating audio for request', actualRequest);
 
-        return this.createAudio(request)
+        return this.createAudio(actualRequest)
             .pipe(
                 tap(audio => this.cache[cacheKey] = audio)
             );
@@ -89,7 +99,7 @@ export class AudioRepositoryService implements OnDestroy {
     createAudio(request: AudioRequest): Observable<HTMLAudioElement> {
         request = AudioUtil.getDefaultRequest(request);
 
-        const url = this.personalizationTokenService.replaceTokens(request.sound);
+        const url = this.personalizationTokenService.replaceTokens(request.url);
         const audio = new Audio(url);
         const audio$ = new Subject<HTMLAudioElement>();
 
@@ -110,23 +120,39 @@ export class AudioRepositoryService implements OnDestroy {
             ).subscribe(message => this.onAudioConfigMessage(message));
     }
 
-    fillBrowserCache(contentUrls: string[]): void {
+    fillBrowserCache(urls: string[]): Observable<any> {
+        const done$ = new Subject<string[]>();
         let loadedCount = 0;
 
-        contentUrls
-            .map(contentUrl => this.personalizationTokenService.replaceTokens(contentUrl))
+        if (urls.length === 0) {
+            return of([]);
+        }
+
+        urls
+            .map(url => this.personalizationTokenService.replaceTokens(url))
             // Loading each audio file will cause the browser to cache subsequent requests
-            .map(url => new Audio(url))
-            .forEach(audio => {
+            .forEach(url => {
+                const audio = new Audio();
+
                 audio.oncanplay = () => {
                     loadedCount++;
 
-                    if (loadedCount === contentUrls.length) {
-                        console.log(`[AudioRepositoryService]: Finished preloading ${contentUrls.length} audio files`, contentUrls);
-                        this.preloading$.next(false);
+                    if (loadedCount === urls.length) {
+                        console.log(`[AudioRepositoryService]: Finished preloading ${urls.length} audio files`, urls);
+                        done$.next();
+                        done$.complete();
                     }
                 };
+                audio.onerror = error => {
+                    console.error(`[AudioRepositoryService]: Failed to preload ${url}`);
+                    done$.next();
+                    done$.error(error);
+                };
+                audio.src = url;
+                audio.load();
             });
+
+        return done$;
     }
 
     onAudioConfigMessage(message: AudioConfigMessage): void {
@@ -137,8 +163,7 @@ export class AudioRepositoryService implements OnDestroy {
     }
 
     onAudioPreloadMessage(message: AudioPreloadMessage): void {
-        this.preloading$.next(false);
         console.log('[AudioRepositoryService]: Received preload message', message);
-        this.fillBrowserCache(message.contentUrls);
+        this.fillBrowserCache(message.urls).subscribe(() => this.preloading$.next(false));
     }
 }
