@@ -79,7 +79,9 @@ export class AudioRepositoryService implements OnDestroy {
             console.log('[AudioRepositoryService]: Loaded audio from the cache', audio);
 
             // Pause this instance in case it was in the middle of playing
-            audio.pause();
+            if (AudioUtil.isPlaying(audio)) {
+                audio.pause();
+            }
 
             // Make sure the start time is correct, because if this instance was previously played
             // from the cache, then the start time will not be correct.

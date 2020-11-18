@@ -1,6 +1,6 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, merge, Observable, Subject } from 'rxjs';
-import { filter, skip, take, takeUntil } from 'rxjs/operators';
+import { filter, map, skip, switchMap, take, takeUntil } from 'rxjs/operators';
 import { SessionService } from '../services/session.service';
 import { MessageTypes } from '../messages/message-types';
 import { AudioGroup, AudioRequest } from './audio-request.interface';
@@ -26,6 +26,7 @@ export class AudioService implements OnDestroy {
 
     beforePlay$ = new Subject<AudioPlayRequest>();
     playing$ = new BehaviorSubject<AudioPlayRequest>({audio: null, request: null});
+    audioMessage$ = new Subject<AudioMessage>();
 
     waitForDialogQueue: AudioPlayRequest[] = [];
 
@@ -75,19 +76,24 @@ export class AudioService implements OnDestroy {
         this.stop$.next();
     }
 
-    play(request: string | AudioRequest): Observable<HTMLAudioElement> {
+    play(request: AudioRequest): Observable<AudioPlayRequest> {
         if (!this.config.enabled) {
             console.warn('[AudioService]: Ignoring audio request because the service is disabled', request);
             return;
         }
 
-        if (!request || !(request as AudioRequest).sound) {
-            console.warn('[AudioService]: Ignoring null request');
-            return;
+        const actualRequest = AudioUtil.getDefaultRequest(request);
+
+        if (actualRequest.sound && !actualRequest.url) {
+            // If only a sound, and no URL is provided, we need to publish the request to the server so the
+            // content URL can be resolved
+            return this.publishPlaySoundRequest(actualRequest);
         }
 
-        let actualRequest = (typeof request === 'string' ? {sound: request} as AudioRequest : request) as AudioRequest;
-        actualRequest = AudioUtil.getDefaultRequest(actualRequest);
+        if (!actualRequest.url) {
+            console.warn('[AudioService]: Ignoring null request', actualRequest);
+            return;
+        }
 
         console.log('[AudioService]: Getting audio from repository', actualRequest);
         const audio$ = this.audioRepositoryService.getAudio(actualRequest);
@@ -96,7 +102,40 @@ export class AudioService implements OnDestroy {
             take(1)
         ).subscribe(audio => this.onAudioReady({audio, request: actualRequest}));
 
-        return audio$;
+        return audio$.pipe(map(audio => ({audio, request: actualRequest})));
+    }
+
+    publishPlaySoundRequest(request: AudioRequest): Observable<AudioPlayRequest> {
+        const actualRequest = AudioUtil.getDefaultRequest(request);
+        // Disable autoplay so this method can handle playing the sound
+        actualRequest.autoplay = false;
+        const actualRequestHash = AudioUtil.getAudioRequestHash(actualRequest);
+
+        const audioMessage$ = this.audioMessage$.pipe(
+            filter(message => {
+                // Update "autoplay" and "url" to match the original request when checking the hashes
+                const messageRequest = {...message.request};
+                messageRequest.autoplay = false;
+                messageRequest.url = null;
+                return AudioUtil.getAudioRequestHash(messageRequest) === actualRequestHash;
+            }),
+            take(1),
+            switchMap(message => {
+                // Switch back autoplay to "true"
+                message.request.autoplay = true;
+                return this.play(message.request);
+            })
+        );
+        audioMessage$.subscribe();
+
+        this.sessionService.publish('Play', 'Audio', actualRequest);
+
+        return Observable.create((subscriber: Subject<AudioPlayRequest>) => {
+            audioMessage$.subscribe(playRequest => {
+                subscriber.next(playRequest);
+                subscriber.complete();
+            });
+        });
     }
 
     playRequest(playRequest: AudioPlayRequest): void {
@@ -167,6 +206,7 @@ export class AudioService implements OnDestroy {
                 // Stop all of the audio in this group
                 audioListInGroup
                     .filter(audio => audio !== skipThisAudio)
+                    .filter(audio => audio.readyState > HTMLMediaElement.HAVE_CURRENT_DATA)
                     .forEach(audio => audio.pause());
             });
     }
@@ -210,6 +250,7 @@ export class AudioService implements OnDestroy {
     onAudioMessage(message: AudioMessage): void {
         console.log('[AudioService]: Received message', message);
 
+        this.audioMessage$.next(message);
         const request = {...message.request};
 
         if (this.dialogService.isDialogOpening()) {
@@ -218,6 +259,7 @@ export class AudioService implements OnDestroy {
             request.waitForScreen = true;
         }
 
+        this.audioMessage$.next(message);
         this.play(request);
     }
 
