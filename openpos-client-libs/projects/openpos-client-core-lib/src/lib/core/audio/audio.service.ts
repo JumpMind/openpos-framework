@@ -118,13 +118,13 @@ export class AudioService implements OnDestroy {
             });
         }
 
-        if (request.waitForScreen) {
-            console.log('[AudioService]: Waiting for screen before playing...', playRequest.request);
-            setTimeout(() => this.makeSound(playRequest), 0);
-        } else if (request.delayTime) {
+        if (request.delayTime) {
             const delaySeconds = request.delayTime * 1000;
             console.log(`[AudioService]: Delayed playing by ${delaySeconds} seconds`, request);
             setTimeout(() => this.makeSound(playRequest), delaySeconds);
+        } else if (request.waitForScreen) {
+            console.log('[AudioService]: Waiting for screen before playing...', playRequest.request);
+            setTimeout(() => this.makeSound(playRequest), 0);
         } else {
             console.log('[AudioService]: Playing', request);
             this.makeSound(playRequest);
@@ -178,6 +178,7 @@ export class AudioService implements OnDestroy {
         // Only honor autoplay setting if there's no setting that delays the playing
         audio.autoplay = request.autoplay
             && !request.delayTime
+            && !request.waitForScreen
             && !request.waitForDialog;
 
         audio.currentTime = request.startTime || 0;
