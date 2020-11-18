@@ -36,7 +36,9 @@ public class DefaultErrorHandler implements IErrorHandler {
         IAudioService audioService = applicationState.getScopeValue("audioService");
 
         if (audioService != null) {
-            audioService.play("error-alert");
+            audioService.play("sad-trombone");
+            audioService.play(AudioRequest.builder().sound("error-sci-fi").delayTime(1.5).build());
+            audioService.play(AudioRequest.builder().sound("explosion-ultra-bass").delayTime(3.0).build());
         }
     }
 }

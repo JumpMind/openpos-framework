@@ -3,7 +3,6 @@ package org.jumpmind.pos.core.audio;
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.content.ContentProviderService;
 import org.jumpmind.pos.core.flow.IStateManager;
-import org.jumpmind.pos.util.ObjectUtils;
 import org.jumpmind.pos.util.ResourceUtils;
 import org.springframework.core.io.Resource;
 
@@ -21,22 +20,22 @@ public final class AudioUtil {
     public static final String AUDIO_CONTENT_ROOT = "audio/";
 
     public static AudioConfigMessage getInteractionMessageFromConfig(IStateManager stateManager, AudioConfig config) {
-        AudioConfig configCopy = (AudioConfig)config.clone();
+        AudioConfig configCopy = (AudioConfig) config.clone();
 
         if (configCopy.getInteractions() != null && configCopy.getInteractions().getMouse() != null) {
-            updateSoundWithProviderUrl(stateManager, configCopy.getInteractions().getMouse().getMouseDown());
-            updateSoundWithProviderUrl(stateManager, configCopy.getInteractions().getMouse().getMouseUp());
+            setProviderUrl(stateManager, configCopy.getInteractions().getMouse().getMouseDown());
+            setProviderUrl(stateManager, configCopy.getInteractions().getMouse().getMouseUp());
         }
 
         if (configCopy.getInteractions() != null && configCopy.getInteractions().getDialog() != null) {
-            updateSoundWithProviderUrl(stateManager, configCopy.getInteractions().getDialog().getOpening());
-            updateSoundWithProviderUrl(stateManager, configCopy.getInteractions().getDialog().getClosing());
+            setProviderUrl(stateManager, configCopy.getInteractions().getDialog().getOpening());
+            setProviderUrl(stateManager, configCopy.getInteractions().getDialog().getClosing());
         }
 
         return new AudioConfigMessage(configCopy);
     }
 
-    public static void updateSoundWithProviderUrl(IStateManager stateManager, AudioRequest request) {
+    public static void setProviderUrl(IStateManager stateManager, AudioRequest request) {
         if (request == null) {
             return;
         }
@@ -45,7 +44,7 @@ public final class AudioUtil {
 
         String audioKey = getKey(request.getSound());
         String soundUrl = contentProviderService.resolveContent(stateManager.getDeviceId(), audioKey);
-        request.setSound(soundUrl);
+        request.setUrl(soundUrl);
     }
 
     public static String getKey(String sound) {

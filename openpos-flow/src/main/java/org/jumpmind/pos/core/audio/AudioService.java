@@ -50,8 +50,9 @@ public class AudioService implements IAudioService {
         }
 
         AudioRequest requestCopy = (AudioRequest)request.clone();
-        requestCopy.setSound(url);
+        requestCopy.setUrl(url);
         AudioMessage message = new AudioMessage(requestCopy);
+
 
         log.info(String.format("Sending sound '%s' to be played on device '%s'", url, stateManager.getDeviceId()), message);
         messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), new AudioMessage(requestCopy));
