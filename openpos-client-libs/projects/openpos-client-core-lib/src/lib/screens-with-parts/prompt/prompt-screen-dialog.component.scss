@@ -20,5 +20,8 @@
             }
             justify-self: center;
         }
+        ::ng-deep form {
+            outline: 0;
+        }
     }
 }
