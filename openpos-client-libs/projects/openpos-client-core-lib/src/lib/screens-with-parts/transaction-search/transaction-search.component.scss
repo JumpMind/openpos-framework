@@ -15,7 +15,7 @@
                 "filterOptions filterOptions filterOptions";
         align-items: center;
         margin: 16px 16px 0 16px;
-        gap: 48px;
+        gap: 24px 48px;
 
         &.change-search-mode-disabled {
             grid-template-areas: "searchMode searchOptions"
