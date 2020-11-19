@@ -40,7 +40,7 @@
             </button>
             <div class="transaction-filter-options">
                 <span class="transaction-filter-options-label">{{screen.filtersLabel}}</span>
-                <mat-chip-list aria-label="Fruit selection" [multiple]="true" [selectable]="true">
+                <mat-chip-list [multiple]="true" [selectable]="true">
                     <mat-chip *ngFor="let filter of screen.filters" [selected]="filter.enabled" [selectable]="true"
                               (click)="filterChanged(filter)">
                         {{filter.title}}
