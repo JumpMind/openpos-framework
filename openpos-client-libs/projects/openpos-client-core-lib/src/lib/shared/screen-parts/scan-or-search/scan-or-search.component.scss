@@ -1,9 +1,10 @@
 :host {
     border-radius: 4px;
     display:grid;
-    grid-template-columns: 0px auto 1fr;
+    grid-template-columns: 0 auto 1fr;
     grid-template-rows: auto;
-    &.focusInitial{
+
+    &.focusInitial {
         grid-template-columns: auto 1fr;
     }
 }
@@ -15,7 +16,7 @@
 
 .scan-button {
     width: 100px;
-    height: 55px;
+    height: 50px;
 }
 
 .scan-button-xs {
@@ -25,16 +26,23 @@
 
 .scan-input {
     font-size: 24px;
-    margin: 0px;
-    padding: 4px;
-    padding-left: 8px;
-    border-width: 0px;
+    margin: 0;
+    padding: 4px 4px 4px 8px;
+    border-width: 0;
     width:auto;
+
+    &.mobile-landscape {
+        font-size: 1rem;
+    }
+
+    &.mobile-portrait {
+        font-size: .75rem;
+    }
 }
 
 .scan-input-xs {
     font-size: 16px;
-    margin: 0px;
+    margin: 0;
     padding: 4px;
 }
 

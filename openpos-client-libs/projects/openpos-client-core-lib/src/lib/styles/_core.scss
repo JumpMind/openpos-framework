@@ -99,4 +99,9 @@ $mat-card-default-margin: 24px !default;
     }
   }
 
+  @media only screen and (max-width: 640px) {
+    .mat-dialog-container {
+      padding: 16px !important;
+    }
+  }
 }

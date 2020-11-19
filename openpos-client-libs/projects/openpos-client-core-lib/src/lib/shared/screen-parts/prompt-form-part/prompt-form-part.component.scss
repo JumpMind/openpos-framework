@@ -24,7 +24,9 @@
         justify-content: end;
         grid-column-gap: 8px;
         &.mobile {
-            grid-column-gap: 4px;
+            grid-auto-flow: row;
+            justify-content: center;
+            grid-row-gap: 8px;
         }
     }
 }
