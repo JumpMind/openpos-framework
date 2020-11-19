@@ -1,3 +1,7 @@
+.header {
+    font-size: 1rem;
+}
+
 @supports not(display: grid) {
     .back-button{
         position: absolute;
