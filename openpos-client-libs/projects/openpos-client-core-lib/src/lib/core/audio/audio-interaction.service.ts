@@ -16,7 +16,6 @@ export class AudioInteractionService implements OnDestroy {
     private destroyed$ = new Subject();
     private stop$ = new Subject();
     private config = AudioUtil.getDefaultConfig();
-    private isBeingTouched: boolean;
 
     constructor(private audioRepositoryService: AudioRepositoryService,
                 private dialogService: DialogService,
@@ -67,13 +66,9 @@ export class AudioInteractionService implements OnDestroy {
         // Use "capture" so this service hears the event even if propagation is stopped
         const mouseDown$ = fromEvent<MouseEvent>(document.body, 'mousedown', {capture: true});
         const mouseUp$ = fromEvent<MouseEvent>(document.body, 'mouseup', {capture: true});
-        const click$ = fromEvent<MouseEvent>(document.body, 'click', {capture: true});
         const mouseEvents$ = merge(mouseDown$, mouseUp$);
 
         mouseEvents$.pipe(
-            // Touch events fire first, before mouse events, so check the flag to make sure sounds for the mouse
-            // don't play for a touch-enabled deice
-            filter(() => !this.isBeingTouched),
             filter(() => this.isEnabled('mouse')),
             takeUntil(merge(this.stop$, this.destroyed$))
         ).subscribe(event => {
@@ -81,15 +76,10 @@ export class AudioInteractionService implements OnDestroy {
                 console.log('[AudioInteractionService]: Playing button mouse-down sound');
                 this.play(this.config.interactions.mouse.mouseDown);
             } else if (event.type === 'mouseup') {
-                console.log('[AudioInteractionService]: Playing button mouse-up sound');
+                console.log('[AudioInteractionService]: Playing button mouse-up sound')
                 this.play(this.config.interactions.mouse.mouseUp);
             }
         });
-
-        // Click is the last event in the touch/click sequence, so reset the flag to track if the device is being touched
-        click$.pipe(
-            takeUntil(merge(this.stop$, this.destroyed$))
-        ).subscribe(() => this.isBeingTouched = false);
     }
 
     listenForTouchInteractions(): void {
@@ -102,9 +92,6 @@ export class AudioInteractionService implements OnDestroy {
             filter(() => this.isEnabled('touch')),
             takeUntil(merge(this.stop$, this.destroyed$))
         ).subscribe(event => {
-            // Set the flag used to prevent sounds for the mouse from playing when a device is being touched
-            this.isBeingTouched = true;
-
             if (event.type === 'touchstart') {
                 console.log('[AudioInteractionService]: Playing button touch-start sound');
                 this.play(this.config.interactions.touch.touchStart);
