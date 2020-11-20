@@ -52,7 +52,7 @@
                 </div>
             </app-content-card>
             <app-content-card>
-                <mat-dialog-content class="content">
+                <mat-dialog-content class="content" responsive-class>
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
                                       [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
                                       [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"

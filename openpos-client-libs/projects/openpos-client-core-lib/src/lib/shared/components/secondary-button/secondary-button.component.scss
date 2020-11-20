@@ -2,20 +2,22 @@
 
 button{
   @extend %text-md;
-  padding: 8px;
+  border-width: 2px;
+  padding: $text-md/2 $text-md*1.25;
   min-width: 150px;
 
-  &.desktop-portrait {
-    padding: 12px 24px;
+  &.tablet {
     min-width: 100px;
+    padding: $text-md-mobile/4 $text-md-mobile*1.25;
   }
 
-  &.tablet{
-    min-width: 100px;
-  }
-
-  &.mobile{
+  &.mobile {
     @extend %text-sm;
     min-width: 75px;
+    padding: $text-sm-mobile/4 $text-sm-mobile*1.25;
   }
+}
+
+:host ::ng-deep app-icon {
+  margin: -4px -4px -4px 0;
 }

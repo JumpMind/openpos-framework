@@ -1,0 +1,40 @@
+@import '../../../styles/mixins/typography';
+
+.prompt-text,
+.prompt-password,
+.prompt-input {
+  @extend %text-lg;
+}
+
+.prompt-textarea,
+.prompt-hint,
+.prompt-error {
+  @extend %text-sm;
+}
+
+app-icon {
+  position: relative;
+  bottom: -5px;
+  padding: 0 $text-lg/4;
+
+  &.mobile {
+    bottom: -3px;
+    padding: 0 $text-lg-mobile/4;
+  }
+
+  &.tablet {
+    padding: 0 $text-lg-mobile/4;
+  }
+}
+
+.mat-form-field-label {
+  @extend %text-lg;
+
+  @at-root app-prompt-input .mobile .mat-form-field-label {
+    font-size: $text-lg-mobile;
+  }
+
+  @at-root app-prompt-input .tablet .mat-form-field-label {
+    font-size: $text-lg-mobile;
+  }
+}
