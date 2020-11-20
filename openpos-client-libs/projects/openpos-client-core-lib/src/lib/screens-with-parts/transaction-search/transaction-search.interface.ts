@@ -12,4 +12,6 @@ export interface TransactionSearchInterface extends IAbstractScreen {
     transSearchModeIcon: string;
     providerKey: string;
     noResultsMessage: string;
+    filtersLabel: string;
+    filters: IActionItem[];
 }

@@ -8,6 +8,7 @@ import { IForm } from '../../core/interfaces/form.interface';
 import { UIDataMessageService } from '../../core/ui-data-message/ui-data-message.service';
 import { takeUntil } from 'rxjs/operators';
 import { merge } from 'rxjs';
+import {IActionItem} from '../../core/actions/action-item.interface';
 
 @ScreenComponent({
   name: 'TransactionSearch'
@@ -42,5 +43,9 @@ export class TransactionSearchComponent extends PosScreen<TransactionSearchInter
 
   searchAll(): void {
     this.doAction(this.screen.searchAllButton.action, this.searchAllParamsForm);
+  }
+
+  filterChanged(filter: IActionItem): void {
+    this.doAction(filter.action);
   }
 }

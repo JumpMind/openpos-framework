@@ -38,6 +38,15 @@
                 <span class="transaction-change-search-mode-button-text">{{screen.changeSearchModeButton.title}}</span>
                 <app-icon iconName="Forward" iconClass="mat-24"></app-icon>
             </button>
+            <div class="transaction-filter-options">
+                <span class="transaction-filter-options-label">{{screen.filtersLabel}}</span>
+                <mat-chip-list [multiple]="true" [selectable]="true">
+                    <mat-chip *ngFor="let filter of screen.filters" [selected]="filter.enabled" [selectable]="true"
+                              (click)="filterChanged(filter)">
+                        {{filter.title}}
+                    </mat-chip>
+                </mat-chip-list>
+            </div>
         </div>
         <app-instructions *ngIf="resultsCount === 0" [instructions]="screen.noResultsMessage" class="no-results"></app-instructions>
         <app-infinite-scroll *ngIf="resultsCount !== 0" [dataKey]="screen.providerKey" [itemTemplate]="itemTemplate"
