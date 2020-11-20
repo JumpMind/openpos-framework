@@ -14,6 +14,7 @@ import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.model.OpenposBarcodeType;
 import org.jumpmind.pos.core.model.ScanData;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
+import org.jumpmind.pos.devices.model.DeviceAuthModel;
 import org.jumpmind.pos.devices.model.DevicesRepository;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
@@ -35,15 +36,27 @@ public class DevToolsActionListener implements IActionListener {
     private static final String SAVE_PATH = "./savepoints";
 
     final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     IStateManagerContainer stateManagerFactory;
-    
+
     @Autowired
     IMessageService messageService;
 
     @Autowired
     DevicesRepository devicesRepository;
+
+    @Value("${openpos.customerDisplayViewer.customerDisplayPort:#{null}}")
+    String customerDisplayPort;
+
+    @Value("${openpos.customerDisplayViewer.appId:'customerdisplay'}")
+    String customerDisplayAppId;
+
+    @Value("${openpos.customerDisplayViewer.customerDisplayUrl:#{null}}")
+    String customerDisplayUrl;
+
+    @Value("${openpos.customerDisplayViewer.customerDisplayProtocol:#{null}}")
+    String customerDisplayProtocol;
 
     @Value("${openpos.peripheralSimulatorViewer.simPort:#{null}}")
     String simPort;
@@ -106,6 +119,7 @@ public class DevToolsActionListener implements IActionListener {
         setScopes(sm, message);
         setCurrentStateAndActions(sm, message);
         setSimAuthCode(deviceId, message);
+        setCustomerDisplayAuthData(deviceId, message);
         return message;
     }
 
@@ -147,6 +161,21 @@ public class DevToolsActionListener implements IActionListener {
         simulatorMap.put("simUrl", simUrl);
         simulatorMap.put("simProtocol", simProtocol);
         message.put("simulator", simulatorMap);
+    }
+
+    private void setCustomerDisplayAuthData(String deviceId, Message message) {
+        Map<String, String> customDeviceMap = new HashMap<>();
+        String authToken = "";
+        try{
+            authToken = devicesRepository.getDeviceAuth(deviceId, customerDisplayAppId);
+        } catch (DeviceNotFoundException ex){
+            authToken = "";
+        }
+        customDeviceMap.put("customerDisplayAuthToken", authToken);
+        customDeviceMap.put("customerDisplayPort", customerDisplayPort);
+        customDeviceMap.put("customerDisplayUrl", customerDisplayUrl);
+        customDeviceMap.put("customerDisplayProtocol", customerDisplayProtocol);
+        message.put("customerDisplay", customDeviceMap);
     }
 
     private void setCurrentStateAndActions(IStateManager sm, Message message) {

@@ -4,7 +4,6 @@ import { ChangeDetectorRef, Renderer2, ElementRef } from '@angular/core';
 import { Component, ViewChild, HostListener, ComponentRef, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatExpansionPanel } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Router } from '@angular/router';
 import { Configuration } from '../../../configuration/configuration';
 import { IScreen } from '../dynamic-screen/screen.interface';
 import { PersonalizationService } from '../../../core/personalization/personalization.service';
@@ -53,6 +52,16 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     simProtocol: string;
 
     simAuthTokenAvailable = false;
+
+    customerDisplayAuthToken: string;
+
+    customerDisplayPort : string;
+
+    customerDisplayUrl: string;
+
+    customerDisplayProtocol: string;
+
+    customerDisplayAuthTokenAvailable = false;
 
     firstClickTime = Date.now();
 
@@ -264,6 +273,20 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             }
         } else {
             this.simAuthTokenAvailable = false;
+        }
+        if (message.customerDisplay) {
+            console.info('Pulling customer display token...');
+            this.customerDisplayAuthToken = message.customerDisplay.customerDisplayAuthToken;
+            this.customerDisplayPort = message.customerDisplay.customerDisplayPort;
+            this.customerDisplayUrl = message.customerDisplay.customerDisplayUrl;
+            this.customerDisplayProtocol = message.customerDisplay.customerDisplayProtocol;
+            if (message.customerDisplay.customerDisplayPort && message.customerDisplay.customerDisplayAuthToken && message.customerDisplay.customerDisplayAuthToken.length > 0) {
+                this.customerDisplayAuthTokenAvailable = true;
+            } else {
+                this.customerDisplayAuthTokenAvailable = false;
+            }
+        } else {
+            this.customerDisplayAuthTokenAvailable = false;
         }
     }
 
@@ -482,11 +505,26 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         const serverPort = this.personalization.getServerPort$().getValue();
         const protocol = this.simProtocol ? this.simProtocol : window.location.protocol;
         const sslEnabled = this.simProtocol && this.simProtocol === 'https' ? 'true' : 'false';
+        const displayPort = location.port === '4200'? location.port : this.simPort;
         const url = this.simUrl ? this.simUrl : window.location.hostname;
         const sim = protocol + '://' + url + ':'
-            + this.simPort + '/#/?serverName=' + serverName + '&serverPort=' + serverPort
+            + displayPort + '/#/?serverName=' + serverName + '&serverPort=' + serverPort
             + '&deviceToken=' + this.simAuthToken + '&sslEnabled=' + sslEnabled;
             window.open(sim);
+    }
+
+    public onOpenCustomerDisplay() {
+        const serverName = this.personalization.getServerName$().getValue();
+        const serverPort = this.personalization.getServerPort$().getValue();
+        const protocol = this.customerDisplayProtocol ? this.customerDisplayProtocol : window.location.protocol;
+        const displayPort = location.port === '4200'? location.port : this.customerDisplayPort;
+        const url = this.customerDisplayUrl ? this.customerDisplayUrl : window.location.hostname;
+        const sslEnabled = this.customerDisplayProtocol && this.customerDisplayProtocol === 'https' ? 'true' : 'false';
+
+        const customerDisplay = protocol + '://' + url + ':'
+            + displayPort + '/#/?serverName=' + serverName + '&serverPort=' + serverPort
+            + '&deviceToken=' + this.customerDisplayAuthToken + '&sslEnabled=' + sslEnabled;
+        window.open(customerDisplay);
     }
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {
