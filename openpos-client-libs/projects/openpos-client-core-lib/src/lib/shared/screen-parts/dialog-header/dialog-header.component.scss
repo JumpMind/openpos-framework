@@ -1,10 +1,12 @@
 .header {
+  &.mobile {
     font-size: 1rem;
+  }
 }
 
 @supports not(display: grid) {
-    .back-button{
-        position: absolute;
-        left: 95%;
-    }
+  .back-button {
+    position: absolute;
+    left: 95%;
+  }
 }
