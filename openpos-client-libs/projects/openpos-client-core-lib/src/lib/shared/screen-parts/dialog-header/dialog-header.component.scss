@@ -1,6 +1,8 @@
+@import '../../../styles/mixins/typography';
+
 .header {
   &.mobile {
-    font-size: 1rem;
+    font-size: $text-md-mobile*.8;
   }
 }
 

@@ -24,6 +24,9 @@ $xx-large-space: 2rem;
   &.mobile{
     padding: $large-space/$mobile-factor;
   }
+  &.mobile-landscape{
+    padding: $large-space/($mobile-factor*2);
+  }
 }
 
 %clickable-sub-element{

@@ -4,6 +4,10 @@
 .prompt-password,
 .prompt-input {
   @extend %text-lg;
+
+  &.mobile {
+    font-size: $text-md-mobile;
+  }
 }
 
 .prompt-textarea,
