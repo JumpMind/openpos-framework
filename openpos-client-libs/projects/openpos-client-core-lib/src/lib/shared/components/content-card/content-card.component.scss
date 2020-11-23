@@ -8,4 +8,10 @@
     @extend %sub-element;
     display: block;
     overflow-y: auto;
+    border-width: 2px;
+
+    &.mobile,
+    &.tablet-portrait {
+        border-width: 1px;
+    }
 }

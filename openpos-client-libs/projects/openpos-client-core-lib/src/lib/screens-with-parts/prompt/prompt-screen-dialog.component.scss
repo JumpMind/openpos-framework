@@ -16,11 +16,15 @@
     
         .prompt-image {
             max-width: 100%;
+            justify-self: left;
+
+            &.tablet {
+                max-height: 6rem;
+            }
 
             &.mobile {
                 display: none;
             }
-            justify-self: center;
         }
     }
 }
