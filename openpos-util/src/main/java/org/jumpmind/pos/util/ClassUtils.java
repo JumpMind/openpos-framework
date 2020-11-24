@@ -147,7 +147,7 @@ public class ClassUtils {
             try {
                 classes.add(Class.forName(bd.getBeanClassName()));
             } catch (ClassNotFoundException ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
             }
         }
         return classes;
