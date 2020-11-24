@@ -1,6 +1,8 @@
 package org.jumpmind.pos.service;
 
 import bsh.commands.dir;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang.StringUtils;
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
@@ -27,7 +29,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -47,8 +51,10 @@ import java.util.stream.Collectors;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.*;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
 
+@Configuration
 @EnableTransactionManagement
 @DependsOn({"tagConfig", "augmenterConfigs"})
+@ConfigurationProperties(prefix = "openpos.module")
 abstract public class AbstractRDBMSModule extends AbstractServiceFactory implements IModule, IRDBMSModule {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
@@ -99,6 +105,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     protected PlatformTransactionManager txManager;
 
     protected DBSessionFactory sessionFactory;
+
+    @Getter
+    @Setter
+    private ModuleLoaderConfig loaderConfig;
 
     static Server h2Server;
 
@@ -367,6 +377,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     }
 
     public void updateDataModel(DBSession session) {
+        if (!isDatabaseUpgradeable()) {
+            log.info("Module {} database configured as non-upgradeable", getName());
+            return;
+        }
         String fromVersion = null;
 
         try {
@@ -435,4 +449,16 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         };
     }
 
+    protected boolean isDatabaseUpgradeable() {
+        if (loaderConfig == null) {
+            return true;
+        }
+        if (loaderConfig.hasIncludes()) {
+            return loaderConfig.includes(getName());
+        }
+        if (loaderConfig.hasExcludes()) {
+            return !loaderConfig.excludes(getName());
+        }
+        return true;
+    }
 }

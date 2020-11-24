@@ -8,13 +8,20 @@ button{
 
   &.tablet {
     min-width: 100px;
-    padding: $text-md-mobile/4 $text-md-mobile*1.25;
+    padding: $text-md-mobile/4 $text-md-mobile;
+  }
+
+  &.tablet-portrait {
+    border-width: 1px;
+    min-width: 75px;
+    font-size: $text-xs-mobile*1.75;
   }
 
   &.mobile {
-    @extend %text-sm;
+    border-width: 1px;
+    font-size: $text-xs-mobile*1.25;
     min-width: 75px;
-    padding: $text-sm-mobile/4 $text-sm-mobile*1.25;
+    padding: $text-sm-mobile/8 $text-sm-mobile*.75;
   }
 }
 
