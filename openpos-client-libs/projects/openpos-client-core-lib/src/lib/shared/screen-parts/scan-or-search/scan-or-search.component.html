@@ -1,4 +1,4 @@
-<button  class="hidden"></button>
+<button cdkFocusInitial *ngIf="!focusInitial" class="hidden"></button>
 <app-icon-square-button
     class="scan-button"
     ngClass.xs="scan-button-xs"
@@ -8,7 +8,7 @@
     (buttonClick)="scannerService.triggerScan()"
     ></app-icon-square-button>
 <input #input matInput
-       cdkFocusInitial *ngIf="!focusInitial"
+       cdkFocusInitial
        responsive-class
        class="scan-input"
        ngClass.xs="scan-input-xs"
