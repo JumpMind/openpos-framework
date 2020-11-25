@@ -78,42 +78,46 @@ public class EndpointDispatchInvocationHandler implements InvocationHandler {
             endPointsByPath = new HashMap<>();
             Collection<Object> beans = applicationContext.getBeansWithAnnotation(RestController.class).values();
             if (beans != null) {
-                Collection<Object> endpointOverrides = applicationContext.getBeansWithAnnotation(EndpointOverride.class).values();
-                Collection<Object> endpoints = applicationContext.getBeansWithAnnotation(Endpoint.class).values();
                 for (Object object : beans) {
-                    Class<?>[] interfaces = object.getClass().getInterfaces();
-                    for (Class<?> i : interfaces) {
-                        RestController controller = i.getAnnotation(RestController.class);
-                        if (controller != null) {
-                            String serviceName = controller.value();
-                            String implementation = getServiceImplementation(serviceName);
+                        buildEndpointMappingsForService(object);
+                    }
+                }
+            }  
+    }
+    
+    public void buildEndpointMappingsForService( Object service){
+        Class<?>[] interfaces = service.getClass().getInterfaces();
+        Collection<Object> endpointOverrides = applicationContext.getBeansWithAnnotation(EndpointOverride.class).values();
+        Collection<Object> endpoints = applicationContext.getBeansWithAnnotation(Endpoint.class).values();
+        for (Class<?> i : interfaces) {
+            RestController controller = i.getAnnotation(RestController.class);
+            if (controller != null) {
+                String serviceName = controller.value();
+                String implementation = getServiceImplementation(serviceName);
 
-                            log.debug("Loading endpoints for the '{}' implementation of {}({})", implementation, i.getSimpleName(),
-                                    serviceName);
-                            Method[] methods = i.getMethods();
-                            for (Method method : methods) {
-                                String path = buildPath(method);
-                                Object endpointOverride = findBestEndpointOverrideMatch(path, implementation, endpointOverrides);
-                                if (endpointOverride != null) {
-                                    endPointsByPath.put(path, endpointOverride);
-                                }
+                log.debug("Loading endpoints for the '{}' implementation of {}({})", implementation, i.getSimpleName(),
+                        serviceName);
+                Method[] methods = i.getMethods();
+                for (Method method : methods) {
+                    String path = buildPath(method);
+                    Object endpointOverride = findBestEndpointOverrideMatch(path, implementation, endpointOverrides);
+                    if (endpointOverride != null) {
+                        endPointsByPath.put(path, endpointOverride);
+                    }
 
-                                if (!endPointsByPath.containsKey(path)) {
-                                    Object endpointBean = findMatch(path, endpoints, implementation);
-                                    if (endpointBean == null) {
-                                        endpointBean = findMatch(path, endpoints, "default");
-                                    }
+                    if (!endPointsByPath.containsKey(path)) {
+                        Object endpointBean = findMatch(path, endpoints, implementation);
+                        if (endpointBean == null) {
+                            endpointBean = findMatch(path, endpoints, "default");
+                        }
 
-                                    if (endpointBean != null) {
-                                        endPointsByPath.put(path, endpointBean);
-                                    } else {
-                                        log.warn(String.format(
-                                                "No endpoint defined for path '%s' in '%s' in the service Please define a Spring-discoverable @Endpoint class, "
-                                                        + "with a method annotated like  @Endpoint(\"%s\")",
-                                                path, i.getSimpleName(), path));
-                                    }
-                                }
-                            }
+                        if (endpointBean != null) {
+                            endPointsByPath.put(path, endpointBean);
+                        } else {
+                            log.warn(String.format(
+                                    "No endpoint defined for path '%s' in '%s' in the service Please define a Spring-discoverable @Endpoint class, "
+                                            + "with a method annotated like  @Endpoint(\"%s\")",
+                                    path, i.getSimpleName(), path));
                         }
                     }
                 }
