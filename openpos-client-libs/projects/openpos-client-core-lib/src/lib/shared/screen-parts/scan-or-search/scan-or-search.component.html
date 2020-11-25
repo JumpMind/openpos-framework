@@ -1,16 +1,13 @@
-<button cdkFocusInitial *ngIf="!focusInitial" class="hidden"></button>
-
-<button  class="hidden"></button>
+<button cdkFocusInitial *ngIf="!focusInitial"  class="hidden"></button>
 <app-icon-square-button
-    class="scan-button"
-    ngClass.xs="scan-button-xs"
-    [iconClass]="(isMobile$ | async) ? null: 'material-icons mat-36'"
-    [iconName]="screenData.scanIcon" 
-    [color]="'primary-inverse'"
-    (buttonClick)="scannerService.triggerScan()"
-    ></app-icon-square-button>
+        class="scan-button"
+        ngClass.xs="scan-button-xs"
+        [iconClass]="(isMobile$ | async) ? null: 'material-icons mat-36'"
+        [iconName]="screenData.scanIcon"
+        [color]="'primary-inverse'"
+        (buttonClick)="scannerService.triggerScan()"
+></app-icon-square-button>
 <input #input matInput
-       cdkFocusInitial
        responsive-class
        class="scan-input"
        ngClass.xs="scan-input-xs"
