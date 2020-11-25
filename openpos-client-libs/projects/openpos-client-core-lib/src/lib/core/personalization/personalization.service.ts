@@ -1,11 +1,10 @@
-import { Injectable } from '@angular/core';
-import {HttpClient, HttpResponse} from '@angular/common/http';
-import {Http} from '@angular/http';
+import { Injectable, Injector } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { PersonalizationConfigResponse } from './personalization-config-response.interface';
-import {Observable, BehaviorSubject, Subject, throwError, of} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
-import {PersonalizationRequest} from './personalization-request';
-import {PersonalizationResponse} from './personalization-response.interface';
+import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
+import { PersonalizationRequest } from './personalization-request';
+import { PersonalizationResponse } from './personalization-response.interface';
 
 @Injectable({
     providedIn: 'root'
@@ -23,7 +22,7 @@ export class PersonalizationService {
     private isManagedServer$ = new BehaviorSubject<boolean>('true' === localStorage.getItem(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY));
     private personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: HttpClient) {
+    constructor(private http: HttpClient, private injector: Injector) {
     }
 
     public personalizeFromSavedSession(): Observable<string>{
@@ -197,7 +196,6 @@ export class PersonalizationService {
     public refreshApp() {
         window.location.reload();
     }
-
 }
 
 

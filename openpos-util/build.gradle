@@ -11,8 +11,10 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.7'
 	compile group: 'commons-beanutils', name: 'commons-beanutils', version: '1.9.4'
     compile group: 'org.reflections', name: 'reflections', version: '0.9.12'
+    compile group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
     compile("com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}")
     compile("org.springframework.boot:spring-boot:${springBootVersion}") {
         exclude module: "spring-boot-starter-logging"
-    }    
+    }
+    compile group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
 }

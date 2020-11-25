@@ -23,5 +23,11 @@
         .mat-form-field-flex {
             background: $app-card-background;
         }
+
+        .transaction-filter-options {
+            div.mat-chip-list-wrapper {
+                display: inline-flex;
+            }
+        }
     }
 }

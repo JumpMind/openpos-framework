@@ -28,7 +28,7 @@
                 </div>
             </app-content-card>
 
-            <div *ngIf="screenData.otherActions || screenData.actionButton" class="prompt-buttons">
+            <div *ngIf="screenData.otherActions || screenData.actionButton" class="prompt-buttons" responsive-class>
                 <app-secondary-button inputType="button" *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
                     <span responsive-class>{{menuItem.title}}</span>
                     <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
@@ -52,7 +52,7 @@
                 </div>
             </app-content-card>
             <app-content-card>
-                <mat-dialog-content class="content">
+                <mat-dialog-content class="content" responsive-class>
                     <app-prompt-input #promptInput [placeholderText]="screenData.placeholderText" [responseType]="screenData.responseType ? screenData.responseType.toString() : null"
                                       [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
                                       [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
@@ -71,7 +71,7 @@
                 </div>
             </app-content-card>
 
-            <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" class="prompt-buttons">
+            <mat-dialog-actions *ngIf="screenData.otherActions && screenData.otherActions.length > 0" class="prompt-buttons" responsive-class>
                 <app-secondary-button inputType="button" *ngFor="let menuItem of screenData.otherActions" (click)="onAction(menuItem)">
                     <span>{{menuItem.title}}</span>
                     <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>

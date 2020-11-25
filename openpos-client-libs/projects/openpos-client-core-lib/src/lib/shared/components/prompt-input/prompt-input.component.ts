@@ -8,6 +8,7 @@ import { Scan } from '../../../core/oldplugins/scan';
 
 @Component({
     selector: 'app-prompt-input',
+    styleUrls: ['./prompt-input.component.scss'],
     templateUrl: './prompt-input.component.html'
 })
 

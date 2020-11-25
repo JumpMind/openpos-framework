@@ -1,6 +1,14 @@
+@import '../../../styles/mixins/typography';
+
+.header {
+  &.mobile {
+    font-size: $text-md-mobile*.8;
+  }
+}
+
 @supports not(display: grid) {
-    .back-button{
-        position: absolute;
-        left: 95%;
-    }
+  .back-button {
+    position: absolute;
+    left: 95%;
+  }
 }

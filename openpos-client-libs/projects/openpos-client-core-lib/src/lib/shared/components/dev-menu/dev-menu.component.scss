@@ -1,7 +1,7 @@
 .float {
     top:10px;
     right: 10px;
-    position:absolute;     
+    position:absolute;
     z-index: 1003;
 }
 
@@ -12,8 +12,18 @@
     width:100%;
 }
 
-::ng-deep .mat-menu-content {
+:host ::ng-deep .mat-menu-content {
     background-color: white;
+}
+
+:host ::ng-deep .mat-tab-body-content {
+    max-height: 60vh;
+    overflow: auto !important;
+}
+
+.audio-license {
+    display: block;
+    margin-bottom: 1.5rem;
 }
 
 .devButton {
@@ -29,7 +39,7 @@
     margin-top: 0px;
   }
 
-  
+
 
 .panel {
     float: left;
@@ -40,7 +50,7 @@
       width: 600px;
       overflow: auto;
   }
-  
+
   .stacktrace {
     position: fixed;
 
@@ -74,7 +84,7 @@ table {
 .stateTab {
     height: 520px;
     overflow: auto;
-    
+
 }
 
 .saveForm {
@@ -87,7 +97,7 @@ table {
 }
 
 #logs-table {
-    display: block; 
+    display: block;
     width: 100%;
     td {
         padding-top: 5px;

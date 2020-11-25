@@ -131,6 +131,20 @@ export * from './lib/core/help-text/help-text.service';
 export * from './lib/core/lock-screen/lock-screen.service';
 export * from './lib/core/services/simulated-peripheral-service';
 
+export * from './lib/core/audio/audio-request.interface';
+export * from './lib/core/audio/audio.service';
+export * from './lib/core/audio/audio-util';
+export * from './lib/core/audio/audio-cache.interface';
+export * from './lib/core/audio/audio-config.interface';
+export * from './lib/core/audio/audio-config-message.interface';
+export * from './lib/core/audio/audio-play-request.interface';
+export * from './lib/core/audio/audio-interaction.service';
+export * from './lib/core/audio/audio-interaction-set.interface';
+export * from './lib/core/audio/audio-message.interface';
+export * from './lib/core/audio/audio-preload-message.interface';
+export * from './lib/core/audio/audio-repository.service';
+export * from './lib/core/audio/audio-startup-task';
+
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';
 export * from './lib/keyboard/components/keyboard/keyboard.component';

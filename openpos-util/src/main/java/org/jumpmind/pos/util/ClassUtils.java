@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.joda.money.Money;
@@ -93,6 +94,33 @@ public class ClassUtils {
         classes.stream().forEach(e -> result.add((Class<T>) e));
         return result;
     }
+
+    /**
+     * Retrieves all of the classes at of below the given package which are in the list of class names provided and have the given annotation
+     * @param packageName The root package to begin searching
+     * @param classNames The list of names to include
+     * @param annotation The annotation to search for
+     * @param <T>
+     * @return
+     */
+    public static <T> List<Class<T>> getClassForPackageAndClassNamesAndAnnotation( String packageName, List<String> classNames, Class<? extends Annotation> annotation) {
+        List<Class<?>> classes = new ArrayList<Class<?>>();
+        
+        ClassPathScanningCandidateComponentProvider scanner = new ClassPathScanningCandidateComponentProvider(false);
+        if (annotation != null) {
+            scanner.addIncludeFilter(new AnnotationTypeFilter(annotation));
+        }
+        for (BeanDefinition bd : scanner.findCandidateComponents(packageName)) {
+            if(classNames.stream().anyMatch( name -> name.equals(bd.getBeanClassName()))){
+                try {
+                    classes.add(Class.forName(bd.getBeanClassName()));
+                } catch (ClassNotFoundException ex) {
+                    logger.error(ex.getMessage());
+                }
+            }
+        }
+        return classes.stream().map(e -> (Class<T>) e).collect(Collectors.toList());
+    }
     
     /**
      * Retrieves all of the classes at or below the given package which have the given annotation OR implement the matchingInterface. 
@@ -119,7 +147,7 @@ public class ClassUtils {
             try {
                 classes.add(Class.forName(bd.getBeanClassName()));
             } catch (ClassNotFoundException ex) {
-                logger.error(ex.getMessage());
+                logger.error(ex.getMessage(), ex);
             }
         }
         return classes;

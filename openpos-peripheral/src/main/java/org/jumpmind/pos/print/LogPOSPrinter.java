@@ -22,6 +22,8 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     private PrinterStatusReporter printerStatusReporter;
 
+    private int cashDrawerOpened;
+
     @Override
     public void printImage(InputStream image) {
     }
@@ -102,6 +104,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     @Override
     public void openCashDrawer(String cashDrawerId) {
+        cashDrawerOpened = 2;
         log.info("\r\n" +
                 "      ------------------------------ -\n" +
                 "    -/                              /|\n" +
@@ -116,7 +119,8 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     @Override
     public boolean isDrawerOpen(String cashDrawerId) {
-        return false;
+        this.cashDrawerOpened--;
+        return cashDrawerOpened <= 0;
     }
 
     @Override
