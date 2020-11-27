@@ -37,6 +37,12 @@
                                 <div *ngIf="!simAuthTokenAvailable"><p style="color:red">No device auth token found. Ensure SimDeviceStartupTask is enabled for pos devices.</p></div>
                             </div>
                         </li>
+                        <li>
+                            <div fxFlexFill fxLayout="row"  fxLayoutGap="20px" fxLayoutAlign="left center">
+                                <button mat-button [disabled]="!customerDisplayAuthTokenAvailable" (click)="onOpenCustomerDisplay()">Open Customer Display</button>
+                                <div *ngIf="!customerDisplayAuthTokenAvailable"><p style="color:red">No device auth token found. Ensure Customer Display is enabled for pos devices.</p></div>
+                            </div>
+                        </li>
                     </ul>
 
                     <div fxFlexFill fxLayout="row" fxLayoutAlign="left start" fxLayoutAlign.xs="left">
