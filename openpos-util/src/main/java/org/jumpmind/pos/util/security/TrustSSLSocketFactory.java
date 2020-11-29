@@ -38,6 +38,11 @@ public class TrustSSLSocketFactory extends SocketFactory {
     }
 
     @Override
+    public Socket createSocket() throws IOException {
+        return sf.createSocket();
+    }
+
+    @Override
     public Socket createSocket(final String s, final int i) throws IOException {
         return sf.createSocket(s, i);
     }
