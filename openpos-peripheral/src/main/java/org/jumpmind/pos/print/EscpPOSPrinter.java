@@ -34,7 +34,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     boolean deviceEnabled = true;
     private String printerName;
 
-    // certain configurations have to be configured for "unsoliciated status" to work properly, which means
+    // certain configurations have to be configured for "unsolicited status" to work properly, which means
     // status bytes come back after commands where we are not really interested in them.
     // 11/25/2020 = This was added specifically to support reading the cash drawer status over USB on the Toshiba
     // TcX (Suremark) printer.
