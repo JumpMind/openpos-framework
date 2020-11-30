@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.jumpmind.pos.util.AppUtils;
 
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -37,6 +38,7 @@ public class PeripheralConnection {
 
     public void close() {
         IOUtils.closeQuietly(in, out);
+        AppUtils.sleep(300); // Toshiba TCX seems to need a pause when closing and reopening a socket quickly.
     }
 
 }

@@ -4,9 +4,11 @@ import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.AppUtils;
+import org.jumpmind.pos.util.BoolUtils;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.status.Status;
 
@@ -32,6 +34,12 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     boolean deviceEnabled = true;
     private String printerName;
 
+    // certain configurations have to be configured for "unsolicited status" to work properly, which means
+    // status bytes come back after commands where we are not really interested in them.
+    // 11/25/2020 = This was added specifically to support reading the cash drawer status over USB on the Toshiba
+    // TcX (Suremark) printer.
+    boolean unsolicitedStatusMode = false;
+
     static final int STATUS_RECEIPT_PAPER_LOW = 0b00000001;
     static final int STATUS_COVER_OPEN = 0b00000010;
     static final int STATUS_RECEIPT_PAPER_OUT = 0b00000100;
@@ -44,6 +52,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     private PrinterStatusReporter printerStatusReporter;
 
     public EscpPOSPrinter() {
+        this.settings = new HashMap<>();
 
     }
 
@@ -62,6 +71,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         this.peripheralConnection = connectionFactory.open(this.settings);
         this.writer = new PrintWriter(peripheralConnection.getOut());
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
+
+        unsolicitedStatusMode = BoolUtils.toBoolean(settings.get("unsolicitedStatusMode"));
+
         initializePrinter();
     }
 
@@ -157,6 +169,12 @@ public class EscpPOSPrinter implements IOpenposPrinter {
             connection.getOut().write(getCommand(PrinterCommands.CASH_DRAWER_STATE).getBytes());
             connection.getOut().flush();
             AppUtils.sleep(500);
+
+            if (unsolicitedStatusMode) {
+                int statusByteThrowaway1 = connection.getIn().read();
+                int statusByteThrowaway2 = connection.getIn().read();
+            }
+
             int cashDrawerState = connection.getIn().read();
             log.debug("cash drawer state was: {}", cashDrawerState);
             return cashDrawerState == DRAWER_OPEN ? true : false;
