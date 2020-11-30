@@ -52,6 +52,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     private PrinterStatusReporter printerStatusReporter;
 
     public EscpPOSPrinter() {
+        this.settings = new HashMap<>();
 
     }
 
