@@ -3,12 +3,7 @@ package org.jumpmind.pos.persist;
 import java.io.InputStream;
 import java.net.URL;
 import java.sql.Types;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
@@ -110,16 +105,25 @@ public class DBSessionFactory {
 
     public static QueryTemplates getQueryTemplates(String tablePrefix) {
         try {
-            URL url = Thread.currentThread().getContextClassLoader().getResource(tablePrefix + "-query.yml");
-            if (url != null) {
-                log.info(String.format("Loading %s...", url.toString()));
-                InputStream queryYamlStream = url.openStream();
-                QueryTemplates queryTemplates = new Yaml(new Constructor(QueryTemplates.class)).load(queryYamlStream);
-                return queryTemplates;
-            } else {
+            Enumeration<URL> urls = Thread.currentThread().getContextClassLoader().getResources(tablePrefix + "-query.yml");
+
+            QueryTemplates templates = new QueryTemplates();
+            
+            if(!urls.hasMoreElements()) {
                 log.debug("Could not locate " + tablePrefix + "-query.yml on the classpath.");
                 return new QueryTemplates();
             }
+            
+            while(urls.hasMoreElements()){
+                URL url = urls.nextElement();
+                log.info(String.format("Loading %s...", url.toString()));
+                InputStream queryYamlStream = url.openStream();
+                QueryTemplates queryTemplates = new Yaml(new Constructor(QueryTemplates.class)).load(queryYamlStream);
+                templates.getQueries().addAll(queryTemplates.getQueries());
+            }
+            
+            return templates;
+
         } catch (Exception ex) {
             throw new PersistException("Failed to load " + tablePrefix + "-query.yml", ex);
         }
@@ -134,11 +138,11 @@ public class DBSessionFactory {
                 DmlTemplates queryTemplates = new Yaml(new Constructor(DmlTemplates.class)).load(queryYamlStream);
                 return queryTemplates;
             } else {
-                log.debug("Could not locate " + tablePrefix + "-query.yml on the classpath.");
+                log.debug("Could not locate " + tablePrefix + "-dml.yml on the classpath.");
                 return new DmlTemplates();
             }
         } catch (Exception ex) {
-            throw new PersistException("Failed to load " + tablePrefix + "-query.yml", ex);
+            throw new PersistException("Failed to load " + tablePrefix + "-dml.yml", ex);
         }
     }
 
