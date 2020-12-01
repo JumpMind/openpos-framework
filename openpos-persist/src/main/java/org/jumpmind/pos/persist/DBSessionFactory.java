@@ -119,7 +119,9 @@ public class DBSessionFactory {
                 log.info(String.format("Loading %s...", url.toString()));
                 InputStream queryYamlStream = url.openStream();
                 QueryTemplates queryTemplates = new Yaml(new Constructor(QueryTemplates.class)).load(queryYamlStream);
-                templates.getQueries().addAll(queryTemplates.getQueries());
+                if(queryTemplates != null){
+                    templates.getQueries().addAll(queryTemplates.getQueries());
+                }
             }
             
             return templates;
