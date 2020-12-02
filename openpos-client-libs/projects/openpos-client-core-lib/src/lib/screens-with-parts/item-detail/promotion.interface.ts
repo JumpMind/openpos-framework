@@ -9,6 +9,7 @@ export interface IPromotionInterface extends IAbstractScreen {
     autoApply: boolean;
     maxUses: number;
     vendorFunded: boolean;
+    rewardApplicationTypeCode: string;
     forLoyaltyReward: boolean;
     rewards: string[];
 }

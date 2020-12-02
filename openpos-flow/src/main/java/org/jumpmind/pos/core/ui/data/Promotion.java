@@ -22,6 +22,7 @@ public class Promotion implements Serializable {
     boolean autoApply = true;
     BigDecimal maxUses;
     boolean vendorFunded;
+    String rewardApplicationTypeCode;
     boolean forLoyaltyReward;
     List<String> rewards;
 }
