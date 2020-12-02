@@ -1,1 +1,1 @@
-<span class="currency-text-before-symbol">{{textBeforeSymbol}}</span><span class="currency-symbol-text">{{symbolText}}</span><span class="currency-text-after-symbol">{{textAfterSymbol}}</span>
+<span [ngClass]="{'negative': isNegative}" class="currency-text-before-symbol">{{textBeforeSymbol}}</span><span [ngClass]="{'negative': isNegative}" class="currency-symbol-text">{{symbolText}}</span><span [ngClass]="{'negative': isNegative}" class="currency-text-after-symbol">{{textAfterSymbol}}</span>
