@@ -77,12 +77,14 @@ app-options-list {
 
 .promotion-items {
     display: grid;
-    grid-template-columns: auto 65% 1fr;
+    grid-template-columns: auto 60% 1fr;
 }
 
-.promotion-item-price {
-    justify-self: end;
-    align-self: center;
+.promotion-item-rewards {
+    align-self: end;
+    list-style-type: none;
+    padding-inline-start: 0;
+    @extend %text-md;
 }
 
 .promotion-item-name {
@@ -91,6 +93,10 @@ app-options-list {
 
 .promotion-icon {
     margin-right: 1rem;
+}
+
+.promotion-item-icon {
+    align-self: center;
 }
 
 .properties {

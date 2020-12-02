@@ -26,7 +26,11 @@
                 <div class="promotion-item-name">
                     {{promo.promotionName}}
                 </div>
-                <div class="promotion-item-price"><app-currency-text [amountText]="promo.promotionPrice"></app-currency-text></div>
+                <ul responsive-class class="promotion-item-rewards">
+                    <li *ngFor="let reward of promo.rewards">
+                        {{reward}}
+                    </li>
+                </ul>
             </ng-container>
         </div>
     </section>
