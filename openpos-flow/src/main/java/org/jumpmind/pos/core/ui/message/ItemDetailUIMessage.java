@@ -27,6 +27,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private String itemPromotionsTitle;
     private String itemNoPromotionsTitle;
     private List<Promotion> promotions;
+    private String promotionStackingDisclaimer;
 
 
     public void addItemProperty(DisplayProperty property) {
