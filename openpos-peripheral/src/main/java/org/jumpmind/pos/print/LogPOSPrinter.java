@@ -22,7 +22,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     private PrinterStatusReporter printerStatusReporter;
 
-    private int cashDrawerOpened;
+    private static int cashDrawerOpened;
 
     @Override
     public void printImage(InputStream image) {
@@ -76,6 +76,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
     @SneakyThrows
     public int waitForDrawerClose(String cashDrawerId, long timeout) {
         AppUtils.sleep(1000);
+        cashDrawerOpened = 0;
         return DRAWER_CLOSED;
     }
 
@@ -120,7 +121,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
     @Override
     public boolean isDrawerOpen(String cashDrawerId) {
         this.cashDrawerOpened--;
-        return cashDrawerOpened <= 0;
+        return cashDrawerOpened >= 0;
     }
 
     @Override
