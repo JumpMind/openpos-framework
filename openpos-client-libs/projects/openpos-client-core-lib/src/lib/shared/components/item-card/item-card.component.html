@@ -1,4 +1,4 @@
-<mat-card class="item-card" [ngClass]="{'mat-elevation-z5':hover, 'mat-elevation-z1':!hover}">
+<mat-card class="item-card" [class]="item.lineItemType | lowercase" [ngClass]="{'mat-elevation-z5':hover, 'mat-elevation-z1':!hover}">
     <mat-card-content class="item-content">
         <app-image responsive-class
                    class="item-card-image"

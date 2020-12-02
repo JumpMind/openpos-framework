@@ -27,6 +27,7 @@ export class CurrencyTextComponent implements OnChanges {
     textBeforeSymbol: string;
     textAfterSymbol: string;
     symbolText: string;
+    isNegative: boolean;
 
     constructor(private localeService: LocaleService) {}
 
@@ -36,7 +37,7 @@ export class CurrencyTextComponent implements OnChanges {
 
         let localAmtText = this.amountText || (typeof(this.amountText) === 'number') ? this.amountText.toString().trim() : null;
         if (localAmtText) {
-            const hasNegSign = localAmtText.indexOf('-') >= 0;
+            this.isNegative = localAmtText.indexOf('-') >= 0;
             const hasParens = localAmtText.indexOf('(') >= 0;
             // CurrencyPipe does not like text starting with open paren
             localAmtText = this.normalizeNegativeAmount(localAmtText);
