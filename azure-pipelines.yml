@@ -15,7 +15,7 @@ trigger:
     - burl/0.9
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-18.04'
 
 variables:
   - group: maven
