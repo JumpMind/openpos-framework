@@ -1,36 +1,47 @@
-import { Injectable } from '@angular/core';
-import { MatSnackBar, MatSnackBarVerticalPosition } from '@angular/material';
-import { SessionService } from './session.service';
-import { IToastScreen, ToastType } from '../interfaces/toast-screen.interface';
+import {Injectable} from '@angular/core';
+import {SessionService} from './session.service';
+import {IToastScreen, ToastType} from '../interfaces/toast-screen.interface';
+import {ToastrService} from 'ngx-toastr';
 
 @Injectable({
     providedIn: 'root',
   })
 export class ToastService {
 
-    constructor( private snackBar: MatSnackBar, private sessionService: SessionService ) {
+    constructor( private sessionService: SessionService, private toastrService: ToastrService ) {
         sessionService.getMessages('Toast').subscribe(m => this.showToast(m));
-        sessionService.getMessages('Connected').subscribe(m => this.snackBar.dismiss());
+        sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear())
     }
 
     private showToast( message: any) {
-        const toast = message as IToastScreen;
-        this.snackBar.open(toast.message, toast.duration === 0 ? 'X' : null, {
-            duration: toast.duration,
-            panelClass: this.getToastClass(toast.toastType),
-            verticalPosition: toast.verticalPosition === 'top' ? 'top' : 'bottom'
-        });
+        const toastMessage = message as IToastScreen;
+        this.toastrService.show(toastMessage.message, null, {
+            timeOut: toastMessage.duration,
+            extendedTimeOut: toastMessage.duration,
+            disableTimeOut: toastMessage.duration === 0,
+            tapToDismiss: false,
+            positionClass: this.getPosition(toastMessage.verticalPosition)
+        }, this.getType(toastMessage.toastType));
         this.sessionService.cancelLoading();
     }
 
-    private getToastClass(type: ToastType): string {
+    private getPosition(verticalPosition: String): string {
+        switch (verticalPosition) {
+            case 'top':
+                return 'toast-top-center';
+            case 'bottom':
+                return 'toast-bottom-center';
+        }
+        return null;
+    }
+
+    private getType(type: String): string {
         switch (type) {
             case ToastType.Success:
                 return 'toast-success';
             case ToastType.Warn:
-                return 'toast-warn';
+                return 'toast-warning';
         }
-
         return null;
     }
 }

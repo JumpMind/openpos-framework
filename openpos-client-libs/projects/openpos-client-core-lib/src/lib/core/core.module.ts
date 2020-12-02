@@ -6,7 +6,7 @@ import {ScanditScannerCordovaPlugin} from './platform-plugins/scanners/scandit-s
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
 import { STARTUP_TASKS, STARTUP_FAILED_COMPONENT } from './services/startup.service';
-
+import { ToastrModule } from 'ngx-toastr';
 // Angular Includes
 import { NgModule, Injector, Optional, SkipSelf, ErrorHandler } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy, DatePipe } from '@angular/common';
@@ -100,11 +100,13 @@ registerLocaleData(locale_frCA, 'fr-CA');
         SharedModule,
         BrowserModule,
         BrowserAnimationsModule,
-        NgxElectronModule
+        NgxElectronModule,
+        ToastrModule.forRoot()
     ],
     exports: [
         BrowserModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        ToastrModule
     ],
     providers: [
         HttpClient,
