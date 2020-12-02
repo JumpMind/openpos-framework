@@ -13,4 +13,5 @@ export interface ItemDetailInterface extends IAbstractScreen {
     itemPromotionsTitle: string;
     itemNoPromotionsTitle: string;
     promotions: IPromotionInterface[];
+    promotionStackingDisclaimer: string;
 }
