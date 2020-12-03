@@ -10,7 +10,8 @@ export class ToastService {
 
     constructor( private sessionService: SessionService, private toastrService: ToastrService ) {
         sessionService.getMessages('Toast').subscribe(m => this.showToast(m));
-        sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear())
+        sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear());
+        window['toastService'] = this.toastrService;
     }
 
     private showToast( message: any) {
