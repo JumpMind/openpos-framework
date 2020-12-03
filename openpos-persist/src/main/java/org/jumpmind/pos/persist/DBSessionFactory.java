@@ -6,6 +6,7 @@ import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.db.model.Column;
@@ -29,7 +30,9 @@ public class DBSessionFactory {
     Map<String, DmlTemplate> dmlTemplates;
     IDatabasePlatform databasePlatform;
     TypedProperties sessionContext;
+    @Getter
     List<Class<?>> modelClazzes;
+    @Getter
     List<Class<?>> modelExtensionClasses;
     TagHelper tagHelper;
     AugmenterHelper augmenterHelper;
