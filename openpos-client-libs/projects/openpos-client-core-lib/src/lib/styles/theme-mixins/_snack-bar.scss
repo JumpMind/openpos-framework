@@ -1,23 +1,32 @@
+@import '../mixins/ngx-toastr';
+
 @mixin openpos-snack-bar($theme){
-    .app-toast-success{
-        color: mat-color(map-get($theme, selected));
+    @include openpos-ngx-toastr($theme);
+    $foreground: map-get($theme, foreground);
+
+    %app-toast {
         border-style: solid;
-        border-width: 4px;
-        border-color: mat-color(map-get($theme, selected));
-        background-color: white;
-        box-shadow: none;
+        border-width: 1px;
+        box-shadow: none !important;
+        padding: 15px 15px 15px 50px !important;
+        margin-top: 10px !important;
     }
 
-    .app-toast-warn{
-        color: mat-color(map-get($theme, warn));
-        border-style: solid;
-        border-width: 4px;
+    .app-toast-success {
+        @extend %app-toast;
+        color: mat-color($foreground, text) !important;
+        border-color: mat-color(map-get($theme, success));
+        background-color: lighten(mat-color(map-get($theme, success)), 40%);
+    }
+
+    .app-toast-warn {
+        @extend %app-toast;
+        color: mat-color($foreground, text) !important;
         border-color: mat-color(map-get($theme, warn));
-        background-color: white;
-        box-shadow: none;
+        background-color: lighten(mat-color(map-get($theme, warn)), 50%);
     }
 
     .app-toast-warn .mat-simple-snackbar-action {
-        color: mat-color(map-get($theme, warn));  
+        color: mat-color($foreground, text) !important;
     }
 }

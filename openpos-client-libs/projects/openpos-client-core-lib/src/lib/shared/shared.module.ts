@@ -4,6 +4,7 @@ import {HttpModule} from '@angular/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
 import {TextMaskModule} from 'angular2-text-mask';
+import {ToastrModule, ToastContainerModule} from 'ngx-toastr';
 import {MaterialModule} from '../material/material.module';
 import {MatKeyboardModule} from '../keyboard/keyboard.module';
 import {TaskCheckAllBoxComponent} from './components/task-check-all-box/task-check-all-box.component';
@@ -343,7 +344,9 @@ const pipes = [
         MaterialModule,
         MatKeyboardModule,
         TextMaskModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        ToastrModule.forRoot(),
+        ToastContainerModule
     ],
     exports: [
         FormsModule,

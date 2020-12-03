@@ -19,11 +19,16 @@ export class ToastService {
         this.toastrService.show(toastMessage.message, null, {
             timeOut: toastMessage.duration,
             extendedTimeOut: toastMessage.duration,
-            disableTimeOut: toastMessage.duration === 0,
-            tapToDismiss: false,
-            positionClass: this.getPosition(toastMessage.verticalPosition)
+            disableTimeOut: this.isStickyToast(toastMessage),
+            tapToDismiss: this.isStickyToast(toastMessage),
+            positionClass: this.getPosition(toastMessage.verticalPosition),
+            toastClass: `ngx-toastr app-${this.getType(toastMessage.toastType)}`
         }, this.getType(toastMessage.toastType));
         this.sessionService.cancelLoading();
+    }
+
+    private isStickyToast(toastMessage: IToastScreen): boolean {
+        return toastMessage.duration === 0;
     }
 
     private getPosition(verticalPosition: String): string {
