@@ -10,20 +10,25 @@
         box-shadow: none !important;
         padding: 15px 15px 15px 15px !important;
         margin-top: 10px !important;
+        color: mat-color($foreground, text) !important;
     }
 
     .app-toast-success {
         @extend %app-toast;
-        color: mat-color($foreground, text) !important;
         border-color: mat-color(map-get($theme, success));
         background-color: lighten(mat-color(map-get($theme, success)), 40%);
     }
 
     .app-toast-warning {
         @extend %app-toast;
-        color: mat-color($foreground, text) !important;
         border-color: mat-color(map-get($theme, warn));
         background-color: lighten(mat-color(map-get($theme, warn)), 50%);
+    }
+
+    .app-toast-info {
+        @extend %app-toast;
+        border-color: mat-color(map-get($theme, info));
+        background-color: lighten(mat-color(map-get($theme, info)), 40%);
     }
 
     .app-toast-warning .mat-simple-snackbar-action {

@@ -10,5 +10,6 @@ export interface IToastScreen extends IAbstractScreen {
 
 export enum ToastType {
     Success= 'Success',
-    Warn= 'Warn'
+    Warn= 'Warn',
+    Info= 'Info'
 }

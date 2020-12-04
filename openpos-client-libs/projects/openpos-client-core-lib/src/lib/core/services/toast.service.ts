@@ -52,6 +52,8 @@ export class ToastService {
                 return 'toast-success';
             case ToastType.Warn:
                 return 'toast-warning';
+            case ToastType.Info:
+                return 'toast-info';
         }
         return null;
     }
