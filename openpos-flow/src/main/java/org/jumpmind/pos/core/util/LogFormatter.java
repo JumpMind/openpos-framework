@@ -27,7 +27,7 @@ public class LogFormatter {
             "password", "account", "cid", "creditcard", 
             "cardNumber", "driverLicense", "pinblock", "routingnumber", "walletidentifier", 
             "emvdata", "track1", "track2", "track3", "approvalcode", "ksnblock", "cardexpirydate", "referralnum",
-            "ecomtoken", "issuernumber", "socialsec", "scan" };
+            "ecomtoken", "issuernumber", "socialsec", "driverslicense" };
 
     
     private ObjectMapper mapper = new ObjectMapper().setSerializationInclusion(Include.NON_NULL);
