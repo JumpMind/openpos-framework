@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {SessionService} from './session.service';
 import {IToastScreen, ToastType} from '../interfaces/toast-screen.interface';
 import {ToastrService} from 'ngx-toastr';
+import {ToastComponent} from "../../shared/components/toast/toast.component";
 
 @Injectable({
     providedIn: 'root',
@@ -12,18 +13,22 @@ export class ToastService {
         sessionService.getMessages('Toast').subscribe(m => this.showToast(m));
         sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear());
         window['toastService'] = this.toastrService;
+        window['ToastComponent'] = ToastComponent;
     }
 
     private showToast( message: any) {
         const toastMessage = message as IToastScreen;
-        this.toastrService.show(toastMessage.message, null, {
+        const toast = this.toastrService.show(toastMessage.message, null, {
             timeOut: toastMessage.duration,
             extendedTimeOut: toastMessage.duration,
             disableTimeOut: this.isStickyToast(toastMessage),
             tapToDismiss: this.isStickyToast(toastMessage),
             positionClass: this.getPosition(toastMessage.verticalPosition),
-            toastClass: `ngx-toastr app-${this.getType(toastMessage.toastType)}`
-        }, this.getType(toastMessage.toastType));
+            toastClass: `ngx-toastr app-${this.getType(toastMessage.toastType)}`,
+            // @ts-ignore
+            toastComponent: ToastComponent
+        });
+        toast.toastRef.componentInstance.iconName = toastMessage.icon;
         this.sessionService.cancelLoading();
     }
 

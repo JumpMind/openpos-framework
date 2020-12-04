@@ -8,7 +8,7 @@
         border-style: solid;
         border-width: 1px;
         box-shadow: none !important;
-        padding: 15px 15px 15px 50px !important;
+        padding: 15px 15px 15px 15px !important;
         margin-top: 10px !important;
     }
 
@@ -19,14 +19,23 @@
         background-color: lighten(mat-color(map-get($theme, success)), 40%);
     }
 
-    .app-toast-warn {
+    .app-toast-warning {
         @extend %app-toast;
         color: mat-color($foreground, text) !important;
         border-color: mat-color(map-get($theme, warn));
         background-color: lighten(mat-color(map-get($theme, warn)), 50%);
     }
 
-    .app-toast-warn .mat-simple-snackbar-action {
+    .app-toast-warning .mat-simple-snackbar-action {
         color: mat-color($foreground, text) !important;
     }
+
+    .ngx-toastr .app-toast {
+        display: flex;
+    }
+
+    .app-toast-icon {
+        margin-right: 10px;
+    }
+
 }

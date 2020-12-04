@@ -157,6 +157,7 @@ import { PromptButtonRowComponent } from './screen-parts/prompt-button-row/promp
 import { WarnButtonComponent } from './components/warn-button/warn-button.component';
 import {StayFocusedDirective} from './directives/stay-focused.directive';
 import { AudioLicenseComponent } from './components/audio-license/audio-license.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -266,7 +267,8 @@ const components = [
     OrderCardComponent,
     ButtonActionTimerComponent,
     TransactionSummaryComponent,
-    StampComponent
+    StampComponent,
+    ToastComponent
 ];
 
 const directives = [
@@ -331,7 +333,8 @@ const pipes = [
         NavListComponent,
         SystemStatusDialogComponent,
         BaconDrawerComponent,
-        HelpTextPageWrapperComponent
+        HelpTextPageWrapperComponent,
+        ToastComponent
     ],
     imports: [
         FormsModule,
@@ -345,7 +348,9 @@ const pipes = [
         MatKeyboardModule,
         TextMaskModule,
         BrowserAnimationsModule,
-        ToastrModule.forRoot(),
+        ToastrModule.forRoot({
+            toastComponent: ToastComponent
+        }),
         ToastContainerModule
     ],
     exports: [

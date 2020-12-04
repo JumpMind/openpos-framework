@@ -5,6 +5,7 @@ export interface IToastScreen extends IAbstractScreen {
     toastType: ToastType;
     duration: number;
     verticalPosition: string;
+    icon: string;
 }
 
 export enum ToastType {
