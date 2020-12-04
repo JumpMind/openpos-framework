@@ -1,12 +1,10 @@
 package org.jumpmind.pos.core.util;
 
 import java.io.IOException;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jumpmind.pos.core.model.FieldInputType;
-import org.jumpmind.pos.core.model.Form;
-import org.jumpmind.pos.core.model.FormField;
-import org.jumpmind.pos.core.model.IFormElement;
+import org.jumpmind.pos.core.model.*;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.util.ObjectUtils;
 
@@ -34,6 +32,9 @@ public class ActionSerializer extends JsonSerializer<Action> {
             if (StringUtils.containsAny(clone.getName().toLowerCase(), LogFormatter.SENSITIVE_FIELDS)) {
                 if (clone.getData() instanceof String) {
                     clone.setData(MASKED_STRING);
+                } else if (clone.getData() instanceof Map) {
+                    Map data = clone.getData();
+                    data.replaceAll((key, old) -> MASKED_STRING);
                 }
             }
         }
@@ -56,7 +57,7 @@ public class ActionSerializer extends JsonSerializer<Action> {
                 }
             }
         }
-        
+
         defaultSerializer.serialize(clone, gen, serializers);
     }
 
