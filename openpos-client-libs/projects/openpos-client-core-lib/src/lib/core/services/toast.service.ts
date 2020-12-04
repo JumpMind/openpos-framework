@@ -12,8 +12,6 @@ export class ToastService {
     constructor( private sessionService: SessionService, private toastrService: ToastrService ) {
         sessionService.getMessages('Toast').subscribe(m => this.showToast(m));
         sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear());
-        window['toastService'] = this.toastrService;
-        window['ToastComponent'] = ToastComponent;
     }
 
     private showToast( message: any) {
@@ -25,7 +23,6 @@ export class ToastService {
             tapToDismiss: this.isStickyToast(toastMessage),
             positionClass: this.getPosition(toastMessage.verticalPosition),
             toastClass: `ngx-toastr app-${this.getType(toastMessage.toastType)}`,
-            // @ts-ignore
             toastComponent: ToastComponent
         });
         toast.toastRef.componentInstance.iconName = toastMessage.icon;
