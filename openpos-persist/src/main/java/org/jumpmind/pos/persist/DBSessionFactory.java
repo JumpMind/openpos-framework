@@ -6,6 +6,7 @@ import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.db.model.Column;
@@ -29,7 +30,9 @@ public class DBSessionFactory {
     Map<String, DmlTemplate> dmlTemplates;
     IDatabasePlatform databasePlatform;
     TypedProperties sessionContext;
-    List<Class<?>> modelClazzes;
+    @Getter
+    List<Class<?>> modelClasses;
+    @Getter
     List<Class<?>> modelExtensionClasses;
     TagHelper tagHelper;
     AugmenterHelper augmenterHelper;
@@ -59,7 +62,7 @@ public class DBSessionFactory {
         this.sessionContext = sessionContext;
 
         this.databasePlatform = databasePlatform;
-        this.modelClazzes = entities;
+        this.modelClasses = entities;
         this.modelExtensionClasses = extensionEntities;
         this.tagHelper = tagHelper;
         this.augmenterHelper = augmenterHelper;
@@ -70,7 +73,7 @@ public class DBSessionFactory {
     protected void initSchema() {
         this.databaseSchema = new DatabaseSchema();
         databaseSchema.init(sessionContext.get("module.tablePrefix"), databasePlatform,
-                this.modelClazzes.stream().filter(e -> e.getAnnotation(org.jumpmind.pos.persist.TableDef.class) != null)
+                this.modelClasses.stream().filter(e -> e.getAnnotation(org.jumpmind.pos.persist.TableDef.class) != null)
                         .collect(Collectors.toList()),
                 this.modelExtensionClasses,
                 this.augmenterHelper);
@@ -85,7 +88,7 @@ public class DBSessionFactory {
     public List<Table> getTables(Class<?>... exclude) {
         List<Table> list = new ArrayList<>();
         List<Class<?>> toExclude = exclude != null ? Arrays.asList(exclude) : Collections.emptyList();
-        for (Class<?> modelClazz : this.modelClazzes) {
+        for (Class<?> modelClazz : this.modelClasses) {
             if (!toExclude.contains(modelClazz)) {
                 List<Table> tables = this.databaseSchema.getTables(modelClazz);
                 list.addAll(tables);
@@ -168,7 +171,7 @@ public class DBSessionFactory {
         if (augmenterHelper != null) {
             AugmenterConfigs augmenterConfigs = augmenterHelper.getAugmenterConfigs();
             
-            for (Class<?> clazz : modelClazzes) {
+            for (Class<?> clazz : modelClasses) {
                 Augmented[] annotations = clazz.getAnnotationsByType(Augmented.class);
                 if (annotations.length > 0) {
                     AugmenterConfig augmenterConfig = augmenterConfigs.getConfigByName(annotations[0].name());
@@ -250,7 +253,7 @@ public class DBSessionFactory {
         if (tagHelper != null) {
             List<TagModel> tags = tagHelper.getTagConfig().getTags();
 
-            for (Class<?> clazz : modelClazzes) {
+            for (Class<?> clazz : modelClasses) {
                 Tagged[] annotations = clazz.getAnnotationsByType(Tagged.class);
                 if (annotations.length > 0 || ITaggedModel.class.isAssignableFrom(clazz)) {
                     boolean includeTagsInPrimaryKey = true;
