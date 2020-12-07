@@ -3,6 +3,8 @@ package org.jumpmind.pos.core.ui;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.util.model.Message;
 
+import java.util.UUID;
+
 public class Toast extends Message {
 
     private static final long serialVersionUID = 1L;
@@ -12,6 +14,9 @@ public class Toast extends Message {
     private int duration = 2500;
     private String verticalPosition = "bottom";
     private String icon;
+    private boolean persistent;
+    private UUID persistedId;
+    private boolean close;
 
     public static Toast createSuccessToast(String message) {
         return createSuccessToast(message, true);
@@ -29,6 +34,13 @@ public class Toast extends Message {
         toast.setToastType(ToastType.Warn);
         toast.setDuration(0);
         return toast;
+    }
+
+    public static Toast createCloseToast(UUID id) {
+        Toast closeToast = new Toast();
+        closeToast.setPersistedId(id);
+        closeToast.setClose(true);
+        return closeToast;
     }
 
     public Toast() {
@@ -56,6 +68,11 @@ public class Toast extends Message {
     public Toast(String message, ToastType toastType, int duration, String verticalPosition, String icon) {
         this(message, toastType, duration, verticalPosition);
         this.icon = icon;
+    }
+
+    public Toast(String message, ToastType toastType, int duration, String verticalPosition, String icon, boolean persistent) {
+        this(message, toastType, duration, verticalPosition, icon);
+        this.persistent = persistent;
     }
 
     public Toast(String message, ToastType toastType, int duration, String verticalPosition, boolean willUnblock){
@@ -101,5 +118,29 @@ public class Toast extends Message {
 
     public void setIcon(String icon) {
         this.icon = icon;
+    }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    public void setPersistent(boolean persistent) {
+        this.persistent = persistent;
+    }
+
+    public UUID getPersistedId() {
+        return persistedId;
+    }
+
+    public void setPersistedId(UUID persistedId) {
+        this.persistedId = persistedId;
+    }
+
+    public boolean isClose() {
+        return close;
+    }
+
+    public void setClose(boolean close) {
+        this.close = close;
     }
 }
