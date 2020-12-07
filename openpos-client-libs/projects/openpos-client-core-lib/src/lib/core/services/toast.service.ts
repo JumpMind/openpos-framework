@@ -12,6 +12,7 @@ export class ToastService {
     constructor( private sessionService: SessionService, private toastrService: ToastrService ) {
         sessionService.getMessages('Toast').subscribe(m => this.showToast(m));
         sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear());
+        window['toastService'] = this;
     }
 
     private showToast( message: any) {
@@ -36,7 +37,7 @@ export class ToastService {
             timeOut: toastMessage.duration,
             extendedTimeOut: toastMessage.duration,
             disableTimeOut: this.isStickyToast(toastMessage),
-            tapToDismiss: this.isStickyToast(toastMessage),
+            tapToDismiss: !toastMessage.persistent,
             positionClass: this.getPosition(toastMessage.verticalPosition),
             toastClass: `ngx-toastr app-${this.getType(toastMessage.toastType)}`,
             toastComponent: ToastComponent
