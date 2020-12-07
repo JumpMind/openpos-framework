@@ -1,14 +1,14 @@
 import {Injectable} from '@angular/core';
 import {SessionService} from './session.service';
 import {IToastScreen, ToastType} from '../interfaces/toast-screen.interface';
-import {ToastrService} from 'ngx-toastr';
+import {ActiveToast, ToastrService} from 'ngx-toastr';
 import {ToastComponent} from "../../shared/components/toast/toast.component";
 
 @Injectable({
     providedIn: 'root',
   })
 export class ToastService {
-
+    persistedToasts = new Map<String,ActiveToast<any>>();
     constructor( private sessionService: SessionService, private toastrService: ToastrService ) {
         sessionService.getMessages('Toast').subscribe(m => this.showToast(m));
         sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear());
@@ -16,6 +16,22 @@ export class ToastService {
 
     private showToast( message: any) {
         const toastMessage = message as IToastScreen;
+        if(toastMessage.close) {
+            this.closeMessage(toastMessage);
+        }
+        else {
+            this.showMessage(toastMessage);
+        }
+    }
+
+    private closeMessage(toastMessage: IToastScreen) {
+        const messageToClose = this.persistedToasts.get(toastMessage.persistedId);
+        if(messageToClose) {
+            this.toastrService.remove(messageToClose.toastId);
+        }
+    }
+
+    private showMessage(toastMessage: IToastScreen) {
         const toast = this.toastrService.show(toastMessage.message, null, {
             timeOut: toastMessage.duration,
             extendedTimeOut: toastMessage.duration,
@@ -26,6 +42,9 @@ export class ToastService {
             toastComponent: ToastComponent
         });
         toast.toastRef.componentInstance.iconName = toastMessage.icon;
+        if(toastMessage.persistent) {
+            this.persistedToasts.set(toastMessage.persistedId, toast);
+        }
         this.sessionService.cancelLoading();
     }
 
