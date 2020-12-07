@@ -26,7 +26,7 @@ ext {
     springfoxSwaggerVersion='2.9.2'
     javaposVersion='1.14.2'
     jacksonVersion='2.8.10'
-    lombokVersion='1.18.6'
+    lombokVersion='1.18.16'
     snakeYamlVersion='1.23'
 }
 
