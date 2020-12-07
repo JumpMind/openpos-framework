@@ -1,35 +1,24 @@
 package org.jumpmind.pos.devices.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
-import org.jumpmind.pos.devices.DeviceNotFoundException;
-import org.jumpmind.pos.devices.DeviceUpdater;
 import org.jumpmind.pos.devices.model.DeviceModel;
-import org.jumpmind.pos.devices.model.DeviceParamModel;
-import org.jumpmind.pos.devices.model.DevicelessRepository;
-import org.jumpmind.pos.devices.model.DevicesRepository;
+import org.jumpmind.pos.devices.model.VirtualDeviceRepository;
 import org.jumpmind.pos.devices.service.model.PersonalizationRequest;
 import org.jumpmind.pos.devices.service.model.PersonalizationResponse;
 import org.jumpmind.pos.service.Endpoint;
 import org.jumpmind.pos.util.RandomString;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
-import static org.apache.commons.lang3.StringUtils.*;
 
 @Slf4j
-@Endpoint(path="/devices/personalize", implementation = "deviceless")
-public class PersonalizeDevicelessEndpoint {
+@Endpoint(path="/devices/personalize", implementation = "virtual")
+public class PersonalizeVirtualDeviceEndpoint {
 
     @Autowired
-    DevicelessRepository devicesRepository;
+    VirtualDeviceRepository devicesRepository;
 
     RandomString session = new RandomString(9);
 

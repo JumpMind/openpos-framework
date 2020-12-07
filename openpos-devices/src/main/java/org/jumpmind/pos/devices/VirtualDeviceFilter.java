@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public class DevicelessFilter implements Filter {
+public class VirtualDeviceFilter implements Filter {
 
     RandomString session = new RandomString(9);
 

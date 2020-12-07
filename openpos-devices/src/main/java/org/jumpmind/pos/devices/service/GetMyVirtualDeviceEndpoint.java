@@ -6,14 +6,14 @@ import org.jumpmind.pos.service.Endpoint;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@Endpoint(path = "/devices/myDevice", implementation = "deviceless")
-public class GetMyDevicelessEndpoint {
+@Endpoint(path = "/devices/myDevice", implementation = "virtual")
+public class GetMyVirtualDeviceEndpoint {
 
     @Autowired
     ClientContext clientContext;
 
     @Autowired
-    GetDevicelessEndpoint endpoint;
+    GetVirtualDeviceEndpoint endpoint;
 
     public GetDeviceResponse getMyDevice() {
         return GetDeviceResponse.builder()

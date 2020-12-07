@@ -2,12 +2,12 @@ package org.jumpmind.pos.devices.model;
 
 import org.springframework.stereotype.Component;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
-public class DevicelessRepository {
-    Map<String, DeviceModel> virtualDevices = new HashMap<>();
+public class VirtualDeviceRepository {
+    Map<String, DeviceModel> virtualDevices = new ConcurrentHashMap<>();
 
     public void add(String authToken, DeviceModel deviceModel) {
         virtualDevices.put(authToken, deviceModel);

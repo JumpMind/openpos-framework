@@ -6,8 +6,8 @@ import org.jumpmind.pos.service.Endpoint;
 
 
 @Slf4j
-@Endpoint(path = "/devices/personalizationConfig", implementation = "deviceless")
-public class GetDevicelessPersonalizationConfigEndpoint {
+@Endpoint(path = "/devices/personalizationConfig", implementation = "virtual")
+public class GetVirtualDevicePersonalizationConfigEndpoint {
 
     public PersonalizationConfigResponse getPersonalizationConfig() {
         // Not Used
