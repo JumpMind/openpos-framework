@@ -10,12 +10,12 @@ import {ToastComponent} from "../../shared/components/toast/toast.component";
 export class ToastService {
     persistedToasts = new Map<String,ActiveToast<any>>();
     constructor( private sessionService: SessionService, private toastrService: ToastrService ) {
-        sessionService.getMessages('Toast').subscribe(m => this.showToast(m));
+        sessionService.getMessages('Toast').subscribe(m => this.handleToastMessage(m));
         sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear());
         window['toastService'] = this;
     }
 
-    private showToast( message: any) {
+    private handleToastMessage( message: any) {
         const toastMessage = message as IToastScreen;
         if(toastMessage.close) {
             this.closeMessage(toastMessage);

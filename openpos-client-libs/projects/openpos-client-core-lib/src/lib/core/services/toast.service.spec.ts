@@ -26,6 +26,19 @@ describe('ToastService', () => {
         toastType: ToastType.Success
     };
 
+    const persistedToast: IToastScreen = {
+        locale: 'en-us',
+        name: 'Toast',
+        type: 'Toast',
+        screenType: 'Toast',
+        message: 'Hi',
+        duration: 2500,
+        verticalPosition: 'top',
+        toastType: ToastType.Success,
+        persistent: true,
+        persistedId: 'persistedId'
+    };
+
     beforeEach(() => {
         const sessionSpy = jasmine.createSpyObj('SessionService', ['getMessages', 'cancelLoading']);
         const toastrSpy = jasmine.createSpyObj('ToastrService', ['show', 'clear']);
@@ -60,12 +73,35 @@ describe('ToastService', () => {
                         timeOut: 2500,
                         extendedTimeOut: 2500,
                         disableTimeOut: false,
-                        tapToDismiss: false,
+                        tapToDismiss: true,
                         positionClass: 'toast-top-center',
                         toastClass: 'ngx-toastr app-toast-success',
                         toastComponent: ToastComponent
                     },
                 );
+        });
+
+        it('should save persisted messages', () => {
+            sessionServiceSpy.getMessages.and.returnValue(of(persistedToast));
+            expect(toastService.persistedToasts.get('persistedId')).not.toBeNull();
+        });
+
+        it('should remove persisted message by ID', () => {
+            sessionServiceSpy.getMessages.and.returnValue(of(persistedToast));
+            const closeToast: IToastScreen = {
+                duration: 0,
+                locale: "",
+                message: "",
+                name: "",
+                screenType: "",
+                toastType: undefined,
+                type: "",
+                verticalPosition: "",
+                close: true,
+                persistedId: 'persistedId'
+            };
+            sessionServiceSpy.getMessages.and.returnValue(of(closeToast));
+            expect(toastService.persistedToasts.get('persistedId')).toBeFalsy();
         });
     });
 });
