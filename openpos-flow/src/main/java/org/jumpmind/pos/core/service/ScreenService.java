@@ -309,6 +309,12 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
+    public void closeToast(String appId, String deviceId, CloseToast toast) {
+        interceptMessage(appId, deviceId, toast, CloseToast.class);
+        messageService.sendMessage(appId, deviceId, toast);
+    }
+
+    @Override
     public void showScreen(String appId, String deviceId, UIMessage screen) {
         showScreen(appId, deviceId, screen, null);
     }

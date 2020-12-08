@@ -43,6 +43,7 @@ import org.jumpmind.pos.core.flow.config.*;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.model.StartupMessage;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
+import org.jumpmind.pos.core.ui.CloseToast;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.DialogProperties;
 import org.jumpmind.pos.core.service.IScreenService;
@@ -1047,10 +1048,28 @@ public class StateManager implements IStateManager {
             throw new FlowException(
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
         }
-
+        if(toast.isPersistent() && toast.getPersistedId() == null) {
+            toast.setPersistedId(UUID.randomUUID());
+        }
         screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
 
         lastShowTimeInMs.set(System.currentTimeMillis());
+    }
+
+    @Override
+    public void closeToast(Toast toast) {
+        if (toast != null) {
+            keepAlive();
+
+            if (applicationState.getCurrentContext() == null) {
+                throw new FlowException(
+                        "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
+            }
+            CloseToast closeToast = new CloseToast(toast.getPersistedId());
+            screenService.closeToast(applicationState.getAppId(), applicationState.getDeviceId(), closeToast);
+
+            lastShowTimeInMs.set(System.currentTimeMillis());
+        }
     }
 
 

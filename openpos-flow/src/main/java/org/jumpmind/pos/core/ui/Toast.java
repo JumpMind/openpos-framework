@@ -3,6 +3,8 @@ package org.jumpmind.pos.core.ui;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.util.model.Message;
 
+import java.util.UUID;
+
 public class Toast extends Message {
 
     private static final long serialVersionUID = 1L;
@@ -11,6 +13,9 @@ public class Toast extends Message {
     private ToastType toastType;
     private int duration = 2500;
     private String verticalPosition = "bottom";
+    private String icon;
+    private boolean persistent;
+    private UUID persistedId;
 
     public static Toast createSuccessToast(String message) {
         return createSuccessToast(message, true);
@@ -52,6 +57,16 @@ public class Toast extends Message {
         this.verticalPosition = verticalPosition;
     }
 
+    public Toast(String message, ToastType toastType, int duration, String verticalPosition, String icon) {
+        this(message, toastType, duration, verticalPosition);
+        this.icon = icon;
+    }
+
+    public Toast(String message, ToastType toastType, int duration, String verticalPosition, String icon, boolean persistent) {
+        this(message, toastType, duration, verticalPosition, icon);
+        this.persistent = persistent;
+    }
+
     public Toast(String message, ToastType toastType, int duration, String verticalPosition, boolean willUnblock){
         this(message, toastType, duration, verticalPosition);
         this.setWillUnblock(willUnblock);
@@ -87,5 +102,29 @@ public class Toast extends Message {
     
     public String getVerticalPosition() {
         return verticalPosition;
+    }
+
+    public String getIcon() {
+        return icon;
+    }
+
+    public void setIcon(String icon) {
+        this.icon = icon;
+    }
+
+    public boolean isPersistent() {
+        return persistent;
+    }
+
+    public void setPersistent(boolean persistent) {
+        this.persistent = persistent;
+    }
+
+    public UUID getPersistedId() {
+        return persistedId;
+    }
+
+    public void setPersistedId(UUID persistedId) {
+        this.persistedId = persistedId;
     }
 }

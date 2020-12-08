@@ -1,5 +1,6 @@
 package org.jumpmind.pos.core.service;
 
+import org.jumpmind.pos.core.ui.CloseToast;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIDataMessage;
 import org.jumpmind.pos.core.ui.UIMessage;
@@ -14,6 +15,8 @@ public interface IScreenService {
     public void showScreen(String appId, String nodeId, UIMessage screen);
 
     public void showToast(String appId, String nodeId, Toast toast);
+
+    public void closeToast(String appId, String nodeId, CloseToast toast);
 
     public UIMessage getLastScreen(String appId, String nodeId);
 
