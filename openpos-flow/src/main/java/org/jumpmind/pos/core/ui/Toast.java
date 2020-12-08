@@ -16,7 +16,6 @@ public class Toast extends Message {
     private String icon;
     private boolean persistent;
     private UUID persistedId;
-    private boolean close;
 
     public static Toast createSuccessToast(String message) {
         return createSuccessToast(message, true);
@@ -34,13 +33,6 @@ public class Toast extends Message {
         toast.setToastType(ToastType.Warn);
         toast.setDuration(0);
         return toast;
-    }
-
-    public static Toast createCloseToast(UUID id) {
-        Toast closeToast = new Toast();
-        closeToast.setPersistedId(id);
-        closeToast.setClose(true);
-        return closeToast;
     }
 
     public Toast() {
@@ -134,13 +126,5 @@ public class Toast extends Message {
 
     public void setPersistedId(UUID persistedId) {
         this.persistedId = persistedId;
-    }
-
-    public boolean isClose() {
-        return close;
-    }
-
-    public void setClose(boolean close) {
-        this.close = close;
     }
 }
