@@ -8,7 +8,6 @@ export interface IToastScreen extends IAbstractScreen {
     icon?: string;
     persistent?: boolean;
     persistedId?: string;
-    close?: boolean;
 }
 
 export interface CloseToastMessage {
