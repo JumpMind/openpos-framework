@@ -11,6 +11,10 @@ export interface IToastScreen extends IAbstractScreen {
     close?: boolean;
 }
 
+export interface CloseToastMessage {
+    persistedId?: string;
+}
+
 export enum ToastType {
     Success= 'Success',
     Warn= 'Warn',

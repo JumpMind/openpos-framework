@@ -3,7 +3,7 @@ import { SessionService } from './session.service';
 import { ToastService } from './toast.service';
 import { of } from 'rxjs';
 import { Injector } from '@angular/core';
-import { IToastScreen, ToastType } from '../interfaces/toast-screen.interface';
+import {CloseToastMessage, IToastScreen, ToastType} from '../interfaces/toast-screen.interface';
 import { AppInjector } from '../app-injector';
 import {ToastrService} from 'ngx-toastr';
 import {ToastComponent} from "../../shared/components/toast/toast.component";
@@ -88,16 +88,7 @@ describe('ToastService', () => {
 
         it('should remove persisted message by ID', () => {
             sessionServiceSpy.getMessages.and.returnValue(of(persistedToast));
-            const closeToast: IToastScreen = {
-                duration: 0,
-                locale: "",
-                message: "",
-                name: "",
-                screenType: "",
-                toastType: undefined,
-                type: "",
-                verticalPosition: "",
-                close: true,
+            const closeToast: CloseToastMessage = {
                 persistedId: 'persistedId'
             };
             sessionServiceSpy.getMessages.and.returnValue(of(closeToast));

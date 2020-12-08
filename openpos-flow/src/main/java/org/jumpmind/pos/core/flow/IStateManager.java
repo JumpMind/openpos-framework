@@ -23,6 +23,7 @@ package org.jumpmind.pos.core.flow;
 import java.util.Map;
 
 import org.jumpmind.pos.core.error.IErrorHandler;
+import org.jumpmind.pos.core.ui.CloseToast;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
@@ -51,6 +52,7 @@ public interface IStateManager {
     public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap);
     public void showScreen(UIMessage screen);
     public void showToast(Toast toast);
+    public void closeToast(Toast toast);
     public void refreshScreen();
     public void reset();
     public Object getCurrentState();
