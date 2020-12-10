@@ -20,6 +20,9 @@ public class ClientContext {
     @Value("${openpos.installationId:'not set'}")
     String installationId;
 
+    @Value("${openpos.businessunitId:'not set'}")
+    String businessUnitId;
+
     public void put(String name, String value) {
         if (propertiesMap.get() == null) {
             propertiesMap.set(new HashMap<>());
@@ -34,6 +37,8 @@ public class ClientContext {
         if (props == null || !props.containsKey(name)) {
             if ("deviceId".equals(name)) {
                 return installationId;
+            } else if ("businessUnitId".equals(name)) {
+                return businessUnitId;
             } else if ("appId".equals(name)) {
                 return "server";
             } else if ("timezoneOffset".equals(name)) {
