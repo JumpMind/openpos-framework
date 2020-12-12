@@ -38,5 +38,4 @@ public final class UIMessageType {
     public static String AUDIO = "Audio";
     public static String AUDIO_CONFIG = "AudioConfig";
     public static String AUDIO_PRELOAD = "AudioPreload";
-    public static String DASHBOARD = "Dashboard";
 }
