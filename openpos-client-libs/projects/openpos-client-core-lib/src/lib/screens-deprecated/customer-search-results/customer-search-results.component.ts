@@ -25,14 +25,14 @@ export class CustomerSearchResultsComponent extends PosScreen<any> {
 
     if (this.localMenuItems) {
       this.localMenuItems.forEach(element => {
-        this.session.registerActionPayload(element.action, () => this.selectedOptions);
+        this.actionService.registerActionPayload(element.action, () => this.selectedOptions);
         element.enabled = false;
       });
     }
   }
 
   onSubmitAction(): void {
-    this.session.onAction(this.submitAction, this.selectedOptions);
+    this.doAction(this.submitAction, this.selectedOptions);
   }
 
   isSelectedOptionsEmpty(): boolean {

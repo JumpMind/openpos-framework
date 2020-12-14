@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { SelfCheckoutOptionsPartInterface } from './self-checkout-options-part.interface';
 import { ScreenPart } from '../../../shared/decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../../../shared/screen-parts/screen-part';
@@ -16,8 +16,8 @@ import { MessageProvider } from '../../../shared/providers/message.provider';
 })
 export class SelfCheckoutOptionsPartComponent extends ScreenPartComponent<SelfCheckoutOptionsPartInterface> {
 
-    constructor(messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() { }

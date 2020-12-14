@@ -19,10 +19,6 @@ export class TillCountComponent extends PosScreen<any> {
   public form: IForm;
   @ViewChild('tillForm') tillForm: DynamicFormControlComponent;
 
-  constructor() {
-      super();
-  }
-
   buildScreen() {
     // After screen is initialized, all we need to do is
     // get an updated total from the server.  This saves
@@ -34,12 +30,12 @@ export class TillCountComponent extends PosScreen<any> {
 
   onFieldChanged(eventData: {formElement: IFormElement, event: Event}) {
     this.form = this.screen.form;
-    this.session.onAction('formChanged', this.form);
+    this.doAction('formChanged', this.form);
   }
 
   onNextAction() {
     if (this.tillForm.form.valid) {
-        this.session.onAction(this.nextAction.action, this.screen.form);
+        this.doAction(this.nextAction.action, this.screen.form);
     }
   }
 

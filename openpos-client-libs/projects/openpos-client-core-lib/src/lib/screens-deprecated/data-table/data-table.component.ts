@@ -14,10 +14,6 @@ export class DataTableComponent extends PosScreen<any> {
     rows = [];
     columnHeaders = [];
 
-    constructor() {
-        super();
-    }
-
     buildScreen() {
         if (this.screen.rows) {
             this.rows = this.screen.rows;

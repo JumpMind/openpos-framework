@@ -30,6 +30,10 @@ import { PingResult } from '../interfaces/ping-result.interface';
 import { PersonalizationResponse } from '../personalization/personalization-response.interface';
 import { ElectronService } from 'ngx-electron';
 import { DiscoveryService } from '../discovery/discovery.service';
+import { OpenposMessage } from '../messages/message';
+import { MessageTypes } from '../messages/message-types';
+import { ActionMessage } from '../messages/action-message';
+
 
 declare var window: any;
 export class QueueLoadingMessage implements ILoading {
@@ -139,10 +143,18 @@ export class SessionService implements IMessageHandler<any> {
         this.registerMessageHandler(this);
     }
 
+    public sendMessage<T extends OpenposMessage>(message: T) {
+        if ( message.type === MessageTypes.ACTION && message instanceof ActionMessage ) {
+            const actionMessage = message as ActionMessage;
+            this.publish(actionMessage.actionName, 'Screen', actionMessage.payload);
+        }
+        this.sessionMessages$.next(message);	        this.sessionMessages$.next(message);
+    }
+/*
     public sendMessage(message: any) {
         this.sessionMessages$.next(message);
     }
-
+*/
     public getMessages(...types: string[]): Observable<any> {
         return merge(
             this.stompJsonMessages$,
@@ -497,10 +509,13 @@ export class SessionService implements IMessageHandler<any> {
         }
     }
 
+    /*
     public async onValueChange(action: string, payload?: any) {
         this.onAction(action, payload, null, true);
     }
+    */
 
+    /*
     public async onAction(action: string | IActionItem,
                           payload?: any, confirm?: string | IConfirmationDialog, isValueChangedAction?: boolean) {
         if (action) {
@@ -615,7 +630,7 @@ export class SessionService implements IMessageHandler<any> {
             this.log.info(`received an invalid action: ${action}`);
         }
     }
-
+*/
     public keepAlive() {
         if (this.subscription) {
             this.log.info(`>>> KeepAlive`);

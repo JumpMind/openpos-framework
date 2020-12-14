@@ -1,7 +1,7 @@
 import { Component, Input, HostListener } from '@angular/core';
 import { SessionService } from '../../../core/services/session.service';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
-
+import { ActionService } from '../../../core/actions/action.service';
 @Component({
   selector: 'app-receipt-card',
   templateUrl: './receipt-card.component.html',
@@ -17,7 +17,7 @@ export class ReceiptCardComponent {
 
   public hover = false;
 
-  constructor(public session: SessionService) {
+  constructor(public actionService: ActionService) {
   }
 
   @HostListener('mouseenter')

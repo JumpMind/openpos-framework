@@ -8,7 +8,7 @@
             </mat-error>	
         </mat-card-content>
         <mat-card-actions fxFlex="0 0 auto" mat-dialog-actions align="end">
-            <button fxFlex="0 0 auto" mat-raised-button type="button" color="primary-inverse" *ngFor="let button of buttons" (click)="onMenuItemClick(button)">
+            <button fxFlex="0 0 auto" mat-raised-button type="button" color="primary-inverse" *ngFor="let button of buttons" (click)="doAction(button)">
                 <span>{{button.label}}</span>
                 <app-icon *ngIf="button.icon" [iconClass]="'material-icons'" [iconName]="button.icon"></app-icon>
             </button>

@@ -22,7 +22,7 @@
 			<app-language-selector *ngIf="data.showLanguageSelector"></app-language-selector>
 
 			<div fxLayout="row" fxLayoutAlign="center center">
-				<button *ngIf="data.skipButton && data.skipButton.enabled" class="skip-icon" mat-button (click)="this.session.onAction(data.skipButton.action)">
+				<button *ngIf="data.skipButton && data.skipButton.enabled" class="skip-icon" mat-button (click)="actionService.doAction({action: data.skipButton.action})">
 					<h2>{{data.skipButton.title}}</h2>
 				</button>
 			</div>

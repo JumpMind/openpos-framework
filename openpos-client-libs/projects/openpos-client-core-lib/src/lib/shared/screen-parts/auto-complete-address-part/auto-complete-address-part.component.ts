@@ -1,4 +1,4 @@
-import { ViewChildren, AfterViewInit, Input, QueryList, ViewChild, Component } from '@angular/core';
+import { ViewChildren, AfterViewInit, Input, QueryList, ViewChild, Component, Injector } from '@angular/core';
 import { FormGroup, AbstractControl } from '@angular/forms';
 import { ScreenPartComponent } from '../screen-part';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
@@ -45,8 +45,8 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
 
     @Input() submitButton: IActionItem;
 
-    constructor(private formBuilder: FormBuilder, messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(private formBuilder: FormBuilder, injector: Injector) {
+        super(injector);
     }
 
     setAddress(address: any) {
@@ -115,7 +115,7 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
         if (actions) {
             actions.forEach(action => {
 
-                this.sessionService.registerActionPayload(action, () => {
+                this.actionService.registerActionPayload(action, () => {
                     if (this.form.valid) {
                         this.formBuilder.buildFormPayload(this.form, this.screenData);
                         return this.screenData;
@@ -151,7 +151,7 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
     submitForm() {
         if (this.form.valid) {
             this.formBuilder.buildFormPayload(this.form, this.screenData);
-            this.sessionService.onAction(this.submitButton, this.screenData);
+            this.doAction(this.submitButton, this.screenData);
         } else {
             // Set focus on the first invalid field found
             const invalidFieldKey = Object.keys(this.form.controls).find(key => {
@@ -182,11 +182,11 @@ export class AutoCompleteAddressPartComponent extends ScreenPartComponent<IForm>
     onFieldChanged(formElement: IFormElement) {
         if (formElement.valueChangedAction) {
             this.formBuilder.buildFormPayload(this.form, this.screenData);
-            this.sessionService.onAction(formElement.valueChangedAction, this.screenData);
+            this.doAction({action: formElement.valueChangedAction, doNotBlockForResponse: true}, this.screenData);
         }
     }
 
     onButtonClick(formElement: IFormElement) {
-        this.sessionService.onAction(formElement.action, null, formElement.confirmationDialog);
+        this.doAction({ action: formElement.action, confirmationDialog: formElement.confirmationDialog}, null );
     }
 }

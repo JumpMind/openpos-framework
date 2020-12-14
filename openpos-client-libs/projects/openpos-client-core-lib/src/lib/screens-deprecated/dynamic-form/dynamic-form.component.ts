@@ -1,5 +1,5 @@
 import { ScannerService } from '../../core/platform-plugins/scanners/scanner.service';
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { SessionService } from '../../core/services/session.service';
@@ -19,8 +19,8 @@ export class DynamicFormComponent extends PosScreen<any> implements OnDestroy {
 
     private scanServiceSubscription: Subscription;
 
-    constructor(private scannerService: ScannerService) {
-        super();
+    constructor(private scannerService: ScannerService, injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {

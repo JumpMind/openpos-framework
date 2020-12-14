@@ -31,10 +31,6 @@ export class StaticTableComponent extends PosScreen<any> {
     /** Prompt text to display to user */
     text: string;
 
-    constructor() {
-        super();
-    }
-
     private initColumnDefs(): void {
         this.columns = [];
         this.columnIds = [];
@@ -85,7 +81,7 @@ export class StaticTableComponent extends PosScreen<any> {
 
     onAction(action: string) {
         if (action) {
-            this.session.onAction(action, this.selectedRow);
+            this.doAction(action, this.selectedRow);
         }
     }
 }

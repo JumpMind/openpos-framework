@@ -67,7 +67,7 @@ export class TillCountOtherTenderComponent extends PosScreen<any> {
   }
 
   onNextAction() {
-    this.session.onAction(this.nextAction.action, {items: this.items, total: this.totalAmount.toString()});
+    this.doAction(this.nextAction.action, {items: this.items, total: this.totalAmount.toString()});
   }
 
 

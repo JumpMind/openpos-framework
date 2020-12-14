@@ -7,6 +7,7 @@ import { IForm } from '../../../core/interfaces/form.interface';
 import { SessionService } from '../../../core/services/session.service';
 import { ScreenService } from '../../../core/services/screen.service';
 import { FormBuilder } from '../../../core/services/form-builder.service';
+import { ActionService } from '../../../core/actions/action.service';
 
 @Component({
     selector: 'app-dynamic-list-control',
@@ -38,7 +39,10 @@ export class DynamicListControlComponent implements OnInit {
     private _alternateSubmitActions: string[];
     private _screenForm: IForm;
 
-    constructor(public session: SessionService, public screenService: ScreenService, private formBuilder: FormBuilder) {
+    constructor(
+        public screenService: ScreenService,
+        private formBuilder: FormBuilder,
+        public actionService: ActionService) {
         this.log('Constructing DynamicListControlComponent...')
         this.log('initialized = ' + this._initialized);
     }
@@ -70,7 +74,7 @@ export class DynamicListControlComponent implements OnInit {
         this._alternateSubmitActions = actions;
         if (actions) {
             actions.forEach(action => {
-                this.session.registerActionPayload(action, () => {
+                this.actionService.registerActionPayload(action, () => {
                     if (this.form.valid) {
                         this.formBuilder.buildFormPayload(this.form, this._screenForm);
                         return this._screenForm;
@@ -230,7 +234,7 @@ export class DynamicListControlComponent implements OnInit {
     private toCleanValue(value: string) {
         if (value) {
             const pos = value.indexOf('$');
-            return (pos < 0 ? value : value.substring(pos + 1))
+            return (pos < 0 ? value : value.substring(pos + 1));
         }
         return (this._isNumeric ? '0' : '');
     }
@@ -293,7 +297,7 @@ export class DynamicListControlComponent implements OnInit {
             } else if (this.alternateSubmitActions) {
                 //  Is this an alternate submit action?
 
-                for (var action in this.alternateSubmitActions) {
+                for (const action in this.alternateSubmitActions) {
                     if (action === button.action) {
                         this.onSubmit(action);
                     }
@@ -374,7 +378,7 @@ export class DynamicListControlComponent implements OnInit {
             //  No errors, perform the submit action.
 
             this.log('Form has no errors, firing action ' + action + '...');
-            this.session.onAction(action, this.list.valueList, null, false);
+            this.actionService.doAction({action}, this.list.valueList);
         }
 
         this.log('onSubmit() returning ' + isValid);

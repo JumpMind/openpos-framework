@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ScreenPartComponent } from '../../../shared/screen-parts/screen-part';
 import { SaleFooterInterface } from './sale-footer.interface';
 import { MessageProvider } from '../../../shared/providers/message.provider';
@@ -9,8 +9,8 @@ import { MessageProvider } from '../../../shared/providers/message.provider';
     styleUrls: ['./sale-footer.component.scss']})
 export class SaleFooterComponent extends ScreenPartComponent<SaleFooterInterface> {
 
-    constructor( messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor( injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() {

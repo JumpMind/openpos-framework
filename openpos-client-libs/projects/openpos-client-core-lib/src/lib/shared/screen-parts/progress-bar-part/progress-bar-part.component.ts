@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ProgressBarPartInterface } from './progress-bar-part.interface';
 import { ScreenPartComponent } from '../screen-part';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { MessageProvider } from '../../providers/message.provider';
 
 
 @ScreenPart({
@@ -15,8 +14,8 @@ import { MessageProvider } from '../../providers/message.provider';
 })
 export class ProgressBarPartComponent extends ScreenPartComponent<ProgressBarPartInterface> {
 
-    constructor(messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(injector: Injector) {
+        super(injector);
     }
 
     buildScreen() { }

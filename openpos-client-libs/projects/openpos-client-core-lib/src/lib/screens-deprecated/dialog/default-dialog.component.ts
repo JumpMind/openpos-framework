@@ -1,6 +1,6 @@
 import { SessionService } from './../../core/services/session.service';
 
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { MatDialogRef } from '@angular/material';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ILine } from './line.interface';
@@ -21,8 +21,8 @@ export class DefaultDialogComponent extends PosScreen<any> {
   messages: string[];
   lines: ILine[];
 
-  constructor(public session: SessionService, public dialogRef: MatDialogRef<DefaultDialogComponent> ) {
-      super();
+  constructor(public session: SessionService, public dialogRef: MatDialogRef<DefaultDialogComponent>, injector: Injector) {
+      super(injector);
   }
 
   buildScreen(): void {

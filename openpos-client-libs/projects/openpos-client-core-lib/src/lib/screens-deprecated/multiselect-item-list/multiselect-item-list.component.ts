@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterViewChecked, Injector } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { NavListComponent } from '../../shared/components/nav-list/nav-list.component';
 import { PosScreen } from '../pos-screen/pos-screen.component';
@@ -44,8 +44,8 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     private nextActionPresent = false;
 
 
-    constructor(protected dialog: MatDialog) {
-        super();
+    constructor(protected dialog: MatDialog, injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {
@@ -114,7 +114,7 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     }
 
     onItemClick(itemInfo: ItemClickAction): void {
-        this.session.onAction(this.itemActionName, itemInfo.item);
+        this.doAction(this.itemActionName, itemInfo.item);
     }
 
     onItemSelected(itemInfo: ItemClickAction): void {
@@ -132,7 +132,7 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     }
 
     onActionButtonClick(): void {
-        this.session.onAction(this.screen.actionButton.action, this.selectedItems);
+        this.doAction(this.screen.actionButton.action, this.selectedItems);
     }
 
     isItemSelected(item: IItem): boolean {
@@ -178,14 +178,21 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     }
 
     showItemDetailScreen(items: IItem[]) {
-        this.session.onAction('ItemDisplay', items);
+        this.doAction('ItemDisplay', items);
     }
 
     addItemsToSale(items: IItem[]) {
         //  Send the appropriate Add action to the page.
-        const message = (items.length === 1 ? 'Add the selected item to the transaction?'
+        const msg = (items.length === 1 ? 'Add the selected item to the transaction?'
             : 'Add the ' + items.length + ' selected items to the transaction?');
-        this.session.onAction(this.getAddActionName(), items, message);
+        
+        // TODO: had to port this, not sure if it will work correctly
+        const action: IActionItem = {
+            action: this.getAddActionName(),
+            confirmationDialog: {title: '', message: msg, cancelButtonName: 'No',
+            confirmButtonName: 'Yes', cancelAction: null, confirmAction: null}
+        };
+        this.doAction(action, items);
     }
 
     openItemDialog(item: IItem) {
@@ -219,7 +226,7 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     }
 
     doItemAction(item: IItem): void {
-        this.session.onAction(this.itemActions[0], [item]);
+        this.doAction(this.itemActions[0], [item]);
     }
 
     public getIndexes(items: IItem[]): number[] {

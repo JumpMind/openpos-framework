@@ -59,7 +59,6 @@ export * from './lib/core/interfaces/ping-result.interface';
 export * from './lib/core/interfaces/selection-mode.enum';
 export * from './lib/core/interfaces/sell-item.interface';
 export * from './lib/core/startup/startup-task.interface';
-export * from './lib/core/interfaces/status-bar-control.interface';
 export * from './lib/core/interfaces/system-status-type.enum';
 export * from './lib/core/interfaces/system-status.interface';
 export * from './lib/core/interfaces/tender-item.interface';
@@ -116,6 +115,7 @@ export * from './lib/core/services/location.service';
 export * from './lib/core/personalization/client-url.service';
 export * from './lib/core/focus/focus.service';
 export * from './lib/core/help-text/help-text.service';
+export * from './lib/core/actions/action.service';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';
@@ -284,9 +284,6 @@ export * from './lib/shared/components/secondary-button/secondary-button.compone
 export * from './lib/shared/components/selectable-item-list/selectable-item-list.component';
 export * from './lib/shared/components/selectable-item-list/selectable-list-data.interface';
 export * from './lib/shared/components/show-errors/show-errors.component';
-export * from './lib/shared/components/status-bar/status-bar-data';
-export * from './lib/shared/components/status-bar/status-bar.component';
-export * from './lib/shared/components/status-bar-status-control/status-bar-status-control.component';
 export * from './lib/shared/components/system-status/system-status-dialog.component';
 export * from './lib/shared/components/time-chooser/time-chooser.component';
 export * from './lib/shared/components/training-dialog/training-dialog.component';

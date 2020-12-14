@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Injector } from '@angular/core';
 import {  MatPaginator, PageEvent } from '@angular/material';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IItemQuantityFormElement } from './iitem-quantity-form-field.interface';
@@ -29,8 +29,8 @@ import { ICatalogBrowserForm } from '../../core/interfaces/catalog-browser-form.
     form: IForm;
     formGroup: FormGroup;
 
-    constructor(private formBuilder: FormBuilder) {
-        super();
+    constructor(private formBuilder: FormBuilder, injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {
@@ -46,7 +46,7 @@ import { ICatalogBrowserForm } from '../../core/interfaces/catalog-browser-form.
     public onItemSelected(item: ISellItem) {
         if (this.formGroup.valid) {
             const returnForm: ICatalogBrowserForm = {selectedItems: [item], form: this.form};
-            this.session.onAction('ItemSelected', returnForm);
+            this.doAction('ItemSelected', returnForm);
         } else {
             this.showErrors();
         }
@@ -58,12 +58,12 @@ import { ICatalogBrowserForm } from '../../core/interfaces/catalog-browser-form.
     }
     public onCategorySelected(category: IActionItem, event?: any) {
         const returnForm: ICatalogBrowserForm = {selectedCategory: category, form: this.form};
-        this.session.onAction(category.action, returnForm);
+        this.doAction(category.action, returnForm);
     }
 
     public onPageEvent(event?: PageEvent) {
         const returnForm: ICatalogBrowserForm = {pageEvent: event, form: this.form};
-        this.session.onAction('PageEvent', returnForm);
+        this.doAction('PageEvent', returnForm);
     }
 
     onItemQuantityChange(value: string) {

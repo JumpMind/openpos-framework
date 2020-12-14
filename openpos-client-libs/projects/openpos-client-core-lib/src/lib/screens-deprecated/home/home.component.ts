@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { ObservableMedia} from '@angular/flex-layout';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { Configuration } from '../../configuration/configuration';
@@ -23,8 +23,8 @@ export class HomeComponent extends PosScreen<any> implements OnInit {
   gutterSize = 40;
   gridColumns = 3;
 
-  constructor( public media: ObservableMedia ) {
-    super();
+  constructor( public media: ObservableMedia, injector: Injector ) {
+    super(injector);
   }
 
   ngOnInit() {
@@ -46,7 +46,7 @@ export class HomeComponent extends PosScreen<any> implements OnInit {
   }
 
   onEnter(value: string) {
-    this.session.onAction('Save');
+    this.doAction('Save');
   }
 
   getClass(): String {
@@ -55,7 +55,7 @@ export class HomeComponent extends PosScreen<any> implements OnInit {
   }
 
   onMenuItemClick(menuItem: IActionItem) {
-      this.session.onAction( menuItem );
+      this.doAction( menuItem );
   }
 
   public keybindsEnabled() {

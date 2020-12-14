@@ -2,7 +2,7 @@
 
 	<div #scrollList class="selfcheckout-list-background" style="overflow-y: auto; overflow-x: hidden;">
 
-		<app-item-card *ngFor="let i of items" [item]=i [session]=session [isReadOnly]=screen.readOnly></app-item-card>
+		<app-item-card *ngFor="let i of items" [item]=i [isReadOnly]=screen.readOnly></app-item-card>
 
 		<div *ngIf="items.length == 0 && !screen.readOnly" fxFlexFill fxLayout="column" fxLayoutAlign="center center">
 			<div class="prompt text-center" style="padding: 16px;">{{this.screen.prompt}}</div>

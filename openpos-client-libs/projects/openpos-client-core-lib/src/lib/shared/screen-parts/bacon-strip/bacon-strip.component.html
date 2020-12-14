@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="back-button-container" *ngIf="screenData.backButton" (click)="onMenuItemClick(screenData.backButton)">
+    <div class="back-button-container" *ngIf="screenData.backButton" (click)="doAction(screenData.backButton)">
         <app-icon-button
             class="back-button"
             [actionItem]="screenData.backButton"

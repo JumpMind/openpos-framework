@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { IItem } from '../../core/interfaces/item.interface';
@@ -27,8 +27,8 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     localMenuItems: IActionItem[];
     @ViewChild('productList') productList: ProductListComponent;
 
-    constructor() {
-        super();
+    constructor(injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {
@@ -48,7 +48,7 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     ngOnDestroy(): void {
         if (this.localMenuItems) {
             this.localMenuItems.forEach(element => {
-                this.session.unregisterActionPayloads();
+                this.actionService.unregisterActionPayloads();
             });
         }
     }
@@ -62,14 +62,14 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     }
 
     onItemClick(itemInfo: ItemClickAction): void {
-        this.session.onAction(this.itemActionName, itemInfo.item);
+        this.doAction(this.itemActionName, itemInfo.item);
     }
 
     onItemSelected(itemInfo: ItemClickAction): void {
         if (this.getSelectionModeAsEnum() === SelectionMode.Multiple || this.getSelectionModeAsEnum() === SelectionMode.SingleCheckbox) {
             if (this.localMenuItems) {
                 this.localMenuItems.forEach(element => {
-                    this.session.registerActionPayload(element.action, () => this.productList.selectedItems);
+                    this.actionService.registerActionPayload(element.action, () => this.productList.selectedItems);
                 });
             }
         }
@@ -80,7 +80,7 @@ export class ItemListComponent extends PosScreen<any> implements OnInit, OnDestr
     }
 
     onActionButtonClick(): void {
-        this.session.onAction(this.screen.actionButton.action, this.productList.selectedItems);
+        this.doAction(this.screen.actionButton.action, this.productList.selectedItems);
     }
 
     isItemSelectedDisabled(): boolean {

@@ -14,9 +14,6 @@ export class ItemOptionsComponent extends PosScreen<any> {
 
   selectedImage: String;
 
-  constructor() {
-    super();
-  }
 
   buildScreen() {
     if (this.screen.imageUrls) {
@@ -25,7 +22,7 @@ export class ItemOptionsComponent extends PosScreen<any> {
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem);
+    this.doAction(menuItem);
   }
 
   public selectImage(imageUrl: String) {

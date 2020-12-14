@@ -1,4 +1,4 @@
-import { Component, ViewChild, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ChangeDetectorRef, Injector } from '@angular/core';
 import { HomeInterface } from './home.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
@@ -45,8 +45,8 @@ export class HomeComponent extends PosScreen<HomeInterface> {
   pageSize = 15;
   paginationSettings = { itemsPerPage: this.pageSize, currentPage: this.pageNum };
   
-  constructor(media: OpenposMediaService) {
-    super();
+  constructor(media: OpenposMediaService, injector: Injector) {
+    super(injector);
     this.gridColumns = media.mediaObservableFromMap(new Map([
       ['xs', 1],
       ['sm', 2],

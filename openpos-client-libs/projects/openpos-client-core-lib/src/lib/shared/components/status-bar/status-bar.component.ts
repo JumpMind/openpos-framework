@@ -18,6 +18,7 @@ import { IStatusBarControl } from '../../../core/interfaces/status-bar-control.i
 import { SessionService } from '../../../core/services/session.service';
 import { TrainingOverlayService } from '../../../core/services/training-overlay.service';
 import { HelpTextService } from '../../../core/help-text/help-text.service';
+import { ActionService } from '../../../core/actions/action.service';
 
 export const STATUS_BAR_STATUS_CONTROL_COMPONENT = new InjectionToken<ComponentType<IStatusBarControl>>('StatusBarStatusControlComponent');
 @Component({
@@ -45,7 +46,7 @@ export class StatusBarComponent implements IStatusBarControl, AfterViewInit, OnI
     @ViewChild('statusBarStatusControl', { read: ViewContainerRef }) statusBarControlContainer: ViewContainerRef;
 
     constructor(
-        public session: SessionService, public snackBar: MatSnackBar, private trainingService: TrainingOverlayService,
+        public actionService: ActionService, public snackBar: MatSnackBar, private trainingService: TrainingOverlayService,
         @Inject(STATUS_BAR_STATUS_CONTROL_COMPONENT) private statusBarStatusCtrlType: ComponentType<IStatusBarControl>,
         private componentFactoryResolver: ComponentFactoryResolver,
         public helpTextService: HelpTextService) {
@@ -77,7 +78,7 @@ export class StatusBarComponent implements IStatusBarControl, AfterViewInit, OnI
 
     public onHome() {
         if (this.data.enableHomeAction === true) {
-            this.session.onAction('Home');
+            this.actionService.doAction({action: 'Home'});
         }
     }
 

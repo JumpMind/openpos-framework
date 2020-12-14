@@ -60,7 +60,7 @@ export class SellComponent extends AbstractTemplate<any> {
 
   public doMenuItemAction(menuItem: IActionItem) {
     if (this.isMenuItemEnabled(menuItem)) {
-      this.session.onAction(menuItem);
+      this.actionService.doAction(menuItem);
     }
   }
 

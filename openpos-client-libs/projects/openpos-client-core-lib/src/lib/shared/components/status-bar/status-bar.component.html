@@ -1,7 +1,7 @@
 <mat-toolbar *ngIf="data" fxLayout="row" fxLayoutAlign="space-between center">
 	<span fxFlex fxLayout="row" fxLayoutAlign="start center">
 		<button [actionItem]="data.backButton" *ngIf="data && data.backButton && data.backButton.enabled"
-			mat-button style="margin-left:-20px; z-index:10;" (click)="session.onAction(data.backButton.action)">
+			mat-button style="margin-left:-20px; z-index:10;" (click)="actionService.doAction({action: data.backButton.action})">
 			<mat-icon class="material-icons mat-48">keyboard_arrow_left</mat-icon>
         </button>
         <app-icon *ngIf="data.screenIcon" [iconName]="data.screenIcon" class="material-icons"></app-icon>

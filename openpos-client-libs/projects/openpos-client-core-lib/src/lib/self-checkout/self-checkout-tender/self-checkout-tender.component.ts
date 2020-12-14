@@ -20,10 +20,6 @@ export class SelfCheckoutTenderComponent extends PosScreen<SelfCheckoutTenderInt
     public amountTitle = 'Amount Due';
     public amountDue = '0.00';
 
-    constructor() {
-        super();
-    }
-
     buildScreen() {
         if (this.screen.amountDue) {
             this.amountTitle = this.screen.amountDue.name;

@@ -19,7 +19,7 @@
 				<button mat-raised-button (click)="onClearSignature()" class="sigcap-button">Clear</button>
 				<button *ngIf="screen.saveAction.action.indexOf('SaveSignature') >= 0; else elseBlock" mat-raised-button (click)="onSaveSignature()" color="primary" class="sigcap-button">{{screen.saveAction.title}}</button>
 				<ng-template #elseBlock>
-					<button mat-raised-button (click)="session.onAction(screen.saveAction.action)" class="sigcap-button">{{screen.saveAction.title}}</button>
+					<button mat-raised-button (click)="doAction(screen.saveAction.action)" class="sigcap-button">{{screen.saveAction.title}}</button>
 				</ng-template>
 			</div>
 		</mat-card-actions>

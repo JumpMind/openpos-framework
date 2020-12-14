@@ -2,7 +2,7 @@
     <form fxFlexFill fxLayout="column" [formGroup]="promptFormGroup" (ngSubmit)="onFormSubmit()">
         <div *ngIf="screen.backButton" mat-dialog-title fxLayoutAlign="space-between">
             <span></span>
-            <button type="button" mat-icon-button style="margin:-15px" (click)="this.session.onAction(screen.backButton.action)" [actionItem]="screen.backButton">
+            <button type="button" mat-icon-button style="margin:-15px" (click)="doAction(screen.backButton.action)" [actionItem]="screen.backButton">
                 <mat-icon>close</mat-icon>
             </button>
         </div>

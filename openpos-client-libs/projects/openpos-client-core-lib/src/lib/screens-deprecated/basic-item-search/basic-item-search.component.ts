@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, ViewChild, Injector } from '@angular/core';
 import { MatInput } from '@angular/material';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IForm } from '../../core/interfaces/form.interface';
@@ -25,13 +25,13 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
   searchCategoriesText: string;
   public displayCategoryIndex = 0;
 
-  constructor() {
-      super();
+  constructor(injector: Injector) {
+      super(injector);
   }
 
   buildScreen() {
     if (this.screen.template && this.screen.template.localMenuItems && this.screen.template.localMenuItems[0]) {
-        this.session.registerActionPayload(this.screen.template.localMenuItems[0].action, () => {
+        this.actionService.registerActionPayload(this.screen.template.localMenuItems[0].action, () => {
             return this.getSearchPayload();
           });
     }
@@ -46,7 +46,7 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
   }
 
   ngOnDestroy(): void {
-    this.session.unregisterActionPayloads();
+    this.actionService.unregisterActionPayloads();
   }
 
   ngAfterViewInit(): void {
@@ -55,7 +55,7 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
 
   onValueSelected(value: ISearchCategoryValue, categoryName: string): void {
     value.selected = true;
-    this.session.onAction(`on${categoryName}Selected`, {
+    this.doAction(`on${categoryName}Selected`, {
         'selectedCategoryValue': value,
         'searchFieldForm': this.searchFieldForm
       });
@@ -72,7 +72,7 @@ export class BasicItemSearchComponent extends PosScreen<any> implements AfterVie
 
   onSubmitAction(submitAction: string): void {
     // Collect the field values
-    this.session.onAction(submitAction, this.getSearchPayload());
+    this.doAction(submitAction, this.getSearchPayload());
   }
 
   protected refreshContent(): void {

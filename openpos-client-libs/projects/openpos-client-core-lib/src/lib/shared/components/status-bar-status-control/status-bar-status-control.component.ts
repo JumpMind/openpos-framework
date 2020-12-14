@@ -3,6 +3,7 @@ import { StatusBarData } from '../status-bar/status-bar-data';
 import { IStatusBarControl } from '../../../core/interfaces/status-bar-control.interface';
 import { SessionService } from '../../../core/services/session.service';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
+import { ActionService } from '../../../core/actions/action.service';
 
 /**
  * A swappable component that is placed on the right side of the status bar.
@@ -15,11 +16,12 @@ import { IActionItem } from '../../../core/interfaces/action-item.interface';
 export class StatusBarStatusControlComponent implements IStatusBarControl {
     data: StatusBarData;
 
-    constructor(@Inject(forwardRef(() => SessionService)) private session: SessionService) {
+    constructor(@Inject(forwardRef(() => SessionService)) private session: SessionService,
+                public actionService: ActionService) {
     }
 
     public doMenuItemAction(menuItem: IActionItem) {
-        this.session.onAction(menuItem);
+        this.actionService.doAction(menuItem);
     }
 
     public isMenuItemEnabled(m: IActionItem): boolean {

@@ -1,7 +1,7 @@
 import { SelfCheckoutMenuInterface } from './self-checkout-menu.interface';
 import { OpenposMediaService } from '../../../core/services/openpos-media.service';
 import { Observable } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ScreenPartComponent } from '../../../shared/screen-parts/screen-part';
 import { MessageProvider } from '../../../shared/providers/message.provider';
 import { ScreenPart } from '../../../shared/decorators/screen-part.decorator';
@@ -23,8 +23,8 @@ export class SelfCheckoutMenuComponent extends ScreenPartComponent<SelfCheckoutM
     isMobile$: Observable<boolean>;
     operatorInfo: string;
 
-    constructor(mediaService: OpenposMediaService, messageProvider: MessageProvider, protected dialogService: MatDialog) {
-        super(messageProvider);
+    constructor(mediaService: OpenposMediaService, injector: Injector, protected dialogService: MatDialog) {
+        super(injector);
         const mobileMap = new Map([
             ['xs', true],
             ['sm', false],
@@ -47,11 +47,11 @@ export class SelfCheckoutMenuComponent extends ScreenPartComponent<SelfCheckoutM
     }
 
     public doMenuItemAction(menuItem: IActionItem) {
-        this.sessionService.onAction(menuItem);
+        this.doAction(menuItem);
     }
 
     public onAdminLogin() {
-        this.sessionService.onAction('ShowLogin');
+        this.doAction('ShowLogin');
     }
 
     public showScan() {

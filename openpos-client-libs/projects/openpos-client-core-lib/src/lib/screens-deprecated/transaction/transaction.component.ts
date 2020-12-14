@@ -1,5 +1,5 @@
 import { MatDialog } from '@angular/material';
-import { Component, ViewChild, AfterViewInit, OnInit } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, Injector, INJECTOR } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -43,8 +43,8 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
 
   private screenData$ = new BehaviorSubject<ISelectableListData<ISellItem>>(null);
 
-  constructor(devices: DeviceService, private observableMedia: ObservableMedia, protected dialog: MatDialog) {
-    super();
+  constructor(devices: DeviceService, private observableMedia: ObservableMedia, protected dialog: MatDialog, protected injector: Injector) {
+    super(injector);
     this.listData = this.screenData$;
   }
 
@@ -112,7 +112,7 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
   }
 
   onEnter(value: string) {
-    this.session.onAction('Next', value);
+    this.doAction('Next', value);
   }
 
   openItemDialog(item: ISellItem) {
@@ -149,14 +149,14 @@ export class TransactionComponent extends PosScreen<any> implements AfterViewIni
   }
 
   public onItemListChange(event: number[]): void {
-    this.session.onValueChange('SelectedItemsChanged', event);
+    this.doAction('SelectedItemsChanged', event);
   }
 
   public onMenuAction(event: any) {
     if (event.menuItem && event.payload) {
-      this.onMenuItemClick(event.menuItem, event.payload);
+      this.doAction(event.menuItem, event.payload);
     } else {
-      this.onMenuItemClick(event);
+      this.doAction(event);
     }
   }
 

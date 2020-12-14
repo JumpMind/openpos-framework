@@ -1,6 +1,7 @@
+import { ActionService } from './../../../../core/actions/action.service';
 import { Component, Input } from '@angular/core';
 import { IActionItem } from '../../../../core/interfaces/action-item.interface';
-import { SessionService } from '../../../../core/services/session.service';
+
 
 /**
  * @ignore
@@ -17,11 +18,11 @@ export class SellLinkedCustomerComponent {
     @Input() noCustomerText: string;
     @Input() loyaltyButton?: IActionItem;
 
-    constructor(public session: SessionService) { }
+    constructor(public actionService: ActionService) { }
 
     onClick() {
         if (this.loyaltyButton) {
-            this.session.onAction(this.loyaltyButton);
+            this.actionService.doAction(this.loyaltyButton);
         }
     }
 }

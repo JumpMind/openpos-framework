@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, Injector } from '@angular/core';
 import { SelectableItemListComponentConfiguration } from '../../shared/components/selectable-item-list/selectable-item-list.component';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
@@ -26,8 +26,8 @@ export class ItemSearchResultsComponent extends PosScreen<any> {
   listData: Observable<ISelectableListData<any>>;
   index = -1;
 
-  constructor() {
-    super();
+  constructor(injector: Injector) {
+    super(injector);
   }
 
   buildScreen() {
@@ -65,7 +65,7 @@ export class ItemSearchResultsComponent extends PosScreen<any> {
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem, this.index);
+    this.doAction(menuItem, this.index);
   }
 
   scrollToTop(): void {

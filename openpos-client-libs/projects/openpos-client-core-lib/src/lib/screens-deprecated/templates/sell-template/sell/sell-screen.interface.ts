@@ -1,10 +1,10 @@
+import { StatusBarData } from './../../../../shared/components/status-bar/status-bar-data';
 import { SelfCheckoutStatusBarData } from '../../../../self-checkout/self-checkout-statusbar/self-checkout-status-bar-data';
 import { ISellTemplate } from './sell-template.interface';
 import { SellStatusSectionData } from '../sell-status-section/sell-status-section.data';
 import { IAbstractScreen } from '../../../../core/interfaces/abstract-screen.interface';
 import { IActionItem } from '../../../../core/interfaces/action-item.interface';
 import { ISellItem } from '../../../../core/interfaces/sell-item.interface';
-import { StatusBarData } from '../../../../shared/components/status-bar/status-bar-data';
 
 /**
  * @ignore

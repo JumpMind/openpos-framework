@@ -2,7 +2,7 @@ import { SessionService } from './../../../core/services/session.service';
 import { IActionItem } from '../../../core/interfaces/action-item.interface';
 import { Component, Input } from '@angular/core';
 import { ISellItem } from '../../../core/interfaces/sell-item.interface';
-
+import { ActionService } from '../../../core/actions/action.service';
 @Component({
     selector: 'app-sell-item-line',
     templateUrl: './sell-item-line.component.html',
@@ -14,7 +14,7 @@ export class SellItemLineComponent {
     @Input() readOnly: boolean;
     @Input() hideButton: boolean;
 
-    constructor(private session: SessionService) {
+    constructor(private actionService: ActionService) {
     }
 
     showMenu(): boolean {
@@ -23,7 +23,7 @@ export class SellItemLineComponent {
 
     onMenuItemClick(menuItem: IActionItem, payload?: any) {
         if (menuItem.enabled) {
-            this.session.onAction(menuItem, payload);
+            this.actionService.doAction(menuItem, payload);
         }
     }
 

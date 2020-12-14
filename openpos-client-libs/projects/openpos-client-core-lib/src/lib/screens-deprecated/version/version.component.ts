@@ -1,5 +1,5 @@
 import { SessionService } from './../../core/services/session.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { OldPluginService } from '../../core/services/old-plugin.service';
@@ -24,8 +24,9 @@ export class VersionComponent extends PosScreen<any> {
     primaryAction: IActionItem;
     otherActions: IActionItem[];
 
-    constructor(public session: SessionService, private pluginService: OldPluginService, public appVersion: AppVersion) {
-        super();
+    constructor(public session: SessionService, private pluginService: OldPluginService, public appVersion: AppVersion,
+                protected injector: Injector) {
+        super(injector);
     }
 
     buildScreen(): void {

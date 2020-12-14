@@ -2,8 +2,7 @@ import { ScreenPartComponent } from '../screen-part';
 import { StatusStripInterface } from './status-strip.interface';
 import { MatDialog } from '@angular/material';
 import { timer } from 'rxjs';
-import { Component } from '@angular/core';
-import { MessageProvider } from '../../providers/message.provider';
+import { Component, Injector } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 @ScreenPart({
     name: 'statusStrip'
@@ -18,8 +17,8 @@ export class StatusStripComponent extends ScreenPartComponent<StatusStripInterfa
     date = Date.now();
     timer: number;
 
-    constructor(protected dialog: MatDialog, messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(protected dialog: MatDialog, injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() {

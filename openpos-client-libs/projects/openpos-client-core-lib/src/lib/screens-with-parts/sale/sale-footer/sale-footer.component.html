@@ -8,7 +8,7 @@
         <button mat-raised-button color="primary"
             class="checkout-button mat-elevation-z0"
             [disabled]="!screenData.checkoutButton.enabled"
-            (click)="onMenuItemClick(screenData.checkoutButton)"
+            (click)="doAction(screenData.checkoutButton)"
             >
             <span class="text-md">{{screenData.checkoutButton.title}}</span>
             <app-icon [iconClass]="'mat-48'" [iconName]="screenData.checkoutButton.icon"></app-icon>

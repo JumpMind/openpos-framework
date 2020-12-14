@@ -32,23 +32,26 @@ export class ChooseOptionsComponent extends PosScreen<IChooseOptionsScreen> impl
   }
 
   ngOnDestroy() {
-    this.session.unregisterActionIntercepter(ChooseOptionsComponent.UNDO);
+    // TODO: What to do here?
+    // this.actionService.unregisterActionIntercepter(ChooseOptionsComponent.UNDO);
   }
 
   onMakeOptionSelection( option: IOptionItem): void {
     if ( option.form.formElements.length > 0 ) {
       this.selectedOption = option;
       this.currentView = 'OptionForm';
-      this.session.registerActionIntercepter(ChooseOptionsComponent.UNDO,
-        new ActionIntercepter(this.log, (payload) => { this.onBackButtonPressed(); }, ActionIntercepterBehaviorType.block));
+        // TODO: What to do here?
+        // this.actionService.registerActionIntercepter(ChooseOptionsComponent.UNDO,
+        // new ActionIntercepter(this.log, (payload) => { this.onBackButtonPressed(); }, ActionIntercepterBehaviorType.block));
     } else {
-      this.session.onAction( option.value );
+      this.doAction( option.value );
     }
   }
 
   onBackButtonPressed(): void {
     this.currentView = this.screen.displayStyle;
-    this.session.unregisterActionIntercepter(ChooseOptionsComponent.UNDO);
+    // TODO: What to do here?
+    // this.actionService.unregisterActionIntercepter(ChooseOptionsComponent.UNDO);
   }
 
   @HostListener('document:keydown', ['$event'])

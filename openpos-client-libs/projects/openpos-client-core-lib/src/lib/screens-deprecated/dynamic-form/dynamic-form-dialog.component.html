@@ -1,7 +1,7 @@
 <mat-card-title fxLayout="row">
     <span *ngIf="screen.prompt" class="text-md text-left" [ngClass]="{'warn':screen.customerFacing}">{{screen.prompt}}</span>
     <div fxFlex="1 1 auto"></div>
-    <button *ngIf="screen.backButton" mat-icon-button style="margin:-15px" (click)="session.onAction(screen.backButton.action)" [actionItem]="screen.backButton">
+    <button *ngIf="screen.backButton" mat-icon-button style="margin:-15px" (click)="doAction(screen.backButton.action)" [actionItem]="screen.backButton">
         <mat-icon>close</mat-icon>
     </button>
 </mat-card-title>

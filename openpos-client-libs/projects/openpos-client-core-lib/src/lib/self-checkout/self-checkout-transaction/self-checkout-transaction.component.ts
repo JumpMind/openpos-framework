@@ -3,15 +3,15 @@ import { IScreen } from '../../shared/components/dynamic-screen/screen.interface
 import { ISellItem } from '../../core/interfaces/sell-item.interface';
 import { SessionService } from '../../core/services/session.service';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
+import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
 
 @Component({
     selector: 'app-self-checkout-transaction',
     templateUrl: './self-checkout-transaction.component.html',
     styleUrls: ['./self-checkout-transaction.component.scss']
 })
-export class SelfCheckoutTransactionComponent implements AfterViewChecked, IScreen, OnInit {
+export class SelfCheckoutTransactionComponent extends PosScreen<any> implements AfterViewChecked, OnInit {
 
-    public screen: any;
     @ViewChild('scrollList') private scrollList: ElementRef;
 
     initialized = false;
@@ -23,12 +23,7 @@ export class SelfCheckoutTransactionComponent implements AfterViewChecked, IScre
     public loyaltyBefore: string;
     public loyaltyAfter: string;
 
-    constructor(public session: SessionService) {
-    }
-
-    show(screen: any) {
-        this.screen = screen;
-
+    buildScreen() {
         this.items = this.screen.items;
 
         if (this.screen.loyaltyButton) {
@@ -55,7 +50,7 @@ export class SelfCheckoutTransactionComponent implements AfterViewChecked, IScre
     }
 
     public doMenuItemAction(menuItem: IActionItem) {
-        this.session.onAction(menuItem);
+        this.doAction(menuItem);
     }
 
     scrollToBottom(): void {

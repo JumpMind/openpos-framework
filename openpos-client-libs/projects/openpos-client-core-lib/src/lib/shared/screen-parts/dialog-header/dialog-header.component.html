@@ -9,7 +9,7 @@
         class="back-button" 
         gdArea="backbutton" 
         *ngIf="screenData.backButton"
-        (buttonClick)="onMenuItemClick(screenData.backButton)"
+        (buttonClick)="doAction(screenData.backButton)"
         [actionItem]="screenData.backButton"
         [iconName]="'close'"
         ></app-icon-button>

@@ -1,7 +1,6 @@
 import { Component, ViewChild, AfterViewInit, ElementRef, OnDestroy } from '@angular/core';
 import { ScreenPartComponent } from '../screen-part';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
-import { MessageProvider } from '../../providers/message.provider';
 import { WebcamViewerInterface } from './webcam-viewer.interface';
 
 @ScreenPart({
@@ -16,10 +15,6 @@ export class WebcamViewerComponent extends ScreenPartComponent<WebcamViewerInter
 
     @ViewChild('videoElement') video: ElementRef;
     private mediaStream: MediaStream;
-
-    constructor(messageProvider: MessageProvider) {
-        super(messageProvider);
-    }
 
     screenDataUpdated() {
     }

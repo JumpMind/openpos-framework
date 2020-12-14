@@ -4,6 +4,7 @@ import { ViewChild, ComponentRef, ComponentFactory } from '@angular/core';
 import { ScreenDirective } from '../../shared/directives/screen.directive';
 import { SessionService } from '../services/session.service';
 import { Logger } from '../services/logger.service';
+import { ActionService } from '../actions/action.service';
 
 export abstract class AbstractTemplate<T> implements IScreen {
 
@@ -14,11 +15,13 @@ export abstract class AbstractTemplate<T> implements IScreen {
     template: T;
 
     session: SessionService;
+    actionService: ActionService;
     log: Logger;
 
     constructor() {
         this.session = AppInjector.Instance.get(SessionService);
         this.log = AppInjector.Instance.get(Logger);
+        this.actionService = AppInjector.Instance.get(ActionService);
     }
 
     public installScreen(screenComponentFactory: ComponentFactory<IScreen>): IScreen {

@@ -11,9 +11,6 @@ import { PosScreen } from '../pos-screen/pos-screen.component';
 })
 export class AutoCompleteAddressComponent extends PosScreen<any> {
 
-  constructor() {
-    super();
-  }
 
   buildScreen() { }
 

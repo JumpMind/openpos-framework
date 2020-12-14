@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { PromptComponent } from '../prompt/prompt.component';
 import { ValidatorsService } from '../../core/services/validators.service';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
@@ -16,8 +16,8 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 })
 export class PromptWithInfoComponent extends PromptComponent {
 
-  constructor( private validators: ValidatorsService) {
-    super( validators);
+  constructor( private validators: ValidatorsService, injector: Injector) {
+    super( validators, injector);
   }
 
 

@@ -20,15 +20,12 @@ export class SelectionListComponent extends PosScreen<any> {
   index = -1;
   lastSelection = -1;
 
-  constructor() {
-    super();
-  }
 
   buildScreen() {
     if (this.screen.template.localMenuItems) {
       let i: number;
       for (i = 0; i < this.screen.template.localMenuItems.length; i++) {
-        this.session.registerActionPayload(this.screen.template.localMenuItems[i].action, () => {
+        this.actionService.registerActionPayload(this.screen.template.localMenuItems[i].action, () => {
           return this.index;
         });
       }
@@ -68,12 +65,12 @@ export class SelectionListComponent extends PosScreen<any> {
     this.index = event;
     if (this.screen.selectionChangedAction && this.index !== this.lastSelection) {
       this.lastSelection = this.index;
-      this.session.onAction(this.screen.selectionChangedAction, this.index);
+      this.doAction(this.screen.selectionChangedAction, this.index);
     }
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem, this.index);
+    this.doAction(menuItem, this.index);
   }
 
 }

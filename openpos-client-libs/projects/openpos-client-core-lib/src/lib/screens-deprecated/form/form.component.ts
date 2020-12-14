@@ -33,23 +33,23 @@ export class FormComponent extends PosScreen<any> {
       elem => elem.elementType === 'Button' && elem.submitButton);
 
     if (submitButtons.length > 0) {
-      this.session.onAction(submitButtons[0].action, this.form);
+      this.doAction(submitButtons[0].action, this.form);
     }
   }
 
   onItemAction(menuItem: IActionItem, $event): void {
-    this.session.onAction(menuItem, this.form);
+    this.doAction(menuItem, this.form);
   }
 
   onButtonAction(action: string) {
-    this.session.onAction(action, this.form);
+    this.doAction(action, this.form);
   }
 
   onSubmitOptionSelected(formElement: IFormElement, valueIndex: number, event: Event) {
     if (formElement.selectedIndexes) {
       formElement.selectedIndexes = [valueIndex];
     }
-    this.session.onAction(formElement.id, this.form);
+    this.doAction(formElement.id, this.form);
   }
 
   getPlaceholderText(formElement: IFormElement) {

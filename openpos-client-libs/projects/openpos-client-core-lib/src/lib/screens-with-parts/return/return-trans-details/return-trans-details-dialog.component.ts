@@ -55,7 +55,7 @@ export class ReturnTransDetailsDialogComponent extends PosScreen<ReturnTransDeta
 
     public doMenuItemAction(menuItem: IActionItem) {
         if (this.index > -1) {
-            this.session.onAction(menuItem, this.index);
+            this.doAction(menuItem, this.index);
         }
     }
 

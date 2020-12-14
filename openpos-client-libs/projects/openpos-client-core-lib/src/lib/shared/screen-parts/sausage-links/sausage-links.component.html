@@ -2,7 +2,7 @@
     <app-secondary-button
         class="sausage-link"
         color="primary-inverse"
-        *ngFor="let m of sausageLinks.links" (click)="onMenuItemClick(m)"
+        *ngFor="let m of sausageLinks.links" (click)="doAction(m)"
         [actionItem]="m"
         [disabled]="!m.enabled">
 

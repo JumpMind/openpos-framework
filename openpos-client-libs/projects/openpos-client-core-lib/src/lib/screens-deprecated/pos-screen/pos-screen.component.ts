@@ -5,19 +5,25 @@ import { IScreen } from '../../shared/components/dynamic-screen/screen.interface
 import { SessionService } from '../../core/services/session.service';
 import { deepAssign } from '../../utilites/deep-assign';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
-
+import { ActionService } from '../../core/actions/action.service';
+import { Injector, OnDestroy, Optional } from '@angular/core';
+import { Subscription } from 'rxjs';
 /**
  * @ignore
  */
-export abstract class PosScreen<T extends IAbstractScreen> implements IScreen {
+export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, OnDestroy {
 
     screen: T;
-    session: SessionService;
     log: Logger;
+    actionService: ActionService;
 
-    constructor() {
-        this.session = AppInjector.Instance.get(SessionService);
-        this.log = AppInjector.Instance.get(Logger);
+    subscriptions = new Subscription();
+
+    constructor( @Optional() injector: Injector) {
+        if ( !!injector ) {
+            this.log = injector.get(Logger);
+            this.actionService = injector.get(ActionService);
+        }
     }
 
     show(screen: any) {
@@ -25,11 +31,25 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen {
         this.buildScreen();
     }
 
+    doAction( action: IActionItem | string, payload?: any) {
+        if ( typeof(action) === 'string' ) {
+            this.actionService.doAction( {action}, payload);
+        } else {
+            this.actionService.doAction(action, payload);
+        }
+    }
+
+    ngOnDestroy(): void {
+        if ( this.subscriptions ) {
+            this.subscriptions.unsubscribe();
+        }
+    }
+/*
     onMenuItemClick( menuItem: IActionItem, payload?: any) {
         if (menuItem.enabled) {
             this.session.onAction( menuItem, payload );
         }
     }
-
+*/
     abstract buildScreen();
 }

@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, Injector} from '@angular/core';
 import {MatTableDataSource} from '@angular/material';
 import { IPromoItem } from './promo-item.interface';
 import { PosScreen } from '../pos-screen/pos-screen.component';
@@ -22,8 +22,8 @@ export class SellItemDetailComponent extends PosScreen<any> {
 
   promosDataSource: MatTableDataSource<IPromoItem>;
 
-  constructor() {
-      super();
+  constructor(injector: Injector) {
+      super(injector);
   }
 
   buildScreen() {
@@ -32,7 +32,7 @@ export class SellItemDetailComponent extends PosScreen<any> {
   }
 
   onIdClick(id: any) {
-    this.session.onAction('LinkClicked', id);
+    this.doAction('LinkClicked', id);
   }
 
 }

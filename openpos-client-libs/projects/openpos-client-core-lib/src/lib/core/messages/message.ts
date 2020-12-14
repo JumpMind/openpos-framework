@@ -1,3 +1,3 @@
-export interface Message {
+export interface OpenposMessage {
     type: string;
 }

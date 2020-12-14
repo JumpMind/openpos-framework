@@ -18,7 +18,7 @@
         </mat-card-content>
         <ng-container *ngIf="screenData.buttons && screenData.buttons.length > 0">
             <mat-card-actions fxLayout="row wrap" fxLayoutAlign="end center" class="banner-button-container">
-                <button mat-button type="button" color="primary" *ngFor="let button of screenData.buttons" (click)="onMenuItemClick(button)" class="banner-button">
+                <button mat-button type="button" color="primary" *ngFor="let button of screenData.buttons" (click)="doAction(button)" class="banner-button">
                     {{button.title}}
                 </button>
             </mat-card-actions>

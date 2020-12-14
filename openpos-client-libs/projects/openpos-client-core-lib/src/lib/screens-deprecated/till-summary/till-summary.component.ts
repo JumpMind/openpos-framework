@@ -20,7 +20,7 @@ export class TillSummaryComponent extends PosScreen<any> {
     }
 
     onNextAction() {
-        this.session.onAction(this.nextAction.action);
+        this.doAction(this.nextAction.action);
     }
 
 }

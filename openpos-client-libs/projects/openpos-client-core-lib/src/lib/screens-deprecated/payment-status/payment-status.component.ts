@@ -18,16 +18,12 @@ export class PaymentStatusComponent extends PosScreen<any> {
   screen: any;
   pinPadStatus = '0';
 
-  constructor() {
-      super();
-  }
-
   buildScreen() {
     this.pinPadStatus = this.screen.pinPadStatus;
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem);
+    this.doAction(menuItem);
   }
 
 }

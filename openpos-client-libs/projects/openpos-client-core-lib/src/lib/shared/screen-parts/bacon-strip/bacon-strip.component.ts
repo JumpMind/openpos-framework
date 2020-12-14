@@ -2,7 +2,7 @@ import { BaconStripInterface } from './bacon-strip.interface';
 import { ScreenPartComponent } from '../screen-part';
 import { OpenposMediaService } from '../../../core/services/openpos-media.service';
 import { Observable } from 'rxjs';
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { MessageProvider } from '../../providers/message.provider';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { HelpTextService } from '../../../core/help-text/help-text.service';
@@ -20,8 +20,8 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     operatorInfo: string;
     TillStatusType = TillStatusType;
 
-    constructor( mediaService: OpenposMediaService, messageProvider: MessageProvider, public helpTextService: HelpTextService) {
-        super(messageProvider);
+    constructor( mediaService: OpenposMediaService, injector: Injector, public helpTextService: HelpTextService) {
+        super(injector);
         const mobileMap = new Map([
             ['xs', true],
             ['sm', false],

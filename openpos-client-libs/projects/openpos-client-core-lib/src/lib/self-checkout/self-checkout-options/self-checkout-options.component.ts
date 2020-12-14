@@ -15,9 +15,6 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 })
 export class SelfCheckoutOptionsComponent extends PosScreen<SelfCheckoutOptionsInterface> {
 
-    constructor(public session: SessionService) {
-        super();
-    }
 
     buildScreen() {
     }

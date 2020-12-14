@@ -1,6 +1,6 @@
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { FormGroup, FormControl, ValidatorFn, Validators } from '@angular/forms';
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Injector } from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { ValidatorsService } from '../../core/services/validators.service';
 
@@ -16,8 +16,8 @@ export class PromptComponent extends PosScreen<any> implements AfterViewInit {
     promptFormGroup: FormGroup;
     instructions: string;
 
-    constructor(private validatorsService: ValidatorsService) {
-        super();
+    constructor(private validatorsService: ValidatorsService, injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {
@@ -58,16 +58,16 @@ export class PromptComponent extends PosScreen<any> implements AfterViewInit {
     }
 
     onAction(menuItm: IActionItem) {
-        this.session.onAction(menuItm);
+        this.doAction(menuItm);
     }
 
     onFormSubmit(): void {
         if (this.promptFormGroup.valid) {
             const payload = this.promptFormGroup.value['promptInputControl'];
             if (this.screen.actionButton) {
-                this.session.onAction(this.screen.actionButton.action, payload);
+                this.doAction(this.screen.actionButton.action, payload);
             } else {
-                this.session.onAction(this.screen.action, payload);
+                this.doAction(this.screen.action, payload);
             }
         }
     }

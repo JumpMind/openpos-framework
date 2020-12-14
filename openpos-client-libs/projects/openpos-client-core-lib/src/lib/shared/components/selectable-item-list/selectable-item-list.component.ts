@@ -7,7 +7,7 @@ import { KeyPressProvider } from '../../providers/keypress.provider';
 import { Configuration } from '../../../configuration/configuration';
 import { SelectionMode } from '../../../core/interfaces/selection-mode.enum';
 import { SessionService } from '../../../core/services/session.service';
-
+import { ActionService } from '../../../core/actions/action.service';
 export class SelectableItemListComponentConfiguration {
     numItemsPerPage: number;
     totalNumberOfItems: number;
@@ -74,7 +74,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
     private subscription: Subscription;
     private selectedItemSubscription: Subscription;
 
-    constructor(private keyPresses: KeyPressProvider, private session: SessionService) {
+    constructor(private keyPresses: KeyPressProvider, private actionService: ActionService, private session: SessionService) {
 
         // we only want to be subscribed for keypresses when we have selected items
         // so watch the selected item changes and add remove the key bindings.
@@ -172,7 +172,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
         }
 
         if (this.configuration.fetchDataAction) {
-            this.session.onValueChange(this.configuration.fetchDataAction, this.currentPage);
+            this.actionService.doAction({ action: this.configuration.fetchDataAction, doNotBlockForResponse: true }, this.currentPage);
         }
     }
 
@@ -245,7 +245,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
         if (this.isPageSavedInMap() || !this.configuration.fetchDataAction) {
             this.updateResultsToShow();
         } else {
-            this.session.onValueChange(this.configuration.fetchDataAction, this.currentPage);
+            this.actionService.doAction({action: this.configuration.fetchDataAction, doNotBlockForResponse: true}, this.currentPage);
         }
     }
 
@@ -255,7 +255,7 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
         if (this.isPageSavedInMap() || !this.configuration.fetchDataAction) {
             this.updateResultsToShow();
         } else {
-            this.session.onValueChange(this.configuration.fetchDataAction, this.currentPage);
+            this.actionService.doAction({action: this.configuration.fetchDataAction, doNotBlockForResponse: true}, this.currentPage);
         }
     }
 

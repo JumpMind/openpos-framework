@@ -3,6 +3,8 @@ import { ObservableMedia } from '@angular/flex-layout';
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { SessionService } from '../../core/services/session.service';
+import { PosScreen } from '../../screens-deprecated/pos-screen/pos-screen.component';
+
 
 @Component({
   selector: 'app-self-checkout-home',
@@ -10,14 +12,10 @@ import { SessionService } from '../../core/services/session.service';
   styleUrls: ['./self-checkout-home.component.scss']
 
 })
-export class SelfCheckoutHomeComponent implements IScreen {
+export class SelfCheckoutHomeComponent extends PosScreen<any>  {
 
-  screen: any;
   public menuItems: IActionItem[];
   private actionSent = false;
-
-  constructor(public session: SessionService, public media: ObservableMedia) {
-  }
 
   @HostListener('document:click', [])
   @HostListener('document:touchstart', [])
@@ -27,24 +25,22 @@ export class SelfCheckoutHomeComponent implements IScreen {
     }
   }
 
-  show(screen: any) {
+  buildScreen() {
     this.actionSent = false;
-    this.screen = screen;
-    this.menuItems = screen.menuItems;
-  }
-
+    this.menuItems = this.screen.menuItems;
+}
   onEnter(value: string) {
-    this.session.onAction('Save');
+    this.doAction('Save');
   }
 
-  getClass(): String {
+  getClass(): string {
     // return 'main-menu-grid-list';
     return 'foo';
   }
 
   onMenuItemClick(menuItem: IActionItem) {
     if (!this.actionSent) {
-      this.session.onAction(menuItem);
+      this.doAction(menuItem);
       this.actionSent = true;
     }
   }

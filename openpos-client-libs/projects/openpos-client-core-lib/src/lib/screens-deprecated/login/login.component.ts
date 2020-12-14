@@ -21,9 +21,6 @@ import { IActionItem } from '../../core/interfaces/action-item.interface';
     cancelButton: IFormElement;
     title: string;
 
-    constructor() {
-        super();
-    }
 
     buildScreen(): void {
         this.form = this.screen.form;
@@ -53,19 +50,19 @@ import { IActionItem } from '../../core/interfaces/action-item.interface';
     }
 
     onSubmitAction(): void {
-        this.session.onAction(this.submitAction, this.form);
+        this.doAction(this.submitAction, this.form);
     }
 
     onOkButton(): void {
-        this.session.onAction(this.okButton.action, this.form);
+        this.doAction(this.okButton.action, this.form);
     }
 
     onChangePasswordAction(): void {
-        this.session.onAction(this.changePasswordAction.action, this.form);
+        this.doAction(this.changePasswordAction.action, this.form);
     }
 
     onForgotPasswordAction(): void {
-        this.session.onAction(this.forgotPasswordAction, this.form);
+        this.doAction(this.forgotPasswordAction, this.form);
     }
 }
 

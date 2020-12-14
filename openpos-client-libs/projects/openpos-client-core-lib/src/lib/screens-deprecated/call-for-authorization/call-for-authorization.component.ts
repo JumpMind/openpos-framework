@@ -13,9 +13,6 @@ export class CallForAuthorizationComponent extends PosScreen<any> implements OnI
   prompt = '';
   instructions = '';
 
-  constructor() {
-      super();
-   }
 
   buildScreen() {
     this.prompt = this.screen.prompt;

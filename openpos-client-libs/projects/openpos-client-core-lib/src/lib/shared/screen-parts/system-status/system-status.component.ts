@@ -1,12 +1,11 @@
 import { ISystemStatus } from '../../../core/interfaces/system-status.interface';
 import { ScreenPartComponent } from '../screen-part';
-import { Component } from '@angular/core';
+import { Component, Injector } from '@angular/core';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { Configuration } from '../../../configuration/configuration';
 import { SystemStatusType } from '../../../core/interfaces/system-status-type.enum';
 import { SystemStatusDialogComponent } from '../../components/system-status/system-status-dialog.component';
 import { MatDialog } from '@angular/material';
-import { MessageProvider } from '../../providers/message.provider';
 
 @ScreenPart({
     name: 'statusStrip.systemStatus'
@@ -18,8 +17,8 @@ import { MessageProvider } from '../../providers/message.provider';
 })
 export class SystemStatusComponent extends ScreenPartComponent<ISystemStatus> {
 
-    constructor(protected dialog: MatDialog, messageProvider: MessageProvider) {
-        super(messageProvider);
+    constructor(protected dialog: MatDialog, injector: Injector) {
+        super(injector);
     }
 
     screenDataUpdated() {

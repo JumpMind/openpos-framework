@@ -1,5 +1,5 @@
 import { MatDialog } from '@angular/material';
-import { Component, ViewChild, AfterViewInit, OnInit, AfterViewChecked, ElementRef } from '@angular/core';
+import { Component, ViewChild, AfterViewInit, OnInit, AfterViewChecked, ElementRef, Injector } from '@angular/core';
 import { ObservableMedia } from '@angular/flex-layout';
 import { Observable } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
@@ -42,8 +42,8 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     public removeReceiptAction: IActionItem;
 
     constructor(
-        private observableMedia: ObservableMedia, protected dialog: MatDialog) {
-        super();
+        private observableMedia: ObservableMedia, protected dialog: MatDialog, injector: Injector) {
+        super(injector);
     }
 
     buildScreen() {
@@ -128,20 +128,20 @@ export class ReturnComponent extends PosScreen<any> implements AfterViewInit, Af
     public onReceiptClick(event: any) {
         if (this.receipts) {
             const index = this.receipts.indexOf(event);
-            this.session.onAction('TransactionDetails', index);
+            this.doAction('TransactionDetails', index);
         }
     }
 
     public onItemListChange(event: number[]): void {
         const items = this.screen.items.filter(item => event.includes(item.index));
-        this.session.onValueChange('SelectedItemsChanged', items);
+        this.doAction('SelectedItemsChanged', items);
     }
 
     public onMenuAction(event: any) {
         if (event.menuItem && event.payload) {
-            this.onMenuItemClick(event.menuItem, event.payload);
+            this.doAction(event.menuItem, event.payload);
         } else {
-            this.onMenuItemClick(event);
+            this.doAction(event);
         }
     }
 

@@ -4,6 +4,8 @@ import { SelfCheckoutStatusBarData } from './self-checkout-status-bar-data';
 import { SessionService } from '../../core/services/session.service';
 import { IActionItem } from '../../core/interfaces/action-item.interface';
 import { ScanSomethingComponent } from '../../shared/components/scan-something/scan-something.component';
+import { ActionService } from '../../core/actions/action.service';
+
 
 @Component({
   selector: 'app-self-checkout-statusbar',
@@ -16,11 +18,15 @@ export class SelfCheckoutStatusBarComponent {
   @Input()
   data: SelfCheckoutStatusBarData;
 
-  constructor(public session: SessionService, public snackBar: MatSnackBar, public dialogService: MatDialog) {
+  constructor(
+      public session: SessionService,
+      public snackBar: MatSnackBar,
+      public dialogService: MatDialog,
+      public actionService: ActionService) {
   }
 
   public doMenuItemAction(menuItem: IActionItem) {
-    this.session.onAction(menuItem);
+    this.actionService.doAction(menuItem);
   }
 
   public isMenuItemEnabled(m: IActionItem): boolean {
@@ -32,7 +38,7 @@ export class SelfCheckoutStatusBarComponent {
   }
 
   public onAdminLogin() {
-    this.session.onAction('ShowLogin');
+    this.actionService.doAction({action: 'ShowLogin'});
   }
 
   public showScan() {
