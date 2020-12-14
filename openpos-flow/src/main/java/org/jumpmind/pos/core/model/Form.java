@@ -125,7 +125,9 @@ public class Form implements Serializable {
     }
 
     public PopTartField addPopTart(String fieldId, String label, String value, List<String> values, boolean required) {
-        return createPopTartField(fieldId, label, value, values, required);
+        PopTartField field = createPopTartField(fieldId, label, value, values, required);
+        formElements.add(field);
+        return field;
     }
 
     public static PopTartField createPopTartField(String fieldId, String label, String value, List<String> values, boolean required) {
