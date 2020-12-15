@@ -180,6 +180,7 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
     dialogRef.afterClosed().subscribe(result => {
       console.info('pop tart closed with value of: ' + result);
       this.formGroup.get(this.formField.id).setValue(result);
+      this.field.focus();
       this.onFormElementChanged(this.formField);
     });
   }
