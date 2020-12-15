@@ -12,13 +12,13 @@
         </div>
         <div class="summary-trans-properties" [ngSwitch]="transactionSummary.transactionType">
             <ng-container *ngSwitchCase="TransTypeEnum.Sale">
-                <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</span>
-                <span class="summary-customer">{{transactionSummary.customerName}}</span>
+                <span *ngIf="transactionSummary.labels && transactionSummary.customerName">{{transactionSummary.labels.customerName}}</span>
+                <span *ngIf="transactionSummary.customerName" class="summary-customer">{{transactionSummary.customerName}}</span>
                 <div>{{transactionSummary.itemsFormatted}}</div>
             </ng-container>
             <ng-container *ngSwitchCase="TransTypeEnum.Return">
-                <span *ngIf="transactionSummary.labels">{{transactionSummary.labels.customerName}}</span>
-                <span class="summary-customer">{{transactionSummary.customerName}}</span>
+                <span *ngIf="transactionSummary.labels && transactionSummary.customerName">{{transactionSummary.labels.customerName}}</span>
+                <span *ngIf="transactionSummary.customerName" class="summary-customer">{{transactionSummary.customerName}}</span>
                 <div>{{transactionSummary.itemsFormatted}}</div>
             </ng-container>
             <ng-container *ngSwitchCase="TransTypeEnum.Void">
