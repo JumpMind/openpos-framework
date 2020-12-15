@@ -15,6 +15,10 @@ export interface IActionItem {
     keybind?: string;
     // If set to true the client will not wait for a response from the server before allowing more actions
     doNotBlockForResponse?: boolean;
+    /**
+     * If set the action service will queue up the action if the action service is currently blocked
+     */
+    queueIfBlocked?: boolean;
     // TODO Remove this. This should not come from the server
     buttonSize?: string;
     // TODO Remove this. This should not come from the server

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Logger } from '../services/logger.service';
 import { ConfirmationDialogComponent } from '../components/confirmation-dialog/confirmation-dialog.component';
 import { MatDialog } from '@angular/material';
@@ -9,27 +9,60 @@ import { MessageProvider } from '../../shared/providers/message.provider';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 import { IActionItem } from '../interfaces/action-item.interface';
 import { IUrlMenuItem } from '../interfaces/url-menu-item.interface';
+import { ActionIntercepter } from '../action-intercepter';
+import { OpenposMessage } from '../messages/message';
+import { MessageTypes } from '../messages/message-types';
 
 @Injectable()
-export class ActionService {
+export class ActionService implements OnDestroy {
 
     private blockActions: boolean;
     private actionPayloads: Map<string, () => void> = new Map<string, () => void>();
     private actionDisablers = new Map<string, BehaviorSubject<boolean>>();
+    private actionIntercepters: Map<string, ActionIntercepter> = new Map();
+    private subscriptions = new Subscription();
+    private actionQueue = new Array<QueuedItem>();
+
 
     constructor(
         private dialogService: MatDialog,
         private logger: Logger,
         private messageProvider: MessageProvider ) {
-        messageProvider.getScopedMessages$().subscribe( message => {
-            this.blockActions = false;
-        });
+        logger.info('Creating new Action Service');
+        this.subscriptions.add(messageProvider.getScopedMessages$().subscribe( message => {
+            if (message.willUnblock === false) {
+                logger.info('creating a screen that is disabled');
+                this.blockActions = true;
+            } else if (message.willUnblock) {
+                logger.info('unblocking actions because message:', message);
+                this.unblock();
+            }
+        }));
+
+        this.subscriptions.add(messageProvider.getAllMessages$<OpenposMessage>().subscribe( message => {
+            if (message.type === MessageTypes.TOAST && message.willUnblock) {
+                logger.info('unblocking action because toast:', message);
+                this.unblock();
+            }
+        }));
+    }
+
+    private unblock() {
+        this.blockActions = false;
+
+        const queued = this.actionQueue.pop();
+        if (queued) {
+            this.logger.info('Dequeued an action to send');
+            this.doAction(queued.item, queued.payload);
+        }
     }
 
     async doAction( actionItem: IActionItem, payload?: any ) {
         const sendAction = await this.canPerformAction(actionItem);
-
         if ( sendAction ) {
+            if (!actionItem.doNotBlockForResponse) {
+                this.blockActions = true;
+            }
 
             if (actionItem.hasOwnProperty('url')) {
                 this.doUrlAction(actionItem as IUrlMenuItem);
@@ -38,7 +71,7 @@ export class ActionService {
 
             // First we will use the payload passed into this function then
             // Check if we have registered action payload
-            if ( !payload && this.actionPayloads.has(actionItem.action)) {
+            if (!payload && this.actionPayloads.has(actionItem.action)) {
                 this.logger.info(`Checking registered action payload for ${actionItem.action}`);
                 try {
                     payload = this.actionPayloads.get(actionItem.action)();
@@ -47,11 +80,42 @@ export class ActionService {
                 }
             }
 
+            const sendToServer = () => {
+                this.logger.info(`>>> Post action "${actionItem.action}"`);
+//                if (!isValueChangedAction) {
+//                    this.queueLoading();
+//                }
+                this.messageProvider.sendMessage( new ActionMessage(actionItem.action, actionItem.doNotBlockForResponse, payload));
+                if ( !actionItem.doNotBlockForResponse ) {
+                    this.queueLoading();
+                }
+            };
+
+            // see if we have any intercepters registered
+            // otherwise just send the action
+            if (this.actionIntercepters.has(actionItem.action)) {
+                const interceptor = this.actionIntercepters.get(actionItem.action);
+                interceptor.intercept(payload, sendToServer);
+                /*
+                if (interceptor.options && interceptor.options.showLoadingAfterIntercept) {
+                    if (!isValueChangedAction) {
+                        this.queueLoading();
+                    }
+                }*/
+            } else {
+                sendToServer();
+            }
+
+            /*
             this.messageProvider.sendMessage( new ActionMessage(actionItem.action, payload));
             if ( !actionItem.doNotBlockForResponse ) {
                 this.blockActions = true;
                 this.queueLoading();
             }
+            */
+        } else if (actionItem.queueIfBlocked) {
+            this.logger.info('queueing an action to send')
+            this.actionQueue.push(new QueuedItem(actionItem, payload));
         }
     }
 
@@ -103,7 +167,7 @@ export class ActionService {
     }
 
     private async  canPerformAction( actionItem: IActionItem): Promise<boolean> {
-        if ( actionItem.enabled === false) {
+        if ( actionItem && typeof actionItem.enabled === 'boolean' && actionItem.enabled === false) {
             this.logger.info('Not sending action because it was disabled');
             return false;
         }
@@ -133,4 +197,26 @@ export class ActionService {
 
         return true;
     }
+
+    public registerActionIntercepter(actionName: string, actionIntercepter: ActionIntercepter) {
+        this.actionIntercepters.set(actionName, actionIntercepter);
+    }
+
+    public unregisterActionIntercepters() {
+        this.actionIntercepters.clear();
+    }
+
+    public unregisterActionIntercepter(actionName: string) {
+        this.actionIntercepters.delete(actionName);
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscriptions) {
+            this.subscriptions.unsubscribe();
+        }
+    }
+}
+
+export class QueuedItem {
+    constructor(public item: IActionItem, public payload: any) {}
 }
