@@ -15,6 +15,7 @@ import org.jumpmind.pos.core.model.OpenposBarcodeType;
 import org.jumpmind.pos.core.model.ScanData;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.devices.model.DeviceAuthModel;
+import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.model.DevicesRepository;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
@@ -150,11 +151,24 @@ public class DevToolsActionListener implements IActionListener {
 
     private void setSimAuthCode(String deviceId, Message message) {
         Map<String, String> simulatorMap = new HashMap<>();
-        String authToken = "";
-        try{
-            authToken = devicesRepository.getDeviceAuth(deviceId, simAppId);
-        } catch (DeviceNotFoundException ex){
-            authToken = "";
+        DeviceModel deviceModel = null;
+        String authToken = null;
+        try {
+            deviceModel = devicesRepository.getDevice(deviceId, simAppId);
+        } catch (DeviceNotFoundException ex) {
+        }
+        if (deviceModel == null) {
+            deviceModel = DeviceModel.builder().deviceId(deviceId).appId(simAppId).build();
+            devicesRepository.saveDevice(deviceModel);
+            authToken = UUID.randomUUID().toString();
+            devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
+        } else {
+            try {
+                authToken = devicesRepository.getDeviceAuth(deviceId, simAppId);
+            } catch (DeviceNotFoundException ex) {
+                authToken = UUID.randomUUID().toString();
+                devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
+            }
         }
         simulatorMap.put("simAuthToken", authToken);
         simulatorMap.put("simPort", simPort);

@@ -62,11 +62,14 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     IErrorHandler errorHandler;
 
     @Autowired
-    private ClientContext clientContext;
+    ClientContext clientContext;
 
-    private Map<String, Map<String, StateManager>> stateManagersByAppIdByNodeId = new HashMap<>();
+    @Autowired(required = false)
+    List<IClientContextUpdater> clientContextUpdaters;
 
-    private ThreadLocal<IStateManager> currentStateManager = new InheritableThreadLocal<>();
+    Map<String, Map<String, StateManager>> stateManagersByAppIdByNodeId = new HashMap<>();
+
+    ThreadLocal<IStateManager> currentStateManager = new InheritableThreadLocal<>();
 
     @Override
     public synchronized void removeSessionIdVariables(String sessionId) {
@@ -193,6 +196,11 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
             clientContext.put("deviceId", stateManager.getDeviceId());
             clientContext.put("appId", stateManager.getAppId());
+            if (clientContextUpdaters != null) {
+                for(IClientContextUpdater clientContextUpdater: clientContextUpdaters) {
+                    clientContextUpdater.update(clientContext, stateManager);
+                }
+            }
         } else {
             setupLogging("server");
 
