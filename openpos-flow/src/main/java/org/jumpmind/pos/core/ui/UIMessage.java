@@ -20,6 +20,7 @@ public class UIMessage extends Message {
     }
 
     public UIMessage() {
+        setWillUnblock(true);
         setType(MessageType.Screen);
     }
 

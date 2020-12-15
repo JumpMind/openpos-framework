@@ -9,6 +9,8 @@ public class ActionItemGroup implements Serializable {
     
     private String title;
     private String keybind;
+    private String selectedAction;
+
     private List<ActionItem> actionItems= new ArrayList<>();
     
     public String getTitle() {
@@ -29,6 +31,12 @@ public class ActionItemGroup implements Serializable {
     }
     public void setActionItems(List<ActionItem> actionItems) {
         this.actionItems = actionItems;
+    }
+    public String getSelectedAction() {
+        return selectedAction;
+    }
+    public void setSelectedAction(String selectedAction) {
+        this.selectedAction = selectedAction;
     }
     
     

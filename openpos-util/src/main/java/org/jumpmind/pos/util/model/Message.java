@@ -12,6 +12,7 @@ public class Message implements Serializable {
     private static final long serialVersionUID = 1L;
         
     String type;
+    private boolean willUnblock = false;
     
     public Message() {
     }
@@ -56,6 +57,13 @@ public class Message implements Serializable {
         return type;
     }
 
+    public boolean getWillUnblock(){
+        return willUnblock;
+    }
+
+    public void setWillUnblock(boolean willUnblock){
+        this.willUnblock = willUnblock;
+    }    
 
     public void setSequenceNumber(int sequenceNumber) {
         put("sequenceNumber", sequenceNumber);

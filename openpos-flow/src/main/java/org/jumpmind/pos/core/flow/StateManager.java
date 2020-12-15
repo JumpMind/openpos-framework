@@ -428,7 +428,7 @@ public class StateManager implements IStateManager {
         long currentActionTimeInMs = System.currentTimeMillis();
 
         synchronized (this) {
-            if ((isAtRest() ||
+            if ((isAtRest() || action.isDoNotBlockForResponse() || 
                     activeThread.get() == null ||
                     activeThread.get().equals(Thread.currentThread())) && 
                     currentActionTimeInMs >= lastActionTimeInMs.longValue()) {

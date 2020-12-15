@@ -12,9 +12,15 @@ public class Toast extends Message {
     private int duration = 2500;
     private String verticalPosition = "bottom";
 
+    
     public static Toast createSuccessToast(String message) {
+        return createSuccessToast(message, true);
+    }
+    
+    public static Toast createSuccessToast(String message, boolean willUnblock) {
         Toast toast = new Toast(message);
         toast.setToastType(ToastType.Success);
+        toast.setWillUnblock(willUnblock);
         return toast;
     }
 
@@ -27,6 +33,7 @@ public class Toast extends Message {
 
     public Toast() {
         setType(MessageType.Toast);
+        setWillUnblock(true);
     }
 
     public Toast(String message) {
@@ -77,4 +84,5 @@ public class Toast extends Message {
     public String getVerticalPosition() {
         return verticalPosition;
     }
+    
 }

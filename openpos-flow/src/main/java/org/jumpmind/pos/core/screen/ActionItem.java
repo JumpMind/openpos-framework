@@ -39,6 +39,7 @@ public class ActionItem implements Serializable {
     protected String buttonSize;
     protected String fontSize;
     protected String keybind;
+    protected boolean queueIfBlocked;
     @JsonIgnore
     protected transient boolean autoAssignEnabled = true;
 
@@ -271,4 +272,11 @@ public class ActionItem implements Serializable {
         return autoAssignEnabled;
     }
     
+    public void setQueueIfBlocked(boolean queueIfBlocked) {
+        this.queueIfBlocked = queueIfBlocked;
+    }
+
+    public boolean isQueueIfBlocked() {
+        return queueIfBlocked;
+    }    
 }
