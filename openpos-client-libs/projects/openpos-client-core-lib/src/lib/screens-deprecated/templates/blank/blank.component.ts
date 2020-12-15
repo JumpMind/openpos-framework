@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { AbstractTemplate } from '../../../core/components/abstract-template';
 import { ScreenComponent } from '../../../shared/decorators/screen-component.decorator';
 
@@ -18,8 +18,8 @@ export class BlankComponent extends AbstractTemplate<any> implements OnInit {
 
   template: any;
 
-  constructor(public overlayContainer: OverlayContainer) {
-      super();
+  constructor(public overlayContainer: OverlayContainer, injector: Injector) {
+      super(injector);
   }
 
   ngOnInit() {

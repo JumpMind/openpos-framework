@@ -1,5 +1,5 @@
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Component, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { SellScreenUtils } from '../sell-template/sell/sell-screen.interface';
 import { ScreenComponent } from '../../../shared/decorators/screen-component.decorator';
 import { AbstractTemplate } from '../../../core/components/abstract-template';
@@ -21,8 +21,8 @@ export class BlankWithBarComponent extends AbstractTemplate<any> implements OnIn
   template: any;
   statusBar: StatusBarData;
 
-  constructor(public overlayContainer: OverlayContainer) {
-      super();
+  constructor(public overlayContainer: OverlayContainer, injector: Injector) {
+      super(injector);
   }
 
   ngOnInit() {

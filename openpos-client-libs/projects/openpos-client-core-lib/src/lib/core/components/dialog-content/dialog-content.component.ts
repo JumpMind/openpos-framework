@@ -2,12 +2,13 @@ import { ScreenDirective } from './../../../shared/directives/screen.directive';
 import { IScreen } from '../../../shared/components/dynamic-screen/screen.interface';
 import { Component, OnDestroy, ViewChild, ComponentRef, ComponentFactory } from '@angular/core';
 import { MessageProvider } from '../../../shared/providers/message.provider';
+import { ActionService } from '../../actions/action.service';
 
 @Component({
   selector: 'app-dialog-content',
   templateUrl: './dialog-content.component.html',
   styleUrls: ['./dialog-content.component.scss'],
-  providers: [MessageProvider]
+  providers: [MessageProvider, ActionService]
 })
 export class DialogContentComponent implements OnDestroy, IScreen {
 
