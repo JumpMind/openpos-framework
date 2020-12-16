@@ -6,12 +6,15 @@ import { MessageProvider } from '../../shared/providers/message.provider';
 import { ToastMessage } from '../messages/toast-message';
 import { IConfirmationDialog } from '../interfaces/confirmation-dialog.interface';
 import { IActionItem } from '../interfaces/action-item.interface';
+import { ElectronService } from 'ngx-electron';
 
 const confirmationDialog: IConfirmationDialog = {
     title: 'Are you sure',
     message: 'you want to do this',
     confirmAction: {action: 'yes'},
-    cancelAction: {action: 'no'}
+    cancelAction: {action: 'no'},
+    confirmButtonName: '',
+    cancelButtonName: ''
 };
 
 const testScreen = {};
@@ -38,6 +41,7 @@ describe('ActionService', () => {
                 ActionService,
                 { provide: MessageProvider, useValue: messageProviderSpy},
                 { provide: MatDialog, useValue: matDialogSpy },
+                ElectronService
             ]
         });
 

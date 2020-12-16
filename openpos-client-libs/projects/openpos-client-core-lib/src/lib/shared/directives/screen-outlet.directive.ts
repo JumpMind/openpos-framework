@@ -24,6 +24,8 @@ import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-
 import { IScreen } from '../components/dynamic-screen/screen.interface';
 import { FocusService } from '../../core/focus/focus.service';
 import { PersonalizationService } from '../../core/personalization/personalization.service';
+import { filter } from 'rxjs/operators';
+import { ScreenCreatorService } from '../../core/services/screen-creator.service';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -55,13 +57,15 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         public overlayContainer: OverlayContainer,
         private dialogService: DialogService,
         private focusService: FocusService,
+        private screenCreator: ScreenCreatorService,
         public renderer: Renderer2,
         private personaliation: PersonalizationService) {
     }
 
     ngOnInit(): void {
         this.updateTemplateAndScreen();
-        this.subscriptions.add(this.session.getMessages('Screen').subscribe((message) => this.handle(message)));
+        this.subscriptions.add(this.session.getMessages('Screen').pipe(filter(m => m.screenType !== 'NoOp'))
+            .subscribe((message) => this.handle(message)));
         this.subscriptions.add(this.session.getMessages('Connected').subscribe((message) => this.handle(new SplashScreen())));
         this.subscriptions.add(this.session.getMessages(
             MessageTypes.LIFE_CYCLE_EVENT).subscribe(message => this.handleLifeCycleEvent(message)));
@@ -151,8 +155,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
             // Create our screen component
             const componentFactory = this.screenService.resolveScreen(screenToCreate, this.currentTheme);
-            this.componentRef = this.viewContainerRef.createComponent(componentFactory,
-                this.viewContainerRef.length, this.viewContainerRef.parentInjector);
+            this.componentRef = this.screenCreator.createScreenComponent(componentFactory, this.viewContainerRef);
             this.updateTheme(this.currentTheme);
 
             // If we accept an inner screen meaning we are a template, install the screen
@@ -163,6 +166,10 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
             }
 
             trap = true;
+        }
+
+        if ( this.componentRef.instance.initialize ) {
+            this.componentRef.instance.initialize( this.componentRef.injector );
         }
 
         if (this.componentRef.instance.show) {

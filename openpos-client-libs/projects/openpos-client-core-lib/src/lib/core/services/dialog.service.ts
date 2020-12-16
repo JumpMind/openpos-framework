@@ -208,7 +208,6 @@ export class DialogService {
         }
         console.log('screen updated');
         this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.ScreenUpdated, dialog));
-        
     }
 
 }

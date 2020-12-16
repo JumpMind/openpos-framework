@@ -29,9 +29,9 @@ export class DeviceService implements IMessageHandler<any> {
     private cameraScanInProgress = false;
 
     constructor(private log: Logger, protected session: SessionService,
-        private cordovaService: CordovaService,
-        public pluginService: OldPluginService,
-        private fileUploadService: FileUploadService) {
+                private cordovaService: CordovaService,
+                public pluginService: OldPluginService,
+                private fileUploadService: FileUploadService) {
 
         // On iOS need to enter into loading state when the app is backgrounded, otherwise
         // user can execute actions as app is coming back to foreground.

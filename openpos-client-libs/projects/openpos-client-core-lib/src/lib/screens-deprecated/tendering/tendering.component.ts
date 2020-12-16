@@ -40,8 +40,7 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
         if (this.screen.template.localMenuItems) {
             this.screen.template.localMenuItems.forEach(element => {
                 this.actionService.unregisterActionPayload(element.action);
-                // I DON'T KNOW WHAT TO DO ABOUT THIS
-                // this.actionService.unregisterActionIntercepter(element.action);
+                this.actionService.unregisterActionIntercepter(element.action);
             });
         }
     }
@@ -80,7 +79,6 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
         if (this.screen.template.localMenuItems) {
             this.screen.template.localMenuItems.forEach(element => {
                 this.actionService.registerActionPayload(element.action, () => this.tenderFormGroup.get('tenderAmtFld').value);
-                /* I DON'T KNOW WHAT TO DO ABOUT THIS
                 this.session.registerActionIntercepter(element.action,
                     new ActionIntercepter(this.log, (payload) => {
                         const value = this.tenderFormGroup.get('tenderAmtFld').value;
@@ -93,7 +91,6 @@ export class TenderingComponent extends PosScreen<any> implements OnDestroy {
                         )
                     )
                 );
-                */
             });
             //                this.session.registerActionPayload( element.action, () => this.tenderFormGroup.get('tenderAmtFld').value );
             //            });

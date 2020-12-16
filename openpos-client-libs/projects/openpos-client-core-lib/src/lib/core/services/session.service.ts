@@ -150,11 +150,7 @@ export class SessionService implements IMessageHandler<any> {
         }
         this.sessionMessages$.next(message);	        this.sessionMessages$.next(message);
     }
-/*
-    public sendMessage(message: any) {
-        this.sessionMessages$.next(message);
-    }
-*/
+
     public getMessages(...types: string[]): Observable<any> {
         return merge(
             this.stompJsonMessages$,

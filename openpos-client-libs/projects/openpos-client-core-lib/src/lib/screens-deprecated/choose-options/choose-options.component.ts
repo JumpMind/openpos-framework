@@ -40,7 +40,6 @@ export class ChooseOptionsComponent extends PosScreen<IChooseOptionsScreen> impl
     if ( option.form.formElements.length > 0 ) {
       this.selectedOption = option;
       this.currentView = 'OptionForm';
-        // TODO: What to do here?
       this.actionService.registerActionIntercepter(
                 ChooseOptionsComponent.UNDO,
             new ActionIntercepter(this.log, (payload) => { this.onBackButtonPressed(); }, ActionIntercepterBehaviorType.block)
@@ -52,7 +51,6 @@ export class ChooseOptionsComponent extends PosScreen<IChooseOptionsScreen> impl
 
   onBackButtonPressed(): void {
     this.currentView = this.screen.displayStyle;
-    // TODO: What to do here?
     this.actionService.unregisterActionIntercepter(ChooseOptionsComponent.UNDO);
   }
 

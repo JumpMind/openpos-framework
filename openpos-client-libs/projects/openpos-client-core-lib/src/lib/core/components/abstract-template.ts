@@ -1,12 +1,12 @@
 import { IScreen } from '../../shared/components/dynamic-screen/screen.interface';
 import { AppInjector } from '../app-injector';
-import { ViewChild, ComponentRef, ComponentFactory, Injector } from '@angular/core';
+import { ViewChild, ComponentRef, ComponentFactory, Injector, OnDestroy } from '@angular/core';
 import { ScreenDirective } from '../../shared/directives/screen.directive';
 import { SessionService } from '../services/session.service';
 import { Logger } from '../services/logger.service';
 import { ActionService } from '../actions/action.service';
 
-export abstract class AbstractTemplate<T> implements IScreen {
+export abstract class AbstractTemplate<T> implements IScreen, OnDestroy {
 
     @ViewChild(ScreenDirective) host: ScreenDirective;
     private currentScreenRef: ComponentRef<IScreen>;
@@ -35,7 +35,7 @@ export abstract class AbstractTemplate<T> implements IScreen {
         return this.currentScreenRef.instance;
     }
 
-    ngOnDestry(): void {
+    ngOnDestroy(): void {
         if (this.currentScreenRef) {
             this.currentScreenRef.destroy();
         }
