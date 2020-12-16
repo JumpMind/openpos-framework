@@ -1,7 +1,5 @@
 package org.jumpmind.pos.core.service;
 
-import java.io.IOException;
-
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpResponseException;
@@ -15,8 +13,9 @@ import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
+
+import java.io.IOException;
 
 @Service
 public class DefaultHttpConnectionService implements IHttpConnectionService {
