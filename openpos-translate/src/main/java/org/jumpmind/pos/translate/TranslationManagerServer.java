@@ -107,6 +107,11 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
             if (executeActiveMacro(screen)) {
                 screenShown = translateAndShow(screen);
                 lastScreenWasNoOp = false;
+            } else {
+                logger.info("Screen {} not showing since {}macro is executing", 
+                  screen.getSpecName() + (screen.getDialogResourceId() != null ? "/"+screen.getDialogResourceId() : ""),
+                  activeMacro != null ? activeMacro.getClass().getSimpleName() + " " : ""
+                );
             }
         }
         return screenShown;
@@ -135,6 +140,7 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
             List<Object> objects = activeMacro.getInteractionQueue();
             if (objects != null && objects.size() > 0) {
                 Object current = objects.get(0);
+                logger.info("{} macro is executing...", activeMacro.getClass().getSimpleName());
                 while (current != null) {
                     if (current instanceof SendLetter) {
                         sendAction(((SendLetter) current).getLetter());
@@ -194,7 +200,10 @@ public class TranslationManagerServer implements ITranslationManager, IDeviceMes
                 }
 
                 if (objects.size() == 0) {
+                    logger.info("{} macro finished", activeMacro.getClass().getSimpleName());
                     activeMacro = null;
+                } else {
+                    logger.info("{} macro has {} objects remaining to process", activeMacro.getClass().getSimpleName(), objects.size());
                 }
             } else {
                 activeMacro = null;
