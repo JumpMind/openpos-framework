@@ -9,6 +9,8 @@ import { OpenPOSDialogConfig } from '../interfaces/open-pos-dialog-config.interf
 import { BehaviorSubject, Subject, Observable } from 'rxjs';
 import { LifeCycleMessage } from '../messages/life-cycle-message';
 import { LifeCycleEvents } from '../messages/life-cycle-events.enum';
+import { MessageProvider } from '../../shared/providers/message.provider';
+import { MessageTypes } from '../messages/message-types';
 
 @Injectable({
     providedIn: 'root',
@@ -18,6 +20,10 @@ export class DialogService {
     static dialogs = new Map<string, Type<IScreen>>();
 
     public dialogRef: MatDialogRef<DialogContentComponent>;
+	public beforeOpened$ = new Subject<OpenPOSDialogConfig>();
+    public afterOpened$ = new Subject<MatDialogRef<DialogContentComponent>>();
+    public beforeClosed$ = new Subject<MatDialogRef<DialogContentComponent>>();
+    public afterClosed$ = new Subject<MatDialogRef<DialogContentComponent>>();
 
     private closingDialogRef: MatDialogRef<DialogContentComponent>;
 
@@ -31,6 +37,7 @@ export class DialogService {
 
     constructor(
         private log: Logger,
+        private messageProvider: MessageProvider,
         private componentFactoryResolver: ComponentFactoryResolver,
         private session: SessionService,
         private dialog: MatDialog) {
@@ -39,7 +46,7 @@ export class DialogService {
         // once dialog service has started. Handles case where server is 'showing' a dialog
         // but client is starting up. If we wait to subscribe until start() method, we can
         // miss the dialog.
-        this.session.getMessages('Dialog').subscribe(s => { if (s) { this.$dialogMessages.next(s); } });
+        // this.session.getMessages('Dialog').subscribe(s => { if (s) { this.$dialogMessages.next(s); } });
     }
 
     public start() {
@@ -48,7 +55,9 @@ export class DialogService {
         // We use a Startup Task to invoke this start method at nearly the end of startup.
 
         // Pipe all the messages for dialog updates
-        this.$dialogMessages.subscribe(m => this.updateDialog(m));
+//        this.$dialogMessages.subscribe(m => this.updateDialog(m));
+        this.messageProvider.setMessageType(MessageTypes.DIALOG);
+        this.session.getMessages(MessageTypes.DIALOG).subscribe(m => this.updateDialog(m));
 
     }
 
@@ -95,7 +104,7 @@ export class DialogService {
             this.dialogRef = null;
             this.closingDialogRef.close();
 
-            this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogClosing));
+            this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogClosing, null));
 
             // Wait for the dialog to fully close before moving on
             await this.closingDialogRef.afterClosed().toPromise();
@@ -167,8 +176,13 @@ export class DialogService {
 
                 if (!this.dialogRef || !this.dialogRef.componentInstance) {
                     this.log.info('[DialogService] Dialog \'' + dialog.screenType + '\' opening...');
-                    this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogOpening));
+                    this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogOpening, dialog));
+                    this.beforeOpened$.next(dialogProperties);
                     this.dialogRef = this.dialog.open(DialogContentComponent, dialogProperties);
+                    const dialogRef = this.dialogRef;
+                    this.dialogRef.beforeClosed().subscribe(() => this.beforeClosed$.next(dialogRef));
+                    this.dialogRef.afterClosed().subscribe(() => this.afterClosed$.next(dialogRef));
+                    this.dialogRef.afterOpened().subscribe(() => this.afterOpened$.next(dialogRef));
                 } else {
                     // I don't think this code will ever run
                     this.log.info('[DialogService] Dialog \'' + dialog.screenType + '\' refreshing content...');
@@ -192,6 +206,9 @@ export class DialogService {
         } finally {
             this.dialogOpening = false;
         }
+        console.log('screen updated');
+        this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.ScreenUpdated, dialog));
+        
     }
 
 }

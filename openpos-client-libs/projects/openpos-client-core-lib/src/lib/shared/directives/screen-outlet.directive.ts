@@ -36,6 +36,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     public templateTypeName: string;
     public screenTypeName: string;
     private screenName: string;
+    private screenId: string;
 
     public classes = '';
 
@@ -123,11 +124,13 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         if (screen &&
             (screen.refreshAlways
                 || screen.screenType !== this.screenTypeName
-                || screen.name !== this.screenName)
+                || screen.name !== this.screenName
+                || screen.id !== this.screenId)
         ) {
             this.logSwitchScreens(screen);
 
             this.screenName = screen.name;
+            this.screenId = screen.id;
             let screenToCreate = this.screenTypeName = screen.screenType;
             // If we have a template we'll create that instead of the screen and
             // later we'll install the screen in the temlate
@@ -186,7 +189,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
 
         // Output the componentRef and screen to the training-wrapper
         this.componentEmitter.emit({ componentRef: this.componentRef, screen });
-
+        this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.ScreenUpdated, screen));
     }
 
     protected updateTheme(theme: string) {

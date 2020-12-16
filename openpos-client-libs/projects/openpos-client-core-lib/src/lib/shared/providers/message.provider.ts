@@ -1,25 +1,35 @@
 import { Injectable } from '@angular/core';
 import { SessionService } from '../../core/services/session.service';
-import { Observable, ConnectableObservable } from 'rxjs';
+import { Observable, ConnectableObservable, ReplaySubject, Subscription } from 'rxjs';
 import { OpenposMessage } from '../../core/messages/message';
-import { map, publishReplay } from 'rxjs/operators';
+import { filter, map, publishReplay } from 'rxjs/operators';
 import { MessageTypes } from '../../core/messages/message-types';
 import { LifeCycleMessage } from '../../core/messages/life-cycle-message';
 import { LifeCycleEvents } from '../../core/messages/life-cycle-events.enum';
 
-@Injectable()
+@Injectable({providedIn: 'root'})
 export class MessageProvider {
 
-    private messages$: Observable<any>;
+    private messages$ = new ReplaySubject<any>(1);
     private messageType: string;
+    private subscription: Subscription;
 
     constructor( private sessionService: SessionService ) {
 
     }
 
     setMessageType( messageType: string ) {
-        this.messages$ = this.sessionService.getMessages( messageType ).pipe(publishReplay(1));
-        (this.messages$ as ConnectableObservable<any>).connect();
+        if ( this.subscription ) {
+            this.subscription.unsubscribe();
+        }
+        // Update state withe the latest message
+        this.subscription  = this.sessionService.getMessages( MessageTypes.LIFE_CYCLE_EVENT )
+          .pipe(filter(m =>
+              m instanceof LifeCycleMessage &&
+              (m as LifeCycleMessage).screen !== null &&
+              (m as LifeCycleMessage).screen.type === messageType &&
+              (m as LifeCycleMessage).screen.screenType !== 'NoOp'))
+            .subscribe( m => this.messages$.next((m as LifeCycleMessage).screen));
         this.messageType = messageType;
     }
 
@@ -35,12 +45,12 @@ export class MessageProvider {
                     switch ( lfMessage.eventType ) {
                         case LifeCycleEvents.DialogOpening:
                             return this.messageType === MessageTypes.DIALOG ?
-                                new LifeCycleMessage(LifeCycleEvents.BecomingActive) :
-                                new LifeCycleMessage(LifeCycleEvents.LeavingActive);
+                                new LifeCycleMessage(LifeCycleEvents.BecomingActive, lfMessage.screen) :
+                                new LifeCycleMessage(LifeCycleEvents.LeavingActive, lfMessage.screen);
                         case LifeCycleEvents.DialogClosing:
-                                return this.messageType === MessageTypes.DIALOG ?
-                                new LifeCycleMessage(LifeCycleEvents.LeavingActive) :
-                                new LifeCycleMessage(LifeCycleEvents.BecomingActive);
+                            return this.messageType === MessageTypes.DIALOG ?
+                                new LifeCycleMessage(LifeCycleEvents.LeavingActive, lfMessage.screen) :
+                                new LifeCycleMessage(LifeCycleEvents.BecomingActive, lfMessage.screen);
                     }
                 }
                 return m;
