@@ -39,7 +39,7 @@
             {{screenData.taxExemptCertificateDetail.label}}: {{screenData.taxExemptCertificateDetail.value}}
         </div>
         <app-secondary-button responsive-class
-                              *ngIf="!screenData.readOnly && !screenData.customer && screenData.loyaltyButton"
+                              *ngIf="!screenData.readOnly && !screenData.linkedCustomerButton && screenData.loyaltyButton"
                               [actionItem]="screenData.loyaltyButton"
                               (actionClick)="doMenuItemAction(screenData.loyaltyButton)"
                               (click)="doMenuItemAction(screenData.loyaltyButton)" class="sale-total-loyalty-button">
