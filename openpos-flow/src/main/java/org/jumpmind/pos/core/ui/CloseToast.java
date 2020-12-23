@@ -6,19 +6,19 @@ import org.jumpmind.pos.util.model.Message;
 import java.util.UUID;
 
 public class CloseToast extends Message {
-    private UUID persistedId;
+    private String persistedId;
 
-    public CloseToast(UUID persistedId) {
+    public CloseToast(String persistedId) {
         this.persistedId = persistedId;
         setType(MessageType.CloseToast);
         setWillUnblock(true);
     }
 
-    public UUID getPersistedId() {
+    public String getPersistedId() {
         return persistedId;
     }
 
-    public void setPersistedId(UUID persistedId) {
+    public void setPersistedId(String persistedId) {
         this.persistedId = persistedId;
     }
 }

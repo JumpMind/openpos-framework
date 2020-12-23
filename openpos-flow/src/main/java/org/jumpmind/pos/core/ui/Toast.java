@@ -15,7 +15,7 @@ public class Toast extends Message {
     private String verticalPosition = "bottom";
     private String icon;
     private boolean persistent;
-    private UUID persistedId;
+    private String persistedId;
 
     public static Toast createSuccessToast(String message) {
         return createSuccessToast(message, true);
@@ -120,11 +120,11 @@ public class Toast extends Message {
         this.persistent = persistent;
     }
 
-    public UUID getPersistedId() {
+    public String getPersistedId() {
         return persistedId;
     }
 
-    public void setPersistedId(UUID persistedId) {
+    public void setPersistedId(String persistedId) {
         this.persistedId = persistedId;
     }
 }
