@@ -1,13 +1,11 @@
 package org.jumpmind.pos.persist.cars;
 
-import org.jumpmind.pos.persist.ColumnDef;
+import org.jumpmind.pos.persist.*;
 import org.joda.money.Money;
-import org.jumpmind.pos.persist.IndexDef;
-import org.jumpmind.pos.persist.IndexDefs;
-import org.jumpmind.pos.persist.TableDef;
 import org.jumpmind.pos.persist.model.AbstractTaggedModel;
 import org.jumpmind.pos.persist.model.ITaggedModel;
 
+@Tagged
 @TableDef(name="car",
         description = "A basic concept of an automobile fit to drive down the road.",
         primaryKey = "vin")

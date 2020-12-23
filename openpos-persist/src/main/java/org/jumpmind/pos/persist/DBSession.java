@@ -523,7 +523,7 @@ public class DBSession {
 
     protected int excecuteDml(DmlType type, ModelWrapper model, Table table) {
         boolean[] nullKeyValues = model.getNullKeys();
-        List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
+        List<Column> primaryKeyColumns = getPrimaryKeyWithTags(model, table);
 
         DmlStatement statement = databasePlatform.createDmlStatement(type, table.getCatalog(), table.getSchema(), table.getName(),
                 primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
@@ -547,13 +547,32 @@ public class DBSession {
             List<Table> tables = getValidatedTables(exampleModel);
             for (Table table : tables) {
                 boolean[] nullKeyValues = model.getNullKeys();
-                List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
+                List<Column> primaryKeyColumns = getPrimaryKeyWithTags(model, table);
+                
                 DmlStatement statement = databasePlatform.createDmlStatement(dmlType, table.getCatalog(), table.getSchema(), table.getName(),
                         primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
                 String sql = statement.getSql();
                 jdbcTemplate.getJdbcOperations().batchUpdate(sql, getValueArray(statement, models), model.getColumnTypes(table));
             }
         }
+    }
+    
+    private List<Column> getPrimaryKeyWithTags(ModelWrapper model, Table table) {
+        List<Column> primaryKeyColumns = new ArrayList<>(model.getPrimaryKeyColumns());
+        if (isTaggedWithPrimaryKey(model.getModel())) {
+            primaryKeyColumns.addAll(Arrays.stream(model.getColumns(table))
+                    .filter(c -> StringUtils.startsWith(c.getName(), TagModel.TAG_PREFIX))
+                    .collect(Collectors.toList()));
+        }
+        return primaryKeyColumns;
+    }
+    
+    private boolean isTaggedWithPrimaryKey(AbstractModel model) {
+        if (model != null && model instanceof ITaggedModel) {
+            Tagged tagged = model.getClass().getAnnotation(Tagged.class);
+            return model instanceof ITaggedModel && tagged != null && tagged.includeTagsInPrimaryKey();
+        }
+        return false;
     }
 
     public void batchInsert(List<? extends AbstractModel> models) {

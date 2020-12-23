@@ -5,10 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.io.StringReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.DBSessionFactory;
@@ -18,6 +15,7 @@ import org.jumpmind.pos.persist.cars.CarModel;
 import org.jumpmind.pos.persist.cars.CarStats;
 import org.jumpmind.pos.persist.cars.RaceCarModel;
 import org.jumpmind.pos.persist.cars.TestPersistCarsConfig;
+import org.jumpmind.pos.persist.model.SearchCriteria;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -438,5 +436,139 @@ public class DBSessionQueryTest {
         CarModel subclass = db.findByNaturalId(CarModel.class, raceCar.getVin());
         assertEquals(raceCar.getVin(), subclass.getVin());
         assertEquals(raceCar.getMake(), subclass.getMake());
+    }
+    
+    @Test
+    public void testDeleteOnTaggedModel() {
+        DBSession db = sessionFactory.createDbSession();
+        CarModel carModel = new CarModel();
+        carModel.setVin(VIN + "1222");
+        carModel.setMake("BMW");
+        carModel.setModel("328i");
+        carModel.setModelYear("2013");
+        carModel.setTagValue("DEALERSHIP_NUMBER", "123");
+        db.save(carModel);
+        
+        carModel.setTagValue("DEALERSHIP_NUMBER", "456");
+        db.save(carModel);
+
+        SearchCriteria searchCriteria = new SearchCriteria(CarModel.class)
+                .addCriteria("vin", VIN + "1222");
+        
+        List<CarModel> cars = db.findByCriteria(searchCriteria);
+        assertEquals(2, cars.size());
+        
+        db.delete(carModel);
+        
+        cars = db.findByCriteria(searchCriteria);
+        
+        assertEquals(1, cars.size());
+    }
+
+    @Test
+    public void testBatchDeleteOnTaggedModel() {
+        DBSession db = sessionFactory.createDbSession();
+        CarModel carModel1 = new CarModel();
+        carModel1.setVin(VIN + "1222");
+        carModel1.setMake("BMW");
+        carModel1.setModel("328i");
+        carModel1.setModelYear("2013");
+        carModel1.setTagValue("DEALERSHIP_NUMBER", "123");
+
+        CarModel carModel2 = new CarModel();
+        carModel2.setVin(VIN + "1222");
+        carModel2.setMake("BMW");
+        carModel2.setModel("328i");
+        carModel2.setModelYear("2013");
+        carModel2.setTagValue("DEALERSHIP_NUMBER", "456");
+
+        List<CarModel> carModels = Arrays.asList(carModel1, carModel2);
+        db.batchInsert(carModels);
+
+        SearchCriteria searchCriteria = new SearchCriteria(CarModel.class)
+                .addCriteria("vin", VIN + "1222");
+
+        List<CarModel> cars = db.findByCriteria(searchCriteria);
+        assertEquals(2, cars.size());
+
+        db.batchDelete(Collections.singletonList(carModel2));
+
+        cars = db.findByCriteria(searchCriteria);
+
+        assertEquals(1, cars.size());
+    }
+
+    @Test
+    public void testUpdateOnTaggedModel() {
+        DBSession db = sessionFactory.createDbSession();
+        CarModel carModel = new CarModel();
+        carModel.setVin(VIN + "1222");
+        carModel.setMake("BMW");
+        carModel.setModel("328i");
+        carModel.setModelYear("2013");
+        carModel.setTagValue("DEALERSHIP_NUMBER", "123");
+        db.save(carModel);
+
+        carModel.setTagValue("DEALERSHIP_NUMBER", "456");
+        db.save(carModel);
+
+        SearchCriteria searchCriteria = new SearchCriteria(CarModel.class)
+                .addCriteria("vin", VIN + "1222");
+
+        List<CarModel> cars = db.findByCriteria(searchCriteria);
+        assertEquals(2, cars.size());
+        
+        carModel.setModelYear("2014");
+        db.save(carModel);
+        
+        cars = db.findByCriteria(searchCriteria);
+
+        assertEquals(2, cars.size());
+        
+        searchCriteria.addCriteria("modelYear", "2014");
+        
+        cars = db.findByCriteria(searchCriteria);
+        assertEquals(1, cars.size());
+        assertEquals("456", cars.get(0).getTagValue("DEALERSHIP_NUMBER"));
+    }
+
+    @Test
+    public void testBatchUpdateOnTaggedModel() {
+        DBSession db = sessionFactory.createDbSession();
+        CarModel carModel1 = new CarModel();
+        carModel1.setVin(VIN + "1222");
+        carModel1.setMake("BMW");
+        carModel1.setModel("328i");
+        carModel1.setModelYear("2013");
+        carModel1.setTagValue("DEALERSHIP_NUMBER", "123");
+
+        CarModel carModel2 = new CarModel();
+        carModel2.setVin(VIN + "1222");
+        carModel2.setMake("BMW");
+        carModel2.setModel("328i");
+        carModel2.setModelYear("2013");
+        carModel2.setTagValue("DEALERSHIP_NUMBER", "456");
+        
+        List<CarModel> carModels = Arrays.asList(carModel1, carModel2);
+        db.batchInsert(carModels);
+
+        SearchCriteria searchCriteria = new SearchCriteria(CarModel.class)
+                .addCriteria("vin", VIN + "1222");
+
+        List<CarModel> cars = db.findByCriteria(searchCriteria);
+        assertEquals(2, cars.size());
+
+        carModel2.setModelYear("2014");
+        db.batchUpdate(Collections.singletonList(carModel2));
+
+        cars = db.findByCriteria(searchCriteria);
+
+        assertEquals(2, cars.size());
+
+        searchCriteria.addCriteria("modelYear", "2014");
+
+        cars = db.findByCriteria(searchCriteria);
+        assertEquals(1, cars.size());
+        assertEquals("456", cars.get(0).getTagValue("DEALERSHIP_NUMBER"));
     }
 }
