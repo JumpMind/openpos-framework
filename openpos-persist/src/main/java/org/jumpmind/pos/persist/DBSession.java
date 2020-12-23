@@ -570,7 +570,7 @@ public class DBSession {
     private boolean isTaggedWithPrimaryKey(AbstractModel model) {
         if (model != null && model instanceof ITaggedModel) {
             Tagged tagged = model.getClass().getAnnotation(Tagged.class);
-            return model instanceof ITaggedModel && tagged != null && tagged.includeTagsInPrimaryKey();
+            return tagged != null && tagged.includeTagsInPrimaryKey();
         }
         return false;
     }
