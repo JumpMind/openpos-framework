@@ -1,8 +1,8 @@
 package org.jumpmind.pos.devices.service;
 
 import io.swagger.annotations.Api;
-import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.service.model.*;
+import org.jumpmind.pos.util.SuppressMethodLogging;
 import org.springframework.web.bind.annotation.*;
 
 @Api(tags = "Devices Service")
@@ -21,6 +21,7 @@ public interface IDevicesService {
     @ResponseBody
     public GetDeviceResponse getDevice(@RequestBody GetDeviceRequest request);
 
+    @SuppressMethodLogging
     @RequestMapping(path="/myDevice", method = RequestMethod.GET)
     @ResponseBody
     public GetDeviceResponse getMyDevice();
