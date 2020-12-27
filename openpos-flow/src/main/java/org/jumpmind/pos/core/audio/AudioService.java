@@ -37,7 +37,7 @@ public class AudioService implements IAudioService {
     @Override
     public void play(AudioRequest request) {
         if (!enableAudio) {
-            log.warn("Audio is disabled on device '{}', so the sound '{}' will not be played", stateManager.getDeviceId(), request.getSound());
+            log.debug("Audio is disabled on device '{}', so the sound '{}' will not be played", stateManager.getDeviceId(), request.getSound());
             return;
         }
 
