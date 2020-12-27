@@ -12,6 +12,7 @@ public class SearchCriteria {
 
     Map<String, Object> criteria;
 
+    @ToString.Exclude
     Class<? extends AbstractModel> entityClass;
 
     boolean useAnd = true;
