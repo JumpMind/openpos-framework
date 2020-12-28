@@ -26,6 +26,19 @@ export class ToastService {
 
     private showMessage(message: any) {
         const toastMessage = message as IToastScreen;
+        if(toastMessage.persistent) {
+            if(!this.persistedToasts.get(toastMessage.persistedId)) {
+                const toast = this.getToast(toastMessage);
+                this.persistedToasts.set(toastMessage.persistedId, toast);
+            }
+        }
+        else {
+            this.getToast(toastMessage);
+        }
+        this.sessionService.cancelLoading();
+    }
+
+    private getToast(toastMessage: IToastScreen): ActiveToast<any> {
         const toast = this.toastrService.show(toastMessage.message, null, {
             timeOut: toastMessage.duration,
             extendedTimeOut: toastMessage.duration,
@@ -36,10 +49,7 @@ export class ToastService {
             toastComponent: ToastComponent
         });
         toast.toastRef.componentInstance.iconName = toastMessage.icon;
-        if(toastMessage.persistent) {
-            this.persistedToasts.set(toastMessage.persistedId, toast);
-        }
-        this.sessionService.cancelLoading();
+        return toast;
     }
 
     private isStickyToast(toastMessage: IToastScreen): boolean {

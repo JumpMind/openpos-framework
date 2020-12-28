@@ -1048,9 +1048,11 @@ public class StateManager implements IStateManager {
             throw new FlowException(
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
         }
+
         if(toast.isPersistent() && toast.getPersistedId() == null) {
-            toast.setPersistedId(UUID.randomUUID());
+            throw new FlowException("Persistent toast message requires ID");
         }
+
         screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
 
         lastShowTimeInMs.set(System.currentTimeMillis());
