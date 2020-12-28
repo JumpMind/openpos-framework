@@ -35,6 +35,7 @@ export class LockScreenComponent implements OnDestroy {
     } else {
       this.submitPassword();
     }
+    this.password = '';
   }
 
   submitPassword() {
