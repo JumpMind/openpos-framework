@@ -1,19 +1,16 @@
 package org.jumpmind.pos.persist;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
 import org.jumpmind.db.platform.h2.H2DatabasePlatform;
 import org.jumpmind.db.platform.oracle.OracleDatabasePlatform;
 import org.jumpmind.db.sql.ISqlTemplate;
 import org.jumpmind.db.sql.SqlScript;
-import org.jumpmind.db.util.BinaryEncoding;
 import org.jumpmind.exception.IoException;
 import org.jumpmind.pos.persist.model.ScriptVersionModel;
 import org.jumpmind.symmetric.io.data.Batch;
 import org.jumpmind.symmetric.io.data.DataProcessor;
 import org.jumpmind.symmetric.io.data.DbImport;
-import org.jumpmind.symmetric.io.data.reader.CsvTableDataReader;
 import org.jumpmind.symmetric.io.data.reader.ProtocolDataReader;
 import org.jumpmind.symmetric.io.data.writer.*;
 import org.springframework.core.io.DefaultResourceLoader;
