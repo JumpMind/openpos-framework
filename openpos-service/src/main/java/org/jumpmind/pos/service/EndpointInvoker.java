@@ -253,7 +253,7 @@ public class EndpointInvoker implements InvocationHandler {
                     }
                 }
             }
-            log.info("Calling endpoint: {}.{}({})",
+            log.info("{}.{}({})",
                     method.getDeclaringClass().getSimpleName(),
                     method.getName(),
                     logArgs);
