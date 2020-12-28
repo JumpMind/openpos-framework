@@ -5,6 +5,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 @Component({
   selector: 'app-toast',
   templateUrl: './toast.component.html',
+  styles: [':host { display: block; }'],
   animations: [
     trigger('flyInOut', [
       state('inactive', style({ opacity: 0 })),
