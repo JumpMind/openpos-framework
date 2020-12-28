@@ -134,7 +134,7 @@ public class DatabaseSchema {
                 log.info("There are database tables that need to be created or altered. SQL generated:\r\n{}", alterSql);
                 runScript(alterSql);
                 actualModel = platform.readFromDatabase(desiredModel.getTables());
-                log.info("Finished updating tables.");
+                log.info("Finished updating tables");
                 refreshMetaData(actualModel);
                 return true;
             } else {

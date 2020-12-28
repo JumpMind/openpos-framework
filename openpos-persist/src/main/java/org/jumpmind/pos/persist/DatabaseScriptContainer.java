@@ -7,9 +7,15 @@ import org.jumpmind.db.platform.h2.H2DatabasePlatform;
 import org.jumpmind.db.platform.oracle.OracleDatabasePlatform;
 import org.jumpmind.db.sql.ISqlTemplate;
 import org.jumpmind.db.sql.SqlScript;
+import org.jumpmind.db.util.BinaryEncoding;
 import org.jumpmind.exception.IoException;
 import org.jumpmind.pos.persist.model.ScriptVersionModel;
+import org.jumpmind.symmetric.io.data.Batch;
+import org.jumpmind.symmetric.io.data.DataProcessor;
 import org.jumpmind.symmetric.io.data.DbImport;
+import org.jumpmind.symmetric.io.data.reader.CsvTableDataReader;
+import org.jumpmind.symmetric.io.data.reader.ProtocolDataReader;
+import org.jumpmind.symmetric.io.data.writer.*;
 import org.springframework.core.io.DefaultResourceLoader;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.ResourcePatternUtils;
@@ -102,10 +108,15 @@ public class DatabaseScriptContainer {
                     try {
                         executeImports(s, s.getResource(), failOnError);
                         execute(s, s.getResource(), failOnError);
-                        dbSession.save(ScriptVersionModel.builder().
-                                installationId(installationId).
-                                fileName(s.getResource().getFilename()).
-                                checkSum(md5Hash).build());
+                        if (version == null) {
+                            version = ScriptVersionModel.builder().
+                                    installationId(installationId).
+                                    fileName(s.getResource().getFilename()).
+                                    checkSum(md5Hash).build();
+                        } else {
+                            version.setCheckSum(md5Hash);
+                        }
+                        dbSession.save(version);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -138,7 +149,43 @@ public class DatabaseScriptContainer {
             loadSql(resource.getURL(), failOnError);
         } else if (compareString.endsWith(".csv")) {
             loadCsv(databaseScript, resource, failOnError);
+        } else if (compareString.endsWith(".batch")) {
+            loadFromBatchCsv(databaseScript, resource, failOnError);
         }
+    }
+
+    void loadFromBatchCsv(DatabaseScript script, Resource resource, boolean failOnError) throws IOException {
+        DefaultDatabaseWriter writer = new DefaultDatabaseWriter(platform, buildDatabaseWriterSettings(failOnError));
+        try (InputStream is = script.getResource().getInputStream()) {
+            ProtocolDataReader reader = new ProtocolDataReader(Batch.BatchType.LOAD, "localhost", is);
+            DataProcessor dataProcessor = new DataProcessor(reader, writer, "import");
+            dataProcessor.process();
+        }
+    }
+
+    DatabaseWriterSettings buildDatabaseWriterSettings(boolean failOnError) {
+        DatabaseWriterSettings settings = new DatabaseWriterSettings();
+        settings.setMaxRowsBeforeCommit(10000);
+        settings.setCommitSleepInterval(0);
+        settings.setDefaultConflictSetting(buildConflictSettings());
+        settings.setUsePrimaryKeysFromSource(false);
+        settings.setAlterTable(false);
+        settings.setCreateTableDropFirst(false);
+        settings.setCreateTableFailOnError(false);
+        settings.setDatabaseWriterFilters(new ArrayList<IDatabaseWriterFilter>(0));
+        settings.setIgnoreMissingTables(true);
+        settings.setCreateTableAlterCaseToMatchDatabaseDefault(true);
+        if (!failOnError) {
+            settings.addErrorHandler(new DatabaseWriterErrorIgnorer());
+        }
+        return settings;
+    }
+
+    Conflict buildConflictSettings() {
+        Conflict conflict = new Conflict();
+        conflict.setDetectType(Conflict.DetectConflict.USE_OLD_DATA);
+            conflict.setResolveType(Conflict.ResolveConflict.FALLBACK);
+        return conflict;
     }
 
     void loadSql(URL script, boolean failOnError) {
