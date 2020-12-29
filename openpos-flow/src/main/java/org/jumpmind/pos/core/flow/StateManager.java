@@ -497,6 +497,11 @@ public class StateManager implements IStateManager {
         }
     }
 
+    public void pushScopeValue(String name, ScopeType scopeType, Object value) {
+        applicationState.getScope().setScope(name, scopeType, value);
+        refreshDeviceScope();
+    }
+
     public void performOutjections(Object stateOrStep) {
         outjector.performOutjections(stateOrStep, applicationState.getScope(), applicationState.getCurrentContext());
     }

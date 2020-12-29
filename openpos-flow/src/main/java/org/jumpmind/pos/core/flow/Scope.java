@@ -66,6 +66,22 @@ public class Scope {
         return null;
     }
 
+    public void setScope(String name, ScopeType scopeType, Object value) {
+        switch (scopeType) {
+            case Device:
+                setDeviceScope(name, value);
+                break;
+            case Session:
+                setSessionScope(name, value);
+                break;
+            case Conversation:
+                setConversationScope(name, value);
+                break;
+            default:
+                throw new FlowException("Invalid scope " + scopeType + " for name '" + name + "'");
+        }
+    }
+
     public void setDeviceScope(String name, Object value) {
         setScope(deviceScope, name, value);
     }
