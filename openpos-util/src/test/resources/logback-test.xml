@@ -2,7 +2,7 @@
 
     <variable name="LOG_DIR" value="${.LOG_DIR:-./logs}" />
     <variable name="LOG_TARGET" value="${LOG_TARGET:-CONSOLE}" />
-    <variable name="LOG_PATTERN" value="%d{YYYY-MM-dd HH:mm:ss.SSS} %-5level [%X{stateManager:--}] [%thread] [%class{0}] %msg %n" />
+    <variable name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5level [%X{stateManager:--}] [%thread] [%class{0}] %msg %n" />
 
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
