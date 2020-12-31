@@ -21,7 +21,7 @@ public class ScaleWeightData {
         SCALE_READ_UNDER_0
     }
 
-    private boolean sucessful;
+    private boolean successful;
     private CheckoutScaleFailureCode failureCode = CheckoutScaleFailureCode.UNSPECIFIED;
     private String failureMessage;
 
