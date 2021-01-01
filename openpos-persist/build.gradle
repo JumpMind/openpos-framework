@@ -12,14 +12,14 @@ dependencies {
     compile "org.springframework.data:spring-data-commons:$springDataCommon"
     compile ("org.jumpmind.symmetric:symmetric-jdbc:$symmetricVersion") {
          exclude group: 'org.slf4j'
-         exclude group: 'log4j'
+         exclude group: 'org.apache.logging.log4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'
          exclude group: 'org.springframework'
          exclude group: 'net.java.dev.jna'
     }
     compile ("org.jumpmind.symmetric:symmetric-io:$symmetricVersion") {
          exclude group: 'org.slf4j'
-         exclude group: 'log4j'
+         exclude group: 'org.apache.logging.log4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'
          exclude group: 'org.springframework'
          exclude group: 'net.java.dev.jna'

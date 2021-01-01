@@ -260,13 +260,13 @@ public class DBSessionFactory {
                     if (annotations.length > 0) {
                         includeTagsInPrimaryKey = annotations[0].includeTagsInPrimaryKey();
                     }
-                    enchanceTaggedTable(clazz, tags, includeTagsInPrimaryKey);
+                    enhanceTaggedTable(clazz, tags, includeTagsInPrimaryKey);
                 }
             }
         }
     }
 
-    protected void enchanceTaggedTable(Class<?> entityClass, List<TagModel> tags, boolean includeInPk) {
+    protected void enhanceTaggedTable(Class<?> entityClass, List<TagModel> tags, boolean includeInPk) {
         Table table = getTableForEnhancement(entityClass);
         warnOrphanedTagColumns(tags, table);
         modifyTagColumns(tags, table, includeInPk);
@@ -277,7 +277,7 @@ public class DBSessionFactory {
         for (Column existingColumn : table.getColumns()) {
             for (TagModel tag : tags) {
                 if (StringUtils.equalsIgnoreCase(getColumnName(tag), existingColumn.getName())) {
-                    setColumnInfo(existingColumn, tag, includeInPk);
+                    setColumnInfo(existingColumn, table, tag, includeInPk);
                     break;
                 }
             }
@@ -287,7 +287,7 @@ public class DBSessionFactory {
     protected void addTagColumns(List<TagModel> tags, Table table, boolean modifyPk) {
         for (TagModel tag : tags) {
             if (table.getColumnIndex(getColumnName(tag)) == -1) {
-                Column tagColumn = generateTagColumn(tag, modifyPk);
+                Column tagColumn = generateTagColumn(tag, table, modifyPk);
                 table.addColumn(tagColumn);
             }
         }
@@ -313,13 +313,16 @@ public class DBSessionFactory {
         }
     }
 
-    protected Column generateTagColumn(TagModel tag, boolean modifyPk) {
-        return setColumnInfo(new Column(), tag, modifyPk);
+    protected Column generateTagColumn(TagModel tag, Table table, boolean modifyPk) {
+        return setColumnInfo(new Column(), table, tag, modifyPk);
     }
 
-    protected Column setColumnInfo(Column column, TagModel tag, boolean includeInPk) {
+    protected Column setColumnInfo(Column column, Table table, TagModel tag, boolean includeInPk) {
         column.setName(getColumnName(tag));
         column.setPrimaryKey(includeInPk);
+        if (includeInPk) {
+            column.setPrimaryKeySequence(table.getPrimaryKeyColumnCount() + 1);
+        }
         column.setRequired(true);
         column.setDefaultValue(TagModel.TAG_ALL);
         column.setTypeCode(Types.VARCHAR);

@@ -1,6 +1,6 @@
 package org.jumpmind.pos.persist;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 import java.beans.PropertyDescriptor;
 import java.io.File;
