@@ -53,12 +53,14 @@ public class ModelClassMetaData {
     }
 
     private void initPrimaryKeyColumns() {
+        int primaryKeySequence = 0;
         for (String primaryKeyFieldName : primaryKeyFieldNames) {
             FieldMetaData fieldMetaData = entityIdFieldMetaDatas.get(primaryKeyFieldName);
             if (fieldMetaData == null) {
                 throw new PersistException("There is no field meta data for field name '" + primaryKeyFieldName + "' for model " + getClazz().getSimpleName());
             }
 
+            fieldMetaData.getColumn().setPrimaryKeySequence(primaryKeySequence++);
             primaryKeyColumns.add(fieldMetaData.getColumn());
         }
     }

@@ -1,9 +1,8 @@
 package org.jumpmind.pos.service;
 
-import bsh.commands.dir;
 import lombok.Getter;
 import lombok.Setter;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
