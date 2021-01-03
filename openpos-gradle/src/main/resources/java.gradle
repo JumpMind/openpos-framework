@@ -5,7 +5,7 @@ group = 'org.jumpmind.pos'
 apply plugin: 'eclipse'
 apply plugin: 'java'
 apply plugin: 'idea'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'ru.vyarus.quality'
 
 def removeSnapshot = { v ->
@@ -66,9 +66,9 @@ repositories {
 jar {
     manifest {
         attributes("Implementation-Title": project.name,
-                "Implementation-Version": project.hasProperty('version') && version ? version : '0.0',
+                "Implementation-Version": project.hasProperty('version') && project.getProperty('version') ? project.getProperty('version') : '0.0',
                 "Project-Artifact": project.name,
-                "Build-Version": project.hasProperty('version') && version ? version : '0.0',
+                "Build-Version": project.hasProperty('version') && project.getProperty('version') ? project.getProperty('version') : '0.0',
                 "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()),
                 "Build-Name": buildName,
                 "Build-Number": buildNumber,
@@ -168,7 +168,7 @@ configurations {
 dependencies {
     deployerJars group: 'org.apache.maven.wagon', name: 'wagon-ssh', version: '3.3.2'
     dependencies {
-          compile group: 'org.yaml', name: 'snakeyaml', version: snakeYamlVersion
+          implementation group: 'org.yaml', name: 'snakeyaml', version: snakeYamlVersion
           compileOnly("org.projectlombok:lombok:${lombokVersion}")
           testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
           annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
@@ -182,11 +182,21 @@ artifacts {
     testArtifacts testJar
 }
 
-uploadArchives {
-    repositories.mavenDeployer {
-        configuration = configurations.deployerJars
-        repository(url: deployUploadUrl) {
-            authentication(userName: deployUser, password: deployPassword)
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+        logger.info "Repo URL: ${deployUploadUrl} \nAttributes - group: ${group} artifact: ${artifactId} version: ${version}"
+
+            from components.java
+        }
+    }
+    repositories {
+        maven {
+            url "$deployUploadUrl"
+            credentials {
+                username deployUser
+                password deployPassword
+            }
         }
     }
 }

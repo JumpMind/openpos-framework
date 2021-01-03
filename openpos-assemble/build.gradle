@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url "http://maven.jumpmind.com/repo" }
+        maven { url "https://maven.jumpmind.com/repo" }
         jcenter()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }

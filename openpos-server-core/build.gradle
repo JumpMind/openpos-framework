@@ -14,20 +14,20 @@ buildscript {
 }
 
 dependencies {
-	compile project(":openpos-util")
-    compile project(":openpos-devices")
-	testCompile project(path: ':openpos-util', configuration: 'testArtifacts') 
-    compile "io.springfox:springfox-swagger2:$springfoxSwaggerVersion"
-    compile "io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion"
+	implementation project(":openpos-util")
+    implementation project(":openpos-devices")
+	testImplementation project(path: ':openpos-util', configuration: 'testArtifacts')
+    implementation "io.springfox:springfox-swagger2:$springfoxSwaggerVersion"
+    implementation "io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion"
     
-    compile("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
+    implementation ("org.springframework.boot:spring-boot-starter-web:$springBootVersion") {
         exclude module: "spring-boot-starter-tomcat"
         exclude module: "spring-boot-starter-logging"
     }
-    compile("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"){
+    implementation ("org.springframework.boot:spring-boot-starter-jetty:$springBootVersion"){
         exclude module: "spring-boot-starter-logging"
     }
-    compile("org.springframework.boot:spring-boot-starter-websocket:$springBootVersion"){
+    implementation ("org.springframework.boot:spring-boot-starter-websocket:$springBootVersion"){
         exclude module: "spring-boot-starter-tomcat"
         exclude module: "spring-boot-starter-logging"
     }

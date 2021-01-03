@@ -7,11 +7,11 @@ apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {
-    compile project(":openpos-symds")
-    compile("com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2")
-    compile("org.codehaus.groovy:groovy:$groovyVersion")
-    compile("org.codehaus.groovy:groovy-jsr223:$groovyVersion")
-    compile("org.codehaus.groovy:groovy-ant:$groovyVersion")
+    implementation project(":openpos-symds")
+    implementation ("com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2")
+    implementation ("org.codehaus.groovy:groovy:$groovyVersion")
+    implementation ("org.codehaus.groovy:groovy-jsr223:$groovyVersion")
+    implementation ("org.codehaus.groovy:groovy-ant:$groovyVersion")
 }
 
 test {

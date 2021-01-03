@@ -11,18 +11,8 @@ apply from: '../openpos-gradle/src/main/resources/java.gradle'
 apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
-jar {
-    manifest {
-        attributes("Implementation-Title": project.name,
-                   "Implementation-Version": project.hasProperty('version') && version ? version : '0.0',
-                   "Project-Artifact": project.name,                       
-                   "Build-Version": project.hasProperty('version') && version ? version : '0.0',
-                   "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()))
-    }    
-}  
-
 dependencies {	
-	compile project(":openpos-server-core")
-	testCompile project(path: ':openpos-util', configuration: 'testArtifacts') 
+	implementation project(":openpos-server-core")
+	testImplementation project(path: ':openpos-util', configuration: 'testArtifacts')
 }
 

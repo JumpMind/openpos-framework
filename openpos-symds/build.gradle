@@ -3,12 +3,12 @@ apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {
-    compile ("org.jumpmind.symmetric:symmetric-server:$symmetricVersion") {
+    implementation ("org.jumpmind.symmetric:symmetric-server:$symmetricVersion") {
          exclude group: 'org.slf4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'
          exclude group: 'org.springframework'
          exclude group: 'net.java.dev.jna'
     }
-    compile project(":openpos-service")
-    testCompile project(path: ':openpos-util', configuration: 'testArtifacts')
+    implementation project(":openpos-service")
+    testImplementation project(path: ':openpos-util', configuration: 'testArtifacts')
 }
