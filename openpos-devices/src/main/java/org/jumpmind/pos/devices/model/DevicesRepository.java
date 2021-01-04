@@ -1,8 +1,8 @@
 package org.jumpmind.pos.devices.model;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections4.map.HashedMap;
 import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.persist.DBSession;

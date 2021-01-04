@@ -176,18 +176,16 @@ dependencies {
     }
 }
 
-artifacts {
-    archives testJar
-    archives sourcesJar
-    testArtifacts testJar
-}
-
 publishing {
     publications {
         mavenJava(MavenPublication) {
-        logger.info "Repo URL: ${deployUploadUrl} \nAttributes - group: ${group} artifact: ${artifactId} version: ${version}"
-
             from components.java
+            artifact sourcesJar {
+              classifier 'sources'
+            }
+            artifact testJar {
+              classifier 'test'
+            }
         }
     }
     repositories {
