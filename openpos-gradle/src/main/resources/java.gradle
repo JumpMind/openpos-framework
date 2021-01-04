@@ -3,7 +3,7 @@ import java.text.SimpleDateFormat
 group = 'org.jumpmind.pos'
 
 apply plugin: 'eclipse'
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'idea'
 apply plugin: 'maven-publish'
 apply plugin: 'ru.vyarus.quality'

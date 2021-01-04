@@ -4,6 +4,6 @@ apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 
 dependencies {
-    implementation project(":openpos-service")
+    api project(":openpos-service")
     testImplementation project(path: ':openpos-service', configuration: 'testArtifacts')
 }

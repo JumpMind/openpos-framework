@@ -4,20 +4,20 @@ apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 
 dependencies {
-    implementation project(':openpos-util')
+    api project(':openpos-util')
     testImplementation project(path: ':openpos-util', configuration: 'testArtifacts')
-    implementation "org.springframework:spring-context:$springVersion"
-    implementation "org.springframework:spring-jdbc:$springVersion"
-    implementation "com.h2database:h2:${h2databaseVersion}"
-    implementation "org.springframework.data:spring-data-commons:$springDataCommon"
-    implementation ("org.jumpmind.symmetric:symmetric-jdbc:$symmetricVersion") {
+    api "org.springframework:spring-context:$springVersion"
+    api "org.springframework:spring-jdbc:$springVersion"
+    api "com.h2database:h2:${h2databaseVersion}"
+    api "org.springframework.data:spring-data-commons:$springDataCommon"
+    api ("org.jumpmind.symmetric:symmetric-jdbc:$symmetricVersion") {
          exclude group: 'org.slf4j'
          exclude group: 'org.apache.logging.log4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'
          exclude group: 'org.springframework'
          exclude group: 'net.java.dev.jna'
     }
-    implementation ("org.jumpmind.symmetric:symmetric-io:$symmetricVersion") {
+    api ("org.jumpmind.symmetric:symmetric-io:$symmetricVersion") {
          exclude group: 'org.slf4j'
          exclude group: 'org.apache.logging.log4j'
          exclude group: 'com.mangofactory', module: 'swagger-springmvc'

@@ -14,8 +14,8 @@ buildscript {
 }
 
 dependencies {
-	implementation project(":openpos-util")
-    implementation project(":openpos-devices")
+	api project(":openpos-util")
+    api project(":openpos-devices")
 	testImplementation project(path: ':openpos-util', configuration: 'testArtifacts')
     implementation "io.springfox:springfox-swagger2:$springfoxSwaggerVersion"
     implementation "io.springfox:springfox-swagger-ui:$springfoxSwaggerVersion"
