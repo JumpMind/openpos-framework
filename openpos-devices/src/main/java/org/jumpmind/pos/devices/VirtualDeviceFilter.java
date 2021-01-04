@@ -28,7 +28,7 @@ public class VirtualDeviceFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
         String requestUri = ((HttpServletRequest) request).getRequestURI();
-        if (requestUri.equals("/") && "deviceless".equals(devicesImplementation)) {
+        if (requestUri.equals("/") && "virtual".equals(devicesImplementation)) {
             ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper(
                     (HttpServletResponse) response);
             chain.doFilter(request, wrappedResponse);
