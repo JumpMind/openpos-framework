@@ -1,7 +1,5 @@
 package org.jumpmind.pos.service;
 
-import org.jumpmind.db.model.Table;
-
 import java.util.List;
 
 public interface IModule {
