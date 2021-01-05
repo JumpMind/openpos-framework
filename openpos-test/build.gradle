@@ -6,8 +6,6 @@ dependencies {
     api "com.h2database:h2:${h2databaseVersion}"
     api "org.springframework:spring-jdbc:$springVersion"
     api "org.springframework:spring-tx:$springVersion"
-	api project(":openpos-persist")
-	api project(":openpos-util")
-	testImplementation project(':openpos-test')
-
+    api "org.springframework:spring-test:$springVersion"
+	api 'com.github.tomakehurst:wiremock:2.19.0'
 }

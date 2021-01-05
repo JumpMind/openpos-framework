@@ -18,4 +18,5 @@ dependencies {
         exclude module: "spring-boot-starter-logging"
     }
     api group: 'org.apache.commons', name: 'commons-csv', version: '1.8'
+	testImplementation project(':openpos-test')
 }

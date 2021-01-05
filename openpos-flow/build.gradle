@@ -13,6 +13,6 @@ apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {	
 	api project(":openpos-server-core")
-	testImplementation project(path: ':openpos-util', configuration: 'testArtifacts')
+	testImplementation project(':openpos-test')
 }
 

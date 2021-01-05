@@ -161,19 +161,18 @@ task develop {
 }
 
 configurations {
-    testArtifacts.extendsFrom testRuntime
-    deployerJars
+    testArtifacts.extendsFrom testCompile {
+        canBeResolved = true
+        canBeConsumed = true
+    }
 }
 
 dependencies {
-    deployerJars group: 'org.apache.maven.wagon', name: 'wagon-ssh', version: '3.3.2'
-    dependencies {
-          implementation group: 'org.yaml', name: 'snakeyaml', version: snakeYamlVersion
-          compileOnly("org.projectlombok:lombok:${lombokVersion}")
-          testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
-          annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-          testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-    }
+    implementation group: 'org.yaml', name: 'snakeyaml', version: snakeYamlVersion
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
 }
 
 publishing {

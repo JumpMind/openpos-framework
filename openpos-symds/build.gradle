@@ -9,6 +9,12 @@ dependencies {
          exclude group: 'org.springframework'
          exclude group: 'net.java.dev.jna'
     }
+    api ("org.jumpmind.symmetric:symmetric-core:$symmetricVersion") {
+         exclude group: 'org.slf4j'
+         exclude group: 'com.mangofactory', module: 'swagger-springmvc'
+         exclude group: 'org.springframework'
+         exclude group: 'net.java.dev.jna'
+    }
     implementation project(":openpos-service")
     implementation project(":openpos-persist")
     implementation "org.springframework:spring-tx:$springVersion"

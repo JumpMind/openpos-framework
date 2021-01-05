@@ -1,9 +1,8 @@
-package org.jumpmind.pos.service.utils;
+package org.jumpmind.pos.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 public class MockPutRequestBuilder extends AbstractServiceMockRequestBuilder {
     public MockPutRequestBuilder(String url) {
@@ -12,7 +11,7 @@ public class MockPutRequestBuilder extends AbstractServiceMockRequestBuilder {
 
     @Override
     public MockHttpServletRequestBuilder build() throws JsonProcessingException {
-        MockHttpServletRequestBuilder request = put(url);
+        MockHttpServletRequestBuilder request = MockMvcRequestBuilders.put(url);
         appendBaseParameters(request);
 
         return request;

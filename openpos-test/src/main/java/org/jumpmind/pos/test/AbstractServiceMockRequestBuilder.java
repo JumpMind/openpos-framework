@@ -1,4 +1,4 @@
-package org.jumpmind.pos.service.utils;
+package org.jumpmind.pos.test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

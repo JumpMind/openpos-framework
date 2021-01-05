@@ -8,10 +8,12 @@ apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {
     implementation project(":openpos-symds")
+    implementation project(":openpos-util")
     implementation ("com.github.ulisesbocchio:jasypt-spring-boot-starter:2.1.2")
     implementation ("org.codehaus.groovy:groovy:$groovyVersion")
     implementation ("org.codehaus.groovy:groovy-jsr223:$groovyVersion")
     implementation ("org.codehaus.groovy:groovy-ant:$groovyVersion")
+    testImplementation project(":openpos-test")
 }
 
 test {
