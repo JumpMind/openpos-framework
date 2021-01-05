@@ -199,8 +199,8 @@ public class DBSession {
     }
 
     public void executeScript(Reader reader) {
-        try {
-            RunScript.execute(getConnection(), reader);
+        try (Connection connection = getConnection()) {
+            RunScript.execute(connection, reader);
         } catch (Exception ex) {
             throw new PersistException("Failed to execute script " + reader, ex);
         }
