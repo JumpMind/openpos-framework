@@ -1,14 +1,14 @@
 apply from: '../openpos-gradle/src/main/resources/java.gradle'
 
 dependencies {
-    compile "net.java.dev.jna:jna:$jnaVersion"
-    compile "net.java.dev.jna:jna-platform:$jnaVersion"
+    implementation "net.java.dev.jna:jna:$jnaVersion"
+    implementation "net.java.dev.jna:jna-platform:$jnaVersion"
 }
 
-jar.baseName = 'openpos-wrapper'
+jar.archiveBaseName = 'openpos-wrapper'
 
 int i = 0;
-String classpathVar = configurations.compile.collect { (i++==0?String.format("%0\$-50s", it.getName()):String.format("%0\$-62s", it.getName()))   }.join(" ");
+String classpathVar = configurations.compileClasspath.collect { (i++==0?String.format("%0\$-50s", it.getName()):String.format("%0\$-62s", it.getName()))   }.join(" ");
 jar {
     manifest {
         attributes 'Main-Class': 'org.jumpmind.pos.wrapper.ServiceWrapper',

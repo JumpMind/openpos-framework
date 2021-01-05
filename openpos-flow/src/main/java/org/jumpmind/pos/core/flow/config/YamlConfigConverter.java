@@ -3,7 +3,7 @@ package org.jumpmind.pos.core.flow.config;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jumpmind.pos.core.flow.*;
 import org.jumpmind.pos.util.ClassUtils;
 import org.slf4j.Logger;
