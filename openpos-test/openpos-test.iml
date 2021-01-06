@@ -11,6 +11,7 @@
       <excludeFolder url="file://$MODULE_DIR$/bin"/>
     </content>
     <orderEntry type="sourceFolder" forTests="false"/>
+    <orderEntry type="module" module-name="openpos-util"/>
     <orderEntry type="module-library">
       <library>
         <CLASSES>
@@ -177,6 +178,19 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.codehaus.groovy/groovy/3.0.7/a11a4ad5d63aa64d8c2ce7850ca3df6a85a31e4a/groovy-3.0.7-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-text/1.3/9abf61708a66ab5e55f6169a200dbfc584b546d9/commons-text-1.3.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-text/1.3/8e170d7068f08823c0ad208214a48506f2950cbc/commons-text-1.3-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-text/1.3/9c51853f855aca4ea31785f30385e980a58eaf4b/commons-text-1.3-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -495,13 +509,13 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.6/1afe5621985efe90a92d0fbc9be86271efbe796f/httpclient-4.5.6.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/e5f6cae5ca7ecaac1ec2827a9e2d65ae2869cada/httpclient-4.5.13.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.6/9f4a30702f433fbb99765e85812d6c33d5214ad2/httpclient-4.5.6-javadoc.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/60e8e309548f93ea55ace6c614966cd0e1c7e6b4/httpclient-4.5.13-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.6/bda84e42670536453ecd61ee70349c2493445994/httpclient-4.5.6-sources.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpclient/4.5.13/9654e91a61d7662c36be6710ef8e720c0e3f9807/httpclient-4.5.13-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -937,13 +951,26 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.10/acc54d9b28bdffe4bbde89ed2e4a1e86b5285e2b/httpcore-4.4.10.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.13/853b96d3afbb7bf8cc303fe27ee96836a10c1834/httpcore-4.4.13.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.10/4703dee0b11db83b64f8a5fea549dfccbb7bcfeb/httpcore-4.4.10-javadoc.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.13/3a29e9db25fb24a7f8beeccbf8b2876d26c31c99/httpcore-4.4.13-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.10/35dcae32cc1c3bfb62546e64b90fc6359183b3b5/httpcore-4.4.10-sources.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.httpcomponents/httpcore/4.4.13/d6e6365dac44108fb2cc0684daea0d40bc6609f5/httpcore-4.4.13-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.9.4/d52b9abcd97f38c81342bb7e7ae1eee9b73cba51/commons-beanutils-1.9.4.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.9.4/6daf5afaab5f8d1c578d72c548d84b4e15b91c6c/commons-beanutils-1.9.4-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-beanutils/commons-beanutils/1.9.4/f00e0ba867d1810f255876631ab440e0725a9af0/commons-beanutils-1.9.4-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -963,13 +990,13 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/4b95f4897fa13f2cd904aee711aeafc0c5295cd8/commons-codec-1.10.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.11/3acb4705652e16236558f0f4f2192cc33c3bd189/commons-codec-1.11.jar!/"/>
         </CLASSES>
         <JAVADOC>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/8176f1eb181cde7c9e4b5290f0365652777b3b87/commons-codec-1.10-javadoc.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.11/978245f8bd06d70703fa3180554c62891500f97a/commons-codec-1.11-javadoc.jar!/"/>
         </JAVADOC>
         <SOURCES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.10/11fb3d88ae7e3b757d70237064210ceb954a5a04/commons-codec-1.10-sources.jar!/"/>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-codec/commons-codec/1.11/bce4ba84fd527950e35040b20a991c63e90e2850/commons-codec-1.11-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1048,6 +1075,69 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.glassfish/jakarta.el/3.0.3/1c224778fa1b2851e91400dd335f1a96a4b5b30/jakarta.el-3.0.3-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javapos/javapos/1.14.2/e839410db1ec74fd5cd608fde947a90b47517ccd/javapos-1.14.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javapos/javapos/1.14.2/5c11ca922707c8703c377b0c8aa245ba61fdee00/javapos-1.14.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javapos/javapos/1.14.2/25337a17fb8461e554b055a0aa2f67a96a0c9121/javapos-1.14.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/934c04d3cfef185a8008e7bf34331b79730a9d43/javax.annotation-api-1.3.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/cbbe0a4445e038f75c4c8aea3179bd17108ec57e/javax.annotation-api-1.3.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/javax.annotation/javax.annotation-api/1.3.2/65dfd2c47380bf72ec62a5b8c4ceb78a4eda1a53/javax.annotation-api-1.3.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/javax.activation/activation/1.1.1/485de3a253e23f645037828c07f1d7f1af40763a/activation-1.1.1.jar!/"/>
+        </CLASSES>
+        <JAVADOC/>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/javax.activation/activation/1.1.1/159e45688875fdabff19c9ceb7335aefe4df8339/activation-1.1.1-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.12/1c9d44c563eebe9b8a3afebd29ed5c4646db800c/reflections-0.9.12.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.12/966c4cd9b2c387f0868539314dc199c8d688adec/reflections-0.9.12-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.12/bce0f060e07c97ee9a04f6bdc4fd940adc4debcb/reflections-0.9.12-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-csv/1.8/37ca9a9aa2d4be2599e55506a6d3170dd7a3df4/commons-csv-1.8.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-csv/1.8/2049f5217b8c1eaa3ed2f44934de37a1de902661/commons-csv-1.8-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-csv/1.8/5b00020b591516fe1a811ad8bff9ee439bb300eb/commons-csv-1.8-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1256,6 +1346,32 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.eclipse.jetty.websocket/websocket-servlet/9.4.30.v20200611/9052653abc55deebb33ee389a1b69bb0462d89c7/websocket-servlet-9.4.30.v20200611-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/3.2.2/8ad72fe39fa8c91eaaf12aadb21e0c3661fe26d5/commons-collections-3.2.2.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/3.2.2/ea9a113ab0147c4d48dda62dff207be07374c590/commons-collections-3.2.2-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/commons-collections/commons-collections/3.2.2/78c50ebda5784937ca1615fc0e1d0cb35857d572/commons-collections-3.2.2-sources.jar!/"/>
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.26.0-GA/bb2890849968d8d8311ffba8c37b0ce16ce284dc/javassist-3.26.0-GA.jar!/"/>
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.26.0-GA/42202c3357a1175ecaa0ff366b24a13865ed93ed/javassist-3.26.0-GA-javadoc.jar!/"/>
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.26.0-GA/61e272d124cd95493e7d621ca9db1d46e7e4bb17/javassist-3.26.0-GA-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>
@@ -1522,19 +1638,6 @@
     <orderEntry type="module-library" scope="TEST">
       <library>
         <CLASSES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.11/23bba0ff497ec61fbca967d9b641c7681a71edb3/reflections-0.9.11.jar!/"/>
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.11/e3972f4e1ff22856d7dba64dac2c255815f4cff7/reflections-0.9.11-javadoc.jar!/"/>
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.reflections/reflections/0.9.11/be2a63b3d10dc8c4e63cc3ba06a393ae6dcee67/reflections-0.9.11-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
           <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.xmlunit/xmlunit-core/2.7.0/4d014eac96329c70175116b185749765cee0aad5/xmlunit-core-2.7.0.jar!/"/>
         </CLASSES>
         <JAVADOC>
@@ -1620,19 +1723,6 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.skyscreamer/jsonassert/1.5.0/d729b258165a2fd9b5d6156c05c4c4f7ca053117/jsonassert-1.5.0-sources.jar!/"/>
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" scope="TEST">
-      <library>
-        <CLASSES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/598244f595db5c5fb713731eddbb1c91a58d959b/javassist-3.21.0-GA.jar!/"/>
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/3fb3d9123e78eb224e3dafe8a6c6f2ed52ebe4af/javassist-3.21.0-GA-javadoc.jar!/"/>
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar:///Users/cshenso/.gradle/caches/modules-2/files-2.1/org.javassist/javassist/3.21.0-GA/81fefbd46ba6a18fc7af83b9c60b28c0862cd492/javassist-3.21.0-GA-sources.jar!/"/>
         </SOURCES>
       </library>
     </orderEntry>

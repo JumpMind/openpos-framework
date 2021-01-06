@@ -3,6 +3,7 @@ apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {
+	implementation project(":openpos-util")
     api "com.h2database:h2:${h2databaseVersion}"
     api "org.springframework:spring-jdbc:$springVersion"
     api "org.springframework:spring-tx:$springVersion"

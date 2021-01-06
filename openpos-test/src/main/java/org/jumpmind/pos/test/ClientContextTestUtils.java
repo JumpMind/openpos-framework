@@ -1,11 +1,11 @@
-package org.jumpmind.pos.devices;
+package org.jumpmind.pos.test;
 
 import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DeviceTestUtils {
+public class ClientContextTestUtils {
 
     @Autowired
     private ClientContext clientContext;

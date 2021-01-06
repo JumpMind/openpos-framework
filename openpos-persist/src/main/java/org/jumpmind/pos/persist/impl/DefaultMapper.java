@@ -65,23 +65,17 @@ public class DefaultMapper implements RowMapper<Row> {
         }
         if (obj instanceof Blob) {
             Blob blob = (Blob) obj;
-            InputStream is = blob.getBinaryStream();
-            try {
+            try (InputStream is = blob.getBinaryStream()) {
                 obj = IOUtils.toByteArray(is);
             } catch (IOException e) {
                 throw new SqlException(e);
-            } finally {
-                IOUtils.closeQuietly(is);
             }
         } else if (obj instanceof Clob) {
             Clob clob = (Clob) obj;
-            Reader reader = clob.getCharacterStream();
-            try {
+            try (Reader reader = clob.getCharacterStream()) {
                 obj = IOUtils.toString(reader);
             } catch (IOException e) {
                 throw new SqlException(e);
-            } finally {
-                IOUtils.closeQuietly(reader);
             }
         } else if (className != null && ("oracle.sql.TIMESTAMP".equals(className))) {
             obj = rs.getTimestamp(index);
