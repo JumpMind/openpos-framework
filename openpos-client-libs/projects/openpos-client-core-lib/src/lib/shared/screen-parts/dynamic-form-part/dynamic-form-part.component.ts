@@ -121,8 +121,10 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
     }
 
     submitForm() {
-        this.formBuilder.buildFormPayload(this.form, this.screenData);
-        this.doAction(this.submitButton, this.screenData);
+        if (this.form.valid && !this.form.pending) {
+            this.formBuilder.buildFormPayload(this.form, this.screenData);
+            this.doAction(this.submitButton, this.screenData);
+        }
     }
 
     onFieldChanged(formElement: IFormElement) {

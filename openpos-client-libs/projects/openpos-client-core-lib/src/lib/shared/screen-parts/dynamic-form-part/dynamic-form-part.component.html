@@ -16,7 +16,7 @@
                 <span>{{button.label}}</span>
                 <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
             </app-secondary-button>
-            <app-primary-button *ngIf="submitButton" (click)="submitForm()">
+            <app-primary-button *ngIf="submitButton" type="submit" [disabled]="!form.valid || form.pending">
                 <span>{{submitButton.title}}</span>
                 <app-icon *ngIf="submitButton.icon" [iconName]="submitButton.icon"></app-icon>
             </app-primary-button>

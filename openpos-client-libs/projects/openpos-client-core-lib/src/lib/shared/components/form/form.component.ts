@@ -27,7 +27,9 @@ export class FormComponent {
     submitFormEvent = new EventEmitter();
 
     submitForm() {
-        if (this.form.valid) {
+        const shouldSubmit = this.form.valid && !this.form.pending;
+
+        if (shouldSubmit) {
             this.submitFormEvent.emit();
         } else {
             // Set focus on the first invalid field found
@@ -54,5 +56,7 @@ export class FormComponent {
                 }
             }
         }
+
+        return shouldSubmit;
     }
 }
