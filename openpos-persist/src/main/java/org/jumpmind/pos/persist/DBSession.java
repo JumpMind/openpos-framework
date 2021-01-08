@@ -666,6 +666,9 @@ public class DBSession {
                             resultClass.getPackage().getName().equals("java.sql") ||
                             resultClass.getPackage().getName().equals("java.math")) {
                         object = (T) row.values().iterator().next();
+                        if (object != null && !resultClass.isAssignableFrom(object.getClass())) {
+                            throw new PersistException(object.getClass().getName() + " is not assignable to " + resultClass.getName());
+                        }
                     } else if (isModel(resultClass)) {
                         object = mapModel(resultClass, row);
                     } else {
