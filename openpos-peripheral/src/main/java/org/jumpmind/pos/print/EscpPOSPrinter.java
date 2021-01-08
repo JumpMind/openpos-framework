@@ -4,7 +4,6 @@ import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.BooleanUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
 import org.jumpmind.pos.util.AppUtils;
@@ -49,7 +48,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
-    private PrinterStatusReporter printerStatusReporter;
+    private IPrinterStatusReporter printerStatusReporter;
 
     public EscpPOSPrinter() {
         this.settings = new HashMap<>();
@@ -303,7 +302,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         return printerCommands.get(commandName);
     }
 
-    public void init(Map<String, Object> settings, PrinterStatusReporter printerStatusReporter) {
+    public void init(Map<String, Object> settings, IPrinterStatusReporter printerStatusReporter) {
         this.printerStatusReporter = printerStatusReporter;
         this.settings = settings;
         this.refreshConnectionFactoryFromSettings();

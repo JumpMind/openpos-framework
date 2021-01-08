@@ -20,7 +20,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     private StringBuilder buff = new StringBuilder(128);
 
-    private PrinterStatusReporter printerStatusReporter;
+    private StatusManagerPrinterStatusReporter printerStatusReporter;
 
     private static int cashDrawerOpened;
 
@@ -49,7 +49,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public void init(Map<String, Object> settings, PrinterStatusReporter printerStatusReporter) {
+    public void init(Map<String, Object> settings, IPrinterStatusReporter printerStatusReporter) {
         printerStatusReporter.reportStatus(Status.Online, "LogPOSPrinter Ok.");
     }
 

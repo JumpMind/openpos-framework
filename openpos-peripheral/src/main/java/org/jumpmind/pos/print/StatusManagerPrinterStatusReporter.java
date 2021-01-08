@@ -5,11 +5,12 @@ import org.jumpmind.pos.util.status.IStatusReporter;
 import org.jumpmind.pos.util.status.Status;
 import org.jumpmind.pos.util.status.StatusReport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PrinterStatusReporter implements IStatusReporter {
-
+@ConditionalOnProperty(name = "openpos.devices.enableMobilePrint", havingValue = "false")
+public class StatusManagerPrinterStatusReporter implements IStatusReporter, IPrinterStatusReporter {
     private IStatusManager statusManager;
 
     private StatusReport lastStatus;
