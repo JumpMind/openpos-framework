@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
-@ConditionalOnProperty(name = "openpos.devices.enableMobilePrint", havingValue = "false")
+@ConditionalOnProperty(name = "openpos.devices.enableMobilePrint", havingValue = "false", matchIfMissing = true)
 public class StatusManagerPrinterStatusReporter implements IStatusReporter, IPrinterStatusReporter {
     private IStatusManager statusManager;
 
