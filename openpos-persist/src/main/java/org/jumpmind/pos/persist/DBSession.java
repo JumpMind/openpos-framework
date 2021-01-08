@@ -1,21 +1,5 @@
 package org.jumpmind.pos.persist;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
-
-import java.beans.PropertyDescriptor;
-import java.io.File;
-import java.io.FileReader;
-import java.io.Reader;
-import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import javax.sql.DataSource;
-
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.beanutils.PropertyUtils;
@@ -42,6 +26,21 @@ import org.springframework.jdbc.core.*;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
 import org.springframework.jdbc.core.namedparam.ParsedSql;
+
+import javax.sql.DataSource;
+import java.beans.PropertyDescriptor;
+import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
+import java.lang.reflect.Field;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.*;
+import java.util.stream.Collectors;
+
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Slf4j
 public class DBSession {
@@ -662,6 +661,11 @@ public class DBSession {
                 if (resultClass != null) {
                     if (resultClass.equals(String.class)) {
                         object = (T) row.stringValue();
+                    } else if (resultClass.getPackage().getName().equals("java.lang") ||
+                            resultClass.getPackage().getName().equals("java.util") ||
+                            resultClass.getPackage().getName().equals("java.sql") ||
+                            resultClass.getPackage().getName().equals("java.math")) {
+                        object = (T) row.values().iterator().next();
                     } else if (isModel(resultClass)) {
                         object = mapModel(resultClass, row);
                     } else {
