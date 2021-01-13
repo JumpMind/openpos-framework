@@ -7,6 +7,7 @@ export interface ItemDetailInterface extends IAbstractScreen {
     imageUrls: string[];
     alternateImageUrl: string;
     itemName: string;
+    itemValueDisplay: DisplayProperty;
     summary: string;
     itemProperties: DisplayProperty[];
     itemActions: IActionItem[];

@@ -11,5 +11,5 @@ export interface IPromotionInterface extends IAbstractScreen {
     vendorFunded: boolean;
     rewardApplicationTypeCode: string;
     forLoyaltyReward: boolean;
-    rewards: string[];
+    promotionPrice: string;
 }
