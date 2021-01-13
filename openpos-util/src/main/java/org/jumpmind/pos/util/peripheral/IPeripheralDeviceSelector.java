@@ -22,7 +22,7 @@ public interface IPeripheralDeviceSelector {
 
     /**
      * Gets a list of possible selections that this reporter instance could
-     * be in.
+     * be in. `null` may be used to indicate that selection is disabled.
      */
     List<PeripheralDeviceDescription> getPossibleSelections();
 }

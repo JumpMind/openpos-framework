@@ -14,6 +14,6 @@ public class PeripheralDeviceSelectionMessage extends Message {
 
     @Override
     public String getType() {
-        return "peripheralDeviceSelection";
+        return "PeripheralDeviceSelection";
     }
 }
