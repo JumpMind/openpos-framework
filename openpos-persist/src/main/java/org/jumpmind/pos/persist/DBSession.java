@@ -635,7 +635,7 @@ public class DBSession {
                     List<Row> results = new ArrayList<>();
                     DefaultMapper mapper = new DefaultMapper();
                     try {
-                        ps.setFetchSize(maxResults);
+                        ps.setFetchSize(maxResults < 10000 ? maxResults : 10000);
                         ps.setMaxRows(maxResults);
                         // jumped through all these hoops just to set auto commit to false for postgres
                         con.setAutoCommit(false);
