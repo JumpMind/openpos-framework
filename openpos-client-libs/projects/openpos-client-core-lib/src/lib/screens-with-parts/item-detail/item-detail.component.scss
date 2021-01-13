@@ -65,6 +65,10 @@ app-options-list {
     width: 50%;
     float: right;
     @extend %text-md;
+    &.mobile,
+    &.tablet{
+        width: auto;
+    }
 }
 
 .promotion-list {
@@ -79,12 +83,18 @@ app-options-list {
 
 .promotion-items {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 65px 1fr 1fr;
     padding-left: 5px;
     padding-right: 5px;
 }
 
+.price {
+    justify-self: end;
+    align-self: center;
+}
+
 .promotion-item-rewards {
+    justify-content: center;
     align-self: center;
     list-style-type: none;
     padding-inline-start: 0;
@@ -93,6 +103,7 @@ app-options-list {
 
 .promotion-item-name {
     align-self: center;
+    font-weight: 525;
 }
 
 .promotion-icon {
