@@ -21,13 +21,14 @@ p{
     margin: 0;
 }
 
+.page-gutter {
+    @extend %page-gutter
+}
+
 .item-card{
     display: grid;
     @extend %sub-element-container;
-    @extend %page-gutter;
     @extend %page-element;
-    width: 75%;
-    height: 100%;
     overflow-y: auto;
     align-self: center;
     justify-self: center;
@@ -61,7 +62,8 @@ app-options-list {
 .promotions {
     grid-area: promotions;
     align-self: start;
-
+    width: 50%;
+    float: right;
     @extend %text-md;
 }
 
@@ -77,11 +79,13 @@ app-options-list {
 
 .promotion-items {
     display: grid;
-    grid-template-columns: auto 60% 1fr;
+    grid-template-columns: auto 1fr 1fr 1fr;
+    padding-left: 5px;
+    padding-right: 5px;
 }
 
 .promotion-item-rewards {
-    align-self: end;
+    align-self: center;
     list-style-type: none;
     padding-inline-start: 0;
     @extend %text-md;

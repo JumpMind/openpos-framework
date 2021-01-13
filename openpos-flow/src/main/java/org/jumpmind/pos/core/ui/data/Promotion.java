@@ -25,4 +25,5 @@ public class Promotion implements Serializable {
     String rewardApplicationTypeCode;
     boolean forLoyaltyReward;
     List<String> rewards;
+    String promotionPrice;
 }
