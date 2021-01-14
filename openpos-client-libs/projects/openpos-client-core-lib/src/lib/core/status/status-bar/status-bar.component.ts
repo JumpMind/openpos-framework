@@ -1,4 +1,4 @@
-import {Component, ElementRef, Renderer2} from '@angular/core';
+import {Component, ElementRef, HostListener, Renderer2} from '@angular/core';
 import {combineLatest, Observable} from 'rxjs';
 import {map, tap} from 'rxjs/operators';
 import {ConfigChangedMessage} from '../../messages/config-changed-message';
@@ -20,7 +20,7 @@ export class StatusBarComponent {
 
   line1$: Observable<string>;
 
-  constructor( statusService: StatusService, render2: Renderer2, elementRef: ElementRef) {
+  constructor(private statusService: StatusService, render2: Renderer2, elementRef: ElementRef) {
     this.systemInfo$ = statusService.getSystemInfo().pipe(
         map( message => message as SystemInfo),
         tap( info => render2.addClass(elementRef.nativeElement, 'show'))
@@ -42,11 +42,15 @@ export class StatusBarComponent {
           l += " | " + element.category + " " + element.displayName;
         });
 
-        return l
+        return l;
       })
     );
   }
 
+  @HostListener('click')
+  onClick() {
+    this.statusService.openDetails();
+  }
 }
 
 class SystemInfo extends ConfigChangedMessage{

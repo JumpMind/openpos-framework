@@ -151,6 +151,7 @@ import {ImageTextPanelComponent} from './screen-parts/image-text-panel/image-tex
 import {TransactionSummaryComponent} from './components/transaction-summary/transaction-summary.component';
 import {TransactionHistoryPartComponent} from './screen-parts/transaction-history-part/transaction-history-part.component';
 import {StatusBarComponent} from '../core/status/status-bar/status-bar.component';
+import {StatusDetailsComponent} from '../core/status/status-details/status-details.component';
 import {StampComponent} from './components/stamp/stamp.component';
 import {FitTextDirective} from './directives/fit-text.directive';
 import { PromptButtonRowComponent } from './screen-parts/prompt-button-row/prompt-button-row.component';
@@ -327,6 +328,7 @@ const pipes = [
         ...pipes,
         BaconDrawerComponent,
         StatusBarComponent,
+        StatusDetailsComponent,
         ModalOverlayContainerDirective
     ],
     entryComponents: [
@@ -338,7 +340,8 @@ const pipes = [
         SystemStatusDialogComponent,
         BaconDrawerComponent,
         HelpTextPageWrapperComponent,
-        ToastComponent
+        ToastComponent,
+        StatusDetailsComponent
     ],
     imports: [
         FormsModule,
