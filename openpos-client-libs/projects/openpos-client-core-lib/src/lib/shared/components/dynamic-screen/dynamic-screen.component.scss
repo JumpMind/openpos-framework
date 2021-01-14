@@ -31,3 +31,15 @@
     height: 100%;
     overflow: hidden;
 }
+
+.content-area {
+    // needed so that the absolute positiong of the CDK overlay will work correctly.
+    position: relative;
+}
+
+.cdk-overlay-container {
+
+    // the overlay is default static, we need it to be able to position it so it
+    // doesn't obstruct the status bar.
+    position: absolute;
+}

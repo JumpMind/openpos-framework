@@ -158,6 +158,9 @@ import { WarnButtonComponent } from './components/warn-button/warn-button.compon
 import {StayFocusedDirective} from './directives/stay-focused.directive';
 import { AudioLicenseComponent } from './components/audio-license/audio-license.component';
 import { ToastComponent } from './components/toast/toast.component';
+import { ModalOverlayContainerDirective } from '../core/modal-overlay-container/modal-overlay-container.directive';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ModalOverlayContainer } from '../core/modal-overlay-container/modal-overlay-container';
 
 const screenParts = [
     TenderPartComponent,
@@ -324,6 +327,7 @@ const pipes = [
         ...pipes,
         BaconDrawerComponent,
         StatusBarComponent,
+        ModalOverlayContainerDirective
     ],
     entryComponents: [
         KebabMenuComponent,
@@ -367,6 +371,9 @@ const pipes = [
         ...components,
         ...screenParts,
         ...pipes
+    ],
+    providers: [
+        { provide: OverlayContainer, useClass: ModalOverlayContainer }
     ]
 })
 export class SharedModule { }
