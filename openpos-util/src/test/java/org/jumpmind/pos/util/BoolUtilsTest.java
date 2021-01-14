@@ -1,9 +1,9 @@
 package org.jumpmind.pos.util;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class BoolUtilsTest {
     public static final String[] EXTRA_TRUTHYS = {"checked", "enabled"};

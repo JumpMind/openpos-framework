@@ -1,6 +1,5 @@
 package org.jumpmind.pos.service;
 
-import jdk.nashorn.internal.scripts.JD;
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
