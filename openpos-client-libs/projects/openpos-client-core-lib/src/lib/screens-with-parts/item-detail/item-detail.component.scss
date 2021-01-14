@@ -62,12 +62,12 @@ app-options-list {
 .promotions {
     grid-area: promotions;
     align-self: start;
-    width: 50%;
+    width: auto;
     float: right;
     @extend %text-md;
     &.mobile,
-    &.tablet{
-        width: auto;
+    &.tablet {
+        float: none;
     }
 }
 
