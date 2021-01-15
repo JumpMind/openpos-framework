@@ -1,10 +1,18 @@
 @import "../../styles/mixins/typography";
 @import "../../styles/variables/spacing";
 
+.item-details {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 100px;
+}
 
-:host{
-    height: 100%;
-    display: grid;
+.padding-none {
+    padding: 0 0 0 0;
 }
 
 h1{
@@ -25,29 +33,21 @@ p{
     @extend %page-gutter
 }
 
+.page-element {
+    @extend %page-element
+}
+
+.margin-bottom {
+    margin-bottom: 1rem !important;
+}
+
 .item-card{
     display: grid;
-    @extend %sub-element-container;
-    @extend %page-element;
     overflow-y: auto;
-    align-self: center;
-    justify-self: center;
     grid-template: "image title" auto
                     "image summary" auto
-                    "image properties" 1fr
-                    "image promotions" 1fr
-                    "actions actions" auto/ auto 1fr;
-    &.mobile,
-    &.tablet-portrait{
-        grid-template: "title" auto
-                        "image" auto
-                        "summary" auto
-                        "properties" auto
-                        "promotions" auto
-                        "actions" auto/auto;
-        width: 100%;
-        align-self: start;
-    }
+                    "image properties" auto
+                    "actions actions" auto/auto;
 }
 
 app-options-list {
@@ -60,24 +60,17 @@ app-options-list {
 }
 
 .promotions {
-    grid-area: promotions;
-    align-self: start;
-    width: auto;
-    float: right;
+    width: 50%;
+    align-self: flex-end;
+    overflow: auto;
+    /* for Firefox */
+    min-height: 0;
+    margin-top: 0;
     @extend %text-md;
     &.mobile,
     &.tablet {
-        float: none;
-    }
-}
-
-.promotion-list {
-    list-style-type: none;
-    padding-inline-start: 0;
-
-    > li {
-        display: flex;
-        align-items: center;
+        width: auto;
+        align-self: auto;
     }
 }
 
