@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
-import { BehaviorSubject, Observable, ReplaySubject, Subscription } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { Observable, ReplaySubject } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 
 import { ConfigChangedMessage } from '../messages/config-changed-message';
 import { MessageTypes } from '../messages/message-types';
 import { StatusMessage } from './status.message';
 import { SessionService } from '../services/session.service';
-import { PeripheralDeviceSelectionMessage } from '../messages/peripheral-device-selection';
 import { StatusDetailsComponent } from './status-details/status-details.component';
 
 @Injectable({
@@ -18,8 +17,6 @@ export class StatusService {
     private systemInfoConfig$ = new ReplaySubject<ConfigChangedMessage>(1);
     private latestStatus = new Map<string, StatusMessage>();
     private latestStatus$ = new ReplaySubject<Map<string, StatusMessage>>(1);
-    private peripheralSelections = new Map<string, PeripheralDeviceSelectionMessage>();
-    private peripheralSelections$ = new BehaviorSubject<Map<string, PeripheralDeviceSelectionMessage>>(this.peripheralSelections);
 
     private detailsDialog?: MatDialogRef<StatusDetailsComponent>;
 
@@ -34,16 +31,6 @@ export class StatusService {
             filter(message => (message as ConfigChangedMessage).configType === 'SystemInfo'),
             tap(message => console.log("SystemInfo Updated ", message))
         ).subscribe(message => this.configUpdated(message));
-
-        sessionService.getMessages(MessageTypes.PERIPHERAL_DEVICE_SELECTION)
-            .pipe(
-                map(m => m as PeripheralDeviceSelectionMessage),
-                filter(m => !!m.category)
-            )
-            .subscribe(m => {
-                this.peripheralSelections.set(m.category, m);
-                this.peripheralSelections$.next(this.peripheralSelections);
-            });
     }
 
     public openDetails() {
@@ -77,10 +64,6 @@ export class StatusService {
 
     public getSystemInfo(): Observable<ConfigChangedMessage> {
         return this.systemInfoConfig$;
-    }
-
-    public getPeripheralSelections(): Observable<Map<String, PeripheralDeviceSelectionMessage>> {
-        return this.peripheralSelections$;
     }
 
     private configUpdated(message: ConfigChangedMessage) {

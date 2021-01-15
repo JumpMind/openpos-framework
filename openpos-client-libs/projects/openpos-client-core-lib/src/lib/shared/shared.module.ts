@@ -162,6 +162,7 @@ import { ToastComponent } from './components/toast/toast.component';
 import { ModalOverlayContainerDirective } from '../core/modal-overlay-container/modal-overlay-container.directive';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ModalOverlayContainer } from '../core/modal-overlay-container/modal-overlay-container';
+import { PeripheralSelectorComponent } from '../core/status/status-details/selector/peripheral-selector.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -329,6 +330,7 @@ const pipes = [
         BaconDrawerComponent,
         StatusBarComponent,
         StatusDetailsComponent,
+        PeripheralSelectorComponent,
         ModalOverlayContainerDirective
     ],
     entryComponents: [
@@ -341,7 +343,8 @@ const pipes = [
         BaconDrawerComponent,
         HelpTextPageWrapperComponent,
         ToastComponent,
-        StatusDetailsComponent
+        StatusDetailsComponent,
+        PeripheralSelectorComponent
     ],
     imports: [
         FormsModule,

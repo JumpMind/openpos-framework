@@ -1,0 +1,6 @@
+
+<h1 mat-dialog-title>{{data.category.name}}</h1>
+
+<ul>
+    <li *ngFor="let p of data.category.knownDevices" (click)="assignDevice(p)">{{p.displayName}}</li>
+</ul>

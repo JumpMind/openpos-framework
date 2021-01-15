@@ -1,5 +1,7 @@
 
 <h1 mat-dialog-title>Status</h1>
 <div mat-dialog-content>
-    <p>Here we show status</p>
+    <ul>
+        <li *ngFor="let s of peripheralSelection.periphealCategories$ | async">{{s.name}} - {{s.selectedDevice?.displayName || "Not Selected"}} - <button mat-button color="primary" (click)="onChangeSelectedPeripheral(s)">Change...</button></li>
+    </ul>
 </div>
