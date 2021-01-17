@@ -76,10 +76,6 @@ public class PersonalizeEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DeviceId and AppId or AuthToken are required for personalization");
         }
 
-
-
-        deviceModel.setDeviceType(request.getDeviceType());
-
         deviceUpdater.updateDevice(deviceModel);
 
         return PersonalizationResponse.builder()

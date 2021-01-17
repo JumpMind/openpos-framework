@@ -36,10 +36,6 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     @ColumnDef
     private String appId;
 
-    @ColumnDef(description = "The type of the Device.  Store/DC workstation or handheld, Customer handheld, website, etc.")
-    private String deviceType; // STORE/DC/WORKSTATION/HANDELD/CUSTOMER
-    // HANDHELD/WEBSITE, etc.
-
     @ColumnDef(size = "10", description = "The locale under which this Device currently operates")
     String locale;
 
@@ -54,10 +50,9 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
 
     private Map<String, String> tags = new CaseInsensitiveMap<String, String>();
 
-    public DeviceModel(String deviceId, String appId, String deviceType, String locale, String timezoneOffset, String businessUnitId, String description, Map<String, String> tags, List<DeviceParamModel> deviceParamModels) {
+    public DeviceModel(String deviceId, String appId, String locale, String timezoneOffset, String businessUnitId, String description, Map<String, String> tags, List<DeviceParamModel> deviceParamModels) {
         this.deviceId = deviceId;
         this.appId = appId;
-        this.deviceType = deviceType;
         this.locale = locale;
         this.timezoneOffset = timezoneOffset;
         this.businessUnitId = businessUnitId;
