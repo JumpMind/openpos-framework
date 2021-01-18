@@ -18,10 +18,6 @@ public interface IScreenService {
 
     public void closeToast(String appId, String nodeId, CloseToast toast);
 
-    public void showWatermark(String appId, String deviceId, String message);
-
-    public void hideWatermark(String appId, String deviceId);
-
     public UIMessage getLastScreen(String appId, String nodeId);
 
     public UIMessage getLastDialog(String appId, String nodeId);

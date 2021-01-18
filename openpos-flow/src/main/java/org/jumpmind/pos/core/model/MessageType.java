@@ -22,4 +22,6 @@ public final class MessageType {
     public static final String Startup = "Startup";
     public static final String Scan = "Scan";
     public static final String SimulatedPeripheral = "SimulatedPeripheral";
+    public static final String Watermark = "Watermark";
+    public static final String HideWatermark = "HideWatermark";
 }

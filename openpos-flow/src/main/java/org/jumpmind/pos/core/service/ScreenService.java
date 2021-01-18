@@ -315,23 +315,6 @@ public class ScreenService implements IScreenService, IActionListener {
         messageService.sendMessage(appId, deviceId, toast);
     }
 
-    public void showWatermark(String appId, String deviceId, String message) {
-        Message watermark = new Message("Watermark");
-        Map<String, Object> optionalParameters = new HashMap<>();
-        optionalParameters.put("showWatermark", true);
-        optionalParameters.put("screenMessage", message);
-        watermark.setOptionalProperties(optionalParameters);
-        messageService.sendMessage(appId, deviceId, watermark);
-    }
-
-    public void hideWatermark(String appId, String deviceId) {
-        Message watermark = new Message("Watermark");
-        Map<String, Object> optionalParameters = new HashMap<>();
-        optionalParameters.put("showWatermark", false);
-        watermark.setOptionalProperties(optionalParameters);
-        messageService.sendMessage(appId, deviceId, watermark);
-    }
-
     @Override
     public void showScreen(String appId, String deviceId, UIMessage screen) {
         showScreen(appId, deviceId, screen, null);

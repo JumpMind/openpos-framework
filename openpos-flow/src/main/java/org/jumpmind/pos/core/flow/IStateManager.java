@@ -50,8 +50,6 @@ public interface IStateManager {
     public void showScreen(UIMessage screen);
     public void showToast(Toast toast);
     public void closeToast(Toast toast);
-    public void showWatermark(String message);
-    public void hideWatermark();
     public void refreshScreen();
     public void reset();
     public Object getCurrentState();

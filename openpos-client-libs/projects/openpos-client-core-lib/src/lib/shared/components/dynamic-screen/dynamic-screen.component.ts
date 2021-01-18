@@ -3,7 +3,8 @@ import { ActionService } from '../../../core/actions/action.service';
 import { MessageProvider } from '../../providers/message.provider';
 import { ToastContainerDirective, ToastrService } from 'ngx-toastr';
 import { SessionService } from '../../../core/services/session.service';
-import { OpenposMessage } from '../../../core/messages/message';
+import { WatermarkMessage } from '../../../core/messages/watermark-message';
+import { MessageTypes } from '../../../core/messages/message-types';
 
 @Component({
     selector: 'app-dynamic-screen',
@@ -22,9 +23,13 @@ export class DynamicScreenComponent implements OnInit {
         private sessionService: SessionService
     ) {
         this.messageProvider.setMessageType('Screen');
-        this.sessionService.getMessages('Watermark').subscribe((message: OpenposMessage) => {
-            this.showWatermark = message?.showWatermark;
-            this.watermarkMessage = message?.screenMessage;
+        this.sessionService.getMessages(MessageTypes.WATERMARK).subscribe((message: WatermarkMessage) => {
+            this.showWatermark = true;
+            this.watermarkMessage = message.screenMessage;
+        });
+        this.sessionService.getMessages(MessageTypes.HIDE_WATERMARK).subscribe(() => {
+            this.showWatermark = false;
+            this.watermarkMessage = '';
         });
     }
 

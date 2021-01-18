@@ -1081,14 +1081,6 @@ public class StateManager implements IStateManager {
         }
     }
 
-    public void showWatermark(String message) {
-        screenService.showWatermark(applicationState.getAppId(), applicationState.getDeviceId(), message);
-    }
-
-    public void hideWatermark() {
-        screenService.hideWatermark(applicationState.getAppId(), applicationState.getDeviceId());
-    }
-
     @Override
     public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap) {
         keepAlive();
