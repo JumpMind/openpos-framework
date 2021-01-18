@@ -35,7 +35,6 @@ import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.DefaultObjectMapper;
-import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.web.MimeTypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
