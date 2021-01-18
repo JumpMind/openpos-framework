@@ -35,6 +35,7 @@ import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.DefaultObjectMapper;
+import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.web.MimeTypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -312,6 +313,23 @@ public class ScreenService implements IScreenService, IActionListener {
     public void closeToast(String appId, String deviceId, CloseToast toast) {
         interceptCloseToast(appId, deviceId, toast);
         messageService.sendMessage(appId, deviceId, toast);
+    }
+
+    public void showWatermark(String appId, String deviceId, String message) {
+        Message watermark = new Message("Watermark");
+        Map<String, Object> optionalParameters = new HashMap<>();
+        optionalParameters.put("showWatermark", true);
+        optionalParameters.put("screenMessage", message);
+        watermark.setOptionalProperties(optionalParameters);
+        messageService.sendMessage(appId, deviceId, watermark);
+    }
+
+    public void hideWatermark(String appId, String deviceId) {
+        Message watermark = new Message("Watermark");
+        Map<String, Object> optionalParameters = new HashMap<>();
+        optionalParameters.put("showWatermark", false);
+        watermark.setOptionalProperties(optionalParameters);
+        messageService.sendMessage(appId, deviceId, watermark);
     }
 
     @Override

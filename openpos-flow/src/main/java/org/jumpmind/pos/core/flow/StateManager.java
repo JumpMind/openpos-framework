@@ -30,7 +30,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
+
 import static java.lang.String.*;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
@@ -200,7 +202,7 @@ public class StateManager implements IStateManager {
 
             if (initialFlowConfig.getInitialState() == null ||
                     initialFlowConfig.getInitialState().getStateClass() == null) {
-               throw new IllegalStateException(format("The flow for %s:%s did not have an initial state configured", getDeviceId(), appId));
+                throw new IllegalStateException(format("The flow for %s:%s did not have an initial state configured", getDeviceId(), appId));
             }
 
             startActionLoop(StateManagerActionConstants.STARTUP_ACTION, initialFlowConfig.getInitialState());
@@ -475,8 +477,8 @@ public class StateManager implements IStateManager {
     protected boolean shouldWireDeviceBean(Object value) {
         Class<?> clazz = value.getClass();
         if (ClassUtils.isSimpleType(clazz)
-            || Collection.class.isAssignableFrom(clazz)
-            || Map.class.isAssignableFrom(clazz)) {
+                || Collection.class.isAssignableFrom(clazz)
+                || Map.class.isAssignableFrom(clazz)) {
             return false;
         } else {
             return true;
@@ -791,7 +793,7 @@ public class StateManager implements IStateManager {
         classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
 
         applicationState.getScope().getDeviceScope().values().
-                forEach(obj->eventBroadcaster.postEventToObject(obj, event));
+                forEach(obj -> eventBroadcaster.postEventToObject(obj, event));
 
         Object state = getCurrentState();
         if (state != null) {
@@ -1054,7 +1056,7 @@ public class StateManager implements IStateManager {
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
         }
 
-        if(toast.isPersistent() && toast.getPersistedId() == null) {
+        if (toast.isPersistent() && toast.getPersistedId() == null) {
             throw new FlowException("Persistent toast message requires ID");
         }
 
@@ -1079,6 +1081,13 @@ public class StateManager implements IStateManager {
         }
     }
 
+    public void showWatermark(String message) {
+        screenService.showWatermark(applicationState.getAppId(), applicationState.getDeviceId(), message);
+    }
+
+    public void hideWatermark() {
+        screenService.hideWatermark(applicationState.getAppId(), applicationState.getDeviceId());
+    }
 
     @Override
     public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap) {
@@ -1097,8 +1106,8 @@ public class StateManager implements IStateManager {
         if (screen != null) {
             ScreenConfig screenConfig = screensConfig.getConfig().get(screen.getId());
             ScreenConfig defaultScreenConfig = screensConfig.getConfig().get("default");
-            sessionTimeoutMillis = screenConfig != null && screenConfig.getTimeout() != null ?  screenConfig.getTimeout()*1000 : defaultScreenConfig.getTimeout()*1000;
-            sessionTimeoutAction = new Action(screenConfig != null && screenConfig.getTimeoutAction() != null ?  screenConfig.getTimeoutAction() : defaultScreenConfig.getTimeoutAction());
+            sessionTimeoutMillis = screenConfig != null && screenConfig.getTimeout() != null ? screenConfig.getTimeout() * 1000 : defaultScreenConfig.getTimeout() * 1000;
+            sessionTimeoutAction = new Action(screenConfig != null && screenConfig.getTimeoutAction() != null ? screenConfig.getTimeoutAction() : defaultScreenConfig.getTimeoutAction());
         } else {
             sessionTimeoutMillis = 0;
             sessionTimeoutAction = null;
