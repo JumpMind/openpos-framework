@@ -1,10 +1,15 @@
 package org.jumpmind.pos.persist;
 
+import lombok.Builder;
+import lombok.Singular;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Builder
 public class ModelId {
 
+    @Singular
     protected Map<String, Object> keys = new HashMap<>();
 
     public ModelId(Object... values) {

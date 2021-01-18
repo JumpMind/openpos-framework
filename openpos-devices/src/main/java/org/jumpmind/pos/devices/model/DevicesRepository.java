@@ -116,7 +116,15 @@ public class DevicesRepository {
     }
 
     public void updateDeviceStatus(String deviceId, String appId, String status) {
-        devSession.save(new DeviceStatusModel(deviceId, appId, status));
+        DeviceStatusModel statusModel = devSession.findByNaturalId(DeviceStatusModel.class,
+                ModelId.builder().
+                key("deviceId", deviceId).
+                key("appId", appId).build());
+        if (statusModel == null) {
+            statusModel = DeviceStatusModel.builder().deviceId(deviceId).appId(appId).build();
+        }
+        statusModel.setDeviceStatus(status);
+        devSession.save(statusModel);
     }
 
 }
