@@ -10,8 +10,6 @@
     margin-top: 0px;
   }
 
-  
-
 .panel {
     float: left;
     width: 55vw;
@@ -30,4 +28,8 @@
     grid-template-rows: auto minmax(0, 1fr);
     height: 100%;
     overflow: hidden;
+}
+
+.display-contents {
+    display: contents;
 }

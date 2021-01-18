@@ -1,0 +1,12 @@
+.watermark {
+    opacity: 0.5;
+    position: fixed;
+    font-size: 7em;
+    z-index: 999;
+    color: gray;
+    width: 50%;
+    transform: rotate(-45deg);
+    text-align: center;
+    bottom: 40%;
+    left: 15%;
+}
