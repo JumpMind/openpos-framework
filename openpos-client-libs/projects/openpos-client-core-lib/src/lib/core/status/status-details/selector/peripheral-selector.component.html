@@ -2,5 +2,5 @@
 <h1 mat-dialog-title>{{data.category.name}}</h1>
 
 <ul>
-    <li *ngFor="let p of data.category.knownDevices" (click)="assignDevice(p)">{{p.displayName}}</li>
+    <li *ngFor="let p of data.category.knownDevices"><button mat-mat-button (click)="assignDevice(p)">{{p.displayName}}</button></li>
 </ul>

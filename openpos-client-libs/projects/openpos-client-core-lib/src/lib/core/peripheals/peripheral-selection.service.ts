@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable, ConnectableObservable } from 'rxjs';
 import { filter, map, publishBehavior, tap } from 'rxjs/operators';
-;import { MessageTypes } from '../messages/message-types';
+
+import { MessageTypes } from '../messages/message-types';
 import { SessionService } from '../services/session.service';
-import { PeripheralDeviceSelectionMessage, PeripheralChangeSelectionRequestMessage } from '../messages/peripheral-device-selection';
+import { PeripheralDeviceSelectionMessage } from '../messages/peripheral-device-selection';
+import { ActionMessage } from '../messages/action-message';
 
 @Injectable({providedIn: 'root'})
 export class PeriphealSelectionService {
@@ -27,7 +29,7 @@ export class PeriphealSelectionService {
                 };
             }),
             tap(n => this._categoryNameToData.set(n.name, n)),
-            map(m => Array.from(this._categoryNameToData.values())),
+            map(() => Array.from(this._categoryNameToData.values())),
             publishBehavior([])
         ) as ConnectableObservable<PeriphealCategory[]>;
 
@@ -53,12 +55,7 @@ export class PeriphealSelectionService {
             deviceId = (device as PeriphealDevice).id;
         }
 
-        const msg = new PeripheralChangeSelectionRequestMessage();
-        msg.category = categoryName;
-        msg.id = deviceId;
-
-        // todo: send message
-        this.session.sendMessage(msg);
+        this.session.sendMessage(new ActionMessage('SelectPeripheral', true, { category: categoryName, id: deviceId }));
     }
 }
 
