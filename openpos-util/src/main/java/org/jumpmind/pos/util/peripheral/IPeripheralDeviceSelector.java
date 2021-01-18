@@ -25,4 +25,11 @@ public interface IPeripheralDeviceSelector {
      * be in. `null` may be used to indicate that selection is disabled.
      */
     List<PeripheralDeviceDescription> getPossibleSelections();
+
+    /**
+     * Updates the peripheral selection to the specified id.
+     *
+     * @param id The unique ID of the device.
+     */
+    void setSelection(String id);
 }
