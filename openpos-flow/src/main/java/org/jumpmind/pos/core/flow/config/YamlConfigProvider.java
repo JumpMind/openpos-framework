@@ -52,8 +52,6 @@ public class YamlConfigProvider implements IFlowConfigProvider {
 
             List<YamlFlowConfig> yamlFlowConfigs = new ArrayList<>();
 
-            // Loop these backwards since most specific will be first in the class path an we want those
-            // last so they win the override
             for (int i = resources.size() - 1; i >= 0; --i) {
                 Resource resource = resources.get(i);
                 // first pass needs to load all raw YAML.
