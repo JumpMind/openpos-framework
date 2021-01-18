@@ -1,9 +1,7 @@
-
 import { Component } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { SessionService } from '../../services/session.service';
 
 import { StatusMessage } from '../status.message';
 import { StatusService } from '../status.service';
@@ -20,7 +18,6 @@ export class StatusDetailsComponent {
     constructor(
         status: StatusService, 
         public peripheralSelection: PeripheralSelectionService,
-        private session: SessionService, 
         private dialog: MatDialog
     ) {
         this.status$ = status.getStatus().pipe(
