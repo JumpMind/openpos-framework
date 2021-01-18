@@ -23,9 +23,6 @@ openpos:
     -
       name: STORE_TYPE
     -
-      name: DEVICE_TYPE
-      size: 20
-    -
       name: PRICE_ZONE
       size: 20
     -

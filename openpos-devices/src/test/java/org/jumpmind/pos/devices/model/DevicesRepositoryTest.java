@@ -32,8 +32,7 @@ public class DevicesRepositoryTest {
         assertEquals("OH", device.getTagValue("STATE"));
         assertEquals("100", device.getTagValue("STORE_NUMBER"));
         assertEquals("REGULAR", device.getTagValue("STORE_TYPE"));
-        assertEquals("WORKSTATION", device.getTagValue("DEVICE_TYPE"));
+        assertEquals("WORKSTATION", device.getTagValue("APP_PROFILE"));
         assertEquals("Metl", device.getTagValue("PRICE_ZONE"));
-        assertEquals("POS", device.getTagValue("APP_PROFILE"));
     }
 }
