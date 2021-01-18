@@ -1,10 +1,10 @@
 import { Component, Inject } from "@angular/core";
 import { MAT_DIALOG_DATA } from "@angular/material/dialog";
 
-import { PeriphealSelectionService, PeriphealCategory, PeriphealDevice } from '../../../peripheals/peripheral-selection.service';
+import { PeripheralSelectionService, PeripheralCategory, PeripheralDevice } from '../../../peripherals/peripheral-selection.service';
 
 export interface PeripheralSelectorDialogData {
-    category: PeriphealCategory
+    category: PeripheralCategory
 }
 
 @Component({
@@ -14,11 +14,11 @@ export interface PeripheralSelectorDialogData {
 export class PeripheralSelectorComponent {
     constructor(
         @Inject(MAT_DIALOG_DATA) public data: PeripheralSelectorDialogData,
-        public periph: PeriphealSelectionService
+        public periph: PeripheralSelectionService
     ) {
     }
 
-    assignDevice(device: PeriphealDevice) {
+    assignDevice(device: PeripheralDevice) {
         this.periph.selectDevice(this.data.category, device);
     }
 }

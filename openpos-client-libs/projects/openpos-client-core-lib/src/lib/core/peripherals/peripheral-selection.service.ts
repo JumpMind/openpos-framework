@@ -7,11 +7,13 @@ import { SessionService } from '../services/session.service';
 import { PeripheralDeviceSelectionMessage } from '../messages/peripheral-device-selection';
 import { ActionMessage } from '../messages/action-message';
 
-@Injectable({providedIn: 'root'})
-export class PeriphealSelectionService {
-    readonly periphealCategories$: Observable<PeriphealCategory[]>;
+@Injectable({
+    providedIn: 'root'
+})
+export class PeripheralSelectionService {
+    readonly peripheralCategories$: Observable<PeripheralCategory[]>;
 
-    private _categoryNameToData = new Map<string, PeriphealCategory>();
+    private _categoryNameToData = new Map<string, PeripheralCategory>();
 
     constructor(
         private session: SessionService
@@ -22,7 +24,7 @@ export class PeriphealSelectionService {
             map(m => {
                 const devices = m.available;
 
-                return <PeriphealCategory> {
+                return <PeripheralCategory> {
                     name: m.categoryDisplayName,
                     knownDevices: devices,
                     selectedDevice: devices.find(d => d.id === m.selectedId)
@@ -31,43 +33,43 @@ export class PeriphealSelectionService {
             tap(n => this._categoryNameToData.set(n.name, n)),
             map(() => Array.from(this._categoryNameToData.values())),
             publishBehavior([])
-        ) as ConnectableObservable<PeriphealCategory[]>;
+        ) as ConnectableObservable<PeripheralCategory[]>;
 
         // make it hot...
         connectable.connect();
 
-        this.periphealCategories$ = connectable;
+        this.peripheralCategories$ = connectable;
     }
 
-    selectDevice(category: PeriphealCategoryRef, device: PeriphealDeviceRef) {
+    selectDevice(category: PeripheralCategoryRef, device: PeripheralDeviceRef) {
         let categoryName: string;
         let deviceId: string;
 
         if (typeof(category) == 'string') {
             categoryName = category as string;
         } else {
-            categoryName = (category as PeriphealCategory).name;
+            categoryName = (category as PeripheralCategory).name;
         }
 
         if (typeof(device) == 'string') {
             deviceId = device as string;
         } else {
-            deviceId = (device as PeriphealDevice).id;
+            deviceId = (device as PeripheralDevice).id;
         }
 
         this.session.sendMessage(new ActionMessage('SelectPeripheral', true, { category: categoryName, id: deviceId }));
     }
 }
 
-export type PeriphealCategoryRef = PeriphealCategory | string;
-export interface PeriphealCategory {
+export type PeripheralCategoryRef = PeripheralCategory | string;
+export interface PeripheralCategory {
     name: string;
-    knownDevices: PeriphealDevice[];
-    selectedDevice: PeriphealDevice;
+    knownDevices: PeripheralDevice[];
+    selectedDevice: PeripheralDevice;
 }
 
-export type PeriphealDeviceRef = PeriphealDevice | string;
-export interface PeriphealDevice {
+export type PeripheralDeviceRef = PeripheralDevice | string;
+export interface PeripheralDevice {
     id: string;
     displayName: string;
 }

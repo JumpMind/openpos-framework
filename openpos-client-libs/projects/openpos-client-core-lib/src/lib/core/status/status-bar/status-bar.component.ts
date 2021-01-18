@@ -5,7 +5,7 @@ import { ConfigChangedMessage } from '../../messages/config-changed-message';
 import { Status } from '../../messages/status.enum';
 import { StatusMessage } from '../status.message';
 import { StatusService } from '../status.service';
-import { PeriphealSelectionService } from '../../peripheals/peripheral-selection.service';
+import { PeripheralSelectionService } from '../../peripherals/peripheral-selection.service';
 
 @Component({
   selector: 'app-status-bar',
@@ -23,7 +23,7 @@ export class StatusBarComponent {
 
   constructor(
     private statusService: StatusService,
-    peripheralSelectionService: PeriphealSelectionService,
+    peripheralSelectionService: PeripheralSelectionService,
     render2: Renderer2,
     elementRef: ElementRef
   ) {
@@ -37,7 +37,7 @@ export class StatusBarComponent {
 
     this.line1$ = combineLatest(
       this.systemInfo$,
-      peripheralSelectionService.periphealCategories$
+      peripheralSelectionService.peripheralCategories$
     ).pipe(
       map(results => {
         let l = results[0].line1;

@@ -7,7 +7,7 @@ import { SessionService } from '../../services/session.service';
 
 import { StatusMessage } from '../status.message';
 import { StatusService } from '../status.service';
-import { PeriphealSelectionService, PeriphealCategory } from '../../peripheals/peripheral-selection.service';
+import { PeripheralSelectionService, PeripheralCategory } from '../../peripherals/peripheral-selection.service';
 import { PeripheralSelectorComponent, PeripheralSelectorDialogData } from './selector/peripheral-selector.component';
 
 @Component({
@@ -19,7 +19,7 @@ export class StatusDetailsComponent {
 
     constructor(
         status: StatusService, 
-        public peripheralSelection: PeriphealSelectionService,
+        public peripheralSelection: PeripheralSelectionService,
         private session: SessionService, 
         private dialog: MatDialog
     ) {
@@ -28,7 +28,7 @@ export class StatusDetailsComponent {
         );
     }
 
-    onChangeSelectedPeripheral(category: PeriphealCategory) {
+    onChangeSelectedPeripheral(category: PeripheralCategory) {
         this.dialog.open(PeripheralSelectorComponent, {
             data: <PeripheralSelectorDialogData> {
                 category: category

@@ -2,6 +2,6 @@
 <h1 mat-dialog-title>Status</h1>
 <div mat-dialog-content>
     <ul>
-        <li *ngFor="let s of peripheralSelection.periphealCategories$ | async">{{s.name}} - {{s.selectedDevice?.displayName || "Not Selected"}} - <button mat-button color="primary" (click)="onChangeSelectedPeripheral(s)">Change...</button></li>
+        <li *ngFor="let s of peripheralSelection.peripheralCategories$ | async">{{s.name}} - {{s.selectedDevice?.displayName || "Not Selected"}} - <button mat-button color="primary" (click)="onChangeSelectedPeripheral(s)">Change...</button></li>
     </ul>
 </div>
