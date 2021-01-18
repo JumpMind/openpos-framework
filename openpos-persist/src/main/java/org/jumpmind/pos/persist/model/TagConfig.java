@@ -23,6 +23,10 @@ public class TagConfig {
     public void setTags(List<TagModel> tags) {
         this.tags = tags;
     }
+
+    public boolean hasTag(String tag) {
+        return tags.stream().filter(t->t.getName().equalsIgnoreCase(tag)).map(t->true).findFirst().orElse(false);
+    }
     
     public Map<String, List<TagModel>> getTagsByGroup() {
         Map<String, List<TagModel>> tagsByGroup = new LinkedHashMap<>();

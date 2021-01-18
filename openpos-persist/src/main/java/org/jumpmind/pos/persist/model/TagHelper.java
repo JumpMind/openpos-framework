@@ -122,7 +122,9 @@ public class TagHelper {
              if (columnUpper.startsWith(TagModel.TAG_PREFIX)) {
                  Object value = additionalFields.get(columnName);
                  String tagName = columnUpper.substring(TagModel.TAG_PREFIX.length());
-                 tags.put(tagName, value.toString());
+                 if (tagConfig.hasTag(tagName)) {
+                     tags.put(tagName, value.toString());
+                 }
              }
          }
          
