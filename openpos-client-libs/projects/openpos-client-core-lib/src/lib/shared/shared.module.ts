@@ -163,6 +163,7 @@ import { ModalOverlayContainerDirective } from '../core/modal-overlay-container/
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ModalOverlayContainer } from '../core/modal-overlay-container/modal-overlay-container';
 import { PeripheralSelectorComponent } from '../core/status/status-details/selector/peripheral-selector.component';
+import { StatusDetailsItemComponent } from '../core/status/status-details/item/status-details-item.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -331,7 +332,8 @@ const pipes = [
         StatusBarComponent,
         StatusDetailsComponent,
         PeripheralSelectorComponent,
-        ModalOverlayContainerDirective
+        ModalOverlayContainerDirective, 
+        StatusDetailsItemComponent,
     ],
     entryComponents: [
         KebabMenuComponent,

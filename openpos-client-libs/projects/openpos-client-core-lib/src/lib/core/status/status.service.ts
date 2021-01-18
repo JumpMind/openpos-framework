@@ -38,7 +38,7 @@ export class StatusService {
             return;
         }
 
-        this.detailsDialog = this.dialog.open(StatusDetailsComponent);
+        this.detailsDialog = this.dialog.open(StatusDetailsComponent, { minWidth: '75%' });
         this.detailsDialog
             .afterClosed()
             .subscribe({

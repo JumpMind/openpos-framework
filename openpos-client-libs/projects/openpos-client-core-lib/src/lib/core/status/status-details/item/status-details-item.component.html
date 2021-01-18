@@ -1,0 +1,25 @@
+<div class="icon-area">
+    <app-icon iconName="assignment"></app-icon>
+</div>
+
+<div class="title-group">
+    <div class="title">{{title}}</div>
+    <div class="caption" [ngSwitch]="status">
+        <ng-container *ngSwitchCase="'online'">
+            Online
+        </ng-container>
+        <ng-container *ngSwitchCase="'offline'">
+            Offline
+        </ng-container>
+        <ng-container *ngSwitchCase="'error'">
+            Error
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+            Unknown
+        </ng-container>
+    </div>
+</div>
+
+<button mat-button *ngIf="actionText" (click)="actionExecuted.emit()">
+    {{actionText}}
+</button>

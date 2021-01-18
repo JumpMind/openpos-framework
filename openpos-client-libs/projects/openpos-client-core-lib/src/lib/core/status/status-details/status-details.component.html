@@ -1,7 +1,11 @@
 
 <h1 mat-dialog-title>Status</h1>
 <div mat-dialog-content>
-    <ul>
-        <li *ngFor="let s of peripheralSelection.peripheralCategories$ | async">{{s.name}} - {{s.selectedDevice?.displayName || "Not Selected"}} - <button mat-button color="primary" (click)="onChangeSelectedPeripheral(s)">Change...</button></li>
-    </ul>
+    <app-status-details-item 
+        *ngFor="let s of peripheralSelection.peripheralCategories$ | async" 
+        [title]="s.name +  ' - ' + (s.selectedDevice?.displayName || 'Not Selected')" 
+        status="online" 
+        actionText="Choose..."
+        (actionExecuted)="onChangeSelectedPeripheral(s)">
+    </app-status-details-item>
 </div>
