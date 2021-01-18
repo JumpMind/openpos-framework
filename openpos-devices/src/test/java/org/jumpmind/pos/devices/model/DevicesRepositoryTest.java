@@ -26,7 +26,6 @@ public class DevicesRepositoryTest {
         DeviceModel device = devicesRepository.getDevice("00100-001", "pos");
         assertNotNull(device);
         assertEquals("00100-001", device.getDeviceId());
-        assertEquals("WORKSTATION", device.getDeviceType());
         assertEquals("Store 100 Register 1", device.getDescription());
         assertEquals("N_AMERICA", device.getTagValue("REGION"));
         assertEquals("US", device.getTagValue("COUNTRY"));
