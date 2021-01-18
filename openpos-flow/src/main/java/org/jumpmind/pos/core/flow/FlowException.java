@@ -20,6 +20,7 @@
  */
 package org.jumpmind.pos.core.flow;
 
+import static java.lang.String.format;
 
 public class FlowException extends RuntimeException {
 
@@ -31,6 +32,10 @@ public class FlowException extends RuntimeException {
 
     public FlowException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public FlowException(String message, Object... args) {
+        super(format(message, args));
     }
 
     public FlowException(String message) {
