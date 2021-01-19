@@ -11,6 +11,9 @@ export class StatusDetailsItemComponent {
     status: 'online' | 'offline' | 'error';
 
     @Input()
+    icon?: string;
+
+    @Input()
     title: string
 
     @Input()

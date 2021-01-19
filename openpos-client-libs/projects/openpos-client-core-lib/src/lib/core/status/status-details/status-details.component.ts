@@ -29,7 +29,8 @@ export class StatusDetailsComponent {
         this.dialog.open(PeripheralSelectorComponent, {
             data: <PeripheralSelectorDialogData> {
                 category: category
-            }
+            },
+            width: '75%'
         });
     }
 }
