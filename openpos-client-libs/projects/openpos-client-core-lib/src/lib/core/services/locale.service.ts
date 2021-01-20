@@ -75,7 +75,7 @@ export class LocaleService {
     }
 
     getConstant(key: LocaleConstantKey, locale?: string): any {
-        let llocale = locale || this.locale;
+        let llocale = locale || this.getLocale();
         llocale = llocale ? llocale.toLowerCase() : null;
         if (LocaleConstants[key] && llocale) {
             return LocaleConstants[key][llocale];
