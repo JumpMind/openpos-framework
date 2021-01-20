@@ -60,6 +60,10 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
                 const screenPartData = getValue(s, this.screenPartName);
                 if (screenPartData !== undefined && screenPartData !== null) {
                     this.screenData = deepAssign(this.screenData, screenPartData);
+
+                    //Would be better if ScreenPart interfaces were constrained to an abstract ScreenPart class
+                    //that contains this but I don't want to force everyone to update their screen part objects.
+                    this.screenData['willUnblock'] = s.willUnblock;
                 } else {
                     this.screenData = deepAssign(this.screenData, s);
                 }

@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -44,9 +44,11 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
+import lombok.EqualsAndHashCode;
 import org.jumpmind.properties.TypedProperties;
 
 @SuppressWarnings({"unused", "rawtypes", "unchecked"})
+@EqualsAndHashCode
 public class PreparedStatementWrapper implements PreparedStatement {
 
     private WrapperInterceptor interceptor;
@@ -197,13 +199,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (boolean) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        boolean value = wrapped.execute();
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime );
-        if (postResult.isIntercepted()) {
-            return (boolean) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            boolean value = wrapped.execute();
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime );
+            if (postResult.isIntercepted()) {
+                return (boolean) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("execute", exception);
         }
-        return value;
     }
 
     public ResultSetMetaData getMetaData() throws SQLException {
@@ -227,13 +237,23 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (ResultSet) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        ResultSet value = wrapped.executeQuery();
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeQuery", value,startTime, endTime );
-        if (postResult.isIntercepted()) {
-            return (ResultSet) postResult.getInterceptResult();
+
+        Exception exception = null;
+
+        try {
+            ResultSet value = wrapped.executeQuery();
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeQuery", value,startTime, endTime );
+            if (postResult.isIntercepted()) {
+                return (ResultSet) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeQuery", exception);
         }
-        return value;
     }
 
     public int executeUpdate() throws SQLException {
@@ -241,14 +261,23 @@ public class PreparedStatementWrapper implements PreparedStatement {
         if (preResult.isIntercepted()) {
             return (int) preResult.getInterceptResult();
         }
+        Exception exception = null;
+
         long startTime = System.currentTimeMillis();
-        int value = wrapped.executeUpdate();
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime );
-        if (postResult.isIntercepted()) {
-            return (int) postResult.getInterceptResult();
+        try {
+            int value = wrapped.executeUpdate();
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime );
+            if (postResult.isIntercepted()) {
+                return (int) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeUpdate", exception);
         }
-        return value;
     }
 
     public void addBatch() throws SQLException {
@@ -717,13 +746,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (boolean) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        boolean value = wrapped.execute(arg1,arg2);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1,arg2);
-        if (postResult.isIntercepted()) {
-            return (boolean) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            boolean value = wrapped.execute(arg1,arg2);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1,arg2);
+            if (postResult.isIntercepted()) {
+                return (boolean) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("execute", exception);
         }
-        return value;
     }
 
     public boolean execute(String arg1) throws SQLException {
@@ -731,14 +768,24 @@ public class PreparedStatementWrapper implements PreparedStatement {
         if (preResult.isIntercepted()) {
             return (boolean) preResult.getInterceptResult();
         }
+
+        Exception exception = null;
+
         long startTime = System.currentTimeMillis();
-        boolean value = wrapped.execute(arg1);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1);
-        if (postResult.isIntercepted()) {
-            return (boolean) postResult.getInterceptResult();
+        try {
+            boolean value = wrapped.execute(arg1);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1);
+            if (postResult.isIntercepted()) {
+                return (boolean) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("execute", exception);
         }
-        return value;
     }
 
     public boolean execute(String arg1, String[] arg2) throws SQLException {
@@ -747,13 +794,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (boolean) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        boolean value = wrapped.execute(arg1,arg2);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1,arg2);
-        if (postResult.isIntercepted()) {
-            return (boolean) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            boolean value = wrapped.execute(arg1,arg2);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1,arg2);
+            if (postResult.isIntercepted()) {
+                return (boolean) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("execute", exception);
         }
-        return value;
     }
 
     public boolean execute(String arg1, int[] arg2) throws SQLException {
@@ -762,13 +817,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (boolean) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        boolean value = wrapped.execute(arg1,arg2);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1,arg2);
-        if (postResult.isIntercepted()) {
-            return (boolean) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            boolean value = wrapped.execute(arg1,arg2);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("execute", value,startTime, endTime ,arg1,arg2);
+            if (postResult.isIntercepted()) {
+                return (boolean) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("execute", exception);
         }
-        return value;
     }
 
     public boolean isClosed() throws SQLException {
@@ -818,13 +881,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (ResultSet) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        ResultSet value = wrapped.executeQuery(arg1);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeQuery", value,startTime, endTime ,arg1);
-        if (postResult.isIntercepted()) {
-            return (ResultSet) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            ResultSet value = wrapped.executeQuery(arg1);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeQuery", value,startTime, endTime ,arg1);
+            if (postResult.isIntercepted()) {
+                return (ResultSet) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeQuery", exception);
         }
-        return value;
     }
 
     public int executeUpdate(String arg1, int arg2) throws SQLException {
@@ -833,13 +904,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (int) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        int value = wrapped.executeUpdate(arg1,arg2);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1,arg2);
-        if (postResult.isIntercepted()) {
-            return (int) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            int value = wrapped.executeUpdate(arg1,arg2);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1,arg2);
+            if (postResult.isIntercepted()) {
+                return (int) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeUpdate", exception);
         }
-        return value;
     }
 
     public int executeUpdate(String arg1, int[] arg2) throws SQLException {
@@ -848,13 +927,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (int) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        int value = wrapped.executeUpdate(arg1,arg2);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1,arg2);
-        if (postResult.isIntercepted()) {
-            return (int) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            int value = wrapped.executeUpdate(arg1,arg2);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1,arg2);
+            if (postResult.isIntercepted()) {
+                return (int) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeUpdate", exception);
         }
-        return value;
     }
 
     public int executeUpdate(String arg1, String[] arg2) throws SQLException {
@@ -863,13 +950,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (int) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        int value = wrapped.executeUpdate(arg1,arg2);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1,arg2);
-        if (postResult.isIntercepted()) {
-            return (int) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            int value = wrapped.executeUpdate(arg1,arg2);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1,arg2);
+            if (postResult.isIntercepted()) {
+                return (int) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeUpdate", exception);
         }
-        return value;
     }
 
     public int executeUpdate(String arg1) throws SQLException {
@@ -878,13 +973,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (int) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        int value = wrapped.executeUpdate(arg1);
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1);
-        if (postResult.isIntercepted()) {
-            return (int) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            int value = wrapped.executeUpdate(arg1);
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeUpdate", value,startTime, endTime ,arg1);
+            if (postResult.isIntercepted()) {
+                return (int) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeUpdate", exception);
         }
-        return value;
     }
 
     public int getMaxFieldSize() throws SQLException {
@@ -1168,13 +1271,21 @@ public class PreparedStatementWrapper implements PreparedStatement {
             return (int[]) preResult.getInterceptResult();
         }
         long startTime = System.currentTimeMillis();
-        int[] value = wrapped.executeBatch();
-        long endTime = System.currentTimeMillis();
-        InterceptResult postResult = interceptor.postExecute("executeBatch", value,startTime, endTime );
-        if (postResult.isIntercepted()) {
-            return (int[]) postResult.getInterceptResult();
+        Exception exception = null;
+        try {
+            int[] value = wrapped.executeBatch();
+            long endTime = System.currentTimeMillis();
+            InterceptResult postResult = interceptor.postExecute("executeBatch", value,startTime, endTime );
+            if (postResult.isIntercepted()) {
+                return (int[]) postResult.getInterceptResult();
+            }
+            return value;
+        } catch (Exception ex) {
+            exception = ex;
+            throw ex;
+        } finally {
+            interceptor.cleanupExecute("executeBatch", exception);
         }
-        return value;
     }
 
     public ResultSet getGeneratedKeys() throws SQLException {

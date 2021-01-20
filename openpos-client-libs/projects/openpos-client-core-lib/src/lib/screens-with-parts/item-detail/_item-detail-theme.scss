@@ -1,8 +1,12 @@
 @mixin item-detail-theme($theme) {
     $app-primary: mat-color(map-get($theme, primary));
-
+    $background: map-get($mat-grey, 300);
     .promotion-icon {
         color: $app-primary;
+    }
+
+    .promotion-item-gray {
+        background-color: $background;
     }
 
     .rounded-edge {

@@ -1,16 +1,9 @@
 package org.jumpmind.pos.core.service;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.IOException;
+import java.util.*;
 
-import org.jumpmind.pos.core.flow.ApplicationState;
-import org.jumpmind.pos.core.flow.FlowException;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.core.flow.ScopeValue;
@@ -20,13 +13,20 @@ import org.jumpmind.pos.core.javapos.SimulatedScannerService;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.model.OpenposBarcodeType;
 import org.jumpmind.pos.core.model.ScanData;
+import org.jumpmind.pos.devices.DeviceNotFoundException;
+import org.jumpmind.pos.devices.model.DeviceAuthModel;
+import org.jumpmind.pos.devices.model.DeviceModel;
+import org.jumpmind.pos.devices.model.DevicesRepository;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
+import org.jumpmind.pos.util.AudioLicense;
+import org.jumpmind.pos.util.AudioLicenseUtil;
 import org.jumpmind.pos.util.model.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import jpos.events.DataEvent;
@@ -37,12 +37,39 @@ public class DevToolsActionListener implements IActionListener {
     private static final String SAVE_PATH = "./savepoints";
 
     final Logger logger = LoggerFactory.getLogger(getClass());
-    
+
     @Autowired
     IStateManagerContainer stateManagerFactory;
-    
+
     @Autowired
     IMessageService messageService;
+
+    @Autowired
+    DevicesRepository devicesRepository;
+
+    @Value("${openpos.customerDisplayViewer.customerDisplayPort:#{null}}")
+    String customerDisplayPort;
+
+    @Value("${openpos.customerDisplayViewer.appId:'customerdisplay'}")
+    String customerDisplayAppId;
+
+    @Value("${openpos.customerDisplayViewer.customerDisplayUrl:#{null}}")
+    String customerDisplayUrl;
+
+    @Value("${openpos.customerDisplayViewer.customerDisplayProtocol:#{null}}")
+    String customerDisplayProtocol;
+
+    @Value("${openpos.peripheralSimulatorViewer.simPort:#{null}}")
+    String simPort;
+
+    @Value("${openpos.peripheralSimulatorViewer.appId:'sim'}")
+    String simAppId;
+
+    @Value("${openpos.peripheralSimulatorViewer.simUrl:#{null}}")
+    String simUrl;
+    
+    @Value("${openpos.peripheralSimulatorViewer.simProtocol:#{null}}")
+    String simProtocol;
     
     @Override
     public Collection<String> getRegisteredTypes() {        
@@ -81,16 +108,88 @@ public class DevToolsActionListener implements IActionListener {
 
         }
 
-        messageService.sendMessage(appId, deviceId, createMessage(stateManager));
+        messageService.sendMessage(appId, deviceId, createMessage(stateManager, deviceId));
     }
     
-    private Message createMessage(IStateManager sm) {
+    private Message createMessage(IStateManager sm, String deviceId) {
         Message message = new Message();
         message.setType(MessageType.DevTools);
         message.put("name", "DevTools::Get");
+        message.put("audioLicenses", getAudioLicenses());
+        message.put("audioLicenseLabels", getAudioLicenseLabels());
         setScopes(sm, message);
         setCurrentStateAndActions(sm, message);
+        setSimAuthCode(deviceId, message);
+        setCustomerDisplayAuthData(deviceId, message);
         return message;
+    }
+
+    private List<AudioLicense> getAudioLicenses() {
+        try {
+            return AudioLicenseUtil.getLicenses();
+        } catch(IOException e) {
+            logger.warn("Unable to load audio licenses", e);
+        }
+
+        return null;
+    }
+
+    private Map<String, String> getAudioLicenseLabels() {
+        return new HashMap<String, String>() {
+            {
+                put("key", "Content Key:");
+                put("author", "Author:");
+                put("title", "Title:");
+                put("sourceUri", "Source URI:");
+                put("filename", "File Name:");
+                put("license", "License:");
+                put("licenseUri", "License URI:");
+                put("comments", "Comments:");
+            }
+        };
+    }
+
+    private void setSimAuthCode(String deviceId, Message message) {
+        Map<String, String> simulatorMap = new HashMap<>();
+        DeviceModel deviceModel = null;
+        String authToken = null;
+        try {
+            deviceModel = devicesRepository.getDevice(deviceId, simAppId);
+        } catch (DeviceNotFoundException ex) {
+        }
+        if (deviceModel == null) {
+            deviceModel = DeviceModel.builder().deviceId(deviceId).appId(simAppId).build();
+            devicesRepository.saveDevice(deviceModel);
+            authToken = UUID.randomUUID().toString();
+            devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
+        } else {
+            try {
+                authToken = devicesRepository.getDeviceAuth(deviceId, simAppId);
+            } catch (DeviceNotFoundException ex) {
+                authToken = UUID.randomUUID().toString();
+                devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
+            }
+        }
+        simulatorMap.put("simAuthToken", authToken);
+        simulatorMap.put("simPort", simPort);
+        simulatorMap.put("simUrl", simUrl);
+        simulatorMap.put("simProtocol", simProtocol);
+        message.put("simulator", simulatorMap);
+    }
+
+    private void setCustomerDisplayAuthData(String deviceId, Message message) {
+        Map<String, String> customDeviceMap = new HashMap<>();
+        String authToken = "";
+        try{
+            authToken = devicesRepository.getDeviceAuth(deviceId, customerDisplayAppId);
+        } catch (DeviceNotFoundException ex){
+            authToken = "";
+        }
+        customDeviceMap.put("customerDisplayAuthToken", authToken);
+        customDeviceMap.put("customerDisplayPort", customerDisplayPort);
+        customDeviceMap.put("customerDisplayUrl", customerDisplayUrl);
+        customDeviceMap.put("customerDisplayProtocol", customerDisplayProtocol);
+        message.put("customerDisplay", customDeviceMap);
     }
 
     private void setCurrentStateAndActions(IStateManager sm, Message message) {

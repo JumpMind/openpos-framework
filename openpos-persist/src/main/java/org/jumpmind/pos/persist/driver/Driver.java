@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -42,11 +42,14 @@ import org.jumpmind.properties.TypedProperties;
  */
 public class Driver implements java.sql.Driver {
     
-    private static final String DRIVER_PREFIX = "jdbc:openpos:";
+    public static final String DRIVER_PREFIX = "jdbc:openpos:";
     
     public static void register(TypedProperties properties) {
         try {
             DriverManager.registerDriver(new Driver());
+            if (System.getProperty("jumpmind.commerce.disableSqlWatchdog") == null) {
+                SqlWatchdog.start();
+            }
         } catch (Exception ex) {
             throw new RuntimeException("Failed to register openpos driver", ex);
         } 

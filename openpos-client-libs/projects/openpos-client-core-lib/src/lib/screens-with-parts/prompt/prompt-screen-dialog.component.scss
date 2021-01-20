@@ -15,10 +15,19 @@
         @extend %page-spaced-content; 
     
         .prompt-image {
-            &.mobile {
-                max-height: 4em;
+            max-width: 100%;
+            justify-self: left;
+
+            &.tablet {
+                max-height: 6rem;
             }
-            justify-self: center;
+
+            &.mobile {
+                display: none;
+            }
+        }
+        ::ng-deep form {
+            outline: 0;
         }
     }
 }

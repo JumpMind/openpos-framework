@@ -1,42 +1,46 @@
 package org.jumpmind.pos.util
 
+import groovy.transform.CompileStatic
+
 import java.math.RoundingMode
 
 import org.joda.money.CurrencyUnit
 
+@CompileStatic
+@SuppressWarnings('ClassJavadoc')
 class ProrationCalculator {
-    CurrencyUnit currency;
-    
+    CurrencyUnit currency
+
     ProrationCalculator(String isoCurrencyCode) {
-        this.currency = CurrencyUnit.of(isoCurrencyCode);
+        this.currency = CurrencyUnit.of(isoCurrencyCode)
     }
 
     List<BigDecimal> prorate(BigDecimal amountToBeProrated, List<BigDecimal> existingAmounts) {
-        List<BigDecimal> proratedAmounts = new ArrayList<BigDecimal>();
-        
-        MoneyCalculator moneyCalculator = new MoneyCalculator(currency.getCode());
-        
-        BigDecimal amountsTotal = 0.00;
+        List<BigDecimal> proratedAmounts = []
+
+        MoneyCalculator moneyCalculator = new MoneyCalculator(currency.code)
+
+        BigDecimal amountsTotal = BigDecimal.ZERO
         for (BigDecimal amount : existingAmounts) {
-            amountsTotal += amount;
+            amountsTotal += amount
         }
         if (amountToBeProrated > amountsTotal) {
-            throw new RuntimeException("Amount to be prorated is greater than the total amount");
+            throw new IllegalStateException('Amount to be prorated is greater than the total amount')
         }
-        
-        BigDecimal proratedTotal = 0.00;
+
+        BigDecimal proratedTotal = BigDecimal.ZERO
         for (BigDecimal amount : existingAmounts) {
-            BigDecimal itemPct = amount.divide(amountsTotal,4, RoundingMode.HALF_UP);
-            BigDecimal proratedAmount = amountToBeProrated * itemPct;
-            proratedAmount = moneyCalculator.amount(proratedAmount);
-            proratedAmounts.add(proratedAmount);
-            proratedTotal += proratedAmount;
+            BigDecimal itemPct = amount.divide(amountsTotal, 5, RoundingMode.HALF_UP)
+            BigDecimal proratedAmount = amountToBeProrated * itemPct
+            proratedAmount = moneyCalculator.amount(proratedAmount)
+            proratedAmounts.add(proratedAmount)
+            proratedTotal += proratedAmount
         }
-        BigDecimal remainder = moneyCalculator.amount(amountToBeProrated - proratedTotal);
+        BigDecimal remainder = moneyCalculator.amount(amountToBeProrated - proratedTotal)
         if (remainder != 0) {
-            BigDecimal lastAmount = proratedAmounts.get(proratedAmounts.size()-1);
-            proratedAmounts.set(proratedAmounts.size()-1, moneyCalculator.amount(lastAmount + remainder));
+            BigDecimal lastAmount = proratedAmounts.last()
+            proratedAmounts.set(proratedAmounts.size() - 1, moneyCalculator.amount(lastAmount + remainder))
         }
-        return proratedAmounts;
+        return proratedAmounts
     }
 }

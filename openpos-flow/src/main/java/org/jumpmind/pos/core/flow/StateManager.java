@@ -8,7 +8,7 @@
  * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -38,10 +38,12 @@ import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
 import org.jumpmind.pos.core.clientconfiguration.LocaleChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
+import org.jumpmind.pos.core.event.DeviceResetEvent;
 import org.jumpmind.pos.core.flow.config.*;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.model.StartupMessage;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
+import org.jumpmind.pos.core.ui.CloseToast;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.DialogProperties;
 import org.jumpmind.pos.core.service.IScreenService;
@@ -51,9 +53,9 @@ import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.ClassUtils;
-import org.jumpmind.pos.util.ObjectUtils;
 import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
+import org.jumpmind.pos.util.event.EventPublisher;
 import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.model.PrintMessage;
 import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
@@ -63,6 +65,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -117,11 +120,17 @@ public class StateManager implements IStateManager {
     @Autowired
     Environment env;
 
-    @Value("${openpos.screens.config.defaultSessionTimeoutMills:240000}")
-    long defaultSessionTimeoutMillis;
+    @Autowired
+    ScreensConfig screensConfig;
 
     @Value("${openpos.general.failOnUnmatchedAction:false}")
     boolean failOnUnmatchedAction;
+
+    @Autowired
+    ScheduledAnnotationBeanPostProcessor scheduledAnnotationBeanPostProcessor;
+
+    @Autowired
+    EventPublisher eventPublisher;
 
     ApplicationState applicationState = new ApplicationState();
 
@@ -145,6 +154,7 @@ public class StateManager implements IStateManager {
 
     final String STATE_MANAGER_RESET_ACTION = "StateManagerReset";
     final String STATE_MANAGER_STOP_ACTION = "StateManagerStop";
+    final String STATE_MANAGER_PROCESS_EVENT_ACTION = "StateManagerProcessEvent";
 
     AtomicBoolean runningFlag = new AtomicBoolean(false);
     AtomicBoolean busyFlag = new AtomicBoolean(false);
@@ -158,7 +168,7 @@ public class StateManager implements IStateManager {
 
     @Override
     public void reset() {
-        log.info("StateManager resetting.");
+        log.info("StateManager reset queued");
         this.actionQueue.clear();
         this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_RESET_ACTION)));
     }
@@ -171,12 +181,13 @@ public class StateManager implements IStateManager {
     }
 
     public void init(String appId, String nodeId) {
-        this.applicationState.reset();
+        this.applicationState.reset(scheduledAnnotationBeanPostProcessor);
         this.applicationState.setAppId(appId);
         this.applicationState.setDeviceId(nodeId);
         this.eventBroadcaster = new EventBroadcaster(this);
 
         applicationState.getScope().setDeviceScope("stateManager", this);
+
         initDefaultScopeObjects();
 
         if (initialFlowConfig != null) {
@@ -230,19 +241,23 @@ public class StateManager implements IStateManager {
                 if (actionContext != null) {
                     busyFlag.set(true);
                     if (actionContext.getAction().getName().equals(STATE_MANAGER_RESET_ACTION)) {
+                        log.info("StateManager reset queued");
                         actionContext.getAction().markProcessed();
                         runningFlag.set(false);
                         busyFlag.set(false);
                         init(this.getAppId(), this.getDeviceId());
-                        this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
-                        log.info("StateManager reset.");
+                        log.info("StateManager reset");
+                        this.eventPublisher.publish(new DeviceResetEvent(getDeviceId(), getAppId()));
                         break;
                     } else if (actionContext.getAction().getName().equals(STATE_MANAGER_STOP_ACTION)) {
                         actionContext.getAction().markProcessed();
                         runningFlag.set(false);
                         busyFlag.set(false);
-                        log.info("StateManager stopped.");
+                        log.info("StateManager stopped");
                         break;
+                    } else if (actionContext.getAction().getName().equals(STATE_MANAGER_PROCESS_EVENT_ACTION)) {
+                        processEvent(actionContext.getAction().getData());
+                        actionContext.getAction().markProcessed();
                     } else {
                         processAction(actionContext);
                         actionContext.getAction().markProcessed();
@@ -482,6 +497,11 @@ public class StateManager implements IStateManager {
         }
     }
 
+    public void pushScopeValue(String name, ScopeType scopeType, Object value) {
+        applicationState.getScope().setScope(name, scopeType, value);
+        refreshDeviceScope();
+    }
+
     public void performOutjections(Object stateOrStep) {
         outjector.performOutjections(stateOrStep, applicationState.getScope(), applicationState.getCurrentContext());
     }
@@ -572,9 +592,10 @@ public class StateManager implements IStateManager {
         // resassert the previous state before the cancelled transition
         // Note: this can be a problem if the state doesn't show a screen and just sends an action because
         // the StateManager will be busy.
-        stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         if (transitionResult.getTransition().getQueuedAction() != null) { // allowed cancelled transitions to queue an action.
             doAction(transitionResult.getTransition().getQueuedAction());
+        } else {
+            stateLifecycle.executeArrive(this, applicationState.getCurrentContext().getState(), cancelAction);
         }
     }
 
@@ -756,6 +777,27 @@ public class StateManager implements IStateManager {
                 lastShowTimeInMs.set(System.currentTimeMillis());
             }
         }
+    }
+
+    protected void processEvent(Event event) {
+        lastInteractionTime.set(new Date());
+        if (initialFlowConfig == null) {
+            throw new FlowException("initialFlowConfig is null. This StateManager is likely misconfigured. " +
+                    "Check your appId and Spring profiles. (appId=\"" + this.getAppId() +
+                    "\") profiles=" + Arrays.toString(env.getActiveProfiles()));
+        }
+
+        List<Class> classes = initialFlowConfig.getEventHandlers();
+        classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
+
+        applicationState.getScope().getDeviceScope().values().
+                forEach(obj->eventBroadcaster.postEventToObject(obj, event));
+
+        Object state = getCurrentState();
+        if (state != null) {
+            eventBroadcaster.postEventToObject(state, event);
+        }
+
     }
 
     protected void handleOrRaiseException(Throwable ex) {
@@ -966,18 +1008,6 @@ public class StateManager implements IStateManager {
     }
 
     @Override
-    public void timeout() {
-        FlowConfig flowConfig = applicationState.getCurrentContext().getFlowConfig();
-        if (!applicationState.getStateStack().isEmpty()) {
-            StateContext suspendedState = applicationState.getStateStack().pop();
-            transitionTo(Action.ACTION_TIMEOUT, suspendedState.getState(), null, suspendedState);
-        } else {
-            transitionTo(Action.ACTION_TIMEOUT, flowConfig.getInitialState());
-        }
-
-    }
-
-    @Override
     public void endConversation() {
         applicationState.getScope().clearConversationScope();
         clearScopeOnStates(ScopeType.Conversation);
@@ -1024,9 +1054,29 @@ public class StateManager implements IStateManager {
                     "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
         }
 
+        if(toast.isPersistent() && toast.getPersistedId() == null) {
+            throw new FlowException("Persistent toast message requires ID");
+        }
+
         screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
 
         lastShowTimeInMs.set(System.currentTimeMillis());
+    }
+
+    @Override
+    public void closeToast(Toast toast) {
+        if (toast != null) {
+            keepAlive();
+
+            if (applicationState.getCurrentContext() == null) {
+                throw new FlowException(
+                        "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
+            }
+            CloseToast closeToast = new CloseToast(toast.getPersistedId());
+            screenService.closeToast(applicationState.getAppId(), applicationState.getDeviceId(), closeToast);
+
+            lastShowTimeInMs.set(System.currentTimeMillis());
+        }
     }
 
 
@@ -1045,8 +1095,10 @@ public class StateManager implements IStateManager {
         }
 
         if (screen != null) {
-            sessionTimeoutMillis = screen.getSessionTimeoutMillis() == null ? defaultSessionTimeoutMillis : screen.getSessionTimeoutMillis();
-            sessionTimeoutAction = screen.getSessionTimeoutAction();
+            ScreenConfig screenConfig = screensConfig.getConfig().get(screen.getId());
+            ScreenConfig defaultScreenConfig = screensConfig.getConfig().get("default");
+            sessionTimeoutMillis = screenConfig != null && screenConfig.getTimeout() != null ?  screenConfig.getTimeout()*1000 : defaultScreenConfig.getTimeout()*1000;
+            sessionTimeoutAction = new Action(screenConfig != null && screenConfig.getTimeoutAction() != null ?  screenConfig.getTimeoutAction() : defaultScreenConfig.getTimeoutAction());
         } else {
             sessionTimeoutMillis = 0;
             sessionTimeoutAction = null;
@@ -1061,11 +1113,6 @@ public class StateManager implements IStateManager {
     @Override
     public void showScreen(UIMessage screen) {
         showScreen(screen, null);
-    }
-
-    @Override
-    public String getNodeId() {
-        return applicationState.getDeviceId();
     }
 
     @Override
@@ -1090,7 +1137,7 @@ public class StateManager implements IStateManager {
     }
 
     protected void sessionTimeout() {
-        Action localSessionTimeoutAction = sessionTimeoutAction != null ? sessionTimeoutAction : Action.ACTION_TIMEOUT;
+        Action localSessionTimeoutAction = sessionTimeoutAction;
         localSessionTimeoutAction.setDoNotBlockForResponse(true);
         doAction(localSessionTimeoutAction);
     }
@@ -1107,7 +1154,9 @@ public class StateManager implements IStateManager {
     @Override
     public void registerQueryParams(Map<String, Object> queryParams) {
         if (queryParams != null) {
-            log.info("Registering query params " + queryParams.toString());
+            if (queryParams.size() > 0) {
+                log.info("Registering query params " + queryParams.toString());
+            }
             applicationState.getScope().setScopeValue(ScopeType.Device, "queryParams", queryParams);
         }
     }
@@ -1150,28 +1199,13 @@ public class StateManager implements IStateManager {
             messageService.sendMessage(appId, deviceId, localeMessage);
 
         } catch (NoSuchBeanDefinitionException e) {
-            log.info("An {} is not configured. Will not be sending clientconfiguration configuration to the client",
+            log.info("An {} is not configured. Will not be sending client configuration to the client",
                     IClientConfigSelector.class.getSimpleName());
         }
     }
 
     protected void onEvent(Event event) {
-        if (initialFlowConfig == null) {
-            throw new FlowException("initialFlowConfig is null. This StateManager is likely misconfigured. " +
-                    "Check your appId and Spring profiles. (appId=\"" + this.getAppId() +
-                    "\") profiles=" + Arrays.toString(env.getActiveProfiles()));
-        }
-
-        List<Class> classes = initialFlowConfig.getEventHandlers();
-        classes.forEach(clazz -> eventBroadcaster.postEventToObject(clazz, event));
-
-        applicationState.getScope().getDeviceScope().values().
-                forEach(obj->eventBroadcaster.postEventToObject(obj, event));
-
-        Object state = getCurrentState();
-        if (state != null) {
-            eventBroadcaster.postEventToObject(state, event);
-        }
+        this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_PROCESS_EVENT_ACTION, event)));
     }
 
     @Override

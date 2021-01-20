@@ -12,7 +12,16 @@ import { ActionService } from '../../../core/actions/action.service';
 })
 export class MobileItemComponent {
 
-    @Input() item: ISellItem;
+    private _item: ISellItem;
+
+    @Input() set item(item: ISellItem) {
+        this._item = item;
+    }
+
+    get item() {
+        return this._item;
+    }
+
     @Input() expanded = true;
 
     constructor(public actionService: ActionService, public session: SessionService) { }
@@ -28,5 +37,4 @@ export class MobileItemComponent {
         }
         return enabled;
     }
-
 }

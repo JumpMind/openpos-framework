@@ -3,8 +3,11 @@ apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {
-	compile project(":openpos-persist")
-	compile project(":openpos-util")
-	testCompile project(path: ':openpos-util', configuration: 'testArtifacts') 
-	testCompile 'com.github.tomakehurst:wiremock:2.19.0'
+    api "com.h2database:h2:${h2databaseVersion}"
+    api "org.springframework:spring-jdbc:$springVersion"
+    api "org.springframework:spring-tx:$springVersion"
+	api project(":openpos-persist")
+	api project(":openpos-util")
+	testImplementation project(':openpos-test')
+
 }

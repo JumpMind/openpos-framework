@@ -1,5 +1,26 @@
 package org.jumpmind.pos.persist;
 
+import lombok.extern.slf4j.Slf4j;
+import org.jumpmind.db.platform.IDatabasePlatform;
+import org.jumpmind.db.platform.h2.H2DatabasePlatform;
+import org.jumpmind.db.platform.oracle.OracleDatabasePlatform;
+import org.jumpmind.db.sql.ISqlTemplate;
+import org.jumpmind.db.sql.SqlScript;
+import org.jumpmind.exception.IoException;
+import org.jumpmind.pos.persist.model.ScriptVersionModel;
+import org.jumpmind.symmetric.io.data.Batch;
+import org.jumpmind.symmetric.io.data.DataProcessor;
+import org.jumpmind.symmetric.io.data.DbImport;
+import org.jumpmind.symmetric.io.data.reader.ProtocolDataReader;
+import org.jumpmind.symmetric.io.data.writer.*;
+import org.springframework.core.io.DefaultResourceLoader;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.support.ResourcePatternUtils;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.ConnectionCallback;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.util.DigestUtils;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,31 +28,10 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jumpmind.db.platform.IDatabasePlatform;
-import org.jumpmind.db.platform.h2.H2DatabasePlatform;
-import org.jumpmind.db.platform.oracle.OracleDatabasePlatform;
-import org.jumpmind.db.sql.ISqlTemplate;
-import org.jumpmind.db.sql.SqlScript;
-import org.jumpmind.exception.IoException;
-import org.jumpmind.symmetric.io.data.DbImport;
-import org.springframework.core.io.DefaultResourceLoader;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.ResourcePatternUtils;
-import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.ConnectionCallback;
-import org.springframework.jdbc.core.JdbcTemplate;
-
+@Slf4j
 public class DatabaseScriptContainer {
-    protected final Log logger = LogFactory.getLog(getClass());
-
     final static String IMPORT_PREFIX = "-- import:";
 
     private List<DatabaseScript> preInstallScripts = new ArrayList<DatabaseScript>();
@@ -39,30 +39,33 @@ public class DatabaseScriptContainer {
 
     private JdbcTemplate jdbcTemplate;
     private IDatabasePlatform platform;
-
+    private DBSession dbSession;
+    private String installationId;
     private Map<String, String> replacementTokens;
 
-    private String scriptLocation;
+    private List<String> scriptLocations;
 
-    public DatabaseScriptContainer(String scriptLocation, IDatabasePlatform platform) {
+    public DatabaseScriptContainer(List<String> scriptLocations, DBSession dbSession, String installationId) {
         try {
-            this.scriptLocation = scriptLocation;
-            this.platform = platform;
+            this.installationId = installationId;
+            this.dbSession = dbSession;
+            this.scriptLocations = scriptLocations;
+            this.platform = dbSession.getDatabasePlatform();
             this.jdbcTemplate = new JdbcTemplate(platform.getDataSource());
 
             replacementTokens = new HashMap<String, String>();
             // Add any replacement tokens
 
-            Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
-                    .getResources(String.format("classpath*:%s/*.*", scriptLocation));
-            for (Resource r : resources) {
-                DatabaseScript script = new DatabaseScript(r.getFilename());
-                script.setResource(r);
-
-                if (script.getWhen() == DatabaseScript.WHEN_PREINSTALL) {
-                    preInstallScripts.add(script);
-                } else if (script.getWhen() == DatabaseScript.WHEN_POSTINSTALL) {
-                    postInstallScripts.add(script);
+            for (String scriptLocation : scriptLocations) {
+                Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
+                        .getResources(String.format("classpath*:%s/*.*", scriptLocation));
+                for (Resource r : resources) {
+                    DatabaseScript script = new DatabaseScript(r);
+                    if (script.getWhen() == DatabaseScript.WHEN_PREINSTALL) {
+                        preInstallScripts.add(script);
+                    } else if (script.getWhen() == DatabaseScript.WHEN_POSTINSTALL) {
+                        postInstallScripts.add(script);
+                    }
                 }
             }
         } catch (IOException e) {
@@ -70,28 +73,47 @@ public class DatabaseScriptContainer {
         }
     }
 
-    public void executePreInstallScripts(String fromVersion, String toVersion, boolean failOnError) {
-        executeScripts(fromVersion, toVersion, this.preInstallScripts, failOnError);
+    public void executePreInstallScripts(boolean failOnError) {
+        executeScripts(this.preInstallScripts, failOnError);
     }
 
-    public void executePostInstallScripts(String fromVersion, String toVersion, boolean failOnError) {
-        executeScripts(fromVersion, toVersion, this.postInstallScripts, failOnError);
+    public void executePostInstallScripts(boolean failOnError) {
+        executeScripts(this.postInstallScripts, failOnError);
     }
 
-    public void executeScripts(String fromVersion, String toVersion, List<DatabaseScript> scripts, boolean failOnError) {
+    public void executeScripts(List<DatabaseScript> scripts, boolean failOnError) {
         if (scripts != null) {
             Collections.sort(scripts);
-            DatabaseScript from = new DatabaseScript();
-            from.parseVersion(fromVersion);
-
-            DatabaseScript to = new DatabaseScript();
-            to.parseVersion(toVersion);
-
             for (DatabaseScript s : scripts) {
-                if (isDatabaseMatch(s) && ((s.compareVersionTo(from) > 0 && s.compareVersionTo(to) <= 0) || s.getMajor() == 999)) {
+                boolean executeScript = false;
+                ScriptVersionModel version = dbSession.findByNaturalId(ScriptVersionModel.class, new ModelId("installationId", installationId, "fileName", s.getResource().getFilename()));
+                String md5Hash = null;
+                try (InputStream is = s.getResource().getInputStream()) {
+                    md5Hash = DigestUtils.md5DigestAsHex(is);
+                } catch (IOException ex) {
+                    throw new IoException(ex);
+                }
+                if (version == null) {
+                    log.info("Running {} for the first time", s.getResource().getFilename());
+                    executeScript = true;
+                } else if (!md5Hash.equals(version.getCheckSum())) {
+                    log.info("Running {} again because the content changed", s.getResource().getFilename());
+                    executeScript = true;
+
+                }
+                if (isDatabaseMatch(s) && executeScript) {
                     try {
                         executeImports(s, s.getResource(), failOnError);
                         execute(s, s.getResource(), failOnError);
+                        if (version == null) {
+                            version = ScriptVersionModel.builder().
+                                    installationId(installationId).
+                                    fileName(s.getResource().getFilename()).
+                                    checkSum(md5Hash).build();
+                        } else {
+                            version.setCheckSum(md5Hash);
+                        }
+                        dbSession.save(version);
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
@@ -100,7 +122,7 @@ public class DatabaseScriptContainer {
         }
     }
 
-    protected void executeImports(DatabaseScript databaseScript, Resource resource, boolean failOnError) throws IOException {
+    void executeImports(DatabaseScript databaseScript, Resource resource, boolean failOnError) throws IOException {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
 
             String line = reader.readLine();
@@ -108,7 +130,7 @@ public class DatabaseScriptContainer {
                 if (line.startsWith(IMPORT_PREFIX)) {
                     String file = line.substring(IMPORT_PREFIX.length()).trim();
                     Resource[] resources = ResourcePatternUtils.getResourcePatternResolver(new DefaultResourceLoader())
-                            .getResources(String.format("classpath*:%s/%s", scriptLocation, file));
+                            .getResources(String.format("classpath*:%s", file));
                     for (Resource resource2 : resources) {
                         execute(databaseScript, resource2, failOnError);
                     }
@@ -118,17 +140,52 @@ public class DatabaseScriptContainer {
         }
     }
 
-    public void execute(DatabaseScript databaseScript, final Resource resource, boolean failOnError) throws IOException {
+    void execute(DatabaseScript databaseScript, final Resource resource, boolean failOnError) throws IOException {
         String compareString = resource.getFilename().toLowerCase();
         if (compareString.endsWith(".sql")) {
             loadSql(resource.getURL(), failOnError);
         } else if (compareString.endsWith(".csv")) {
             loadCsv(databaseScript, resource, failOnError);
+        } else if (compareString.endsWith(".batch")) {
+            loadFromBatchCsv(databaseScript, resource, failOnError);
         }
     }
 
+    void loadFromBatchCsv(DatabaseScript script, Resource resource, boolean failOnError) throws IOException {
+        DefaultDatabaseWriter writer = new DefaultDatabaseWriter(platform, buildDatabaseWriterSettings(failOnError));
+        try (InputStream is = script.getResource().getInputStream()) {
+            ProtocolDataReader reader = new ProtocolDataReader(Batch.BatchType.LOAD, "localhost", is);
+            DataProcessor dataProcessor = new DataProcessor(reader, writer, "import");
+            dataProcessor.process();
+        }
+    }
+
+    DatabaseWriterSettings buildDatabaseWriterSettings(boolean failOnError) {
+        DatabaseWriterSettings settings = new DatabaseWriterSettings();
+        settings.setMaxRowsBeforeCommit(10000);
+        settings.setCommitSleepInterval(0);
+        settings.setDefaultConflictSetting(buildConflictSettings());
+        settings.setUsePrimaryKeysFromSource(false);
+        settings.setAlterTable(false);
+        settings.setCreateTableDropFirst(false);
+        settings.setCreateTableFailOnError(false);
+        settings.setDatabaseWriterFilters(new ArrayList<IDatabaseWriterFilter>(0));
+        settings.setIgnoreMissingTables(true);
+        settings.setCreateTableAlterCaseToMatchDatabaseDefault(true);
+        if (!failOnError) {
+            settings.addErrorHandler(new DatabaseWriterErrorIgnorer());
+        }
+        return settings;
+    }
+
+    Conflict buildConflictSettings() {
+        Conflict conflict = new Conflict();
+        conflict.setDetectType(Conflict.DetectConflict.USE_OLD_DATA);
+            conflict.setResolveType(Conflict.ResolveConflict.FALLBACK);
+        return conflict;
+    }
+
     void loadSql(URL script, boolean failOnError) {
-        logger.info("Executing script " + script.toString());
         jdbcTemplate.execute(new ConnectionCallback<Object>() {
             public Object doInConnection(Connection c) throws SQLException, DataAccessException {
                 ISqlTemplate template = platform.getSqlTemplate();
@@ -143,7 +200,7 @@ public class DatabaseScriptContainer {
                     if (failOnError) {
                         throw new SQLException(message, ex);
                     }
-                    logger.warn(message, ex);
+                    log.warn(message, ex);
                 }
                 return null;
             }
@@ -151,18 +208,20 @@ public class DatabaseScriptContainer {
     }
 
     void loadCsv(DatabaseScript script, Resource resource, boolean failOnError) throws IOException {
-        logger.info("Loading file " + script.toString());
         try (InputStream is = resource.getInputStream()) {
+            String tableName = script.getDescription().replaceAll("-", "_");
+            // delete versus truncate so symds syncs deletes
+            jdbcTemplate.execute(String.format("delete from %s", tableName));
             DbImport importer = new DbImport(platform);
             importer.setFormat(DbImport.Format.CSV);
             importer.setCommitRate(1000);
             importer.setForceImport(!failOnError);
             importer.setAlterCaseToMatchDatabaseDefaultCase(true);
-            importer.importTables(is, script.getDescription().replaceAll("-", "_"));
+            importer.importTables(is, tableName);
         }
     }
 
-    public boolean isDatabaseMatch(DatabaseScript script) {
+    boolean isDatabaseMatch(DatabaseScript script) {
         if (script.getDescription().equals("H2Only")) {
             return platform instanceof H2DatabasePlatform;
         } else if (script.getDescription().equals("OracleOnly")) {

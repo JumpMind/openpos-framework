@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -20,8 +20,13 @@
  */
 package org.jumpmind.pos.persist;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.core.io.Resource;
 
+@Getter
+@NoArgsConstructor
 public class DatabaseScript implements Comparable<DatabaseScript> {
 	private int major;
 	private int minor;
@@ -30,7 +35,6 @@ public class DatabaseScript implements Comparable<DatabaseScript> {
 	private int when;
 	private int order;
 	private String description;
-	
 	private Resource resource;
 	
 	public final static String DELIMITER_MAIN = "_";
@@ -41,11 +45,9 @@ public class DatabaseScript implements Comparable<DatabaseScript> {
 	public final static int WHEN_POSTINSTALL = 2;
 	
 	
-	public DatabaseScript(String fileName) {
-		parse(fileName);
-	}
-	
-	public DatabaseScript() {
+	public DatabaseScript(Resource resource) {
+		this.resource = resource;
+		parse(resource.getFilename());
 	}
 	
 	public void parse(String fileName) {
@@ -159,37 +161,5 @@ public class DatabaseScript implements Comparable<DatabaseScript> {
 			this.description = parts[0];
 		}
 	}
-	
-	public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-	
-	public int getMajor() {
-		return major;
-	}
 
-	public int getMinor() {
-		return minor;
-	}
-
-	public int getBuild() {
-		return build;
-	}
-	
-	public int getWhen() {
-		return when;
-	}
-	
-	public int getOrder() {
-		return order;
-	}
-	
-	public String getDescription() {
-		return description;
-	}
-	
-	public Resource getResource() {
-		return resource;
-	}
-	
 }

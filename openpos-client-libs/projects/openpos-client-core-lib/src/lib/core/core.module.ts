@@ -6,7 +6,7 @@ import {ScanditScannerCordovaPlugin} from './platform-plugins/scanners/scandit-s
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
 import { STARTUP_TASKS, STARTUP_FAILED_COMPONENT } from './services/startup.service';
-
+import { ToastrModule } from 'ngx-toastr';
 // Angular Includes
 import { NgModule, Injector, Optional, SkipSelf, ErrorHandler } from '@angular/core';
 import { Location, LocationStrategy, PathLocationStrategy, DatePipe } from '@angular/common';
@@ -65,6 +65,12 @@ import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
 import { ServerScannerPlugin } from './platform-plugins/scanners/server-scanner/server-scanner.service';
+import {TransactionService} from './services/transaction.service';
+import { AudioStartupTask } from './audio/audio-startup-task';
+import { AudioService } from './audio/audio.service';
+import { AudioRepositoryService } from './audio/audio-repository.service';
+import { AudioInteractionService } from './audio/audio-interaction.service';
+import { AudioConsolePlugin } from './audio/audio-console.plugin';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -94,11 +100,13 @@ registerLocaleData(locale_frCA, 'fr-CA');
         SharedModule,
         BrowserModule,
         BrowserAnimationsModule,
-        NgxElectronModule
+        NgxElectronModule,
+        ToastrModule.forRoot()
     ],
     exports: [
         BrowserModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        ToastrModule
     ],
     providers: [
         HttpClient,
@@ -113,6 +121,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
         { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
+        { provide: STARTUP_TASKS, useClass: AudioStartupTask, multi: true, deps: [AudioRepositoryService, AudioService, AudioInteractionService]},
         { provide: STARTUP_TASKS, useClass: FinalStartupTask, multi: true, deps: [SessionService]},
         { provide: STARTUP_TASKS, useClass: PlatformReadyStartupTask, multi: true },
         { provide: STARTUP_TASKS, useClass: PluginStartupTask, multi: true },
@@ -141,7 +150,12 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: LOGGERS, useExisting: ServerLogger, multi: true, deps: [HttpClient, PersonalizationService, ConsoleIntercepter] },
         HelpTextService,
         { provide: CLIENTCONTEXT, useClass: TimeZoneContext, multi: true },
-        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher }
+        { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
+        TransactionService,
+        AudioService,
+        AudioInteractionService,
+        AudioRepositoryService,
+        { provide: PLUGINS, useExisting: AudioConsolePlugin, multi: true, deps: [AudioService]}
     ]
 })
 export class CoreModule {

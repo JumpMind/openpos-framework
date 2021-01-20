@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -43,7 +43,7 @@ public class StatementDelayInterceptor extends StatementInterceptor {
     }
     
     @Override
-    public void preparedStatementExecute(String methodName, long elapsed, String sql) {
+    public void preparedStatementExecute(String methodName, long elapsed, String sql, Object[] objects) {
         if (sql.toLowerCase().startsWith("insert") || sql.toLowerCase().startsWith("update")) {
             try {
                 Thread.sleep(delay);

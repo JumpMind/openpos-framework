@@ -17,7 +17,16 @@ import { KebabLabelButtonComponent } from '../kebab-label-button/kebab-label-but
 })
 export class ItemCardComponent implements OnDestroy {
 
-  @Input() item: ISellItem;
+  private _item:ISellItem;
+
+  @Input() set item(item: ISellItem) {
+    this._item = item;
+  }
+
+  get item() {
+    return this._item;
+  }
+
   @Input() isReadOnly = false;
 
   _expanded = true;
@@ -80,15 +89,15 @@ export class ItemCardComponent implements OnDestroy {
   }
 
   @HostListener('mouseenter')
-  onMouseEnter() {
-    if (this.enableHover) {
-      this.hover = true;
-    }
-  }
+  onMouseEnter() {
+    if (this.enableHover) {
+     this.hover = true;
+    }
+  }
 
-  @HostListener('mouseleave')
-  onMouseLeave() {
-    this.hover = false;
-  }
+  @HostListener('mouseleave')
+  onMouseLeave() {
+    this.hover = false;
+  }
 
 }

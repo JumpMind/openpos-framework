@@ -20,6 +20,9 @@ abstract public class AbstractTaggedModel extends AbstractModel implements ITagg
 
     @Override
     public void setTags(Map<String, String> tags) {
+        if (!(tags instanceof CaseInsensitiveMap)) {
+            tags = new CaseInsensitiveMap<>(tags);
+        }
         this.tags = tags;
     }
 

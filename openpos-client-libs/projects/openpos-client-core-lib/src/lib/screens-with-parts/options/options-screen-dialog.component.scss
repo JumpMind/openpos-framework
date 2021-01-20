@@ -1,11 +1,31 @@
 @import "../../styles/variables/spacing";
 
+.mobile {
+    &.options-outer{
+        max-height: 80vh;
+        .options-body{
+            .options-list {
+                max-height: 70vh;
+            }
+        }
+    }
+    .options-header {
+        ::ng-deep .mat-card-title span {
+            font-size: 4vh;
+        }
+
+        ::ng-deep .option-item {
+            background: red;
+            padding: 4px;
+        }
+    }
+}
+
 .options-outer {
     display: grid;
     grid-auto-flow: column;
     grid-template-rows: auto 1fr;
     height: 100%;
-    
     .options-body {
         overflow-y: auto;
         display: grid;
@@ -23,4 +43,8 @@
             max-height: 80vh;
         }
     }
+}
+
+app-prompt-button-row {
+    margin-top: 24px;
 }

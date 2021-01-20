@@ -79,7 +79,8 @@ export class PersonalizationStartupTask implements IStartupTask {
     }
 
     hasPersonalizationQueryParams(queryParams: Params): boolean {
-        return queryParams.deviceId && queryParams.appId && queryParams.serverName && queryParams.serverPort;
+        return ((queryParams.deviceId && queryParams.appId && queryParams.serverName && queryParams.serverPort)
+            || (queryParams.deviceToken && queryParams.serverName && queryParams.serverPort));
 
     }
 
@@ -87,17 +88,25 @@ export class PersonalizationStartupTask implements IStartupTask {
         const deviceId = queryParams.deviceId;
         const appId = queryParams.appId;
         const serverName = queryParams.serverName;
+        const deviceToken = queryParams.deviceToken;
         let serverPort = queryParams.serverPort;
-        let sslEnabled = queryParams.sslEnabled;
+        let sslEnabled = queryParams.sslEnabled == 'true';
 
         const personalizationProperties = new Map<string, string>();
         const keys = Object.keys(queryParams);
         if (keys) {
             for (const key of keys) {
-                if (key !== 'deviceId' && key !== 'serverName' && key !== 'serverPort' && key !== 'sslEnabled') {
+                if (key !== 'deviceId' && key !== 'deviceToken' && key !== 'serverName' && key !== 'serverPort' && key !== 'sslEnabled') {
                     personalizationProperties.set(key, queryParams[key]);
                 }
             }
+        }
+
+        if (deviceToken && serverName) {
+            serverPort = !serverPort ? 6140 : serverPort;
+            sslEnabled = !sslEnabled ? false : sslEnabled;
+
+            return this.personalization.personalizeWithToken(serverName, serverPort, deviceToken, sslEnabled);
         }
 
         if (deviceId && serverName) {

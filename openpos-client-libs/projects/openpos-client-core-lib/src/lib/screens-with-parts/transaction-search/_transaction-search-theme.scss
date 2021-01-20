@@ -1,17 +1,33 @@
 @mixin transaction-search-theme($theme) {
-
-    $app-primary: mat-color(map-get($theme, primary));
-    $app-accent: mat-color(map-get($theme, accent));
-    $app-warn: mat-color(map-get($theme, warn));
-
     $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
+
+    $app-border: mat-color($foreground, border, .35);
+    $app-card-background: map-get($background, card);
+    $app-disabled: mat-color(map-get($theme, foreground), disabled);
 
     app-transaction-search {
         app-infinite-scroll {
             @extend .mat-elevation-z2;
-            background: map-get($background, card);
+            background: $app-card-background;
+        }
+
+        .transaction-summary {
+            border-color: $app-border;
+        }
+
+        .transaction-search-mode {
+            color: $app-disabled;
+        }
+
+        .mat-form-field-flex {
+            background: $app-card-background;
+        }
+
+        .transaction-filter-options {
+            div.mat-chip-list-wrapper {
+                display: inline-flex;
+            }
         }
     }
-
 }

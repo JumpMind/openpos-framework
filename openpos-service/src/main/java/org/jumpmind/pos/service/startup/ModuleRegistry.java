@@ -11,7 +11,7 @@ import java.util.Properties;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.service.IModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,7 +33,8 @@ public class ModuleRegistry {
     @PostConstruct
     public void loadModuleDatabaseDefaults() {
         if (this.modules != null) {
-            File file = new File("work", ".h2.server.properties");
+            File file = new File(System.getProperty("java.io.tmpdir"), ".h2.server.properties");
+            file.getParentFile().mkdirs();
             Properties properties = new Properties();
             try {
                 if (file.exists()) {

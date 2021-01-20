@@ -9,7 +9,7 @@
  * <p>
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  * <p>
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -24,7 +24,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
@@ -62,11 +62,14 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     IErrorHandler errorHandler;
 
     @Autowired
-    private ClientContext clientContext;
+    ClientContext clientContext;
 
-    private Map<String, Map<String, StateManager>> stateManagersByAppIdByNodeId = new HashMap<>();
+    @Autowired(required = false)
+    List<IClientContextUpdater> clientContextUpdaters;
 
-    private ThreadLocal<IStateManager> currentStateManager = new InheritableThreadLocal<>();
+    Map<String, Map<String, StateManager>> stateManagersByAppIdByNodeId = new HashMap<>();
+
+    ThreadLocal<IStateManager> currentStateManager = new InheritableThreadLocal<>();
 
     @Override
     public synchronized void removeSessionIdVariables(String sessionId) {
@@ -193,6 +196,11 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
             clientContext.put("deviceId", stateManager.getDeviceId());
             clientContext.put("appId", stateManager.getAppId());
+            if (clientContextUpdaters != null) {
+                for(IClientContextUpdater clientContextUpdater: clientContextUpdaters) {
+                    clientContextUpdater.update(clientContext, stateManager);
+                }
+            }
         } else {
             setupLogging("server");
 

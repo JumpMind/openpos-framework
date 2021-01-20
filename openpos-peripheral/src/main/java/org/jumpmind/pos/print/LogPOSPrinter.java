@@ -3,7 +3,9 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.status.Status;
 
 import java.io.InputStream;
@@ -12,11 +14,13 @@ import java.util.Map;
 @Slf4j
 public class LogPOSPrinter implements IOpenposPrinter {
 
+    private String cashDrawerStatus = EscpCashDrawerService.STATUS_OPEN;
+
     private PrinterCommands printerCommands = new PrinterCommandPlaceholders();
 
     private StringBuilder buff = new StringBuilder(128);
 
-    private PrinterStatusReporter printerStatusReporter;
+    private static int cashDrawerOpened;
 
     @Override
     public void printImage(InputStream image) {
@@ -43,7 +47,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public void init(Map<String, Object> settings, PrinterStatusReporter printerStatusReporter) {
+    public void init(Map<String, Object> settings, IPrinterStatusReporter printerStatusReporter) {
         printerStatusReporter.reportStatus(Status.Online, "LogPOSPrinter Ok.");
     }
 
@@ -59,11 +63,15 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     @Override
     public int readPrinterStatus() {
-        if (printerStatusReporter != null) {
-            printerStatusReporter.reportStatus(Status.Online, "LogPOSPrinter Ok.");
-        }
-
         return 0;
+    }
+
+    @Override
+    @SneakyThrows
+    public int waitForDrawerClose(String cashDrawerId, long timeout) {
+        AppUtils.sleep(1000);
+        cashDrawerOpened = 0;
+        return DRAWER_CLOSED;
     }
 
     @Override
@@ -92,6 +100,7 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     @Override
     public void openCashDrawer(String cashDrawerId) {
+        cashDrawerOpened = 2;
         log.info("\r\n" +
                 "      ------------------------------ -\n" +
                 "    -/                              /|\n" +
@@ -102,6 +111,12 @@ public class LogPOSPrinter implements IOpenposPrinter {
                 "|            ----               | -/  \n" +
                 "|        LogPOSPrinter          |/    \n" +
                 "+-------------------------------+     ");
+    }
+
+    @Override
+    public boolean isDrawerOpen(String cashDrawerId) {
+        this.cashDrawerOpened--;
+        return cashDrawerOpened >= 0;
     }
 
     @Override

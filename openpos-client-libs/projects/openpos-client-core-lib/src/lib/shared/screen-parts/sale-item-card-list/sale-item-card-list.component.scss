@@ -1,3 +1,6 @@
 .sale-item-list-outer {
     overflow-y: auto;
+    ::ng-deep .item-card-title {
+        font-weight: 600;
+    }
 }

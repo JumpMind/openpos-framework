@@ -3,7 +3,7 @@ package org.jumpmind.pos.devices.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jumpmind.pos.devices.TestDevicesConfig;
 import org.jumpmind.pos.devices.service.model.GetDeviceResponse;
-import org.jumpmind.pos.service.utils.MockGetRequestBuilder;
+import org.jumpmind.pos.test.MockGetRequestBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

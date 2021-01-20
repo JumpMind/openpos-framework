@@ -1,12 +1,11 @@
 package org.jumpmind.pos.print;
 
 import jpos.JposException;
+import jpos.POSPrinterConst;
 
 import javax.xml.transform.sax.SAXSource;
 import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * A developer tool for testing a printer with openpos capabilities.
@@ -20,13 +19,14 @@ public class PrinterTester {
 
         Map<String, Object> settings = new HashMap<>();
         settings.put("printerCommandLocations", "esc_p.properties, epson.properties");
-        settings.put("connectionClass", "org.jumpmind.pos.print.RS232ConnectionFactory");
+//        settings.put("connectionClass", "org.jumpmind.pos.print.UsbConnectionFactory");
 //        settings.put("connectionClass", "org.jumpmind.pos.print.SocketConnectionFactory");
-//        settings.put("hostName", "192.168.42.181");
-        settings.put("portName", "COM7");
-        settings.put("printWidth", "46");
+        settings.put("connectionClass", "org.jumpmind.pos.print.RS232ConnectionFactory");
+        settings.put("hostName", "192.168.1.26");
+        settings.put("portName", "COM3");
+//        settings.put("printWidth", "46");
 //        settings.put("usbVendorId", 0x0404); // NCR
-//        settings.put("usbVendorId", 0x04b8); // EPSON
+        settings.put("usbVendorId", 0x04b8); // EPSON
 //        settings.put("usbVendorId", 0x08a6); // TOSHIBA
         settings.put("usbProductId", "ANY");
 
@@ -43,7 +43,7 @@ public class PrinterTester {
     }
 
     public static void main(String[] args) throws Exception {
-        
+
         try {
             IOpenposPrinter printer = createPrinter();
 
@@ -59,22 +59,89 @@ public class PrinterTester {
 
             long start = System.currentTimeMillis();
 
-//            try {
-//                while (printer.getJrnEmpty() && System.currentTimeMillis()-start < 6000) {
-//                    System.out.print("no slip ");
-//                }
-//            }
-//            catch (Exception ex) {
-//                ex.printStackTrace();
-//            }
+
+
+            printer.printNormal(0, "Code B.\n");
+
+//                        printer.printBarCode(POSPrinterConst.PTR_S_RECEIPT,"0187096010006202009300000000006", POSPrinterConst.PTR_BCS_Code128, 50, 150,
+//                    POSPrinterConst.PTR_BC_CENTER, POSPrinterConst.PTR_BC_TEXT_BELOW);
+
+            // 1D 6B m d1…dk 00
+
+
+
+//            final String BARCODE = "ABCS1234234";
+            String BARCODE = "01870960100062020093000000000067";
+//            BARCODE = "123";
+            printer.printBarCode(POSPrinterConst.PTR_S_RECEIPT, BARCODE, POSPrinterConst.PTR_BCS_Code128, 50, 50,
+                    POSPrinterConst.PTR_BC_CENTER, POSPrinterConst.PTR_BC_TEXT_BELOW);
+
+//            printer.printNormal(0, printer.getCommand(PrinterCommands.PROP_BARCODE_WIDTH));
+
 //
-//            if (printer.getJrnEmpty()) {
-//                System.out.println("TIMED OUT WAITING FOR SLIP");
-//                System.exit(1);
-//            }
 
-            printer.printNormal(0, "A long string. A long string. 234567890234567890234567890234567890234567890234567890234567890234567890\n");
+//            printer.printNormal(0, "Code C:\n");
+//            printer.printNormal(0, printer.getCommand(PrinterCommands.ALIGN_CENTER));
+            //            0x1D,0x77,1
+//            printer.getPeripheralConnection().getOut().write(new byte[] {0x1D, 0x77, 2  }); // height.
+//
+//            List<Byte> bytes = new ArrayList<>();
+//
+            final String ODD_BARCODE = "0187096010006202009300000000006";
+//            final String ODD_BARCODE = "1234";
 
+            List<Byte> barcodeCommand = new ArrayList<>();
+            barcodeCommand.add((byte) 123);
+            barcodeCommand.add((byte) 67);
+
+            for (int i = 0; i < ODD_BARCODE.length(); i++) {
+                byte number = 0x0;
+                if (i <= ODD_BARCODE.length()-2) {
+                    number = (byte) Integer.parseInt(ODD_BARCODE.substring(i, i+2));
+                    barcodeCommand.add(number);
+                    i++;
+                } else {
+                    barcodeCommand.add((byte) 123);
+                    barcodeCommand.add((byte) 66);
+                    barcodeCommand.add(ODD_BARCODE.substring(i, i+1).getBytes()[0]);
+                }
+
+
+            }
+
+            byte[] finalBarcodeCommand = new byte[barcodeCommand.size()+4];
+            int counter = 0;
+            finalBarcodeCommand[counter++] = 0x1D;
+            finalBarcodeCommand[counter++] = 0x6B;
+            finalBarcodeCommand[counter++] = 73;
+            finalBarcodeCommand[counter++] = (byte) barcodeCommand.size();
+
+            for (Byte b : barcodeCommand) {
+                finalBarcodeCommand[counter++] = b.byteValue();
+            }
+
+
+            String s = new String(finalBarcodeCommand);
+//            printer.printNormal(0, s);
+//            printer.getPeripheralConnection().getOut().write(finalBarcodeCommand);
+            printer.getPeripheralConnection().getOut().flush();
+
+            printer.printNormal(0, "After odd barcode.\n");
+
+
+//            printer.getPeripheralConnection().getOut().write(new byte[] {0x1D, 0x6B, 73, 17, 123, 67, 01, 87,9,60,10,06,20,20,93,00,00,00,00,00,6});
+            //    printer.getPeripheralConnection().getOut().write("12345678".getBytes());
+//            printer.getPeripheralConnection().getOut().write("11".getBytes());
+//            printer.getPeripheralConnection().getOt().write(new byte[] {0x0});
+            printer.getPeripheralConnection().getOut().flush();
+
+
+            printer.printNormal(0, "\n\n\n\n");
+
+
+            printer.cutPaper(100);
+
+            System.exit(1);
 
 //            printer.printNormal(POSPrinterConst.PTR_S_RECEIPT, "Initial print on receipt printer.\n");
 
@@ -143,7 +210,7 @@ public class PrinterTester {
 //            StringBuilder buffer = new StringBuilder(128);
 //
 
-//  
+//
 //            buffer.append(BOLD).append("6/18/2019 5:03PM");
 //            buffer.append(NORMAL).append(" Helped by ");
 //            buffer.append(BOLD).append("Sara ");
@@ -265,7 +332,7 @@ public class PrinterTester {
 
     // TODO temp.
     public static final int ESC = 27;
-//    public static final String FONT_SIZE_MEDIUM = codes(ESC, 88, 1, 25, 1);
+    //    public static final String FONT_SIZE_MEDIUM = codes(ESC, 88, 1, 25, 1);
     public static final String FONT_SIZE_MEDIUM = codes(ESC, 0x58, 0x1, 25, 0x1);
 
 

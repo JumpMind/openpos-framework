@@ -14,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class LocalOnlyStrategyTest {
 
     @Autowired
-    EndpointDispatchInvocationHandler dispatcher;
+    EndpointInvoker dispatcher;
 
     @Autowired
     TestEndpoint endpoint;

@@ -4,6 +4,8 @@ import org.jumpmind.pos.util.DriversLicenseUtils;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class Form implements Serializable {
 
@@ -33,6 +35,14 @@ public class Form implements Serializable {
     private String name;
     
     private String iconType;
+
+    public Map<String, String> toMap() {
+        return getFormElements()
+                .stream()
+                .filter(formElement -> formElement instanceof FormField)
+                .map(formElement -> (FormField)formElement)
+                .collect(Collectors.toMap(FormField::getId, FormField::getValue));
+    }
 
     public List<IFormElement> getFormElements() {
         return formElements;
@@ -115,7 +125,9 @@ public class Form implements Serializable {
     }
 
     public PopTartField addPopTart(String fieldId, String label, String value, List<String> values, boolean required) {
-        return createPopTartField(fieldId, label, value, values, required);
+        PopTartField field = createPopTartField(fieldId, label, value, values, required);
+        formElements.add(field);
+        return field;
     }
 
     public static PopTartField createPopTartField(String fieldId, String label, String value, List<String> values, boolean required) {
@@ -380,7 +392,12 @@ public class Form implements Serializable {
     	formElements.add(formButton);
     	return formButton;
     }
-    
+
+    public FormField getField(String fieldId) {
+        IFormElement formElement = this.getFormElement(fieldId);
+        return formElement instanceof FormField ? (FormField)formElement : null;
+    }
+
     public FormField getTextField(String fieldId) {
         IFormElement formElement = this.getFormElement(fieldId);
         if (formElement != null && formElement instanceof FormField) {
@@ -440,7 +457,7 @@ public class Form implements Serializable {
         
         return returnValue;
     }
-    
+
     public void setName(String name) {
         this.name = name;
     }

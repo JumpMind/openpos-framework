@@ -9,6 +9,7 @@ public interface IconType {
     public static final String Back = "Back"; //keyboard_arrow_left
     public static final String BankIn = "BankIn"; //bank_transfer_in
     public static final String Barcode = "Barcode"; //barcode.svg
+    public static final String Broken = "Broken"; //broken_image.svg
     public static final String BusinessCustomer = "BusinessCustomer"; //business
     public static final String BypassAction = "BypassAction"; //low_priority
     public static final String Calculator = "Calculator"; //calculator
@@ -56,10 +57,12 @@ public interface IconType {
     public static final String Help = "Help"; //help
     public static final String Home = "Home"; //home
     public static final String Increment = "Increment"; //add
+    public static final String InProgress = "AutoRenew"; //autorenew
     public static final String ItemList = "ItemList"; //list
     public static final String Journal = "Journal"; //book
     public static final String KebabMenu = "KebabMenu"; //more_vert
     public static final String Lease = "Lease"; // account_balance
+    public static final String LightSolid = "LightSolid"; //ws_incandescent_up
     public static final String Links = "Links"; //link
     public static final String Light = "Light"; //lightbulb_on_outline
     public static final String Location = "Location";//location_on
@@ -67,6 +70,7 @@ public interface IconType {
     public static final String Logout = "Logout"; //input
     public static final String LoyaltyProgram = "LoyaltyProgram"; //loyalty
     public static final String NoReceipt = "NoReceipt"; //block
+    public static final String Notebook = "Notebook"; //notebook
     public static final String OrderHistory = "OrderHistory";
     public static final String OrderSearch = "OrderSearch";//shopping_cart
     public static final String Password = "Password";
@@ -95,6 +99,7 @@ public interface IconType {
     public static final String Trash = "Trash"; //delete
     public static final String User = "User";
     public static final String ViewAction = "ViewAction"; //pageview
+    public static final String Block = "Block"; //block
     public static final String WebOrder = "WebOrder"; //computer
     public static final String AddNote = "AddNote"; //note_add
     public static final String CheckRoutingSymbol = "CheckRoutingSymbol";

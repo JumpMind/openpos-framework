@@ -4,7 +4,6 @@ import { ChangeDetectorRef, Renderer2, ElementRef } from '@angular/core';
 import { Component, ViewChild, HostListener, ComponentRef, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatExpansionPanel } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
-import { Router } from '@angular/router';
 import { Configuration } from '../../../configuration/configuration';
 import { IScreen } from '../dynamic-screen/screen.interface';
 import { PersonalizationService } from '../../../core/personalization/personalization.service';
@@ -25,6 +24,7 @@ import { FileUploadService } from '../../../core/services/file-upload.service';
 import { IVersion } from '../../../core/interfaces/version.interface';
 import { Observable } from 'rxjs';
 import { DiscoveryService } from '../../../core/discovery/discovery.service';
+import { AudioLicense, AudioLicenseLabels } from '../audio-license/audio-license.interface';
 
 @Component({
     selector: 'app-dev-menu',
@@ -42,6 +42,26 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     FlowElements: Element[];
 
     savePoints: string[];
+
+    simAuthToken: string;
+
+    simPort: string;
+
+    simUrl: string;
+
+    simProtocol: string;
+
+    simAuthTokenAvailable = false;
+
+    customerDisplayAuthToken: string;
+
+    customerDisplayPort : string;
+
+    customerDisplayUrl: string;
+
+    customerDisplayProtocol: string;
+
+    customerDisplayAuthTokenAvailable = false;
 
     firstClickTime = Date.now();
 
@@ -62,6 +82,10 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     keyCount = 0;
 
     savePointFileName: string;
+
+    public audioLicenses: AudioLicense[];
+
+    public audioLicenseLabels: AudioLicenseLabels;
 
     public displaySavePoints = false;
 
@@ -104,17 +128,17 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     @ViewChild('devMenuPanel') devMenuPanel: MatExpansionPanel;
 
     constructor(
-            private personalization: PersonalizationService,
-            public screenService: ScreenService, public dialogService: DialogService, public session: SessionService,
-            public deviceService: DeviceService, public dialog: MatDialog,
-            public iconService: IconService, public snackBar: MatSnackBar, public overlayContainer: OverlayContainer,
-            private pluginService: OldPluginService,
-            private fileUploadService: FileUploadService,
-            private httpClient: HttpClient, private cd: ChangeDetectorRef,
-            private elRef: ElementRef, public renderer: Renderer2,
-            private electron: ElectronService,
-            private configurationService: ConfigurationService,
-            private discovery: DiscoveryService) {
+        private personalization: PersonalizationService,
+        public screenService: ScreenService, public dialogService: DialogService, public session: SessionService,
+        public deviceService: DeviceService, public dialog: MatDialog,
+        public iconService: IconService, public snackBar: MatSnackBar, public overlayContainer: OverlayContainer,
+        private pluginService: OldPluginService,
+        private fileUploadService: FileUploadService,
+        private httpClient: HttpClient, private cd: ChangeDetectorRef,
+        private elRef: ElementRef, public renderer: Renderer2,
+        private electron: ElectronService,
+        private configurationService: ConfigurationService,
+        private discovery: DiscoveryService) {
 
         if (Configuration.useTouchListener) {
             this.renderer.listen(elRef.nativeElement, 'touchstart', (event) => {
@@ -135,6 +159,9 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     }
 
     private populateDevTables(message: any) {
+        this.audioLicenses = message.audioLicenses;
+        this.audioLicenseLabels = message.audioLicenseLabels;
+
         if (message.currentState) {
             console.info('Pulling current state actions...');
             this.currentState = message.currentState.stateName;
@@ -148,78 +175,80 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                 });
             }
         }
-        if (message.scopes.ConversationScope) {
-            console.info('Pulling Conversation Scope Elements...');
-            this.ConvElements = [];
-            message.scopes.ConversationScope.forEach(element => {
-                if (!this.ConvElements.includes(element, 0)) {
-                    this.ConvElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-        }
-        if (message.scopes.SessionScope) {
-            console.info('Pulling Session Scope Elements...');
-            this.SessElements = [];
-            message.scopes.SessionScope.forEach(element => {
-                if (!this.SessElements.includes(element, 0)) {
-                    this.SessElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-        }
-        if (message.scopes.DeviceScope) {
-            console.info('Pulling Device Scope Elements...');
-            this.DeviceElements = [];
-            message.scopes.DeviceScope.forEach(element => {
-                if (!this.DeviceElements.includes(element, 0)) {
-                    this.DeviceElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-        }
-        if (message.scopes.FlowScope) {
-            console.info('Pulling Flow Scope Elements...');
-            this.FlowElements = [];
-            message.scopes.FlowScope.forEach(element => {
-                if (!this.FlowElements.includes(element, 0)) {
-                    this.FlowElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-            console.info(this.FlowElements);
-        }
+        if (message.scopes) {
+            if (message.scopes.ConversationScope) {
+                console.info('Pulling Conversation Scope Elements...');
+                this.ConvElements = [];
+                message.scopes.ConversationScope.forEach(element => {
+                    if (!this.ConvElements.includes(element, 0)) {
+                        this.ConvElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+            }
+            if (message.scopes.SessionScope) {
+                console.info('Pulling Session Scope Elements...');
+                this.SessElements = [];
+                message.scopes.SessionScope.forEach(element => {
+                    if (!this.SessElements.includes(element, 0)) {
+                        this.SessElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+            }
+            if (message.scopes.DeviceScope) {
+                console.info('Pulling Device Scope Elements...');
+                this.DeviceElements = [];
+                message.scopes.DeviceScope.forEach(element => {
+                    if (!this.DeviceElements.includes(element, 0)) {
+                        this.DeviceElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+            }
+            if (message.scopes.FlowScope) {
+                console.info('Pulling Flow Scope Elements...');
+                this.FlowElements = [];
+                message.scopes.FlowScope.forEach(element => {
+                    if (!this.FlowElements.includes(element, 0)) {
+                        this.FlowElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+                console.info(this.FlowElements);
+            }
 
-        if (message.scopes.ConfigScope) {
-            console.info('Pulling Config Scope Elements...');
-            this.ConfElements = [];
-            message.scopes.ConfigScope.forEach(element => {
-                if (!this.ConfElements.includes(element, 0)) {
-                    this.ConfElements.push({
-                        ID: element.name,
-                        Time: element.date,
-                        StackTrace: element.stackTrace,
-                        Value: element.value
-                    });
-                }
-            });
-            console.info(this.ConfElements);
+            if (message.scopes.ConfigScope) {
+                console.info('Pulling Config Scope Elements...');
+                this.ConfElements = [];
+                message.scopes.ConfigScope.forEach(element => {
+                    if (!this.ConfElements.includes(element, 0)) {
+                        this.ConfElements.push({
+                            ID: element.name,
+                            Time: element.date,
+                            StackTrace: element.stackTrace,
+                            Value: element.value
+                        });
+                    }
+                });
+                console.info(this.ConfElements);
+            }
         }
 
         if (message.saveFiles) {
@@ -229,6 +258,35 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
                 this.savePoints.push(saveName);
                 console.info(this.savePoints);
             });
+        }
+
+        if (message.simulator) {
+            console.info('Pulling sim auth token...');
+            this.simAuthToken = message.simulator.simAuthToken;
+            this.simPort = message.simulator.simPort;
+            this.simUrl = message.simulator.simUrl;
+            this.simProtocol = message.simulator.simProtocol;
+            if (message.simulator.simPort && message.simulator.simAuthToken && message.simulator.simAuthToken.length > 0) {
+                this.simAuthTokenAvailable = true;
+            } else {
+                this.simAuthTokenAvailable = false;
+            }
+        } else {
+            this.simAuthTokenAvailable = false;
+        }
+        if (message.customerDisplay) {
+            console.info('Pulling customer display token...');
+            this.customerDisplayAuthToken = message.customerDisplay.customerDisplayAuthToken;
+            this.customerDisplayPort = message.customerDisplay.customerDisplayPort;
+            this.customerDisplayUrl = message.customerDisplay.customerDisplayUrl;
+            this.customerDisplayProtocol = message.customerDisplay.customerDisplayProtocol;
+            if (message.customerDisplay.customerDisplayPort && message.customerDisplay.customerDisplayAuthToken && message.customerDisplay.customerDisplayAuthToken.length > 0) {
+                this.customerDisplayAuthTokenAvailable = true;
+            } else {
+                this.customerDisplayAuthTokenAvailable = false;
+            }
+        } else {
+            this.customerDisplayAuthTokenAvailable = false;
         }
     }
 
@@ -334,7 +392,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             console.info(`DevTools can't fetch server status since device is not yet personalized.`);
         }
         this.showDevMenu = !this.showDevMenu;
-        if (! this.personalization.getPersonalizationSuccessful$().getValue()) {
+        if (!this.personalization.getPersonalizationSuccessful$().getValue()) {
             // Due to a bug in the WKWebview, the below is needed on cordova to get the
             // DevMenu to show on the iPad when personalization has failed.  Without this code,
             // the DevMenu is invisible until the iPad is rotated. With this code, though, there
@@ -432,14 +490,41 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         this.personalization.dePersonalize();
         this.session.unsubscribe();
 
-        const d = this.dialog.open( PersonalizationComponent );
-        d.afterOpened().subscribe( () => this.session.cancelLoading() );
-        d.afterClosed().subscribe( () => this.personalization.refreshApp() );
+        const d = this.dialog.open(PersonalizationComponent);
+        d.afterOpened().subscribe(() => this.session.cancelLoading());
+        d.afterClosed().subscribe(() => this.personalization.refreshApp());
     }
 
     public onDevClearLocalStorage() {
         localStorage.clear();
         this.personalization.refreshApp();
+    }
+
+    public onOpenSimulator() {
+        const serverName = this.personalization.getServerName$().getValue();
+        const serverPort = this.personalization.getServerPort$().getValue();
+        const protocol = this.simProtocol ? this.simProtocol : window.location.protocol;
+        const sslEnabled = this.simProtocol && this.simProtocol === 'https' ? 'true' : 'false';
+        const displayPort = location.port === '4200'? location.port : this.simPort;
+        const url = this.simUrl ? this.simUrl : window.location.hostname;
+        const sim = protocol + '://' + url + ':'
+            + displayPort + '/#/?serverName=' + serverName + '&serverPort=' + serverPort
+            + '&deviceToken=' + this.simAuthToken + '&sslEnabled=' + sslEnabled;
+            window.open(sim);
+    }
+
+    public onOpenCustomerDisplay() {
+        const serverName = this.personalization.getServerName$().getValue();
+        const serverPort = this.personalization.getServerPort$().getValue();
+        const protocol = this.customerDisplayProtocol ? this.customerDisplayProtocol : window.location.protocol;
+        const displayPort = location.port === '4200'? location.port : this.customerDisplayPort;
+        const url = this.customerDisplayUrl ? this.customerDisplayUrl : window.location.hostname;
+        const sslEnabled = this.customerDisplayProtocol && this.customerDisplayProtocol === 'https' ? 'true' : 'false';
+
+        const customerDisplay = protocol + '://' + url + ':'
+            + displayPort + '/#/?serverName=' + serverName + '&serverPort=' + serverPort
+            + '&deviceToken=' + this.customerDisplayAuthToken + '&sslEnabled=' + sslEnabled;
+        window.open(customerDisplay);
     }
 
     public onDevRestartNode(): Promise<{ success: boolean, message: string }> {

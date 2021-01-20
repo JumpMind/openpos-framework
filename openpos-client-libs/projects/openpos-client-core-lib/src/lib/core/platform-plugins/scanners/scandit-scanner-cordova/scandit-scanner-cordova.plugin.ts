@@ -4,6 +4,7 @@ import { Observable, Subject } from 'rxjs';
 import { filter } from 'rxjs/operators';
 import { SessionService } from '../../../services/session.service';
 import { IPlatformPlugin } from '../../platform-plugin.interface';
+import {OpenposScanType} from '../openpos-scan-type.enum';
 import { IScanData } from '../scan.interface';
 import { IScanner } from '../scanner.interface';
 import { ScanditCameraViewComponent } from './scandit-camera-view/scandit-camera-view.component';
@@ -82,7 +83,16 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
             this.barcodeCapture = Scandit.BarcodeCapture.forContext(this.context, this.settings);
             this.barcodeCapture.feedback = this.getFeedback();
             this.barcodeCapture.isEnabled = false;
-            const camera = Scandit.Camera.default;
+
+            let camera;
+            if(this.config.camera === 'front'){
+                camera = Scandit.Camera.atPosition(Scandit.CameraPosition.UserFacing);
+            } else if( this.config.camera === 'rear'){
+                camera = Scandit.Camera.atPosition(Scandit.CameraPosition.WorldFacing);
+
+            } else {
+                camera = Scandit.Camera.default;
+            }
 
             if (!this.cameraSettings) {
                 this.cameraSettings = Scandit.BarcodeCapture.recommendedCameraSettings;
@@ -138,10 +148,16 @@ export class ScanditScannerCordovaPlugin implements IScanner, IPlatformPlugin {
         console.log('Scanned ', session);
         const scanData = (
             {
-                type: ScanditBarcodeUtils.convertToOpenposType(session.newlyRecognizedBarcodes[0].symbology),
+                type: ScanditBarcodeUtils.convertToOpenposType(session.newlyRecognizedBarcodes[0].symbology, session.newlyRecognizedBarcodes[0].data),
                 data: session.newlyRecognizedBarcodes[0].data
             }
         ) as IScanData;
+
+        // Scandit adds a leading 0 to UPCA scans and we need to strip it off
+        if(scanData.type === OpenposScanType.UPCA){
+            scanData.data = scanData.data.substring(1);
+        }
+
         this.scanData$.next(scanData);
     }
 

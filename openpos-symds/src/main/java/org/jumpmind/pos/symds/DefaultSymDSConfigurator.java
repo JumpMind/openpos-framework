@@ -2,6 +2,7 @@ package org.jumpmind.pos.symds;
 
 import org.jumpmind.symmetric.ISymmetricEngine;
 import org.jumpmind.symmetric.common.ParameterConstants;
+import org.jumpmind.symmetric.common.ServerConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
@@ -31,6 +32,7 @@ public class DefaultSymDSConfigurator implements ISymDSConfigurator {
         properties.put(ParameterConstants.INITIAL_LOAD_USE_EXTRACT_JOB, "false");
         properties.put(ParameterConstants.JOB_PUSH_PERIOD_TIME_MS, "10000");
         properties.put(ParameterConstants.INITIAL_LOAD_EXTRACT_JOB_START, "false");
+        properties.put(ServerConstants.HTTPS2_ENABLE, "false");
         properties.setProperty(ParameterConstants.DATA_LOADER_MAX_ROWS_BEFORE_COMMIT, "100");
         String nodeGroupId = env.getProperty("openpos.symmetric.nodeGroupId");
         if (isNotBlank(nodeGroupId)) {

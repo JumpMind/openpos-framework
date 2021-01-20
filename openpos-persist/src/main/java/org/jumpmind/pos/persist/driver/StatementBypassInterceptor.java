@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -20,7 +20,7 @@
  */
 package org.jumpmind.pos.persist.driver;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.properties.TypedProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,7 +63,7 @@ public class StatementBypassInterceptor extends StatementInterceptor {
     }
     
     @Override
-    public void preparedStatementExecute(String methodName, long elapsed, String sql) {
+    public void preparedStatementExecute(String methodName, long elapsed, String sql, Object[] objects) {
         // no op.
     }
 

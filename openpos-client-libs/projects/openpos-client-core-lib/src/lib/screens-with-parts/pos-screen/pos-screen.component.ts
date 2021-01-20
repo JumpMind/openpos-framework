@@ -16,6 +16,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
     sessionService: SessionService;
 
     subscriptions = new Subscription();
+    beforeBuildScreen$ = new Subject();
     destroyed$ = new Subject();
     screen$ = new ReplaySubject<T>(1);
 
@@ -31,7 +32,7 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
 
     show(screen: any) {
         this.screen = deepAssign(this.screen, screen);
-        this.screen$.next(this.screen);
+        this.beforeBuildScreen$.next();
         this.buildScreen();
     }
 

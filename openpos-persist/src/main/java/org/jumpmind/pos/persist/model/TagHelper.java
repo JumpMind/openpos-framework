@@ -6,9 +6,11 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -114,13 +116,15 @@ public class TagHelper {
      }
      
      protected Map<String, String> additionalFieldsToTags(Map<String, Object> additionalFields) {
-         Map<String, String> tags = new HashMap<>();
+         Map<String, String> tags = new CaseInsensitiveMap<>();
          for (String columnName : additionalFields.keySet()) {
              String columnUpper = columnName.toUpperCase();
              if (columnUpper.startsWith(TagModel.TAG_PREFIX)) {
                  Object value = additionalFields.get(columnName);
                  String tagName = columnUpper.substring(TagModel.TAG_PREFIX.length());
-                 tags.put(tagName, value.toString());
+                 if (tagConfig.hasTag(tagName)) {
+                     tags.put(tagName, value.toString());
+                 }
              }
          }
          

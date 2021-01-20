@@ -1,0 +1,33 @@
+
+.simulator-container {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 10% 80% 10%;
+  grid-template-areas:
+    "header header"
+    "left right"
+    "footer footer";
+}
+
+.header {
+  grid-area: header;
+}
+
+.right {
+  grid-area: right;
+}
+
+.left {
+  grid-area: left;
+}
+
+.footer {
+  grid-area: footer;
+}
+
+.receipt-container {
+  height: 100%;
+  text-align: center;
+}

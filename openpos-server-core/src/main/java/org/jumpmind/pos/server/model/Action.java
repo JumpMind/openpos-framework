@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -37,8 +37,6 @@ public class Action implements Serializable, Cloneable {
 
     private static final long serialVersionUID = 1L;
     
-    public static final Action ACTION_TIMEOUT = new Action("Timeout");
-
     @ToString.Include
     private String name;
     private Object data;

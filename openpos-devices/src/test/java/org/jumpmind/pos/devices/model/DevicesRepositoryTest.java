@@ -26,15 +26,13 @@ public class DevicesRepositoryTest {
         DeviceModel device = devicesRepository.getDevice("00100-001", "pos");
         assertNotNull(device);
         assertEquals("00100-001", device.getDeviceId());
-        assertEquals("WORKSTATION", device.getDeviceType());
         assertEquals("Store 100 Register 1", device.getDescription());
         assertEquals("N_AMERICA", device.getTagValue("REGION"));
         assertEquals("US", device.getTagValue("COUNTRY"));
         assertEquals("OH", device.getTagValue("STATE"));
         assertEquals("100", device.getTagValue("STORE_NUMBER"));
         assertEquals("REGULAR", device.getTagValue("STORE_TYPE"));
-        assertEquals("WORKSTATION", device.getTagValue("DEVICE_TYPE"));
+        assertEquals("WORKSTATION", device.getTagValue("APP_PROFILE"));
         assertEquals("Metl", device.getTagValue("PRICE_ZONE"));
-        assertEquals("POS", device.getTagValue("APP_PROFILE"));
     }
 }

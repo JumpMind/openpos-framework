@@ -3,7 +3,8 @@ apply from: '../openpos-gradle/src/main/resources/openpos.gradle'
 apply from: '../openpos-gradle/src/main/resources/spring.gradle'
 
 dependencies {
-    compile project(":openpos-flow")
-    compile group: 'com.hazelcast', name: 'hazelcast', version: '4.0'
-    compile group: 'com.hazelcast', name: 'hazelcast-spring', version: '4.0'
+    implementation project(":openpos-flow")
+    implementation group: 'com.hazelcast', name: 'hazelcast', version: '4.0.3'
+    implementation group: 'com.hazelcast', name: 'hazelcast-spring', version: '4.0.3'
+    testImplementation project(':openpos-test')
 }

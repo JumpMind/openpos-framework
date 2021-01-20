@@ -1,10 +1,14 @@
 package org.jumpmind.pos.service.strategy;
 
+import net.bytebuddy.implementation.bytecode.Throw;
 import org.jumpmind.pos.service.PosServerException;
 import org.jumpmind.pos.service.ProfileConfig;
 import org.jumpmind.pos.service.ServiceConfig;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
+import org.jumpmind.pos.util.model.ServiceException;
+import org.jumpmind.pos.util.model.ServiceResult;
+import org.jumpmind.pos.util.model.ServiceVisit;
 import org.jumpmind.pos.util.status.IStatusManager;
 import org.jumpmind.pos.util.status.IStatusReporter;
 import org.jumpmind.pos.util.status.Status;
@@ -29,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component(RemoteOnlyStrategy.REMOTE_ONLY_STRATEGY)
 public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements IInvocationStrategy, IStatusReporter {
@@ -53,6 +58,8 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
     public static final String STATUS_NAME = "NETWORK.REMOTE";
     public static final String STATUS_ICON = "cloud";
 
+    private Map<String, Status> statuses = new ConcurrentHashMap<>();
+
     public String getStrategyName() {
         return REMOTE_ONLY_STRATEGY;
     }
@@ -62,21 +69,51 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
     }
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
+    public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
 
-        ResourceAccessException lastException=null;
-        for (String profileId : config.getProfileIds()) {
+        Throwable lastException = null;
+        Object result = null;
+        List<ServiceVisit> serviceVisits = new ArrayList<>();
+
+        for (String profileId : profileIds) {
+            ServiceVisit serviceVisit = new ServiceVisit();
+            serviceVisit.setProfileId(profileId);
+            long startTime = System.currentTimeMillis();
             try {
-                return invokeProfile(serviceConfig.getProfileConfig(profileId), proxy, method, endpoints, args);
-            } catch (ResourceAccessException ex) {
+                result = invokeProfile(profileId, serviceConfig.getProfileConfig(profileId), proxy, method, endpoints, args);
+                break;
+            } catch (Throwable ex) {
+                serviceVisit.setException(ex);
                 lastException = ex;
-                logger.warn(String.format("Remote service %s unavailable.",profileId));
+                logger.warn(String.format("Remote service %s unavailable.", profileId), ex);
+            } finally {
+                serviceVisit.setElapsedTimeMillis(System.currentTimeMillis()-startTime);
+                serviceVisits.add(serviceVisit);
             }
         }
-        throw lastException;
+
+        if (result != null) {
+            populateServiceVisits(result, serviceVisits);
+            return result;
+        }
+
+        if (lastException != null) {
+            ServiceException serviceException = new ServiceException("Failed to invoke remote service(s)", lastException);
+            serviceException.setServiceVisits(serviceVisits);
+            throw serviceException;
+        }
+
+        log.warn("We should not have gotten here - there should be a result or lastException");
+        return null;
     }
 
-    private Object invokeProfile(ProfileConfig profileConfig, Object proxy, Method method,
+    private void populateServiceVisits(Object result, List<ServiceVisit> serviceVisits) {
+        if (result instanceof ServiceResult) {
+            ((ServiceResult) result).setServiceVisits(serviceVisits);
+        }
+    }
+
+    private Object invokeProfile(String profileId, ProfileConfig profileConfig, Object proxy, Method method,
                                  Map<String, Object> endpoints, Object[] args) throws ResourceAccessException {
 
         int httpTimeoutInSecond = profileConfig.getHttpTimeout();
@@ -113,12 +150,14 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
                         template.execute(serverUrl, requestBody, requestMethod, headers, newArgs);
                     } else {
                         Object result =  template.execute(serverUrl, requestBody, method.getReturnType(), requestMethod, headers, newArgs);
-                        reportStatus(Status.Online);
+                        statuses.put(profileId, Status.Online);
+                        reportStatus();
                         return result;
                     }
                 }
             } catch (Throwable ex) {
-                reportStatus(Status.Offline, ex.getMessage());
+                statuses.put(profileId, Status.Offline);
+                reportStatus(ex.getMessage());
                 throw ex;
             }
 
@@ -129,11 +168,22 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
 
     }
 
-    private void reportStatus(Status status) {
-        reportStatus(status, "");
+    private void reportStatus() {
+        reportStatus("");
     }
-    private void reportStatus(Status status, String message) {
-        this.lastStatus = new StatusReport(STATUS_NAME, STATUS_ICON, status, message);
+
+    private void reportStatus(String message) {
+
+        Status lowestCommonDenominatorStatus = Status.Online;
+
+        for (Status status : statuses.values()) {
+            if (status == Status.Error || status == Status.Offline) {
+                lowestCommonDenominatorStatus = status;
+                break;
+            }
+        }
+
+        this.lastStatus = new StatusReport(STATUS_NAME, STATUS_ICON, lowestCommonDenominatorStatus, message);
         if (this.statusManager != null) {
             this.statusManager.reportStatus(lastStatus);
         }

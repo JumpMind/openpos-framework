@@ -1,4 +1,4 @@
-import {Component, HostListener, Inject, OnDestroy, OnInit} from '@angular/core';
+import {Component, Inject, OnDestroy} from '@angular/core';
 import {Observable, Subject} from 'rxjs';
 import {takeUntil, tap} from 'rxjs/operators';
 import {ActionService} from '../actions/action.service';
@@ -11,13 +11,12 @@ import {LOCK_SCREEN_DATA} from './lock-screen.service';
   styleUrls: ['./lock-screen.component.scss'],
   providers: [ActionService]
 })
-export class LockScreenComponent implements OnDestroy{
+export class LockScreenComponent implements OnDestroy {
 
   data: LockScreenMessage;
-  password = "";
-  username = "";
+  password = '';
+  username = '';
   override = false;
-
   destroy = new Subject();
 
   constructor(
@@ -29,30 +28,25 @@ export class LockScreenComponent implements OnDestroy{
       ).subscribe();
   }
 
-  submit(){
-    if(this.override){
+  submit($event: any) {
+    $event.stopPropagation();
+    if (this.override) {
       this.doOverride();
-    }else{
+    } else {
       this.submitPassword();
     }
+    this.password = '';
   }
 
-  @HostListener('keydown', ['$event'])
-  onKeyDown(event: KeyboardEvent) {
-    // Stop the key press events from bubbling up out of the lock screen so they don't trigger any actions
-    // on the page behind the lock screen
-    event.stopPropagation();
-  }
-
-  submitPassword(){
+  submitPassword() {
     this.actionService.doAction(this.data.passwordAction, this.password);
   }
 
-  doOverride(){
-    this.actionService.doAction(this.data.overrideAction, {username: this.username, password: this.password})
+  doOverride() {
+    this.actionService.doAction(this.data.overrideAction, {username: this.username, password: this.password});
   }
 
-  toggleOverride(){
+  toggleOverride() {
     this.override = !this.override;
   }
 

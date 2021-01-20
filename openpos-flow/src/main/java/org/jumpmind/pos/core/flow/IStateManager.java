@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -23,6 +23,7 @@ package org.jumpmind.pos.core.flow;
 import java.util.Map;
 
 import org.jumpmind.pos.core.error.IErrorHandler;
+import org.jumpmind.pos.core.ui.CloseToast;
 import org.jumpmind.pos.core.ui.Toast;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
@@ -37,20 +38,18 @@ public interface IStateManager {
     void stop();
 
     public void init(String appId, String deviceId);
-    @Deprecated
-    public String getNodeId();
     public String getDeviceId();
     public String getAppId();
     public void doAction(String action);
     public void doAction(String action, Map<String, String> params);
     public void doAction(Action action);    
     public void transitionTo(Action action, Object newState);
-    public void timeout();
     public void endConversation();
     public void endSession();
     public void showScreen(UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProviderMap);
     public void showScreen(UIMessage screen);
     public void showToast(Toast toast);
+    public void closeToast(Toast toast);
     public void refreshScreen();
     public void reset();
     public Object getCurrentState();

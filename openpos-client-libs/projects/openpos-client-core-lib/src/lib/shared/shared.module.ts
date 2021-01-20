@@ -4,6 +4,7 @@ import {HttpModule} from '@angular/http';
 import {FlexLayoutModule} from '@angular/flex-layout';
 import {HttpClientModule} from '@angular/common/http';
 import {TextMaskModule} from 'angular2-text-mask';
+import {ToastrModule, ToastContainerModule} from 'ngx-toastr';
 import {MaterialModule} from '../material/material.module';
 import {MatKeyboardModule} from '../keyboard/keyboard.module';
 import {TaskCheckAllBoxComponent} from './components/task-check-all-box/task-check-all-box.component';
@@ -152,6 +153,11 @@ import {TransactionHistoryPartComponent} from './screen-parts/transaction-histor
 import {StatusBarComponent} from '../core/status/status-bar/status-bar.component';
 import {StampComponent} from './components/stamp/stamp.component';
 import {FitTextDirective} from './directives/fit-text.directive';
+import { PromptButtonRowComponent } from './screen-parts/prompt-button-row/prompt-button-row.component';
+import { WarnButtonComponent } from './components/warn-button/warn-button.component';
+import {StayFocusedDirective} from './directives/stay-focused.directive';
+import { AudioLicenseComponent } from './components/audio-license/audio-license.component';
+import { ToastComponent } from './components/toast/toast.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -182,6 +188,7 @@ const screenParts = [
     BasicBaconStripComponent,
     ImageTextPanelComponent,
     TransactionHistoryPartComponent,
+    PromptButtonRowComponent
 ];
 
 const components = [
@@ -210,6 +217,7 @@ const components = [
     DatePartChooserDialogComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
+    WarnButtonComponent,
     SideNavComponent,
     TrainingDialogComponent,
     TrainingWrapperComponent,
@@ -254,11 +262,13 @@ const components = [
     InstructionsComponent,
     TitleComponent,
     ContentCardComponent,
+    AudioLicenseComponent,
     OptionButtonComponent,
     OrderCardComponent,
     ButtonActionTimerComponent,
     TransactionSummaryComponent,
-    StampComponent
+    StampComponent,
+    ToastComponent
 ];
 
 const directives = [
@@ -287,7 +297,8 @@ const directives = [
     ArrowTabItemDirective,
     ResponsiveClassDirective,
     ResponsiveGridDirective,
-    FitTextDirective
+    FitTextDirective,
+    StayFocusedDirective
 ];
 
 const pipes = [
@@ -322,7 +333,8 @@ const pipes = [
         NavListComponent,
         SystemStatusDialogComponent,
         BaconDrawerComponent,
-        HelpTextPageWrapperComponent
+        HelpTextPageWrapperComponent,
+        ToastComponent
     ],
     imports: [
         FormsModule,
@@ -335,7 +347,11 @@ const pipes = [
         MaterialModule,
         MatKeyboardModule,
         TextMaskModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        ToastrModule.forRoot({
+            toastComponent: ToastComponent
+        }),
+        ToastContainerModule
     ],
     exports: [
         FormsModule,

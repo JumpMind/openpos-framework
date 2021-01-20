@@ -3,9 +3,10 @@ import java.text.SimpleDateFormat
 group = 'org.jumpmind.pos'
 
 apply plugin: 'eclipse'
-apply plugin: 'java'
+apply plugin: 'java-library'
 apply plugin: 'idea'
-apply plugin: 'maven'
+apply plugin: 'maven-publish'
+apply plugin: 'ru.vyarus.quality'
 
 def removeSnapshot = { v ->
     if (v.endsWith('-SNAPSHOT')) {
@@ -17,6 +18,11 @@ def removeSnapshot = { v ->
 sourceCompatibility=1.8
 targetCompatibility=1.8
 
+quality {
+   strict = false
+   consoleReporting = false
+}
+
 tasks.withType(JavaCompile) {
     options.compilerArgs = ['-Xlint:none']
 }
@@ -26,7 +32,7 @@ ext {
     springfoxSwaggerVersion='2.9.2'
     javaposVersion='1.14.2'
     jacksonVersion='2.8.10'
-    lombokVersion='1.18.6'
+    lombokVersion='1.18.16'
     snakeYamlVersion='1.23'
 }
 
@@ -51,19 +57,18 @@ processResources {
 
 
 repositories { 
-    maven {
-        url symmetricMavenUrl 
-        jcenter()
-        mavenCentral()
-    } 
+    maven { url symmetricMavenUrl }
+    jcenter()
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 jar {
     manifest {
         attributes("Implementation-Title": project.name,
-                "Implementation-Version": project.hasProperty('version') && version ? version : '0.0',
+                "Implementation-Version": project.hasProperty('version') && project.getProperty('version') ? project.getProperty('version') : '0.0',
                 "Project-Artifact": project.name,
-                "Build-Version": project.hasProperty('version') && version ? version : '0.0',
+                "Build-Version": project.hasProperty('version') && project.getProperty('version') ? project.getProperty('version') : '0.0',
                 "Build-Time": new SimpleDateFormat("yyyyMMdd-HHmm").format(new Date()),
                 "Build-Name": buildName,
                 "Build-Number": buildNumber,
@@ -96,16 +101,6 @@ eclipse {
             type = 'EXCLUDE_ALL'
             matcher {
                 id = 'org.eclipse.ui.ide.orFilterMatcher'
-                //               matcher {
-                //                 id = 'org.eclipse.ui.ide.multiFilter'
-                //                 arguments = '1.0-projectRelativePath-matches-false-false-bin'
-                //               }
-                /*
-                matcher {
-                    id = 'org.eclipse.ui.ide.multiFilter'
-                    arguments = '1.0-projectRelativePath-matches-false-false-build'
-                }
-                */
                 matcher {
                     id = 'org.eclipse.ui.ide.multiFilter'
                     arguments = '1.0-name-matches-false-false-*.class'
@@ -120,12 +115,10 @@ eclipse {
 }
 
 test {
-    // ignoreFailures = true
+    if (project.hasProperty('ignoreFailures')) {
+       ignoreFailures = project.property('ignoreFailures').toBoolean()
+    }
     testLogging.showStandardStreams = true
-
-//     forkEvery = 1
-//     maxParallelForks = 5
-
     //Dynamic exclude through property defined in the build.gradle file
     if (project.hasProperty('excludeTests')) {
         println('Excluding tests: ' + project.property('excludeTests'))
@@ -157,33 +150,33 @@ task develop {
 
 }
 
-configurations {
-    testArtifacts.extendsFrom testRuntime
-    deployerJars
-}
-
 dependencies {
-    deployerJars group: 'org.apache.maven.wagon', name: 'wagon-ssh', version: '3.3.2'
-    dependencies {
-          compile group: 'org.yaml', name: 'snakeyaml', version: snakeYamlVersion
-          compileOnly("org.projectlombok:lombok:${lombokVersion}")
-          testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
-          annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
-          testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    implementation group: 'org.yaml', name: 'snakeyaml', version: snakeYamlVersion
+    compileOnly("org.projectlombok:lombok:${lombokVersion}")
+    testCompileOnly("org.projectlombok:lombok:${lombokVersion}")
+    annotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+    testAnnotationProcessor("org.projectlombok:lombok:${lombokVersion}")
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            artifact sourcesJar {
+              classifier 'sources'
+            }
+            artifact testJar {
+              classifier 'test'
+            }
+        }
     }
-}
-
-artifacts {
-    archives testJar
-    archives sourcesJar
-    testArtifacts testJar
-}
-
-uploadArchives {
-    repositories.mavenDeployer {
-        configuration = configurations.deployerJars
-        repository(url: deployUploadUrl) {
-            authentication(userName: deployUser, password: deployPassword)
+    repositories {
+        maven {
+            url "$deploySftpUrl"
+            credentials {
+                username deployUser
+                password deployPassword
+            }
         }
     }
 }
@@ -191,7 +184,7 @@ uploadArchives {
 task deploy {
     description 'Shortcut for Maven users'
     if (!gitBranch.equals('merge')) {
-        dependsOn tasks.uploadArchives
+        dependsOn tasks.publish
     }
 }
 

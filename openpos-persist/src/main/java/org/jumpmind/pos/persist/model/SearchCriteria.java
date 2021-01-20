@@ -3,13 +3,16 @@ package org.jumpmind.pos.persist.model;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.ToString;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.util.model.ITypeCode;
 
+@ToString
 public class SearchCriteria {
 
     Map<String, Object> criteria;
 
+    @ToString.Exclude
     Class<? extends AbstractModel> entityClass;
 
     boolean useAnd = true;

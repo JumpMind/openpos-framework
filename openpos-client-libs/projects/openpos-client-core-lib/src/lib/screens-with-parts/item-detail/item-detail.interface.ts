@@ -7,10 +7,12 @@ export interface ItemDetailInterface extends IAbstractScreen {
     imageUrls: string[];
     alternateImageUrl: string;
     itemName: string;
+    itemValueDisplay: DisplayProperty;
     summary: string;
     itemProperties: DisplayProperty[];
     itemActions: IActionItem[];
     itemPromotionsTitle: string;
     itemNoPromotionsTitle: string;
     promotions: IPromotionInterface[];
+    promotionStackingDisclaimer: string;
 }

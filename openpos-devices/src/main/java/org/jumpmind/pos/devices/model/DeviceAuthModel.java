@@ -13,7 +13,7 @@ import org.jumpmind.pos.persist.*;
 @IndexDefs({
         @IndexDef(name = "idx_devices_auth_token", column = "authToken")
 })
-public class DeviceAuthModel extends AbstractModel {
+public class DeviceAuthModel extends AbstractModel implements Comparable {
     @ColumnDef
     private String deviceId;
 
@@ -22,4 +22,16 @@ public class DeviceAuthModel extends AbstractModel {
 
     @ColumnDef()
     private String authToken;
+
+    @Override
+    public int compareTo(Object o) {
+        if (o instanceof DeviceAuthModel) {
+            DeviceAuthModel da2 = (DeviceAuthModel)o;
+            String id2 = da2.getDeviceId() + ":" + da2.getAppId();
+            String id1 = getDeviceId() + ":" + getAppId();
+            return id1.compareTo(id2);
+        } else {
+            return -1;
+        }
+    }
 }

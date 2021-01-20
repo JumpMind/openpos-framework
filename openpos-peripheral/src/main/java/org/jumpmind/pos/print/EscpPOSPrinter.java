@@ -3,11 +3,13 @@ package org.jumpmind.pos.print;
 import jpos.JposException;
 import jpos.POSPrinterConst;
 import jpos.services.EventCallbacks;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.text.StrSubstitutor;
+import org.jumpmind.pos.util.AppUtils;
+import org.jumpmind.pos.util.BoolUtils;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.status.Status;
-import org.jumpmind.pos.util.status.StatusReport;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -18,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+@Slf4j
 public class EscpPOSPrinter implements IOpenposPrinter {
 
     PrinterCommands printerCommands = new PrinterCommandPlaceholders();
@@ -30,6 +33,12 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     boolean deviceEnabled = true;
     private String printerName;
 
+    // certain configurations have to be configured for "unsolicited status" to work properly, which means
+    // status bytes come back after commands where we are not really interested in them.
+    // 11/25/2020 = This was added specifically to support reading the cash drawer status over USB on the Toshiba
+    // TcX (Suremark) printer.
+    boolean unsolicitedStatusMode = false;
+
     static final int STATUS_RECEIPT_PAPER_LOW = 0b00000001;
     static final int STATUS_COVER_OPEN = 0b00000010;
     static final int STATUS_RECEIPT_PAPER_OUT = 0b00000100;
@@ -39,9 +48,10 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
-    private PrinterStatusReporter printerStatusReporter;
+    private IPrinterStatusReporter printerStatusReporter;
 
     public EscpPOSPrinter() {
+        this.settings = new HashMap<>();
 
     }
 
@@ -60,6 +70,9 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         this.peripheralConnection = connectionFactory.open(this.settings);
         this.writer = new PrintWriter(peripheralConnection.getOut());
         imagePrinter = new EscpImagePrinter(printerCommands.get(PrinterCommands.IMAGE_START_BYTE)); // TODO parameterize the image byte
+
+        unsolicitedStatusMode = BoolUtils.toBoolean(settings.get("unsolicitedStatusMode"));
+
         initializePrinter();
     }
 
@@ -133,11 +146,53 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     }
 
     @Override
+    public int waitForDrawerClose(String cashDrawerId, long timeout) {
+        long startTime = System.currentTimeMillis();
+        int drawerState = DRAWER_OPEN;
+        try {
+            while (drawerState != DRAWER_CLOSED && System.currentTimeMillis() - startTime < timeout) {
+                    Thread.sleep(1000);
+                    drawerState = isDrawerOpen(cashDrawerId) ? DRAWER_OPEN : DRAWER_CLOSED;
+            }
+        } catch (Exception e) {
+            String msg = String.format("Failure to read the status of the drawer: %s", cashDrawerId);
+            throw new PrintException(msg, e);
+        }
+        return drawerState;
+    }
+
+    public boolean isDrawerOpen(String cashDrawerId) {
+        try {
+            PeripheralConnection connection = getPeripheralConnection();
+            connection.resetInput();
+            connection.getOut().write(getCommand(PrinterCommands.CASH_DRAWER_STATE).getBytes());
+            connection.getOut().flush();
+            AppUtils.sleep(500);
+
+            if (unsolicitedStatusMode) {
+                int statusByteThrowaway1 = connection.getIn().read();
+                int statusByteThrowaway2 = connection.getIn().read();
+            }
+
+            int cashDrawerState = connection.getIn().read();
+            log.debug("cash drawer state was: {}", cashDrawerState);
+            return cashDrawerState == DRAWER_OPEN ? true : false;
+        } catch (Exception e) {
+            String msg = String.format("Failure to read the status of the drawer: %s", cashDrawerId);
+            throw new PrintException(msg, e);
+        }
+    }
+
+    @Override
     public void printBarCode(int station, String data, int symbology, int height, int width, int alignment, int textPosition) {
-        String printBarcodeCommand = buildBarcodeCommand(station, data, symbology, height, width, alignment, textPosition);
-        printNormal(0, printerCommands.get(PrinterCommands.ALIGN_CENTER));
-        printNormal(0, printBarcodeCommand);
-        printNormal(0, printerCommands.get(PrinterCommands.ALIGN_LEFT));
+        try {
+            printNormal(0, printerCommands.get(PrinterCommands.ALIGN_CENTER));
+            String printBarcodeCommand = buildBarcodeCommand(station, data, symbology, height, width, alignment, textPosition);
+            printNormal(0, printBarcodeCommand);
+            printNormal(0, printerCommands.get(PrinterCommands.ALIGN_LEFT));
+        } catch (Exception ex) {
+            throw new PrintException("Failed to print barcode: " + data + " symbology: " + symbology, ex);
+        }
     }
 
     public String buildBarcodeCommand(int station, String data, int symbology, int height, int width, int alignment, int textPosition) {
@@ -150,20 +205,52 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         switch (symbology) {
             case POSPrinterConst.PTR_BCS_Code128:
                 substitutions.put("barcodeType", printerCommands.get(PrinterCommands.BARCODE_TYPE_CODE_128));
-                barcodeData = printerCommands.get(PrinterCommands.BARCODE_TYPE_CODE_128_CODEA) + data;
+
+                if (StringUtils.isNumeric(data)) {
+                    List<Byte> barcodeCommand = new ArrayList<>();
+                    for (byte b : getCommand(PrinterCommands.BARCODE_TYPE_CODE_128_CODEC).getBytes()) {
+                        barcodeCommand.add(b);
+                    }
+                    for (int i = 0; i < data.length(); i++) {
+                        if (i <= data.length() - 2) {
+                            byte number = (byte) Integer.parseInt(data.substring(i, i + 2));
+                            barcodeCommand.add(number);
+                            i++;
+                        } else {
+                            // switch to code B just for the last (ODD) number.  Code C only support an even number of digits.
+                            for (byte b : getCommand(PrinterCommands.BARCODE_TYPE_CODE_128_CODEB).getBytes()) {
+                                barcodeCommand.add(b);
+                            }
+                            barcodeCommand.add(data.substring(i, i + 1).getBytes()[0]);
+                        }
+                    }
+
+                    barcodeData = new String(toBytes(barcodeCommand));
+                } else {
+                    barcodeData = getCommand(PrinterCommands.BARCODE_TYPE_CODE_128_CODEB) + data;
+
+                }
+                substitutions.put("barcodeLength", new String(new byte[] {(byte)barcodeData.length()}));
+                substitutions.put("barcodeData", barcodeData);
+
                 break;
             default:
                 throw new PrintException("Unsupported barcode symbology: " + symbology);
         }
 
-        substitutions.put("barcodeLength", String.valueOf((char) barcodeData.length()));
-
-        substitutions.put("barcodeData", barcodeData);
 
         StrSubstitutor substitutor = new StrSubstitutor(substitutions);
 
         printBarcodeCommand = substitutor.replace(printBarcodeCommand);
         return printBarcodeCommand;
+    }
+
+    private byte[] toBytes(List<Byte> barcodeCommand) {
+        byte[] bytes = new byte[barcodeCommand.size()];
+        for (int i = 0; i < barcodeCommand.size(); i++) {
+            bytes[i] = barcodeCommand.get(i);
+        }
+        return bytes;
     }
 
     @Override
@@ -215,7 +302,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
         return printerCommands.get(commandName);
     }
 
-    public void init(Map<String, Object> settings, PrinterStatusReporter printerStatusReporter) {
+    public void init(Map<String, Object> settings, IPrinterStatusReporter printerStatusReporter) {
         this.printerStatusReporter = printerStatusReporter;
         this.settings = settings;
         this.refreshConnectionFactoryFromSettings();
@@ -305,35 +392,49 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     public String readMicr() {
         StringBuilder buff = new StringBuilder(32);
 
-        int status = -1;
+        byte status = -1;
+
+        getPeripheralConnection().resetInput();
 
         try {
             getPeripheralConnection().getOut().write(new byte[]{0x1B, 0x77, 0x01});
             getPeripheralConnection().getOut().flush();
             long micrWaitTime = Long.valueOf(settings.getOrDefault("micrWaitTime", "2000").toString());
             long micrTimeout = Long.valueOf(settings.getOrDefault("micrTimeout", "20000").toString());
+
             Thread.sleep(micrWaitTime);
+
+            int available = 0, lastAvailable = 0;
 
             long start = System.currentTimeMillis();
 
-            while (System.currentTimeMillis() - start < micrTimeout
-                    && (status = getPeripheralConnection().getIn().read()) == -1) {
-                Thread.sleep(100);
+            while ((System.currentTimeMillis() - start) < micrTimeout)  {
+                available = getPeripheralConnection().getIn().available();
+                if (available > 0 && available == lastAvailable) { // looking for available bytes to stabilize.
+                    break;
+                }
+                lastAvailable = available;
+                Thread.sleep(500);
             }
 
-            Thread.sleep(micrWaitTime);
+            if (available == 0) {
+                throw new PrintException("Could not read micr data.");
+            }
+
+            byte[] micrBytes = new byte[available];
+
+            int bytesRead = getPeripheralConnection().getIn().read(micrBytes);
+
+            status = micrBytes[0];
+
+            for (int i = 1; i < bytesRead; i++) {
+                if (micrBytes[i] == '\r') { // MICR read is spec'd to end in carriage return
+                    break;
+                }
+                buff.append((char) micrBytes[i]);
+            }
 
             endSlipMode(); // kick the slip out no matter what happenens.
-
-            if (status == -1) {
-                throw new PrintException("MICR read timed out.");
-            }
-
-            int current;
-
-            while ((current = getPeripheralConnection().getIn().read()) != -1) {
-                buff.append((char) current);
-            }
 
             if (status != 0) {
                 throw new PrintException("MICR read failed with error code: " + status);

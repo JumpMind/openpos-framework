@@ -27,6 +27,8 @@ public class OptionsListPart implements Serializable {
 
     private ActionItem overflowButton;
 
+    private boolean firstElementFocused;
+
     public void addOption(ActionItem option) {
         if (this.options == null) {
             this.options = new ArrayList<>();

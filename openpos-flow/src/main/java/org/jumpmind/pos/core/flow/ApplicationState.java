@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -28,6 +28,7 @@ import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
 /**
  * Responsible for housing all true state data for a node. That is, it should be
@@ -50,9 +51,19 @@ public class ApplicationState {
 
     private Map<String, UIDataMessageProvider<?>> dataMessageProviderMap;
 
-    public void reset() {
+    public void reset(ScheduledAnnotationBeanPostProcessor scheduledAnnotationBeanPostProcessor) {
         Object queryParams = scope.getDeviceScope().get("queryParams");
         Object personalizationProperties = scope.getDeviceScope().get("personalizationProperties");
+
+        scope.getDeviceScope().keySet().forEach(s->
+                scheduledAnnotationBeanPostProcessor.
+                        postProcessBeforeDestruction(scope.getDeviceScope().get(s).getValue(), s));
+
+        scope.getDeviceScope().values().stream().
+                filter(s->s.getValue() instanceof AsyncExecutor).
+                map(s-> (AsyncExecutor)s.getValue()).
+                forEach(a->a.cancel());
+
         scope = new Scope();
         stateStack = new LinkedList<>();
         currentContext = null;

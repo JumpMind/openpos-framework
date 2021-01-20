@@ -18,6 +18,38 @@
         </mat-expansion-panel-header>
 
         <mat-tab-group dynamicHeight>
+            <mat-tab label="Options">
+                <div>
+                    <h1>Options</h1>
+                    <ul [style.height.px]="'250'">
+                        <li>
+                            <button mat-button (click)="onPersonalize()">Personalize</button>
+                        </li>
+                        <li>
+                            <button mat-button (click)="onDevRefreshView()">Refresh View</button>
+                        </li>
+                        <li>
+                            <button mat-button (click)="onDevClearLocalStorage()">Clear Local Storage</button>
+                        </li>
+                        <li>
+                            <div fxFlexFill fxLayout="row"  fxLayoutGap="20px" fxLayoutAlign="left center">
+                                <button mat-button [disabled]="!simAuthTokenAvailable" (click)="onOpenSimulator()">Open Simulator</button>
+                                <div *ngIf="!simAuthTokenAvailable"><p style="color:red">No device auth token found. Ensure SimDeviceStartupTask is enabled for pos devices.</p></div>
+                            </div>
+                        </li>
+                        <li>
+                            <div fxFlexFill fxLayout="row"  fxLayoutGap="20px" fxLayoutAlign="left center">
+                                <button mat-button [disabled]="!customerDisplayAuthTokenAvailable" (click)="onOpenCustomerDisplay()">Open Customer Display</button>
+                                <div *ngIf="!customerDisplayAuthTokenAvailable"><p style="color:red">No device auth token found. Ensure Customer Display is enabled for pos devices.</p></div>
+                            </div>
+                        </li>
+                    </ul>
+
+                    <div fxFlexFill fxLayout="row" fxLayoutAlign="left start" fxLayoutAlign.xs="left">
+                        <button mat-raised-button color="primary" (click)="onDevRestartNode()">Restart Node</button>
+                    </div>
+                </div>
+            </mat-tab>
             <mat-tab label="State">
                 <div class="stateTab">
                     <div [style.width.px]="'30vw'">
@@ -260,27 +292,6 @@
                     </div>
                 </div>
             </mat-tab>
-            <mat-tab label="Local Storage">
-                <div>
-                    <h1>Local Storage</h1>
-                    <ul [style.height.px]="'250'">
-                        <li>
-                            <button mat-button (click)="onPersonalize()">Personalize</button>
-                        </li>
-                        <li>
-                            <button mat-button (click)="onDevRefreshView()">Refresh View</button>
-                        </li>
-                        <li>
-                            <button mat-button (click)="onDevClearLocalStorage()">Clear Local Storage</button>
-                        </li>
-                    </ul>
-
-                    <div fxFlexFill fxLayout="row" fxLayoutAlign="left start" fxLayoutAlign.xs="left">
-                        <button mat-raised-button color="primary" (click)="onDevRestartNode()">Restart Node</button>
-                    </div>
-                </div>
-            </mat-tab>
-
             <mat-tab *ngIf="logFilenames && logFilenames.length > 0" label="Logs">
                 <h1>Logs</h1>
                 <div class="logs">
@@ -334,30 +345,38 @@
                 </div>
             </mat-tab>
             <mat-tab label="About">
-                <h1>About</h1>
-                <mat-card *ngFor="let v of versions()">
-                    <mat-card-title>{{v.componentName}}</mat-card-title>
-                    <mat-card-content>
-                        <div>
-                            <strong>Version: </strong>{{v.version}}
-                        </div>
-                        <div>
-                            <strong>Build Number: </strong>{{v.buildNumber}}
-                        </div>
-                        <div>
-                            <strong>Build Time: </strong>{{v.buildTime}}
-                        </div>
-                        <div>
-                            <strong>Branch: </strong>{{v.gitBranch}}
-                        </div>
-                        <div>
-                            <strong>Git Hash: </strong>{{v.gitHash}}
-                        </div>
-                        <div>
-                            <strong>Build Name: </strong>{{v.buildName}}
-                        </div>
-                    </mat-card-content>
-                </mat-card>
+                <div>
+                    <h1>About</h1>
+                    <mat-card *ngFor="let v of versions()">
+                        <mat-card-title>{{v.componentName}}</mat-card-title>
+                        <mat-card-content>
+                            <div>
+                                <strong>Version: </strong>{{v.version}}
+                            </div>
+                            <div>
+                                <strong>Build Number: </strong>{{v.buildNumber}}
+                            </div>
+                            <div>
+                                <strong>Build Time: </strong>{{v.buildTime}}
+                            </div>
+                            <div>
+                                <strong>Branch: </strong>{{v.gitBranch}}
+                            </div>
+                            <div>
+                                <strong>Git Hash: </strong>{{v.gitHash}}
+                            </div>
+                            <div>
+                                <strong>Build Name: </strong>{{v.buildName}}
+                            </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <mat-card>
+                        <mat-card-title>Audio Licenses</mat-card-title>
+                        <app-audio-license class="audio-license" *ngFor="let audioLicense of audioLicenses"
+                                           [license]="audioLicense" [labels]="audioLicenseLabels">
+                        </app-audio-license>
+                    </mat-card>
+                </div>
             </mat-tab>
         </mat-tab-group>
 

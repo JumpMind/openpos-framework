@@ -34,4 +34,8 @@ public final class UIMessageType {
     public static String TRANSACTION_SEARCH = "TransactionSearch";
     public static String TRANSACTION_DETAILS = "TransactionDetails";
     public static String PROMOTION_SEARCH = "PromotionSearch";
+    public static String SIMULATED_PERIPHERAL = "SimulatedPeripheral";
+    public static String AUDIO = "Audio";
+    public static String AUDIO_CONFIG = "AudioConfig";
+    public static String AUDIO_PRELOAD = "AudioPreload";
 }

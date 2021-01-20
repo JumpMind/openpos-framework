@@ -1,7 +1,6 @@
-import {Directive, ElementRef, OnDestroy, OnInit, Renderer2} from '@angular/core';
-import {KeyPressProvider} from '../providers/keypress.provider';
-import {fromEvent, merge, Subject} from 'rxjs';
-import {filter, takeUntil, tap} from 'rxjs/operators';
+import { Directive, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { KeyPressProvider } from '../providers/keypress.provider';
+import { fromEvent, Subject } from 'rxjs';
 
 @Directive({
     selector: '[appKeypressSource]',
@@ -16,35 +15,13 @@ export class KeyPressSourceDirective implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.keyPressProvider.registerKeyPressSource(this.keyup$);
-        this.keyPressProvider.registerKeyPressSource(this.keydown$);
+        this.keyPressProvider.registerKeyPressSource(fromEvent<KeyboardEvent>(this.el.nativeElement, 'keyup'));
+        this.keyPressProvider.registerKeyPressSource(fromEvent<KeyboardEvent>(this.el.nativeElement, 'keydown'));
+
         // Need to do this so that this element can grab key events
         this.renderer.setAttribute(this.el.nativeElement, 'tabindex', '0');
-
-        const keydownEvent$ = fromEvent<KeyboardEvent>(this.el.nativeElement, 'keydown');
-        const keyupEvent$ = fromEvent<KeyboardEvent>(this.el.nativeElement, 'keyup');
-
-        merge(keydownEvent$, keyupEvent$).pipe(
-            filter(event => this.el.nativeElement.contains(event.target)),
-            tap(event => this.handleKeyboardEvent(event)),
-            takeUntil(this.destroyed$)
-        ).subscribe();
     }
 
-    handleKeyboardEvent(event: KeyboardEvent): void {
-        if(event.type === 'keydown') {
-            this.keydown$.next(event)
-        } else {
-            this.keyup$.next(event)
-        }
-
-        if(this.keyPressProvider.keyHasSubscribers(event)) {
-            event.stopPropagation();
-            event.preventDefault();
-            const key = this.keyPressProvider.getNormalizedKey(event);
-            console.log(`[appKeypressSource]: Handling "${event.type}" event for "${key}" for element`, this.el.nativeElement);
-        }
-    }
 
     ngOnDestroy(): void {
         this.keyPressProvider.unregisterKeyPressSource(this.keyup$);

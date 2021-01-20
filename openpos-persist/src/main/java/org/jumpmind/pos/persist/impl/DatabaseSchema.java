@@ -2,14 +2,12 @@ package org.jumpmind.pos.persist.impl;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.math.BigDecimal;
 import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import lombok.SneakyThrows;
 import org.apache.commons.collections4.map.CaseInsensitiveMap;
@@ -28,6 +26,10 @@ import org.jumpmind.db.platform.IDatabasePlatform;
 import org.jumpmind.db.platform.IDdlBuilder;
 import org.jumpmind.db.sql.SqlScript;
 import org.jumpmind.pos.persist.*;
+import org.jumpmind.pos.persist.model.AugmenterConfig;
+import org.jumpmind.pos.persist.model.AugmenterHelper;
+import org.jumpmind.pos.persist.model.AugmenterIndexConfig;
+import org.jumpmind.pos.persist.model.AugmenterModel;
 import org.jumpmind.pos.util.model.ITypeCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,13 +45,15 @@ public class DatabaseSchema {
     private Database desiredModel;
     private static ModelValidator modelClassValidator = new ModelValidator();
     private String tablePrefix;
+    private AugmenterHelper augmenterHelper;
 
     @SneakyThrows
-    public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses) {
+    public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses, AugmenterHelper augmenterHelper) {
         this.platform = platform;
         this.tablePrefix = tablePrefix;
         this.entityClasses = entityClasses;
         this.entityExtensionClasses = entityExtensionClasses;
+        this.augmenterHelper = augmenterHelper;
         desiredModel = buildDesiredModel();
     }
 
@@ -130,7 +134,7 @@ public class DatabaseSchema {
                 log.info("There are database tables that need to be created or altered. SQL generated:\r\n{}", alterSql);
                 runScript(alterSql);
                 actualModel = platform.readFromDatabase(desiredModel.getTables());
-                log.info("Finished updating tables.");
+                log.info("Finished updating tables");
                 refreshMetaData(actualModel);
                 return true;
             } else {
@@ -217,12 +221,12 @@ public class DatabaseSchema {
         }
     }
 
-    public static ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses) {
+    public ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses) {
         return createMetaData(clazz, entityExtensionClasses, null);
     }
 
     @SneakyThrows
-    public static ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses, IDatabasePlatform databasePlatform) {
+    public ModelMetaData createMetaData(Class<?> clazz, List<Class<?>> entityExtensionClasses, IDatabasePlatform databasePlatform) {
         List<ModelClassMetaData> list = new ArrayList<>();
         Class<?> entityClass = clazz;
         boolean ignoreSuperClasses = false;
@@ -250,7 +254,7 @@ public class DatabaseSchema {
                 for (Class<?> extensionClass : myExtensions) {
                     createClassFieldsMetadata(extensionClass, meta, true, columns, databasePlatform);
                 }
-
+                createAugmentedFieldsMetaData(meta, columns, databasePlatform);
                 meta.init();
 
                 for (Column column : meta.getPrimaryKeyColumns()) {
@@ -275,12 +279,32 @@ public class DatabaseSchema {
             for (IIndex index : indices.values()) {
                 dbTable.addIndex(index);
             }
+            Map<String, IIndex> augmentedIndices = createAugmentedIndices(currentClass, dbTable, meta, platform);
+            for (IIndex index : augmentedIndices.values()) {
+                dbTable.addIndex(index);
+            }
         }
 
         ModelMetaData metaData = new ModelMetaData();
         metaData.setModelClassMetaData(list);
         metaData.init();
         return metaData;
+    }
+
+    private void createAugmentedFieldsMetaData(ModelClassMetaData meta, List<Column> columns, IDatabasePlatform databasePlatform) {
+        List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(meta.getClazz());
+        for (AugmenterConfig config : configs) {
+            meta.getAugmenterConfigs().add(config);
+            for (AugmenterModel augmenterModel : config.getAugmenters()) {
+                meta.getAugmentedFieldNames().add(augmenterModel.getName());
+                Column column = new Column();
+                column.setName(alterCaseToMatchDatabaseDefaultCase(config.getPrefix(), databasePlatform) + alterCaseToMatchDatabaseDefaultCase(camelToSnakeCase(augmenterModel.getName()), databasePlatform));
+                column.setDefaultValue(augmenterModel.getDefaultValue());
+                column.setSize(augmenterModel.getSize() != null ? Integer.toString(augmenterModel.getSize()) : "32");
+                column.setTypeCode(Types.VARCHAR);
+                columns.add(column);
+            }
+        }
     }
 
     public static Set<String> getPrimaryKeyNames(TableDef tblAnnotation) {
@@ -307,7 +331,7 @@ public class DatabaseSchema {
     }
 
     @SneakyThrows
-    private static void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
+    private void createClassFieldsMetadata(Class<?> clazz, ModelClassMetaData metaData,
                                                   boolean includeAllFields, List<Column> columns, IDatabasePlatform platform) {
 
         Field[] fields = clazz.getDeclaredFields();
@@ -338,7 +362,7 @@ public class DatabaseSchema {
         }
     }
 
-    private static Map<String, IIndex> createIndices(IndexDefs indexDefs, Table table,
+    private Map<String, IIndex> createIndices(IndexDefs indexDefs, Table table,
                                                      ModelClassMetaData metaData, IDatabasePlatform platform) {
         Map<String, IIndex> indices = new HashMap<>();
         if (indexDefs != null && indexDefs.value() != null) {
@@ -350,7 +374,7 @@ public class DatabaseSchema {
         return indices;
     }
 
-    private static void parseIndexDef(IndexDef indexDef, Table table, Map<String, IIndex> indices, ModelClassMetaData metaData, IDatabasePlatform platform) {
+    private void parseIndexDef(IndexDef indexDef, Table table, Map<String, IIndex> indices, ModelClassMetaData metaData, IDatabasePlatform platform) {
         if (indexDef.column() != null && !indexDef.column().isEmpty()) {
             Column column = findColumn(indexDef.column(), table, platform);
             createIndex(indexDef, column, indexDef.column(), indices, metaData.getIdxPrefix());
@@ -364,13 +388,18 @@ public class DatabaseSchema {
         }
     }
 
-    private static Column findColumn(String columnName, Table table, IDatabasePlatform platform) {
+    private Column findColumn(String columnName, String augmentedPrefix, Table table, IDatabasePlatform platform) {
+        String augmentedColumnName = alterCaseToMatchDatabaseDefaultCase(augmentedPrefix + camelToSnakeCase(columnName), platform);
+        return table.getColumnWithName(augmentedColumnName);
+    }
+
+    private Column findColumn(String columnName, Table table, IDatabasePlatform platform) {
         String snakeCase = alterCaseToMatchDatabaseDefaultCase(camelToSnakeCase(columnName), platform);
         Column column = table.getColumnWithName(snakeCase);
         return column;
     }
 
-    private static void createIndex(IndexDef indexDef, Column column, String columnName, Map<String, IIndex> indices, String idxPrefix) {
+    private void createIndex(IndexDef indexDef, Column column, String columnName, Map<String, IIndex> indices, String idxPrefix) {
         if (column != null && indexDef != null) {
             String indexName = idxPrefix != null && !idxPrefix.isEmpty() ? idxPrefix + "_" + indexDef.name() : indexDef.name();
             boolean unique = indexDef.unique();
@@ -387,7 +416,7 @@ public class DatabaseSchema {
         }
     }
 
-    private static boolean isPrimaryKey(Field field, ModelClassMetaData metaData) {
+    private boolean isPrimaryKey(Field field, ModelClassMetaData metaData) {
         if (field != null) {
             ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
             if (colAnnotation != null) {
@@ -398,14 +427,14 @@ public class DatabaseSchema {
         return false;
     }
 
-    private static String alterCaseToMatchDatabaseDefaultCase(String name, IDatabasePlatform platform) {
+    private String alterCaseToMatchDatabaseDefaultCase(String name, IDatabasePlatform platform) {
         if (platform != null) {
             name = platform.alterCaseToMatchDatabaseDefaultCase(name);
         }
         return name;
     }
 
-    private static Column createColumn(Field field, IDatabasePlatform platform, ModelClassMetaData metaData) {
+    private Column createColumn(Field field, IDatabasePlatform platform, ModelClassMetaData metaData) {
         Column dbCol = null;
         ColumnDef colAnnotation = field.getAnnotation(ColumnDef.class);
 
@@ -444,6 +473,7 @@ public class DatabaseSchema {
 
             if (metaData.isPrimaryKey(field)) {
                 dbCol.setRequired(true);
+                dbCol.setPrimaryKeySequence(new ArrayList<>(metaData.getPrimaryKeyFieldNames()).indexOf(dbCol.getName()));
             } else {
                 dbCol.setRequired(colAnnotation.required());
             }
@@ -451,7 +481,7 @@ public class DatabaseSchema {
         return dbCol;
     }
 
-    private static boolean platformMatches(String name, IDatabasePlatform platform) {
+    private boolean platformMatches(String name, IDatabasePlatform platform) {
         return platform != null && name != null && platform.getName().equals(name);
     }
 
@@ -492,8 +522,25 @@ public class DatabaseSchema {
                 entityIdColumnsToFields.put(columnName, field.getField().getName());
             }
         }
+        Map<String, String> augmentedColumnsToFields = getAugmentedColumnsToFields(entityClass);
+        Map<String, String> mergedMaps = Stream.concat(entityIdColumnsToFields.entrySet().stream(), augmentedColumnsToFields.entrySet().stream())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (value1, value2) -> value1,
+                        CaseInsensitiveMap::new));
+        return mergedMaps;
+    }
 
-        return entityIdColumnsToFields;
+    private Map<String, String> getAugmentedColumnsToFields(Class<?> entityClass) {
+        Map<String, String> columnsToAugmentedFields = new CaseInsensitiveMap<>();
+        List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(entityClass);
+        for (AugmenterConfig config : configs) {
+            for (String augmenterName: config.getAugmenterNames()) {
+                columnsToAugmentedFields.put(config.getPrefix() + camelToSnakeCase(augmenterName), augmenterName);
+            }
+        }
+        return columnsToAugmentedFields;
     }
 
     public Map<String, String> getEntityFieldsToColumns(Class<?> entityClass) {
@@ -565,7 +612,7 @@ public class DatabaseSchema {
         return classToModelMetaData.get(modelClass);
     }
 
-    private static int getDefaultType(Field field) {
+    private int getDefaultType(Field field) {
         if (field.getType().isAssignableFrom(String.class) || field.getType().isEnum() || ITypeCode.class.isAssignableFrom(field.getType())) {
             return Types.VARCHAR;
         } else if (field.getType().isAssignableFrom(long.class) || field.getType().isAssignableFrom(Long.class)) {
@@ -600,4 +647,44 @@ public class DatabaseSchema {
 
         return buff.toString().toLowerCase();
     }
+
+    private Map<String, IIndex> createAugmentedIndices(Class<?> currentClass, Table table,
+                                                       ModelClassMetaData metaData, IDatabasePlatform platform) {
+        Map<String, IIndex> indices = new HashMap<>();
+        Augmented augmented = currentClass.getAnnotation(Augmented.class);
+        if (augmented != null) {
+            AugmenterConfig config = augmenterHelper.getAugmenterConfig(augmented.name());
+            if (config != null && config.getIndexConfigs() != null) {
+                List<AugmenterIndexConfig> indexConfigs = config.getIndexConfigs();
+                for (AugmenterIndexConfig indexConfig : indexConfigs) {
+                    createIndex(indexConfig, table, indices, augmented.indexPrefix(), platform, config.getPrefix());
+                }
+            }
+        }
+        return indices;
+    }
+
+    private void createIndex(AugmenterIndexConfig indexConfig, Table table, Map<String, IIndex> indices, String idxPrefix, IDatabasePlatform platform, String augmentedColumnPrefix) {
+        String indexName = idxPrefix != null && !idxPrefix.isEmpty() ? idxPrefix + "_" + indexConfig.getName() : indexConfig.getName();
+        indexName += (indexConfig.isUnique() ? "_unq" : "");
+        IIndex index = indices.get(indexName);
+        if (index == null) {
+            index = indexConfig.isUnique() ? new UniqueIndex(indexName) : new NonUniqueIndex(indexName);
+            indices.put(indexName, index);
+        }
+        for (String columnName : indexConfig.getColumnNames()) {
+            Column column = findColumn(columnName, augmentedColumnPrefix, table, platform);
+            if (column == null) {
+                column = findColumn(columnName, table, platform);
+            }
+            if (column != null) {
+                index.addColumn(new IndexColumn(column));
+            }
+            if (column == null) {
+                log.warn("No column {} found for index {} on augmented table {}", columnName, indexName, table.getName());
+            }
+        }
+    }
+
+
 }

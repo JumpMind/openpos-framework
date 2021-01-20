@@ -33,7 +33,7 @@ public class UsbHelper {
             System.out.println(usbDevice.getUsbConfigurations());
             usbConfiguration = usbDevice.getUsbConfiguration((byte)0);
         }
-        UsbInterface usbInterface = usbConfiguration.getUsbInterface((byte) 0);
+        UsbInterface usbInterface = usbConfiguration.getUsbInterface((byte) 1);
 
         final int RETRIES = 10;
 

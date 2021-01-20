@@ -34,17 +34,21 @@
         grid-template:  "name icon" auto
                         "id icon" auto / auto auto;
 
-        .operator-name{
+        .operator-name {
             @extend %text-sm;
             grid-area: name;
+
+            @at-root .container.mobile .rightside .operator-name {
+                font-size: .75rem;
+            }
         }
 
-        .operator-id{
+        .operator-id {
             @extend %text-xs;
             grid-area: id;
         }
 
-        .icon{
+        .icon {
             grid-area: icon;
         }
 

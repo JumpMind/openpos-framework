@@ -23,7 +23,7 @@ public class SimulatedRemoteStrategy extends LocalOnlyStrategy implements IInvoc
     }
 
     @Override
-    public Object invoke(ServiceSpecificConfig config, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
+    public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
         ObjectMapper mapper = DefaultObjectMapper.build();
         mapper.setSerializationInclusion(JsonInclude.Include.ALWAYS);
         mapper.enable(SerializationFeature.INDENT_OUTPUT);
@@ -34,7 +34,7 @@ public class SimulatedRemoteStrategy extends LocalOnlyStrategy implements IInvoc
                 newArgs[i] = mapper.readValue(mapper.writeValueAsString(args[i]), args[i].getClass());
             }
         }
-        Object retObj = super.invoke(config, proxy, method, endpoints, newArgs);
+        Object retObj = super.invoke(profileIds, proxy, method, endpoints, newArgs);
         if (retObj instanceof List<?>) {
             String className = ((AnnotatedParameterizedType) method.getAnnotatedReturnType()).getAnnotatedActualTypeArguments()[0].getType().getTypeName();
             return mapper.readValue(mapper.writeValueAsString(retObj), mapper.getTypeFactory().constructCollectionType(List.class, Class.forName(className)));

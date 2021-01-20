@@ -11,6 +11,7 @@ import org.jumpmind.pos.util.status.IStatusManager;
 import org.jumpmind.pos.util.status.IStatusReporter;
 import org.jumpmind.pos.util.status.Status;
 import org.jumpmind.pos.util.status.StatusReport;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PreDestroy;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 @Slf4j
 @Component
+@ConditionalOnProperty(name = "openpos.devices.poleDisplay.enabled", havingValue = "true")
 public class PoleDisplay implements IStatusReporter {
 
     public final static String STATUS_NAME = "DEVICE.POLE_DISPLAY";

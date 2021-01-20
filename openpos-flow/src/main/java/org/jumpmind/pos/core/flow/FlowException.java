@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -20,6 +20,7 @@
  */
 package org.jumpmind.pos.core.flow;
 
+import static java.lang.String.format;
 
 public class FlowException extends RuntimeException {
 
@@ -31,6 +32,10 @@ public class FlowException extends RuntimeException {
 
     public FlowException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public FlowException(String message, Object... args) {
+        super(format(message, args));
     }
 
     public FlowException(String message) {

@@ -3,6 +3,7 @@ package org.jumpmind.pos.print;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.Map;
 
@@ -16,16 +17,18 @@ public class SocketConnectionFactory implements IConnectionFactory {
         String hostname = (String) settings.get("hostName");
         Object portObject = settings.get("port");
         int port = getInt(settings.get("port"), 9100);
+        int connectTimeout = getInt(settings.get("connectTimeout"), 2500);
         int soTimeout = getInt(settings.get("soTimeout"), 2500);
         try {
-            log.info("Connecting to printer at {}:{}", hostname, port);
-            Socket socket = new Socket(hostname, port);
+            log.info("Connecting to peripheral at {}:{}", hostname, port);
+            Socket socket = new Socket();
+            socket.connect(new InetSocketAddress(hostname, port), connectTimeout);
             socket.setSoTimeout(soTimeout);
             peripheralConnection.setOut(socket.getOutputStream());
             peripheralConnection.setIn(socket.getInputStream());
-            log.info("Connected to printer at {}:{}", hostname, port);
+            log.info("Connected to peripheral at {}:{}", hostname, port);
         } catch (Exception ex) {
-            throw new PrintException(String.format("Failed to connect to printer at %s:%s",
+            throw new PrintException(String.format("Failed to connect to peripheral at %s:%s",
                     hostname, port), ex);
         }
         return peripheralConnection;

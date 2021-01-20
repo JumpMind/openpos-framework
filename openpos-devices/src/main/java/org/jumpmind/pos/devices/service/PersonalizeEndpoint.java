@@ -3,6 +3,7 @@ package org.jumpmind.pos.devices.service;
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
+import org.jumpmind.pos.devices.DeviceUpdater;
 import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.model.DeviceParamModel;
 import org.jumpmind.pos.devices.model.DevicesRepository;
@@ -19,7 +20,6 @@ import org.springframework.core.env.Environment;
 import org.springframework.core.env.MutablePropertySources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
@@ -35,19 +35,13 @@ public class PersonalizeEndpoint {
     @Autowired
     DevicesRepository devicesRepository;
 
-    @Value("${openpos.businessunitId:undefined}")
-    String businessUnitId;
-
-    @Autowired(required = false)
-    List<ITagProvider> tagProviders;
-
     @Autowired
-    Environment env;
+    DeviceUpdater deviceUpdater;
 
     public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request){
         String authToken = request.getDeviceToken();
-        String deviceId = request.getDeviceId();
-        String appId = request.getAppId();
+        final String deviceId = request.getDeviceId();
+        final String appId = request.getAppId();
 
         DeviceModel deviceModel;
 
@@ -66,7 +60,6 @@ public class PersonalizeEndpoint {
                 // if device doesn't exist create a new unique code
                 authToken = UUID.randomUUID().toString();
                 devicesRepository.saveDeviceAuth(appId, deviceId, authToken);
-
             }
 
             deviceModel = new DeviceModel();
@@ -83,36 +76,7 @@ public class PersonalizeEndpoint {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DeviceId and AppId or AuthToken are required for personalization");
         }
 
-
-
-        deviceModel.setDeviceType(request.getDeviceType());
-        deviceModel.setTimezoneOffset(AppUtils.getTimezoneOffset());
-        deviceModel.setBusinessUnitId(businessUnitId);
-        // TODO check properties also before using default
-        deviceModel.setLocale(Locale.getDefault().toString());
-        deviceModel.setLastUpdateTime(new Date());
-        deviceModel.setLastUpdateBy("personalization");
-        deviceModel.updateTags((AbstractEnvironment) env);
-
-        if (this.tagProviders != null && tagProviders.size() > 0) {
-            MutablePropertySources propSrcs = ((AbstractEnvironment) env).getPropertySources();
-            StreamSupport.stream(propSrcs.spliterator(), false)
-                    .filter(ps -> ps instanceof EnumerablePropertySource)
-                    .map(ps -> ((EnumerablePropertySource<?>) ps).getPropertyNames())
-                    .flatMap(Arrays::<String>stream)
-                    .filter(propName -> propName.startsWith("openpos.tags")).map(propName -> propName.substring("openpos.tags".length() + 1))
-                    .forEach(propName -> {
-                        for (ITagProvider tagProvider:
-                                this.tagProviders) {
-                            String value = tagProvider.getTagValue(deviceId, businessUnitId, propName);
-                            if (isNotBlank(value)) {
-                                deviceModel.setTagValue(propName, value);
-                            }
-                        }
-                    });
-        }
-
-        devicesRepository.saveDevice(deviceModel);
+        deviceUpdater.updateDevice(deviceModel);
 
         return PersonalizationResponse.builder()
                 .authToken(authToken)

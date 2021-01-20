@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Builder
 @Data
@@ -24,4 +25,5 @@ public class Promotion implements Serializable {
     String rewardApplicationTypeCode;
     boolean forLoyaltyReward;
     String promotionPrice;
+    List<String> rewards;
 }

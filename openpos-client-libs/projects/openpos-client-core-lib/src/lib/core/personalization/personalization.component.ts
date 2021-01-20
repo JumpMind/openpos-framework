@@ -54,7 +54,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
         this.navigateExternal = this.clientUrlService.navigateExternal;
         this.serverIsSSL = window.location.protocol.includes('https');
         this.appServerAddress = window.location.hostname;
-        this.appServerPort = window.location.port;
+        this.appServerPort = window.location.port? window.location.port : this.serverIsSSL? '443': '';
 
         if (this.navigateExternal && localStorage.getItem('clientUrl')) {
             this.clientUrlService.renavigate();
@@ -97,6 +97,8 @@ export class PersonalizationComponent implements IScreen, OnInit {
                     let value = entry[1];
                     this.availableDevices.push({key, value});
                 });
+                this.availableDevices.sort((deviceOne, deviceTwo) =>
+                    (deviceOne.value > deviceTwo.value) ? 1 : (deviceOne.value === deviceTwo.value) ? ((deviceOne.key > deviceTwo.key) ? 1 : -1) : -1 );
             } else {
                 this.manualPersonalization = true;
             }
@@ -161,7 +163,7 @@ export class PersonalizationComponent implements IScreen, OnInit {
 
     public personalizeLocal(): Observable<string> {
         const personalizationProperties = new Map<string, string>();
-        if (this.serverResponse) {
+        if (this.serverResponse && this.serverResponse.parameters) {
             for (const parameter of this.serverResponse.parameters) {
                 personalizationProperties.set(parameter.property, this.lastFormGroup.get(parameter.property).value);
             }

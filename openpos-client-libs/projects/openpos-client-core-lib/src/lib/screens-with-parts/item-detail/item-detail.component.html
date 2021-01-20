@@ -1,35 +1,57 @@
 <app-bacon-strip></app-bacon-strip>
-<section responsive-class class="item-card">
-    <h1 responsive-class>{{screen.itemName}}</h1>
-    <p responsive-class>{{screen.summary}}</p>
-    <app-carousel class="carousel" carouselSize="xl" [carouselItemClass]="'rounded-edge'">
-        <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
-            <app-image [imageUrl]="image | imageUrl" [altImageUrl]="screen.alternateImageUrl" [altText]="'Image NotFound'"></app-image>
-        </ng-template>
-    </app-carousel>
+<section class="item-details">
+    <mat-card responsive-class class="padding-none page-gutter">
+        <div responsive-class class="item-card padding-none page-gutter page-element margin-bottom">
+            <h1 responsive-class>{{screen.itemName}}</h1>
+            <p responsive-class>{{screen.summary}}</p>
+            <app-carousel class="carousel" [carouselSize]="carouselSize" [carouselItemClass]="'rounded-edge'">
+                <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
+                    <app-image [imageUrl]="image | imageUrl" [altImageUrl]="screen.alternateImageUrl" [altText]="'Image NotFound'"></app-image>
+                </ng-template>
+            </app-carousel>
 
-    <ul responsive-class class="properties">
-        <li *ngFor="let prop of screen.itemProperties">
-            <app-display-property [property]="prop"></app-display-property>
-        </li>
-    </ul>
+            <ul responsive-class class="properties">
+                <li *ngFor="let prop of screen.itemProperties">
+                    <app-display-property [property]="prop"></app-display-property>
+                </li>
+            </ul>
 
-    <section responsive-class class="promotions">
-        <h3 responsive-class>
-            {{screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
-        </h3>
-        <div class="promotion-items">
-            <ng-container *ngFor="let promo of screen.promotions">
+            <app-options-list optionListSizeClass="md"></app-options-list>
+        </div>
+
+    </mat-card>
+    <mat-card responsive-class class=" promotions page-gutter padding-none">
+        <div responsive-class class="page-gutter page-element margin-bottom">
+            <h3 responsive-class>
+                {{screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
+            </h3>
+            <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
+                              [instructionsSize]="'text-md'"></app-instructions>
+            <span class="promotion-items promotion-item-gray">
+            <div class="promotion-item-icon">
+                <app-icon iconClass="md"></app-icon>
+            </div>
+            <div class="promotion-item-name">
+                {{screen.itemValueDisplay.label}}
+            </div>
+            <div class="price">
+                {{screen.itemValueDisplay.value}}
+            </div>
+        </span>
+            <ng-container *ngFor="let promo of screen.promotions; let i = index">
+            <span class="promotion-items" [ngClass]="{'promotion-item-gray': 0 === (i + 1) % 2}">
                 <div class="promotion-item-icon">
-                    <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon> 
+                    <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon>
                 </div>
                 <div class="promotion-item-name">
                     {{promo.promotionName}}
                 </div>
-                <div class="promotion-item-price"><app-currency-text [amountText]="promo.promotionPrice"></app-currency-text></div>
+                <div class="price">
+                    {{promo.promotionPrice}}
+                </div>
+            </span>
             </ng-container>
         </div>
-    </section>
-
-    <app-options-list optionListSizeClass="md"></app-options-list>
+    </mat-card>
 </section>
+

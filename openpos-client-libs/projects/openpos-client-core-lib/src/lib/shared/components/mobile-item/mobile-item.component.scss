@@ -95,6 +95,11 @@
                 margin: unset;
                 >*{
                     margin-top: 4px;
+                    min-height: 1rem;
+                }
+
+                .item-card-details-label:not(:empty)::after {
+                    content: ': ';
                 }
             }
         }

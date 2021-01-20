@@ -8,6 +8,7 @@ public final class MessageType {
     public static final String Screen = "Screen";
     public static final String Dialog = "Dialog";
     public static final String Toast = "Toast";
+    public static final String CloseToast = "CloseToast";
     public static final String DevTools = "DevTools";
     public static final String Loading = "Loading";
     public static final String ConfigChanged = "ConfigChanged";
@@ -20,5 +21,5 @@ public final class MessageType {
     public static final String UnlockScreen = "UnlockScreen";
     public static final String Startup = "Startup";
     public static final String Scan = "Scan";
-    
+    public static final String SimulatedPeripheral = "SimulatedPeripheral";
 }

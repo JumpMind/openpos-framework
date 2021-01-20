@@ -15,12 +15,14 @@ import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes= {TestConfig.class})
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ActiveProfiles("test")
 public class TestModuleTest {
     
     @Autowired
@@ -44,13 +46,6 @@ public class TestModuleTest {
         ModuleModel info = testSession.findByNaturalId(ModuleModel.class, installationId);
         assertNotNull(info);
         assertEquals("0.0.1", info.getCurrentVersion());
-    }
-    
-    @Test
-    public void test02SqlScript001WasRun() {
-        List<TestTableModel> rows = testSession.findAll(TestTableModel.class, 1000);
-        assertNotNull(rows);
-        assertEquals(2, rows.size());
     }
     
     @Test

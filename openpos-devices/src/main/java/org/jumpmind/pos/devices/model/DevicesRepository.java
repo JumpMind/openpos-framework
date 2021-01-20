@@ -1,9 +1,7 @@
 package org.jumpmind.pos.devices.model;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.map.HashedMap;
-import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
+import org.apache.commons.collections4.CollectionUtils;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.ModelId;
@@ -13,9 +11,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository
 @Slf4j
@@ -25,7 +22,7 @@ public class DevicesRepository {
     @Lazy
     DBSession devSession;
 
-    @Cacheable("/devices/device")
+    @Cacheable(value="/devices/device", key="#deviceId + '-' + #appId")
     public DeviceModel getDevice(String deviceId, String appId) {
         DeviceModel device = devSession.findByNaturalId(DeviceModel.class, new ModelId("deviceId", deviceId, "appId", appId));
         if (device != null) {
@@ -46,11 +43,16 @@ public class DevicesRepository {
         }
     }
 
-    public List<DeviceStatusModel> getDevicesByStatus(String status) {
-        Map<String, Object> params = new HashMap<>();
-        params.put("deviceStatus", status);
+    public List<DeviceAuthModel> getDisconnectedDevices(String businessUnitId) {
+        Map<String, Object> statusParams = new HashMap<>();
+        statusParams.put("deviceStatus", DeviceStatusConstants.CONNECTED);
+        Set<String> connectedDevices = devSession.findByFields(DeviceStatusModel.class, statusParams, 10000).stream().map(d-> d.getDeviceId()+":"+d.getAppId()).collect(Collectors.toSet());
 
-        return devSession.findByFields(DeviceStatusModel.class, params, 10000);
+        Map<String, Object> deviceParams = new HashMap<>();
+        deviceParams.put("businessUnitId", businessUnitId);
+        final Set<String> devices = devSession.findByFields(DeviceModel.class, deviceParams,10000).stream().map(d-> d.getDeviceId()+":"+d.getAppId()).collect(Collectors.toSet());
+        devices.removeAll(connectedDevices);
+        return devSession.findAll(DeviceAuthModel.class, 10000).stream().filter(d-> devices.contains(d.getDeviceId()+":"+d.getAppId())).sorted().collect(Collectors.toList());
     }
 
     public DeviceModel getDeviceByAuth(String auth) {
@@ -78,7 +80,7 @@ public class DevicesRepository {
         return deviceModel;
     }
 
-    @CacheEvict(value = "/devices/device")
+    @CacheEvict(value = "/devices/device", key="#device.deviceId + '-' + #device.appId")
     public void saveDevice(DeviceModel device) {
 
         devSession.save(device);
@@ -103,7 +105,7 @@ public class DevicesRepository {
     }
 
     private List<DeviceParamModel> getDeviceParams(String deviceId, String appId) {
-        Map<String, Object> params = new HashedMap();
+        Map<String, Object> params = new HashMap<>();
         params.put("deviceId", deviceId);
         params.put("appId", appId);
 
@@ -111,7 +113,16 @@ public class DevicesRepository {
     }
 
     public void updateDeviceStatus(String deviceId, String appId, String status) {
-        devSession.save(new DeviceStatusModel(deviceId, appId, status));
+        DeviceStatusModel statusModel = devSession.findByNaturalId(DeviceStatusModel.class,
+                ModelId.builder().
+                key("deviceId", deviceId).
+                key("appId", appId).build());
+        if (statusModel == null) {
+            statusModel = DeviceStatusModel.builder().deviceId(deviceId).appId(appId).build();
+        }
+        statusModel.setDeviceStatus(status);
+        statusModel.setLastUpdateTime(new Date());
+        devSession.save(statusModel);
     }
 
 }

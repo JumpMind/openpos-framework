@@ -56,6 +56,7 @@
         background: map-merge($mat-light-theme-background, $openpos-background),
         selected: $selected,
         success: mat-palette($mat-green),
+        info: mat-palette($mat-amber),
         orders: mat-palette($mat-orange, 800),
         returns: mat-palette($mat-red, 900)
     );
@@ -97,6 +98,10 @@
 
     .warn {
         color: $app-warn;
+    }
+
+    .warn-light {
+        color: mat-color(mat-palette($mat-orange, 800));
     }
 
     .accent {
@@ -254,10 +259,6 @@
 
     .mat-tab-label-active{
         color: $app-primary;
-    }
-
-    app-prompt-input app-icon {
-        padding: 5px;
     }
 
     .cdk-overlay-dark-backdrop {

@@ -42,7 +42,7 @@ public class DefaultClientConfigSelector implements IClientConfigSelector {
                     tagsForSpecificity.add(value);
                 }
             } else {
-                logger.warn("Could not find personalization parameter {}", s);
+                logger.info("Could not find personalization parameter {}", s);
             }
         });
 

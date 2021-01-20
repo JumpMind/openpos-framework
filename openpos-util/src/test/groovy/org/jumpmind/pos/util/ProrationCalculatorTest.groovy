@@ -21,6 +21,17 @@ public class ProrationCalculatorTest {
         assertEquals(moneyCalculator.amount(new BigDecimal(41.14)),proratedAmounts.get(1));        		
         assertEquals(moneyCalculator.amount(new BigDecimal(12.77)),proratedAmounts.get(2));        		
     }
+
+    @Test
+    public void testProratePrecision() {
+        BigDecimal amountToBeProrated = new BigDecimal(259.90);
+        List<BigDecimal>existingAmounts = new ArrayList<BigDecimal>();
+        existingAmounts.add(new BigDecimal(59.95));
+        existingAmounts.add(new BigDecimal(199.95));
+        List<BigDecimal> proratedAmounts = prorationCalculator.prorate(amountToBeProrated, existingAmounts);
+        assertEquals(moneyCalculator.amount(new BigDecimal(59.95)),proratedAmounts.get(0));
+        assertEquals(moneyCalculator.amount(new BigDecimal(199.95)),proratedAmounts.get(1));
+    }
     
     @Test
     public void testProrateWithRemainder() {

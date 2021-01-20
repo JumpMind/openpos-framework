@@ -118,6 +118,7 @@ export * from './lib/core/services/training-overlay.service';
 export * from './lib/core/services/validators.service';
 export * from './lib/core/services/location.service';
 export * from './lib/core/services/fetch-message.service';
+export * from './lib/core/services/transaction.service';
 export * from './lib/core/personalization/client-url.service';
 export * from './lib/core/focus/focus.service';
 export * from './lib/core/ui-data-message/ui-data-message.service';
@@ -128,6 +129,21 @@ export * from './lib/core/messages/ui-message';
 export * from './lib/core/messages/message';
 export * from './lib/core/help-text/help-text.service';
 export * from './lib/core/lock-screen/lock-screen.service';
+export * from './lib/core/services/simulated-peripheral-service';
+
+export * from './lib/core/audio/audio-request.interface';
+export * from './lib/core/audio/audio.service';
+export * from './lib/core/audio/audio-util';
+export * from './lib/core/audio/audio-cache.interface';
+export * from './lib/core/audio/audio-config.interface';
+export * from './lib/core/audio/audio-config-message.interface';
+export * from './lib/core/audio/audio-play-request.interface';
+export * from './lib/core/audio/audio-interaction.service';
+export * from './lib/core/audio/audio-interaction-set.interface';
+export * from './lib/core/audio/audio-message.interface';
+export * from './lib/core/audio/audio-preload-message.interface';
+export * from './lib/core/audio/audio-repository.service';
+export * from './lib/core/audio/audio-startup-task';
 
 export * from './lib/keyboard/keyboard.module';
 export * from './lib/keyboard/classes/keyboard-ref.class';
@@ -174,6 +190,7 @@ export * from './lib/screens-with-parts/selection-list/selection-list-screen.com
 export * from './lib/screens-with-parts/selection-list/selection-list.interface';
 export * from './lib/screens-with-parts/return/return.component';
 export * from './lib/screens-with-parts/confirm-dialog/confirm-dialog.component';
+export * from './lib/screens-with-parts/simulated-peripheral-viewer/simulated-peripheral-viewer.component';
 
 export * from './lib/screens-with-parts/prompt/prompt-screen.component';
 export * from './lib/screens-with-parts/prompt/prompt-screen-dialog.component';
@@ -188,6 +205,8 @@ export * from './lib/customer-display/customer-display-home/customer-display-hom
 export * from './lib/customer-display/customer-display-sale/customer-display-sale.component';
 
 export * from './lib/shared/shared.module';
+export * from './lib/shared/trans-status.enum';
+export * from './lib/shared/trans-type.enum';
 export * from './lib/shared/components/catalog-browser-item/catalog-browser-item.component';
 export * from './lib/shared/components/counter/counter.component';
 export * from './lib/shared/components/currency-text/currency-text.component';

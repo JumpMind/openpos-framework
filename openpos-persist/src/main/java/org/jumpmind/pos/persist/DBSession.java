@@ -1,7 +1,33 @@
 package org.jumpmind.pos.persist;
 
-import static org.apache.commons.lang.StringUtils.isNotBlank;
+import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.h2.tools.RunScript;
+import org.joda.money.Money;
+import org.jumpmind.db.model.Column;
+import org.jumpmind.db.model.Table;
+import org.jumpmind.db.platform.IDatabasePlatform;
+import org.jumpmind.db.sql.DmlStatement;
+import org.jumpmind.db.sql.DmlStatement.DmlType;
+import org.jumpmind.db.sql.LogSqlBuilder;
+import org.jumpmind.db.sql.Row;
+import org.jumpmind.pos.persist.impl.*;
+import org.jumpmind.pos.persist.model.*;
+import org.jumpmind.pos.util.ReflectUtils;
+import org.jumpmind.pos.util.model.ITypeCode;
+import org.jumpmind.properties.TypedProperties;
+import org.jumpmind.util.LinkedCaseInsensitiveMap;
+import org.springframework.dao.DataAccessException;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.*;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
+import org.springframework.jdbc.core.namedparam.ParsedSql;
 
+import javax.sql.DataSource;
 import java.beans.PropertyDescriptor;
 import java.io.File;
 import java.io.FileReader;
@@ -14,35 +40,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import javax.sql.DataSource;
-
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.h2.tools.RunScript;
-import org.joda.money.Money;
-import org.jumpmind.db.model.Column;
-import org.jumpmind.db.model.Table;
-import org.jumpmind.db.platform.IDatabasePlatform;
-import org.jumpmind.db.sql.DmlStatement;
-import org.jumpmind.db.sql.DmlStatement.DmlType;
-import org.jumpmind.db.sql.LogSqlBuilder;
-import org.jumpmind.db.sql.Row;
-import org.jumpmind.pos.persist.impl.*;
-import org.jumpmind.pos.persist.model.ITaggedModel;
-import org.jumpmind.pos.persist.model.SearchCriteria;
-import org.jumpmind.pos.persist.model.TagHelper;
-import org.jumpmind.pos.persist.model.TagModel;
-import org.jumpmind.pos.util.ReflectUtils;
-import org.jumpmind.pos.util.model.ITypeCode;
-import org.jumpmind.properties.TypedProperties;
-import org.jumpmind.util.LinkedCaseInsensitiveMap;
-import org.springframework.dao.DataAccessException;
-import org.springframework.dao.DuplicateKeyException;
-import org.springframework.jdbc.core.*;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterUtils;
-import org.springframework.jdbc.core.namedparam.ParsedSql;
+import static org.apache.commons.lang3.StringUtils.*;
 
 @Slf4j
 public class DBSession {
@@ -51,16 +49,18 @@ public class DBSession {
     public static final String JDBC_FETCH_SIZE = "openpos.jdbc.fetchSize";
 
     private DatabaseSchema databaseSchema;
+    @Getter
     private IDatabasePlatform databasePlatform;
     private TypedProperties sessionContext;
     private NamedParameterJdbcTemplate jdbcTemplate;
     private Map<String, QueryTemplate> queryTemplates;
     private Map<String, DmlTemplate> dmlTemplates;
     private TagHelper tagHelper;
+    private AugmenterHelper augmenterHelper;
 
     public DBSession(String catalogName, String schemaName, DatabaseSchema databaseSchema, IDatabasePlatform databasePlatform,
                      TypedProperties sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates,
-                     TagHelper tagHelper) {
+                     TagHelper tagHelper, AugmenterHelper augmenterHelper) {
         super();
         this.dmlTemplates = dmlTemplates;
         this.databaseSchema = databaseSchema;
@@ -72,6 +72,7 @@ public class DBSession {
         this.jdbcTemplate = new NamedParameterJdbcTemplate(baseTemplate);
         this.queryTemplates = queryTemplates;
         this.tagHelper = tagHelper;
+        this.augmenterHelper = augmenterHelper;
     }
 
     public <T extends AbstractModel> List<T> findAll(Class<T> clazz, int maxResults) {
@@ -197,8 +198,8 @@ public class DBSession {
     }
 
     public void executeScript(Reader reader) {
-        try {
-            RunScript.execute(getConnection(), reader);
+        try (Connection connection = getConnection()) {
+            RunScript.execute(connection, reader);
         } catch (Exception ex) {
             throw new PersistException("Failed to execute script " + reader, ex);
         }
@@ -269,6 +270,37 @@ public class DBSession {
         }
     }
 
+    public Integer queryForInt(Query query, Map<String, Object> params) {
+        QueryTemplate queryTemplate = getQueryTemplate(query);
+        List results = null;
+        try {
+            SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
+            results = queryInternal(null, sqlStatement, 1000);
+
+            if (results.size() == 1) {
+                Row row = (Row) results.get(0);
+
+                if (row.keySet().size() == 1) {
+                    Object value = row.values().iterator().next();
+
+                    if (value instanceof Long) {
+                        int intValue = Math.toIntExact(((Long) value).longValue());
+                        return new Integer(intValue);
+
+                    } else if (value instanceof Integer) {
+                        return (Integer) value;
+
+                    } else {
+                        throw new PersistException("Unexpected result: " + value);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            throw new PersistException("Failed to execute query. Name: " + query.getName() + " Parameters: " + params, ex);
+        }
+        throw new PersistException("Invalid results: Failed to execute query. Name: " + query.getName() + " Parameters: " + params + " Results: " + results);
+    }
+
     @SuppressWarnings("unchecked")
     public <T> List<T> query(Query<T> query, QueryTemplate queryTemplate, Map<String, Object> params, int maxResults) {
         SqlStatement sqlStatement;
@@ -283,7 +315,7 @@ public class DBSession {
     }
 
     public ModelWrapper wrap(AbstractModel model) {
-        ModelWrapper wrapper = new ModelWrapper(model, databaseSchema.getModelMetaData(model.getClass()));
+        ModelWrapper wrapper = new ModelWrapper(model, databaseSchema.getModelMetaData(model.getClass()), augmenterHelper);
         return wrapper;
     }
 
@@ -398,7 +430,8 @@ public class DBSession {
             for (String property: queryParamKeys) {
                 boolean isPropertyMapped = entityModelClasses.stream().anyMatch(modelClass -> {
                     ModelMetaData modelMetaData = this.databaseSchema.getModelMetaData(modelClass);
-                    return modelMetaData.getColumnNameForProperty(modelClass, property) != null;
+                    return modelMetaData.getColumnNameForProperty(modelClass, property) != null ||
+                            isAugmentedProperty(modelClass, property);
                 });
 
                 if (! isPropertyMapped) {
@@ -414,12 +447,23 @@ public class DBSession {
         }
     }
 
+    private boolean isAugmentedProperty(Class<?> modelClass, String property) {
+        boolean hasProperty = false;
+        List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(modelClass);
+        for (AugmenterConfig config : configs) {
+            hasProperty = config.getAugmenter(property) != null;
+            if (hasProperty) {
+                break;
+            }
+        }
+        return hasProperty;
+    }
 
     public void save(AbstractModel argModel) {
         List<Table> tables = getValidatedTables(argModel);
 
         ModelWrapper model =
-                new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()));
+                new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()), augmenterHelper);
 
         setMaintenanceValues(model);
         setTagValues(model);
@@ -452,7 +496,7 @@ public class DBSession {
         List<Table> tables = getValidatedTables(argModel);
 
         ModelWrapper model =
-                new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()));
+                new ModelWrapper(argModel, databaseSchema.getModelMetaData(argModel.getClass()), augmenterHelper);
 
         model.load();
         model.loadValues();
@@ -478,7 +522,7 @@ public class DBSession {
 
     protected int excecuteDml(DmlType type, ModelWrapper model, Table table) {
         boolean[] nullKeyValues = model.getNullKeys();
-        List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
+        List<Column> primaryKeyColumns = getPrimaryKeyWithTags(model, table);
 
         DmlStatement statement = databasePlatform.createDmlStatement(type, table.getCatalog(), table.getSchema(), table.getName(),
                 primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
@@ -493,7 +537,7 @@ public class DBSession {
         if (models.size() > 0) {
             AbstractModel exampleModel = models.get(0);
 
-            ModelWrapper model = new ModelWrapper(exampleModel, databaseSchema.getModelMetaData(exampleModel.getClass()));
+            ModelWrapper model = new ModelWrapper(exampleModel, databaseSchema.getModelMetaData(exampleModel.getClass()), augmenterHelper);
             setMaintenanceValues(model);
             setTagValues(model);
             model.load();
@@ -502,13 +546,32 @@ public class DBSession {
             List<Table> tables = getValidatedTables(exampleModel);
             for (Table table : tables) {
                 boolean[] nullKeyValues = model.getNullKeys();
-                List<Column> primaryKeyColumns = model.getPrimaryKeyColumns();
+                List<Column> primaryKeyColumns = getPrimaryKeyWithTags(model, table);
+                
                 DmlStatement statement = databasePlatform.createDmlStatement(dmlType, table.getCatalog(), table.getSchema(), table.getName(),
                         primaryKeyColumns.toArray(new Column[primaryKeyColumns.size()]), model.getColumns(table), nullKeyValues, null);
                 String sql = statement.getSql();
                 jdbcTemplate.getJdbcOperations().batchUpdate(sql, getValueArray(statement, models), model.getColumnTypes(table));
             }
         }
+    }
+    
+    private List<Column> getPrimaryKeyWithTags(ModelWrapper model, Table table) {
+        List<Column> primaryKeyColumns = new ArrayList<>(model.getPrimaryKeyColumns());
+        if (isTaggedWithPrimaryKey(model.getModel())) {
+            primaryKeyColumns.addAll(Arrays.stream(model.getColumns(table))
+                    .filter(c -> StringUtils.startsWith(c.getName(), TagModel.TAG_PREFIX))
+                    .collect(Collectors.toList()));
+        }
+        return primaryKeyColumns;
+    }
+    
+    private boolean isTaggedWithPrimaryKey(AbstractModel model) {
+        if (model != null && model instanceof ITaggedModel) {
+            Tagged tagged = model.getClass().getAnnotation(Tagged.class);
+            return tagged != null && tagged.includeTagsInPrimaryKey();
+        }
+        return false;
     }
 
     public void batchInsert(List<? extends AbstractModel> models) {
@@ -527,7 +590,7 @@ public class DBSession {
         List<Object[]> values = new ArrayList<>(models.size());
         final ModelMetaData meta = databaseSchema.getModelMetaData(models.get(0).getClass());
         models.forEach(m -> {
-            ModelWrapper model = new ModelWrapper(m, meta);
+            ModelWrapper model = new ModelWrapper(m, meta, augmenterHelper);
             setMaintenanceValues(model);
             setTagValues(model);
             model.load();
@@ -572,7 +635,7 @@ public class DBSession {
                     List<Row> results = new ArrayList<>();
                     DefaultMapper mapper = new DefaultMapper();
                     try {
-                        ps.setFetchSize(maxResults);
+                        ps.setFetchSize(maxResults < 10000 ? maxResults : 10000);
                         ps.setMaxRows(maxResults);
                         // jumped through all these hoops just to set auto commit to false for postgres
                         con.setAutoCommit(false);
@@ -598,6 +661,14 @@ public class DBSession {
                 if (resultClass != null) {
                     if (resultClass.equals(String.class)) {
                         object = (T) row.stringValue();
+                    } else if (resultClass.getPackage().getName().equals("java.lang") ||
+                            resultClass.getPackage().getName().equals("java.util") ||
+                            resultClass.getPackage().getName().equals("java.sql") ||
+                            resultClass.getPackage().getName().equals("java.math")) {
+                        object = (T) row.values().iterator().next();
+                        if (object != null && !resultClass.isAssignableFrom(object.getClass())) {
+                            throw new PersistException(object.getClass().getName() + " is not assignable to " + resultClass.getName());
+                        }
                     } else if (isModel(resultClass)) {
                         object = mapModel(resultClass, row);
                     } else {
@@ -650,7 +721,7 @@ public class DBSession {
         ModelMetaData modelMetaData = databaseSchema.getModelMetaData(resultClass);
 
         T object = resultClass.newInstance();
-        ModelWrapper model = new ModelWrapper((AbstractModel) object, modelMetaData);
+        ModelWrapper model = new ModelWrapper((AbstractModel) object, modelMetaData, augmenterHelper);
         model.load();
 
         LinkedCaseInsensitiveMap<String> matchedColumns = new LinkedCaseInsensitiveMap<String>();
@@ -664,6 +735,7 @@ public class DBSession {
         }
 
         addTags(row, matchedColumns, (AbstractModel) object);
+        addAugments(row, matchedColumns, (AbstractModel) object);
         addUnmatchedColumns(row, matchedColumns, (AbstractModel) object);
         decorateRetrievedModel(model);
 
@@ -715,6 +787,26 @@ public class DBSession {
                 }
             }
             tagHelper.addTags((ITaggedModel) model, tagValues);
+        }
+    }
+
+    protected void addAugments(Row row, LinkedCaseInsensitiveMap<String> matchedColumns, AbstractModel model) {
+        if (model instanceof IAugmentedModel) {
+            List<AugmenterConfig> configs = augmenterHelper.getAugmenterConfigs(model);
+            if (CollectionUtils.isEmpty(configs)) {
+                log.info("No augmenter columns defined for the model: " + model.getClass().getSimpleName());
+                return;
+            }
+            Map<String, Object> augmentsValues = new HashMap<>();
+            for (String columnName : row.keySet()) {
+                for (AugmenterConfig config : configs) {
+                    if (columnName.toUpperCase().startsWith(config.getPrefix())) {
+                        matchedColumns.put(columnName, null);
+                        augmentsValues.put(columnName, row.getString(columnName));
+                    }
+                }
+                augmenterHelper.addAugments((IAugmentedModel) model, augmentsValues);
+            }
         }
     }
 

@@ -24,7 +24,7 @@ export class PercentageFormatter implements IFormatter {
         }
         const parts = value.split('.');
 
-        if (parts.length > 1) {
+        if (parts.length > 1 && this.mode === PercentageFormatter.DECIMAL_MODE) {
             return `${parts[0]}.${parts[1].slice(0, 2)}`;
         }
         return `${parts[0]}`;

@@ -1,6 +1,7 @@
 package org.jumpmind.pos.devices.model;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
@@ -19,7 +20,6 @@ import org.springframework.core.env.MutablePropertySources;
 @Setter
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @TableDef(name = "device", description = "A device used to transaction commerce for a Business Unit",
@@ -36,10 +36,6 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     @ColumnDef
     private String appId;
 
-    @ColumnDef(description = "The type of the Device.  Store/DC workstation or handheld, Customer handheld, website, etc.")
-    private String deviceType; // STORE/DC/WORKSTATION/HANDELD/CUSTOMER
-    // HANDHELD/WEBSITE, etc.
-
     @ColumnDef(size = "10", description = "The locale under which this Device currently operates")
     String locale;
 
@@ -53,6 +49,17 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     private String description;
 
     private Map<String, String> tags = new CaseInsensitiveMap<String, String>();
+
+    public DeviceModel(String deviceId, String appId, String locale, String timezoneOffset, String businessUnitId, String description, Map<String, String> tags, List<DeviceParamModel> deviceParamModels) {
+        this.deviceId = deviceId;
+        this.appId = appId;
+        this.locale = locale;
+        this.timezoneOffset = timezoneOffset;
+        this.businessUnitId = businessUnitId;
+        this.description = description;
+        this.tags = new CaseInsensitiveMap<>(tags != null ? tags : new HashMap<>());
+        this.deviceParamModels = deviceParamModels;
+    }
 
     @Override
     public String getTagValue(String tagName) {

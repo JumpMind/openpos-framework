@@ -233,9 +233,6 @@ The set of tags to be used by a system are defined through configuration.  Tags 
     -
       name: STORE_TYPE
     -
-      name: DEVICE_TYPE
-      size: 20
-    -
       name: PRICE_ZONE
       size: 20
     -

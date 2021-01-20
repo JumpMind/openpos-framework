@@ -9,7 +9,7 @@
  *
  * You should have received a copy of the GNU General Public License,
  * version 3.0 (GPLv3) along with this library; if not, see
- * <http://www.gnu.org/licenses/>.
+ * http://www.gnu.org/licenses.
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -64,6 +64,22 @@ public class Scope {
             return deviceScope.get(name);
         }
         return null;
+    }
+
+    public void setScope(String name, ScopeType scopeType, Object value) {
+        switch (scopeType) {
+            case Device:
+                setDeviceScope(name, value);
+                break;
+            case Session:
+                setSessionScope(name, value);
+                break;
+            case Conversation:
+                setConversationScope(name, value);
+                break;
+            default:
+                throw new FlowException("Invalid scope " + scopeType + " for name '" + name + "'");
+        }
     }
 
     public void setDeviceScope(String name, Object value) {

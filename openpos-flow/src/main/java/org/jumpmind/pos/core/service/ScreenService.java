@@ -7,9 +7,7 @@ import static org.jumpmind.pos.util.BoxLogging.UPPER_LEFT_CORNER;
 import static org.jumpmind.pos.util.BoxLogging.UPPER_RIGHT_CORNER;
 import static org.jumpmind.pos.util.BoxLogging.VERITCAL_LINE;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.lang.reflect.Field;
 import java.util.*;
 
@@ -37,6 +35,7 @@ import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IActionListener;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.DefaultObjectMapper;
+import org.jumpmind.pos.util.web.MimeTypeUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,6 @@ import springfox.documentation.annotations.ApiIgnore;
 @CrossOrigin
 @Controller
 public class ScreenService implements IScreenService, IActionListener {
-
     Logger logger = LoggerFactory.getLogger(getClass());
     Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
 
@@ -100,28 +98,41 @@ public class ScreenService implements IScreenService, IActionListener {
             HttpServletResponse response,
             @PathVariable String appId,
             @PathVariable String deviceId,
-            @RequestParam(name = "contentPath", required = true) String contentPath,
-            @RequestParam(name = "provider", required = true) String provider) throws IOException {
+            @RequestParam(name = "contentPath") String contentPath,
+            @RequestParam(name = "provider") String provider) throws IOException {
 
         logger.debug("Received a request for content: {}", contentPath);
 
         IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
         if (stateManager != null) {
+            String contentType = MimeTypeUtil.getContentType(contentPath);
+            response.setContentType(contentType);
+
             stateManagerContainer.setCurrentStateManager(stateManager);
 
-            if (contentPath.endsWith(".svg")) {
-                response.setContentType("image/svg+xml");
-                if( StringUtils.isNotEmpty(contentMaxAge)){
-                    response.setHeader("Cache-Control", "max-age=" + contentMaxAge);
-                }
+            if(MimeTypeUtil.isContentTypeAudio(contentType)) {
+                // Required by browsers to allow starting audio at arbitrary time
+                response.setHeader("Accept-Ranges", "bytes");
+            }
+
+            if(StringUtils.isNotEmpty(contentMaxAge)){
+                response.setHeader("Cache-Control", "max-age=" + contentMaxAge);
             }
 
             ContentProviderService contentProviderService = applicationContext.getBean(ContentProviderService.class);
             InputStream in = contentProviderService.getContentInputStream(contentPath, provider);
+            ByteArrayOutputStream tempOutputStream = new ByteArrayOutputStream();
 
             if (in != null) {
                 try {
-                    IOUtils.copy(in, response.getOutputStream());
+                    int byteCount = IOUtils.copy(in, tempOutputStream);
+
+                    if(byteCount > -1) {
+                        // Required by browsers to allow starting audio at arbitrary time
+                        response.setContentLength(byteCount);
+                    }
+
+                    tempOutputStream.writeTo(response.getOutputStream());
                 } finally {
                     IOUtils.closeQuietly(in);
                 }
@@ -298,6 +309,12 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
+    public void closeToast(String appId, String deviceId, CloseToast toast) {
+        interceptCloseToast(appId, deviceId, toast);
+        messageService.sendMessage(appId, deviceId, toast);
+    }
+
+    @Override
     public void showScreen(String appId, String deviceId, UIMessage screen) {
         showScreen(appId, deviceId, screen, null);
     }
@@ -354,6 +371,16 @@ public class ScreenService implements IScreenService, IActionListener {
                 IMessageInterceptor<Toast> toastInterceptor =  (IMessageInterceptor<Toast>) applicationContext.getBean(beanName);
                 toastInterceptor.intercept(appId, deviceId, toast);
             }
+        }
+    }
+
+    protected void interceptCloseToast(String appId, String deviceId, CloseToast closeToast) {
+        String[] closeToastInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, CloseToast.class));
+
+        for (String beanName: closeToastInterceptorBeanNames) {
+            @SuppressWarnings("unchecked")
+            IMessageInterceptor<CloseToast> toastInterceptor =  (IMessageInterceptor<CloseToast>) applicationContext.getBean(beanName);
+            toastInterceptor.intercept(appId, deviceId, closeToast);
         }
     }
     

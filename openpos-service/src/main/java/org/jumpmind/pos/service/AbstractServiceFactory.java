@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 abstract public class AbstractServiceFactory {
 
     @Autowired
-    protected EndpointDispatchInvocationHandler dispatcher;
+    protected EndpointInvoker dispatcher;
 
     @SuppressWarnings("unchecked")
     protected <T> T buildService(Class<T> serviceInterface) {

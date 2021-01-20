@@ -15,7 +15,7 @@ trigger:
     - burl/0.9
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: 'ubuntu-18.04'
 
 variables:
   - group: maven
@@ -34,7 +34,7 @@ steps:
 - task: Gradle@2
   inputs:
     workingDirectory: 'openpos-assemble'
-    options: '--stacktrace -PdownloadNode=true -PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranchName) -PdeployUser=$(deployUser) -PdeployPassword=$(deployPassword) -PdeployUploadUrl=$(deployUploadUrl)'
+    options: '--stacktrace -PdownloadNode=true -PbuildNumber=$(Build.BuildNumber) -PbuildName=$(Build.DefinitionName) -PgitHash=$(Build.SourceVersion) -PgitBranch=$(Build.SourceBranchName) -PdeployUser=$(deployUser) -PdeployPassword=$(deployPassword) -PdeploySftpUrl=$(deploySftpUrl)'
     gradleWrapperFile: 'openpos-assemble/gradlew'
     gradleOptions: '-Xmx3072m'
     javaHomeOption: 'JDKVersion'
@@ -48,8 +48,3 @@ steps:
   inputs: 
     codeCoverageTool: Cobertura
     summaryFileLocation: '**/*coverage.xml'
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish server source for downstream pipeline consumption'
-  inputs:
-    pathtoPublish: 'openpos-assemble/build/openpos-server-core-lib'
-    artifactName: 'openpos-server-core-lib'

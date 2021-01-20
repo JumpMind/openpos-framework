@@ -59,19 +59,15 @@ public class Outjector {
 
             switch (scopeType) {
                 case Device:
-                    scope.setDeviceScope(name, value);
-                    break;
                 case Session:
-                    scope.setSessionScope(name, value);
-                    break;
                 case Conversation:
-                    scope.setConversationScope(name, value);
+                    scope.setScope(name, scopeType, value);
                     break;
                 case Flow:
                     currentContext.setFlowScope(name, value);
                     break;
                 default:
-                    throw new FlowException("Invalid scope " + scopeType + " for out field " + field);
+                    throw new FlowException("Invalid scope " + scopeType + " for out field " + field + " name " + name);
             }
         } catch (Exception ex) {
             if (ex instanceof FlowException) {

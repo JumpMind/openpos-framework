@@ -1,7 +1,7 @@
 <div class="sale-item-list-outer">
 <app-item-card *ngFor="let item of (items$ | async); index as i; trackBy: itemsTrackByFn"
 #items
-[item]="item" 
+[item]="item"
 [isReadOnly]="screenData.readOnly" 
 [expanded]="isItemExpanded(i)" 
 [enableHover]="screenData.enableCollapsibleItems"

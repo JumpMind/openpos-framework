@@ -21,12 +21,14 @@ public class ItemDetailUIMessage extends UIMessage {
 
     private String itemName;
     private String summary;
+    private DisplayProperty itemValueDisplay;
     private List<String> imageUrls;
     private String alternateImageUrl;
     private List<DisplayProperty> itemProperties;
     private String itemPromotionsTitle;
     private String itemNoPromotionsTitle;
     private List<Promotion> promotions;
+    private String promotionStackingDisclaimer;
 
 
     public void addItemProperty(DisplayProperty property) {

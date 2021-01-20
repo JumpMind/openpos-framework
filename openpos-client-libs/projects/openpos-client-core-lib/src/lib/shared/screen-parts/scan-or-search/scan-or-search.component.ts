@@ -84,7 +84,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     private registerScanner() {
-        if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
+        if ((typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) && this.screenData.willUnblock) {
             this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
                 this.doAction(this.screenData.scanAction, scanData);
             });
@@ -99,6 +99,9 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     screenDataUpdated() {
+        //Since we are checking if the screen is disabled (willUnblock set to false) we need to try and register the scanner
+        //on every update just in case we go from disabled to enabled.
+        this.registerScanner();
     }
 
     public onEnter($event: any): void {

@@ -25,7 +25,11 @@ export class ScanditBarcodeUtils {
     ]);
 
 
-    static convertToOpenposType( type: Barcode.Symbology ): OpenposScanType {
+    static convertToOpenposType( type: Barcode.Symbology, data: string ): OpenposScanType {
+        if(type === Barcode.Symbology.EAN13UPCA && data[0] !== '0'){
+            return OpenposScanType.EAN13;
+        }
+
         if( this.scanditToOpenPosMap.has(type) ){
             return this.scanditToOpenPosMap.get(type);
         }

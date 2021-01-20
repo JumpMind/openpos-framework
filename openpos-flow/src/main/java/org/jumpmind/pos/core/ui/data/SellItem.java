@@ -33,6 +33,7 @@ public class SellItem extends DefaultItem {
     private List<AdditionalLabel> additionalLabels = new ArrayList<>();
     private List<AdditionalLabel> returnItemLabels;
     private List<AdditionalLabel> orderItemLabels;
+    private List<AdditionalLabel> collapsedAdditionalLabels = new ArrayList<>();
     private String imageUrl;
     private String optionsLabel;
     private boolean isTender;
@@ -354,6 +355,14 @@ public class SellItem extends DefaultItem {
             return false;
         }
         return true;
+    }
+
+    public List<AdditionalLabel> getCollapsedAdditionalLabels() {
+        return collapsedAdditionalLabels;
+    }
+
+    public void setCollapsedAdditionalLabels(List<AdditionalLabel> collapsedAdditionalLabels) {
+        this.collapsedAdditionalLabels = collapsedAdditionalLabels;
     }
 
 }

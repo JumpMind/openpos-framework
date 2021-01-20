@@ -12,7 +12,7 @@
     }
 
     &.mobile {
-        padding: 12px;
+        padding: 8px;
         margin: 4px 0px;
         text-align: start;
         justify-self: start;
@@ -84,7 +84,6 @@
 
     &.mobile {
         .mat-button-wrapper {
-            grid-template-columns: auto 1fr;
             display: grid !important;
             column-gap: 4px;
         }

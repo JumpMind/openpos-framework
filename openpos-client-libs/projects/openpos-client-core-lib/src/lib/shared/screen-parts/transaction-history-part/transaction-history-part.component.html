@@ -6,7 +6,7 @@
         </div>
         <div class="detail-field">
             <span *ngIf="screenData.labels" class="detail-label">{{screenData.labels.status}}</span>
-            <span class="detail-value">{{screenData.status}}</span>
+            <span class="detail-value">{{screenData.statusText}}</span>
         </div>
     </div>
     <div class="transaction-history-details">
@@ -38,7 +38,7 @@
 
     <div class="transaction-history-actions">
         <button *ngFor="let button of screenData.actions" mat-raised-button color="primary-inverse"
-            class="transaction-button" (click)="onClick(button)">
+            class="transaction-button" (click)="onClick(button)" [disabled]="! button.enabled">
             <span class="transaction-button-text">{{button.title}}</span>
             <app-icon [iconName]="button.icon" iconClass="mat-24"></app-icon>
         </button>

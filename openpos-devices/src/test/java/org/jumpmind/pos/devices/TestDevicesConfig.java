@@ -7,7 +7,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 import javax.annotation.PostConstruct;
 
-@ComponentScan(basePackages = { "org.jumpmind.pos.devices", "org.jumpmind.pos.service", "org.jumpmind.pos.persist"})
+@ComponentScan(basePackages = { "org.jumpmind.pos" })
 @SpringBootApplication
 @EnableConfigurationProperties
 public class TestDevicesConfig {
@@ -17,7 +17,6 @@ public class TestDevicesConfig {
 
     @PostConstruct
     public void init() {
-//        module.start();
     }
 
 }

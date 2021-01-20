@@ -1,8 +1,11 @@
 package org.jumpmind.pos.util.model;
 
+import java.util.ArrayList;
+
 public class ServiceResult {
 
     private Object extension;
+    private java.util.List<ServiceVisit> serviceVisits = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public <T> T ext() {
@@ -20,6 +23,14 @@ public class ServiceResult {
 
     public void setExtension(Object extension) {
         this.extension = extension;
+    }
+
+    public void setServiceVisits(java.util.List<ServiceVisit> serviceVisits) {
+        this.serviceVisits = serviceVisits;
+    }
+
+    public java.util.List<ServiceVisit> getServiceVisits() {
+        return serviceVisits;
     }
 
 }

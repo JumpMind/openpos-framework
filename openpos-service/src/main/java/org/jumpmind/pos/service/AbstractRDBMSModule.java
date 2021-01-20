@@ -1,5 +1,8 @@
 package org.jumpmind.pos.service;
 
+import lombok.Getter;
+import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 import org.h2.tools.Server;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
@@ -11,6 +14,7 @@ import org.jumpmind.db.util.ConfigDatabaseUpgrader;
 import org.jumpmind.exception.IoException;
 import org.jumpmind.pos.persist.*;
 import org.jumpmind.pos.persist.driver.Driver;
+import org.jumpmind.pos.persist.model.AugmenterHelper;
 import org.jumpmind.pos.persist.model.TagHelper;
 import org.jumpmind.pos.service.model.ModuleModel;
 import org.jumpmind.properties.TypedProperties;
@@ -24,7 +28,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.DependsOn;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -36,16 +42,23 @@ import javax.sql.DataSource;
 import java.io.*;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.*;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
 
+@Configuration
 @EnableTransactionManagement
-@DependsOn({"tagConfig"})
+@DependsOn({"tagConfig", "augmenterConfigs"})
+@ConfigurationProperties(prefix = "openpos.module")
 abstract public class AbstractRDBMSModule extends AbstractServiceFactory implements IModule, IRDBMSModule {
 
     protected final Logger log = LoggerFactory.getLogger(getClass());
+
+    private final static String SYS_PROP_DISABLE_JUMPMIND_DRIVER = "jumpmind.commerce.disable.jdbc.driver";
 
     @Autowired
     protected Environment env;
@@ -56,8 +69,14 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.businessunitId:undefined}")
     protected String businessUnitId;
 
+    @Value("${openpos.general.rebuildDatabase.enabled:true}")
+    protected boolean rebuildDatabaseEnabled;
+
     @Autowired
     protected TagHelper tagHelper;
+
+    @Autowired
+    protected AugmenterHelper augmenterHelper;
 
     @Autowired
     protected ApplicationContext applicationContext;
@@ -67,7 +86,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.datasourceBeanName:#{null}}")
     protected String dataSourceBeanName;
 
-    @Value("${openpos.general.sqlScriptProfile:test}")
+    @Deprecated
+    @Value("${openpos.general.sqlScriptProfile:not set}")
     protected String sqlScriptProfile;
 
     @Value("${openpos.general.dataModelExtensionPackages:#{null}}")
@@ -76,6 +96,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.failStartupOnModuleLoadFailure:false}")
     boolean failStartupOnModuleLoadFailure;
 
+    @Autowired(required = false)
     protected DataSource dataSource;
 
     protected ISecurityService securityService;
@@ -83,6 +104,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     protected PlatformTransactionManager txManager;
 
     protected DBSessionFactory sessionFactory;
+
+    @Getter
+    @Setter
+    private ModuleLoaderConfig loaderConfig;
 
     static Server h2Server;
 
@@ -173,15 +198,29 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public String getDriver() {
-        return getDbProperties(DB_POOL_DRIVER, "org.h2.Driver");
+        String driverClassName = getDbProperties(DB_POOL_DRIVER, "org.h2.Driver");
+        return driverClassName;
     }
 
     @Override
     public String getURL() {
         String url = getDbProperties(DB_POOL_URL, "jdbc:openpos:h2:mem:" + getName() + ";DB_CLOSE_ON_EXIT=FALSE");
+
+        final String JDBC_PROTOCOL = "jdbc:";
+
+        if (System.getProperty(SYS_PROP_DISABLE_JUMPMIND_DRIVER) == null
+                && !url.startsWith(Driver.DRIVER_PREFIX)
+                && url.startsWith(JDBC_PROTOCOL)) {
+
+            String modifiedJdbcUrl = url.replace(JDBC_PROTOCOL, Driver.DRIVER_PREFIX);
+            log.info("Modified JDBC URL to include :openpos: protocol. modified='" + modifiedJdbcUrl + "' original= '" + url + "'");
+            url = modifiedJdbcUrl;
+        }
         if (url.contains("openpos")) {
             loadJumpMindDriver();
         }
+
+
         return url;
     }
 
@@ -195,7 +234,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public DataSource getDataSource() {
-        if (dataSource == null) {
+        if (dataSource == null || dataSource.getClass().getSimpleName().contains("EmbeddedDataSourceProxy")) {
+            this.dataSource = null;
             setupH2Server();
             if (this.dataSourceBeanName != null) {
                 try {
@@ -210,7 +250,10 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             if (dataSource == null) {
                 Driver.class.getName(); // Load openpos driver wrapper.
                 TypedProperties properties = new TypedProperties();
-                properties.put(DB_POOL_DRIVER, getDriver());
+
+                String driverClassName = getDriver();
+
+                properties.put(DB_POOL_DRIVER, driverClassName);
                 properties.put(DB_POOL_URL, getURL());
                 properties.put(DB_POOL_USER, getDbProperties(DB_POOL_USER, null));
                 properties.put(DB_POOL_PASSWORD, getDbProperties(DB_POOL_PASSWORD, null));
@@ -229,7 +272,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                 log.info(String.format(
                         "About to initialize the '%s' module datasource using the following driver:"
                                 + " '%s' and the following url: '%s' and the following user: '%s'",
-                        getName(), properties.get(DB_POOL_DRIVER), properties.get(DB_POOL_URL), properties.get(DB_POOL_USER)));
+                        getName(), driverClassName, properties.get(DB_POOL_URL), properties.get(DB_POOL_USER)));
 
                 dataSource = BasicDataSourceFactory.create(properties, securityService());
             }
@@ -260,7 +303,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             sessionContext.put(DBSession.JDBC_FETCH_SIZE, env.getProperty(DBSession.JDBC_FETCH_SIZE));
             sessionContext.put(DBSession.JDBC_QUERY_TIMEOUT, env.getProperty(DBSession.JDBC_QUERY_TIMEOUT));
 
-            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper);
+            sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper, augmenterHelper);
 
         }
 
@@ -272,30 +315,71 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         updateDataModel(getDBSession());
     }
 
-    public void exportData(String format, String dir, boolean includeModuleTables) {
+    public void rebuildDatabase() {
+        if (rebuildDatabaseEnabled) {
+            List<Table> tables = this.sessionFactory.getTables();
+            for (Table table : tables) {
+                try {
+                    new JdbcTemplate(getDataSource()).execute("drop table " + table.getName());
+                } catch(Exception ex) {
+                    log.warn("Failed to drop {}.  Reason: {}", table.getName(), ex.getMessage());
+                    log.debug("", ex);
+                }
+            }
+            initialize();
+        } else {
+            log.warn("The rebuild database feature is not enabled");
+        }
+    }
+
+    public void exportData(String format, String dir, boolean includeModuleTables, String whereClause, List<String> tableFilter, String batchId) {
         List<Table> tables = this.sessionFactory.getTables(includeModuleTables ? new Class<?>[0] : new Class[]{ModuleModel.class});
+        if (whereClause == null) {
+            whereClause = StringUtils.EMPTY;
+        }
+        if(StringUtils.isEmpty(batchId)){
+            batchId = "01";
+        }
+        if(tableFilter != null){
+        }
         for (Table table : tables) {
-            if (includeModuleTables || !(
+            if (
+                    (tableFilter == null || tableFilter.stream().anyMatch( t -> t.equalsIgnoreCase(table.getName()))) &&
+                    (includeModuleTables || !(
                     table.getName().toLowerCase().endsWith("module") ||
                     table.getName().toLowerCase().endsWith("sample")))
-                if (new JdbcTemplate(dataSource).queryForObject("select count(*) from " + table.getName(), Integer.class) > 0) {
+            ){
+                if (new JdbcTemplate(dataSource).queryForObject("select count(*) from " + table.getName() + " " + whereClause, Integer.class) > 0) {
+                    String filename = String.format("%s_post_01_%s.%s", getVersion(), table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase());
+                    if(Format.SQL.equals(Format.valueOf(format))){
+                        filename = String.format("%s_post_01_%s-%s.%s", getVersion(), batchId, table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase());
+                    }
+                    File out = new File(dir, filename);
+                    out.getParentFile().mkdirs();
                     try (OutputStream os = new BufferedOutputStream(
-                            new FileOutputStream(new File(dir, String.format("%s_post_01_%s.%s", getVersion(), table.getName().toLowerCase().replaceAll("_", "-"), format.toLowerCase()))))) {
+                            new FileOutputStream(out))) {
                         DbExport dbExport = new DbExport(this.databasePlatform);
                         dbExport.setCompatible(Compatible.H2);
                         dbExport.setUseQuotedIdentifiers(false);
                         dbExport.setNoData(false);
                         dbExport.setFormat(Format.valueOf(format));
                         dbExport.setNoCreateInfo(true);
+                        dbExport.setWhereClause(whereClause);
                         dbExport.exportTable(os, table.getName(), null);
                     } catch (IOException e) {
                         throw new IoException(e);
                     }
                 }
+            }
+
         }
     }
 
     public void updateDataModel(DBSession session) {
+        if (!isDatabaseUpgradeable()) {
+            log.info("Module {} database configured as non-upgradeable", getName());
+            return;
+        }
         String fromVersion = null;
 
         try {
@@ -308,26 +392,32 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         }
 
         String currentVersion = getVersion();
-        log.info("The previous version of {} was {} and the current version is {}. sqlScriptProfile: {}", getName(),
-                fromVersion, currentVersion, sqlScriptProfile);
-        DatabaseScriptContainer scripts = new DatabaseScriptContainer(String.format("%s/sql/%s", getName(), sqlScriptProfile),
-                getDatabasePlatform());
+        log.info("The previous version of {} was {} and the current version is {}", getName(),
+                fromVersion, currentVersion);
+
+        List<String> profiles = new ArrayList(Arrays.asList(env.getActiveProfiles()));
+        if (sqlScriptProfile != null && !sqlScriptProfile.equals("not set") &&
+                !profiles.contains(sqlScriptProfile)) {
+            profiles.add(sqlScriptProfile);
+        }
+
+        List<String> scriptLocations = profiles.stream().map(p->String.format("%s/sql/%s", getName(), p)).collect(Collectors.toList());
+        DatabaseScriptContainer scripts = new DatabaseScriptContainer(scriptLocations,
+                getDBSession(), installationId);
         IDBSchemaListener schemaListener = getDbSchemaListener();
 
-        scripts.executePreInstallScripts(fromVersion, currentVersion, failStartupOnModuleLoadFailure);
+        scripts.executePreInstallScripts(failStartupOnModuleLoadFailure);
         schemaListener.beforeSchemaCreate(sessionFactory);
         sessionFactory.createAndUpgrade();
         upgradeDbFromXml();
         schemaListener.afterSchemaCreate(sessionFactory);
-        scripts.executePostInstallScripts(fromVersion, currentVersion, failStartupOnModuleLoadFailure);
+        scripts.executePostInstallScripts(failStartupOnModuleLoadFailure);
 
         ModuleModel moduleModel = session.findByNaturalId(ModuleModel.class, installationId);
         if (moduleModel == null) {
             moduleModel = new ModuleModel(installationId, currentVersion);
-        } else {
-            if (!moduleModel.getCurrentVersion().equals(currentVersion)) {
-                moduleModel.setCurrentVersion(currentVersion);
-            }
+        } else if (!moduleModel.getCurrentVersion().equals(currentVersion)) {
+            moduleModel.setCurrentVersion(currentVersion);
         }
         session.save(moduleModel);
     }
@@ -358,4 +448,16 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
         };
     }
 
+    protected boolean isDatabaseUpgradeable() {
+        if (loaderConfig == null) {
+            return true;
+        }
+        if (loaderConfig.hasIncludes()) {
+            return loaderConfig.includes(getName());
+        }
+        if (loaderConfig.hasExcludes()) {
+            return !loaderConfig.excludes(getName());
+        }
+        return true;
+    }
 }

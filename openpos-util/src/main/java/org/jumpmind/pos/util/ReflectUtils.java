@@ -6,11 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.beans.BeanInfo;
-import java.beans.IntrospectionException;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -68,11 +66,11 @@ public class ReflectUtils {
                 }
             }
         } else if (field.getType().equals(Integer.class) && value instanceof Number) {
-            value = ((Number)value).intValue();
+            value = ((Number) value).intValue();
         } else if (field.getType().equals(BigDecimal.class) && value instanceof Number) {
             value = new BigDecimal(value.toString());
         } else if ((field.getType().equals(Boolean.class) || field.getType().equals(boolean.class))
-                && (value instanceof Number)    ) {
+                && (value instanceof Number)) {
             Number number = (Number) value;
             if (number.intValue() != 0) {
                 return Boolean.TRUE;
@@ -88,7 +86,7 @@ public class ReflectUtils {
         setProperty(target, propertyName, value, false);
     }
 
-    @SuppressWarnings({ "unchecked", "rawtypes" })
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public static void setProperty(Object target, String propertyName, Object value, boolean ignoreIfFieldNotFound) {
         Field field = getAccessibleField(target, propertyName);
         if (field != null) {
@@ -144,6 +142,18 @@ public class ReflectUtils {
         } catch (Exception ex) {
             throw new ReflectionException("Failed to execute getPropertyDescriptor for property '" + propertyName + "' on " + target, ex);
         }
+    }
+
+
+    /**
+     * This simple method will convert any input string into a valid java identifier
+     */
+    public static String toIdentifier(String str) {
+        if (str != null) {
+            // TODO this will need to become more advanced in the future
+            str = str.replaceAll("-", "");
+        }
+        return str;
     }
 
 }
