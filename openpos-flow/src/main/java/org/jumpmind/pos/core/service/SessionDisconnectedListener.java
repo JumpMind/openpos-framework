@@ -37,9 +37,10 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
         log.info("session disconnected: {}", sessionId);
         
         DeviceModel deviceModel = sessionAuthTracker.getDeviceModel(sessionId);
-        devicesService.disconnectDevice(new DisconnectDeviceRequest(deviceModel.getDeviceId(), deviceModel.getAppId()));
 
         if (deviceModel != null) {
+            devicesService.disconnectDevice(new DisconnectDeviceRequest(deviceModel.getDeviceId(), deviceModel.getAppId()));
+
             try {
                 eventPublisher.publish(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId()));
             } catch (Exception ex) {
