@@ -4,8 +4,8 @@ import { HttpClient } from '@angular/common/http';
 import { LocaleConstantKey, LocaleConstants } from './locale.constants';
 import { SessionService } from './session.service';
 import { PersonalizationService } from '../personalization/personalization.service';
-import { Observable } from 'rxjs';
-import { take } from 'rxjs/operators';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 export const DEFAULT_LOCALE = 'en-US';
 
@@ -13,12 +13,11 @@ export const DEFAULT_LOCALE = 'en-US';
     providedIn: 'root',
 })
 export class LocaleService {
-    private locale = DEFAULT_LOCALE;
-    private displayLocale = DEFAULT_LOCALE;
     private supportedLocales = ['en-US'];
     private showIcons = true;
 
-    private locale$: Observable<string>;
+    private locale$ = new BehaviorSubject<string>(DEFAULT_LOCALE);
+    private displayLocale$ = new BehaviorSubject<string>(DEFAULT_LOCALE);
 
     constructor(
         public sessionService: SessionService,
@@ -30,10 +29,10 @@ export class LocaleService {
 
     handleLocaleChanged(message: any) {
         if (message.locale) {
-            this.locale = this.formatLocaleForBrowser(message.locale);
+            this.locale$.next(this.formatLocaleForBrowser(message.locale));
         }
         if (message.displayLocale) {
-            this.displayLocale = this.formatLocaleForBrowser(message.displayLocale);
+            this.displayLocale$.next(this.formatLocaleForBrowser(message.displayLocale));
         }
         if (message.supportedLocales) {
             this.supportedLocales = message.supportedLocales.map(locale => this.formatLocaleForBrowser(locale));
@@ -47,22 +46,24 @@ export class LocaleService {
         const url = `http${this.personalization.getSslEnabled$().getValue() ? 's' : ''}` +
                 `://${this.personalization.getServerName$().getValue()}:${this.personalization.getServerPort$().getValue()}/i18n/value`;
 
-        return this.http.post(url, {
-            base,
-            key,
-            locale: this.formatLocaleForJava(this.getLocale()),
-            args
-        }, {
-            responseType: 'text',
-        });
+        return this.displayLocale$.pipe(
+            switchMap(l => this.http.post(url, {
+                base,
+                key,
+                locale: this.formatLocaleForJava(l),
+                args
+            }, {
+                responseType: 'text',
+            }))
+        );
     }
 
     getLocale(): string {
-        return this.locale;
+        return this.locale$.getValue();
     }
 
     getDisplayLocale(): string {
-        return this.displayLocale;
+        return this.displayLocale$.getValue();
     }
 
     getSupportedLocales(): string[] {
