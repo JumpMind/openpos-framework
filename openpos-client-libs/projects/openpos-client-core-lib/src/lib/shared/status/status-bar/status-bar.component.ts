@@ -64,7 +64,7 @@ export class StatusBarComponent {
     ).pipe(
       map(results => {
         let l = results[0].line1;
-        let i = results[1];
+        const i = results[1];
 
         i.forEach((value) => {
           let dn = "Not Selected";
