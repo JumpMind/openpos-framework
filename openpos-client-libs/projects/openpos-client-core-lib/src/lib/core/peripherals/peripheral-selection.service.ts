@@ -25,12 +25,13 @@ export class PeripheralSelectionService {
                 const devices = m.available;
 
                 return <PeripheralCategory> {
-                    name: m.categoryDisplayName,
+                    id: m.category.id,
+                    localizationKey: m.category.localizationDisplayKey,
                     knownDevices: devices,
                     selectedDevice: devices.find(d => d.id === m.selectedId)
                 };
             }),
-            tap(n => this._categoryNameToData.set(n.name, n)),
+            tap(n => this._categoryNameToData.set(n.id, n)),
             map(() => Array.from(this._categoryNameToData.values())),
             publishBehavior([])
         ) as ConnectableObservable<PeripheralCategory[]>;
@@ -48,7 +49,7 @@ export class PeripheralSelectionService {
         if (typeof(category) == 'string') {
             categoryName = category as string;
         } else {
-            categoryName = (category as PeripheralCategory).name;
+            categoryName = (category as PeripheralCategory).id;
         }
 
         if (typeof(device) == 'string') {
@@ -63,7 +64,8 @@ export class PeripheralSelectionService {
 
 export type PeripheralCategoryRef = PeripheralCategory | string;
 export interface PeripheralCategory {
-    name: string;
+    id: string;
+    localizationKey: string,
     knownDevices: PeripheralDevice[];
     selectedDevice: PeripheralDevice;
 }

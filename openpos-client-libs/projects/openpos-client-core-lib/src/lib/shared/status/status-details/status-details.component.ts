@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import { StatusMessage } from '../status.message';
 import { StatusService } from '../status.service';
-import { PeripheralSelectionService, PeripheralCategory } from '../../peripherals/peripheral-selection.service';
+import { PeripheralSelectionService, PeripheralCategory } from '../../../core/peripherals/peripheral-selection.service';
 import { PeripheralSelectorComponent, PeripheralSelectorDialogData } from './selector/peripheral-selector.component';
 
 @Component({

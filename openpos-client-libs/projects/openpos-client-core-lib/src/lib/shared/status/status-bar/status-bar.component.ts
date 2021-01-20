@@ -1,11 +1,11 @@
 import { Component, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { combineLatest, Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { ConfigChangedMessage } from '../../messages/config-changed-message';
-import { Status } from '../../messages/status.enum';
+import { ConfigChangedMessage } from '../../../core/messages/config-changed-message';
+import { Status } from '../../../core/messages/status.enum';
 import { StatusMessage } from '../status.message';
 import { StatusService } from '../status.service';
-import { PeripheralSelectionService } from '../../peripherals/peripheral-selection.service';
+import { PeripheralSelectionService } from '../../../core/peripherals/peripheral-selection.service';
 
 @Component({
   selector: 'app-status-bar',
@@ -50,7 +50,7 @@ export class StatusBarComponent {
             dn = value.selectedDevice.displayName;
           }
 
-          l += " | " + value.name + " " + dn;
+          l += " | " + value.localizationKey + " " + dn;
         });
 
         return l;

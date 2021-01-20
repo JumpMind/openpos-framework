@@ -3,10 +3,10 @@ import { MatDialog, MatDialogRef } from '@angular/material';
 import { Observable, ReplaySubject } from 'rxjs';
 import { filter, tap } from 'rxjs/operators';
 
-import { ConfigChangedMessage } from '../messages/config-changed-message';
-import { MessageTypes } from '../messages/message-types';
+import { ConfigChangedMessage } from '../../core/messages/config-changed-message';
+import { MessageTypes } from '../../core/messages/message-types';
 import { StatusMessage } from './status.message';
-import { SessionService } from '../services/session.service';
+import { SessionService } from '../../core/services/session.service';
 import { StatusDetailsComponent } from './status-details/status-details.component';
 
 @Injectable({

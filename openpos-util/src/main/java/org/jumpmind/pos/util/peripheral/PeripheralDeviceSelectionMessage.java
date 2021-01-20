@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class PeripheralDeviceSelectionMessage extends Message {
-    String categoryDisplayName;
+    CategoryDescriptor category;
     List<PeripheralDeviceDescription> available;
     String selectedId;
 

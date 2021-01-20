@@ -3,7 +3,7 @@
 <div mat-dialog-content>
     <app-status-details-item 
         *ngFor="let s of peripheralSelection.peripheralCategories$ | async" 
-        [title]="s.name +  ' - ' + (s.selectedDevice?.displayName || 'Not Selected')" 
+        [title]="(s.localizationKey) +  ' - ' + (s.selectedDevice?.displayName || 'Not Selected')" 
         status="online" 
         actionText="Choose..."
         (actionExecuted)="onChangeSelectedPeripheral(s)">

@@ -1,5 +1,5 @@
 
-<h1 mat-dialog-title>{{data.category.name}}</h1>
+<h1 mat-dialog-title>{{data.category.localizationKey | localize}}</h1>
 
 <div mat-dialog-content>
     <app-option-button *ngFor="let o of data.category.knownDevices; let i = index"

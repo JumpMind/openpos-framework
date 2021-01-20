@@ -1,6 +1,11 @@
+import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+
 import { LocaleConstantKey, LocaleConstants } from './locale.constants';
 import { SessionService } from './session.service';
-import { Injectable } from '@angular/core';
+import { PersonalizationService } from '../personalization/personalization.service';
+import { Observable } from 'rxjs';
+import { take } from 'rxjs/operators';
 
 export const DEFAULT_LOCALE = 'en-US';
 
@@ -13,7 +18,13 @@ export class LocaleService {
     private supportedLocales = ['en-US'];
     private showIcons = true;
 
-    constructor(public sessionService: SessionService) {
+    private locale$: Observable<string>;
+
+    constructor(
+        public sessionService: SessionService,
+        private http: HttpClient,
+        private personalization: PersonalizationService
+    ) {
         this.sessionService.getMessages('LocaleChanged').subscribe(message => this.handleLocaleChanged(message));
     }
 
@@ -30,6 +41,20 @@ export class LocaleService {
         if (message.hasOwnProperty('showIcons')) {
             this.showIcons = message.showIcons;
         }
+    }
+
+    getString(base: string, key: string, args?: any[]): Observable<string> {
+        const url = `http${this.personalization.getSslEnabled$().getValue() ? 's' : ''}` +
+                `://${this.personalization.getServerName$().getValue()}:${this.personalization.getServerPort$().getValue()}/i18n/value`;
+
+        return this.http.post(url, {
+            base,
+            key,
+            locale: this.formatLocaleForJava(this.getLocale()),
+            args
+        }, {
+            responseType: 'text',
+        });
     }
 
     getLocale(): string {

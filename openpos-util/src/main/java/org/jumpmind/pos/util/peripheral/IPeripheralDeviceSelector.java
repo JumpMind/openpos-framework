@@ -10,9 +10,9 @@ public interface IPeripheralDeviceSelector {
     void initialize(IInvalidationHandle invalidationHandle);
 
     /**
-     * Gets the name of the category.
+     * Gets the the category.
      */
-    String getCategory();
+    CategoryDescriptor getCategory();
 
     /**
      * Gets the current device selection. Use `null` to indicate that there is

@@ -84,7 +84,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         DialogContentComponent,
         SplashScreenComponent,
         ScanditCameraViewComponent,
-        LockScreenComponent
+        LockScreenComponent, 
     ],
     declarations: [
         DialogContentComponent,
@@ -94,7 +94,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StartupFailedComponent,
         SplashScreenComponent,
         ScanditCameraViewComponent,
-        LockScreenComponent,
+        LockScreenComponent
     ],
     imports: [
         SharedModule,
