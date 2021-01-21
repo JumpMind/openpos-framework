@@ -20,5 +20,5 @@ export class MessageTypes {
     static AUDIO_CONFIG = 'AudioConfig';
     static AUDIO_PRELOAD = 'AudioPreload';
     static LOADING = 'Loading';
-    static PERIPHERAL_DEVICE_SELECTION = "PeripheralDeviceSelection";
+    static PERIPHERAL_DEVICE_SELECTION = 'PeripheralDeviceSelection';
 }
