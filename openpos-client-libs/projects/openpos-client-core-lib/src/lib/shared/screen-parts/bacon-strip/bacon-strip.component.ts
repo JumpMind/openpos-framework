@@ -27,6 +27,7 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     isMobile: Observable<boolean>;
 
     searchExpanded = false;
+
     constructor(injector: Injector, public helpTextService: HelpTextService, private media: OpenposMediaService,
                 protected keyPresses: KeyPressProvider) {
         super(injector);
@@ -41,15 +42,15 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
         ]));
 
         this.subscriptions.add(
-          this.keyPresses.subscribe( 'Escape', 100, (event: KeyboardEvent) => {
-            // ignore repeats and check configuration
-            if ( event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
-              return;
-            }
-            if ( event.type === 'keydown' && this.screenData.actions) {
-              this.buttonClick();
-            }
-          })
+            this.keyPresses.subscribe('Escape', 100, (event: KeyboardEvent) => {
+                // ignore repeats and check configuration
+                if (event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
+                    return;
+                }
+                if (event.type === 'keydown' && this.screenData.actions) {
+                    this.buttonClick();
+                }
+            })
         );
     }
 
@@ -75,3 +76,4 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
         this.searchExpanded = expanded;
     }
 }
+
