@@ -2,7 +2,6 @@ package org.jumpmind.pos.core.flow.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.flow.FlowException;
-import org.springframework.context.annotation.Bean;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
@@ -34,11 +33,6 @@ public class YamlConfigProvider implements IFlowConfigProvider {
     public void load(String appId, String path, String startFlowName) {
         appIdToStartFlowName.put(appId, startFlowName);
         load(appId, path);
-    }
-
-    @Bean
-    public List<String> loadedAppIds() {
-        return new ArrayList<>(appIdToStartFlowName.keySet());
     }
 
     public void load(String appId, String path) {
