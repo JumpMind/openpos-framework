@@ -12,9 +12,9 @@
     <div *ngIf="!(isMobile | async) && !searchExpanded">
         <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
     </div>
-    <div *ngIf="!searchExpanded && screenData.operatorLine1" class="rightside">
-        <p class="operator-name">{{screenData.operatorLine1}}</p>
-        <p class="operator-id">{{screenData.operatorLine2}}</p>
+    <div *ngIf="!searchExpanded && screenData.hasCurrentUser" class="rightside">
+        <p *ngIf="screenData.operatorLine1" class="operator-name">{{screenData.operatorLine1}}</p>
+        <p *ngIf="screenData.operatorLine2" class="operator-id">{{screenData.operatorLine2}}</p>
         <app-kebab-button class="icon"
                           *ngIf="screenData.operatorMenu"
                           [iconName]="screenData.operatorIcon"

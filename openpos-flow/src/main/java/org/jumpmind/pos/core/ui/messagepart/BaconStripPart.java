@@ -19,6 +19,7 @@ import org.jumpmind.pos.core.ui.IconType;
 public class BaconStripPart implements IHasBackButton, Serializable {
     private static final long serialVersionUID = 1L;
 
+    private boolean hasCurrentUser;
     private String operatorLine1;
     private String operatorLine2;
     private String headerText;
