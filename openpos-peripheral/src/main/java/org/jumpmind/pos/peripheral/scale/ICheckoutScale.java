@@ -8,5 +8,9 @@ public interface ICheckoutScale {
 
     public ScaleWeightData getScaleWeightData();
 
+    public String getScaleUnit();
+    public long getPollInterval();
+    public long getReadTimeout();
+
 
 }
