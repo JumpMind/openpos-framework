@@ -9,7 +9,7 @@
 @import '../self-checkout/self-checkout-themes';
 @import '../customer-display/customer-display-themes';
 @import '../keyboard/keyboard-theme';
-@import '../core/status/status-bar/status-bar-theme';
+@import '../shared/status/status-bar/status-bar-theme';
 @import '../core/lock-screen/lock-screen-theme';
 
 @include mat-core();

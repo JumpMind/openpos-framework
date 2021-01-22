@@ -8,7 +8,7 @@
   ></app-icon>
 </section>
 <section class="system-info-left" responsive-class>
-  {{(systemInfo$ | async)?.line1}}
+  {{line1$ | async}}
 </section>
 <section class="system-info-right" responsive-class>
   {{(systemInfo$ | async)?.line2}}

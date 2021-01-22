@@ -150,7 +150,6 @@ import {ButtonActionTimerComponent} from './components/button-action-timer/butto
 import {ImageTextPanelComponent} from './screen-parts/image-text-panel/image-text-panel.component';
 import {TransactionSummaryComponent} from './components/transaction-summary/transaction-summary.component';
 import {TransactionHistoryPartComponent} from './screen-parts/transaction-history-part/transaction-history-part.component';
-import {StatusBarComponent} from '../core/status/status-bar/status-bar.component';
 import {StampComponent} from './components/stamp/stamp.component';
 import {FitTextDirective} from './directives/fit-text.directive';
 import { PromptButtonRowComponent } from './screen-parts/prompt-button-row/prompt-button-row.component';
@@ -158,6 +157,14 @@ import { WarnButtonComponent } from './components/warn-button/warn-button.compon
 import {StayFocusedDirective} from './directives/stay-focused.directive';
 import { AudioLicenseComponent } from './components/audio-license/audio-license.component';
 import { ToastComponent } from './components/toast/toast.component';
+import { OverlayContainer } from '@angular/cdk/overlay';
+import { ModalOverlayContainer } from './modal-overlay-container/modal-overlay-container';
+import { StatusDetailsComponent } from './status/status-details/status-details.component';
+import { PeripheralSelectorComponent } from './status/status-details/selector/peripheral-selector.component';
+import { StatusDetailsItemComponent } from './status/status-details/item/status-details-item.component';
+import { StatusBarComponent } from './status/status-bar/status-bar.component';
+import { LocalizePipe } from './pipes/localize.pipe';
+import { ModalOverlayContainerDirective } from './modal-overlay-container/modal-overlay-container.directive';
 
 const screenParts = [
     TenderPartComponent,
@@ -324,6 +331,11 @@ const pipes = [
         ...pipes,
         BaconDrawerComponent,
         StatusBarComponent,
+        StatusDetailsComponent,
+        StatusDetailsItemComponent,
+        PeripheralSelectorComponent,
+        LocalizePipe,
+        ModalOverlayContainerDirective,
     ],
     entryComponents: [
         KebabMenuComponent,
@@ -334,7 +346,9 @@ const pipes = [
         SystemStatusDialogComponent,
         BaconDrawerComponent,
         HelpTextPageWrapperComponent,
-        ToastComponent
+        ToastComponent,
+        StatusDetailsComponent,
+        PeripheralSelectorComponent
     ],
     imports: [
         FormsModule,
@@ -363,10 +377,14 @@ const pipes = [
         MaterialModule,
         MatKeyboardModule,
         TextMaskModule,
+        LocalizePipe,
         ...directives,
         ...components,
         ...screenParts,
         ...pipes
+    ],
+    providers: [
+        { provide: OverlayContainer, useClass: ModalOverlayContainer }
     ]
 })
 export class SharedModule { }

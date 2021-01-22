@@ -1,0 +1,30 @@
+<!-- 
+Uncomment when statuses are suported.
+<div class="icon-area" [class.offline]="status === 'offline'" [class.error]="status === 'error'">
+    <app-icon [iconName]="icon"></app-icon>
+</div> 
+-->
+
+<div class="title-group">
+    <div class="title">{{title}}</div>
+    <!--
+        Uncomment when statuses are supported. 
+        <div class="caption" [ngSwitch]="status">
+        <ng-container *ngSwitchCase="'online'">
+            Online
+        </ng-container>
+        <ng-container *ngSwitchCase="'offline'">
+            Offline
+        </ng-container>
+        <ng-container *ngSwitchCase="'error'">
+            Error
+        </ng-container>
+        <ng-container *ngSwitchDefault>
+            Unknown
+        </ng-container>
+    </div> -->
+</div>
+
+<button mat-button *ngIf="actionText" (click)="actionExecuted.emit()">
+    {{actionText}}
+</button>

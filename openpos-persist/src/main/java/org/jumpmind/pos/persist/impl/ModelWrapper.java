@@ -370,7 +370,7 @@ public class ModelWrapper {
                     DatabaseSchema.camelToSnakeCase(xRefField.getName()), isoCurrencyCode);
             } catch (Exception ex) {
                 throw new PersistException("Failed to set money field " + fieldName  
-                        + " on model " + model);                
+                        + " on model " + model, ex);
             }
             return decimal;
         } else {
