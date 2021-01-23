@@ -29,14 +29,14 @@ public class DetectoCheckoutScale extends CheckoutScale implements IPlugAndPlayD
     // representation of the computed checksum
     //         E = ASCII ETX (HEX 03)
 
-
     final static int MIN_RESPONSE_LEGNTH = 10;
     final static int SIGN_POSITION = 0;
 
+    // differs between model
     private final static int DETECTO_RESPONSE_LENGTH = 13;
-    private final static int STATUS_POSITION = 9; // differs between model
-    private final static int WEIGHT_STRING_LENGTH = "wwwww.ww".length(); // differs between model
-    private final static byte WEIGHT_COMMAND = 'W';  // OR '~' - differs by model
+    private final static int STATUS_POSITION = 9;
+    private final static int WEIGHT_STRING_LENGTH = "wwwww.ww".length();
+    private final static byte WEIGHT_COMMAND = 'W';
 
     public byte getWeightCommand() {
         return WEIGHT_COMMAND;
@@ -124,24 +124,22 @@ public class DetectoCheckoutScale extends CheckoutScale implements IPlugAndPlayD
 
         settings.put("connectionClass", RS232JSerialCommConnectionFactory.class.getName());
         settings.put(RS232JSerialCommConnectionFactory.BAUD_RATE, 9600);
-//        settings.put(RS232JSerialCommConnectionFactory.DATA_BITS, 7);
-//        settings.put(RS232JSerialCommConnectionFactory.PARITY, SerialPort.PARITY_EVEN);
         settings.put("portName", "/dev/tty.usbserial-1420");
 
 
         scale.scanDevice(settings);
 
-//        scale.initialize(settings);
+        scale.initialize(settings);
 
-//        int tries = 200;
-//        while (tries-- > 0) {
-//
-//            ScaleWeightData weightData = scale.getScaleWeightData();
-//            if (weightData.isSuccessful()) {
-//                System.out.println("Read weight: " + weightData.getWeight());
-//            } else {
-//                System.out.println("Failed: " + weightData.getFailureMessage());
-//            }
-//        }
+        int tries = 200;
+        while (tries-- > 0) {
+
+            ScaleWeightData weightData = scale.getScaleWeightData();
+            if (weightData.isSuccessful()) {
+                System.out.println("Read weight: " + weightData.getWeight());
+            } else {
+                System.out.println("Failed: " + weightData.getFailureMessage());
+            }
+        }
     }
 }
