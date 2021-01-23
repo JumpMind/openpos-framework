@@ -90,12 +90,7 @@ public class MettlerCheckoutScale extends CheckoutScale {
         ScaleWeightData scaleWeightData = new ScaleWeightData();
         scaleWeightData.setWeight(weight);
         scaleWeightData.setSuccessful(true);
-        setLastStatus(Status.Online);
-        if (statusManager != null) {
-            statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, Status.Online));
-        }
         return scaleWeightData;
-
     }
 
     protected String checkStatus(ScaleWeightData scaleWeightData, int statusByte) {

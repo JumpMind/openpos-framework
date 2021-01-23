@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.peripheral.PeripheralException;
 import org.jumpmind.pos.print.IConnectionFactory;
 import org.jumpmind.pos.print.PeripheralConnection;
+import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.ReflectionException;
 import org.jumpmind.pos.util.status.IStatusManager;
@@ -23,10 +24,7 @@ import java.util.Map;
 @Slf4j
 @Getter
 @Setter
-public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
-
-    public final static String STATUS_NAME = "DEVICE.CHECKOUT_SCALE";
-    public final static String STATUS_ICON = "checkout_scale";
+public abstract class CheckoutScale implements ICheckoutScale {
 
     Map<String, Object> settings;
     PeripheralConnection peripheralConnection;
@@ -36,23 +34,20 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
     private long pollInterval;
     private long readTimeout;
 
-    IStatusManager statusManager;
-    private Status lastStatus = Status.Unknown;
-
     public void initialize(Map<String,Object> settings) {
-        this.settings = settings;
         open(settings);
         close();
     }
 
     void open(Map<String,Object> settings) {
+        this.settings = settings;
         if (this.peripheralConnection != null) {
             throw new PeripheralException("peripheralConnection should be null when open is called. Scale might already be open.");
         }
 
-        readTimeout = getInt(settings,"readTimeout", 20*1000);
-        pollInterval = getInt(settings,"pollInterval", 300);
-        scaleUnit = (String)settings.get("scaleUnit");
+        readTimeout = getInt(this.settings,"readTimeout", 20*1000);
+        pollInterval = getInt(this.settings,"pollInterval", 300);
+        scaleUnit = (String)this.settings.get("scaleUnit");
 
         try {
             String className = (String) this.settings.get("connectionClass");
@@ -61,10 +56,6 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
             }
             this.connectionFactory = ClassUtils.instantiate(className);
         } catch (Exception ex) {
-            lastStatus = Status.Offline;
-            if (statusManager != null) {
-                statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, lastStatus, ex.getMessage()));
-            }
             throw new PeripheralException("Failed to create the connection factory for " + getClass().getName(), ex);
         }
         try {
@@ -73,10 +64,6 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
             log.info("Checkout scale appears to be successfully opened.");
         } catch (Exception ex) {
             this.peripheralConnection = null;
-            lastStatus = Status.Offline;
-            if (statusManager != null) {
-                statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, lastStatus, ex.getMessage()));
-            }
             throw new PeripheralException("Failed to open connection to the checkout scale.", ex);
         }
     }
@@ -100,10 +87,12 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
             if (this.peripheralConnection == null) {
                 throw new PeripheralException("The checkout scale is not open.");
             }
+            this.peripheralConnection.resetInput();
             this.peripheralConnection.getOut().write(command);
             this.peripheralConnection.getOut().flush();
+
             try {
-                Thread.sleep(300);
+                Thread.sleep(400);
             } catch (Exception ex) {
                 log.debug("sendScaleCommand interruppted", ex);
             }
@@ -111,6 +100,13 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
             List<Integer> bytes = new ArrayList<Integer>();
 
             int responseByte = -1;
+
+            long timeoutTime = System.currentTimeMillis()+readTimeout;
+
+            while (this.peripheralConnection.getIn().available() == 0
+                && System.currentTimeMillis() <= timeoutTime) {
+                AppUtils.sleep(10);
+            }
 
             while (this.peripheralConnection.getIn().available() > 0) {
                 responseByte = this.peripheralConnection.getIn().read();
@@ -139,18 +135,8 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
         }
     }
 
-    @Override
-    public StatusReport getStatus(IStatusManager statusManager) {
-        this.statusManager = statusManager;
-
-        Status status = getLastStatus();
-
-        if (this.settings == null) {
-            status = Status.Disabled;
-        }
-
-        StatusReport report = new StatusReport(STATUS_NAME, STATUS_ICON, status);
-        return report;
+    public byte getWeightCommand() {
+        return 'W';
     }
 
     public synchronized ScaleWeightData getScaleWeightData() {
@@ -159,17 +145,13 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
         }
 
         try {
-            byte[] response = sendScaleCommand((byte)'W');
+            byte[] response = sendScaleCommand(getWeightCommand());
             if (response.length < 2) {
                 throw new PeripheralException("Unrecognized response from checkout scale " + Arrays.toString(response));
             }
 
             return parseResponse(response);
         } catch (Exception ex) {
-            setLastStatus(Status.Error);
-            if (statusManager != null) {
-                statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, Status.Error, ex.getMessage()));
-            }
             if (ex instanceof PeripheralException) {
                 throw (PeripheralException)ex;
             } else {
@@ -181,6 +163,14 @@ public abstract class CheckoutScale implements IStatusReporter, ICheckoutScale {
     }
 
     public abstract ScaleWeightData parseResponse(byte[] response);
+
+    protected ScaleWeightData createFailure(ScaleWeightData.CheckoutScaleFailureCode failureCode, String failureMessgae) {
+        ScaleWeightData scaleWeightData = new ScaleWeightData();
+        scaleWeightData.setSuccessful(false);
+        scaleWeightData.setFailureCode(failureCode);
+        scaleWeightData.setFailureMessage(failureMessgae);
+        return scaleWeightData;
+    }
 
     private int getInt(Map<String, Object> settings, String key, int defaultValue) {
         if (settings.containsKey(key)) {
