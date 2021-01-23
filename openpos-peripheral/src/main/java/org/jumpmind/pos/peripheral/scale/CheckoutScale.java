@@ -162,6 +162,10 @@ public abstract class CheckoutScale implements ICheckoutScale {
         }
     }
 
+    public Map<String, Object> getSettings() {
+        return settings;
+    }
+
     public abstract ScaleWeightData parseResponse(byte[] response);
 
     protected ScaleWeightData createFailure(ScaleWeightData.CheckoutScaleFailureCode failureCode, String failureMessgae) {

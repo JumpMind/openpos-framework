@@ -11,6 +11,7 @@ public interface ICheckoutScale {
     public String getScaleUnit();
     public long getPollInterval();
     public long getReadTimeout();
+    public Map<String, Object> getSettings();
 
 
 }
