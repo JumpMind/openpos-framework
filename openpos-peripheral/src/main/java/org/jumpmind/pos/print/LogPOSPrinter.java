@@ -83,8 +83,6 @@ public class LogPOSPrinter implements IOpenposPrinter {
 
     }
 
-    int counter = 1;
-
     @Override
     public String readMicr() {
         return " (1098765432( )321270742) 012547854(";

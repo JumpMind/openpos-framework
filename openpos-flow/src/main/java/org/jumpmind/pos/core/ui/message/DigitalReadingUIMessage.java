@@ -9,7 +9,6 @@ import org.jumpmind.pos.core.ui.UIMessage;
 public class DigitalReadingUIMessage extends UIMessage {
 
     public DigitalReadingUIMessage() {
-       // setType(MessageType.Screen);
         setScreenType("DigitalReading");
     }
 

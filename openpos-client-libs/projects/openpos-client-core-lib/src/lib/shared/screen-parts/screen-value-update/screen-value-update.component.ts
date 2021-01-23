@@ -11,11 +11,6 @@ import { MatDialog } from '@angular/material';
 @ScreenPart({
     name: 'screenValueUpdate'
 })
-// @Component({
-//     selector: 'app-system-status',
-//     templateUrl: './system-status.component.html',
-//     styleUrls: ['./system-status.component.scss'],
-// })
 export class ScreenValueUpdate extends ScreenPartComponent<IScreenValueUpdate> {
 
     constructor(protected dialog: MatDialog, injector: Injector) {
@@ -25,30 +20,4 @@ export class ScreenValueUpdate extends ScreenPartComponent<IScreenValueUpdate> {
     screenDataUpdated() {
         console.log('ScreenValue sees a message.')
     }
-
-    // showRegisterStatus(): boolean {
-    //     if (this.screenData && Configuration.showRegisterStatus) {
-    //         return Configuration.offlineOnlyRegisterStatus ?
-    //             this.screenData.overallSystemStatus === SystemStatusType.Offline : true;
-    //     } else {
-    //         return false;
-    //     }
-    // }
-
-    // onRegisterStatusClick(): void {
-    //     if (Configuration.clickableRegisterStatus) {
-    //         const dialogRef = this.dialog.open(SystemStatusDialogComponent, {
-    //             width: '40%',
-    //             data: {
-    //                 devices: this.screenData.devices,
-    //                 deviceHeader: 'Device/Database',
-    //                 statusHeader: 'Status',
-    //                 disableClose: false,
-    //                 autoFocus: false
-    //             }
-    //         });
-
-    //         this.subscriptions.add(dialogRef.afterClosed().subscribe(result => {}));
-    //     }
-    // }
 }
