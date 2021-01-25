@@ -61,10 +61,11 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
         }
 
         this.form = this.formBuilder.group(this.screenData);
+        this.updateSubmitButtonState();
 
         this.form.statusChanges
             .pipe(
-                tap(() => this.disableSubmitButton = this.isFormInvalid()),
+                tap(() => this.updateSubmitButtonState()),
                 takeUntil(this.beforeScreenDataUpdated$)
             )
             // Let Angular know that changes in a child view (app-dynamic-form-field) will cause the UI
@@ -94,13 +95,17 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
         }
     }
 
+    updateSubmitButtonState(): void {
+        this.disableSubmitButton = this.isFormInvalid();
+    }
+
     isFormInvalid(): boolean {
         return this.form.invalid || this.form.pending;
     }
 
     ngOnInit() {
         super.ngOnInit();
-        this.disableSubmitButton = this.isFormInvalid();
+        this.updateSubmitButtonState();
     }
 
     ngAfterViewInit(): void {
