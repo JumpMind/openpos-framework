@@ -6,33 +6,32 @@ import {ToastComponent} from "../../shared/components/toast/toast.component";
 
 @Injectable({
     providedIn: 'root',
-  })
+})
 export class ToastService {
-    persistedToasts = new Map<String,ActiveToast<any>>();
-    constructor( private sessionService: SessionService, private toastrService: ToastrService ) {
+    persistedToasts = new Map<String, ActiveToast<any>>();
+
+    constructor(private sessionService: SessionService, private toastrService: ToastrService) {
         sessionService.getMessages('Toast').subscribe(m => this.showMessage(m));
         sessionService.getMessages('CloseToast').subscribe(m => this.closeMessage(m));
-        sessionService.getMessages('Connected').subscribe(m => this.toastrService.clear());
-        window['toastService'] = this;
+        sessionService.getMessages('Connected').subscribe(() => this.toastrService.clear());
     }
 
     private closeMessage(message: any) {
         const toastMessage = message as CloseToastMessage;
         const messageToClose = this.persistedToasts.get(toastMessage.persistedId);
-        if(messageToClose) {
+        if (messageToClose) {
             this.toastrService.remove(messageToClose.toastId);
         }
     }
 
     private showMessage(message: any) {
         const toastMessage = message as IToastScreen;
-        if(toastMessage.persistent) {
-            if(!this.persistedToasts.get(toastMessage.persistedId)) {
+        if (toastMessage.persistent) {
+            if (!this.persistedToasts.get(toastMessage.persistedId)) {
                 const toast = this.getToast(toastMessage);
                 this.persistedToasts.set(toastMessage.persistedId, toast);
             }
-        }
-        else {
+        } else {
             this.getToast(toastMessage);
         }
         this.sessionService.cancelLoading();

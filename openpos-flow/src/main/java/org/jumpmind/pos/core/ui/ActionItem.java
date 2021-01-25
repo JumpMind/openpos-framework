@@ -34,9 +34,10 @@ import java.util.List;
 public class ActionItem implements Serializable {
 
     private static final long serialVersionUID = 1L;
-    
+
     protected String action;
     protected String title;
+    protected String defaultPayload;
     protected String icon;
     protected boolean enabled = true;
     protected ConfirmationDialog confirmationDialog;
@@ -66,9 +67,9 @@ public class ActionItem implements Serializable {
     public final static String BUTTON_SIZE_MD = "menuItem-md";
     public final static String BUTTON_SIZE_LG = "menuItem-lg";
     public final static String BUTTON_SIZE_XL = "menuItem-xl";
-    
+
     public ActionItem(String action) {
-        this.action = action;    
+        this.action = action;
     }
 
     public ActionItem(String action, String title) {
@@ -79,13 +80,13 @@ public class ActionItem implements Serializable {
     public ActionItem(String action, String title, String icon) {
         this(action, title);
         this.icon = icon;
-    }    
-    
+    }
+
     public ActionItem(boolean autoAssignEnabled, String action, String title, String icon) {
         this(action, title, icon);
         this.autoAssignEnabled = autoAssignEnabled;
-    } 
-    
+    }
+
     public ActionItem(String action, String title, String icon, String confirmationMessage) {
         this(action, title, icon);
         if (confirmationMessage != null) {
@@ -94,19 +95,19 @@ public class ActionItem implements Serializable {
             this.confirmationDialog.setMessage(confirmationMessage);
         }
     }
-    
+
     public ActionItem(String action, String title, String icon, ConfirmationDialog confirmationDialog) {
-    	this(action, title, icon );
-    	this.confirmationDialog = confirmationDialog;
+        this(action, title, icon);
+        this.confirmationDialog = confirmationDialog;
     }
-    
+
     public ActionItem(String title, String action, boolean enabled) {
         super();
         this.action = action;
         this.title = title;
         this.enabled = enabled;
     }
-    
+
     public ActionItem(String title, String action, String icon, boolean enabled) {
         super();
         this.action = action;
@@ -114,7 +115,7 @@ public class ActionItem implements Serializable {
         this.enabled = enabled;
         this.icon = icon;
     }
-    
+
     public ActionItem(String title, String action, boolean enabled, boolean sensitive) {
         super();
         this.action = action;
@@ -123,12 +124,12 @@ public class ActionItem implements Serializable {
         this.sensitive = sensitive;
     }
 
-    
+
     public String getAction() {
         return action;
     }
 
-    
+
     public void setAction(String action) {
         this.action = action;
     }
@@ -137,13 +138,13 @@ public class ActionItem implements Serializable {
         this.setAction(action);
         return this;
     }
-    
-    
+
+
     public String getTitle() {
         return title;
     }
 
-    
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -152,13 +153,20 @@ public class ActionItem implements Serializable {
         this.setTitle(title);
         return this;
     }
-    
-    
+
+    public String getDefaultPayload() {
+        return defaultPayload;
+    }
+
+    public void setDefaultPayload(String defaultPayload) {
+        this.defaultPayload = defaultPayload;
+    }
+
     public String getIcon() {
         return icon;
     }
 
-    
+
     public void setIcon(String icon) {
         this.icon = icon;
     }
@@ -167,49 +175,47 @@ public class ActionItem implements Serializable {
         this.setIcon(icon);
         return this;
     }
-    
-    
+
+    public boolean isEnabled() {
+        return enabled;
+    }
+
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
-    
-    public boolean isEnabled() {
-        return enabled;
-    }
-    
     public ActionItem enabled(boolean enabled) {
         this.setEnabled(enabled);
         return this;
     }
-    
-    public void setChildren(List<ActionItem> children) {
-        this.children = children;
-    }
-    
+
     public List<ActionItem> getChildren() {
         return children;
     }
-    
+
+    public void setChildren(List<ActionItem> children) {
+        this.children = children;
+    }
+
     public ActionItem children(List<ActionItem> children) {
         this.setChildren(children);
         return this;
     }
-    
+
     public String getConfirmationMessage() {
-    	if( this.confirmationDialog != null ) {
+        if (this.confirmationDialog != null) {
             return this.confirmationDialog.getMessage();
-    	}
-    	
-    	return null;
+        }
+
+        return null;
     }
-    
+
     public void setConfirmationMessage(String confirmationMessage) {
-    	
-    	if( this.confirmationDialog == null ) {
-    		this.confirmationDialog = new ConfirmationDialog();
-    	}
-    	    	
+
+        if (this.confirmationDialog == null) {
+            this.confirmationDialog = new ConfirmationDialog();
+        }
+
         this.confirmationDialog.setMessage(confirmationMessage);
     }
 
@@ -248,21 +254,21 @@ public class ActionItem implements Serializable {
     }
 
 
-	public ConfirmationDialog getConfirmationDialog() {
-		return confirmationDialog;
-	}
+    public ConfirmationDialog getConfirmationDialog() {
+        return confirmationDialog;
+    }
 
 
-	public void setConfirmationDialog(ConfirmationDialog confirmationDialog) {
-		this.confirmationDialog = confirmationDialog;
-	}
-
-    public void setQueueIfBlocked(boolean queueIfBlocked) {
-        this.queueIfBlocked = queueIfBlocked;
+    public void setConfirmationDialog(ConfirmationDialog confirmationDialog) {
+        this.confirmationDialog = confirmationDialog;
     }
 
     public boolean isQueueIfBlocked() {
         return queueIfBlocked;
+    }
+
+    public void setQueueIfBlocked(boolean queueIfBlocked) {
+        this.queueIfBlocked = queueIfBlocked;
     }
 
     public String getKeybindDisplayName() {
@@ -282,20 +288,19 @@ public class ActionItem implements Serializable {
     public void setKeybind(String keybind) {
         this.keybind = keybind;
     }
-    
+
     public ActionItem keybind(String keybind) {
         this.setKeybind(keybind);
         return this;
     }
-    
-    public void setAutoAssignEnabled(boolean autoAssignEnabled) {
-        this.autoAssignEnabled = autoAssignEnabled;
-    }
-    
+
     public boolean isAutoAssignEnabled() {
         return autoAssignEnabled;
     }
 
+    public void setAutoAssignEnabled(boolean autoAssignEnabled) {
+        this.autoAssignEnabled = autoAssignEnabled;
+    }
 
     public boolean getDoNotBlockForResponse() {
         return doNotBlockForResponse;

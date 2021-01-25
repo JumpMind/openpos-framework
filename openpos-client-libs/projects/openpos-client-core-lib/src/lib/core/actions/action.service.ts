@@ -25,10 +25,10 @@ export class ActionService implements OnDestroy {
         private messageProvider: MessageProvider) {
         console.log("Creating new Action Service")
         this.subscriptions.add(messageProvider.getScopedMessages$().subscribe(message => {
-            if(message.willUnblock === false) {
+            if (message.willUnblock === false) {
                 console.log('creating a screen that is disabled');
                 this.blockActions = true;
-            } else if( message.willUnblock) {
+            } else if (message.willUnblock) {
                 console.log('unblocking actions because message:', message);
                 this.unblock();
             }
@@ -38,21 +38,20 @@ export class ActionService implements OnDestroy {
                 console.log('unblocking action because toast:', message);
                 this.unblock();
             }
+            if (message.type === MessageTypes.CLIENT_EXECUTE) {
+                console.log('unblocking action because client execute:', message);
+                this.unblock();
+            }
         }));
-    }
-
-    private unblock() {
-        this.blockActions = false;
-        const queued = this.actionQueue.pop();
-        if (queued) {
-            console.log('Dequeued an action to send');
-            this.doAction(queued.item, queued.payload);
-        }
     }
 
     async doAction(actionItem: IActionItem, payload?: any) {
         const sendAction = await this.canPerformAction(actionItem);
         if (sendAction) {
+            if (payload && actionItem.defaultPayload) {
+                console.warn("Default action payload overridden for action " + actionItem.action);
+            }
+            payload = payload || actionItem.defaultPayload;
             if (!actionItem.doNotBlockForResponse) {
                 this.blockActions = true;
             }
@@ -82,16 +81,9 @@ export class ActionService implements OnDestroy {
         }
     }
 
-    private doUrlAction(urlItem: IUrlMenuItem) {
-        // check to see if we are an IURLMenuItem
-        console.info(`About to open: ${urlItem.url} in target mode: ${urlItem.targetMode}, with options: ${urlItem.options}`);
-        window.open(urlItem.url, urlItem.targetMode, urlItem.options);
-    }
-
     public actionBlocked(): boolean {
         return this.blockActions;
     }
-
 
     public registerActionPayload(actionName: string, actionValue: () => void) {
         this.actionPayloads.set(actionName, actionValue);
@@ -127,6 +119,27 @@ export class ActionService implements OnDestroy {
         }
 
         return this.actionDisablers.get(action).value;
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscriptions) {
+            this.subscriptions.unsubscribe();
+        }
+    }
+
+    private unblock() {
+        this.blockActions = false;
+        const queued = this.actionQueue.pop();
+        if (queued) {
+            console.log('Dequeued an action to send');
+            this.doAction(queued.item, queued.payload);
+        }
+    }
+
+    private doUrlAction(urlItem: IUrlMenuItem) {
+        // check to see if we are an IURLMenuItem
+        console.info(`About to open: ${urlItem.url} in target mode: ${urlItem.targetMode}, with options: ${urlItem.options}`);
+        window.open(urlItem.url, urlItem.targetMode, urlItem.options);
     }
 
     private queueLoading() {
@@ -165,15 +178,10 @@ export class ActionService implements OnDestroy {
         return true;
     }
 
-    ngOnDestroy(): void {
-        if (this.subscriptions) {
-            this.subscriptions.unsubscribe();
-        }
-    }
-
 
 }
 
 export class QueuedItem {
-    constructor(public item: IActionItem, public payload: any) {}
+    constructor(public item: IActionItem, public payload: any) {
+    }
 }
