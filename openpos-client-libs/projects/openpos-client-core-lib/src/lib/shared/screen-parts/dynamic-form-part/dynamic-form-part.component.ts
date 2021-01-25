@@ -1,9 +1,9 @@
 import {
-    AfterViewInit,
+    AfterViewInit, ChangeDetectorRef,
     Component,
     EventEmitter,
     Injector,
-    Input,
+    Input, OnInit,
     Output,
     QueryList,
     ViewChild,
@@ -18,13 +18,14 @@ import {IForm} from '../../../core/interfaces/form.interface';
 import {IFormElement} from '../../../core/interfaces/form-field.interface';
 import {IActionItem} from '../../../core/actions/action-item.interface';
 import {IDynamicFormPartEventArg} from './dynamic-form-part-event-arg.interface';
+import { takeUntil, tap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-dynamic-form-part',
     templateUrl: './dynamic-form-part.component.html',
     styleUrls: ['./dynamic-form-part.component.scss']
 })
-export class DynamicFormPartComponent extends ScreenPartComponent<IForm> implements AfterViewInit{
+export class DynamicFormPartComponent extends ScreenPartComponent<IForm> implements OnInit, AfterViewInit {
     @Output() formInit = new EventEmitter<IDynamicFormPartEventArg>();
     @Output() formChanges = new EventEmitter<IDynamicFormPartEventArg>();
     @ViewChildren(DynamicFormFieldComponent) children: QueryList<DynamicFormFieldComponent>;
@@ -32,6 +33,7 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
     form: FormGroup;
 
     buttons: IFormElement[];
+    disableSubmitButton: boolean;
 
     private _alternateSubmitActions: string[];
     private  lastFocusedId;
@@ -43,7 +45,7 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
 
     @Input() submitButton: IActionItem;
 
-    constructor(private formBuilder: FormBuilder, injector: Injector) {
+    constructor(private changeDetectorRef: ChangeDetectorRef, private formBuilder: FormBuilder, injector: Injector) {
         super(injector);
     }
 
@@ -59,6 +61,15 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
         }
 
         this.form = this.formBuilder.group(this.screenData);
+
+        this.form.statusChanges
+            .pipe(
+                tap(() => this.disableSubmitButton = this.isFormInvalid()),
+                takeUntil(this.beforeScreenDataUpdated$)
+            )
+            // Let Angular know that changes in a child view (app-dynamic-form-field) will cause the UI
+            // in this control to update
+            .subscribe(() => this.changeDetectorRef.detectChanges());
 
         this.formInit.emit({
             form: this.screenData,
@@ -81,6 +92,15 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
                 }
             });
         }
+    }
+
+    isFormInvalid(): boolean {
+        return this.form.invalid || this.form.pending;
+    }
+
+    ngOnInit() {
+        super.ngOnInit();
+        this.disableSubmitButton = this.isFormInvalid();
     }
 
     ngAfterViewInit(): void {
