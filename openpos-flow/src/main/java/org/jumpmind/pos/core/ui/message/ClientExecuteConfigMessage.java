@@ -12,7 +12,7 @@ import org.jumpmind.pos.util.model.Message;
 public class ClientExecuteConfigMessage extends Message {
     private ClientExecutableType executableType;
     private String data;
-    private String args;
+    private String[] args;
 
     public ClientExecuteConfigMessage() {
         setType(MessageType.ClientExecute);
