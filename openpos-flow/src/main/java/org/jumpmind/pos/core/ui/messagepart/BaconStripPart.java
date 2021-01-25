@@ -1,9 +1,5 @@
 package org.jumpmind.pos.core.ui.messagepart;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +8,10 @@ import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.IHasBackButton;
 import org.jumpmind.pos.core.ui.IconType;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -19,6 +19,7 @@ import org.jumpmind.pos.core.ui.IconType;
 public class BaconStripPart implements IHasBackButton, Serializable {
     private static final long serialVersionUID = 1L;
 
+    private boolean hasCurrentUser;
     private String operatorLine1;
     private String operatorLine2;
     private String headerText;
