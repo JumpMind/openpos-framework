@@ -6,7 +6,6 @@
 @import './item-detail/item-detail-theme';
 @import './return/return-theme';
 @import './transaction-search/transaction-search-theme';
-@import './digital-reading/digital-reading-theme';
 @import './simulated-peripheral-viewer/simulated-peripheral-theme';
 
 @mixin screen-with-parts-themes($theme){
@@ -17,6 +16,5 @@
     @include item-detail-theme($theme);
     @include return-theme($theme);
     @include transaction-search-theme($theme);
-    @include digital-reading-theme($theme);
     @include simulated-peripheral-theme($theme);
 }
