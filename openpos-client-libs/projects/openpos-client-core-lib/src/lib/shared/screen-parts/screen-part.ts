@@ -14,7 +14,6 @@ import {LifeCycleTypeGuards} from '../../core/life-cycle-interfaces/lifecycle-ty
 import {MessageTypes} from '../../core/messages/message-types';
 import {ActionService} from '../../core/actions/action.service';
 import {KeyPressProvider} from '../providers/keypress.provider';
-import { IScreenValueUpdate } from './screen-value-update/screen-value-update.interface';
 
 export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     destroyed$ = new Subject();
