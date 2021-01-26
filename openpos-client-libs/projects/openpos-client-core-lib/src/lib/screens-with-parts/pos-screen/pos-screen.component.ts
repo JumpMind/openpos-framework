@@ -4,7 +4,7 @@ import {deepAssign} from '../../utilites/deep-assign';
 import {IActionItem} from '../../core/actions/action-item.interface';
 import {Injector, OnDestroy, Optional} from '@angular/core';
 import {ActionService} from '../../core/actions/action.service';
-import {merge, Observable, ReplaySubject, Subject, Subscription} from 'rxjs';
+import {Subject, Subscription} from 'rxjs';
 
 export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, OnDestroy {
     screen: T;
@@ -13,7 +13,6 @@ export abstract class PosScreen<T extends IAbstractScreen> implements IScreen, O
     subscriptions = new Subscription();
     beforeBuildScreen$ = new Subject();
     destroyed$ = new Subject();
-    screen$ = new ReplaySubject<T>(1);
 
     // I don't completely understand why we need @Optional here. I suspect it has something to do with
     // creating these components dynamically and this being an abstract class.
