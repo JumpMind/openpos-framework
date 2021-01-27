@@ -1,4 +1,4 @@
-export interface ClientExecuteConfig {
+export interface ClientExecutableConfig {
     executableType: string,
     data: string,
     args?: string[];

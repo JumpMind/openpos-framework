@@ -38,10 +38,6 @@ export class ActionService implements OnDestroy {
                 console.log('unblocking action because toast:', message);
                 this.unblock();
             }
-            if (message.type === MessageTypes.CLIENT_EXECUTE) {
-                console.log('unblocking action because client execute:', message);
-                this.unblock();
-            }
         }));
     }
 

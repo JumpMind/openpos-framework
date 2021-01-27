@@ -20,6 +20,6 @@ export class MessageTypes {
     static AUDIO_CONFIG = 'AudioConfig';
     static AUDIO_PRELOAD = 'AudioPreload';
     static LOADING = 'Loading';
-    static CLIENT_EXECUTE = 'ClientExecute';
+    static CLIENT_EXECUTABLE = 'ClientExecutable';
 
 }

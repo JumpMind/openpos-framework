@@ -21,5 +21,5 @@ public final class MessageType {
     public static final String UnlockScreen = "UnlockScreen";
     public static final String Startup = "Startup";
     public static final String Scan = "Scan";
-    public static final String ClientExecute = "ClientExecute";
+    public static final String ClientExecutable = "ClientExecutable";
 }

@@ -37,7 +37,12 @@ public class ActionItem implements Serializable {
 
     protected String action;
     protected String title;
+
+    /**
+     * Optional default payload for action to be sent back to the server
+     */
     protected String defaultPayload;
+
     protected String icon;
     protected boolean enabled = true;
     protected ConfirmationDialog confirmationDialog;

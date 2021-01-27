@@ -9,13 +9,14 @@ import org.jumpmind.pos.util.model.Message;
 @Data
 @Builder
 @AllArgsConstructor
-public class ClientExecuteConfigMessage extends Message {
+public class ClientExecutableConfigMessage extends Message {
     private ClientExecutableType executableType;
     private String data;
     private String[] args;
 
-    public ClientExecuteConfigMessage() {
-        setType(MessageType.ClientExecute);
+    public ClientExecutableConfigMessage() {
+        setType(MessageType.ClientExecutable);
+        setWillUnblock(true);
     }
 
     public enum ClientExecutableType {
