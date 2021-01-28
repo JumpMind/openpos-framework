@@ -26,11 +26,13 @@ public class ReturnUIMessage extends UIMessage {
     private ActionItem checkoutButton;
     private ActionItem loyaltyButton;
     private ActionItem linkedCustomerButton;
+    private ActionItem linkedEmployeeButton;
     private ActionItem removeReceiptAction;
 
     private boolean transactionActive = false;
 
     private UICustomer customer;
+    private UICustomer employee;
 
     private boolean locationEnabled;
     private String locationOverridePrompt;
