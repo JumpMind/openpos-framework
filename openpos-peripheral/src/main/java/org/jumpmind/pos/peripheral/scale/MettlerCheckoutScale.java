@@ -31,6 +31,8 @@ public class MettlerCheckoutScale extends CheckoutScale {
 
     final static char TARE_CHARACTER = 'N';
 
+    final int MIN_RESPONSE_LENGTH = 3;
+
     protected ScaleWeightData parseErrorResponse(byte[] response) {
         String statusMessage = "";
         byte statusByte = response[2];
@@ -121,6 +123,10 @@ public class MettlerCheckoutScale extends CheckoutScale {
         buff.append(" 0b").append(Integer.toBinaryString(statusByte));
 
         return buff.toString();
+    }
+
+    protected int getResponseLength() {
+        return MIN_RESPONSE_LENGTH;
     }
 
     public static void main(String[] args) throws Exception {

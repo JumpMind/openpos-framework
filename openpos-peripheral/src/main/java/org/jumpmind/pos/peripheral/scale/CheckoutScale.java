@@ -112,6 +112,14 @@ public abstract class CheckoutScale implements ICheckoutScale {
                 responseByte = this.peripheralConnection.getIn().read();
                 if (responseByte != '\r' && responseByte != '\n') { // most scale commands terminate with \r\n
                     bytes.add(responseByte);
+                    AppUtils.sleep(10);
+                }
+
+                // check for incomplete reads.
+                while (bytes.size() < this.getResponseLength()
+                        && this.peripheralConnection.getIn().available() == 0
+                        && System.currentTimeMillis() <= timeoutTime) {
+                    AppUtils.sleep(10);
                 }
             }
 
@@ -183,5 +191,7 @@ public abstract class CheckoutScale implements ICheckoutScale {
             return defaultValue;
         }
     }
+
+    abstract protected int getResponseLength();
 
 }
