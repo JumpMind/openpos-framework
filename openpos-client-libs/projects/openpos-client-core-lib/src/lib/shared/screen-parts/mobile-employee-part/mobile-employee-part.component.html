@@ -1,0 +1,12 @@
+<button *ngIf="screenData.employee && screenData.linkedEmployeeButton" mat-raised-button
+    class="mobile-employee-sale-outer" (click)="doAction(screenData.linkedEmployeeButton)">
+    <app-icon responsive-class *ngIf="screenData.employee.icon" [iconName]="screenData.employee.icon" [iconClass]="'primary xs'"></app-icon>
+    <div class="mobile-employee-sale-name">
+        <div responsive-class *ngIf="screenData.employee.name" class="mobile-employee-name">
+            {{screenData.employee.name}}
+        </div>
+        <div responsive-class *ngIf="screenData.employee.label && screenData.employee.id" class="mobile-employee-id">
+            {{screenData.employee.label}}: {{screenData.employee.id}}
+        </div>
+    </div>
+</button>

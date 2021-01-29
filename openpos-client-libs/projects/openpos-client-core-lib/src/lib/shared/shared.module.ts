@@ -128,6 +128,7 @@ import {BaconDrawerComponent} from './screen-parts/bacon-strip/bacon-drawer/baco
 import {CarouselComponent} from './components/carousel/carousel.component';
 import {MobileTotalsPartComponent} from './screen-parts/mobile-totals-part/mobile-totals-part.component';
 import {MobileLoyaltyPartComponent} from './screen-parts/mobile-loyalty-part/mobile-loyalty-part.component';
+import {MobileEmployeePartComponent} from './screen-parts/mobile-employee-part/mobile-employee-part.component';
 import {MobileSaleItemListComponent} from './screen-parts/mobile-sale-item-list/mobile-sale-item-list.component';
 import {MobileItemComponent} from './components/mobile-item/mobile-item.component';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
@@ -188,6 +189,7 @@ const screenParts = [
     SaleTotalPanelComponent,
     MobileTotalsPartComponent,
     MobileLoyaltyPartComponent,
+    MobileEmployeePartComponent,
     MobileSaleItemListComponent,
     OptionsListComponent,
     ScanPartComponent,
