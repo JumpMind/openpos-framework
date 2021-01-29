@@ -6,6 +6,7 @@
 @import './notifications/notifications-theme';
 @import './mobile-totals-part/mobile-totals-part-theme';
 @import './mobile-loyalty-part/mobile-loyalty-part-theme';
+@import './mobile-employee-part/mobile-employee-part-theme';
 @import './mobile-sale-item-list/mobile-sale-item-list-theme';
 @import './sale-item-card-list/sale-item-card-list-theme';
 @import './search-expand-input/search-expand-input-theme';
@@ -22,6 +23,7 @@
     @include notification-theme($theme);
     @include mobile-totals-part-theme($theme);
     @include mobile-loyalty-part-theme($theme);
+    @include mobile-employee-part-theme($theme);
     @include mobile-sale-item-list-theme($theme);
     @include sale-item-card-list-theme($theme);
     @include search-expand-input-theme($theme);
