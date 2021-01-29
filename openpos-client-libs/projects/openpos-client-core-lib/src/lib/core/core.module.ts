@@ -71,6 +71,7 @@ import { AudioService } from './audio/audio.service';
 import { AudioRepositoryService } from './audio/audio-repository.service';
 import { AudioInteractionService } from './audio/audio-interaction.service';
 import { AudioConsolePlugin } from './audio/audio-console.plugin';
+import {ClientExecutableService} from "./services/client-executable.service";
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -165,6 +166,7 @@ export class CoreModule {
                 logger: ConsoleIntercepter,
                 toastService: ToastService,
                 uiDataService: UIDataMessageService,
+                clientExecutableService: ClientExecutableService,
                 keyProvider: KeyPressProvider) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');
         AppInjector.Instance = this.injector;
