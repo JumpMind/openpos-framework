@@ -22,12 +22,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 public class ConfiguredRestTemplate extends RestTemplate {
 
     ObjectMapper mapper;
+    
+    private Map<String, String> additionalHeaders;
 
     static BufferingClientHttpRequestFactory build(int timeout) {
         HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
@@ -89,6 +93,13 @@ public class ConfiguredRestTemplate extends RestTemplate {
         });
 
     }
+    
+    public void addHeader(String name, String value){
+        if( additionalHeaders == null){
+            additionalHeaders = new HashMap<>();
+        }
+        additionalHeaders.put(name, value);
+    }
 
     public void execute(String url, Object request, HttpMethod method, Object... args) {
         execute(url, buildRequestEntity(request), Void.class, method, args);
@@ -118,6 +129,11 @@ public class ConfiguredRestTemplate extends RestTemplate {
     public HttpHeaders buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
+        
+        if( additionalHeaders != null){
+            additionalHeaders.forEach((s, s2) -> headers.set(s, s2));
+        }
+        
         return headers;
     }
 
