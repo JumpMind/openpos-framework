@@ -28,6 +28,7 @@
             <app-sale-total-panel></app-sale-total-panel>
         </div>
         <div *ngIf="(isMobile | async)" class="sale-body-mobile">
+            <app-mobile-employee-part class="sale-employee-mobile"></app-mobile-employee-part>
             <app-mobile-loyalty-part class="sale-loyalty-mobile"></app-mobile-loyalty-part>
             <app-mobile-sale-item-list class="sale-list-background-mobile"></app-mobile-sale-item-list>
         </div>
