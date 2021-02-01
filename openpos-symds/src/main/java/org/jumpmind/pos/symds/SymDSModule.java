@@ -15,6 +15,7 @@ import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.service.AbstractRDBMSModule;
 import org.jumpmind.pos.service.ModuleEnabledCondition;
 import org.jumpmind.security.ISecurityService;
+import org.jumpmind.symmetric.ISymmetricEngine;
 import org.jumpmind.symmetric.common.Constants;
 import org.jumpmind.symmetric.common.ParameterConstants;
 import org.jumpmind.symmetric.io.data.Batch;
@@ -33,11 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.cache.CacheManager;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Conditional;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.annotation.*;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.env.Environment;
 import org.springframework.transaction.PlatformTransactionManager;
@@ -160,66 +157,8 @@ public class SymDSModule extends AbstractRDBMSModule {
     public void start() {
         if ("true".equals(env.getProperty("openpos.symmetric.start", "false"))) {
             serverEngine.start();
-
-            if ("true".equals(env.getProperty("openpos.symmetric.waitForInitialLoad", "false"))) {
-               waitForInitialLoad();
-            }
         }
         super.start();
-    }
-
-    protected void waitForInitialLoad() {
-        try {
-            INodeService nodeService = serverEngine.getNodeService();
-            MonitorFilter monitor = new MonitorFilter();
-            serverEngine.getExtensionService().addExtensionPoint(monitor);
-
-            long ts = System.currentTimeMillis();
-            final DateFormat DATE_FORMAT = SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM);
-            if (!nodeService.isDataLoadCompleted()) {
-                log.info(String.format("SymmetricDS initial data load started at %s", DATE_FORMAT.format(new Date())));
-            }
-
-            int tableCount = 0;
-
-            boolean initialLoaded = false;
-
-            Exception error = null;
-            while (!nodeService.isDataLoadCompleted()) {
-                initialLoaded = true;
-                while (monitor.tableQueue.size() > 0) {
-                    printTable(monitor.tableQueue.remove(0), ++tableCount);
-                }
-
-                if ((error == null && monitor.error != null) || (error != null && monitor.error != null && !error.equals(monitor.error))) {
-                    error = monitor.error;
-                    log.error("An error occured", error);
-                }
-
-                AppUtils.sleep(500);
-            }
-
-            while (monitor.tableQueue.size() > 0) {
-                printTable(monitor.tableQueue.remove(0), ++tableCount);
-            }
-
-            serverEngine.getExtensionService().removeExtensionPoint(monitor);
-
-            if (initialLoaded && nodeService.isDataLoadCompleted()) {
-                log.info(String.format("SymmetricDS initial data load complete at %s in %s seconds", DATE_FORMAT.format(new Date()),
-                        ((System.currentTimeMillis() - ts) / 1000)));
-            } else {
-                log.info("No tables were initial loaded");
-            }
-
-
-        } catch (Exception e) {
-            log.error("Failure while waiting for initial load", e);
-        }
-    }
-
-    void printTable(String currentTable, int tableCount) {
-        log.info("Loading " + currentTable + ".  Current table count=" + tableCount);
     }
 
     @Override
@@ -257,7 +196,7 @@ public class SymDSModule extends AbstractRDBMSModule {
         return super.securityService();
     }
 
-@Override
+   @Override
     @Bean(name = NAME + "SessionFactory")
     protected DBSessionFactory sessionFactory() {
         return super.sessionFactory();
@@ -269,31 +208,10 @@ public class SymDSModule extends AbstractRDBMSModule {
         return super.getDBSession();
     }
 
-    static class MonitorFilter extends DatabaseWriterFilterAdapter implements IDatabaseWriterErrorHandler {
-
-        Set<String> tablesEncountered = new HashSet<String>();
-
-        List<String> tableQueue = Collections.synchronizedList(new ArrayList<String>());
-
-        Exception error;
-
-        @Override
-        public boolean beforeWrite(DataContext context, Table table, CsvData data) {
-            error = null;
-            if (context.getBatch().getChannelId().equals(Constants.CHANNEL_RELOAD) && !data.getDataEventType().equals(DataEventType.SQL)) {
-                if (!tablesEncountered.contains(table.getName())) {
-                    tablesEncountered.add(table.getName());
-                    tableQueue.add(table.getName());
-                }
-            }
-            return true;
-        }
-
-        @Override
-        public boolean handleError(DataContext context, Table table, CsvData data, Exception ex) {
-            error = ex;
-            return true;
-        }
+    @Bean
+    @Lazy
+    ISymmetricEngine symmetricEngine() {
+        return this.serverEngine;
     }
 
 }
