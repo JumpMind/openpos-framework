@@ -75,6 +75,8 @@ export class DialogService {
         DialogService.dialogs.set(name, type);
     }
 
+    
+
     public isDialogOpenOrOpening(): boolean {
         if (!this.dialogOpening) {
             return this.isDialogOpen();

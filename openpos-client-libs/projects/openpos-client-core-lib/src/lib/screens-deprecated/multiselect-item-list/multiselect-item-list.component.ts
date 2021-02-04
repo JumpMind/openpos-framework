@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterViewChecked, Injector } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, AfterViewInit, AfterViewChecked, Injector, ViewContainerRef } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { NavListComponent } from '../../shared/components/nav-list/nav-list.component';
 import { PosScreen } from '../pos-screen/pos-screen.component';
@@ -44,7 +44,7 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
     private nextActionPresent = false;
 
 
-    constructor(protected dialog: MatDialog, injector: Injector) {
+    constructor(protected dialog: MatDialog, injector: Injector, public vcRef: ViewContainerRef) {
         super(injector);
     }
 
@@ -122,8 +122,8 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
 
     public onItemListChange(event: number[]): void {
         const indexes = event;
-        this.selectedItems = this.screen.items.array.filter(element => {
-            indexes.includes(element.index);
+        this.selectedItems = this.screen.items.filter(element => {
+            return indexes.includes(element.index);
         });
 
         if (this.individualMenuClicked) {
@@ -211,6 +211,7 @@ export class MultiselectItemListComponent extends PosScreen<any> implements OnIn
         }
 
         const dialogRef = this.dialog.open(NavListComponent, {
+            viewContainerRef:  this.vcRef,
             width: '70%',
             data: {
                 optionItems: options,

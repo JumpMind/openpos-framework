@@ -115,6 +115,12 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         this.log.info(`updateTemplateAndScreen invoked for '${screen.hasOwnProperty('id') ? screen.id : '?'}'`);
         if (this.dialogService.isDialogOpenOrOpening()) {
             // Close any open dialogs
+            if (screen.hasOwnProperty('screenType') && screen.screenType === 'SplashScreen') {
+                this.log.info(`Not showing SplashScreen because a dialog is opening or opened`);
+                return;
+            }
+                // Close any open dialogs
+            
             this.log.info(`Not showing screen '${screen.hasOwnProperty('id') ? screen.id : '?'}' until dialog closes...`);
             await this.dialogService.closeDialog();
             this.log.info(`Dialog closed, will now resume showing screen '${screen.hasOwnProperty('id') ? screen.id : '?'}'`);
