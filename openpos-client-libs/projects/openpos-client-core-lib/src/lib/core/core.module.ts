@@ -71,6 +71,7 @@ import { AudioService } from './audio/audio.service';
 import { AudioRepositoryService } from './audio/audio-repository.service';
 import { AudioInteractionService } from './audio/audio-interaction.service';
 import { AudioConsolePlugin } from './audio/audio-console.plugin';
+import { ScanditNativeModule } from './platform-plugins/scanners/scandit-native/scandit-native.module';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -101,7 +102,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         BrowserModule,
         BrowserAnimationsModule,
         NgxElectronModule,
-        ToastrModule.forRoot()
+        ToastrModule.forRoot(),
+        ScanditNativeModule.forRoot()
     ],
     exports: [
         BrowserModule,

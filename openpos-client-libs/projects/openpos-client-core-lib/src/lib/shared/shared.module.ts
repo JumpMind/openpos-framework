@@ -165,6 +165,7 @@ import { StatusDetailsItemComponent } from './status/status-details/item/status-
 import { StatusBarComponent } from './status/status-bar/status-bar.component';
 import { LocalizePipe } from './pipes/localize.pipe';
 import { ModalOverlayContainerDirective } from './modal-overlay-container/modal-overlay-container.directive';
+import { ScanditNativeModule } from '../core/platform-plugins/scanners/scandit-native/scandit-native.module';
 
 const screenParts = [
     TenderPartComponent,
@@ -365,7 +366,8 @@ const pipes = [
         ToastrModule.forRoot({
             toastComponent: ToastComponent
         }),
-        ToastContainerModule
+        ToastContainerModule,
+        ScanditNativeModule
     ],
     exports: [
         FormsModule,
