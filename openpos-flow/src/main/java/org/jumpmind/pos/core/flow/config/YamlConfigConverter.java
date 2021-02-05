@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.jumpmind.pos.core.flow.*;
+import org.jumpmind.pos.service.PosServerException;
 import org.jumpmind.pos.util.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -172,6 +173,20 @@ public class YamlConfigConverter {
                 throw new FlowException("Failed to resolve substate reference to a subflow or a state class: " +
                         stateConfig.getStateName() + " referred to by action: " + actionName);
             }
+
+            YamlStateConfig yamlStateConfig =
+                    findStatesByName(stateConfig.getStateName(), allYamlFlowConfigs).stream().filter(searchStateConfig ->
+                    !searchStateConfig.getActionToStateConfigs().isEmpty()).findFirst().orElse(null);
+            if (yamlStateConfig != null) {
+                throw new PosServerException(String.format("Ambiguous subflow reference: '%s' (linked to action '%s'). " +
+                        "A subflow should point to either " +
+                        "a) another flow or b) an inline state that is not used other places. " +
+                        "This subflow references a state that also has additional, external configuration. " +
+                        "Instead of referring directly to a state, you should probably make a new " +
+                        "flow and place the '%s' state in that new flow.",
+                        yamlStateConfig.getStateName(), actionName, yamlStateConfig.getStateName()));
+            }
+
             FlowConfig flowConfig = new FlowConfig(stateClass.getSimpleName());
             FlowBuilder builder = FlowBuilder.addState(stateClass);
             for (String returnAction : stateConfig.getReturnActions()) {
@@ -189,9 +204,14 @@ public class YamlConfigConverter {
 
     }
 
-    protected YamlFlowConfig findFlowByName(String stateName, List<YamlFlowConfig> yamlFlowConfigs) {
+    protected YamlFlowConfig findFlowByName(String flowName, List<YamlFlowConfig> yamlFlowConfigs) {
         return yamlFlowConfigs.stream()
-                .filter(yamlFlowConfig -> stateName.equals(yamlFlowConfig.getFlowName())).findAny().orElse(null);
+                .filter(yamlFlowConfig -> flowName.equals(yamlFlowConfig.getFlowName())).findAny().orElse(null);
+    }
+
+    protected List<YamlStateConfig> findStatesByName(String stateName, List<YamlFlowConfig> yamlFlowConfigs) {
+        return yamlFlowConfigs.stream().flatMap(yamlFlowConfig -> yamlFlowConfig.getFlowStateConfigs().stream()).filter(yamlStateConfig ->
+                yamlStateConfig.getStateName().equals(stateName)).collect(Collectors.toList());
     }
 
     @SuppressWarnings("rawtypes")
