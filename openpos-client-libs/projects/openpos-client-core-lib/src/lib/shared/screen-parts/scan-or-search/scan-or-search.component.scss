@@ -2,7 +2,7 @@
     border-radius: 4px;
     display:grid;
     grid-template-columns: 0 auto 1fr;
-    grid-template-rows: auto;
+    grid-template-rows: auto [scandit-area] 1fr;
 
     &.focusInitial {
         grid-template-columns: auto 1fr;
@@ -48,4 +48,12 @@
 
 .scan-input:focus {
     outline: none;
+}
+
+app-scandit-native {
+    min-height: 200px;
+    place-self: stretch;
+    background-color: red;
+    grid-column: -4 / -1;
+    grid-row: scandit-area;
 }
