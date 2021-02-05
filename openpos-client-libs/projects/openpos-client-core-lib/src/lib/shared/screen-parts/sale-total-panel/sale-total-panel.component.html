@@ -78,8 +78,12 @@
                               [actionItem]="screenData.linkedCustomerButton"
                               (actionClick)="doMenuItemAction(screenData.linkedCustomerButton)" 
                               (click)="doMenuItemAction(screenData.linkedCustomerButton)">
-            <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon"
-                responsive-class>
+            <div *ngIf="screenData.customer.icon" class="sale-total-loyalty-linked-icon">
+                <img [src]="screenData.customer.icon | imageUrl" class="sale-total-loyalty-icon"
+                    responsive-class>
+                <span *ngIf="keybindsEnabled(screenData.linkedCustomerButton)"
+                    class="muted-color loyalty-keybind">{{screenData.linkedCustomerButton.keybindDisplayName}}</span>
+            </div>
             <div *ngIf="screenData.customer.name" class="muted-color">{{screenData.customer.name}}</div>
             <div *ngIf="screenData.customer.label && screenData.customer.id" class="muted-color">
                 {{screenData.customer.label}}: {{screenData.customer.id}}
