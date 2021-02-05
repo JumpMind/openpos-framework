@@ -31,6 +31,10 @@ public class ClientContext {
             propertiesMap.set(new HashMap<>());
         }
 
+        if ("deviceMode".equals(name))  {
+            value = ((value == null) || value.equals("'not set'") ? "default" : value);
+        }
+
         propertiesMap.get().put(name, value);
     }
 

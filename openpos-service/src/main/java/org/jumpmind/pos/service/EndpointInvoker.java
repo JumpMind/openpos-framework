@@ -289,6 +289,14 @@ public class EndpointInvoker implements InvocationHandler {
 
     private void log(Method method, Object[] args, Endpoint annotation) {
         if (!method.isAnnotationPresent(SuppressMethodLogging.class)) {
+            /*
+            **  The code below came over from master. It logs each argument to the
+            **  endpoint call. Some might have sensitive information, but some want
+            **  to try to serialize autowired services and such. The @ToString
+            **  annotation can be used to control what iss logged.  For now, disable
+            **  this until a time when arguments can be looked at more globally.
+            **  Enabling this will cause Cucumber test to fail.
+            **
             StringBuilder logArgs = new StringBuilder();
             if (args != null && args.length > 0) {
                 for(int i = 0; i < args.length; i++) {
@@ -311,6 +319,12 @@ public class EndpointInvoker implements InvocationHandler {
                     method.getDeclaringClass().getSimpleName(),
                     method.getName(),
                     logArgs,
+                    annotation == null || annotation.implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT) ?
+                            "" : annotation.implementation() + " implementation");
+            */
+            log.info("{}.{}() {}",
+                    method.getDeclaringClass().getSimpleName(),
+                    method.getName(),
                     annotation == null || annotation.implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT) ?
                             "" : annotation.implementation() + " implementation");
         }
