@@ -74,3 +74,4 @@ public class DriversLicense {
     private boolean organDonorIndicator;
     private boolean veteranIndicator;
 }
+
