@@ -19,33 +19,37 @@ public final class AudioUtil {
     public static final String AUDIO_LICENSE = "licenses.csv";
     public static final String AUDIO_CONTENT_ROOT = "audio/";
 
-    public static AudioConfigMessage getInteractionMessageFromConfig(IStateManager stateManager, AudioConfig config) {
+    public static AudioConfigMessage getInteractionMessageFromConfig(
+            ContentProviderService contentProviderService, IStateManager stateManager, AudioConfig config
+    ) {
         AudioConfig configCopy = (AudioConfig) config.clone();
 
         if (configCopy.getInteractions() != null && configCopy.getInteractions().getMouse() != null) {
-            setProviderUrl(stateManager, configCopy.getInteractions().getMouse().getMouseDown());
-            setProviderUrl(stateManager, configCopy.getInteractions().getMouse().getMouseUp());
+            setProviderUrl(contentProviderService, stateManager, configCopy.getInteractions().getMouse().getMouseDown());
+            setProviderUrl(contentProviderService, stateManager, configCopy.getInteractions().getMouse().getMouseUp());
         }
 
         if (configCopy.getInteractions() != null && configCopy.getInteractions().getDialog() != null) {
-            setProviderUrl(stateManager, configCopy.getInteractions().getDialog().getOpening());
-            setProviderUrl(stateManager, configCopy.getInteractions().getDialog().getClosing());
+            setProviderUrl(contentProviderService, stateManager, configCopy.getInteractions().getDialog().getOpening());
+            setProviderUrl(contentProviderService, stateManager, configCopy.getInteractions().getDialog().getClosing());
         }
 
         return new AudioConfigMessage(configCopy);
     }
 
-    public static void setProviderUrl(IStateManager stateManager, AudioRequest request) {
+    public static void setProviderUrl(ContentProviderService contentProviderService, IStateManager stateManager, AudioRequest request) {
+        if(contentProviderService == null) {
+            log.warn("Not setting provider URl because the ContentProviderService is 'null'");
+            return;
+        }
+
         if (request == null) {
             return;
         }
 
-        ContentProviderService contentProviderService = stateManager.getApplicationState().getScopeValue("contentProviderService");
-        if (contentProviderService != null) {
-            String audioKey = getKey(request.getSound());
-            String soundUrl = contentProviderService.resolveContent(stateManager.getDeviceId(), audioKey);
-            request.setUrl(soundUrl);
-        }
+        String audioKey = getKey(request.getSound());
+        String soundUrl = contentProviderService.resolveContent(stateManager.getDeviceId(), audioKey);
+        request.setUrl(soundUrl);
     }
 
     public static String getKey(String sound) {
@@ -77,8 +81,11 @@ public final class AudioUtil {
         return contentKeys;
     }
 
-    public static List<String> getAllContentUrls(IStateManager stateManager) {
-        ContentProviderService contentProviderService = stateManager.getApplicationState().getScopeValue("contentProviderService");
+    public static List<String> getAllContentUrls(ContentProviderService contentProviderService, IStateManager stateManager) {
+        if(contentProviderService == null) {
+            log.warn("Not getting the content URLs because the ContentProviderService is 'null'");
+            return new ArrayList<>();
+        }
 
         return getAllContentKeys().stream()
                 .map(contentKey -> contentProviderService.resolveContent(stateManager.getDeviceId(), AUDIO_CONTENT_ROOT + contentKey))
