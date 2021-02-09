@@ -50,10 +50,9 @@
     outline: none;
 }
 
-app-scandit-native {
+app-image-scanner {
     min-height: 200px;
     place-self: stretch;
-    background-color: red;
     grid-column: -4 / -1;
     grid-row: scandit-area;
 }

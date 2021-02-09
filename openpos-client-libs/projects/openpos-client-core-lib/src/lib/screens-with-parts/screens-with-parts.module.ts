@@ -35,7 +35,6 @@ import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
 import { TransactionSearchComponent } from './transaction-search/transaction-search.component';
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 import {SimulatedPeripheralViewerComponent} from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
-import { ScanditNativeModule } from '../core/platform-plugins/scanners/scandit-native/scandit-native.module';
 
 
 const screens = [
@@ -88,8 +87,7 @@ const dialogs = [
         ...dialogs
     ],
     imports: [
-        SharedModule,
-        ScanditNativeModule
+        SharedModule
     ],
     exports: [
     ],

@@ -41,6 +41,8 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     keyboardLayout = 'US Standard';
 
+    showScannerVisual = false;
+
     private scanServiceSubscription: Subscription;
 
     constructor(
