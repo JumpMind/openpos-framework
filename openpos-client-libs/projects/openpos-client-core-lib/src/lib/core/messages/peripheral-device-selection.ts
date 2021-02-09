@@ -7,6 +7,7 @@ export class PeripheralDeviceSelectionMessage implements OpenposMessage {
     selectedId: string;
     category: PeripheralCategoryDescription;
     available: PeripheralDeviceDescription[];
+    selectable: boolean;
 }
 
 export interface PeripheralDeviceDescription {

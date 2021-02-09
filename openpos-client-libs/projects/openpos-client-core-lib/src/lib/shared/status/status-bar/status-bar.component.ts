@@ -24,6 +24,8 @@ export class StatusBarComponent {
 
   line1$: Observable<string>;
 
+  selectable = false;
+
   constructor(
     private statusService: StatusService,
     peripheralSelectionService: PeripheralSelectionService,
@@ -66,14 +68,18 @@ export class StatusBarComponent {
         let l = results[0].line1;
         const i = results[1];
 
+        this.selectable = false;
         i.forEach((value) => {
-          let dn = "Not Selected";
+          if (value.selectable) {
+            this.selectable = true;
+            let dn = "Not Selected";
 
-          if (value.selectedDevice && value.selectedDevice.displayName) {
-            dn = value.selectedDevice.displayName;
+            if (value.selectedDevice && value.selectedDevice.displayName) {
+              dn = value.selectedDevice.displayName;
+            }
+
+            l += " | " + value.displayName + " " + dn;
           }
-
-          l += " | " + value.displayName + " " + dn;
         });
 
         return l;
@@ -83,7 +89,9 @@ export class StatusBarComponent {
 
   @HostListener('click')
   onClick() {
-    this.statusService.openDetails();
+    if (this.selectable) {
+      this.statusService.openDetails();
+    }
   }
 }
 

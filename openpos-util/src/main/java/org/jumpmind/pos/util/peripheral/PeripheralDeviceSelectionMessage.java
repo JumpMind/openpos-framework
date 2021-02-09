@@ -13,6 +13,7 @@ public class PeripheralDeviceSelectionMessage extends Message {
     CategoryDescriptor category;
     List<PeripheralDeviceDescription> available;
     String selectedId;
+    boolean selectable;
 
     @Override
     public String getType() {
