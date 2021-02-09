@@ -18,6 +18,7 @@ import {Observable, Subscription} from 'rxjs';
 import {ScannerService} from '../../../core/platform-plugins/scanners/scanner.service';
 import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
+import { IScanData } from '../../../core/platform-plugins/scanners/scan.interface';
 
 @ScreenPart({
     name: 'scanOrSearch'
@@ -83,6 +84,10 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
         this.unregisterScanner();
         // this.scannerService.stopScanning();
         super.ngOnDestroy();
+    }
+
+    scan(data: IScanData) {
+        this.doAction(this.screenData.scanAction, data);
     }
 
     private registerScanner() {

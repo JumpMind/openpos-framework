@@ -72,6 +72,7 @@ import { AudioRepositoryService } from './audio/audio-repository.service';
 import { AudioInteractionService } from './audio/audio-interaction.service';
 import { AudioConsolePlugin } from './audio/audio-console.plugin';
 import { ImageScannersModule } from './platform-plugins/image-scanners/image-scanners.module';
+import { CapacitorStatusBarStartupTask } from './startup/capacitor-status-bar-startup-task';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -127,6 +128,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: STARTUP_TASKS, useClass: FinalStartupTask, multi: true, deps: [SessionService]},
         { provide: STARTUP_TASKS, useClass: PlatformReadyStartupTask, multi: true },
         { provide: STARTUP_TASKS, useClass: PluginStartupTask, multi: true },
+        { provide: STARTUP_TASKS, useClass: CapacitorStatusBarStartupTask, multi: true },
         { provide: STARTUP_FAILED_COMPONENT, useValue: StartupFailedComponent},
         AilaScannerCordovaPlugin,
         ScanditScannerCordovaPlugin,

@@ -9,48 +9,9 @@ import { ImageScanners } from './image-scanners.service';
 
 @Component({
     selector: 'app-image-scanner',
-    template: '',
-    styles: [
-        `
-        :host {
-            background: blue
-        }
-        `
-    ]
+    template: ''
 })
-export class ImageScannerComponent implements OnInit, OnDestroy, AfterViewInit, ScannerViewRef {
-    // @Input() 
-    // get scan(): boolean {
-    //     return !!this._scanSubscription;
-    // }
-
-    // set scan(value: boolean) {
-    //     if (!!this._scanSubscription === value) {
-    //         return;
-    //     }
-
-    //     if (this._scanSubscription) {
-    //         this._scanSubscription.unsubscribe();
-    //     } else {
-    //         this._scanSubscription = this._scanners.beginScanning(this)
-    //             .subscribe({
-    //                 next: data => {
-    //                     this.onScan.emit(data);
-    //                 },
-    //                 error: e => {
-    //                     console.log('unexpected error durring image scanning', e);
-
-    //                     this._scanSubscription = undefined;
-    //                     this.scanChanged.emit(false);
-    //                 },
-    //                 complete: () => {
-    //                     this._scanSubscription = undefined;
-    //                     this.scanChanged.emit(false);
-    //                 }
-    //             });
-    //     }
-    // }
-
+export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef {
     @Output() readonly scanChanged = new EventEmitter<boolean>();
     @Output() readonly onScan = new EventEmitter<IScanData>();
 
@@ -60,26 +21,15 @@ export class ImageScannerComponent implements OnInit, OnDestroy, AfterViewInit, 
 
     private _destroyed = true;
 
-    private _viewCheckedSubject = new Subject<void>();
-
     constructor(
         private _elementRef: ElementRef<HTMLElement>,
         private _scanners: ImageScanners
     ) { }
 
-    ngAfterViewChecked(): void {
-        //this._viewCheckedSubject.next();
-    }
-
-    ngAfterViewInit() {
-        this._viewCheckedSubject.next();
-    }
-
     ngOnInit() {
         this._destroyed = false;
 
         const viewChanges = [
-            this._viewCheckedSubject,
             ImageScannerComponent._makeObservableListener(
                 cb => window.addEventListener('orientationchange', cb),
                 cb => window.removeEventListener('orientationchange', cb)

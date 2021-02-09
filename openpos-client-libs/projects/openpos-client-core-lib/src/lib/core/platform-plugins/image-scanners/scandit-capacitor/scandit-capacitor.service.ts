@@ -24,14 +24,22 @@ export class ScanditCapacitorImageScanner implements ImageScanner {
             return throwError('the scandit plugin is not available');
         }
 
-        return new Observable(() => {
+        return new Observable(observer => {
             CapacitorPlugins.ScanditNative.addView();
 
             const updateViewSub = view.viewChanges().pipe(
                 mergeMap(d => CapacitorPlugins.ScanditNative.updateView(d))
             ).subscribe();
 
+            const handle = CapacitorPlugins.ScanditNative.addListener('scan', (e) => {
+                observer.next({
+                    type: e.symbology,
+                    data: e.data
+                });
+            });
+
             return () => {
+                handle.remove();
                 updateViewSub.unsubscribe();
                 CapacitorPlugins.ScanditNative.removeView();
             };
