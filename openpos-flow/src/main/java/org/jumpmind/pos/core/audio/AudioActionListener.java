@@ -1,7 +1,6 @@
 package org.jumpmind.pos.core.audio;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jumpmind.pos.core.content.ContentProviderService;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
 import org.jumpmind.pos.server.model.Action;
@@ -27,9 +26,6 @@ public class AudioActionListener implements IActionListener {
     @Autowired()
     AudioConfig audioConfig;
 
-    @Autowired
-    ContentProviderService contentProviderService;
-
     @Override
     public Collection<String> getRegisteredTypes() {
         return Collections.singletonList("Audio");
@@ -50,8 +46,8 @@ public class AudioActionListener implements IActionListener {
     }
 
     public void onGetConfig(IStateManager stateManager) {
-        AudioConfigMessage message = AudioUtil.getInteractionMessageFromConfig(contentProviderService, stateManager, audioConfig);
-        log.warn("Sending audio configuration {}", message);
+        AudioConfigMessage message = AudioUtil.getInteractionMessageFromConfig(stateManager, audioConfig);
+        log.warn("Sending audio configuration", message);
         this.messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
     }
 
@@ -60,7 +56,7 @@ public class AudioActionListener implements IActionListener {
         List<String> urls = new ArrayList<>();
 
         if (audioConfig.getEnabled() != null && audioConfig.getEnabled()) {
-            urls = AudioUtil.getAllContentUrls(contentProviderService, stateManager);
+            urls = AudioUtil.getAllContentUrls(stateManager);
         } else {
             log.warn("Not getting content URLs to preload because audio is disabled");
         }
