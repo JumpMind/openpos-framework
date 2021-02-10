@@ -94,6 +94,9 @@ public class EndpointInvoker implements InvocationHandler {
         Class<?>[] interfaces = service.getClass().getInterfaces();
         Collection<Object> endpointOverrides = applicationContext.getBeansWithAnnotation(EndpointOverride.class).values();
         Collection<Object> endpoints = applicationContext.getBeansWithAnnotation(Endpoint.class).values();
+        //if we have any endpoints that are an @EndpointOverride and extend an Endpoint with @Endpoint they were included
+        //in the collection of endpoints and should therefore be filtered out.
+        endpoints = endpoints.stream().filter(e -> ClassUtils.resolveAnnotation(EndpointOverride.class, e) == null).collect(Collectors.toList());
 
         for (Class<?> i : interfaces) {
             RestController controller = i.getAnnotation(RestController.class);
