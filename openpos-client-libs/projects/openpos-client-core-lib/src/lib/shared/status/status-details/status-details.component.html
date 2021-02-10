@@ -1,11 +1,15 @@
-
-<h1 mat-dialog-title>Status</h1>
-<div mat-dialog-content>
-    <app-status-details-item 
-        *ngFor="let s of peripheralSelection.peripheralCategories$ | async" 
-        [title]="(s.localizationKey | localize) +  ' - ' + (s.selectedDevice?.displayName || 'Not Selected')" 
-        status="online" 
-        actionText="Choose..."
-        (actionExecuted)="onChangeSelectedPeripheral(s)">
-    </app-status-details-item>
+<div class="status-outer" responsive-class>
+    <mat-card-title gdAreas="header backbutton" gdColumns="1fr auto" gdAlignColumns="center center">
+        <div class="header" gdArea="header" gdColumns="auto 1fr" responsive-class>
+            <span>Status</span>
+        </div>
+    </mat-card-title>
+    <div class="status-body">
+        <app-status-details-item
+                *ngFor="let s of peripheralSelection.peripheralCategories$ | async"
+                [title]="(s.localizationKey | localize) +  ' - ' + (s.selectedDevice?.displayName || 'Not Selected')"
+                status="online"
+                (actionExecuted)="onChangeSelectedPeripheral(s)">
+        </app-status-details-item>
+    </div>
 </div>
