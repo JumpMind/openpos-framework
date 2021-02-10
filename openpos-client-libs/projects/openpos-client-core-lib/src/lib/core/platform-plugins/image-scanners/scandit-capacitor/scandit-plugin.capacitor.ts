@@ -18,7 +18,22 @@ export interface ScanditPlugin {
 }
 
 export type ScanditSymbology =
-    'CODE128';
+    'CODABAR' |
+    'CODE39' |
+    'CODE93' |
+    'CODE128' |
+    'CODE11' |
+    'EAN8' |
+    'GS1DATABAR' |
+    'MSI_PLESSEY' |
+    'PDF417' |
+    'MICROPDF417' |
+    'DATAMATRIX' |
+    'AZTEK' |
+    'QRCODE' |
+    'MAXICODE' |
+    'UPCE' |
+    'MATRIX_2OF5';
 
 export interface ScanditScanData {
     symbology: ScanditSymbology;

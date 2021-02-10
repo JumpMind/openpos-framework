@@ -1,6 +1,6 @@
-import { Component, Input, Output, EventEmitter, OnDestroy, OnInit, AfterViewChecked, ElementRef, AfterViewInit } from '@angular/core';
-import { merge, Observable, Subject, Subscription, throwError, timer } from 'rxjs';
-import { delay, map, publishBehavior, publishLast, refCount, take, takeWhile, throttle, throttleTime } from 'rxjs/operators';
+import { Component, Output, EventEmitter, OnDestroy, OnInit, ElementRef } from '@angular/core';
+import { merge, Observable, Subscription, throwError } from 'rxjs';
+import { delay, map, publishLast, refCount, takeWhile } from 'rxjs/operators';
 
 import { IScanData } from '../scanners/scan.interface';
 import { ScannerViewRef } from './image-scanner';

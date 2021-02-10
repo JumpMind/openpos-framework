@@ -1,6 +1,4 @@
-import { NgModule, ModuleWithProviders, Provider } from '@angular/core';
-
-import { Plugins as CapacitorPlugins } from '@capacitor/core';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 import { IMAGE_SCANNERS } from './image-scanner';
 
