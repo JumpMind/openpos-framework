@@ -1,6 +1,6 @@
 import { IPlatformInterface } from './platform.interface';
 import { Observable, fromEvent } from 'rxjs';
-import { take, map, timeout } from 'rxjs/operators';
+import { take, map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -18,9 +18,9 @@ export class CordovaPlatform implements IPlatformInterface {
 
     platformReady(): Observable<string> {
         return fromEvent(document, 'deviceready').pipe(
-                map( e => 'device ready'),
-                take(1)
-            );
+            map(() => 'device ready'),
+            take(1)
+        );
     }
 
 }

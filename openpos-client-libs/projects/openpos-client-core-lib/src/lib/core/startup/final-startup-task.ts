@@ -1,4 +1,4 @@
-import { Observable, Subject } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { IStartupTask } from './startup-task.interface';
 import { SessionService } from '../services/session.service';
 
@@ -10,8 +10,6 @@ export class FinalStartupTask implements IStartupTask {
     }
 
     execute(): Observable<string> {
-        return Observable.create( (message: Subject<string>) => {
-            message.complete();
-        });
+        return of();
     }
 }
