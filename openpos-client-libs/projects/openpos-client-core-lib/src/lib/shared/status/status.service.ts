@@ -8,6 +8,7 @@ import { MessageTypes } from '../../core/messages/message-types';
 import { StatusMessage } from './status.message';
 import { SessionService } from '../../core/services/session.service';
 import { StatusDetailsComponent } from './status-details/status-details.component';
+import { StatusDetailsService } from "./status-details/status-details.service";
 
 @Injectable({
     providedIn: 'root'
@@ -22,7 +23,8 @@ export class StatusService {
 
     constructor(
         sessionService: SessionService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        public statusDetailsService : StatusDetailsService
     ) {
         sessionService.getMessages(MessageTypes.STATUS).pipe(
             tap(message => console.log("Status Updated", message))
@@ -35,6 +37,10 @@ export class StatusService {
 
     public openDetails() {
         if (this.detailsDialog) {
+            return;
+        }
+
+        if (this.statusDetailsService.isDetailsEmpty()) {
             return;
         }
 

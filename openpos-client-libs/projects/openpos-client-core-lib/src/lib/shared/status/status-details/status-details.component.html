@@ -1,8 +1,8 @@
 
 <h1 mat-dialog-title>Status</h1>
-<div mat-dialog-content *ngFor="let s of peripheralSelection.peripheralCategories$ | async">
+<div mat-dialog-content>
     <app-status-details-item 
-        *ngIf="s.selectable"
+        *ngFor="let s of peripheralSelection.peripheralCategories$ | async" 
         [title]="(s.localizationKey | localize) +  ' - ' + (s.selectedDevice?.displayName || 'Not Selected')" 
         status="online" 
         actionText="Choose..."

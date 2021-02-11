@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, publishBehavior, refCount, switchMap, tap } from 'rxjs/operators';
 import { ConfigChangedMessage } from '../../../core/messages/config-changed-message';
 import { Status } from '../../../core/messages/status.enum';
 import { StatusMessage } from '../status.message';
@@ -23,8 +23,6 @@ export class StatusBarComponent {
   systemInfo$: Observable<SystemInfo>;
 
   line1$: Observable<string>;
-
-  selectable = false;
 
   constructor(
     private statusService: StatusService,
@@ -61,25 +59,23 @@ export class StatusBarComponent {
               )
             }
           )
-        ))
+        )),
+        publishBehavior(new Array<CategoryWithName>()),
+        refCount()
       )
     ).pipe(
       map(results => {
         let l = results[0].line1;
         const i = results[1];
 
-        this.selectable = false;
         i.forEach((value) => {
-          if (value.selectable) {
-            this.selectable = true;
-            let dn = "Not Selected";
+          let dn = "Not Selected";
 
-            if (value.selectedDevice && value.selectedDevice.displayName) {
-              dn = value.selectedDevice.displayName;
-            }
-
-            l += " | " + value.displayName + " " + dn;
+          if (value.selectedDevice && value.selectedDevice.displayName) {
+            dn = value.selectedDevice.displayName;
           }
+
+          l += " | " + value.displayName + " " + dn;
         });
 
         return l;
@@ -89,9 +85,7 @@ export class StatusBarComponent {
 
   @HostListener('click')
   onClick() {
-    if (this.selectable) {
-      this.statusService.openDetails();
-    }
+    this.statusService.openDetails();
   }
 }
 

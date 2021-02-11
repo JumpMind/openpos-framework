@@ -28,8 +28,7 @@ export class PeripheralSelectionService {
                     id: m.category.id,
                     localizationKey: m.category.localizationDisplayKey,
                     knownDevices: devices,
-                    selectedDevice: devices.find(d => d.id === m.selectedId),
-                    selectable: m.selectable == null ? true : m.selectable
+                    selectedDevice: devices.find(d => d.id === m.selectedId)
                 };
             }),
             tap(n => this._categoryNameToData.set(n.id, n)),
@@ -69,7 +68,6 @@ export interface PeripheralCategory {
     localizationKey: string,
     knownDevices: PeripheralDevice[];
     selectedDevice: PeripheralDevice;
-    selectable: boolean;
 }
 
 export type PeripheralDeviceRef = PeripheralDevice | string;
