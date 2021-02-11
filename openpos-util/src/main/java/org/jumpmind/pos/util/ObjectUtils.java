@@ -15,8 +15,12 @@ import org.springframework.beans.BeanUtils;
 @Slf4j
 public class ObjectUtils {
 
-    public static void mapFields(Object source, Object desination) {
-        BeanUtils.copyProperties(source, desination);
+    public static void mapFields(Object source, Object destination) {
+        BeanUtils.copyProperties(source, destination);
+    }
+
+    public static void mapFields(Object source, Object destination, String ...ignoreProperties) {
+        BeanUtils.copyProperties(source, destination, ignoreProperties);
     }
 
     public static <T> T deepClone(T object) {
@@ -38,13 +42,12 @@ public class ObjectUtils {
 
     public static <T> byte[] serialize(T object) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        ObjectOutput out = null;
+        ObjectOutput out;
         try {
             out = new ObjectOutputStream(bos);   
             out.writeObject(object);
             out.flush();
-            byte[] bytes = bos.toByteArray();
-            return bytes;
+            return bos.toByteArray();
         } catch (Exception ex) {
             log.warn("Failed to serialize object " + object, ex);
         } finally {
