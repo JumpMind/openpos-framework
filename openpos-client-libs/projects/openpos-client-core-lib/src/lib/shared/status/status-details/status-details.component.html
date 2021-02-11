@@ -1,14 +1,16 @@
 <div class="status-outer" responsive-class>
     <mat-card-title gdAreas="header backbutton" gdColumns="1fr auto" gdAlignColumns="center center">
         <div class="header" gdArea="header" gdColumns="auto 1fr" responsive-class>
-            <span>Status</span>
+            <span>Device Pairing</span>
         </div>
     </mat-card-title>
     <div class="status-body">
         <app-status-details-item
                 *ngFor="let s of peripheralSelection.peripheralCategories$ | async"
-                [title]="(s.localizationKey | localize) +  ' - ' + (s.selectedDevice?.displayName || 'Not Selected')"
+                [title]="s.selectedDevice?.displayName || (s.localizationNoCategorySelectedKey | localize)"
                 status="online"
+                [icon]="s.icon"
+                [titleTransparency]="s.selectedDevice?.displayName"
                 (actionExecuted)="onChangeSelectedPeripheral(s)">
         </app-status-details-item>
     </div>

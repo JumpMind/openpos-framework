@@ -17,4 +17,6 @@ export interface PeripheralDeviceDescription {
 export interface PeripheralCategoryDescription {
     id: string;
     localizationDisplayKey: string;
+    icon: string;
+    localizationNoCategorySelectedKey: string;
 }

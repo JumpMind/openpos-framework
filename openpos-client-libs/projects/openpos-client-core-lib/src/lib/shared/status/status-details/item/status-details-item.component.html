@@ -1,14 +1,14 @@
 <!-- 
-Uncomment when statuses are suported.
+Uncomment when statuses are supported.
 <div class="icon-area" [class.offline]="status === 'offline'" [class.error]="status === 'error'">
     <app-icon [iconName]="icon"></app-icon>
 </div> 
 -->
 <button responsive-class *ngIf="title" mat-flat-button (click)="actionExecuted.emit()"
         color=primary-inverse class="status-item">
-    <app-icon class="status-icon"></app-icon>
+    <app-icon class="status-icon" [iconName]="icon"></app-icon>
     <div class="status-content">
-        <span responsive-class class="status-line">{{title}}</span>
+        <span responsive-class class="status-line {{titleTransparency ? '': 'status-title-transparency'}}">{{title}}</span>&nbsp;(<u>Change</u>)
         <!--
             Uncomment when statuses are supported.
             <div class="caption" [ngSwitch]="status">

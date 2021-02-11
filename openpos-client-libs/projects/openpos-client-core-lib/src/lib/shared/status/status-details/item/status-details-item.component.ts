@@ -19,6 +19,9 @@ export class StatusDetailsItemComponent {
     @Input()
     actionText?: string;
 
+    @Input()
+    titleTransparency: string
+
     @Output()
     actionExecuted = new EventEmitter<void>();
 }
