@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { Observable, ReplaySubject } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter, map, mergeMap, take, tap } from 'rxjs/operators';
 
 import { ConfigChangedMessage } from '../../core/messages/config-changed-message';
 import { MessageTypes } from '../../core/messages/message-types';
@@ -40,24 +40,22 @@ export class StatusService {
             return;
         }
 
-        let isDetailsEmpty: boolean;
-        this.statusDetailsService.isDetailsNotEmpty().subscribe(value => isDetailsEmpty = !value);
-        if (isDetailsEmpty) {
-            return;
-        }
-
-        this.detailsDialog = this.dialog.open(StatusDetailsComponent, { minWidth: '75%' });
-        this.detailsDialog
-            .afterClosed()
-            .subscribe({
-
-                // don't need to worry about the subscription because the
-                // observable will be automatically completed by the
-                // source
-                complete: () => {
-                    this.detailsDialog = undefined;
-                }
-            });
+        this.statusDetailsService.isDetailsNotEmpty().pipe(
+          take(1),
+          filter(isDetailsNotEmpty => isDetailsNotEmpty),
+          map(() => {
+              this.detailsDialog = this.dialog.open(StatusDetailsComponent, { minWidth: '75%' })
+              return this.detailsDialog;
+          }),
+          mergeMap(dialog => dialog.afterClosed())
+        ).subscribe({
+            // don't need to worry about the subscription because the
+            // observable will be automatically completed by the
+            // source
+            complete: () => {
+                this.detailsDialog = undefined;
+            }
+        });
     }
 
     public closeDetails() {
