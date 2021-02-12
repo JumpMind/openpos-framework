@@ -40,7 +40,9 @@ export class StatusService {
             return;
         }
 
-        if (this.statusDetailsService.isDetailsEmpty()) {
+        let isDetailsEmpty: boolean;
+        this.statusDetailsService.isDetailsNotEmpty().subscribe(value => isDetailsEmpty = !value);
+        if (isDetailsEmpty) {
             return;
         }
 

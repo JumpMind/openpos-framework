@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
 import { PeripheralSelectionService } from "../../../core/peripherals/peripheral-selection.service";
+import { map, take } from "rxjs/operators";
+import { Observable } from "rxjs/internal/Observable";
 
 @Injectable({
   providedIn: 'root'
@@ -9,9 +11,10 @@ export class StatusDetailsService {
     public peripheralSelection: PeripheralSelectionService
   ) {}
 
-  isDetailsEmpty() {
-    let count = 0;
-    this.peripheralSelection.peripheralCategories$.subscribe(value => count += value.length);
-    return count == 0;
+  isDetailsNotEmpty(): Observable<boolean> {
+    return this.peripheralSelection.peripheralCategories$.pipe(
+      take(1),
+      map(v => v.length > 0)
+    );
   }
 }
