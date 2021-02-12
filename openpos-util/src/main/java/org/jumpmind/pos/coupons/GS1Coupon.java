@@ -105,8 +105,10 @@ public class GS1Coupon {
                         i += 3;
 
                         secondaryPurchaseCompanyPrefixVLI = Integer.parseInt(gs1Databar.substring(i, ++i));
-                        secondaryPurchaseCompanyPrefix = gs1Databar.substring(i, i + 6 + +secondaryPurchaseCompanyPrefixVLI);
-                        i += 6 + +secondaryPurchaseCompanyPrefixVLI;
+                        if (secondaryPurchaseCompanyPrefixVLI <= 6) {
+                            secondaryPurchaseCompanyPrefix = gs1Databar.substring(i, i + 6 + +secondaryPurchaseCompanyPrefixVLI);
+                            i += 6 + +secondaryPurchaseCompanyPrefixVLI;
+                        }
                         break;
 
                     case 2:
@@ -120,8 +122,10 @@ public class GS1Coupon {
                         i += 3;
 
                         tertiaryPurchaseCompanyPrefixVLI = Integer.parseInt(gs1Databar.substring(i, ++i));
-                        tertiaryPurchaseCompanyPrefix = gs1Databar.substring(i, i + 6 + +tertiaryPurchaseCompanyPrefixVLI);
-                        i += 6 + +tertiaryPurchaseCompanyPrefixVLI;
+                        if (tertiaryPurchaseCompanyPrefixVLI <= 6) {
+                            tertiaryPurchaseCompanyPrefix = gs1Databar.substring(i, i + 6 + +tertiaryPurchaseCompanyPrefixVLI);
+                            i += 6 + +tertiaryPurchaseCompanyPrefixVLI;
+                        }
                         break;
 
                     case 3:
