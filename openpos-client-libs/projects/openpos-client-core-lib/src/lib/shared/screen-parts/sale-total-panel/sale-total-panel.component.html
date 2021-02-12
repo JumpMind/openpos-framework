@@ -57,9 +57,9 @@
                               [actionItem]="screenData.loyaltyButton"
                               (actionClick)="doMenuItemAction(screenData.loyaltyButton)"
                               (click)="doMenuItemAction(screenData.loyaltyButton)" class="sale-total-loyalty-button">
-            <span *ngIf="loyaltyBefore">{{loyaltyBefore}}</span>
-            <img [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
-            <span *ngIf="loyaltyAfter">{{loyaltyAfter}}</span>
+            <span *ngIf="loyaltyBefore" class="loyalty-before">{{loyaltyBefore}}</span>
+            <img *ngIf="screenData.loyaltyButton.icon" [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
+            <span *ngIf="loyaltyAfter" class="loyalty-after">{{loyaltyAfter}}</span>
             <span *ngIf="keybindsEnabled(screenData.loyaltyButton)"
                   class="muted-color loyalty-keybind">{{screenData.loyaltyButton.keybindDisplayName}}</span>
         </app-secondary-button>
@@ -84,11 +84,11 @@
                 <span *ngIf="keybindsEnabled(screenData.linkedCustomerButton)"
                     class="muted-color loyalty-keybind">{{screenData.linkedCustomerButton.keybindDisplayName}}</span>
             </div>
-            <div *ngIf="screenData.customer.name" class="muted-color">{{screenData.customer.name}}</div>
-            <div *ngIf="screenData.customer.label && screenData.customer.id" class="muted-color">
+            <div *ngIf="screenData.customer.name" class="muted-color loyalty-name">{{screenData.customer.name}}</div>
+            <div *ngIf="screenData.customer.label && screenData.customer.id" class="muted-color loyalty-id">
                 {{screenData.customer.label}}: {{screenData.customer.id}}
             </div>
-            <div *ngIf="screenData.taxExemptCertificateDetail" class="muted-color">
+            <div *ngIf="screenData.taxExemptCertificateDetail" class="muted-color tax-exempt-cert-detail">
                 {{screenData.taxExemptCertificateDetail.label}}: {{screenData.taxExemptCertificateDetail.value}}
             </div>
         </app-secondary-button>
