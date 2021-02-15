@@ -72,7 +72,7 @@ import { AudioRepositoryService } from './audio/audio-repository.service';
 import { AudioInteractionService } from './audio/audio-interaction.service';
 import { AudioConsolePlugin } from './audio/audio-console.plugin';
 import { ImageScannersModule } from './platform-plugins/image-scanners/image-scanners.module';
-import { CapacitorStatusBarStartupTask } from './startup/capacitor-status-bar-startup-task';
+import { CapacitorStatusBarPlatformPlugin } from './startup/capacitor-status-bar-platform-plugin';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -128,7 +128,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: STARTUP_TASKS, useClass: FinalStartupTask, multi: true, deps: [SessionService]},
         { provide: STARTUP_TASKS, useClass: PlatformReadyStartupTask, multi: true },
         { provide: STARTUP_TASKS, useClass: PluginStartupTask, multi: true },
-        { provide: STARTUP_TASKS, useClass: CapacitorStatusBarStartupTask, multi: true },
         { provide: STARTUP_FAILED_COMPONENT, useValue: StartupFailedComponent},
         AilaScannerCordovaPlugin,
         ScanditScannerCordovaPlugin,
@@ -142,6 +141,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
         { provide: PLUGINS, useExisting: AndroidContentProviderPlugin, multi: true },
         { provide: PLUGINS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        { provide: PLUGINS, useExisting: CapacitorStatusBarPlatformPlugin, multi: true },
         { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         BrowserPrinterPlugin,
