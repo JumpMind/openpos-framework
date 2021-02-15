@@ -28,21 +28,18 @@ export class ImageScanners {
         }
 
         for (const scanner of scanners) {
-            console.log("SCANNER", scanner);
-            const s = scanner as ImageScanner & { configSelector?: string };
+            const s = scanner as ImageScanner;
 
-            if (s.configSelector) {
-                const configName = s.configSelector;
+            const configName = s.name();
 
-                console.log(`using image scanner ${configName}`);
+            console.log(`using image scanner ${configName}`);
 
-                // just selecting the first one for now...
-                this._scanner = s;
+            // just selecting the first one for now...
+            this._scanner = s;
 
-                return;
+            return;
 
-                // todo: need to select based on configuration...
-            }
+            // todo: need to select based on configuration...
         }
     }
 

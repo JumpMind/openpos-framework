@@ -1,10 +1,11 @@
-import { Observable, merge, concat, of, Subject, iif, defer } from 'rxjs';
+import { Observable, merge, concat, of, Subject, iif, defer, observable } from 'rxjs';
 import { IStartupTask } from './startup-task.interface';
 import { StartupTaskNames } from './startup-task-names';
 import { InjectionToken, Optional, Inject } from '@angular/core';
 import { IPlatformPlugin } from '../platform-plugins/platform-plugin.interface';
 import { SCANNERS } from '../platform-plugins/scanners/scanner.service';
 import { IScanner } from '../platform-plugins/scanners/scanner.interface';
+import { ImageScanner, IMAGE_SCANNERS } from '../platform-plugins/image-scanners/image-scanner';
 
 export const PLUGINS = new InjectionToken<IPlatformPlugin[]>('Plugins');
 
@@ -19,7 +20,8 @@ export class PluginStartupTask implements IStartupTask {
 
     constructor(
         @Optional() @Inject(PLUGINS) private plugins: Array<IPlatformPlugin>,
-        @Optional() @Inject(SCANNERS) private scanners: Array<IScanner> ) {
+        @Optional() @Inject(SCANNERS) private scanners: Array<IScanner>,
+        @Optional() @Inject(IMAGE_SCANNERS) private imageScanners: Array<ImageScanner>) {
     }
 
     execute(): Observable<string> {
@@ -35,6 +37,13 @@ export class PluginStartupTask implements IStartupTask {
                     if (scanner && this.scanners && this.scanners.includes(scanner)) {
                         observer.next(`removing scanner: ${p.name()}   index: ${this.scanners.indexOf(scanner)}`)
                         this.scanners.splice(this.scanners.indexOf(scanner), 1);
+                    }
+
+                    const imageScanner = p as unknown as ImageScanner;
+
+                    if (imageScanner && this.imageScanners && this.imageScanners.includes(imageScanner)) {
+                        observer.next(`removing image scanner: ${p.name()}   index: ${this.imageScanners.indexOf(imageScanner)}`);
+                        this.imageScanners.splice(this.imageScanners.indexOf(imageScanner), 1);
                     }
                 });
 

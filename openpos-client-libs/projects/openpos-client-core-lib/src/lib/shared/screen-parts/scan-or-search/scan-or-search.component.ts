@@ -19,6 +19,7 @@ import {ScannerService} from '../../../core/platform-plugins/scanners/scanner.se
 import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { IScanData } from '../../../core/platform-plugins/scanners/scan.interface';
+import { ImageScanners } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
 
 @ScreenPart({
     name: 'scanOrSearch'
@@ -47,10 +48,12 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     private scanServiceSubscription: Subscription;
 
     constructor(
-                injector: Injector,
-                private el: ElementRef,
-                mediaService: OpenposMediaService,
-                public scannerService: ScannerService) {
+        injector: Injector,
+        private el: ElementRef,
+        mediaService: OpenposMediaService,
+        public scannerService: ScannerService,
+        public imageScanners: ImageScanners
+    ) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -88,6 +91,14 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     scan(data: IScanData) {
         this.doAction(this.screenData.scanAction, data);
+    }
+
+    onScannerButtonClicked() {
+        if (this.imageScanners.isSupported) {
+            this.showScannerVisual = !this.showScannerVisual;
+        } else {
+            this.scannerService.triggerScan();
+        }
     }
 
     private registerScanner() {
