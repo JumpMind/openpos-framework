@@ -15,7 +15,10 @@ export class ScanditCapacitorImageScanner implements ImageScanner {
         // todo: cheesing until bug in startup sequence can be resolved.
         if (Capacitor.isPluginAvailable('ScanditNative')) {
             CapacitorPlugins.ScanditNative.initialize({
-                apiKey: 'ARN/oCgVCGzbEFujPh+FQ94sXhF6A9ok9kmmdG1v11V7S7ipXlnPqf9NBYJkEwim7XsZSgR0RtadNhGtFGyktsMDKtBJJh4Gahfn1+1BTOFlUsmiSCbIulsm2zRNM7yZhA6UidAJNveJpFPpngIwaGZbMPtwYcyW+tyKpD+WGbjWnHhPGl0iufLv/e1byT+wG5y6e9NkfthlCyJ8GyJ79NB6lxRLEkEOb0kSMMTABvPe464/TjBY+/K14p+kG0NEzAcYNWVX2HIzIccJxdEKXnqmWwWYulTTPteMDpJIKUZQK+iqkeifssj/HblPye8yYuoWzasFnL47Q1T5hOg0+LXSZ1HbSqV+/9WcRc2s6m/qzPQfnyAmH75gypHXsGfX/VVPQbLorkfqGmpbH0zP7RXa+UdnGU0DsOpH/WjFNA9k3w6xT9PavaQ4MQ4yA7MaTN438FbBultRUxuQJ7mYeTbGZZtNkUVqYtM/0pJB0xzS7MjGmxBnO/HElYtvGgN4V/J8lmfsoS3tZOCMzc9ePgCc4pwRDbaYWAEUID529JKp7YAkhdX93d8Vu+xjbspUBWcQx26gGms0m6FiV9humB+dnnGR4DIG4o0RvVpPk18tkhM2Ki+CeNHwNdf/2gkMVQLIlUDIbBeiaAXaG77w/odNQo/GKQvNzq3v56DZDBPUWifGBQD7sCuKQccBb+1XbLB0sQT2V2tg2PWLYb4WLzl2wapUfr8tzm8MBLI1jMGnTJVqoZVjI/f3yC5siOO1HnxE28/xlkqd3VE/IGINfelacaDKTlJgheAl0fiU9qol/LM='
+
+                // todo: this is just a temporary trial key... needs to be changed when the initialization
+                // is working. This is relaltively safe for now.
+                apiKey: 'AbwvBxYVNq0xLhGzGTFChC4x3h3gN0BBB0V3vJl0U2C5ATpTdlNHcw53dF97M+vV3X33SgR1XGKZPHW8bVCJTx9ijAe8b+v4diwLtn91Hlx8WThJ4g4yihEUse/0JERz1UF5JudFXAFSIVpgblbJAygA9eUtbZF6BO7FApmFRgqfFFmwMvzx0LytU8gBV13FOlX8mqkEDKWZ/n3Wx2ChuMz9TE9wd/fZhkzwJS1+CHwm2hP2AW0DwotdB7ZFwUTJGt2NfkQhJIMt/k2dhVrLTRW+/rIrOqRqi3cm0gA0JwtxmiXVPnxYWUl8KG8aFDibFXJJCdSlwZvFyx8GbclYfCbsvI5kOBVrmDYsmrYzfL6LsuFQvDNPrTEoa47bxTrqvETWTugrwnBCwdT2UELrZ1v3NrbJrPq9gqrQT3hfYeTWqUSmfzwuq6/WVYJfRF0y9lnXvOwHxycQktjkzmS+rQHCWqtzTtkBhUEqnAcUPr7hALUeyNM8zE3m7+63C7etMptd7Pel7MgP7zlPvwZJPmDZmIngWbFRZrFcdncPAY76sl/Q99f6xEgVl+VHOJJk4AdibfUgFv6HYAtpNfv3fA1om7zrbA1owgJXEGQO4FCjUmvelnB9er8sbc2j4WVlaFjIeEZZqPqolmwKtoKHc+hpEFfLz586+qaJgri0eWdzIqtMb5eYBeYEX72mT8oq2uv5BxgEhDVlhD4MiadGkRNVxkDaNYuTGx0UGihjdYAuGZRLUB19NpiqqGlCu4luU8sWvt5iay0TUXa3CwAGWxJChe+2KFtMTS5B8w0dBkkLnw=='
             });
         }
     }
