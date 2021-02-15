@@ -41,10 +41,11 @@ public final class AudioUtil {
         }
 
         ContentProviderService contentProviderService = stateManager.getApplicationState().getScopeValue("contentProviderService");
-
-        String audioKey = getKey(request.getSound());
-        String soundUrl = contentProviderService.resolveContent(stateManager.getDeviceId(), audioKey);
-        request.setUrl(soundUrl);
+        if (contentProviderService != null) {
+            String audioKey = getKey(request.getSound());
+            String soundUrl = contentProviderService.resolveContent(stateManager.getDeviceId(), audioKey);
+            request.setUrl(soundUrl);
+        }
     }
 
     public static String getKey(String sound) {

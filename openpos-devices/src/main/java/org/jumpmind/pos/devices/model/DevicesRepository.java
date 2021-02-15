@@ -22,6 +22,9 @@ public class DevicesRepository {
     @Lazy
     DBSession devSession;
 
+    @Autowired
+    VirtualDeviceRepository virtualDeviceRepository;
+
     @Cacheable(value="/devices/device", key="#deviceId + '-' + #appId")
     public DeviceModel getDevice(String deviceId, String appId) {
         DeviceModel device = devSession.findByNaturalId(DeviceModel.class, new ModelId("deviceId", deviceId, "appId", appId));
@@ -29,6 +32,10 @@ public class DevicesRepository {
             device.setDeviceParamModels(getDeviceParams(device.getDeviceId(), device.getAppId()));
             return device;
         } else {
+            DeviceModel virtualDevice = virtualDeviceRepository.getByDeviceIdAppId(deviceId, appId);
+            if (virtualDevice != null) {
+                return virtualDevice;
+            }
             throw new DeviceNotFoundException("No device found for appId=" + appId + " deviceId=" + deviceId);
         }
     }

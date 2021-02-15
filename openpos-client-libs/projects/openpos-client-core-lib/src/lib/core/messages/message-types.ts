@@ -22,4 +22,6 @@ export class MessageTypes {
     static AUDIO_PRELOAD = 'AudioPreload';
     static LOADING = 'Loading';
     static PERIPHERAL_DEVICE_SELECTION = 'PeripheralDeviceSelection';
+    static CLIENT_EXECUTABLE = 'ClientExecutable';
+
 }

@@ -123,22 +123,24 @@ app-scandit-native {
         grid-area: buttons;
         display: grid;
         align-self: end;
+        grid-row-gap: 16px;
 
         .sale-total-tax-exempt-label-no-customer {
             @extend %text-sm;
             text-align: center;
             justify-self: center;
-            margin-bottom: 8px;
+            margin-bottom: -8px;
         }
 
         .sale-total-button {
             min-height: 70px;
-            margin-top: 16px;
             width: 100%;
         }
     }
 
+    .loyalty-keybind,
     .checkout-keybind {
         padding-left: 8px;
+        align-self: center;
     }
 }

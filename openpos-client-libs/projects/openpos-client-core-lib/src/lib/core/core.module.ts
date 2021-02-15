@@ -76,6 +76,7 @@ import { ScanditCapacitorImageScanner } from './platform-plugins/image-scanners/
 import { IMAGE_SCANNERS } from './platform-plugins/image-scanners/image-scanner';
 import { ImageScanners } from './platform-plugins/image-scanners/image-scanners.service';
 import { ImageScannerComponent } from './platform-plugins/image-scanners/image-scanner.component';
+import {ClientExecutableService} from "./services/client-executable.service";
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -174,6 +175,7 @@ export class CoreModule {
                 logger: ConsoleIntercepter,
                 toastService: ToastService,
                 uiDataService: UIDataMessageService,
+                clientExecutableService: ClientExecutableService,
                 keyProvider: KeyPressProvider) {
         throwIfAlreadyLoaded(parentModule, 'CoreModule');
         AppInjector.Instance = this.injector;

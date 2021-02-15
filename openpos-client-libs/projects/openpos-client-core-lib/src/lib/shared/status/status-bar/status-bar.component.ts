@@ -1,6 +1,6 @@
 import { Component, ElementRef, HostListener, Renderer2 } from '@angular/core';
 import { combineLatest, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, publishBehavior, refCount, switchMap, tap } from 'rxjs/operators';
 import { ConfigChangedMessage } from '../../../core/messages/config-changed-message';
 import { Status } from '../../../core/messages/status.enum';
 import { StatusMessage } from '../status.message';
@@ -59,7 +59,9 @@ export class StatusBarComponent {
               )
             }
           )
-        ))
+        )),
+        publishBehavior(new Array<CategoryWithName>()),
+        refCount()
       )
     ).pipe(
       map(results => {

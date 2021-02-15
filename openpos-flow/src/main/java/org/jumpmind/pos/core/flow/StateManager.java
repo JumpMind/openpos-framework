@@ -639,23 +639,26 @@ public class StateManager implements IStateManager {
             }
         }
 
-        Class<?> clazz = getCurrentState().getClass();
+        Object currentState = getCurrentState();
+        if (currentState != null) {
+            Class<?> clazz = currentState.getClass();
 
-        List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnRefresh.class, true, true);
+            List<Method> methods = MethodUtils.getMethodsListWithAnnotation(clazz, OnRefresh.class, true, true);
 
-        if (!methods.isEmpty()) {
-            methods.forEach(m -> {
-                m.setAccessible(true);
-                try {
-                    m.invoke(getCurrentState());
-                } catch (Exception ex) {
-                    if (errorHandler != null) {
-                        errorHandler.handleError(this, ex);
-                    } else {
-                        throw new FlowException("Failed to invoke method " + m, ex);
+            if (!methods.isEmpty()) {
+                methods.forEach(m -> {
+                    m.setAccessible(true);
+                    try {
+                        m.invoke(getCurrentState());
+                    } catch (Exception ex) {
+                        if (errorHandler != null) {
+                            errorHandler.handleError(this, ex);
+                        } else {
+                            throw new FlowException("Failed to invoke method " + m, ex);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
 
     }

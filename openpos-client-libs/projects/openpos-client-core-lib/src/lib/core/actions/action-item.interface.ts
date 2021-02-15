@@ -8,6 +8,8 @@ export interface IActionItem {
     enabled?: boolean;
     // A display title to show on the UI element associated with this ActionItem
     title?: string;
+    // Optional default payload for action to be sent back to the server
+    defaultPayload?: string;
     // The icon to display on the UI element associated with the ActionItem
     icon?: string;
     // If set the user will be presented with a dialog to confirm this action befor performing it

@@ -1,5 +1,15 @@
 
-<h1 mat-dialog-title>{{data.category.localizationKey | localize}}</h1>
+<mat-card-title gdAreas="header backbutton" gdColumns="1fr auto" gdAlignColumns="center center">
+    <div class="header" gdArea="header" gdColumns="auto 1fr" responsive-class>
+        <span>{{data.category.localizationKey | localize}}</span>
+    </div>
+    <app-icon-button
+            class="back-button"
+            gdArea="backbutton"
+            [iconName]="'close'"
+            (click)="close()"
+    ></app-icon-button>
+</mat-card-title>
 
 <div mat-dialog-content>
     <app-option-button *ngFor="let o of data.category.knownDevices; let i = index"

@@ -19,5 +19,6 @@ dependencies {
     }
     implementation project(":openpos-service")
     implementation project(":openpos-persist")
+    implementation project(":openpos-flow")
     implementation "org.springframework:spring-tx:$springVersion"
 }

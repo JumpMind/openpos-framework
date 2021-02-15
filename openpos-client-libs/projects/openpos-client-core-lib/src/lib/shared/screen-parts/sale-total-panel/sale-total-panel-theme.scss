@@ -20,19 +20,45 @@
     }
 
     .sale-total-customer-button {
-        .mat-button-wrapper {
+        button {
             @extend %text-sm;
-            display: grid;
-            
-            div {
-                line-height: normal;
+            .mat-button-wrapper {
+                display: grid;
+                
+                div {
+                    line-height: normal;
+                }
             }
         }
 
-        .sale-total-loyalty-icon {
-            padding: 0 8px;
-            max-width: 100%;
-            max-height: 3em;
+        .sale-total-loyalty-linked-icon {
+            display: grid;
+            grid-template-columns: 1fr auto;
+
+            .sale-total-loyalty-icon {
+                max-width: 100%;
+                max-height: 3em;
+            }
+        }
+
+    }
+
+    .sale-total-employee-sale-button {
+        button {
+            @extend %text-sm;
+            .mat-button-wrapper {
+                display: grid;
+                
+                div {
+                    line-height: normal;
+                }
+            }    
+        }
+
+        .sale-total-employee-sale-name {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            grid-gap: 0px 5px;
         }
     }
 

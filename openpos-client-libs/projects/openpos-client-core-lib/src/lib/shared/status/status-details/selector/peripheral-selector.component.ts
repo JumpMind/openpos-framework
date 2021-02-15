@@ -5,7 +5,6 @@ import { PeripheralSelectionService, PeripheralCategory, PeripheralDevice } from
 export interface PeripheralSelectorDialogData {
     category: PeripheralCategory
 }
-
 @Component({
     templateUrl: './peripheral-selector.component.html',
     styleUrls: ['./peripheral-selector.component.scss']
@@ -20,6 +19,10 @@ export class PeripheralSelectorComponent {
 
     assignDevice(device: PeripheralDevice) {
         this.periph.selectDevice(this.data.category, device);
+        this.dialogRef.close();
+    }
+
+    close() {
         this.dialogRef.close();
     }
 }

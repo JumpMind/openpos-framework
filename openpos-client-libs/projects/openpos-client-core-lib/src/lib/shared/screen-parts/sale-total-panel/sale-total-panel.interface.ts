@@ -11,8 +11,10 @@ export interface SaleTotalPanelInterface extends IAbstractScreen {
     logoutButton: IActionItem;
     loyaltyButton: IActionItem;
     linkedCustomerButton: IActionItem;
+    linkedEmployeeButton: IActionItem;
     promoButton: IActionItem;
     customer: { name: string, label: string, icon: string, id: string };
+    employee: {name: string, label: string, icon: string, id: string};
     taxExemptCertificateDetail: {label: string, value: string};
     readOnly: boolean;
     prompt: string;
