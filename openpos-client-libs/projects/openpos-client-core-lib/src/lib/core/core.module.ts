@@ -75,7 +75,6 @@ import { CapacitorStatusBarPlatformPlugin } from './startup/capacitor-status-bar
 import { ScanditCapacitorImageScanner } from './platform-plugins/image-scanners/scandit-capacitor/scandit-capacitor.service';
 import { IMAGE_SCANNERS } from './platform-plugins/image-scanners/image-scanner';
 import { ImageScanners } from './platform-plugins/image-scanners/image-scanners.service';
-import { ImageScannerComponent } from './platform-plugins/image-scanners/image-scanner.component';
 import {ClientExecutableService} from "./services/client-executable.service";
 
 registerLocaleData(locale_enCA, 'en-CA');
