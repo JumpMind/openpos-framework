@@ -71,12 +71,12 @@ export class StartupService implements CanActivate {
 
         // Get an array of task observables and attach task name to messages and errors
         const tasks = list.map(task => concat(
-                of(`running task - ${task.name}`),
+                //of(`running task - ${task.name}`),
                 task.execute({ route, state }).pipe(
                     map(message => `${task.name}: ${message}`),
                     catchError(error => throwError(`${task.name}: ${error}`))
                 ),
-                of(`finished running task - ${task.name}`)
+                //of(`finished running task - ${task.name}`)
             )
         );
 
