@@ -1,4 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
+import { IActionItem } from '../../../core/actions/action-item.interface';
+import { ActionService } from '../../../core/actions/action.service';
 
 @Component({
     selector: 'app-grid-table',
@@ -15,7 +17,7 @@ export class GridTableComponent implements OnInit {
 
     outerStyle: object;
 
-    constructor() {
+    constructor(public actionService: ActionService) {
     }
 
     ngOnInit(): void {
@@ -29,5 +31,13 @@ export class GridTableComponent implements OnInit {
                 `repeat(${numberCols}, minmax(min-content, auto))`,
         };
     }
+
+    isAction(line: any): boolean {
+        return line instanceof Object && line.hasOwnProperty('action');
+    }
+
+    public doAction(action: IActionItem) {
+        this.actionService.doAction(action);
+      }
 
 }
