@@ -1,7 +1,6 @@
 import { InjectionToken } from '@angular/core';
 
 import { Observable } from 'rxjs';
-import { IPlatformPlugin } from '../platform-plugin.interface';
 import { IScanData } from '../scanners/scan.interface'
 
 export const IMAGE_SCANNERS = new InjectionToken<ImageScanner[]>('ImageScanners');
@@ -10,12 +9,8 @@ export interface ScannerViewRef {
     viewChanges(): Observable<{ left: number; top: number; width: number, height: number }>;
 }
 
-export interface ImageScanner extends IPlatformPlugin {
+export interface ImageScanner {
     name(): string;
-
-    pluginPresent(): boolean;
-
-    initialize(): Observable<string>;
 
     /**
      * Starts the image scanner and returns a hot observable which yields

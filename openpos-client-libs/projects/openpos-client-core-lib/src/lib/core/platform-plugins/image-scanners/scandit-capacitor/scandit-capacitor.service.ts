@@ -13,7 +13,7 @@ import { ImageScanner, ScannerViewRef } from '../image-scanner';
     providedIn: 'root'
 }) 
 //@ImageScannerDef('scandit-cap')
-export class ScanditCapacitorImageScanner implements ImageScanner {
+export class ScanditCapacitorImageScanner implements ImageScanner, IPlatformPlugin {
     name(): string {
         return 'scandit-cap';
     }
