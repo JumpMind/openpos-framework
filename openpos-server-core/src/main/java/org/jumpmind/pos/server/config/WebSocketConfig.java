@@ -96,9 +96,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                     if (!deviceToSessionMap.containsKey(deviceToken.get(0))) {
                         deviceToSessionMap.put(deviceToken.get(0), SessionContext.builder()
-                                .isConnected(true)
                                 .sessionId(sessionId)
-                                .deviceToken(deviceToken.get(0))
                                 .build());
                     }
 

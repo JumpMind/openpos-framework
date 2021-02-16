@@ -11,6 +11,4 @@ import lombok.NoArgsConstructor;
 @Builder
 public class SessionContext {
     String sessionId;
-    boolean isConnected;
-    String deviceToken;
 }
