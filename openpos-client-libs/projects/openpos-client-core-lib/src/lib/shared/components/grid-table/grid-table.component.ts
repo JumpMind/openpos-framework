@@ -38,6 +38,6 @@ export class GridTableComponent implements OnInit {
 
     public doAction(action: IActionItem) {
         this.actionService.doAction(action);
-      }
+    }
 
 }
