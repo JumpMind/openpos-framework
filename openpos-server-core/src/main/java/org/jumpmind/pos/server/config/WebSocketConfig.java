@@ -92,15 +92,28 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
                     String sessionId = (String) message.getHeaders().get("simpSessionId");
                     Map<String, List<String>> nativeHeaders = (Map<String, List<String>>) message.getHeaders().get("nativeHeaders");
-                    String deviceToken = nativeHeaders.get("deviceToken").get(0);
-                    if (!deviceToSessionMap.containsKey(deviceToken)) {
-                        deviceToSessionMap.put(deviceToken, SessionContext.builder().isConnected(true).sessionId(sessionId).deviceToken(deviceToken).build());
+                    List<String> deviceToken = nativeHeaders.get("deviceToken");
+
+                    if (!deviceToSessionMap.containsKey(deviceToken.get(0))) {
+                        deviceToSessionMap.put(deviceToken.get(0), SessionContext.builder()
+                                .isConnected(true)
+                                .sessionId(sessionId)
+                                .deviceToken(deviceToken.get(0))
+                                .build());
                     }
+
+                    boolean isDeviceConnected = false;
+
                     for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
-                        if (!pair.getValue().getSessionId().equals(sessionId)) {
-                            throw new DeviceNotAuthorizedException();
+                        if (pair.getValue().getSessionId().equals(sessionId)) {
+                            isDeviceConnected = true;
                         }
                     }
+
+                    if (!isDeviceConnected) {
+                        throw new DeviceNotAuthorizedException();
+                    }
+
                 } else if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
                     String sessionId = (String) message.getHeaders().get("simpSessionId");
                         for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
