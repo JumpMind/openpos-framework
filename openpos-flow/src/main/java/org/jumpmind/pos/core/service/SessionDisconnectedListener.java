@@ -38,16 +38,13 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
         
         DeviceModel deviceModel = sessionAuthTracker.getDeviceModel(sessionId);
 
-        // If another device is connected, do not disconnect it.
         if (deviceModel != null) {
-            if (!sessionAuthTracker.isAnotherDeviceConnected(sessionId)) {
-                sessionAuthTracker.removeConnectedDevice(sessionId);
-                devicesService.disconnectDevice(new DisconnectDeviceRequest(deviceModel.getDeviceId(), deviceModel.getAppId()));
-                try {
-                    eventPublisher.publish(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId()));
-                } catch (Exception ex) {
-                    log.warn("Error publishing DeviceDisconnectedEvent", ex);
-                }
+            devicesService.disconnectDevice(new DisconnectDeviceRequest(deviceModel.getDeviceId(), deviceModel.getAppId()));
+
+            try {
+                eventPublisher.publish(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId()));
+            } catch (Exception ex) {
+                log.warn("Error publishing DeviceDisconnectedEvent", ex);
             }
         } else {
             log.warn("No device found for session id=" + sessionId + ", not publishing DeviceDisconnectedEvent.");

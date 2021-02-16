@@ -1,7 +1,8 @@
 package org.jumpmind.pos.server.service;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.model.DeviceParamModel;
@@ -10,7 +11,6 @@ import org.jumpmind.pos.devices.service.model.AuthenticateDeviceRequest;
 import org.jumpmind.pos.server.config.MessageUtils;
 import org.jumpmind.pos.devices.service.model.PersonalizationParameter;
 import org.jumpmind.pos.devices.service.model.PersonalizationParameters;
-import org.jumpmind.pos.server.model.SessionContext;
 import org.jumpmind.pos.util.BoxLogging;
 import org.jumpmind.pos.util.DefaultObjectMapper;
 import org.jumpmind.pos.util.clientcontext.ClientContextConfig;
@@ -41,8 +41,6 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
     Map<String, Map<String, String>> clientContext = Collections.synchronizedMap(new HashMap<>());
 
     Map<String, DeviceModel> deviceModelMap = Collections.synchronizedMap(new HashMap<>());
-
-    Map<String, SessionContext> deviceToSessionMap = Collections.synchronizedMap(new HashMap<>());
 
     @Value("${openpos.general.authToken:#{null}}")
     String serverAuthToken;
@@ -81,21 +79,11 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
             this.log.warn("Device is not personalized");
         }
 
-        if (!deviceToSessionMap.containsKey(deviceToken)) {
-            deviceToSessionMap.put(deviceToken, SessionContext.builder().isConnected(true).sessionId(sessionId).deviceToken(deviceToken).build());
-            sessionAuthenticated.put(sessionId, (isBlank(serverAuthToken) || serverAuthToken.equals(authToken)) && deviceModel != null);
-        }
-
-
-        // If the device token has not been added to the
-
-
-        if ((isNotBlank(serverAuthToken) && !serverAuthToken.equals(authToken)) || deviceModel == null) {
+        sessionAuthenticated.put(sessionId, (isBlank(serverAuthToken)  || serverAuthToken.equals(authToken)) && deviceModel != null);
+        if ((isNotBlank(serverAuthToken) && ! serverAuthToken.equals(authToken)) || deviceModel == null) {
             String clientAuthTokenValueIfNull = authToken == null || "".equals(authToken) || "undefined".equals(authToken) ? String.format(" (value is: '%s')", authToken) : "";
             this.log.warn("Client auth token{} does not match server auth token, client connection will be rejected.", clientAuthTokenValueIfNull);
-
-        }
-        ;
+        };
         sessionCompatible.put(sessionId, serverCompatibilityVersion == null || serverCompatibilityVersion.equals(compatibilityVersion));
 
         setPersonalizationResults(sessionId, deviceModel);
@@ -167,18 +155,5 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
     public Map<String, String> getClientContext(String sessionId) { return clientContext.get(sessionId); }
 
     public DeviceModel getDeviceModel(String sessionId) { return deviceModelMap.get(sessionId); }
-
-    public boolean isAnotherDeviceConnected(String sessionId) {
-
-         return this.deviceToSessionMap.containsValue(sessionId);
-    }
-
-    public void removeConnectedDevice(String sessionId) {
-        for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
-            if (pair.getValue().getSessionId().equals(sessionId)) {
-                this.deviceToSessionMap.remove(pair.getKey());
-            }
-        }
-    }
 
 }
