@@ -5,7 +5,6 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angul
 import { map, catchError } from 'rxjs/operators';
 import { MatDialog, MatDialogRef } from '@angular/material';
 import { ComponentType } from '@angular/cdk/overlay/index';
-import { StartupTaskData } from '../startup/startup-task-data';
 
 export const STARTUP_TASKS = new InjectionToken<IStartupTask[]>('Startup Tasks');
 export const STARTUP_FAILED_TASK = new InjectionToken<IStartupTask>('Startup Failed Task');
@@ -68,33 +67,42 @@ export class StartupService implements CanActivate {
         list.sort((a, b) => a.order - b.order );
         this.logTaskOrder(list);
 
+        this.dedupedTasks.forEach(t => console.log(`found task ${t.name}`));
+
         // Get an array of task observables and attach task name to messages and errors
-        const tasks = list.map( task => task.execute( { route, state }).pipe(
-            map( message => `${task.name}: ${message}`),
-            catchError( error => throwError(`${task.name}: ${error}`))) );
-
-
+        const tasks = list.map(task => concat(
+                //of(`running task - ${task.name}`),
+                task.execute({ route, state }).pipe(
+                    map(message => `${task.name}: ${message}`),
+                    catchError(error => throwError(`${task.name}: ${error}`))
+                ),
+                //of(`finished running task - ${task.name}`)
+            )
+        );
 
         // Run all tasks in order
-        return Observable.create( (result: Subject<boolean>) => {
-            concat(...tasks).subscribe(
-                {
-                    next: (message) => { this.handleMessage(message); },
-                    error: (error) => {
-                        result.next(false);
-                        console.error('Startup failed');
-                        this.handleError( error );
-                    },
-                    complete: () => {
-                        console.info('All Startup Tasks completed successfully');
-                        result.next(true);
-                        this.startupComplete = true;
-                        if ( this.startupDialogRef ) {
-                            this.startupDialogRef.close();
-                        }
+        return new Observable<boolean>(observer => {
+            const sub = concat(...tasks).subscribe({
+                next: (message) => { this.handleMessage(message); },
+                error: (error) => {
+                    observer.next(false);
+                    console.error('Startup failed');
+                    this.handleError( error );
+                },
+                complete: () => {
+                    console.info('All Startup Tasks completed successfully');
+                    observer.next(true);
+                    observer.complete();
+
+                    this.startupComplete = true;
+
+                    if (this.startupDialogRef) {
+                        this.startupDialogRef.close();
                     }
                 }
-            );
+            });
+
+            return () => sub.unsubscribe();
         });
     }
 

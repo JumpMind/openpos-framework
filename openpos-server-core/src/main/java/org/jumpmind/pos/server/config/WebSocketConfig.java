@@ -1,13 +1,10 @@
 package org.jumpmind.pos.server.config;
 
 import java.util.*;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.server.model.SessionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -31,8 +28,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.server.HandshakeInterceptor;
-
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.jumpmind.pos.util.AppUtils.setupLogging;
 @Slf4j
 @Configuration

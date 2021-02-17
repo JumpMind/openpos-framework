@@ -36,6 +36,7 @@ import { TransactionSearchComponent } from './transaction-search/transaction-sea
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 import {SimulatedPeripheralViewerComponent} from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
 
+
 const screens = [
     SelectionListScreenComponent,
     PromptScreenComponent,
