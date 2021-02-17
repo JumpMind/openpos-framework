@@ -26,10 +26,14 @@ export class SubscribeToSessionTask implements IStartupTask {
                 data.route.queryParamMap.keys.forEach(key => {
                     this.session.addQueryParam(key, data.route.queryParamMap.get(key));
                 });
+
                 this.session.unsubscribe();
-                this.session.subscribe();
-                messages.next('Subscribing to server ...');
-                messages.complete();
+                this.session.subscribe()
+                    .then(() => {
+                        messages.next('Subscribed to server');
+                        messages.complete();
+                    })
+                    .catch(e => messages.error(e));
             }) as Observable<string>;
 
             return concat(
@@ -37,7 +41,8 @@ export class SubscribeToSessionTask implements IStartupTask {
                 this.session.getMessages(MessageTypes.STARTUP).pipe(
                     timeoutWith(Configuration.confirmConnectionTimeoutMillis, throwError('Timed out waiting for server')),
                     map(() => 'Successfully connected to server'),
-                    take(1))
+                    take(1)
+                )
             );
         } else {
             // we shouldn't be coming here if we are already subscribed.  lets do a refresh to get a clean start

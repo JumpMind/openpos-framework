@@ -5,8 +5,8 @@ import { Configuration } from './../../configuration/configuration';
 import { IMessageHandler } from './../interfaces/message-handler.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
 
-import { Observable, Subscription, BehaviorSubject, Subject, merge, timer } from 'rxjs';
-import { map, filter, takeWhile } from 'rxjs/operators';
+import { Observable, Subscription, BehaviorSubject, Subject, merge, timer, ConnectableObservable } from 'rxjs';
+import { map, filter, takeWhile, publishBehavior, refCount, publish, shareReplay, publishReplay } from 'rxjs/operators';
 import { Message } from '@stomp/stompjs';
 import { Injectable, NgZone, Inject, } from '@angular/core';
 import { StompState, StompRService } from '@stomp/ng2-stompjs';
@@ -108,6 +108,8 @@ export class SessionService implements IMessageHandler<any> {
     private reconnectTimerSub: Subscription;
     private connectedOnce = false;
 
+    public screenMessage$: Observable<any>;
+
 
     constructor(
         public dialogService: MatDialog,
@@ -125,6 +127,16 @@ export class SessionService implements IMessageHandler<any> {
         this.onServerConnect = new BehaviorSubject<boolean>(false);
 
         this.registerMessageHandler(this);
+
+        const screenMessagesBehavior = this.stompJsonMessages$.pipe(
+            filter(message => message.type === 'Screen' && message.screenType !== 'NoOp'),
+            publishReplay(1)
+        ) as ConnectableObservable<any>;
+
+        this.screenMessage$ = screenMessagesBehavior;
+
+        // We need to capture incomming screen messages so make this hot 🔥
+        screenMessagesBehavior.connect();
     }
 
     public sendMessage<T extends OpenposMessage>(message: T) {

@@ -23,7 +23,6 @@ import { LifeCycleTypeGuards } from '../../core/life-cycle-interfaces/lifecycle-
 import { ScreenCreatorService } from '../../core/services/screen-creator.service';
 import { FocusService } from '../../core/focus/focus.service';
 import { filter } from 'rxjs/operators';
-import { SplashScreen } from '../../core/messages/splash-screen-message';
 
 // tslint:disable-next-line:directive-selector
 @Directive({ selector: '[openposScreenOutlet]' })
@@ -60,20 +59,16 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.updateScreen();
-        this.subscriptions.add(this.session.getMessages('Screen').pipe(filter(m => m.screenType !== 'NoOp'))
-            .subscribe((message) => this.handle(message)));
-        this.subscriptions.add(this.session.getMessages('Connected').subscribe((message) => this.handle(new SplashScreen())));
-        this.subscriptions.add(this.session.getMessages(
-            MessageTypes.LIFE_CYCLE_EVENT).subscribe( message => this.handleLifeCycleEvent(message)));
+        this.subscriptions.add(this.session.screenMessage$.subscribe((message) => this.handle(message)));
+        this.subscriptions.add(this.session.getMessages(MessageTypes.LIFE_CYCLE_EVENT).subscribe(message => this.handleLifeCycleEvent(message)));
         this.subscriptions.add(this.configurationService.theme$.subscribe( theme => {
             this.updateTheme(theme);
         }));
-        this.subscriptions.add(this.personalization.getPersonalizationProperties$().subscribe( properties => {
-            if( properties != null ){
-                this.updatePersonalizationProperties(properties);
-            }
 
+        this.subscriptions.add(this.personalization.getPersonalizationProperties$().pipe(
+            filter(p => !!p)
+        ).subscribe(properties => {
+            this.updatePersonalizationProperties(properties);
         }));
     }
 
@@ -111,11 +106,7 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
         }
     }
 
-    protected async updateScreen(screen?: any) {
-        if (!screen) {
-            screen = new SplashScreen();
-        }
-
+    protected async updateScreen(screen: any) {
         if ( this.dialogService.isDialogOpen() ) {
             // Close any open dialogs
             await this.dialogService.closeDialog();
