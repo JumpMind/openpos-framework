@@ -6,7 +6,7 @@ import { IMessageHandler } from './../interfaces/message-handler.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
 
 import { Observable, Subscription, BehaviorSubject, Subject, merge, timer, ConnectableObservable } from 'rxjs';
-import { map, filter, takeWhile, publishBehavior, refCount, publish, shareReplay, publishReplay } from 'rxjs/operators';
+import { map, filter, takeWhile, publishReplay } from 'rxjs/operators';
 import { Message } from '@stomp/stompjs';
 import { Injectable, NgZone, Inject, } from '@angular/core';
 import { StompState, StompRService } from '@stomp/ng2-stompjs';
@@ -417,10 +417,9 @@ export class SessionService implements IMessageHandler<any> {
         if (this.personalization.getIsManagedServer$().getValue()) {
             this.unsubscribe();
             this.reconnecting = true;
-            this.reconnectTimerSub = timer(5000, 5000).pipe(takeWhile(v => this.reconnecting)).subscribe(async () => {
+            this.reconnectTimerSub = timer(5000, 5000).pipe(takeWhile(() => this.reconnecting)).subscribe(async () => {
                 if (await this.discovery.isManagementServerAlive()) {
                     console.debug(`Management server is alive`);
-                    const response = await this.discovery.discoverDeviceProcess({maxWaitMillis: 2500});
                     if (this.discovery.getWebsocketUrl()) {
                         // TODO: May not be necessary to run in zone, check.
                         this.zone.run(() => {
