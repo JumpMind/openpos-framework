@@ -1,19 +1,11 @@
 <div *ngIf="(!screenData.amounts || screenData.amounts.length === 0) && screenData.amountDue" responsive-class
-    class="tender-amount-due-wrapper">
-    <div></div>
-    <div responsive-class class="tender-border-color tender-amount-due-outer">
-        <div responsive-class class="tender-amount-due-title">{{screenData.amountDue.name}}</div>
-        <div responsive-class class="tender-amount-due" [ngClass]="amountCss">
-            <app-currency-text [amountText]="screenData.amountDue.amount"></app-currency-text>
-        </div>
-    </div>
-    <div responsive-class class="round-up-button-container">
-        <app-secondary-button responsive-class class="round-up-button" (click)="roundUp()" [disabled]="!isRoundUpAvailable">Round Up
-            <mat-icon *ngIf="isRoundUpAvailable" aria-hidden="true">arrow_upward</mat-icon>
-            <mat-icon *ngIf="!isRoundUpAvailable" aria-hidden="true">check</mat-icon>
-        </app-secondary-button>
+    class="tender-border-color tender-amount-due-outer">
+    <div responsive-class class="tender-amount-due-title">{{screenData.amountDue.name}}</div>
+    <div responsive-class class="tender-amount-due" [ngClass]="amountCss">
+        <app-currency-text [amountText]="screenData.amountDue.amount"></app-currency-text>
     </div>
 </div>
+
 
 <div *ngIf="screenData.amounts && screenData.amounts.length > 0 && screenData.amountDue" responsive-class
     class="tender-amounts-outer">
@@ -32,6 +24,13 @@
             <app-currency-text [amountText]="screenData.amountDue.amount"></app-currency-text>
         </div>
     </div>
+</div>
+
+<div responsive-class class="round-up-button-container">
+    <app-secondary-button responsive-class class="round-up-button" (click)="roundUp()" [disabled]="!isRoundUpAvailable">Round Up
+        <mat-icon *ngIf="isRoundUpAvailable" aria-hidden="true">arrow_upward</mat-icon>
+        <mat-icon *ngIf="!isRoundUpAvailable" aria-hidden="true">check</mat-icon>
+    </app-secondary-button>
 </div>
 
 <app-dynamic-form-part *ngIf="screenData.form" [formName]="'form'" [alternateSubmitActions]="alternateSubmitActionNames"
