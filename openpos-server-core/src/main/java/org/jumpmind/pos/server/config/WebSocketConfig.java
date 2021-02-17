@@ -1,9 +1,6 @@
 package org.jumpmind.pos.server.config;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -101,8 +98,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     }
 
                     boolean isDeviceConnected = false;
-
-                    for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
+                    Iterator<Map.Entry<String, SessionContext>> itr = deviceToSessionMap.entrySet().iterator();
+                    while (itr.hasNext()) {
+                        Map.Entry<String, SessionContext> pair = itr.next();
                         if (pair.getValue().getSessionId().equals(sessionId)) {
                             isDeviceConnected = true;
                         }
@@ -114,10 +112,12 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
                 } else if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
                     String sessionId = (String) message.getHeaders().get("simpSessionId");
-                        for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
-                            if (pair.getValue().getSessionId().equals(sessionId)) {
-                                deviceToSessionMap.remove(pair.getKey());
-                            }
+                    Iterator<Map.Entry<String, SessionContext>> itr = deviceToSessionMap.entrySet().iterator();
+                    while (itr.hasNext()) {
+                        Map.Entry<String, SessionContext> pair = itr.next();
+                        if (pair.getValue().getSessionId().equals(sessionId)) {
+                            itr.remove();
+                        }
                     }
                 }
                 return super.beforeHandle(message, channel, handler);
