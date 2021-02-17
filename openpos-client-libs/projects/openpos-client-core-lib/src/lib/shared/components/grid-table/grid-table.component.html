@@ -7,8 +7,10 @@
             <div class="grid-table-line" *ngFor="let line of cell">
                 <span *ngIf="!isAction(line)">{{line}}</span>
                 <button *ngIf="isAction(line)" mat-button (click)="doAction(line)">
-                    <span [ngClass]="{'muted-color': ! line.enabled}">{{line.title}}</span>
-                    <app-icon *ngIf="line.icon" [iconName]="line.icon"></app-icon>
+                    <div class="button">
+                        <app-icon *ngIf="line.icon" [iconName]="line.icon"></app-icon>
+                        <span [ngClass]="{'muted-color': ! line.enabled}">{{line.title}}</span>
+                    </div>
                 </button>
             </div>
         </div>
