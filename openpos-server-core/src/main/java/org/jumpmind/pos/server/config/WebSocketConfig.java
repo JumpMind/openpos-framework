@@ -107,6 +107,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     }
 
                     if (!isDeviceConnected) {
+                        log.warn("Device Connection Not Authorized While Session Exists: ", new DeviceNotAuthorizedException().getMessage());
                         throw new DeviceNotAuthorizedException();
                     }
 
