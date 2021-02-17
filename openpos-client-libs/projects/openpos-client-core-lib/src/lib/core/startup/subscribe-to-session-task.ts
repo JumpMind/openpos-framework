@@ -29,10 +29,10 @@ export class SubscribeToSessionTask implements IStartupTask {
                 this.session.unsubscribe();
                 this.session.subscribe()
                     .then(() => {
-                        messages.next('Subscribed to server');
-                        messages.complete();
+                        observer.next('Subscribed to server');
+                        observer.complete();
                     })
-                    .catch(e => messages.error(e));
+                    .catch(e => observer.error(e));
             }) as Observable<string>;
 
             return concat(
