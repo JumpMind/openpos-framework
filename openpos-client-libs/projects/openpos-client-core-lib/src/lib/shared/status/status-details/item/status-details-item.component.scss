@@ -1,4 +1,6 @@
 @import '~@angular/material/theming';
+@import "../../../../styles/mixins/typography";
+@import "../../../../styles/variables/font-sizes";
 
 :host {
     display: flex;
@@ -34,4 +36,89 @@
 
 .caption {
     font-size: 0.7em;
+}
+
+.status-title-transparency {
+    opacity: 0.5;
+}
+
+.status-item {
+    width: 100%;
+    padding: 16px;
+    white-space: normal;
+    font-size: $text-md;
+
+    &.tablet {
+        padding: 12px;
+        font-size: $text-md-mobile;
+    }
+
+    &.mobile {
+        padding: 8px;
+        text-align: start;
+        justify-self: start;
+        font-size: $text-md-mobile;
+    }
+
+    .status-icon {
+        align-self: center;
+    }
+
+    .status-content {
+        width: 100%;
+
+        .status-line {
+            grid-area: line;
+
+            &.sm {
+                @extend %text-sm;
+            }
+
+            &.md {
+                @extend %text-md;
+            }
+
+            &.lg {
+                @extend %text-lg;
+            }
+        }
+
+        .status-additional {
+            grid-area: additional;
+        }
+    }
+}
+
+.status-keybind {
+    &.sm {
+        @extend %text-sm;
+    }
+
+    &.md {
+        @extend %text-md;
+    }
+
+    &.lg {
+        @extend %text-lg;
+    }
+}
+
+.status-right {
+    min-width: 64px;
+}
+
+::ng-deep .status-item {
+    column-gap: 16px;
+
+    .mat-button-wrapper {
+        grid-template-columns: 64px 1fr auto;
+        display: grid !important;
+    }
+
+    &.mobile {
+        .mat-button-wrapper {
+            display: grid !important;
+            column-gap: 4px;
+        }
+    }
 }
