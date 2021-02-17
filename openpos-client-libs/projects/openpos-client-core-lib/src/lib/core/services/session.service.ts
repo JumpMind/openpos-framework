@@ -129,20 +129,20 @@ export class SessionService implements IMessageHandler<any> {
         this.registerMessageHandler(this);
 
         const screenMessagesBehavior = this.stompJsonMessages$.pipe(
-            filter(message => message.type === 'Screen' && message.screenType !== 'NoOp'),
+            filter(message => message.type === MessageTypes.SCREEN && message.screenType !== 'NoOp'),
             publishReplay(1)
         ) as ConnectableObservable<any>;
 
         this.screenMessage$ = screenMessagesBehavior;
 
-        // We need to capture incomming screen messages so make this hot 🔥
+        // We need to capture incomming screen messages even with no subscribers, so make this hot 🔥
         screenMessagesBehavior.connect();
     }
 
     public sendMessage<T extends OpenposMessage>(message: T) {
         if ( message.type === MessageTypes.ACTION && message instanceof ActionMessage ) {
             const actionMessage = message as ActionMessage;
-            this.publish(actionMessage.actionName, 'Screen', actionMessage.payload, actionMessage.doNotBlockForResponse);
+            this.publish(actionMessage.actionName, MessageTypes.SCREEN, actionMessage.payload, actionMessage.doNotBlockForResponse);
         } else if (message.type === MessageTypes.PROXY && message instanceof ActionMessage) {
             const actionMessage = message as ActionMessage;
             this.publish(actionMessage.actionName, actionMessage.type, actionMessage.payload, actionMessage.doNotBlockForResponse);
