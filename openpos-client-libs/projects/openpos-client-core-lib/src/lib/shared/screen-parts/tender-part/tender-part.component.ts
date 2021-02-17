@@ -18,6 +18,7 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
     alternateSubmitActions: IActionItem[] = [];
     alternateSubmitActionNames: string[] = [];
     amountCss: string = '';
+    isRoundUpAvailable: boolean = false;
 
     screenDataUpdated() {
         if (this.screenData.amountDue && parseFloat(this.screenData.amountDue.amount) < 0) {
@@ -25,6 +26,10 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
         }
         else {
             this.amountCss = '';
+        }
+        if (this.screenData.roundUpAvailable)
+        {
+            this.isRoundUpAvailable = true;
         }
         // Register form data with possible actions
         if (this.screenData.optionsList) {
@@ -48,5 +53,10 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
 
     voidTender(tender: ITender, index: number) {
         this.doAction(tender.voidButton, index);
+    }
+
+    roundUp()
+    {
+        this.doAction("RoundUp");
     }
 }

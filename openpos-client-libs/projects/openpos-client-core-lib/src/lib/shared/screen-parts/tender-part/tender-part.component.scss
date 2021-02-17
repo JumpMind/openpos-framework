@@ -18,23 +18,14 @@
 
 .tender-options {
     justify-self: center;
-    width: 50%;
-
-    &.mobile {
-        width: 75%;
-    }
-
-    &.tablet {
-        width: 75%;
-    }
 }
 
-.tender-amount-due-outer {
-    padding: 16px 0px;
-    border-bottom-width: 2px;
-    border-bottom-style: solid;
+.tender-amount-due-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 4fr 1fr;
+    column-gap: 10px;
     justify-self: center;
-    width: 25%;
+    width: 30%;
 
     &.mobile {
         width: 75%;
@@ -43,6 +34,28 @@
     &.tablet {
         width: 50%;
     }
+}
+
+.round-up-button {
+    @extend %text-md;
+    min-height: 50px;
+}
+
+.round-up-button:disabled {
+    @extend %text-md;
+    min-height: 50px;
+}
+
+.round-up-button-container {
+    justify-self: center;
+    margin: 40% 0% 10% 0%;
+}
+
+.tender-amount-due-outer {
+    padding: 16px 0px;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+
 }
 
 .tender-amount-due-title {

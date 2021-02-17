@@ -1,8 +1,16 @@
 <div *ngIf="(!screenData.amounts || screenData.amounts.length === 0) && screenData.amountDue" responsive-class
-    class="tender-border-color tender-amount-due-outer">
-    <div responsive-class class="tender-amount-due-title">{{screenData.amountDue.name}}</div>
-    <div responsive-class class="tender-amount-due" [ngClass]="amountCss">
-        <app-currency-text [amountText]="screenData.amountDue.amount"></app-currency-text>
+    class="tender-amount-due-wrapper">
+    <div></div>
+    <div responsive-class class="tender-border-color tender-amount-due-outer">
+        <div responsive-class class="tender-amount-due-title">{{screenData.amountDue.name}}</div>
+        <div responsive-class class="tender-amount-due" [ngClass]="amountCss">
+            <app-currency-text [amountText]="screenData.amountDue.amount"></app-currency-text>
+        </div>
+    </div>
+    <div responsive-class class="round-up-button-container">
+        <button responsive-class class="round-up-button" (click)="roundUp()" mat-stroked-button [disabled]="!isRoundUpAvailable">Round Up
+            <mat-icon aria-hidden="true">keyboard_capslock</mat-icon>
+            </button>
     </div>
 </div>
 

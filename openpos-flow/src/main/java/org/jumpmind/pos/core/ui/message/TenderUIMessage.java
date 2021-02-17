@@ -22,6 +22,7 @@ public class TenderUIMessage extends UIMessage implements IHasForm {
     private List<Tender> amounts;
     private OptionsListPart optionsList;
     private String imageUrl;
+    private boolean roundUpAvailable;
 
     public TenderUIMessage() {
         setScreenType(UIMessageType.TENDER);
@@ -90,6 +91,14 @@ public class TenderUIMessage extends UIMessage implements IHasForm {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public boolean isRoundUpAvailable() {
+        return roundUpAvailable;
+    }
+
+    public void setRoundUpAvailable(boolean roundUpEnabled) {
+        this.roundUpAvailable = roundUpEnabled;
     }
 
 }
