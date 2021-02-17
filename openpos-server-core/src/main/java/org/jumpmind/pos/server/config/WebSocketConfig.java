@@ -93,26 +93,32 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     }
 
                     boolean isDeviceConnected = false;
-                    Iterator<Map.Entry<String, SessionContext>> itr = deviceToSessionMap.entrySet().iterator();
-                    while (itr.hasNext()) {
-                        Map.Entry<String, SessionContext> pair = itr.next();
-                        if (pair.getValue().getSessionId().equals(sessionId)) {
-                            isDeviceConnected = true;
+                    Set<Map.Entry<String, SessionContext>> set = deviceToSessionMap.entrySet();
+                    synchronized (deviceToSessionMap) {
+                        Iterator<Map.Entry<String, SessionContext>> itr = set.iterator();
+                        while (itr.hasNext()) {
+                            Map.Entry<String, SessionContext> pair = itr.next();
+                            if (pair.getValue().getSessionId().equals(sessionId)) {
+                                isDeviceConnected = true;
+                            }
                         }
                     }
 
                     if (!isDeviceConnected) {
-                        log.warn("Device Connection Not Authorized While Session Exists: ", new DeviceNotAuthorizedException().getMessage());
-                        throw new DeviceNotAuthorizedException();
+                        log.warn("\n Client Connection Not Authorized While Session Exists: \n", new DeviceNotAuthorizedException());
+                        return null;
                     }
 
                 } else if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
                     String sessionId = (String) message.getHeaders().get("simpSessionId");
-                    Iterator<Map.Entry<String, SessionContext>> itr = deviceToSessionMap.entrySet().iterator();
-                    while (itr.hasNext()) {
-                        Map.Entry<String, SessionContext> pair = itr.next();
-                        if (pair.getValue().getSessionId().equals(sessionId)) {
-                            itr.remove();
+                    Set<Map.Entry<String, SessionContext>> set = deviceToSessionMap.entrySet();
+                    synchronized (deviceToSessionMap) {
+                        Iterator<Map.Entry<String, SessionContext>> itr = set.iterator();
+                        while (itr.hasNext()) {
+                            Map.Entry<String, SessionContext> pair = itr.next();
+                            if (pair.getValue().getSessionId().equals(sessionId)) {
+                                itr.remove();
+                            }
                         }
                     }
                 }
