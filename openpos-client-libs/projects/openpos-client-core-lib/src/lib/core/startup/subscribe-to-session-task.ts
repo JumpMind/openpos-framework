@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { IStartupTask } from './startup-task.interface';
-import { Observable, of, merge, throwError, Subject, concat } from 'rxjs';
+import { Observable, throwError, concat } from 'rxjs';
 import { SessionService } from '../services/session.service';
 import { Router } from '@angular/router';
 import { StartupTaskData } from './startup-task-data';
@@ -21,15 +21,16 @@ export class SubscribeToSessionTask implements IStartupTask {
 
     execute(data: StartupTaskData): Observable<string> {
         if (!this.session.connected()) {
-
-            const subscribe = Observable.create((messages: Subject<string>) => {
+            const subscribe = Observable.create(observer => {
                 data.route.queryParamMap.keys.forEach(key => {
                     this.session.addQueryParam(key, data.route.queryParamMap.get(key));
                 });
+                
+                observer.next('Subscribing to server ...');
+
                 this.session.unsubscribe();
                 this.session.subscribe();
-                messages.next('Subscribing to server ...');
-                messages.complete();
+                observer.complete();
             }) as Observable<string>;
 
             return concat(

@@ -166,6 +166,7 @@ import { StatusDetailsItemComponent } from './status/status-details/item/status-
 import { StatusBarComponent } from './status/status-bar/status-bar.component';
 import { LocalizePipe } from './pipes/localize.pipe';
 import { ModalOverlayContainerDirective } from './modal-overlay-container/modal-overlay-container.directive';
+import { ImageScannerComponent } from '../core/platform-plugins/image-scanners/image-scanner.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -277,7 +278,8 @@ const components = [
     ButtonActionTimerComponent,
     TransactionSummaryComponent,
     StampComponent,
-    ToastComponent
+    ToastComponent,
+    ImageScannerComponent
 ];
 
 const directives = [

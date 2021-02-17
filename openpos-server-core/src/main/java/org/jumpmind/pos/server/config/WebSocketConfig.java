@@ -1,9 +1,14 @@
 package org.jumpmind.pos.server.config;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.mutable.MutableBoolean;
+import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
+import org.jumpmind.pos.server.model.SessionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,20 +26,21 @@ import org.springframework.messaging.simp.SimpMessageType;
 import org.springframework.messaging.simp.broker.AbstractBrokerMessageHandler;
 import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.messaging.simp.stomp.StompCommand;
+import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.scheduling.concurrent.DefaultManagedTaskScheduler;
 import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.config.annotation.AbstractWebSocketMessageBrokerConfigurer;
-import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
-import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
-import org.springframework.web.socket.config.annotation.WebSocketTransportRegistration;
+import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.server.HandshakeInterceptor;
+
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.jumpmind.pos.util.AppUtils.setupLogging;
 @Slf4j
 @Configuration
 @EnableWebSocketMessageBroker
-public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
+public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Autowired(required = false)
     MutableBoolean initialized = new MutableBoolean(false);
@@ -60,6 +66,8 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Value("${openpos.logging.messages.enabled:true}")
     boolean loggingEnabled;
 
+    Map<String, SessionContext> deviceToSessionMap = Collections.synchronizedMap(new HashMap<>());
+
     @Override
     public void configureWebSocketTransport(WebSocketTransportRegistration registration) {
         registration.setMessageSizeLimit(messageSizeLimit); // 75681
@@ -76,6 +84,44 @@ public class WebSocketConfig extends AbstractWebSocketMessageBrokerConfigurer {
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
         registration.interceptors(new ExecutorChannelInterceptorAdapter() {
+
+            @Override
+            public Message<?> beforeHandle(Message<?> message, MessageChannel channel, MessageHandler handler) {
+                StompHeaderAccessor headerAccessor= StompHeaderAccessor.wrap(message);
+
+                if (StompCommand.CONNECT.equals(headerAccessor.getCommand())) {
+                    String sessionId = (String) message.getHeaders().get("simpSessionId");
+                    Map<String, List<String>> nativeHeaders = (Map<String, List<String>>) message.getHeaders().get("nativeHeaders");
+                    List<String> deviceToken = nativeHeaders.get("deviceToken");
+
+                    if (!deviceToSessionMap.containsKey(deviceToken.get(0))) {
+                        deviceToSessionMap.put(deviceToken.get(0), SessionContext.builder()
+                                .sessionId(sessionId)
+                                .build());
+                    }
+
+                    boolean isDeviceConnected = false;
+
+                    for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
+                        if (pair.getValue().getSessionId().equals(sessionId)) {
+                            isDeviceConnected = true;
+                        }
+                    }
+
+                    if (!isDeviceConnected) {
+                        throw new DeviceNotAuthorizedException();
+                    }
+
+                } else if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
+                    String sessionId = (String) message.getHeaders().get("simpSessionId");
+                        for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
+                            if (pair.getValue().getSessionId().equals(sessionId)) {
+                                deviceToSessionMap.remove(pair.getKey());
+                            }
+                    }
+                }
+                return super.beforeHandle(message, channel, handler);
+            }
 
             @Override
             public void afterMessageHandled(Message<?> message, MessageChannel channel, MessageHandler handler, Exception ex) {

@@ -27,6 +27,8 @@ export class PeripheralSelectionService {
                 return <PeripheralCategory> {
                     id: m.category.id,
                     localizationKey: m.category.localizationDisplayKey,
+                    icon: m.category.icon,
+                    localizationNoCategorySelectedKey: m.category.localizationNoCategorySelectedKey,
                     knownDevices: devices,
                     selectedDevice: devices.find(d => d.id === m.selectedId)
                 };
@@ -65,7 +67,9 @@ export class PeripheralSelectionService {
 export type PeripheralCategoryRef = PeripheralCategory | string;
 export interface PeripheralCategory {
     id: string;
-    localizationKey: string,
+    localizationKey: string;
+    icon: string;
+    localizationNoCategorySelectedKey: string;
     knownDevices: PeripheralDevice[];
     selectedDevice: PeripheralDevice;
 }

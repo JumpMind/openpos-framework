@@ -20,4 +20,14 @@ public class CategoryDescriptor {
      * The i18n key that describes the display of the category.
      */
     private String localizationDisplayKey;
+
+    /**
+     * The icon for this category
+     */
+    private String icon;
+
+    /**
+     * The i18n key that describes when no device is selected.
+     */
+    private String localizationNoCategorySelectedKey;
 }
