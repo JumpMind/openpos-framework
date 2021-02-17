@@ -76,6 +76,8 @@ import { ScanditCapacitorImageScanner } from './platform-plugins/image-scanners/
 import { IMAGE_SCANNERS } from './platform-plugins/image-scanners/image-scanner';
 import { ImageScanners } from './platform-plugins/image-scanners/image-scanners.service';
 import {ClientExecutableService} from "./services/client-executable.service";
+import { CapacitorIosPlatform } from './platforms/capacitor-ios.platform';
+import { CapacitorAndroidPlatform } from './platforms/capacitor-android.platform';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -149,6 +151,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLUGINS, useExisting: ScanditCapacitorImageScanner, multi: true },
         { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
+        { provide: PLATFORMS, useExisting: CapacitorIosPlatform, multi: true },
+        { provide: PLATFORMS, useExisting: CapacitorAndroidPlatform, multi: true },
         BrowserPrinterPlugin,
         { provide: PRINTERS, useExisting: BrowserPrinterPlugin, multi: true},
         LocationService,
