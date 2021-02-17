@@ -31,6 +31,9 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
         {
             this.isRoundUpAvailable = true;
         }
+        else {
+            this.isRoundUpAvailable = false;
+        }
         // Register form data with possible actions
         if (this.screenData.optionsList) {
             if (this.screenData.optionsList.options) {
@@ -57,6 +60,9 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
 
     roundUp()
     {
-        this.doAction("RoundUp");
+        if (this.isRoundUpAvailable)
+        {
+            this.doAction('RoundUp')
+        }
     }
 }

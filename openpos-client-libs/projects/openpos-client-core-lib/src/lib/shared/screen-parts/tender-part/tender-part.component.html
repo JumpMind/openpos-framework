@@ -8,9 +8,10 @@
         </div>
     </div>
     <div responsive-class class="round-up-button-container">
-        <button responsive-class class="round-up-button" (click)="roundUp()" mat-stroked-button [disabled]="!isRoundUpAvailable">Round Up
-            <mat-icon aria-hidden="true">keyboard_capslock</mat-icon>
-            </button>
+        <app-secondary-button responsive-class class="round-up-button" (click)="roundUp()" [disabled]="!isRoundUpAvailable">Round Up
+            <mat-icon *ngIf="isRoundUpAvailable" aria-hidden="true">arrow_upward</mat-icon>
+            <mat-icon *ngIf="!isRoundUpAvailable" aria-hidden="true">check</mat-icon>
+        </app-secondary-button>
     </div>
 </div>
 

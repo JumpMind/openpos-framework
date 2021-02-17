@@ -22,10 +22,12 @@
 
 .tender-amount-due-wrapper {
     display: grid;
-    grid-template-columns: 1fr 4fr 1fr;
+    grid-template-columns: 1fr 1.5fr 1fr;
     column-gap: 10px;
     justify-self: center;
-    width: 30%;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
 
     &.mobile {
         width: 75%;
@@ -38,11 +40,7 @@
 
 .round-up-button {
     @extend %text-md;
-    min-height: 50px;
-}
-
-.round-up-button:disabled {
-    @extend %text-md;
+    display: grid;
     min-height: 50px;
 }
 
