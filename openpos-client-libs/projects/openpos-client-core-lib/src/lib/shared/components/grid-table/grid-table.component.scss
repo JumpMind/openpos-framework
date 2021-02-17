@@ -21,6 +21,12 @@
 
 .grid-table-cell {
     padding-left: 8px;
-    align-self: start;
+    align-self: center;
     justify-self: stretch;
+}
+
+.button{
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-column-gap: 3px;
 }

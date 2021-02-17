@@ -71,6 +71,10 @@ import { AudioService } from './audio/audio.service';
 import { AudioRepositoryService } from './audio/audio-repository.service';
 import { AudioInteractionService } from './audio/audio-interaction.service';
 import { AudioConsolePlugin } from './audio/audio-console.plugin';
+import { CapacitorStatusBarPlatformPlugin } from './startup/capacitor-status-bar-platform-plugin';
+import { ScanditCapacitorImageScanner } from './platform-plugins/image-scanners/scandit-capacitor/scandit-capacitor.service';
+import { IMAGE_SCANNERS } from './platform-plugins/image-scanners/image-scanner';
+import { ImageScanners } from './platform-plugins/image-scanners/image-scanners.service';
 import {ClientExecutableService} from "./services/client-executable.service";
 
 registerLocaleData(locale_enCA, 'en-CA');
@@ -119,6 +123,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         MediaMatcher,
         StompRService,
         ScannerService,
+        ImageScanners,
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
         { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
@@ -134,11 +139,14 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: SCANNERS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: ConsoleScannerPlugin, multi: true},
         { provide: SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        { provide: IMAGE_SCANNERS, useExisting: ScanditCapacitorImageScanner, multi: true },
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
         { provide: PLUGINS, useExisting: AndroidContentProviderPlugin, multi: true },
         { provide: PLUGINS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        { provide: PLUGINS, useExisting: CapacitorStatusBarPlatformPlugin, multi: true },
+        { provide: PLUGINS, useExisting: ScanditCapacitorImageScanner, multi: true },
         { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         BrowserPrinterPlugin,

@@ -18,6 +18,8 @@ import {Observable, Subscription} from 'rxjs';
 import {ScannerService} from '../../../core/platform-plugins/scanners/scanner.service';
 import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
+import { IScanData } from '../../../core/platform-plugins/scanners/scan.interface';
+import { ImageScanners } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
 
 @ScreenPart({
     name: 'scanOrSearch'
@@ -41,13 +43,17 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     keyboardLayout = 'US Standard';
 
+    showScannerVisual = false;
+
     private scanServiceSubscription: Subscription;
 
     constructor(
-                injector: Injector,
-                private el: ElementRef,
-                mediaService: OpenposMediaService,
-                public scannerService: ScannerService) {
+        injector: Injector,
+        private el: ElementRef,
+        mediaService: OpenposMediaService,
+        public scannerService: ScannerService,
+        public imageScanners: ImageScanners
+    ) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -81,6 +87,18 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
         this.unregisterScanner();
         // this.scannerService.stopScanning();
         super.ngOnDestroy();
+    }
+
+    scan(data: IScanData) {
+        this.doAction(this.screenData.scanAction, data);
+    }
+
+    onScannerButtonClicked() {
+        if (this.imageScanners.isSupported) {
+            this.showScannerVisual = !this.showScannerVisual;
+        } else {
+            this.scannerService.triggerScan();
+        }
     }
 
     private registerScanner() {

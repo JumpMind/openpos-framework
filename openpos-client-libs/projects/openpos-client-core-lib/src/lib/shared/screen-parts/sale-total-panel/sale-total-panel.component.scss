@@ -4,6 +4,12 @@
     display: grid;
 }
 
+app-scandit-native {
+    width: 100%;
+    min-height: 300px;
+    background: red;
+}
+
 .item-count {
     grid-area: item-count;
     display: flex;

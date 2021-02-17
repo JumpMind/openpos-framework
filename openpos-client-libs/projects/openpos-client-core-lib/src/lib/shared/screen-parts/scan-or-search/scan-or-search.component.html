@@ -5,7 +5,7 @@
         [iconClass]="(isMobile$ | async) ? null: 'material-icons mat-36'"
         [iconName]="screenData.scanIcon"
         [color]="'primary-inverse'"
-        (buttonClick)="scannerService.triggerScan()"
+        (buttonClick)="onScannerButtonClicked()"
 ></app-icon-square-button>
 <input #input matInput
        responsive-class
@@ -19,3 +19,5 @@
        [attr.minlength]="screenData.scanMinLength"
        [attr.maxlength]="screenData.scanMaxLength"
        [formatterName]="screenData.inputType">
+
+<app-image-scanner *ngIf="imageScanners.isSupported && showScannerVisual" (onScan)="scan($event)" (scanChanged)="showScannerVisual = $event"></app-image-scanner>
