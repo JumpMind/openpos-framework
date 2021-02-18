@@ -1,8 +1,8 @@
 <div>
     <div *ngIf="showOptions" fxLayout="column" appArrowTab>   
         <button 
-        *ngFor="let formOption of options; let i = index" 
-        [attr.cdkFocusInitial]="0 == i ? '' : null"
+        *ngFor="let formOption of options; let i = index"
+        cdkFocusInitial
         mat-button 
         appArrowTabItem 
         (click)="onMakeOptionSelection(formOption, formGroups[i])"
