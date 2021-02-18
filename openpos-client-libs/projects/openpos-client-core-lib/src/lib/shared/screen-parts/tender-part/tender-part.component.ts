@@ -34,6 +34,14 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
         else {
             this.isRoundUpAvailable = false;
         }
+
+        if (this.screenData.roundUpButton)
+        {
+            this.keyPressProvider.globalSubscribe(this.screenData.roundUpButton).pipe(
+                takeUntil(this.destroyed$)
+            ).subscribe(action => this.doAction(action));
+        }
+
         // Register form data with possible actions
         if (this.screenData.optionsList) {
             if (this.screenData.optionsList.options) {
