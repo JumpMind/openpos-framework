@@ -27,8 +27,8 @@
 
 <div *ngIf="screenData.roundUpButton" responsive-class class="round-up-button-container">
     <app-secondary-button responsive-class class="round-up-button" (click)="roundUp()" [disabled]="!isRoundUpAvailable">
-        <app-icon responsive-class class = "round-up-icon" *ngIf="isRoundUpAvailable" [iconName]="screenData.roundUpButton.icon" [iconClass]="'material-icons'"></app-icon>
-        <app-icon responsive-class class = "round-up-icon" *ngIf="!isRoundUpAvailable" [iconName]="'Checkmark'" [iconClass]="'material-icons'"></app-icon>
+        <app-icon responsive-class class = "round-up-icon" *ngIf="isRoundUpAvailable" [iconName]="screenData.roundUpButton.icon" [iconClass]="'sm'"></app-icon>
+        <app-icon responsive-class class = "round-up-icon" *ngIf="!isRoundUpAvailable" [iconName]="'Checkmark'" [iconClass]="'sm'"></app-icon>
         {{screenData.roundUpButton.title}}
     </app-secondary-button>
 </div>
