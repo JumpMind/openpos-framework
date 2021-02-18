@@ -1,16 +1,10 @@
 package org.jumpmind.pos.server.config;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import java.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.server.model.SessionContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,8 +28,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.socket.WebSocketHandler;
 import org.springframework.web.socket.config.annotation.*;
 import org.springframework.web.socket.server.HandshakeInterceptor;
-
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.jumpmind.pos.util.AppUtils.setupLogging;
 @Slf4j
 @Configuration
@@ -101,23 +93,33 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                     }
 
                     boolean isDeviceConnected = false;
-
-                    for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
-                        if (pair.getValue().getSessionId().equals(sessionId)) {
-                            isDeviceConnected = true;
+                    Set<Map.Entry<String, SessionContext>> set = deviceToSessionMap.entrySet();
+                    synchronized (deviceToSessionMap) {
+                        Iterator<Map.Entry<String, SessionContext>> itr = set.iterator();
+                        while (itr.hasNext()) {
+                            Map.Entry<String, SessionContext> pair = itr.next();
+                            if (pair.getValue().getSessionId().equals(sessionId)) {
+                                isDeviceConnected = true;
+                            }
                         }
                     }
 
                     if (!isDeviceConnected) {
-                        throw new DeviceNotAuthorizedException();
+                        log.warn("\n Client Connection Not Authorized While Session Exists: \n", new DeviceNotAuthorizedException());
+                        return null;
                     }
 
                 } else if (StompCommand.DISCONNECT.equals(headerAccessor.getCommand())) {
                     String sessionId = (String) message.getHeaders().get("simpSessionId");
-                        for (Map.Entry<String, SessionContext> pair : deviceToSessionMap.entrySet()) {
+                    Set<Map.Entry<String, SessionContext>> set = deviceToSessionMap.entrySet();
+                    synchronized (deviceToSessionMap) {
+                        Iterator<Map.Entry<String, SessionContext>> itr = set.iterator();
+                        while (itr.hasNext()) {
+                            Map.Entry<String, SessionContext> pair = itr.next();
                             if (pair.getValue().getSessionId().equals(sessionId)) {
-                                deviceToSessionMap.remove(pair.getKey());
+                                itr.remove();
                             }
+                        }
                     }
                 }
                 return super.beforeHandle(message, channel, handler);

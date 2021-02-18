@@ -5,7 +5,13 @@
     <ng-container *ngFor="let row of rows">
         <div class="grid-table-cell" *ngFor="let cell of row.columns">
             <div class="grid-table-line" *ngFor="let line of cell">
-                {{line}}
+                <span *ngIf="!isAction(line)">{{line}}</span>
+                <button *ngIf="isAction(line)" mat-button (click)="doAction(line)">
+                    <div class="button">
+                        <app-icon *ngIf="line.icon" [iconName]="line.icon"></app-icon>
+                        <span [ngClass]="{'muted-color': ! line.enabled}">{{line.title}}</span>
+                    </div>
+                </button>
             </div>
         </div>
     </ng-container>

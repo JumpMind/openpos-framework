@@ -95,9 +95,15 @@ public class TagHelper {
          }        
      }
      
-     public Map<String, Object> getParamsToQueryTaggedModel(Date currentTime,  Map<String, String> tags) {
+     public Map<String, Object> getParamsToQueryTaggedModel(Date currentTime, Map<String, String> tags) {
+         return getParamsToQueryTaggedModel(currentTime, tags, true);
+     }
+
+     public Map<String, Object> getParamsToQueryTaggedModel(Date currentTime, Map<String, String> tags, boolean enableDateRestrictions) {
          Map<String, Object> params = new LinkedHashMap<>();
-         params.put("currentTime", currentTime);
+         if (enableDateRestrictions) {
+             params.put("currentTime", currentTime);
+         }
          
          int counter = 1;
          for (String tagName : tags.keySet()) {
