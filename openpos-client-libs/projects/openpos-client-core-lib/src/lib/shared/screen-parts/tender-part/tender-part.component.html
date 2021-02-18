@@ -26,10 +26,11 @@
     </div>
 </div>
 
-<div responsive-class class="round-up-button-container">
-    <app-secondary-button responsive-class class="round-up-button" (click)="roundUp()" [disabled]="!isRoundUpAvailable">Round Up
-        <mat-icon *ngIf="isRoundUpAvailable" aria-hidden="true">arrow_upward</mat-icon>
-        <mat-icon *ngIf="!isRoundUpAvailable" aria-hidden="true">check</mat-icon>
+<div *ngIf="screenData.roundUpButton" responsive-class class="round-up-button-container">
+    <app-secondary-button responsive-class class="round-up-button" (click)="roundUp()" [disabled]="!isRoundUpAvailable">
+        {{screenData.roundUpButton.title}}
+        <app-icon responsive-class class = "round-up-icon" *ngIf="isRoundUpAvailable" [iconName]="screenData.roundUpButton.icon" [iconClass]="'material-icons'"></app-icon>
+        <app-icon responsive-class class = "round-up-icon" *ngIf="!isRoundUpAvailable" [iconName]="'Checkmark'" [iconClass]="'material-icons'"></app-icon>
     </app-secondary-button>
 </div>
 

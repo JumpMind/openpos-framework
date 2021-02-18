@@ -3,6 +3,7 @@ import { IForm } from '../../../core/interfaces/form.interface';
 import { ITotal } from '../../../core/interfaces/total.interface';
 import { OptionsListInterface } from '../options-list/options-list.interface';
 import { ITender } from './tender.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 
 export interface TenderPartInterface extends IAbstractScreen {
     form: IForm;
@@ -13,4 +14,5 @@ export interface TenderPartInterface extends IAbstractScreen {
     imageUrl: string;
     optionsList: OptionsListInterface;
     roundUpAvailable: boolean;
+    roundUpButton: IActionItem
 }

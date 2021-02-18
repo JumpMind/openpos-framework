@@ -60,9 +60,9 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
 
     roundUp()
     {
-        if (this.isRoundUpAvailable)
+        if (this.isRoundUpAvailable && this.screenData.roundUpButton)
         {
-            this.doAction('RoundUp')
+            this.doAction(this.screenData.roundUpButton.action);
         }
     }
 }

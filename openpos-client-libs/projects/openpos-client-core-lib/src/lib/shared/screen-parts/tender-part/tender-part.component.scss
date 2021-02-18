@@ -39,6 +39,17 @@
     margin: auto;
 }
 
+.round-up-icon {
+    margin-left: 10px;
+    height: 30px;
+    width: 30px;
+
+    &.mobile {
+        height: 25px;
+        width: 25px;
+    }
+}
+
 .tender-amount-due-outer {
     padding: 16px 0px;
     border-bottom-width: 2px;
