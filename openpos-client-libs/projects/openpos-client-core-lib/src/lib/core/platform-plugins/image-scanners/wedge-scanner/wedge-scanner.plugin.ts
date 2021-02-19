@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, of} from 'rxjs';
-import { map, filter, bufferToggle, timeout, catchError, windowToggle, tap, mergeAll} from 'rxjs/operators';
+import { map, filter, bufferToggle, timeout, catchError, windowToggle, tap, mergeAll, publish, refCount} from 'rxjs/operators';
 import { SessionService } from '../../../services/session.service';
 import { WEDGE_SCANNER_ACCEPTED_KEYS } from './wedge-scanner-accepted-keys';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
@@ -21,7 +21,21 @@ interface ControlSequence { modifiers: string[]; key: string; }
     private startSequenceObj = this.getControlStrings(this.startSequence);
     private endSequenceObj = this.getControlStrings(this.endSequence);
 
-    private scanObservable: Observable<ScanData>;
+    private scanObservable = new Observable(observer => {
+        this.scannerActive = true;
+
+        const subscription = this.createScanBuffer().subscribe({
+            next: d => observer.next(d),
+        });
+
+        return () => {
+            subscription.unsubscribe();
+            this.scannerActive = false;
+        };
+    }).pipe(
+        publish(),
+        refCount()
+    );
 
     constructor( sessionService: SessionService, private domEventManager: DomEventManager ) {
 
@@ -60,31 +74,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
     }
 
     beginScanning(): Observable<ScanData> {
-        // shim the old interface.
-        return new Observable(observer => {
-            const subscription = this.startScanning().subscribe({
-                next: d => observer.next(d),
-            });
-
-            return () => {
-                subscription.unsubscribe();
-                this.stopScanning();
-            };
-        });
-    }
-
-    private startScanning(): Observable<ScanData> {
-        this.scannerActive = true;
-
-        if ( this.scanObservable ) {
-            return this.scanObservable;
-        }
-
-        return this.createScanBuffer();
-    }
-
-    private stopScanning() {
-        this.scannerActive = false;
+        return this.scanObservable;
     }
 
     private createScanBuffer(): Observable<ScanData> {
