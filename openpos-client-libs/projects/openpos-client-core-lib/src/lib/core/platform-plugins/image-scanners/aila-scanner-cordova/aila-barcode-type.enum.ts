@@ -1,3 +1,4 @@
+
 export enum AilaBarcodeType {
     UPC_EAN = 1,
     QR = 2,

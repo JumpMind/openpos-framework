@@ -1,30 +1,27 @@
-import { IScanData } from './../scan.interface';
-import { IScanner } from '../scanner.interface';
 import { Injectable } from '@angular/core';
 import { Observable, of} from 'rxjs';
 import { map, filter, bufferToggle, timeout, catchError, windowToggle, tap, mergeAll} from 'rxjs/operators';
 import { SessionService } from '../../../services/session.service';
 import { WEDGE_SCANNER_ACCEPTED_KEYS } from './wedge-scanner-accepted-keys';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
-import { OpenposScanType } from '../openpos-scan-type.enum';
+import { Scanner, ScanData, ScanDataType} from '../image-scanner';
 
 interface ControlSequence { modifiers: string[]; key: string; }
 
 @Injectable({
     providedIn: 'root'
   })
-  export class WedgeScannerPlugin implements IScanner {
-
+  export class WedgeScannerPlugin implements Scanner {
     private startSequence = '*';
     private endSequence = 'Enter';
     private codeTypeLength = 0;
     private timeout = 500;
-    private typeMap: Map<string, OpenposScanType>;
+    private typeMap: Map<string, ScanDataType>;
     private scannerActive: boolean;
     private startSequenceObj = this.getControlStrings(this.startSequence);
     private endSequenceObj = this.getControlStrings(this.endSequence);
 
-    private scanObservable: Observable<IScanData>;
+    private scanObservable: Observable<ScanData>;
 
     constructor( sessionService: SessionService, private domEventManager: DomEventManager ) {
 
@@ -53,16 +50,30 @@ interface ControlSequence { modifiers: string[]; key: string; }
         });
 
         sessionService.getMessages('ConfigChanged').pipe(
-            filter( m => m.configType === 'WedgeScannerTypes')
-        ).subscribe( m => {
-            this.typeMap = new Map<string, OpenposScanType>();
+            filter(m => m.configType === 'WedgeScannerTypes')
+        ).subscribe(m => {
+            this.typeMap = new Map<string, ScanDataType>();
             Object.getOwnPropertyNames(m).forEach(element => {
-                this.typeMap.set( element, m[element]);
+                this.typeMap.set(element, m[element]);
             });
         });
     }
 
-    startScanning(): Observable<IScanData> {
+    beginScanning(): Observable<ScanData> {
+        // shim the old interface.
+        return new Observable(observer => {
+            const subscription = this.startScanning().subscribe({
+                next: d => observer.next(d),
+            });
+
+            return () => {
+                subscription.unsubscribe();
+                this.stopScanning();
+            };
+        });
+    }
+
+    private startScanning(): Observable<ScanData> {
         this.scannerActive = true;
 
         if ( this.scanObservable ) {
@@ -72,11 +83,11 @@ interface ControlSequence { modifiers: string[]; key: string; }
         return this.createScanBuffer();
     }
 
-    stopScanning() {
+    private stopScanning() {
         this.scannerActive = false;
     }
 
-    private createScanBuffer(): Observable<IScanData> {
+    private createScanBuffer(): Observable<ScanData> {
         const startScanBuffer = this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
             filter( (e: KeyboardEvent) => this.filterForControlSequence(this.startSequenceObj, e),
             tap( e => console.debug(`Starting Scan Capture: ${e}`))));
@@ -196,9 +207,9 @@ interface ControlSequence { modifiers: string[]; key: string; }
         return charList;
     }
 
-    private getScanData( s: string ): IScanData {
+    private getScanData( s: string ): ScanData {
         let type = s.slice(0, this.codeTypeLength);
-        const scanData: IScanData = {data: s.slice(this.codeTypeLength)};
+        const scanData: ScanData = {data: s.slice(this.codeTypeLength)};
         if ( !!this.typeMap && this.typeMap.has(type) ) {
             scanData.type = this.typeMap.get(type);
         }
@@ -207,8 +218,4 @@ interface ControlSequence { modifiers: string[]; key: string; }
         }
         return scanData;
     }
-
-    triggerScan() {
-    }
-
 }

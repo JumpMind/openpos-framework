@@ -5,9 +5,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { IPlatformPlugin } from '../../platform-plugin.interface';
 
-import { IScanData } from '../../scanners/scan.interface';
-
-import { ImageScanner, ScannerViewRef } from '../image-scanner';
+import { ImageScanner, ScannerViewRef, ScanData } from '../image-scanner';
 
 @Injectable({
     providedIn: 'root'
@@ -32,7 +30,7 @@ export class ScanditCapacitorImageScanner implements ImageScanner, IPlatformPlug
         );
     }
 
-    beginScanning(view: ScannerViewRef): Observable<IScanData> {
+    beginScanning(view: ScannerViewRef): Observable<ScanData> {
         if (!Capacitor.isPluginAvailable('ScanditNative')) {
             return throwError('the scandit plugin is not available');
         }

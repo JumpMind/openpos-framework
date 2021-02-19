@@ -14,8 +14,7 @@ import {ScreenPartComponent} from '../screen-part';
 import {ScanOrSearchInterface} from './scan-or-search.interface';
 import {ScreenPart} from '../../decorators/screen-part.decorator';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
-import {Observable, Subscription} from 'rxjs';
-import {ScannerService} from '../../../core/platform-plugins/scanners/scanner.service';
+import {Observable, Subject, Subscription} from 'rxjs';
 import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { IScanData } from '../../../core/platform-plugins/scanners/scan.interface';
@@ -47,11 +46,12 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     private scanServiceSubscription: Subscription;
 
+    private triggerNotify = new Subject<void>();
+
     constructor(
         injector: Injector,
         private el: ElementRef,
         mediaService: OpenposMediaService,
-        public scannerService: ScannerService,
         public imageScanners: ImageScanners
     ) {
         super(injector);
@@ -96,14 +96,16 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     onScannerButtonClicked() {
         if (this.imageScanners.isSupported) {
             this.showScannerVisual = !this.showScannerVisual;
-        } else {
-            this.scannerService.triggerScan();
         }
+
+        this.triggerNotify.next();
     }
 
     private registerScanner() {
         if ((typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) && this.screenData.willUnblock) {
-            this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
+            this.scanServiceSubscription = this.imageScanners.beginScanning({
+                softwareTrigger: this.triggerNotify
+            }).subscribe(scanData => {
                 this.doAction(this.screenData.scanAction, scanData);
             });
         }

@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { WedgeScannerPlugin } from './wedge-scanner.plugin';
 import { SessionService } from '../../../services/session.service';
 import { cold, getTestScheduler } from 'jasmine-marbles';
-import { IScanData } from '../scan.interface';
+import { ScanData } from '../image-scanner';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
 import { Subscription, of, Subject } from 'rxjs';
 import { ElectronService } from 'ngx-electron';
@@ -17,7 +17,7 @@ describe('WedgeScanner', () => {
         timeout: null
     };
 
-    let scanResults: IScanData[];
+    let scanResults: ScanData[];
     let keyDownEvents: KeyboardEvent[];
     let subscription: Subscription;
     let sessionService: jasmine.SpyObj<SessionService>;
@@ -83,7 +83,7 @@ describe('WedgeScanner', () => {
         setup();
         domEventManager.createEventObserver.and.callFake(makeEventCold);
 
-        subscription = wedgeScannerPlugin.startScanning().subscribe( s => scanResults.push(s));
+        subscription = wedgeScannerPlugin.beginScanning().subscribe( s => scanResults.push(s));
     }
 
     const fakeEventSubject = new Subject();
@@ -102,7 +102,7 @@ describe('WedgeScanner', () => {
         setup();
         domEventManager.createEventObserver.and.callFake(() => fakeEventSubject);
 
-        subscription = wedgeScannerPlugin.startScanning().subscribe( s => scanResults.push(s));
+        subscription = wedgeScannerPlugin.beginScanning().subscribe( s => scanResults.push(s));
     }
 
     beforeEach( () => {
@@ -228,8 +228,8 @@ describe('WedgeScanner', () => {
 
     it('should only create one event observer. subsequent calls to start should return the same observable', () => {
         setupSync();
-        const observ1 = wedgeScannerPlugin.startScanning();
-        const observ2 = wedgeScannerPlugin.startScanning();
+        const observ1 = wedgeScannerPlugin.beginScanning();
+        const observ2 = wedgeScannerPlugin.beginScanning();
 
         expect(observ1).toBe(observ2);
     });

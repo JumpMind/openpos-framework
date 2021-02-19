@@ -65,7 +65,7 @@ export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef 
             refCount()
         );
 
-        this._scanSubscription = this._scanners.beginScanning(this)
+        this._scanSubscription = this._scanners.beginImageScanning(this)
             .subscribe({
                 next: data => {
                     this.onScan.emit(data);

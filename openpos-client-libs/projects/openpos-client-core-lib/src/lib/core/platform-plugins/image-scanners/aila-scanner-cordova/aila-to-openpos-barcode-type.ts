@@ -1,33 +1,33 @@
 import { AilaBarcodeType } from './aila-barcode-type.enum';
-import { OpenposScanType } from '../openpos-scan-type.enum';
+import { ScanDataType } from '../image-scanner';
 
 export class AilaBarcodeUtils {
 
-    static convertToOpenposType( type: AilaBarcodeType, length: number ): OpenposScanType {
+    static convertToOpenposType( type: AilaBarcodeType, length: number ): ScanDataType {
         switch ( type ) {
             case AilaBarcodeType.UPC_EAN:
                 // This is terrible but as of now we don't know the difference between EAN and UPC
                 switch (length) {
                     case 8:
-                        return OpenposScanType.UPCE;
+                        return 'UPCE';
                     case 12:
-                        return OpenposScanType.UPCA;
+                        return 'UPCA';
                     case 13:
-                        return OpenposScanType.EAN13;
+                        return 'EAN13';
                     default:
-                        return OpenposScanType.UPC_UNKNOWN;
+                        return 'UPC_UNKNOWN';
                 }
             case AilaBarcodeType.QR:
-                return OpenposScanType.QRCODE;
+                return 'QRCODE';
             case AilaBarcodeType.Code128:
-                return OpenposScanType.CODE128;
+                return 'CODE128';
             case AilaBarcodeType.Code25_2of5:
                 // this is a guess
-                return OpenposScanType.CODE25_I2OF5;
+                return 'CODE25_I2OF5';
             case AilaBarcodeType.PDF417:
-                return OpenposScanType.PDF417;
+                return 'PDF417';
             case AilaBarcodeType.DataBar:
-                return OpenposScanType.GS1DATABAR;
+                return 'GS1DATABAR';
             default:
                 return null;
         }

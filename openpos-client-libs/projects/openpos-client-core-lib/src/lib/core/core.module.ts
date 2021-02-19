@@ -1,7 +1,7 @@
 import {AndroidContentProviderPlugin} from './platform-plugins/cordova-plugins/android-content-provider-plugin';
 import {BrowserPrinterPlugin} from './platform-plugins/printers/browser-printer.plugin';
 import {PRINTERS} from './platform-plugins/printers/printer.service';
-import {ConsoleScannerPlugin} from './platform-plugins/scanners/console-scanner/console-scanner.plugin';
+import {ConsoleScannerPlugin} from './platform-plugins/image-scanners/console-scanner/console-scanner.plugin';
 import {ScanditScannerCordovaPlugin} from './platform-plugins/scanners/scandit-scanner-cordova/scandit-scanner-cordova.plugin';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
@@ -40,12 +40,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxElectronModule } from 'ngx-electron';
 import { PluginStartupTask, PLUGINS } from './startup/plugin-startup-task';
-import { AilaScannerCordovaPlugin } from './platform-plugins/scanners/aila-scanner-cordova/aila-scanner-cordova.plugin';
-import { SCANNERS, ScannerService } from './platform-plugins/scanners/scanner.service';
+import { /*SCANNERS,*/ ScannerService } from './platform-plugins/scanners/scanner.service';
 import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-startup-task';
-import { WedgeScannerPlugin } from './platform-plugins/scanners/wedge-scanner/wedge-scanner.plugin';
 import { CordovaPlatform } from './platforms/cordova.platform';
-import { InfineaScannerCordovaPlugin } from './platform-plugins/scanners/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
 import { NCRPaymentPlugin } from './platform-plugins/cordova-plugins/ncr-payment-plugin';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
 import { ScanditCameraViewComponent } from './platform-plugins/scanners/scandit-scanner-cordova/scandit-camera-view/scandit-camera-view.component';
@@ -64,7 +61,6 @@ import { TimeZoneContext } from './client-context/time-zone-context';
 import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
 import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
-import { ServerScannerPlugin } from './platform-plugins/scanners/server-scanner/server-scanner.service';
 import {TransactionService} from './services/transaction.service';
 import { AudioStartupTask } from './audio/audio-startup-task';
 import { AudioService } from './audio/audio.service';
@@ -73,11 +69,15 @@ import { AudioInteractionService } from './audio/audio-interaction.service';
 import { AudioConsolePlugin } from './audio/audio-console.plugin';
 import { CapacitorStatusBarPlatformPlugin } from './startup/capacitor-status-bar-platform-plugin';
 import { ScanditCapacitorImageScanner } from './platform-plugins/image-scanners/scandit-capacitor/scandit-capacitor.service';
-import { IMAGE_SCANNERS } from './platform-plugins/image-scanners/image-scanner';
+import { IMAGE_SCANNERS, SCANNERS } from './platform-plugins/image-scanners/image-scanner';
 import { ImageScanners } from './platform-plugins/image-scanners/image-scanners.service';
 import {ClientExecutableService} from "./services/client-executable.service";
 import { CapacitorIosPlatform } from './platforms/capacitor-ios.platform';
 import { CapacitorAndroidPlatform } from './platforms/capacitor-android.platform';
+import { AilaScannerCordovaPlugin } from './platform-plugins/image-scanners/aila-scanner-cordova/aila-scanner-cordova.plugin';
+import { InfineaScannerCordovaPlugin } from './platform-plugins/image-scanners/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
+import { WedgeScannerPlugin } from './platform-plugins/image-scanners/wedge-scanner/wedge-scanner.plugin';
+import { ServerScannerPlugin } from './platform-plugins/image-scanners/server-scanner/server-scanner.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -136,11 +136,12 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: STARTUP_FAILED_COMPONENT, useValue: StartupFailedComponent},
         AilaScannerCordovaPlugin,
         ScanditScannerCordovaPlugin,
+        { provide: SCANNERS, useExisting: ConsoleScannerPlugin, multi: true },
         { provide: SCANNERS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: WedgeScannerPlugin, multi: true },
         { provide: SCANNERS, useExisting: InfineaScannerCordovaPlugin, multi: true},
-        { provide: SCANNERS, useExisting: ConsoleScannerPlugin, multi: true},
-        { provide: SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        // { provide: SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: IMAGE_SCANNERS, useExisting: ScanditCapacitorImageScanner, multi: true },
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
@@ -149,7 +150,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLUGINS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: CapacitorStatusBarPlatformPlugin, multi: true },
         { provide: PLUGINS, useExisting: ScanditCapacitorImageScanner, multi: true },
-        { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         { provide: PLATFORMS, useExisting: CapacitorIosPlatform, multi: true },
         { provide: PLATFORMS, useExisting: CapacitorAndroidPlatform, multi: true },

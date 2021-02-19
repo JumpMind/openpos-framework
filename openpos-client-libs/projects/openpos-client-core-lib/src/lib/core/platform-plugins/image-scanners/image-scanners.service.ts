@@ -1,11 +1,9 @@
 
 import { Inject, Injectable, Optional } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
-import { share, takeWhile } from 'rxjs/operators';
+import { merge, Observable, of, throwError } from 'rxjs';
+import { share, takeWhile, tap } from 'rxjs/operators';
 
-import { IMAGE_SCANNERS, ImageScanner, ScannerViewRef } from './image-scanner';
-
-import { IScanData } from '../scanners/scan.interface';
+import { IMAGE_SCANNERS, ImageScanner, ScannerViewRef, SCANNERS, Scanner, ScanData, ScanOptions } from './image-scanner';
 
 @Injectable()
 export class ImageScanners {
@@ -18,16 +16,17 @@ export class ImageScanners {
     }
 
     private _scanner?: ImageScanner;
-    private _activeScan?: Observable<IScanData>;
+    private _activeScan?: Observable<ScanData>;
 
     constructor(
-       @Inject(IMAGE_SCANNERS) @Optional() scanners: ImageScanner[]
+       @Inject(IMAGE_SCANNERS) @Optional() imageScanners?: ImageScanner[],
+       @Inject(SCANNERS) @Optional() private _scanners?: Scanner[],
     ) {
-        if (!scanners) {
+        if (!imageScanners) {
             return;
         }
 
-        for (const scanner of scanners) {
+        for (const scanner of imageScanners) {
             const s = scanner as ImageScanner;
 
             const configName = s.name();
@@ -43,7 +42,17 @@ export class ImageScanners {
         }
     }
 
-    beginScanning(view: ScannerViewRef): Observable<IScanData> {
+    beginScanning(options?: ScanOptions): Observable<ScanData> {
+        if (!this._scanners) {
+            return of();
+        }
+
+        return merge(
+            ...this._scanners.map(s => s.beginScanning(options))
+        );
+    }
+
+    beginImageScanning(view: ScannerViewRef): Observable<ScanData> {
         if (!this.isSupported) {
             return throwError('no image scanner is supported');
         }
@@ -56,7 +65,7 @@ export class ImageScanners {
         
         // Sorta doing this weird wrapping in order to tack on some custom
         // teardown logic.
-        this._activeScan = new Observable<IScanData>(observer => {
+        this._activeScan = new Observable<ScanData>(observer => {
             const sub = this._scanner.beginScanning(view).subscribe({
                 next: e => {
                     observer.next(e);
