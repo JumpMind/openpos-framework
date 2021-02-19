@@ -33,4 +33,8 @@ export class StatusDetailsComponent {
             width: '75%'
         });
     }
+
+    close() {
+        this.dialog.closeAll();
+    }
 }

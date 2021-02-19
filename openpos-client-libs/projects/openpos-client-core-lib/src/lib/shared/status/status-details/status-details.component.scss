@@ -16,3 +16,10 @@
         @extend %page-spaced-content;
     }
 }
+
+.invisible {
+    display: block;
+    visibility: hidden;
+    height: 0;
+    width: 0;
+}
