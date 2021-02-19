@@ -27,13 +27,8 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
         else {
             this.amountCss = '';
         }
-        if (this.screenData.roundUpAvailable)
-        {
-            this.isRoundUpAvailable = true;
-        }
-        else {
-            this.isRoundUpAvailable = false;
-        }
+
+        this.isRoundUpAvailable = this.screenData.roundUpAvailable;
 
         if (this.screenData.roundUpButton)
         {
