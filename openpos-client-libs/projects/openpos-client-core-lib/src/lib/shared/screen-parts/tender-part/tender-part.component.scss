@@ -29,6 +29,20 @@
     }
 }
 
+.round-up-button {
+    @extend %text-md;
+    min-height: 50px;
+}
+
+.round-up-button-container {
+    justify-self: center;
+    margin: auto;
+}
+
+.round-up-icon {
+    margin-right: 10px;
+}
+
 .tender-amount-due-outer {
     padding: 16px 0px;
     border-bottom-width: 2px;
