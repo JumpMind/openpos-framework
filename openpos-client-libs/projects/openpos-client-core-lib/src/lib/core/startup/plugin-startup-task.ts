@@ -3,9 +3,7 @@ import { IStartupTask } from './startup-task.interface';
 import { StartupTaskNames } from './startup-task-names';
 import { InjectionToken, Optional, Inject } from '@angular/core';
 import { IPlatformPlugin } from '../platform-plugins/platform-plugin.interface';
-import { SCANNERS } from '../platform-plugins/scanners/scanner.service';
-import { IScanner } from '../platform-plugins/scanners/scanner.interface';
-import { ImageScanner, IMAGE_SCANNERS } from '../platform-plugins/image-scanners/image-scanner';
+import { ImageScanner, SCANNERS, IMAGE_SCANNERS, Scanner } from '../platform-plugins/image-scanners/image-scanner';
 
 export const PLUGINS = new InjectionToken<IPlatformPlugin[]>('Plugins');
 
@@ -20,7 +18,7 @@ export class PluginStartupTask implements IStartupTask {
 
     constructor(
         @Optional() @Inject(PLUGINS) private plugins: Array<IPlatformPlugin>,
-        @Optional() @Inject(SCANNERS) private scanners: Array<IScanner>,
+        @Optional() @Inject(SCANNERS) private scanners: Array<Scanner>,
         @Optional() @Inject(IMAGE_SCANNERS) private imageScanners: Array<ImageScanner>) {
     }
 
@@ -32,7 +30,7 @@ export class PluginStartupTask implements IStartupTask {
                     observer.next(`removing plugin ${p.name()}`);
                     this.plugins.splice(this.plugins.indexOf(p), 1);
 
-                    const scanner = p as unknown as IScanner;
+                    const scanner = p as unknown as Scanner;
 
                     if (scanner && this.scanners && this.scanners.includes(scanner)) {
                         observer.next(`removing scanner: ${p.name()}   index: ${this.scanners.indexOf(scanner)}`)
