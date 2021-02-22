@@ -86,7 +86,7 @@ export * from './lib/core/oldplugins/logfile-download.plugin';
 export * from './lib/core/oldplugins/oldplugin.interface';
 export * from './lib/core/oldplugins/scan';
 
-export * from './lib/core/platform-plugins/image-scanners/barcode-scanner.service';
+export * from './lib/core/platform-plugins/barcode-scanners/barcode-scanner.service';
 export * from './lib/core/platform-plugins/cordova-plugins/android-content-provider-plugin';
 export * from './lib/core/messages/single-sign-on-message';
 

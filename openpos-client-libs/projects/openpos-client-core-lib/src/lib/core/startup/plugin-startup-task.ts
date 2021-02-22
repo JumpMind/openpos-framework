@@ -3,7 +3,7 @@ import { IStartupTask } from './startup-task.interface';
 import { StartupTaskNames } from './startup-task-names';
 import { InjectionToken, Optional, Inject } from '@angular/core';
 import { IPlatformPlugin } from '../platform-plugins/platform-plugin.interface';
-import { ImageScanner, SCANNERS, IMAGE_SCANNERS, Scanner } from '../platform-plugins/image-scanners/scanner';
+import { ImageScanner, SCANNERS, IMAGE_SCANNERS, Scanner } from '../platform-plugins/barcode-scanners/scanner';
 
 export const PLUGINS = new InjectionToken<IPlatformPlugin[]>('Plugins');
 

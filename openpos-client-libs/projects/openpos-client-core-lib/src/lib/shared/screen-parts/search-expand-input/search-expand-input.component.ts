@@ -9,7 +9,7 @@ import { MatInput } from '@angular/material';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
 import { ScanOrSearchInterface } from '../scan-or-search/scan-or-search.interface';
-import { BarcodeScanner } from '../../../core/platform-plugins/image-scanners/barcode-scanner.service';
+import { BarcodeScanner } from '../../../core/platform-plugins/barcode-scanners/barcode-scanner.service';
 
 
 @ScreenPart({

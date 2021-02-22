@@ -6,7 +6,7 @@ import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-a
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { Subscription } from 'rxjs';
 import { ScanInterface } from './scan-part.interface';
-import { BarcodeScanner } from '../../../core/platform-plugins/image-scanners/barcode-scanner.service';
+import { BarcodeScanner } from '../../../core/platform-plugins/barcode-scanners/barcode-scanner.service';
 
 @ScreenPart({
     name: 'scan'
