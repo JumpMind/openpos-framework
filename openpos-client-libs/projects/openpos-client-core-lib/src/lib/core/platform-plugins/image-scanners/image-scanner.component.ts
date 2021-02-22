@@ -2,8 +2,7 @@ import { Component, Output, EventEmitter, OnDestroy, OnInit, ElementRef } from '
 import { merge, Observable, Subscription, throwError } from 'rxjs';
 import { delay, map, publishLast, refCount, takeWhile } from 'rxjs/operators';
 
-import { IScanData } from '../scanners/scan.interface';
-import { ScannerViewRef } from './image-scanner';
+import { ScanData, ScannerViewRef } from './image-scanner';
 
 import { ImageScanners } from './image-scanners.service';
 
@@ -13,7 +12,7 @@ import { ImageScanners } from './image-scanners.service';
 })
 export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef {
     @Output() readonly scanChanged = new EventEmitter<boolean>();
-    @Output() readonly onScan = new EventEmitter<IScanData>();
+    @Output() readonly onScan = new EventEmitter<ScanData>();
 
     get element(): HTMLElement {
         return this._elementRef.nativeElement;

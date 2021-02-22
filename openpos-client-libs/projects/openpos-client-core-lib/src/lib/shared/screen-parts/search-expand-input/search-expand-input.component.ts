@@ -1,15 +1,15 @@
 import { Component, OnInit, OnDestroy, Input, Output, EventEmitter, Injector, ViewChild } from '@angular/core';
 import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
 import { IActionItem } from '../../../core/actions/action-item.interface';
 import { DeviceService } from '../../../core/services/device.service';
-import { ScannerService } from '../../../core/platform-plugins/scanners/scanner.service';
 import { MediaBreakpoints, OpenposMediaService } from '../../../core/media/openpos-media.service';
 import { MatInput } from '@angular/material';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
 import { ScanOrSearchInterface } from '../scan-or-search/scan-or-search.interface';
+import { ImageScanners } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
 
 
 @ScreenPart({
@@ -34,9 +34,11 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
     @ViewChild(MatInput) inputElement: MatInput;
     public open = false;
 
+    private softwareTrigger = new Subject<void>();
+
     constructor(
         private injector: Injector, public devices: DeviceService, mediaService: OpenposMediaService,
-        private scannerService: ScannerService) {
+        private scannerService: ImageScanners) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -71,7 +73,7 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
 
     private registerScanner() {
         if (typeof this.scanServiceSubscription === 'undefined' || this.scanServiceSubscription === null) {
-            this.scanServiceSubscription = this.scannerService.startScanning().subscribe(scanData => {
+            this.scanServiceSubscription = this.scannerService.beginScanning({softwareTrigger: this.softwareTrigger}).subscribe(scanData => {
                 this.actionService.doAction(this.screenData.scanAction, scanData);
             });
         }
@@ -94,9 +96,10 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
     }
 
     public onSelected(): void {
-        if( open ) {
-            this.scannerService.triggerScan();
+        if (this.open) {
+            this.softwareTrigger.next();
         }
+
         this.open = true;
         this.inputElement.focus();
         this.expanded.emit(true);

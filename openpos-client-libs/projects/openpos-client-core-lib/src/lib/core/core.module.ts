@@ -39,7 +39,6 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgxElectronModule } from 'ngx-electron';
 import { PluginStartupTask, PLUGINS } from './startup/plugin-startup-task';
-import { /*SCANNERS,*/ ScannerService } from './platform-plugins/scanners/scanner.service';
 import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-startup-task';
 import { CordovaPlatform } from './platforms/cordova.platform';
 import { NCRPaymentPlugin } from './platform-plugins/cordova-plugins/ncr-payment-plugin';
@@ -121,7 +120,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         BreakpointObserver,
         MediaMatcher,
         StompRService,
-        ScannerService,
         ImageScanners,
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
         { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
