@@ -67,7 +67,7 @@ import { AudioConsolePlugin } from './audio/audio-console.plugin';
 import { CapacitorStatusBarPlatformPlugin } from './startup/capacitor-status-bar-platform-plugin';
 import { ScanditCapacitorImageScanner } from './platform-plugins/image-scanners/scandit-capacitor/scandit-capacitor.service';
 import { IMAGE_SCANNERS, SCANNERS } from './platform-plugins/image-scanners/scanner';
-import { BarcodeScanner } from './platform-plugins/image-scanners/image-scanners.service';
+import { BarcodeScanner } from './platform-plugins/image-scanners/barcode-scanner.service';
 import {ClientExecutableService} from "./services/client-executable.service";
 import { CapacitorIosPlatform } from './platforms/capacitor-ios.platform';
 import { CapacitorAndroidPlatform } from './platforms/capacitor-android.platform';

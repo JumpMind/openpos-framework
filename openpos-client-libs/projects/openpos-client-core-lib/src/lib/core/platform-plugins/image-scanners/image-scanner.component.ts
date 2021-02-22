@@ -4,7 +4,7 @@ import { delay, map, publishLast, refCount, takeWhile } from 'rxjs/operators';
 
 import { ScanData, ScannerViewRef } from './scanner';
 
-import { BarcodeScanner } from './image-scanners.service';
+import { BarcodeScanner } from './barcode-scanner.service';
 
 @Component({
     selector: 'app-image-scanner',

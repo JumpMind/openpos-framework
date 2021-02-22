@@ -17,7 +17,7 @@ import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos
 import {Observable, Subject, Subscription} from 'rxjs';
 import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
-import { BarcodeScanner } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
+import { BarcodeScanner } from '../../../core/platform-plugins/image-scanners/barcode-scanner.service';
 import { ScanData } from '../../../core/platform-plugins/image-scanners/scanner';
 
 @ScreenPart({
