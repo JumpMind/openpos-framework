@@ -6,6 +6,7 @@ export const SCANNERS = new InjectionToken<Scanner[]>('Scanners');
 export const IMAGE_SCANNERS = new InjectionToken<ImageScanner[]>('ImageScanners');
 
 export interface ScannerViewRef {
+    readonly element: HTMLElement;
     viewChanges(): Observable<{ left: number; top: number; width: number, height: number }>;
 }
 

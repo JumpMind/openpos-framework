@@ -15,6 +15,10 @@ export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef 
     @Output() readonly scanChanged = new EventEmitter<boolean>();
     @Output() readonly onScan = new EventEmitter<IScanData>();
 
+    get element(): HTMLElement {
+        return this._elementRef.nativeElement;
+    }
+
     private _scanSubscription?: Subscription;
 
     private _viewChanges?: Observable<{ left: number; top: number; width: number; height: number; }>;

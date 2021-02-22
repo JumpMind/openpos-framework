@@ -2,7 +2,6 @@ import {AndroidContentProviderPlugin} from './platform-plugins/cordova-plugins/a
 import {BrowserPrinterPlugin} from './platform-plugins/printers/browser-printer.plugin';
 import {PRINTERS} from './platform-plugins/printers/printer.service';
 import {ConsoleScannerPlugin} from './platform-plugins/image-scanners/console-scanner/console-scanner.plugin';
-import {ScanditScannerCordovaPlugin} from './platform-plugins/scanners/scandit-scanner-cordova/scandit-scanner-cordova.plugin';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
 import { STARTUP_TASKS, STARTUP_FAILED_COMPONENT } from './services/startup.service';
@@ -45,7 +44,6 @@ import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-st
 import { CordovaPlatform } from './platforms/cordova.platform';
 import { NCRPaymentPlugin } from './platform-plugins/cordova-plugins/ncr-payment-plugin';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
-import { ScanditCameraViewComponent } from './platform-plugins/scanners/scandit-scanner-cordova/scandit-camera-view/scandit-camera-view.component';
 import { LockScreenComponent } from './lock-screen/lock-screen.component';
 
 // Add supported locales
@@ -78,6 +76,7 @@ import { AilaScannerCordovaPlugin } from './platform-plugins/image-scanners/aila
 import { InfineaScannerCordovaPlugin } from './platform-plugins/image-scanners/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
 import { WedgeScannerPlugin } from './platform-plugins/image-scanners/wedge-scanner/wedge-scanner.plugin';
 import { ServerScannerPlugin } from './platform-plugins/image-scanners/server-scanner/server-scanner.service';
+import { ScanditScannerCordovaPlugin } from './platform-plugins/image-scanners/scandit-scanner-cordova/scandit-scanner-cordova.plugin';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -90,7 +89,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StartupFailedComponent,
         DialogContentComponent,
         SplashScreenComponent,
-        ScanditCameraViewComponent,
         LockScreenComponent, 
     ],
     declarations: [
@@ -100,7 +98,6 @@ registerLocaleData(locale_frCA, 'fr-CA');
         StartupComponent,
         StartupFailedComponent,
         SplashScreenComponent,
-        ScanditCameraViewComponent,
         LockScreenComponent
     ],
     imports: [
@@ -140,8 +137,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: SCANNERS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: WedgeScannerPlugin, multi: true },
         { provide: SCANNERS, useExisting: InfineaScannerCordovaPlugin, multi: true},
-        // { provide: SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
+        { provide: IMAGE_SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: IMAGE_SCANNERS, useExisting: ScanditCapacitorImageScanner, multi: true },
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
