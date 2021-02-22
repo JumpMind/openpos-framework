@@ -4,7 +4,7 @@ import { concat, Observable, of, throwError } from 'rxjs';
 import { map, repeat } from 'rxjs/operators';
 
 import { IPlatformPlugin } from '../../platform-plugin.interface';
-import { Scanner, ScanData } from '../image-scanner';
+import { Scanner, ScanData } from '../scanner';
 
 import { AilaBarcodeUtils } from './aila-to-openpos-barcode-type';
 

@@ -1,4 +1,4 @@
-import { ScanDataType } from '../image-scanner';
+import { ScanDataType } from '../scanner';
 import { InfineaBarcodeType } from './infinea-barcode-type.enum';
 
 export class InfineaBarcodeUtils {

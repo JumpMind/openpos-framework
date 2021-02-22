@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, OnDestroy, OnInit, ElementRef } from '
 import { merge, Observable, Subscription, throwError } from 'rxjs';
 import { delay, map, publishLast, refCount, takeWhile } from 'rxjs/operators';
 
-import { ScanData, ScannerViewRef } from './image-scanner';
+import { ScanData, ScannerViewRef } from './scanner';
 
 import { ImageScanners } from './image-scanners.service';
 

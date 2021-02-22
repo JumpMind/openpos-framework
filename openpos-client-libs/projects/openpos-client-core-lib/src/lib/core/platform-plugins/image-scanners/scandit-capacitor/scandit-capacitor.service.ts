@@ -5,7 +5,7 @@ import { Observable, of, throwError } from 'rxjs';
 import { map, mergeMap } from 'rxjs/operators';
 import { IPlatformPlugin } from '../../platform-plugin.interface';
 
-import { ImageScanner, ScannerViewRef, ScanData } from '../image-scanner';
+import { ImageScanner, ScannerViewRef, ScanData } from '../scanner';
 
 @Injectable({
     providedIn: 'root'

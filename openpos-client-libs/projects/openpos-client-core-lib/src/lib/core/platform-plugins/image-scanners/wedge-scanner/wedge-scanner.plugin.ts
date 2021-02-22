@@ -4,7 +4,7 @@ import { map, filter, bufferToggle, timeout, catchError, windowToggle, tap, merg
 import { SessionService } from '../../../services/session.service';
 import { WEDGE_SCANNER_ACCEPTED_KEYS } from './wedge-scanner-accepted-keys';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
-import { Scanner, ScanData, ScanDataType} from '../image-scanner';
+import { Scanner, ScanData, ScanDataType} from '../scanner';
 
 interface ControlSequence { modifiers: string[]; key: string; }
 

@@ -18,7 +18,7 @@ import {Observable, Subject, Subscription} from 'rxjs';
 import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { ImageScanners } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
-import { ScanData } from '../../../core/platform-plugins/image-scanners/image-scanner';
+import { ScanData } from '../../../core/platform-plugins/image-scanners/scanner';
 
 @ScreenPart({
     name: 'scanOrSearch'

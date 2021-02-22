@@ -1,4 +1,4 @@
-import { ScanDataType } from '../image-scanner';
+import { ScanDataType } from '../scanner';
 import { Barcode } from './types/barcode';
 
 export class ScanditBarcodeUtils {

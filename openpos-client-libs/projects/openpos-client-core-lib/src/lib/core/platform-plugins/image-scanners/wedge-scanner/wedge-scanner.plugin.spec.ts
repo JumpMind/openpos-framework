@@ -2,7 +2,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { WedgeScannerPlugin } from './wedge-scanner.plugin';
 import { SessionService } from '../../../services/session.service';
 import { cold, getTestScheduler } from 'jasmine-marbles';
-import { ScanData } from '../image-scanner';
+import { ScanData } from '../scanner';
 import { DomEventManager } from '../../../services/dom-event-manager.service';
 import { Subscription, of, Subject } from 'rxjs';
 import { ElectronService } from 'ngx-electron';

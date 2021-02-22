@@ -3,7 +3,7 @@ import { Inject, Injectable, Optional } from '@angular/core';
 import { merge, Observable, of, throwError } from 'rxjs';
 import { share, takeWhile, tap } from 'rxjs/operators';
 
-import { IMAGE_SCANNERS, ImageScanner, ScannerViewRef, SCANNERS, Scanner, ScanData, ScanOptions } from './image-scanner';
+import { IMAGE_SCANNERS, ImageScanner, ScannerViewRef, SCANNERS, Scanner, ScanData, ScanOptions } from './scanner';
 
 @Injectable()
 export class ImageScanners {

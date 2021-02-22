@@ -5,7 +5,7 @@ import { SessionService } from '../../../services/session.service';
 import { IPlatformPlugin } from '../../platform-plugin.interface';
 import { ScanditBarcodeUtils } from './scandit-to-openpos-barcode-type';
 
-import { ImageScanner, ScanData, ScannerViewRef } from '../image-scanner';
+import { ImageScanner, ScanData, ScannerViewRef } from '../scanner';
 
 declare var Scandit: any;
 @Injectable()

@@ -1,5 +1,5 @@
 import { AilaBarcodeType } from './aila-barcode-type.enum';
-import { ScanDataType } from '../image-scanner';
+import { ScanDataType } from '../scanner';
 
 export class AilaBarcodeUtils {
 

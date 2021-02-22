@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subject } from 'rxjs';
 
-import { Scanner, ScanData, ScanDataType } from '../image-scanner';
+import { Scanner, ScanData, ScanDataType } from '../scanner';
 
 declare global {
     interface Console {
