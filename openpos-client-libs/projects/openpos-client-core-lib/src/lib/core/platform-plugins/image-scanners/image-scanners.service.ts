@@ -7,11 +7,11 @@ import { IMAGE_SCANNERS, ImageScanner, ScannerViewRef, SCANNERS, Scanner, ScanDa
 
 @Injectable()
 export class ImageScanners {
-    get isSupported(): boolean {
+    get hasImageScanner(): boolean {
         return !!this._scanner;
     }
 
-    get isScanning(): boolean {
+    get isImageScannerActive(): boolean {
         return !!this._activeScan;
     }
 
@@ -53,11 +53,11 @@ export class ImageScanners {
     }
 
     beginImageScanning(view: ScannerViewRef): Observable<ScanData> {
-        if (!this.isSupported) {
+        if (!this.hasImageScanner) {
             return throwError('no image scanner is supported');
         }
 
-        if (this.isScanning) {
+        if (this.isImageScannerActive) {
             return throwError('only one active scan allowed at a time');
         }
 

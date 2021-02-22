@@ -94,7 +94,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     onScannerButtonClicked() {
-        if (this.imageScanners.isSupported) {
+        if (this.imageScanners.hasImageScanner) {
             this.showScannerVisual = !this.showScannerVisual;
         }
 

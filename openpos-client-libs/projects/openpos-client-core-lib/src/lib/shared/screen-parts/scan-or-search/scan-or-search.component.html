@@ -20,4 +20,4 @@
        [attr.maxlength]="screenData.scanMaxLength"
        [formatterName]="screenData.inputType">
 
-<app-image-scanner *ngIf="imageScanners.isSupported && showScannerVisual" (onScan)="scan($event)" (scanChanged)="showScannerVisual = $event"></app-image-scanner>
+<app-image-scanner *ngIf="imageScanners.hasImageScanner && showScannerVisual" (onScan)="scan($event)" (scanChanged)="showScannerVisual = $event"></app-image-scanner>
