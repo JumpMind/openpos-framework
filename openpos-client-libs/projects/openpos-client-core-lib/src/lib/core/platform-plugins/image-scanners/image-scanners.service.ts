@@ -6,7 +6,7 @@ import { share, takeWhile, tap } from 'rxjs/operators';
 import { IMAGE_SCANNERS, ImageScanner, ScannerViewRef, SCANNERS, Scanner, ScanData, ScanOptions } from './scanner';
 
 @Injectable()
-export class ImageScanners {
+export class BarcodeScanner {
     get hasImageScanner(): boolean {
         return !!this._scanner;
     }

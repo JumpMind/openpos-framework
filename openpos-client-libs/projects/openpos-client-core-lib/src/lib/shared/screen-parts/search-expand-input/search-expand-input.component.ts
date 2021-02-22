@@ -9,7 +9,7 @@ import { MatInput } from '@angular/material';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
 import { ScanOrSearchInterface } from '../scan-or-search/scan-or-search.interface';
-import { ImageScanners } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
+import { BarcodeScanner } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
 
 
 @ScreenPart({
@@ -38,7 +38,7 @@ export class SearchExpandInputComponent extends ScreenPartComponent<ScanOrSearch
 
     constructor(
         private injector: Injector, public devices: DeviceService, mediaService: OpenposMediaService,
-        private scannerService: ImageScanners) {
+        private scannerService: BarcodeScanner) {
         super(injector);
         const mobileMap = new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],

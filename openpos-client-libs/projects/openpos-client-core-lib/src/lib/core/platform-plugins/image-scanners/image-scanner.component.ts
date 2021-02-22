@@ -4,7 +4,7 @@ import { delay, map, publishLast, refCount, takeWhile } from 'rxjs/operators';
 
 import { ScanData, ScannerViewRef } from './scanner';
 
-import { ImageScanners } from './image-scanners.service';
+import { BarcodeScanner } from './image-scanners.service';
 
 @Component({
     selector: 'app-image-scanner',
@@ -26,7 +26,7 @@ export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef 
 
     constructor(
         private _elementRef: ElementRef<HTMLElement>,
-        private _scanners: ImageScanners
+        private _scanners: BarcodeScanner
     ) { }
 
     ngOnInit() {

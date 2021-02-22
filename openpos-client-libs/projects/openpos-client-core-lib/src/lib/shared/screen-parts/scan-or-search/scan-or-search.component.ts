@@ -17,7 +17,7 @@ import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos
 import {Observable, Subject, Subscription} from 'rxjs';
 import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-active.interface';
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
-import { ImageScanners } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
+import { BarcodeScanner } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
 import { ScanData } from '../../../core/platform-plugins/image-scanners/scanner';
 
 @ScreenPart({
@@ -52,7 +52,7 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
         injector: Injector,
         private el: ElementRef,
         mediaService: OpenposMediaService,
-        public imageScanners: ImageScanners
+        public imageScanners: BarcodeScanner
     ) {
         super(injector);
         const mobileMap = new Map([

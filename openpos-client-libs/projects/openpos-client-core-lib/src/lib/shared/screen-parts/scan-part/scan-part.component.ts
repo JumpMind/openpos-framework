@@ -6,7 +6,7 @@ import { OnBecomingActive } from '../../../core/life-cycle-interfaces/becoming-a
 import { OnLeavingActive } from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { Subscription } from 'rxjs';
 import { ScanInterface } from './scan-part.interface';
-import { ImageScanners } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
+import { BarcodeScanner } from '../../../core/platform-plugins/image-scanners/image-scanners.service';
 
 @ScreenPart({
     name: 'scan'
@@ -21,7 +21,7 @@ export class ScanPartComponent extends ScreenPartComponent<ScanInterface> implem
 
     private scanServiceSubscription: Subscription;
 
-    constructor(injector: Injector, private scannerService: ImageScanners, private focusService: FocusService) {
+    constructor(injector: Injector, private scannerService: BarcodeScanner, private focusService: FocusService) {
         super(injector);
     }
 
