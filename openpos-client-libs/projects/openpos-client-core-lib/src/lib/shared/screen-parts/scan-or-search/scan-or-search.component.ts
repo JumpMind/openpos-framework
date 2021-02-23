@@ -19,6 +19,7 @@ import {OnBecomingActive} from '../../../core/life-cycle-interfaces/becoming-act
 import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-active.interface';
 import { BarcodeScanner } from '../../../core/platform-plugins/barcode-scanners/barcode-scanner.service';
 import { ScanData } from '../../../core/platform-plugins/barcode-scanners/scanner';
+import { MatDialog } from '@angular/material';
 
 @ScreenPart({
     name: 'scanOrSearch'
@@ -35,6 +36,8 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     @Input() defaultAction: IActionItem;
 
+    @Input() allowImageScanner = true;
+
     @HostBinding('class.focusInitial')
     @Input() focusInitial = true;
 
@@ -48,11 +51,14 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
     private triggerNotify = new Subject<void>();
 
+    private dialogWatcherSub?: Subscription;
+
     constructor(
         injector: Injector,
         private el: ElementRef,
         mediaService: OpenposMediaService,
-        public imageScanners: BarcodeScanner
+        public imageScanners: BarcodeScanner,
+        public dialog: MatDialog
     ) {
         super(injector);
         const mobileMap = new Map([
@@ -73,6 +79,9 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
         if (this.screenData.keyboardLayout) {
             this.keyboardLayout = this.screenData.keyboardLayout;
         }
+
+        // shut the scanner off if a dialog opens
+        this.dialogWatcherSub = this.dialog.afterOpened.subscribe(() => this.showScannerVisual = false);
     }
 
     onBecomingActive() {
@@ -84,6 +93,10 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     }
 
     ngOnDestroy(): void {
+        if (this.dialogWatcherSub) {
+            this.dialogWatcherSub.unsubscribe();
+        }
+
         this.unregisterScanner();
         // this.scannerService.stopScanning();
         super.ngOnDestroy();

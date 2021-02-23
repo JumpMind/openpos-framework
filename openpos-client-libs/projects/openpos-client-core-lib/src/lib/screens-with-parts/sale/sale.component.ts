@@ -30,6 +30,7 @@ export class SaleComponent extends PosScreen<SaleInterface> {
     removeOrderAction: IActionItem;
     buildScreen$ = new Subject();
     stop$: Observable<any>;
+    sidenavOpened = false;
 
     constructor(protected dialog: MatDialog,
                 injector: Injector,

@@ -1,4 +1,4 @@
-<app-bacon-strip class="sale-bacon-strip">
+<app-bacon-strip class="sale-bacon-strip" [(sidenavOpened)]="sidenavOpened">
     <div class="sale-outer">
         <div *ngIf="!(isMobile | async)" class="sale-body">
             <section class="orders" *ngIf="screen.orders && screen.orders.length > 0">
@@ -18,7 +18,7 @@
                 <div class="vertical-divider grey-background"></div>
             </section>
             <div class="sale-items-outer">
-                <app-scan-or-search class="scan-or-search mat-elevation-z1" [defaultAction]="screen.checkoutButton" [focusInitial]="false">
+                <app-scan-or-search class="scan-or-search mat-elevation-z1" [defaultAction]="screen.checkoutButton" [focusInitial]="false" [allowImageScanner]="!sidenavOpened">
                 </app-scan-or-search>
 
                 <app-sale-item-card-list class="sale-list-background"></app-sale-item-card-list>

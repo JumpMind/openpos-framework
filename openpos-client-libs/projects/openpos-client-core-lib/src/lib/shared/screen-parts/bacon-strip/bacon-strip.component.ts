@@ -1,7 +1,7 @@
 import {MatSidenav} from '@angular/material/sidenav';
 import {BaconStripInterface} from './bacon-strip.interface';
 import {ScreenPartComponent} from '../screen-part';
-import {Component, Injector, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Injector, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {ScreenPart} from '../../decorators/screen-part.decorator';
 import {HelpTextService} from '../../../core/help-text/help-text.service';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
@@ -17,12 +17,24 @@ import {Configuration} from '../../../configuration/configuration';
     templateUrl: './bacon-strip.component.html',
     styleUrls: ['./bacon-strip.component.scss']
 })
-export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface> {
+export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface> implements OnInit {
 
     iconButtonName: string;
 
     @ViewChild(MatSidenav)
     baconDrawer: MatSidenav;
+
+    get sidenavOpened(): boolean {
+        return this.baconDrawer.opened;
+    }
+
+    @Input()
+    set sidenavOpened(opened: boolean) {
+        this.baconDrawer.opened = opened;
+    }
+
+    @Output()
+    readonly sidenavOpenedChange = new EventEmitter<boolean>();
 
     isMobile: Observable<boolean>;
 
@@ -51,6 +63,11 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
             }
           })
         );
+    }
+
+    ngOnInit() {
+        super.ngOnInit();
+        this.baconDrawer.openedChange.subscribe(v => this.sidenavOpenedChange.next(v));
     }
 
     screenDataUpdated() {
