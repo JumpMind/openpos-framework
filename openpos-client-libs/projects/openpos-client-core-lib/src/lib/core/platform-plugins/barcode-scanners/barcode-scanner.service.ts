@@ -1,45 +1,55 @@
 
 import { Inject, Injectable, Optional } from '@angular/core';
-import { merge, Observable, of, throwError } from 'rxjs';
-import { share, takeWhile, tap } from 'rxjs/operators';
+import { BehaviorSubject, merge, Observable, of, throwError } from 'rxjs';
+import { share, switchMap } from 'rxjs/operators';
+import { ConfigChangedMessage } from '../../messages/config-changed-message';
+import { ConfigurationService } from '../../services/configuration.service';
 
 import { IMAGE_SCANNERS, ImageScanner, ScannerViewRef, SCANNERS, Scanner, ScanData, ScanOptions } from './scanner';
 
 @Injectable()
 export class BarcodeScanner {
     get hasImageScanner(): boolean {
-        return !!this._scanner;
+        return !!this._scanner.value;
     }
 
     get isImageScannerActive(): boolean {
         return !!this._activeScan;
     }
 
-    private _scanner?: ImageScanner;
+    private _scanner = new BehaviorSubject<ImageScanner | undefined>(undefined);
     private _activeScan?: Observable<ScanData>;
 
     constructor(
-       @Inject(IMAGE_SCANNERS) @Optional() imageScanners?: ImageScanner[],
-       @Inject(SCANNERS) @Optional() private _scanners?: Scanner[],
+        configuration: ConfigurationService,
+        @Inject(IMAGE_SCANNERS) @Optional() imageScanners?: ImageScanner[],
+        @Inject(SCANNERS) @Optional() private _scanners?: Scanner[],
     ) {
-        if (!imageScanners) {
-            return;
-        }
+        console.log('scanner config');
+        configuration.getConfiguration('imageScanner').subscribe({
+            next: (config: ConfigChangedMessage & any) => {
+                console.log('got config for scanner');
 
-        for (const scanner of imageScanners) {
-            const s = scanner as ImageScanner;
+                const type = config.scannerType as string;
 
-            const configName = s.name();
+                if (type && imageScanners) {
+                    for (const scanner of imageScanners) {
+                        const s = scanner as ImageScanner;
+            
+                        const configName = s.name();
+    
+                        if (type === configName) {
+                            console.log(`using image scanner ${configName}`);
+                            this._scanner.next(s);
+                            return;
+                        }
+                    }
+                }
 
-            console.log(`using image scanner ${configName}`);
-
-            // just selecting the first one for now...
-            this._scanner = s;
-
-            return;
-
-            // todo: need to select based on configuration...
-        }
+                console.error(`could not find scanner with matching type \`${type}\``);
+                this._scanner.next(undefined);
+            }
+        });
     }
 
     beginScanning(options?: ScanOptions): Observable<ScanData> {
@@ -60,33 +70,30 @@ export class BarcodeScanner {
         if (this.isImageScannerActive) {
             return throwError('only one active scan allowed at a time');
         }
-
-        let captureScanner = this._scanner;
         
         // Sorta doing this weird wrapping in order to tack on some custom
         // teardown logic.
-        this._activeScan = new Observable<ScanData>(observer => {
-            const sub = this._scanner.beginScanning(view).subscribe({
-                next: e => {
-                    observer.next(e);
-                },
-                error: e => {
-                    observer.error(e);
-                },
-                complete: () => {
-                    observer.complete();
-                }
-            });
+        this._activeScan = this._scanner.pipe(
+            switchMap(scanner => new Observable<ScanData>(observer => {
+                const sub = scanner.beginScanning(view).subscribe({
+                    next: e => {
+                        observer.next(e);
+                    },
+                    error: e => {
+                        observer.error(e);
+                    },
+                    complete: () => {
+                        observer.complete();
+                    }
+                });
 
-            return () => {
-                sub.unsubscribe();
-                this._activeScan = undefined;
-            };
-        }).pipe(
-            // Complete this sequence if the scanner was changed from when we
-            // started.
-            takeWhile(() => this._scanner === captureScanner),
-
+                return () => {
+                    sub.unsubscribe();
+                    this._activeScan = undefined;
+                };
+            }))
+        )
+        .pipe(
             // Multicast
             share()
         );

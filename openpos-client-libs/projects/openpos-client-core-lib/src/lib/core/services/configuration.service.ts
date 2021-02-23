@@ -3,8 +3,8 @@ import { VERSION } from './../../version';
 import { Injectable } from '@angular/core';
 import { SessionService } from './session.service';
 import { Configuration } from './../../configuration/configuration';
-import { filter, tap } from 'rxjs/operators';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { distinct, filter, groupBy, map, mergeMap, publish, share, tap } from 'rxjs/operators';
+import { BehaviorSubject, ConnectableObservable, Observable, ReplaySubject } from 'rxjs';
 import { ConfigChangedMessage } from '../messages/config-changed-message';
 import { ThemeChangedMessage } from '../messages/theme-changed-message';
 import { VersionsChangedMessage } from '../messages/versions-changed-message';
@@ -18,7 +18,19 @@ export class ConfigurationService {
     public versions: Array<IVersion> = [];
     public theme$ =  new BehaviorSubject<string>('openpos-default-theme');
 
+    private config$ = new ReplaySubject<Map<string, ConfigChangedMessage>>(1);
+
     constructor(private sessionService: SessionService ) {
+        const capturedConfig = new Map<string, ConfigChangedMessage>();
+        this.sessionService.getMessages(MessageTypes.CONFIG_CHANGED).pipe(
+            map(m => m as ConfigChangedMessage),
+            filter(m => !!m)
+        ).subscribe({
+            next: c => {
+                capturedConfig.set(c.configType, c);
+                this.config$.next(capturedConfig);
+            }
+        });
 
         this.getConfiguration('uiConfig').subscribe( m => this.mapConfig(m));
         this.getConfiguration<ThemeChangedMessage>('theme').subscribe( m => this.theme$.next(m.name));
@@ -29,9 +41,10 @@ export class ConfigurationService {
     }
 
     public getConfiguration<T extends ConfigChangedMessage>(configType: string): Observable<T> {
-        return this.sessionService.getMessages(MessageTypes.CONFIG_CHANGED).pipe (
-            filter( m => m.configType === configType),
-            tap( m => console.info( `ConfigChanged for ${configType}: ${JSON.stringify(m)}`))
+        return this.config$.pipe(
+            map(m => m.get(configType) as T),
+            filter(m => m && m.configType === configType),
+            distinct()
         );
     }
 
