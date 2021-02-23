@@ -43,16 +43,6 @@ export interface ImageScanner {
     beginScanning(view: ScannerViewRef): Observable<ScanData>; 
 }
 
-export function ImageScannerDef<T extends { new (...args: any[]) }>(configSelector: string) {
-    return (ctor: T) => {
-        return class extends ctor {
-            get configSelector(): string {
-                return configSelector;
-            }
-        }
-    };
-}
-
 export type ScanDataType = 
     'UPCA' |
     'CODABAR' |

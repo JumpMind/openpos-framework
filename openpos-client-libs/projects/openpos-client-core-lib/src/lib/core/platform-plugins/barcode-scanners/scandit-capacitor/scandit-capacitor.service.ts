@@ -9,8 +9,7 @@ import { ImageScanner, ScannerViewRef, ScanData } from '../scanner';
 
 @Injectable({
     providedIn: 'root'
-}) 
-//@ImageScannerDef('scandit-cap')
+})
 export class ScanditCapacitorImageScanner implements ImageScanner, IPlatformPlugin {
     name(): string {
         return 'scandit-cap';
