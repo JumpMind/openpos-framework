@@ -253,17 +253,31 @@ public class EndpointInvoker implements InvocationHandler {
 
         ServiceSpecificConfig config = getSpecificConfig(method);
         EndpointSpecificConfig endConfig = null;
-        Endpoint annotation = null;
-        if (endpointObj != null) {
-            annotation = endpointObj.getClass().getAnnotation(Endpoint.class);
-            if (annotation != null) {
-                for (EndpointSpecificConfig aWeirdAcronym : config.getEndpoints()) {
-                    if (annotation.path().equals(aWeirdAcronym.getPath())) {
-                        endConfig = aWeirdAcronym;
+        String endpointImplementation = null;
+        if(endpointObj != null) {
+            EndpointOverride override = endpointObj.getClass().getAnnotation(EndpointOverride.class);
+            if (override != null) {
+                for (EndpointSpecificConfig endpointSpecificConfig : config.getEndpoints()) {
+                    if (override.path().equals(endpointSpecificConfig.getPath())) {
+                        endpointImplementation = override.implementation();
+                        endConfig = endpointSpecificConfig;
+                    }
+                }
+            }
+            else {
+                Endpoint annotation = endpointObj.getClass().getAnnotation(Endpoint.class);
+
+                if (annotation != null) {
+                    for (EndpointSpecificConfig endpointSpecificConfig : config.getEndpoints()) {
+                        if (annotation.path().equals(endpointSpecificConfig.getPath())) {
+                            endpointImplementation = annotation.implementation();
+                            endConfig = endpointSpecificConfig;
+                        }
                     }
                 }
             }
         }
+
         IInvocationStrategy strategy;
         List<String> profileIds = new ArrayList<>();
         if (endConfig != null) {
@@ -279,7 +293,7 @@ public class EndpointInvoker implements InvocationHandler {
         ServiceSampleModel sample = startSample(strategy, config, proxy, method, args);
         Object result = null;
         try {
-            log(method, args, annotation);
+            log(method, args, endpointImplementation);
             result = strategy.invoke(profileIds, proxy, method, endpointsByPathMap, args);
             endSampleSuccess(sample, config, proxy, method, args, result);
         } catch (Throwable ex) {
@@ -290,7 +304,7 @@ public class EndpointInvoker implements InvocationHandler {
         return result;
     }
 
-    private void log(Method method, Object[] args, Endpoint annotation) {
+    private void log(Method method, Object[] args, String implementation) {
         if (!method.isAnnotationPresent(SuppressMethodLogging.class)) {
             /*
             **  The code below came over from master. It logs each argument to the
@@ -328,8 +342,7 @@ public class EndpointInvoker implements InvocationHandler {
             log.info("{}.{}() {}",
                     method.getDeclaringClass().getSimpleName(),
                     method.getName(),
-                    annotation == null || annotation.implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT) ?
-                            "" : annotation.implementation() + " implementation");
+                    Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
         }
     }
 
