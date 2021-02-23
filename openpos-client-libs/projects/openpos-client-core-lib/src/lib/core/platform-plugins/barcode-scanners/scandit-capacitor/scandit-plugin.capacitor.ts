@@ -33,7 +33,8 @@ export type ScanditSymbology =
     'QRCODE' |
     'MAXICODE' |
     'UPCE' |
-    'MATRIX_2OF5';
+    'MATRIX_2OF5' |
+    'UPCA';
 
 export interface ScanditScanData {
     symbology: ScanditSymbology;
