@@ -125,15 +125,20 @@ public class Form implements Serializable {
     }
 
     public PopTartField addPopTart(String fieldId, String label, String value, List<String> values, boolean required) {
-        PopTartField field = createPopTartField(fieldId, label, value, values, required);
+        return addPopTart(fieldId, label, value, values, required, false);
+    }
+
+    public PopTartField addPopTart(String fieldId, String label, String value, List<String> values, boolean required, boolean searchable) {
+        PopTartField field = createPopTartField(fieldId, label, value, values, required, searchable);
         formElements.add(field);
         return field;
     }
 
-    public static PopTartField createPopTartField(String fieldId, String label, String value, List<String> values, boolean required) {
+    public static PopTartField createPopTartField(String fieldId, String label, String value, List<String> values, boolean required, boolean searchable) {
         PopTartField field = new PopTartField(fieldId, label, null, values);
         field.setRequired(required);
         field.setValue(value);
+        field.setSearchable(searchable);
         return field;
     }
 
