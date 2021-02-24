@@ -20,6 +20,7 @@ import {OnLeavingActive} from '../../../core/life-cycle-interfaces/leaving-activ
 import { BarcodeScanner } from '../../../core/platform-plugins/barcode-scanners/barcode-scanner.service';
 import { ScanData } from '../../../core/platform-plugins/barcode-scanners/scanner';
 import { MatDialog } from '@angular/material';
+import { LockScreenService } from '../../../core/lock-screen/lock-screen.service';
 
 @ScreenPart({
     name: 'scanOrSearch'
@@ -52,13 +53,15 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     private triggerNotify = new Subject<void>();
 
     private dialogWatcherSub?: Subscription;
+    private lockScreenSub?: Subscription;
 
     constructor(
         injector: Injector,
         private el: ElementRef,
         mediaService: OpenposMediaService,
         public imageScanners: BarcodeScanner,
-        public dialog: MatDialog
+        public dialog: MatDialog,
+        public lockScreen: LockScreenService
     ) {
         super(injector);
         const mobileMap = new Map([
@@ -82,6 +85,11 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
 
         // shut the scanner off if a dialog opens
         this.dialogWatcherSub = this.dialog.afterOpened.subscribe(() => this.showScannerVisual = false);
+        this.lockScreenSub = this.lockScreen.enabled$.subscribe(locked => {
+            if (locked) {
+                this.showScannerVisual = false;
+            }
+        });
     }
 
     onBecomingActive() {
@@ -95,6 +103,10 @@ export class ScanOrSearchComponent extends ScreenPartComponent<ScanOrSearchInter
     ngOnDestroy(): void {
         if (this.dialogWatcherSub) {
             this.dialogWatcherSub.unsubscribe();
+        }
+
+        if (this.lockScreenSub) {
+            this.lockScreenSub.unsubscribe();
         }
 
         this.unregisterScanner();
