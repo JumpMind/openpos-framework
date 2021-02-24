@@ -101,6 +101,7 @@ app-scandit-native {
         "buttons";
     grid-template-rows: 0 min-content minmax(0, 1fr) min-content;
     grid-template-columns: minmax(0, 1fr);
+    display: grid;
     align-self: stretch;
     justify-self: stretch;
     margin: 0;
