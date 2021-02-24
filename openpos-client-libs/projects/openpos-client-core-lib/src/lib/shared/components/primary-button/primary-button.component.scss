@@ -1,6 +1,6 @@
 @import "../../../styles/mixins/typography";
 
-button{
+.button{
   @extend %text-md;
   border-width: 2px;
   padding: $text-md/2 $text-md*1.25;
