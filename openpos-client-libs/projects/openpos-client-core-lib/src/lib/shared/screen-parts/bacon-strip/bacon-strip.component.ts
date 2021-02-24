@@ -30,7 +30,9 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
 
     @Input()
     set sidenavOpened(opened: boolean) {
-        this.baconDrawer.opened = opened;
+        if (this.baconDrawer) {
+            this.baconDrawer.opened = opened;
+        }
     }
 
     @Output()
@@ -67,7 +69,10 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
 
     ngOnInit() {
         super.ngOnInit();
-        this.baconDrawer.openedChange.subscribe(v => this.sidenavOpenedChange.next(v));
+
+        if (this.baconDrawer) {
+            this.baconDrawer.openedChange.subscribe(v => this.sidenavOpenedChange.next(v));
+        }
     }
 
     screenDataUpdated() {
