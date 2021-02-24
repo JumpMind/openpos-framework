@@ -1,0 +1,11 @@
+<button fxFlex="1 0 auto"
+    cdkFocusInitial
+    responsive-class
+    mat-flat-button
+    [disabled]="disabled"
+    (click)="clickFn()"
+    [type]="type"
+    color="accent"
+>
+    <ng-content></ng-content>
+</button>

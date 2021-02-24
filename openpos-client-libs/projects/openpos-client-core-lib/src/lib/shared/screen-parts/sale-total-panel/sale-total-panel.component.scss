@@ -1,5 +1,70 @@
 @import "../../../styles/mixins/typography";
 
+.sale-total-wrapper {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+            "header"
+            "body";
+    .sale-total-header { grid-area: header; }
+    .sale-total-background { grid-area: body; }
+}
+
+.sale-total-header {
+    margin-bottom: 16px;
+    .material-icons {
+        font-size: 36px;
+    }
+    .link-customer {
+        height: 102px;
+        @extend %text-md;
+        border-width: 2px;
+        padding: $text-md/2 $text-md*1.25;
+        min-width: 150px;
+        .material-icons {
+            margin-top: -8px;
+        }
+    }
+    .linked-customer-summary {
+        padding: 5px;
+        .button-wrapper {
+            vertical-align: inherit;
+            width: 100%;
+            text-align: left;
+            padding: 10px;
+            .grid-container {
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                grid-template-rows: 1fr 1fr;
+                gap: 0px 0px;
+                grid-template-areas:
+                    "Name Name Name Name"
+                    "Icon Memberships Memberships Memberships";
+                .name {
+                    grid-area: Name;
+                    .customer-name {
+                        font-size: 24px;
+                        .loyalty-keybind {
+                            margin-left: 10px;
+                        }
+                    }
+                }
+                .icon {
+                    grid-area: Icon;
+                    display: inline-block;
+                    color: lightgray;
+                }
+                .memberships {
+                    grid-area: Memberships;
+                }
+            }
+        }
+    }
+}
+
 :host {
     display: grid;
 }
@@ -36,7 +101,6 @@ app-scandit-native {
         "buttons";
     grid-template-rows: 0 min-content minmax(0, 1fr) min-content;
     grid-template-columns: minmax(0, 1fr);
-    display: grid;
     align-self: stretch;
     justify-self: stretch;
     margin: 0;

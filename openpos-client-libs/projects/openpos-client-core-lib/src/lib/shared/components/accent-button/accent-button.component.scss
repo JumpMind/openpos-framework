@@ -1,0 +1,31 @@
+@import "../../../styles/mixins/typography";
+
+button{
+  @extend %text-md;
+  border-width: 2px;
+  padding: $text-md/2 $text-md*1.25;
+  min-width: 150px;
+
+  &.tablet {
+    min-width: 100px;
+    padding: $text-md-mobile/4 $text-md-mobile;
+  }
+
+  &.tablet-portrait {
+    border-width: 1px;
+    min-width: 75px;
+    font-size: $text-xs-mobile*1.75;
+  }
+
+  &.mobile {
+    border-width: 1px;
+    font-size: $text-xs-mobile*1.25;
+    min-width: 75px;
+    padding: $text-sm-mobile/8 $text-sm-mobile*.75;
+  }
+}
+
+:host ::ng-deep app-icon {
+  margin: -4px -4px -4px 0;
+  padding: 4px;
+}

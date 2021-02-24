@@ -1,13 +1,11 @@
-@mixin primary-button-theme($theme) {
-    $primary: mat-color(map-get($theme, primary));
+@mixin accent-button-theme($theme) {
+    $accent: mat-color(map-get($theme, accent));
     $disabled-border: map-get(map-get($theme, foreground), disabled-text);
 
-    app-primary-button {
+    app-accent-button {
         button {
-            border-color: $primary;
+            border-color: $accent;
             border-style: solid;
-            white-space: break-spaces;
-            max-width: 100%;
             &[disabled] {
                 border-color: $disabled-border;
             }

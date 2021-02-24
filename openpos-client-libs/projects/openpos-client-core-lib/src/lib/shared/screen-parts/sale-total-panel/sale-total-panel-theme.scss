@@ -1,9 +1,22 @@
 @mixin sale-total-panel-theme($theme) {
     $border: map-get($mat-grey, 800);
     $item-count-background: map-get($mat-grey, 200);
+    $disabled-border: map-get(map-get($theme, foreground), disabled-text);
 
     .item-count {
         background-color: $item-count-background;
+    }
+
+    .link-customer {
+        color: mat-color($theme, link-customer-color);
+        background-color: mat-color($theme, link-customer-background);
+        border-color: mat-color($theme, link-customer-background);
+        border-style: solid;
+        white-space: break-spaces;
+        max-width: 100%;
+        &[disabled] {
+            border-color: $disabled-border;
+        }
     }
     
     .sale-total-total {

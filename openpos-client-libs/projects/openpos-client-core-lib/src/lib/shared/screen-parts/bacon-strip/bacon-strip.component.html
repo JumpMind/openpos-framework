@@ -10,9 +10,9 @@
             class="bacon-strip-search"></app-search-expand-input>
     </div>
     <div *ngIf="!(isMobile | async) && !searchExpanded">
-        <img *ngIf="screenData.logo" [src]="screenData.logo | imageUrl">
+        <img *ngIf="screenData?.logo" [src]="screenData.logo | imageUrl">
     </div>
-    <div *ngIf="!searchExpanded && screenData.operatorLine1" class="rightside">
+    <div *ngIf="!searchExpanded && screenData?.operatorLine1" class="rightside">
         <p class="operator-name">{{screenData.operatorLine1}}</p>
         <p class="operator-id">{{screenData.operatorLine2}}</p>
         <app-kebab-button class="icon"

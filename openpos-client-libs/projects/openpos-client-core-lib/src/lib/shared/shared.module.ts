@@ -70,6 +70,7 @@ import {DatePartChooserComponent} from './components/date-part-chooser/date-part
 import {DatePartChooserFieldComponent} from './components/date-part-chooser/date-part-chooser-field/date-part-chooser-field.component';
 import {DatePartChooserDialogComponent} from './components/date-part-chooser/date-part-chooser-dialog/date-part-chooser-dialog.component';
 import {PrimaryButtonComponent} from './components/primary-button/primary-button.component';
+import {AccentButtonComponent} from './components/accent-button/accent-button.component';
 import {SecondaryButtonComponent} from './components/secondary-button/secondary-button.component';
 import {TrainingDialogComponent} from './components/training-dialog/training-dialog.component';
 import {TrainingWrapperComponent} from './components/training-dialog/training-wrapper.component';
@@ -225,6 +226,7 @@ const components = [
     DatePartChooserComponent,
     DatePartChooserFieldComponent,
     DatePartChooserDialogComponent,
+    AccentButtonComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
     WarnButtonComponent,
