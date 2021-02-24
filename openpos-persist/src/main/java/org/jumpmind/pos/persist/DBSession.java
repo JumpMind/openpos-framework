@@ -532,11 +532,25 @@ public class DBSession {
 
         try {
             return jdbcTemplate.getJdbcOperations().update(sql, values, types);
-        } catch (DuplicateKeyException e) {
-            throw new DuplicateKeyException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types), e);
-        } catch (Exception ex) {
-            throw new PersistException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types), ex);
+        } catch (DataAccessException e) {
+            logDMLError(type, sql, values, e);
+            return jdbcTemplate.getJdbcOperations().update(sql, values, types);
         }
+    }
+
+    protected void logDMLError(DmlType type, String sql, Object[] values, DataAccessException e) {
+        StringBuilder errorStatement = new StringBuilder();
+        errorStatement.append("There was a data access violation in " + type + " statement: ");
+        LogSqlBuilder builder = new LogSqlBuilder();
+        Object[] rawArgs = cleanArgs(values);
+        sql = builder.buildDynamicSqlForLog(sql, rawArgs, null);
+        errorStatement.append(sql);
+        String message = e.getCause().getMessage();
+        if (message.contains("SQL statement")) {
+            message = message.substring(0, message.indexOf("SQL statement"));
+        }
+        errorStatement.append(": " + message);
+        throw new DuplicateKeyException(errorStatement.toString(), e);
     }
 
     protected void batchInternal(List<? extends  AbstractModel> models, DmlType dmlType) {
