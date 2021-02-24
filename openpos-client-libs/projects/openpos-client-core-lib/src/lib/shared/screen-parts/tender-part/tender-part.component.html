@@ -30,6 +30,10 @@
         <app-icon responsive-class class = "round-up-icon" *ngIf="isRoundUpAvailable" [iconName]="screenData.roundUpButton.icon" [iconClass]="'sm'"></app-icon>
         <app-icon responsive-class class = "round-up-icon" *ngIf="!isRoundUpAvailable" [iconName]="'Checkmark'" [iconClass]="'sm'"></app-icon>
         {{screenData.roundUpButton.title}}
+        <div  *ngIf="keybindsEnabled()" class="round-up-right">
+            <span responsive-class class="round-up-keybind muted-color">
+                {{screenData.roundUpButton.keybindDisplayName}}</span>
+        </div>
     </app-secondary-button>
 </div>
 

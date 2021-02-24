@@ -5,6 +5,7 @@ import { ScreenPartComponent } from '../screen-part';
 import {IActionItem} from '../../../core/actions/action-item.interface';
 import {takeUntil} from 'rxjs/operators';
 import { ITender } from './tender.interface';
+import { Configuration } from '../../../configuration/configuration';
 
 @ScreenPart({
     name: 'TenderPart'
@@ -67,5 +68,9 @@ export class TenderPartComponent extends ScreenPartComponent<TenderPartInterface
         {
             this.doAction(this.screenData.roundUpButton.action);
         }
+    }
+
+    public keybindsEnabled(): boolean {
+        return Configuration.enableKeybinds && !!this.screenData.roundUpButton.keybindDisplayName;
     }
 }
