@@ -36,7 +36,7 @@
         <div>
             <div class="summary-field" responsive-class>
                 <span class="summary-field-label"  *ngIf="transactionSummary.labels">{{transactionSummary.labels.transactionDate}}</span>
-                <span class="summary-field-value">{{transactionSummary.transactionDate | date:'M/d/yyy h:mm a'}}</span>
+                <span class="summary-field-value">{{transactionDate | date:'M/d/yyy h:mm a'}}</span>
             </div>
             <div class="summary-field" responsive-class>
                 <span class="summary-field-label" *ngIf="transactionSummary.labels">{{transactionSummary.labels.username}}</span>
