@@ -5,6 +5,7 @@ import org.jumpmind.pos.devices.TestDevicesConfig;
 import org.jumpmind.pos.devices.service.model.GetDeviceRequest;
 import org.jumpmind.pos.devices.service.model.GetDeviceResponse;
 import org.jumpmind.pos.test.MockGetRequestBuilder;
+import org.jumpmind.pos.test.MockPostRequestBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +37,7 @@ public class GetDeviceEndpointTest {
 
         String result =
             mvc.perform(
-                    new MockGetRequestBuilder("/devices/device")
+                    new MockPostRequestBuilder("/devices/device")
                             .content(
                                     GetDeviceRequest.builder()
                                             .deviceId("00100-001")
