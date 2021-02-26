@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.model.DevicesRepository;
 import org.jumpmind.pos.persist.ITagProvider;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.event.DeviceConnectedEvent;
 import org.jumpmind.util.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,8 +44,11 @@ public class DeviceUpdater implements ApplicationListener<DeviceConnectedEvent> 
     @Autowired(required = false)
     CacheManager cacheManager;
 
+    @Autowired
+    ClientContext clientContext;
+
     synchronized public void updateDevice(DeviceModel deviceModel) {
-        deviceModel.setTimezoneOffset(AppUtils.getTimezoneOffset());
+        deviceModel.setTimezoneOffset(clientContext.get("timezoneOffset"));
         deviceModel.setBusinessUnitId(businessUnitId);
         // TODO check properties also before using default
         deviceModel.setLocale(Locale.getDefault().toString());
