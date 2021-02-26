@@ -475,13 +475,11 @@ public class DBSession {
                 try {
                     insert(model, table);
                 } catch (DuplicateKeyException ex) {
-                    if (log.isDebugEnabled())
-                    {
+                    if (log.isDebugEnabled()) {
                         log.info("Insert of entity failed, failing over to an update: " + argModel, ex);
                     } else {
                         log.info("Insert of entity failed, failing over to an update: " + argModel);
                     }
-
                     int updateCount = update(model, table);
                     if (updateCount < 1) {
                         throw new PersistException("Failed to perform an insert or update on entity. Do the DB primary key and unique fields "
