@@ -536,9 +536,6 @@ public class DBSession {
 
         try {
             return jdbcTemplate.getJdbcOperations().update(sql, values, types);
-
-        e
-        
         } catch (DuplicateKeyException e) {
             throw new DuplicateKeyException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types));
         } catch (Exception ex) {
