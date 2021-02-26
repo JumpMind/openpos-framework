@@ -40,6 +40,12 @@ public class DevicesRepository {
         }
     }
 
+    public List<DeviceModel> findDevices(String businessUnitId) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("businessUnitId", businessUnitId);
+        return devSession.findByFields(DeviceModel.class, params, 1000);
+    }
+
     public String getDeviceAuth(String deviceId, String appId) {
         DeviceAuthModel deviceAuthModel = devSession.findByNaturalId(DeviceAuthModel.class, new ModelId("deviceId", deviceId, "appId", appId));
 

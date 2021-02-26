@@ -17,7 +17,7 @@ public interface IDevicesService {
     @ResponseBody
     public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request);
 
-    @RequestMapping(path="/device", method = RequestMethod.GET)
+    @RequestMapping(path="/device", method = RequestMethod.POST)
     @ResponseBody
     public GetDeviceResponse getDevice(@RequestBody GetDeviceRequest request);
 
@@ -26,10 +26,13 @@ public interface IDevicesService {
     @ResponseBody
     public GetDeviceResponse getMyDevice();
 
-    @RequestMapping(path="/authenticate", method = RequestMethod.GET)
+    @RequestMapping(path="/authenticate", method = RequestMethod.POST)
     @ResponseBody
     public AuthenticateDeviceResponse authenticateDevice(@RequestBody AuthenticateDeviceRequest request);
 
     @RequestMapping(path="/disconnectDevice", method = RequestMethod.POST)
     public void disconnectDevice(@RequestBody DisconnectDeviceRequest request);
+
+    @RequestMapping(path="/find", method = RequestMethod.POST)
+    public FindDevicesResponse findDevices(@RequestBody FindDevicesRequest request);
 }
