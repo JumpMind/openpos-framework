@@ -1,8 +1,6 @@
 package org.jumpmind.pos.service.strategy;
 
-import org.jumpmind.pos.service.InjectionContext;
 import org.jumpmind.pos.service.PosServerException;
-import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.InvocationTargetException;
