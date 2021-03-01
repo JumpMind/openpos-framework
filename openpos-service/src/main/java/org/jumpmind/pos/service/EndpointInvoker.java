@@ -32,7 +32,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.jumpmind.pos.service.strategy.AbstractInvocationStrategy.buildPath;
 
 @Slf4j
@@ -60,9 +60,6 @@ public class EndpointInvoker implements InvocationHandler {
 
     @Autowired
     Environment env;
-
-    @Autowired
-    EndpointInjector endpointInjector;
 
     private final static Pattern serviceNamePattern = Pattern.compile("^(?<service>[^_]+)(_(?<version>\\d(_\\d)*))?$");
     private final static String implementationConfigPath = "openpos.services.specificConfig.%s.implementation";
