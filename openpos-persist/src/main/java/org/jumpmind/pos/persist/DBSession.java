@@ -475,7 +475,11 @@ public class DBSession {
                 try {
                     insert(model, table);
                 } catch (DuplicateKeyException ex) {
-                    log.info("Insert of entity failed, failing over to an update: " + argModel);
+                    if (log.isDebugEnabled()) {
+                        log.info("Insert of entity failed, failing over to an update: " + argModel, ex);
+                    } else {
+                        log.info("Insert of entity failed, failing over to an update: " + argModel);
+                    }
                     int updateCount = update(model, table);
                     if (updateCount < 1) {
                         throw new PersistException("Failed to perform an insert or update on entity. Do the DB primary key and unique fields "
@@ -530,7 +534,13 @@ public class DBSession {
         Object[] values = statement.getValueArray(model.getColumnNamesToValues());
         int[] types = statement.getTypes();
 
-        return jdbcTemplate.getJdbcOperations().update(sql, values, types);
+        try {
+            return jdbcTemplate.getJdbcOperations().update(sql, values, types);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateKeyException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types));
+        } catch (Exception ex) {
+            throw new PersistException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types));
+        }
     }
 
     protected void batchInternal(List<? extends  AbstractModel> models, DmlType dmlType) {

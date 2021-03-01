@@ -219,6 +219,9 @@ public class ModelWrapper {
                 AugmenterConfig config = getAugmentedConfigWithPrefix(configs, fieldName);
                 if (fieldName.toUpperCase().startsWith(TagModel.TAG_PREFIX)) {
                     String tagValue = ((ITaggedModel) model).getTagValue(fieldName.substring(TagModel.TAG_PREFIX.length()));
+                    if (StringUtils.isEmpty(tagValue)) {
+                        log.warn("Tag \'" + fieldName.substring(TagModel.TAG_PREFIX.length()) + "\' in model \'" + model.getClass().getSimpleName() + "\' was set to an empty value.");
+                    }
                     columnNamesToObjectValues.put(fieldName, tagValue);
                 } else if (config != null) {
                     String augmentValue = ((IAugmentedModel) model).getAugmentValue(fieldName.substring(config.getPrefix().length()));
