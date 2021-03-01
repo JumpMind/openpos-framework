@@ -490,7 +490,11 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         this.personalization.dePersonalize();
         this.session.unsubscribe();
 
-        const d = this.dialog.open(PersonalizationComponent);
+        const d = this.dialog.open(PersonalizationComponent, {
+            disableClose: true,
+            hasBackdrop: false,
+            panelClass: 'openpos-default-theme'
+        });
         d.afterOpened().subscribe(() => this.session.cancelLoading());
         d.afterClosed().subscribe(() => this.personalization.refreshApp());
     }
