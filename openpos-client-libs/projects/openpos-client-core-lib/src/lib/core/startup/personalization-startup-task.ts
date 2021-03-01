@@ -1,13 +1,15 @@
 import {
+    catchError,
     filter,
+    map,
     retryWhen,
     switchMap,
     take,
-    tap
+    timeout
 } from 'rxjs/operators';
 import { IStartupTask } from './startup-task.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
-import {concat, interval, merge, Observable, of, Subject, throwError} from 'rxjs';
+import {concat, defer, iif, interval, Observable, of, throwError} from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { StartupTaskNames } from './startup-task-names';
 import { Injectable } from '@angular/core';
@@ -19,63 +21,59 @@ import { PersonalizationComponent } from '../personalization/personalization.com
     providedIn: 'root',
 })
 export class PersonalizationStartupTask implements IStartupTask {
-
     name = StartupTaskNames.PERSONALIZATION;
 
     order = 500;
 
-    constructor(protected personalization: PersonalizationService, protected matDialog: MatDialog) {
-
-    }
+    constructor(protected personalization: PersonalizationService, protected matDialog: MatDialog) {}
 
     execute(data: StartupTaskData): Observable<string> {
-
-        if(this.hasPersonalizationQueryParams(data.route.queryParams) || this.personalization.hasSavedSession()){
-
-            let personalize$: Observable<string>;
-
-            let messages = new Subject<string>();
-            let attemptMessage;
-
-            if(this.hasPersonalizationQueryParams(data.route.queryParams)){
-                attemptMessage = 'Attempting to personalize using query parameters';
-                personalize$ = this.personalizeFromQueueParams(data.route.queryParams);
-            } else if(this.personalization.hasSavedSession()){
-
-                attemptMessage = 'Attempting to personalize from saved token';
-                personalize$ = this.personalization.personalizeFromSavedSession();
-            }
-
-            return concat(
-                of(attemptMessage),
-                merge(
-                    messages,
-                    personalize$.pipe(
-                        retryWhen( errors =>
-                            errors.pipe(
-                                switchMap( () => interval(1000),
-                                    (error, time) => `${error} \n Retry in ${5-time}`),
-                                tap(result => messages.next(result)),
-                                filter( result => result.endsWith('0')),
-                                tap( () => messages.next(attemptMessage))
-                            )
-                        ),
-                        take(1),
-                        tap(() => messages.complete())
-                    ))
-                );
-
-        }
-
         return concat(
-            of("No saved session found prompting manual personalization"),
-            this.matDialog.open(
-            PersonalizationComponent, {
-                disableClose: true,
-                hasBackdrop: false,
-                panelClass: 'openpos-default-theme'
-            }
-        ).afterClosed().pipe(take(1)));
+            of('initializing personalization...'),
+            this.personalization.personalizationInitialized$.pipe(
+                filter(initialized => initialized),
+                take(1),
+                map(() => 'personalization initialized'),
+                timeout(5000),
+                catchError(() => of('timed out waiting for personalization to initialize'))
+            ),
+
+            iif(
+                () => this.hasPersonalizationQueryParams(data.route.queryParams),
+                defer(() => this.personalizeFromQueueParams(data.route.queryParams)),
+
+                // else
+                iif(
+                    () => {
+                        const ss = this.personalization.hasSavedSession();
+                        console.log("has saved session", {init: this.personalization.personalizationInitialized$.getValue(), saved: ss});
+                        return ss;
+                    },
+                    
+                    defer(() => {
+                        console.log('being defered');
+                        return this.personalization.personalizeFromSavedSession();
+                    }),
+
+                    // else
+                    defer(() => this.matDialog.open(
+                        PersonalizationComponent,
+                        {
+                            disableClose: true,
+                            hasBackdrop: false,
+                            panelClass: 'openpos-default-theme'
+                        }
+                    ).afterClosed().pipe(
+                        take(1)
+                    ))
+                )
+            ).pipe(
+                retryWhen(errors => errors.pipe(
+                    switchMap(() => interval(1000), (error, time) => `${error} \n Retry in ${5-time}`),
+                )),
+                take(1)
+            )
+        );
     }
 
     hasPersonalizationQueryParams(queryParams: Params): boolean {

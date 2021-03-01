@@ -1,10 +1,12 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonalizationConfigResponse } from './personalization-config-response.interface';
-import { Observable, BehaviorSubject, throwError } from 'rxjs';
+import { Observable, BehaviorSubject, throwError, Subject, zip } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { PersonalizationRequest } from './personalization-request';
 import { PersonalizationResponse } from './personalization-response.interface';
+
+import { Capacitor, Plugins as CapacitorPlugins } from '@capacitor/core';
 
 @Injectable({
     providedIn: 'root'
@@ -12,21 +14,32 @@ import { PersonalizationResponse } from './personalization-response.interface';
 export class PersonalizationService {
     static readonly OPENPOS_MANAGED_SERVER_PROPERTY = 'managedServer';
 
-    private personalizationProperties$ = new BehaviorSubject<Map<string, string>>(null);
-    private deviceId$ = new BehaviorSubject<string>(null);
-    private appId$ = new BehaviorSubject<string>(null);
-    private deviceToken$ = new BehaviorSubject<string>(localStorage.getItem('deviceToken'));
-    private serverName$ = new BehaviorSubject<string>(localStorage.getItem('serverName'));
-    private serverPort$ = new BehaviorSubject<string>(localStorage.getItem('serverPort'));
-    private sslEnabled$ = new BehaviorSubject<boolean>('true' === localStorage.getItem('sslEnabled'));
-    private isManagedServer$ = new BehaviorSubject<boolean>('true' === localStorage.getItem(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY));
-    private personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
+    readonly personalizationInitialized$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: HttpClient, private injector: Injector) {
+    private readonly personalizationProperties$ = new BehaviorSubject<Map<string, string> | null>(null);
+    private readonly deviceId$ = new BehaviorSubject<string | null>(null);
+    private readonly appId$ = new BehaviorSubject<string | null>(null);
+    private readonly deviceToken$ = new BehaviorSubject<string | null>(null);
+    private readonly serverName$ = new BehaviorSubject<string | null>(null);
+    private readonly serverPort$ = new BehaviorSubject<string | null>(null);
+    private readonly sslEnabled$ = new BehaviorSubject<boolean | null>(null);
+    private readonly isManagedServer$ = new BehaviorSubject<boolean | null>(null);
+    private readonly personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
+
+    constructor(private http: HttpClient) {
+        zip(
+            PersonalizationService.updateStorageVariable(this.deviceToken$, 'deviceToken'),
+            PersonalizationService.updateStorageVariable(this.serverName$, 'serverName'),
+            PersonalizationService.updateStorageVariable(this.serverPort$, 'serverPort'),
+            PersonalizationService.updateStorageVariable(this.sslEnabled$, 'sslEnabled', value => value === 'true'),
+            PersonalizationService.updateStorageVariable(this.isManagedServer$, PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY, value => value === 'true')
+        ).subscribe(() => {
+            this.personalizationInitialized$.next(true);
+        });
     }
 
     public personalizeFromSavedSession(): Observable<string>{
-        let request = new PersonalizationRequest(this.deviceToken$.getValue(), null, null, null );
+        const request = new PersonalizationRequest(this.deviceToken$.getValue(), null, null, null );
         return this.sendPersonalizationRequest(this.sslEnabled$.getValue(), this.serverName$.getValue(), this.serverPort$.getValue(), request, null);
     }
 
@@ -107,11 +120,11 @@ export class PersonalizationService {
     }
 
     public dePersonalize() {
-        localStorage.removeItem('serverName');
-        localStorage.removeItem('serverPort');
-        localStorage.removeItem( 'deviceToken');
-        localStorage.removeItem('theme');
-        localStorage.removeItem('sslEnabled');
+        PersonalizationService.setStorageValue('serverName', null);
+        PersonalizationService.setStorageValue('serverPort', null);
+        PersonalizationService.setStorageValue('deviceToken', null);
+        PersonalizationService.setStorageValue('theme', null);
+        PersonalizationService.setStorageValue('sslEnabled', null);
     }
 
 
@@ -166,17 +179,17 @@ export class PersonalizationService {
     }
 
     private setSslEnabled(enabled: boolean) {
-        localStorage.setItem('sslEnabled', enabled + '');
+        PersonalizationService.setStorageValue('sslEnabled', enabled + '');
         this.sslEnabled$.next(enabled);
     }
 
     private setServerName(name: string) {
-        localStorage.setItem('serverName', name);
+        PersonalizationService.setStorageValue('serverName', name);
         this.serverName$.next(name);
     }
 
     private setServerPort(port: string) {
-        localStorage.setItem('serverPort', port);
+        PersonalizationService.setStorageValue('serverPort', port);
         this.serverPort$.next(port);
     }
 
@@ -189,13 +202,59 @@ export class PersonalizationService {
     }
 
     private setDeviceToken(token: string){
-        localStorage.setItem('deviceToken', token);
+        PersonalizationService.setStorageValue('deviceToken', token);
         this.deviceToken$.next(token);
     }
 
     public refreshApp() {
         window.location.reload();
     }
+
+    private static canUseCapacitorStorage(): boolean {
+        // need to check if its native too because there is a default
+        // web implementation that we don't want to use under web.
+        return Capacitor.isNative && Capacitor.isPluginAvailable('Storage');
+    }
+
+    private static async updateStorageVariable(subject: Subject<any>, key: string, convert?: (value: string) => any) {
+        let value: string;
+
+        if (PersonalizationService.canUseCapacitorStorage()) {
+            let result = await CapacitorPlugins.Storage.get({ key: key });
+
+            if (!result) {
+                return;
+            }
+
+            value = result.value;
+        } else {
+            value = localStorage.getItem(key);
+        }
+
+        let converted;
+
+        if (convert) {
+            converted = convert(value);
+        } else {
+            converted = value;
+        }
+
+        subject.next(converted);
+    }
+
+    private static async setStorageValue(key: string, value: string | null) {
+        if (PersonalizationService.canUseCapacitorStorage()) {
+            if (value === null) {
+                await CapacitorPlugins.Storage.remove({ key: key });
+            } else {
+                await CapacitorPlugins.Storage.set({ key: key, value: value });
+            }
+        } else {
+            if (value === null) {
+                localStorage.removeItem(key);
+            } else {
+                localStorage.setItem(key, value);
+            }
+        }
+    }
 }
-
-
