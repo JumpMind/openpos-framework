@@ -1,6 +1,5 @@
 package org.jumpmind.pos.service.strategy;
 
-import org.jumpmind.pos.service.EndpointInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +16,6 @@ abstract public class AbstractInvocationStrategy {
     
     @Autowired
     protected ApplicationContext applicationContext;
-
-    @Autowired
-    protected EndpointInjector endpointInjector;
     
     public static String buildPath(Method method) {
         StringBuilder path = new StringBuilder();

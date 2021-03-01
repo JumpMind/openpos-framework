@@ -24,7 +24,6 @@ public class LocalOnlyStrategy extends AbstractInvocationStrategy implements IIn
         String path = buildPath(method);
         Object obj = endpoints.get(path);
         if (obj != null) {
-            endpointInjector.performInjections(obj, new InjectionContext(args));
             Method targetMethod = obj.getClass().getMethod(method.getName(), method.getParameterTypes());
             if (targetMethod != null) {
                 try {

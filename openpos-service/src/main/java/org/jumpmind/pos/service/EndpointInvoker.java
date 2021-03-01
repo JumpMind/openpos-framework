@@ -43,17 +43,17 @@ public class EndpointInvoker implements InvocationHandler {
     Map<String, IInvocationStrategy> strategies;
 
     @Autowired
-    protected ApplicationContext applicationContext;
+    ApplicationContext applicationContext;
 
     @Autowired
-    private ServiceConfig serviceConfig;
+    ServiceConfig serviceConfig;
 
     final static int MAX_SUMMARY_WIDTH = 127;
 
     @Autowired
     @Qualifier("ctxSession")
     @Lazy
-    private DBSession dbSession;
+    DBSession dbSession;
 
     @Value("${openpos.installationId:'not set'}")
     String installationId;
@@ -61,8 +61,12 @@ public class EndpointInvoker implements InvocationHandler {
     @Autowired
     Environment env;
 
+    @Autowired
+    EndpointInjector endpointInjector;
+
     private final static Pattern serviceNamePattern = Pattern.compile("^(?<service>[^_]+)(_(?<version>\\d(_\\d)*))?$");
     private final static String implementationConfigPath = "openpos.services.specificConfig.%s.implementation";
+
     Map<String, Object> endPointsByPath;
 
     static BasicThreadFactory factory = new BasicThreadFactory.Builder().namingPattern("service-instrumentation-thread-%d").daemon(true)

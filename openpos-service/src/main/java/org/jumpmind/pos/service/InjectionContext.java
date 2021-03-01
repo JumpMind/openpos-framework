@@ -1,5 +1,12 @@
 package org.jumpmind.pos.service;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
 public class InjectionContext {
 
     private Object[] arguments;
@@ -9,12 +16,5 @@ public class InjectionContext {
         this.arguments = arguments;
     }
 
-    public Object[] getArguments() {
-        return arguments;
-    }
-
-    public void setArguments(Object[] arguments) {
-        this.arguments = arguments;
-    }
 
 }
