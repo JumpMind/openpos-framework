@@ -122,7 +122,13 @@ export class SessionService implements IMessageHandler<any> {
         @Inject(CLIENTCONTEXT) private clientContexts: Array<IClientContext>
     ) {
         this.zone.onError.subscribe((e) => {
-            console.error(`[OpenPOS]${e}`);
+            if (typeof(e) === 'string') {
+                console.error(`[OpenPOS] ${e}`);
+            } else if(e.message) {
+                console.error(`[OpenPOS] ${e.message}`, e);
+            } else {
+                console.error(`[OpenPOS] unexpected zone error`, e);
+            }
         });
         this.onServerConnect = new BehaviorSubject<boolean>(false);
 
