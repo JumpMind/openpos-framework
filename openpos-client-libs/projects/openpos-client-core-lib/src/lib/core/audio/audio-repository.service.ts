@@ -3,7 +3,7 @@ import { SessionService } from '../services/session.service';
 import { BehaviorSubject, EMPTY, Observable, of, Subject } from 'rxjs';
 import { AudioConfig } from './audio-config.interface';
 import { MessageTypes } from '../messages/message-types';
-import { skip, takeUntil, tap } from 'rxjs/operators';
+import { skip, take, takeUntil, tap } from 'rxjs/operators';
 import { AudioConfigMessage } from './audio-config-message.interface';
 import { AudioCache } from './audio-cache.interface';
 import { AudioRequest } from './audio-request.interface';
@@ -38,12 +38,10 @@ export class AudioRepositoryService implements OnDestroy {
         console.log('[AudioRepositoryService]: Loading audio configuration...');
         this.sessionService.publish('GetConfig', 'Audio');
 
-        return Observable.create(subscriber => {
-            this.config$.pipe(skip(1)).subscribe(config => {
-                subscriber.next(config);
-                subscriber.complete();
-            });
-        })
+        return this.config$.pipe(
+            skip(1),
+            take(1)
+        );
     }
 
     preloadAudio(): Observable<AudioCache> {
