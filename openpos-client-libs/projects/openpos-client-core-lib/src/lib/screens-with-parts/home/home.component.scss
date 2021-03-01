@@ -2,9 +2,8 @@
 
 .home-wrapper {
   height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows: auto 1fr;
 }
 
 .menu-button-border {
@@ -13,6 +12,11 @@
   padding: 20px;
   border-radius: 4px;
 
+  &.tablet {
+    margin: 10px;
+    padding: 10px;
+  }
+  
   &.mobile {
     margin: 6px;
     padding: 6px;
@@ -25,6 +29,14 @@
   justify-content: center;
   align-content: center;
 
+  &.tablet {
+    min-width: 130px;
+    min-height: 130px;
+    line-height: 16px;
+    font-weight: normal;
+    font-size: .75rem;
+  }
+  
   &.mobile {
     min-width: 96px;
     min-height: 96px;
@@ -59,9 +71,11 @@
 }
 
 .body-container {
-  display: flex;
-  flex: 1 1 100%;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 100%;
+  display: grid;
   height: 100%;
+  overflow: hidden;
 }
 
 .notifications {
@@ -70,6 +84,7 @@
 
 .button-grid {
   flex: 1 1 100%;
+  overflow:auto;
 }
 
 @supports not (display: grid) {
@@ -89,10 +104,16 @@
 @supports (display: grid) {
   .button-grid {
     display: grid;
-    place-content: center;
-    place-items: stretch;
+    align-items: center;
+    justify-items: center;
+    justify-content: center;
+    align-content: center;
     grid-template-columns: repeat(auto-fit, 240px);
 
+    &.tablet {
+      align-content: unset;
+    }
+    
     &.mobile {
       grid-template-columns: repeat(auto-fit, 120px);
     }

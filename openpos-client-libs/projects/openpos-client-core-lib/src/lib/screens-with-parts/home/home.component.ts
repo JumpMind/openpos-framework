@@ -58,8 +58,8 @@ export class HomeComponent extends PosScreen<HomeInterface> {
     this.gutterSize = media.observe(new Map([
       [MediaBreakpoints.MOBILE_PORTRAIT, 10],
       [MediaBreakpoints.MOBILE_LANDSCAPE, 10],
-      [MediaBreakpoints.TABLET_PORTRAIT, 20],
-      [MediaBreakpoints.TABLET_LANDSCAPE, 20],
+      [MediaBreakpoints.TABLET_PORTRAIT, 15],
+      [MediaBreakpoints.TABLET_LANDSCAPE, 15],
       [MediaBreakpoints.DESKTOP_PORTRAIT, 20],
       [MediaBreakpoints.DESKTOP_LANDSCAPE, 20]
     ]));
@@ -77,7 +77,7 @@ export class HomeComponent extends PosScreen<HomeInterface> {
       [MediaBreakpoints.MOBILE_PORTRAIT, 'material-icons mat-24'],
       [MediaBreakpoints.MOBILE_LANDSCAPE, 'material-icons mat-24'],
       [MediaBreakpoints.TABLET_PORTRAIT, 'material-icons mat-24'],
-      [MediaBreakpoints.TABLET_LANDSCAPE, 'material-icons mat-64'],
+      [MediaBreakpoints.TABLET_LANDSCAPE, 'material-icons mat-48'],
       [MediaBreakpoints.DESKTOP_PORTRAIT, 'material-icons mat-64'],
       [MediaBreakpoints.DESKTOP_LANDSCAPE, 'material-icons mat-64']
     ]));
@@ -86,7 +86,7 @@ export class HomeComponent extends PosScreen<HomeInterface> {
       [MediaBreakpoints.MOBILE_PORTRAIT, 'medium'],
       [MediaBreakpoints.MOBILE_LANDSCAPE, 'medium'],
       [MediaBreakpoints.TABLET_PORTRAIT, 'medium'],
-      [MediaBreakpoints.TABLET_LANDSCAPE, 'large'],
+      [MediaBreakpoints.TABLET_LANDSCAPE, 'medium'],
       [MediaBreakpoints.DESKTOP_PORTRAIT, 'large'],
       [MediaBreakpoints.DESKTOP_LANDSCAPE, 'large']
     ]));
