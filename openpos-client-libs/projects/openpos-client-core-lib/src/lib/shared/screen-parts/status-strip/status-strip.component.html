@@ -1,12 +1,12 @@
 <div fxLayoutAlign="space-between" class="muted-color text-sm status-strip">
     <div class="status-strip-time">
-        {{date|localizeddatetime}}
+        {{date | async | localizeddatetime}}
     </div>
     <div class="status-strip-system-status">
         <app-system-status></app-system-status>
         <span *ngIf="screenData.transactionNumber">{{screenData.transactionNumber}}&nbsp;-&nbsp;</span>
         <span *ngIf="screenData.timestampBegin">
-            {{timer|hourminsec}}
+            {{timer | async | hourminsec}}
         </span>
     </div>
 </div>
