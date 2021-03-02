@@ -40,38 +40,40 @@ export class PersonalizationStartupTask implements IStartupTask {
 
             iif(
                 () => this.hasPersonalizationQueryParams(data.route.queryParams),
-                defer(() => this.personalizeFromQueueParams(data.route.queryParams)),
+
+                concat(
+                    of('personalizing from query params'),
+                    defer(() => this.personalizeFromQueueParams(data.route.queryParams))
+                ),
 
                 // else
                 iif(
-                    () => {
-                        const ss = this.personalization.hasSavedSession();
-                        console.log("has saved session", {init: this.personalization.personalizationInitialized$.getValue(), saved: ss});
-                        return ss;
-                    },
+                    () => this.personalization.hasSavedSession(),
                     
-                    defer(() => {
-                        console.log('being defered');
-                        return this.personalization.personalizeFromSavedSession();
-                    }),
+                    concat(
+                        of('personalizing from saved session'),
+                        defer(() => this.personalization.personalizeFromSavedSession()),                        
+                    ),
 
                     // else
-                    defer(() => this.matDialog.open(
-                        PersonalizationComponent,
-                        {
-                            disableClose: true,
-                            hasBackdrop: false,
-                            panelClass: 'openpos-default-theme'
-                        }
-                    ).afterClosed().pipe(
-                        take(1)
-                    ))
+                    concat(
+                        of('prompting for manual personalization'),
+                        defer(() => this.matDialog.open(
+                            PersonalizationComponent,
+                            {
+                                disableClose: true,
+                                hasBackdrop: false,
+                                panelClass: 'openpos-default-theme'
+                            }
+                        ).afterClosed().pipe(
+                            take(1)
+                        ))
+                    )
                 )
             ).pipe(
                 retryWhen(errors => errors.pipe(
                     switchMap(() => interval(1000), (error, time) => `${error} \n Retry in ${5-time}`),
-                )),
-                take(1)
+                ))
             )
         );
     }
