@@ -31,7 +31,7 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
             if (mobile) {
                 this.carouselSize = 'sm';
             } else {
-                this.carouselSize = 'xl';
+                this.carouselSize = 'md';
             }
         });
     }
