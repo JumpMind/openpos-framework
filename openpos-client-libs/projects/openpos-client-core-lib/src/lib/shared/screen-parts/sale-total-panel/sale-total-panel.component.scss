@@ -19,7 +19,6 @@
         font-size: 36px;
     }
     .link-customer {
-        min-height: 102px;
         @extend %text-md;
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
@@ -29,7 +28,7 @@
         }
         .sale-total-loyalty-button-icon {
             width: 100%;
-            max-height: 60px;
+            vertical-align: bottom;
         }
     }
     .linked-customer-summary {
