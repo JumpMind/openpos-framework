@@ -25,7 +25,7 @@ public class TransactionSummary implements Serializable {
     private Integer items;
     private String itemsFormatted;
     private Date endTime;
-    private Timestamp transactionDate;
+    private String transactionDate;
     private String deviceId;
     private String storeId;
     private String tillId;
