@@ -18,6 +18,10 @@ import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos
 })
 export class SaleTotalPanelComponent extends ScreenPartComponent<SaleTotalPanelInterface> {
     isMobile: Observable<boolean>;
+    private loyaltyIconToken = '${icon}';
+    public loyaltyBefore: string;
+    public loyaltyAfter: string;
+
     constructor(injector: Injector, media: OpenposMediaService) {
         super(injector);
         this.isMobile = media.observe(new Map([
@@ -29,7 +33,19 @@ export class SaleTotalPanelComponent extends ScreenPartComponent<SaleTotalPanelI
             [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
         ]));
     }
-    screenDataUpdated() {}
+
+    screenDataUpdated() {
+        if (this.screenData.loyaltyButton) {
+            const title = this.screenData.loyaltyButton.title as string;
+            const parts = title.split(this.loyaltyIconToken);
+            if (parts && parts.length > 0) {
+                this.loyaltyBefore = parts[0].trim();
+                if (parts.length > 1) {
+                    this.loyaltyAfter = parts[1].trim();
+                }
+            }
+        }
+    }
 
     public keybindsEnabled(menuItem: IActionItem): boolean {
         return Configuration.enableKeybinds && !!menuItem.keybind && menuItem.keybind !== 'Enter';

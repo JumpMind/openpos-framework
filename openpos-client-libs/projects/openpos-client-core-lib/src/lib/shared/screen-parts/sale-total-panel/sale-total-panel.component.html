@@ -9,11 +9,12 @@
                 (click)="doAction(screenData.loyaltyButton)"
                 class="link-customer">
             <span>
-                {{screenData.loyaltyButton.title}}
+                <span *ngIf="loyaltyBefore" class="loyalty-before">{{loyaltyBefore}}</span>
+                <img *ngIf="screenData.loyaltyButton.icon" [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
+                <span *ngIf="loyaltyAfter" class="loyalty-after">{{loyaltyAfter}}</span>
                 <span *ngIf="keybindsEnabled(screenData.loyaltyButton)" class="muted-color loyalty-keybind" >
                     {{screenData.loyaltyButton.keybindDisplayName}}
                 </span>
-
             </span>
             <mat-icon class="material-icons" style="vertical-align: top">keyboard_arrow_right</mat-icon>
         </button>

@@ -19,13 +19,17 @@
         font-size: 36px;
     }
     .link-customer {
-        height: 102px;
+        min-height: 102px;
         @extend %text-md;
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
         min-width: 150px;
         .material-icons {
-            margin-top: -8px;
+            margin-top: -12px;
+        }
+        .sale-total-loyalty-button-icon {
+            width: 100%;
+            max-height: 60px;
         }
     }
     .linked-customer-summary {

@@ -14,6 +14,7 @@ import {KeyPressProvider} from "../../providers/keypress.provider";
 import {IActionItem} from "../../../core/actions/action-item.interface";
 import {By} from "@angular/platform-browser";
 import {Configuration} from "../../../configuration/configuration";
+import {ImageUrlPipe} from "../../pipes/image-url.pipe";
 
 class MockMatDialog {};
 class MockActionService {};
@@ -40,7 +41,7 @@ describe('SaleTotalPanelComponent', () => {
             TestBed.configureTestingModule({
                 imports: [HttpClientTestingModule, ],
                 declarations: [
-                    SaleTotalPanelComponent
+                    SaleTotalPanelComponent, ImageUrlPipe
                 ],
                 providers: [
                     { provide: ActionService, useClass: MockActionService },
@@ -135,10 +136,6 @@ describe('SaleTotalPanelComponent', () => {
                             keybindDisplayName: "F5",
                             title: "Link customer to apply rewards!"
                         } as IActionItem);
-                    });
-                    it('it shows the link customer button', () => {
-                        const button = fixture.debugElement.query(By.css('.sale-total-header .link-customer'));
-                        expect(button.nativeElement.textContent).toContain('Link customer to apply rewards!');
                     });
 
                     it('does not show the linked customer button', () => {
