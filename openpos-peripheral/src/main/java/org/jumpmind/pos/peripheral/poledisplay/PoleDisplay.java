@@ -66,6 +66,9 @@ public class PoleDisplay implements IStatusReporter {
             }
             peripheralConnection.getOut().write(CLEAR_DISPLAY);
             peripheralConnection.getOut().write(text.getBytes());
+            if (statusManager != null) {
+                statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, Status.Online));
+            }
         } catch (Exception ex) {
             if (statusManager != null) {
                 statusManager.reportStatus(new StatusReport(STATUS_NAME, STATUS_ICON, Status.Error, ex.getMessage()));
@@ -96,6 +99,7 @@ public class PoleDisplay implements IStatusReporter {
                 log.info("Closing connection to the pole display.");
                 connectionFactory.close(peripheralConnection);
                 peripheralConnection = null;
+                log.info("Pole display appears to be successfully opened.");
             } catch (Exception ex) {
                 log.warn("Failed to cleanly close connection to the pole display.", ex);
             }
