@@ -7,6 +7,7 @@ import { PersonalizationRequest } from './personalization-request';
 import { PersonalizationResponse } from './personalization-response.interface';
 
 import { Capacitor, Plugins as CapacitorPlugins } from '@capacitor/core';
+import { Storage } from '../storage/storage.service';
 
 @Injectable({
     providedIn: 'root'
@@ -26,14 +27,37 @@ export class PersonalizationService {
     private readonly isManagedServer$ = new BehaviorSubject<boolean | null>(null);
     private readonly personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: HttpClient) {
+    constructor(
+        private storage: Storage,
+        private http: HttpClient
+    ) {
         zip(
-            PersonalizationService.updateStorageVariable(this.deviceToken$, 'deviceToken'),
-            PersonalizationService.updateStorageVariable(this.serverName$, 'serverName'),
-            PersonalizationService.updateStorageVariable(this.serverPort$, 'serverPort'),
-            PersonalizationService.updateStorageVariable(this.sslEnabled$, 'sslEnabled', value => value === 'true'),
-            PersonalizationService.updateStorageVariable(this.isManagedServer$, PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY, value => value === 'true')
-        ).subscribe(() => {
+            storage.getValue('deviceToken'),
+            storage.getValue('serverName'),
+            storage.getValue('serverPort'),
+            storage.getValue('sslEnabled'),
+            storage.getValue(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY)
+        ).subscribe(results => {
+            if (results[0]) {
+                this.setDeviceToken(results[0]);
+            }
+
+            if (results[1]) {
+                this.setServerName(results[1]);
+            }
+
+            if (results[2]) {
+                this.setServerPort(results[2]);
+            }
+
+            if (results[3]) {
+                this.setSslEnabled(results[3] === 'true');
+            }
+
+            if (results[4]) {
+                this.isManagedServer$.next(results[4] === 'true');
+            }
+
             this.personalizationInitialized$.next(true);
         });
     }
@@ -104,27 +128,28 @@ export class PersonalizationService {
                 return 'Personalization successful';
             }),
             catchError( error => {
-                    this.personalizationSuccessFul$.next(false);
-                    if(error.status == 401){
-                        return throwError(`Device saved token does not match server`);
-                    }
+                this.personalizationSuccessFul$.next(false);
+                if(error.status == 401){
+                    return throwError(`Device saved token does not match server`);
+                }
 
-                    if(error.status == 0) {
-                        return throwError(`Unable to connect to ${serverName}:${serverPort}`);
-                    }
+                if(error.status == 0) {
+                    return throwError(`Unable to connect to ${serverName}:${serverPort}`);
+                }
 
-                    return throwError(`${error.statusText}`);
-
-                })
+                return throwError(`${error.statusText}`);
+            })
         )
     }
 
     public dePersonalize() {
-        PersonalizationService.setStorageValue('serverName', null);
-        PersonalizationService.setStorageValue('serverPort', null);
-        PersonalizationService.setStorageValue('deviceToken', null);
-        PersonalizationService.setStorageValue('theme', null);
-        PersonalizationService.setStorageValue('sslEnabled', null);
+        zip(
+            this.storage.remove('serverName'),
+            this.storage.remove('serverPort'),
+            this.storage.remove('deviceToken'),
+            this.storage.remove('theme'),
+            this.storage.remove('sslEnabled'),
+        ).subscribe();
     }
 
 
@@ -179,17 +204,17 @@ export class PersonalizationService {
     }
 
     private setSslEnabled(enabled: boolean) {
-        PersonalizationService.setStorageValue('sslEnabled', enabled + '');
+        this.storage.setValue('sslEnabled', enabled + '').subscribe();
         this.sslEnabled$.next(enabled);
     }
 
     private setServerName(name: string) {
-        PersonalizationService.setStorageValue('serverName', name);
+        this.storage.setValue('serverName', name).subscribe();
         this.serverName$.next(name);
     }
 
     private setServerPort(port: string) {
-        PersonalizationService.setStorageValue('serverPort', port);
+        this.storage.setValue('serverPort', port).subscribe();
         this.serverPort$.next(port);
     }
 
@@ -202,59 +227,11 @@ export class PersonalizationService {
     }
 
     private setDeviceToken(token: string){
-        PersonalizationService.setStorageValue('deviceToken', token);
+        this.storage.setValue('deviceToken', token).subscribe();
         this.deviceToken$.next(token);
     }
 
     public refreshApp() {
         window.location.reload();
-    }
-
-    private static canUseCapacitorStorage(): boolean {
-        // need to check if its native too because there is a default
-        // web implementation that we don't want to use under web.
-        return Capacitor.isNative && Capacitor.isPluginAvailable('Storage');
-    }
-
-    private static async updateStorageVariable(subject: Subject<any>, key: string, convert?: (value: string) => any) {
-        let value: string;
-
-        if (PersonalizationService.canUseCapacitorStorage()) {
-            let result = await CapacitorPlugins.Storage.get({ key: key });
-
-            if (!result) {
-                return;
-            }
-
-            value = result.value;
-        } else {
-            value = localStorage.getItem(key);
-        }
-
-        let converted;
-
-        if (convert) {
-            converted = convert(value);
-        } else {
-            converted = value;
-        }
-
-        subject.next(converted);
-    }
-
-    private static async setStorageValue(key: string, value: string | null) {
-        if (PersonalizationService.canUseCapacitorStorage()) {
-            if (value === null) {
-                await CapacitorPlugins.Storage.remove({ key: key });
-            } else {
-                await CapacitorPlugins.Storage.set({ key: key, value: value });
-            }
-        } else {
-            if (value === null) {
-                localStorage.removeItem(key);
-            } else {
-                localStorage.setItem(key, value);
-            }
-        }
     }
 }

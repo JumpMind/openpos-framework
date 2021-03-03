@@ -76,6 +76,9 @@ import { InfineaScannerCordovaPlugin } from './platform-plugins/barcode-scanners
 import { WedgeScannerPlugin } from './platform-plugins/barcode-scanners/wedge-scanner/wedge-scanner.plugin';
 import { ServerScannerPlugin } from './platform-plugins/barcode-scanners/server-scanner/server-scanner.service';
 import { ScanditScannerCordovaPlugin } from './platform-plugins/barcode-scanners/scandit-scanner-cordova/scandit-scanner-cordova.plugin';
+import { CapacitorStorageService } from './storage/capacitor/capacitor-storage.service';
+import { Storage } from './storage/storage.service';
+import { STORAGE_CONTAINERS } from './storage/storage-container';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -148,6 +151,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         { provide: PLATFORMS, useExisting: CapacitorIosPlatform, multi: true },
         { provide: PLATFORMS, useExisting: CapacitorAndroidPlatform, multi: true },
+        { provide: STORAGE_CONTAINERS, useClass: CapacitorStorageService, multi: true },
         BrowserPrinterPlugin,
         { provide: PRINTERS, useExisting: BrowserPrinterPlugin, multi: true},
         LocationService,
@@ -163,7 +167,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         AudioService,
         AudioInteractionService,
         AudioRepositoryService,
-        { provide: PLUGINS, useExisting: AudioConsolePlugin, multi: true, deps: [AudioService]}
+        { provide: PLUGINS, useExisting: AudioConsolePlugin, multi: true, deps: [AudioService]},
+        Storage
     ]
 })
 export class CoreModule {
