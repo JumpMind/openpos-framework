@@ -24,12 +24,16 @@
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
         min-width: 150px;
+        .wrapper {
+            max-height: 60px;
+        }
         .material-icons {
             margin-top: -12px;
         }
         .sale-total-loyalty-button-icon {
             width: 100%;
             max-height: 60px;
+            vertical-align: bottom;
         }
     }
     .linked-customer-summary {

@@ -8,7 +8,7 @@
                 (actionClick)="doAction(screenData.loyaltyButton)"
                 (click)="doAction(screenData.loyaltyButton)"
                 class="link-customer">
-            <span>
+            <span class="wrapper">
                 <span *ngIf="loyaltyBefore" class="loyalty-before">{{loyaltyBefore}}</span>
                 <img *ngIf="screenData.loyaltyButton.icon" [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
                 <span *ngIf="loyaltyAfter" class="loyalty-after">{{loyaltyAfter}}</span>
