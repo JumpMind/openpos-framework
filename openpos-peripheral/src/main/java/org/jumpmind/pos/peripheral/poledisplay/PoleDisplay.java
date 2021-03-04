@@ -99,7 +99,7 @@ public class PoleDisplay implements IStatusReporter {
                 log.info("Closing connection to the pole display.");
                 connectionFactory.close(peripheralConnection);
                 peripheralConnection = null;
-                log.info("Pole display appears to be successfully opened.");
+                log.info("Pole display appears to be successfully closed.");
             } catch (Exception ex) {
                 log.warn("Failed to cleanly close connection to the pole display.", ex);
             }
