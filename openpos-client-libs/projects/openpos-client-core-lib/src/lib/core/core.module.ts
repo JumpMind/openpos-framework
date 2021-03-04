@@ -79,6 +79,7 @@ import { ScanditScannerCordovaPlugin } from './platform-plugins/barcode-scanners
 import { CapacitorStorageService } from './storage/capacitor/capacitor-storage.service';
 import { Storage } from './storage/storage.service';
 import { STORAGE_CONTAINERS } from './storage/storage-container';
+import { CapacitorPrinterPlugin } from './platform-plugins/printers/capacitor-printer.plugin';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -152,8 +153,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: PLATFORMS, useExisting: CapacitorIosPlatform, multi: true },
         { provide: PLATFORMS, useExisting: CapacitorAndroidPlatform, multi: true },
         { provide: STORAGE_CONTAINERS, useClass: CapacitorStorageService, multi: true },
-        BrowserPrinterPlugin,
-        { provide: PRINTERS, useExisting: BrowserPrinterPlugin, multi: true},
+        CapacitorPrinterPlugin,
+        { provide: PRINTERS, useExisting: CapacitorPrinterPlugin, multi: true},
         LocationService,
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
         TrainingOverlayService,

@@ -1,22 +1,40 @@
-import {Inject, Injectable, InjectionToken, Optional} from '@angular/core';
-import {MessageTypes} from '../../messages/message-types';
-import {PrintMessage} from '../../messages/print-message';
-import {SessionService} from '../../services/session.service';
-import {IPrinter} from './printer.interface';
+import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { MessageTypes } from '../../messages/message-types';
+import { PrintMessage } from '../../messages/print-message';
+import { SessionService } from '../../services/session.service';
+import { BrowserPrinterPlugin } from './browser-printer.plugin';
+import { IPrinter } from './printer.interface';
 
 export const PRINTERS = new InjectionToken<IPrinter[]>('Printers');
 
-@Injectable({providedIn: 'root'})
-export class PrinterService{
-    constructor( @Optional() @Inject(PRINTERS) private printers: Array<IPrinter>, sessionService: SessionService) {
-        sessionService.getMessages(MessageTypes.PRINT).subscribe( m => this.print((m as PrintMessage).printerId, (m as PrintMessage).html));
-    }
+@Injectable({
+    providedIn: 'root'
+})
+export class PrinterService {
+    private readonly _selectedPrinter: IPrinter;
 
-    print( printerId: string, html: string){
-        const printer = this.printers.filter( p => p.id === printerId);
-        if(printer.length > 0){
-            printer[0].print(html);
+    constructor(
+        @Optional() @Inject(PRINTERS) private printers: Array<IPrinter>, 
+        sessionService: SessionService,
+
+        // browser printer will be used as fallback if no other printers are avaialable.
+        browserPrinter: BrowserPrinterPlugin
+    ) {
+        this._selectedPrinter = browserPrinter;
+
+        if (printers) {
+            const supportedPrinters = printers.filter(p => p.isSupported());
+            if (supportedPrinters.length > 0) {
+                this._selectedPrinter = supportedPrinters[0];
+            }
         }
+
+        console.log(`using '${this._selectedPrinter.name()}' printer`);
+
+        sessionService.getMessages(MessageTypes.PRINT).subscribe(m => this.print((m as PrintMessage).html));
     }
 
+    print(html: string) {
+        this._selectedPrinter.print(html);
+    }
 }

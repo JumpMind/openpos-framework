@@ -1,4 +1,7 @@
 export interface IPrinter {
-    print( html: String);
-    id: string;
+    name(): string;
+
+    isSupported(): boolean;
+
+    print(html: String);
 }
