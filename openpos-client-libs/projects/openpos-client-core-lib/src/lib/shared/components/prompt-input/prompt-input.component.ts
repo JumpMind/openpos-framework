@@ -96,8 +96,7 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     }
 
     isScanAllowed(): boolean {
-        return this.scanEnabled &&
-            ['numerictext', 'alphanumerictext'].indexOf(this.responseType.toLowerCase()) >= 0;
+        return this.scanEnabled && (this.responseType && ['numerictext', 'alphanumerictext'].indexOf(this.responseType.toLowerCase()) >= 0);
     }
 
 
