@@ -44,7 +44,7 @@ public class ActionItem implements Serializable {
     protected String defaultPayload;
 
     protected String icon;
-    protected boolean enabled = true;
+    @Builder.Default protected boolean enabled = true;
     protected ConfirmationDialog confirmationDialog;
     protected List<ActionItem> children;
     protected boolean sensitive;
@@ -59,7 +59,7 @@ public class ActionItem implements Serializable {
     protected ActionTimer actionTimer;
 
     @JsonIgnore
-    protected boolean autoAssignEnabled = true;
+    @Builder.Default protected boolean autoAssignEnabled = true;
 
     public final static String FONT_SIZE_XS = "text-xs";
     public final static String FONT_SIZE_SM = "text-sm";
