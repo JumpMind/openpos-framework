@@ -44,6 +44,7 @@ public class ActionItem implements Serializable {
     protected String defaultPayload;
 
     protected String icon;
+    @Builder.Default
     protected boolean enabled = true;
     protected ConfirmationDialog confirmationDialog;
     protected List<ActionItem> children;
@@ -59,6 +60,7 @@ public class ActionItem implements Serializable {
     protected ActionTimer actionTimer;
 
     @JsonIgnore
+    @Builder.Default
     protected boolean autoAssignEnabled = true;
 
     public final static String FONT_SIZE_XS = "text-xs";
@@ -74,10 +76,12 @@ public class ActionItem implements Serializable {
     public final static String BUTTON_SIZE_XL = "menuItem-xl";
 
     public ActionItem(String action) {
+        this();
         this.action = action;
     }
 
     public ActionItem(String action, String title) {
+        this();
         this.action = action;
         this.title = title;
     }
@@ -107,14 +111,14 @@ public class ActionItem implements Serializable {
     }
 
     public ActionItem(String title, String action, boolean enabled) {
-        super();
+        this();
         this.action = action;
         this.title = title;
         this.enabled = enabled;
     }
 
     public ActionItem(String title, String action, String icon, boolean enabled) {
-        super();
+        this();
         this.action = action;
         this.title = title;
         this.enabled = enabled;
@@ -122,7 +126,7 @@ public class ActionItem implements Serializable {
     }
 
     public ActionItem(String title, String action, boolean enabled, boolean sensitive) {
-        super();
+        this();
         this.action = action;
         this.title = title;
         this.enabled = enabled;
