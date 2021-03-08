@@ -1,30 +1,37 @@
 <div [formGroup]="promptFormGroup">
     <ng-container *ngIf="!isDateField(); else dateField" [ngSwitch]="true">
-        <div *ngSwitchDefault class="input-container">
-            <mat-form-field class="prompt-text grow" responsive-class>
-                <!-- Was using this:
-                    <mat-icon matPrefix class="material-icons" color="primary">{{promptIcon}}</mat-icon>
-                    but want to be able to use local icons.  TODO: problem with styling however, sizing not working
-                    for SVG icon
-                -->
-                
-                <app-icon matPrefix iconClass="material-icons md primary" [iconName]="promptIcon" responsive-class>
-                </app-icon>
-                <input matInput [errorStateMatcher]="errorMatcher" [formControlName]="'promptInputControl'"
-                    [formatterName]="responseType" cdkFocusInitial [attr.minlength]="minLength" [attr.maxlength]="maxLength"
-                    [readonly]="readOnly" [attr.type]="isNumericField() ? 'tel' : 'text'" [keyboardLayout]="keyboardLayout"
-                    class="prompt-input" autoSelectOnFocus responsive-class>
-                <mat-placeholder>{{placeholderText}}</mat-placeholder>
-                <mat-hint class="prompt-hint" align="start" responsive-class>{{hintText}}</mat-hint>
-                <mat-error class="prompt-error">
-                    <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"
-                        [additionalValidationMessages]="validationMessages"></app-show-errors>
-                </mat-error>
-            </mat-form-field>
-            <app-primary-button responsive-class *ngIf="isScanAllowed()" type="button" mat-button color="primary"
-                (click)="onScan()">
-                <app-icon class="barcode-icon" iconName="barcode"></app-icon>
-            </app-primary-button>
+        <div *ngSwitchDefault class="input-barcode-container">
+            <div class="input-container">
+                <mat-form-field class="prompt-text grow" responsive-class>
+                    <!-- Was using this:
+                        <mat-icon matPrefix class="material-icons" color="primary">{{promptIcon}}</mat-icon>
+                        but want to be able to use local icons.  TODO: problem with styling however, sizing not working
+                        for SVG icon
+                    -->
+                    
+                    <app-icon matPrefix iconClass="material-icons md primary" [iconName]="promptIcon" responsive-class>
+                    </app-icon>
+                    <input matInput [errorStateMatcher]="errorMatcher" [formControlName]="'promptInputControl'"
+                        [formatterName]="responseType" cdkFocusInitial [attr.minlength]="minLength" [attr.maxlength]="maxLength"
+                        [readonly]="readOnly" [attr.type]="isNumericField() ? 'tel' : 'text'" [keyboardLayout]="keyboardLayout"
+                        class="prompt-input" autoSelectOnFocus responsive-class>
+                    <mat-placeholder>{{placeholderText}}</mat-placeholder>
+                    <mat-hint class="prompt-hint" align="start" responsive-class>{{hintText}}</mat-hint>
+                    <mat-error class="prompt-error">
+                        <app-show-errors [control]="promptFormGroup.controls['promptInputControl']"
+                            [additionalValidationMessages]="validationMessages"></app-show-errors>
+                    </mat-error>
+                </mat-form-field>
+                <app-primary-button responsive-class *ngIf="isScanAllowed()" type="button" mat-button color="primary"
+                    (click)="onScan()">
+                    <app-icon class="barcode-icon" iconName="barcode"></app-icon>
+                </app-primary-button>
+            </div>
+
+            <div class="barcode-scanner" *ngIf="showScanner">
+                <app-image-scanner>
+                </app-image-scanner>
+            </div>
         </div>
         
         <mat-form-field fxFlexFill *ngSwitchCase="responseType==='Weight'" ngClass="text-lg">
