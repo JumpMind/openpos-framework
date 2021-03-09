@@ -1,9 +1,11 @@
-import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material';
 
 import { BarcodeScanner } from '../../../core/platform-plugins/barcode-scanners/barcode-scanner.service';
+import { ScanData } from '../../../core/platform-plugins/barcode-scanners/scanner';
+import { ActionService } from '../../../core/actions/action.service';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 
 @Component({
     selector: 'app-prompt-input',
@@ -26,6 +28,8 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     @Input() scanEnabled = false;
     @Input() validationMessages: Map<string, string>;
 
+    @Input() scanActionName?: string;
+
     inputType: string;
     checked = true;
     errorMatcher = new MyErrorStateMatcher();
@@ -33,9 +37,10 @@ export class PromptInputComponent implements OnInit, OnDestroy {
 
     showScanner = false;
 
-    private _activeScan: Subscription;
-
-    constructor(private _barcodeScanner: BarcodeScanner) {}
+    constructor(
+        private _actionService: ActionService,
+        private _barcodeScanner: BarcodeScanner
+    ) {}
 
     isNumericField(): boolean {
         if (this.responseType) {
@@ -71,15 +76,12 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this._activeScan) {
-            this._activeScan.unsubscribe();
-        }
     }
 
     isScanAllowed(): boolean {
-        return this.scanEnabled 
-            && (this.responseType && ['numerictext', 'alphanumerictext'].indexOf(this.responseType.toLowerCase()) >= 0);
-            //&& this._barcodeScanner.hasImageScanner;
+        return this.scanEnabled
+            && (this.responseType && ['numerictext', 'alphanumerictext'].indexOf(this.responseType.toLowerCase()) >= 0)
+            && this._barcodeScanner.hasImageScanner;
     }
 
     // This method is invoked when the user presses the Scan button on the field.
@@ -89,11 +91,13 @@ export class PromptInputComponent implements OnInit, OnDestroy {
         this.showScanner = !this.showScanner && this.isScanAllowed();
 
         console.log('scanner show changed', this.showScanner);
-        
-        if (this.showScanner) {
-            //this._activeScan = this._barcodeScanner.beginImageScanning()
+    }
+
+    async onBarcodeScanned(data: ScanData) {
+        if (this.scanActionName) {
+            await this._actionService.doAction({ action: this.scanActionName, queueIfBlocked: true }, data);
         } else {
-            this._activeScan.unsubscribe();
+            this.setFieldValue(data.data);
         }
     }
 
