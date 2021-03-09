@@ -51,6 +51,17 @@ public class ClientContext {
         return props.get(name);
     }
 
+    /**
+     * Removes the given property from the ClientContext
+     * @param name The name of the property to remove.
+     */
+    public void remove(String name) {
+        Map<String, String> props = propertiesMap.get();
+        if (props != null && name != null) {
+            props.remove(name);
+        }
+    }
+
     public Set<String> getPropertyNames() {
         Map<String, String> props = propertiesMap.get();
 
