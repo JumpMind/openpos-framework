@@ -1,14 +1,15 @@
-import { Configuration } from './../../../configuration/configuration';
+import { Configuration } from '../../../configuration/configuration';
 import { IActionItem } from '../../../core/actions/action-item.interface';
-import { SelectionMode } from './../../../core/interfaces/selection-mode.enum';
-import { ISellItem } from './../../../core/interfaces/sell-item.interface';
-import { Component, Input } from '@angular/core';
+import { SelectionMode } from '../../../core/interfaces/selection-mode.enum';
+import { ISellItem } from '../../../core/interfaces/sell-item.interface';
+import {Component} from '@angular/core';
 import { DialogComponent } from '../../../shared/decorators/dialog-component.decorator';
 import { SelectableItemListComponentConfiguration } from '../../../shared/components/selectable-item-list/selectable-item-list.component';
 import { ReturnTransDetailsInterface } from './return-trans-detals.interface';
 import { PosScreen } from '../../pos-screen/pos-screen.component';
 import { Observable } from 'rxjs';
 import { ISelectableListData } from '../../../shared/components/selectable-item-list/selectable-list-data.interface';
+import {ICheckboxField} from "../../../core/interfaces/form-field.interface";
 
 @DialogComponent({
     name: 'ReturnTransDetailDialog'
@@ -22,6 +23,8 @@ export class ReturnTransDetailsDialogComponent extends PosScreen<ReturnTransDeta
     listData: Observable<ISelectableListData<ISellItem>>;
     listConfig: SelectableItemListComponentConfiguration;
     selectionButton: IActionItem;
+    additionalButtons: IActionItem[];
+    employeeTransaction: ICheckboxField;
     index = -1;
 
     public onItemChange(event: any): void {
@@ -47,6 +50,8 @@ export class ReturnTransDetailsDialogComponent extends PosScreen<ReturnTransDeta
         });
 
         this.selectionButton = this.screen.selectionButton;
+        this.additionalButtons = this.screen.additionalButtons;
+        this.employeeTransaction = this.screen.employeeTransaction;
         this.listConfig = new SelectableItemListComponentConfiguration();
         this.listConfig.selectionMode = SelectionMode.Single;
         this.listConfig.numItemsPerPage = Number.MAX_VALUE;
@@ -57,6 +62,10 @@ export class ReturnTransDetailsDialogComponent extends PosScreen<ReturnTransDeta
         if (this.index > -1) {
             this.doAction(menuItem, this.index);
         }
+    }
+
+    public onEmployeeTransaction($event) {
+        this.doAction('MarkAsEmployeeTransaction', $event.checked);
     }
 
     public keybindsEnabled(menuItem: IActionItem): boolean {

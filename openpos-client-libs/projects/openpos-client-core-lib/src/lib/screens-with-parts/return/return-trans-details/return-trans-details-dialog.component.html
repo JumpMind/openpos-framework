@@ -14,7 +14,19 @@
                 </div>
             </mat-dialog-content>
         </app-content-card>
+        <ng-container *ngIf="employeeTransaction">
+            <mat-checkbox id="{{employeeTransaction.id}}"
+                          [checked]="employeeTransaction.checked"
+                          (change)="onEmployeeTransaction($event)" [value]="employeeTransaction.value"
+                          [disabled]="employeeTransaction.readOnly" [labelPosition]="employeeTransaction.labelPosition"
+            >
+                {{employeeTransaction.label}}
+            </mat-checkbox>
+        </ng-container>
         <mat-dialog-actions class="buttons">
+            <app-secondary-button *ngFor="let additionalButton of additionalButtons" (buttonClick)="doAction(additionalButton)">
+                <span>{{additionalButton.title}}</span>
+            </app-secondary-button>
             <app-primary-button cdkFocusInitial [disabled]="index<0"
                 [actionItem]="selectionButton" (actionClick)="doMenuItemAction(selectionButton)" (click)="doMenuItemAction(selectionButton)">
                 <span>{{selectionButton.title}}</span>&nbsp;

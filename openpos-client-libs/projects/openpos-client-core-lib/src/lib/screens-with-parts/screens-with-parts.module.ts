@@ -12,6 +12,7 @@ import { PromptWithOptionsScreenDialogComponent } from './prompt-with-options/pr
 import { HomeComponent } from './home/home.component';
 import { ReturnComponent } from './return/return.component';
 import { ReturnTransDetailsDialogComponent } from './return/return-trans-details/return-trans-details-dialog.component';
+import { AddItemToReturnTransactionComponent } from './return/add-item-to-return-transaction/add-item-to-return-transaction-dialog.component';
 import { ChooseOptionsScreenDialogComponent } from './choose-options-dialog/choose-options-screen-dialog.component';
 import { ConfirmDialogComponent } from './confirm-dialog/confirm-dialog.component';
 import { LoadingDialogComponent } from './loading-dialog/loading-dialog.component';
@@ -68,6 +69,7 @@ const dialogs = [
     PromptWithInfoScreenDialogComponent,
     ChooseOptionsScreenDialogComponent,
     ReturnTransDetailsDialogComponent,
+    AddItemToReturnTransactionComponent,
     ConfirmDialogComponent,
     LoadingDialogComponent,
     DynamicFormDialogComponent,
