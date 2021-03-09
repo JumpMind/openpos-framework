@@ -5,7 +5,6 @@ import { ErrorStateMatcher } from '@angular/material';
 import { BarcodeScanner } from '../../../core/platform-plugins/barcode-scanners/barcode-scanner.service';
 import { ScanData } from '../../../core/platform-plugins/barcode-scanners/scanner';
 import { ActionService } from '../../../core/actions/action.service';
-import { IActionItem } from '../../../core/actions/action-item.interface';
 
 @Component({
     selector: 'app-prompt-input',

@@ -27,5 +27,5 @@ export interface PromptFormPartInterface {
     validationMessages: Map<string, string>;
     promptPosition: PromptPosition;
     info: DisplayProperty[];
-    scan: ScanInterface;
+    scan?: ScanInterface;
 }

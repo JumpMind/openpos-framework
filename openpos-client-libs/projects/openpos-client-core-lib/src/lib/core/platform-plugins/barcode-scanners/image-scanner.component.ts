@@ -8,7 +8,15 @@ import { BarcodeScanner } from './barcode-scanner.service';
 
 @Component({
     selector: 'app-image-scanner',
-    template: ''
+    template: '',
+    styles: [
+        `
+        :host {
+            width: 100%;
+            height: 100%;
+        }
+        `
+    ]
 })
 export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef {
     @Output() readonly scanChanged = new EventEmitter<boolean>();

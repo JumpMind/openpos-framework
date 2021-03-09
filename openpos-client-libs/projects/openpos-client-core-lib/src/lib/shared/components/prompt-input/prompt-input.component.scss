@@ -77,7 +77,7 @@ app-icon {
 }
 
 .barcode-scanner {
+  display: grid;
   width: 100%;
-  background: blue;
   min-height: 200px;
 }

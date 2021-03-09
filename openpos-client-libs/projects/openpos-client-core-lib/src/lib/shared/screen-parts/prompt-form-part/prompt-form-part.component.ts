@@ -6,7 +6,6 @@ import { IActionItem } from '../../../core/actions/action-item.interface';
 import { PromptFormPartInterface } from './prompt-form-part.interface';
 import {Configuration} from '../../../configuration/configuration';
 import {merge} from 'rxjs';
-import { ScanInterface } from '../scan-part/scan-part.interface';
 
 @Component({
     selector: 'app-prompt-form-part',
