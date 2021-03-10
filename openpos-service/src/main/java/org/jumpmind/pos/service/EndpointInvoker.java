@@ -195,7 +195,8 @@ public class EndpointInvoker implements InvocationHandler {
 
         if (pathMatchedOverrides.size() > 0) {
             List<SimpleEntry<Object, EndpointOverride>> implMatchedOverrides = pathMatchedOverrides.stream()
-                    .filter(entry -> entry.getValue().implementation().equals(implementation)).collect(Collectors.toList());
+                    .filter(entry -> entry.getValue().implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT) || entry.getValue().implementation().equals(implementation))
+                    .collect(Collectors.toList());
             if (implMatchedOverrides.size() > 1) {
                 throw new IllegalStateException(
                         String.format("Found %d EndpointOverrides having path '%s' and implementation '%s'. Expected only one.",
