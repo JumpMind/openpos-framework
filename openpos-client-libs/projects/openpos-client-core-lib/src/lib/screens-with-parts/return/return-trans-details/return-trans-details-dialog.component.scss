@@ -40,7 +40,7 @@
     margin: 0;
 }
 
-::ng-deep {
+:host ::ng-deep {
     .mat-checkbox {
         .mat-checkbox-layout {
             float: right;
