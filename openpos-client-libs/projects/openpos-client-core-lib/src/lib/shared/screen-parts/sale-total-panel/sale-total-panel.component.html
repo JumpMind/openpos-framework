@@ -28,12 +28,12 @@
             <div class="button-wrapper">
                 <div class="grid-container">
                     <div class="name">
-                        <div class="customer-name">
+                        <div responsive-class class="customer-name">
                             {{screenData.customer.name}}
                             <span *ngIf="keybindsEnabled(screenData.linkedCustomerButton)"
-                                  class="muted-color loyalty-keybind">{{screenData.linkedCustomerButton.keybindDisplayName}}</span></div>
+                                  class="muted-color loyalty-keybind">{{screenData.linkedCustomerButton.keybindDisplayName}}</span>
                         </div>
-
+                    </div>
                     <div class="icon"><app-icon [iconName]="'account_circle'" [iconClass]="(isMobile | async) ? null: 'material-icons mat-36'"></app-icon></div>
                     <div class="memberships"><span>{{screenData.loyaltyIDLabel}}: {{screenData.customer.id}}</span></div>
                 </div>
