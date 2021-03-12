@@ -189,14 +189,23 @@ public class EndpointInvoker implements InvocationHandler {
     protected Object findBestEndpointOverrideMatch(String path, String implementation, Collection<Object> endpointOverrides) {
         Object bestMatch = null;
         List<SimpleEntry<Object,EndpointOverride>> pathMatchedOverrides = endpointOverrides.stream()
-                .map(o -> new SimpleEntry<Object,EndpointOverride>(o, ClassUtils.resolveAnnotation(EndpointOverride.class, o)))
+                .map(o -> new SimpleEntry<>(o, ClassUtils.resolveAnnotation(EndpointOverride.class, o)))
                 .filter(entry -> entry.getValue().path().equals(path)
                 ).collect(Collectors.toList());
 
         if (pathMatchedOverrides.size() > 0) {
-            List<SimpleEntry<Object, EndpointOverride>> implMatchedOverrides = pathMatchedOverrides.stream()
-                    .filter(entry -> entry.getValue().implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT) || entry.getValue().implementation().equals(implementation))
-                    .collect(Collectors.toList());
+            List<SimpleEntry<Object, EndpointOverride>> implMatchedOverrides;
+            if(pathMatchedOverrides.stream().anyMatch(entry -> entry.getValue().implementation().equals(implementation))) {
+                implMatchedOverrides = pathMatchedOverrides.stream()
+                        .filter(entry -> entry.getValue().implementation().equals(implementation))
+                        .collect(Collectors.toList());
+            }
+            else {
+                implMatchedOverrides = pathMatchedOverrides.stream()
+                        .filter(entry -> entry.getValue().implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT))
+                        .collect(Collectors.toList());
+            }
+
             if (implMatchedOverrides.size() > 1) {
                 throw new IllegalStateException(
                         String.format("Found %d EndpointOverrides having path '%s' and implementation '%s'. Expected only one.",
