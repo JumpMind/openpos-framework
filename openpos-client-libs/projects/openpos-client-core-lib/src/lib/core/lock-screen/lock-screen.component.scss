@@ -1,6 +1,6 @@
 @import "../../styles/mixins/typography";
 
-main{
+main {
   height: 100vh;
   width: 100vw;
   display: grid;
@@ -11,35 +11,41 @@ main{
   align-content: center;
   justify-content: center;
 
-  section{
+  section {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 240px;
+    min-height: 320px;
     border-radius: 20px;
     padding: 16px;
     display: grid;
 
-    h1{
+    h1 {
       text-align: center;
     }
 
-    .error{
+    .error {
       @extend %text-sm;
       padding: 10px;
       border-radius: 10px;
     }
 
-    .override{
+    .override {
       display: grid;
       align-items: end;
       justify-items: right;
     }
 
-    .user{
+    .user {
       align-items: center;
       align-content: end;
       justify-content: center;
       justify-items: center;
       display: grid;
       row-gap: 8px;
-    };
+    }
 
     &.mobile {
       .user {
