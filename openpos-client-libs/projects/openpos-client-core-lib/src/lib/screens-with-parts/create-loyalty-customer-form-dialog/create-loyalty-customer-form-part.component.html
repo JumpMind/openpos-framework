@@ -1,0 +1,48 @@
+<app-scan-part></app-scan-part>
+<app-form *ngIf="screenData" (submitFormEvent)="submitForm()" [form]="form">
+    <div responsive-class class="form-part-body">
+        <app-content-card>
+            <mat-card-content mat-dialog-conten class="form-content">
+                <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
+                    <div class="BasicInfo">
+                        <div class="Portrait">
+                            <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons ' + ((isMobile | async) ? 'mat-64' : '')"></app-icon>
+                        </div>
+                        <div class="Names">
+                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[0]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[1]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        </div>
+                    </div>
+                    <div class="Contact">
+                        <div>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[4]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[5]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        </div>
+                    </div>
+                    <div class="Loyalty">
+                        <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[3]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <div>No memberships yet (TODO: do proper i18 here)</div>
+                    </div>
+                    <div class="Zip">
+                        <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[2]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                    </div>
+                </div>
+                <mat-error>
+                    <div id="formErrorsWrapper"><app-show-errors #formErrors [control]="form"></app-show-errors></div>
+                    <div *ngFor="let error of screenData.formErrors">{{error}}</div>
+                </mat-error>
+            </mat-card-content>
+        </app-content-card>
+
+        <mat-card-actions *ngIf="(buttons && buttons.length > 0) || submitButton" mat-dialog-actions class="buttons">
+            <app-secondary-button *ngFor="let button of buttons" (click)="doAction(button)">
+                <span>{{button.label}}</span>
+                <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
+            </app-secondary-button>
+            <app-primary-button *ngIf="submitButton" type="submit" [disabled]="disableSubmitButton || !form.valid || form.pending">
+                <span>{{submitButton.title}}</span>
+                <app-icon *ngIf="submitButton.icon" [iconName]="submitButton.icon"></app-icon>
+            </app-primary-button>
+        </mat-card-actions>
+    </div>
+</app-form>

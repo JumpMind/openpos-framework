@@ -1,0 +1,10 @@
+@import "../../styles/variables/spacing";
+
+.form-body {
+    display: grid;
+    @extend %page-spaced-content;
+}
+
+:host ::ng-deep .content {
+    max-height: 50vh;
+}

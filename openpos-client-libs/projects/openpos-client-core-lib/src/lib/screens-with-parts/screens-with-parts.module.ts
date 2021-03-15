@@ -37,6 +37,9 @@ import { TransactionDetailsComponent } from './transaction-details/transaction-d
 import {SimulatedPeripheralViewerComponent} from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
 import {CustomerDetailsDialogComponent} from "./sale/customer-details-dialog/customer-details-dialog.component";
 
+import { CreateLoyaltyFormDialogComponent } from "./create-loyalty-customer-form-dialog/create-loyalty-customer-form-dialog.component";
+import {CreateLoyaltyCustomerFormPart} from "./create-loyalty-customer-form-dialog/create-loyalty-customer-form-part.component";
+
 
 const screens = [
     SelectionListScreenComponent,
@@ -76,7 +79,10 @@ const dialogs = [
     CustomerDetailsDialogComponent,
     AutoCompleteAddressDialogComponent,
     ErrorDialogComponent,
-    DataTableDialogComponent
+    DataTableDialogComponent,
+
+    CreateLoyaltyFormDialogComponent,
+    CreateLoyaltyCustomerFormPart
 ];
 
 @NgModule({
