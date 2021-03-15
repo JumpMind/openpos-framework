@@ -46,7 +46,8 @@
                 .name {
                     grid-area: Name;
                     .customer-name {
-                        overflow: auto;
+                        overflow: hidden;
+                        white-space: normal;
                         @extend %text-sm;
                         .loyalty-keybind {
                             margin-left: 10px;
