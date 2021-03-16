@@ -1,6 +1,5 @@
 package org.jumpmind.pos.service;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +7,6 @@ import java.util.Map;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
@@ -24,9 +22,6 @@ public class ServiceConfig {
 
     @Autowired(required = false)
     IConfigApplicator additionalConfigSource;
-
-    @Autowired
-    CacheManager cacheManager;
 
     public Map<String, ProfileConfig> getProfiles() {
         if (profiles == null) {
