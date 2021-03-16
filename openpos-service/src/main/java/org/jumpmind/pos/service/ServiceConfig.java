@@ -8,6 +8,8 @@ import java.util.Map;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -22,6 +24,9 @@ public class ServiceConfig {
 
     @Autowired(required = false)
     IConfigApplicator additionalConfigSource;
+
+    @Autowired
+    CacheManager cacheManager;
 
     public Map<String, ProfileConfig> getProfiles() {
         if (profiles == null) {
@@ -45,7 +50,8 @@ public class ServiceConfig {
         return specificConfig;
     }
 
-    public ServiceSpecificConfig getServiceConfig(String serviceId) {
+    @Cacheable(value = "/serviceConfig", key = "#deviceId.concat('-').concat(#serviceId)")
+    public ServiceSpecificConfig getServiceConfig(String deviceId, String serviceId) {
         ServiceSpecificConfig config = getSpecificConfig().get(serviceId);
         if (config == null) {
             config = new ServiceSpecificConfig();
