@@ -283,7 +283,11 @@ public class EndpointInvoker implements InvocationHandler {
     private ServiceSpecificConfig getSpecificConfig(Method method) {
         String serviceName = AbstractInvocationStrategy.getServiceName(method);
         if (StringUtils.isNotBlank(serviceName)) {
-            return serviceConfig.getServiceConfig(serviceName);
+            String deviceId = clientContext.get("deviceId");
+            if(deviceId == null) {
+                deviceId = "no-device";
+            }
+            return serviceConfig.getServiceConfig(deviceId, serviceName);
         } else {
             throw new IllegalStateException(method.getDeclaringClass().getSimpleName() + " must declare @"
                     + RestController.class.getSimpleName() + " and it must have the value() attribute set");
