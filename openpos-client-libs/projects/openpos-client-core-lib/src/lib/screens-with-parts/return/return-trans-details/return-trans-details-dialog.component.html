@@ -18,7 +18,7 @@
             <mat-checkbox id="{{employeeTransaction.id}}"
                           [checked]="employeeTransaction.checked"
                           (change)="onEmployeeTransaction($event)" [value]="employeeTransaction.value"
-                          [disabled]="employeeTransaction.readOnly" labelPosition="'before'"
+                          [disabled]="employeeTransaction.readOnly" labelPosition="before"
             >
                 {{employeeTransaction.label}}
             </mat-checkbox>
