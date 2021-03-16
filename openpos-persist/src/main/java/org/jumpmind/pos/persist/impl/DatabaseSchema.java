@@ -81,13 +81,21 @@ public class DatabaseSchema {
                 table.setName(tableName.substring(0, tableName.length() - 1));
             }
         }
+        if(shadowTables.size() > 0 && shadowTablesConfig != null) {
+            prefixShadowTables();
 
-        for (ModelClassMetaData shadowMeta : shadowTables.values())  {
-            db.addTable(shadowMeta.getShadowTable());
-            log.info("Adding shadow table, regular table name {}, shadow table name {}", getTableName(tablePrefix, shadowMeta.getTable().getName()), shadowMeta.getShadowTable().getName());
+            for (ModelClassMetaData shadowMeta : shadowTables.values()) {
+                db.addTable(shadowMeta.getShadowTable());
+                log.info("Adding shadow table, regular table name {}, shadow table name {}", getTableName(tablePrefix, shadowMeta.getTable().getName()), shadowMeta.getShadowTable().getName());
+            }
         }
-
         return db;
+    }
+
+    private void prefixShadowTables() {
+        Database shadowDatabase = new Database();
+        shadowDatabase.addTables(shadowTables.values().stream().map(ModelClassMetaData::getShadowTable).collect(Collectors.toList()));
+        platform.prefixDatabase(String.format("%s_%s", shadowTablesConfig.getTablePrefix(), tablePrefix ), shadowDatabase);
     }
 
     public Table getTable(Class<?> entityClass, Class<?> superClass) {

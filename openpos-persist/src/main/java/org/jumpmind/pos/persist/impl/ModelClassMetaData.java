@@ -74,10 +74,7 @@ public class ModelClassMetaData {
     }
 
     public void setShadowTable(String shadowPrefix, String modulePrefix)  {
-        Table shadowTable = table.copy();
-        shadowTable.setName((shadowPrefix + "_" + modulePrefix + "_" + table.getName()).toUpperCase());
-
-        this.shadowTable = shadowTable;
+        this.shadowTable = table.copy();
         this.shadowPrefix = shadowPrefix;
         this.modulePrefix = modulePrefix;
     }
