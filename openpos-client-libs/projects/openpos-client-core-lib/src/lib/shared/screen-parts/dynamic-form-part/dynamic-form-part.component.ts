@@ -107,7 +107,8 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
         super.ngOnInit();
         this.updateSubmitButtonState();
 
-        console.dir(this.screenData);
+        console.log('<-- DynamicFormPart -->');
+        console.dir(this);
     }
 
     ngAfterViewInit(): void {

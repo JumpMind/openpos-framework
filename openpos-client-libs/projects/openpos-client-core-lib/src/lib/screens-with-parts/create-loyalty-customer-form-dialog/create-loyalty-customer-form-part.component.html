@@ -6,25 +6,30 @@
                 <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
                     <div class="BasicInfo">
                         <div class="Portrait">
-                            <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons ' + ((isMobile | async) ? 'mat-64' : '')"></app-icon>
+                            <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
                         </div>
                         <div class="Names">
-                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[0]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[1]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="firstNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="lastNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
                     </div>
                     <div class="Contact">
                         <div>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[4]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[5]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-icon matPrefix iconName="Email" iconClass="material-icons md"></app-icon>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+
+                            <app-icon matPrefix iconName="Phone" iconClass="material-icons md"></app-icon>
+<!--                            <app-dynamic-form-field [formGroup]="form" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>-->
                         </div>
                     </div>
                     <div class="Loyalty">
-                        <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[3]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <app-icon matPrefix iconName="LoyaltyProgram" iconClass="material-icons md"></app-icon>
+                        <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         <div>No memberships yet (TODO: do proper i18 here)</div>
                     </div>
                     <div class="Zip">
-                        <app-dynamic-form-field [formGroup]="form" [formField]="screenData.formElements[2]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <app-icon matPrefix iconName="Location" iconClass="material-icons md"></app-icon>
+                        <app-dynamic-form-field [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                     </div>
                 </div>
                 <mat-error>
