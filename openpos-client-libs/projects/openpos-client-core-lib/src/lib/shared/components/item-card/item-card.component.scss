@@ -17,15 +17,18 @@
 
         .item-card-image {
             grid-area: 1/1/1/1;
+            width: 220px;
             height: 275px;
             padding-right: 16px;
 
             &.tablet {
                 height: 150px;
+                width: 100px;
             }
 
             &.mobile {
-                height: 50px;
+                height: 60px;
+                width: 60px;
             }
         }
 
@@ -35,7 +38,8 @@
         }
 
         .item-card-image.collapsed {
-            height: 50px;
+            width: 60px;
+            height: 60px;
         }
 
         .left-side {
