@@ -11,6 +11,7 @@ import org.jumpmind.pos.service.strategy.IInvocationStrategy;
 import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.SuppressMethodLogging;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -60,6 +61,9 @@ public class EndpointInvoker implements InvocationHandler {
 
     @Autowired
     Environment env;
+
+    @Autowired
+    private ClientContext clientContext;
 
     private final static Pattern serviceNamePattern = Pattern.compile("^(?<service>[^_]+)(_(?<version>\\d(_\\d)*))?$");
     private final static String implementationConfigPath = "openpos.services.specificConfig.%s.implementation";
