@@ -63,6 +63,9 @@
                     color: lightgray;
                 }
                 .memberships {
+                    overflow: hidden;
+                    white-space: normal;
+                    @extend %text-xs;
                     grid-area: Memberships;
                 }
             }
