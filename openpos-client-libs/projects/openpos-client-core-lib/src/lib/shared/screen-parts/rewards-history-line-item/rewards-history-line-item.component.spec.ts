@@ -61,7 +61,9 @@ describe('RewardsHistoryLineItemComponent', () => {
             }).compileComponents();
             fixture = TestBed.createComponent(RewardsHistoryLineItemComponent);
             component = fixture.componentInstance;
-            component.reward = {} as RewardHistory;
+            component.reward = {
+                expirationDate: '01/01/2000'
+            } as RewardHistory;
             component.screenData = {
                 expiredLabel: "Expired",
                 redeemedLabel: "Redeemed"
@@ -111,15 +113,28 @@ describe('RewardsHistoryLineItemComponent', () => {
                 })
 
                 describe('expiration', () => {
-                    it('renders the access_time icon', () => {
-                        validateIcon(fixture, '.details .expiration app-icon', 'access_time');
+                    describe('when there is an expiration date', () => {
+                        it('renders the access_time icon', () => {
+                            validateIcon(fixture, '.details .expiration app-icon', 'access_time');
+                        });
+
+                        it('renders the expirationLabel', () => {
+                            component.screenData.expiredLabel = 'a label';
+                            fixture.detectChanges();
+
+                            validateText(fixture, '.details .expiration', component.screenData.expiredLabel);
+                        });
                     });
 
-                    it('renders the expirationLabel', () => {
-                        component.screenData.expiredLabel = 'a label';
-                        fixture.detectChanges();
+                    describe('when there is no expiration date', () => {
+                        beforeEach(() => {
+                           component.reward.expirationDate = undefined;
+                           fixture.detectChanges();
+                        });
 
-                        validateText(fixture, '.details .expiration', component.screenData.expiredLabel);
+                        it('does not display the expiration section', () => {
+                           validateDoesNotExist(fixture, '.expiration');
+                        });
                     });
                 });
             });

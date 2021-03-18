@@ -3,7 +3,7 @@
     <app-content-card class="details-wrapper" >
         <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
             <div class="icon">
-                <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons ' + ((isMobile | async) ? 'mat-64' : '')"></app-icon>
+                <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
             </div>
             <div class="details">
                 <div class="customer-name">
