@@ -76,6 +76,12 @@
 
 .Names { grid-area: Names; }
 
+.Email {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
 .Portrait { grid-area: Portrait; }
 
 .Contact { grid-area: Contact; }

@@ -33,6 +33,7 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
     form: FormGroup;
 
     buttons: IFormElement[];
+    phones: IFormElement[];
     disableSubmitButton: boolean;
 
     private _alternateSubmitActions: string[];
@@ -93,6 +94,7 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
                 }
             });
         }
+
     }
 
     updateSubmitButtonState(): void {
@@ -109,6 +111,8 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
 
         console.log('<-- DynamicFormPart -->');
         console.dir(this);
+
+
     }
 
     ngAfterViewInit(): void {

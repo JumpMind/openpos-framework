@@ -17,9 +17,10 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
     firstNameField : IFormElement;
     lastNameField : IFormElement;
     emailField : IFormElement;
-    phoneField : IFormElement;
     loyaltyNumberField : IFormElement;
     postalCodeField : IFormElement;
+    phoneFields : IFormElement[] = [];
+    phoneLabelFields : IFormElement[] = [];
 
     ngOnInit() {
         super.ngOnInit();
@@ -27,9 +28,20 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
         this.firstNameField = this.getFormElementById('firstName');
         this.lastNameField = this.getFormElementById('lastName');
         this.emailField = this.getFormElementById('email');
-        this.phoneField = this.getFormElementById('phone');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
         this.postalCodeField = this.getFormElementById('postalCode');
+
+        if (this.screenData && this.screenData.formElements) {
+            this.screenData.formElements.forEach(element => {
+                if (element.inputType === 'Phone') {
+                    this.phoneFields.push(element);
+                }
+
+                if (element.id.indexOf('phonesLabel') != -1) {
+                    this.phoneLabelFields.push(element);
+                }
+            });
+        }
     }
 
     getFormElementById(formElementId : string) {
