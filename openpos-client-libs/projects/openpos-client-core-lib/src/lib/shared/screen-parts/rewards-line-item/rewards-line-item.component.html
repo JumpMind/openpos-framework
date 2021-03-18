@@ -1,5 +1,5 @@
 <div [ngClass]="{'mobile-reward-line-item-wrapper': isMobile | async, 'reward-line-item-wrapper': !(isMobile | async)}">
-    <div *ngIf="!(isMobile | async)" class="loyalty-icon"><app-icon [iconName]="'loyalty'" [iconClass]="'material-icons mat-36'"></app-icon></div>
+    <div *ngIf="!(isMobile | async)" class="loyalty-icon"><app-icon [iconName]="screenData.loyaltyIcon" [iconClass]="'material-icons mat-36'"></app-icon></div>
     <div class="details">
         <div class="name" responsive-class>{{reward.name}}</div>
         <div *ngIf="reward.expirationDate" class="expiration" responsive-class><app-icon [iconName]="'access_time'" [iconClass]="'material-icons' + (isMobile | async) ? ' mat-16' : ' mat-24'"></app-icon>{{screenData.expiresLabel}} {{reward.expirationDate}}</div>

@@ -1,10 +1,10 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core'
-import {ActionService} from "../../../core/actions/action.service";
-import {MembershipDisplayComponent} from "./membership-display.component";
-import {validateDoesNotExist, validateIcon, validateText} from "../../../utilites/test-utils";
-import {By} from "@angular/platform-browser";
-import {Membership} from "./memebership-display.interface";
+import {ActionService} from '../../../core/actions/action.service';
+import {MembershipDisplayComponent} from './membership-display.component';
+import {validateDoesNotExist, validateIcon, validateText} from '../../../utilites/test-utils';
+import {By} from '@angular/platform-browser';
+import {Membership} from './memebership-display.interface';
 
 class MockActionService {};
 

@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, Output} from '@angular/core';
-import {Membership} from "./memebership-display.interface";
+import {Membership} from './memebership-display.interface';
 
 
 @Component({

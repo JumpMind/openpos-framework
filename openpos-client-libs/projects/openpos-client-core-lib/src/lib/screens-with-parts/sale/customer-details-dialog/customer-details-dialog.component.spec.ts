@@ -1,20 +1,20 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core'
-import {CustomerDetailsDialogComponent} from "./customer-details-dialog.component";
-import {CustomerDetailsDialogInterface} from "./customer-details-dialog.interface";
-import {ActionService} from "../../../core/actions/action.service";
-import {validateDoesNotExist, validateExist, validateText} from "../../../utilites/test-utils";
-import {By} from "@angular/platform-browser";
-import {IActionItem} from "../../../core/actions/action-item.interface";
-import {PhonePipe} from "../../../shared/pipes/phone.pipe";
-import {MatDialog} from "@angular/material";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ElectronService} from "ngx-electron";
-import {CLIENTCONTEXT} from "../../../core/client-context/client-context-provider.interface";
-import {TimeZoneContext} from "../../../core/client-context/time-zone-context";
-import {Observable, of} from "rxjs";
-import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
-import {Reward} from "../../../shared/screen-parts/rewards-line-item/rewards-line-item.interface";
+import {CustomerDetailsDialogComponent} from './customer-details-dialog.component';
+import {CustomerDetailsDialogInterface} from './customer-details-dialog.interface';
+import {ActionService} from '../../../core/actions/action.service';
+import {validateDoesNotExist, validateExist, validateText} from '../../../utilites/test-utils';
+import {By} from '@angular/platform-browser';
+import {IActionItem} from '../../../core/actions/action-item.interface';
+import {PhonePipe} from '../../../shared/pipes/phone.pipe';
+import {MatDialog} from '@angular/material';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {ElectronService} from 'ngx-electron';
+import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provider.interface';
+import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
+import {Observable, of} from 'rxjs';
+import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
+import {Reward} from '../../../shared/screen-parts/rewards-line-item/rewards-line-item.interface';
 
 class MockActionService {};
 class MockMatDialog {};
@@ -101,22 +101,22 @@ describe('CustomerDetailsDialog', () => {
       });
       describe('getRewardsLabel', () => {
         beforeEach(() => {
-          component.screen.rewardsLabel = "Rewards";
+          component.screen.rewardsLabel = 'Rewards';
         });
 
         it('returns "Rewards" when the rewards list is undefined', () => {
           component.screen.customer.rewards = undefined;
-          expect(component.getRewardsLabel()).toBe("Rewards");
+          expect(component.getRewardsLabel()).toBe('Rewards');
         });
 
         it('returns "Rewards (0)" when the rewards list is empty', () => {
           component.screen.customer.rewards = [];
-          expect(component.getRewardsLabel()).toBe("Rewards (0)");
+          expect(component.getRewardsLabel()).toBe('Rewards (0)');
         });
 
         it('returns "Rewards (#)" when the rewards list has items', () => {
           component.screen.customer.rewards = [{} as Reward];
-          expect(component.getRewardsLabel()).toBe("Rewards (1)");
+          expect(component.getRewardsLabel()).toBe('Rewards (1)');
         });
       });
     });

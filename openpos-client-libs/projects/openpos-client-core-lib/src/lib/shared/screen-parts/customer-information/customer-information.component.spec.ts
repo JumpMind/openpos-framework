@@ -1,22 +1,28 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core'
-import {ActionService} from "../../../core/actions/action.service";
-import {CustomerInformationComponent} from "./customer-information.component";
-import {validateDoesNotExist, validateIcon, validateText} from "../../../utilites/test-utils";
-import {By} from "@angular/platform-browser";
-import {PhonePipe} from "../../pipes/phone.pipe";
-import {FormattersService} from "../../../core/services/formatters.service";
-import {CustomerDetails} from "./customer-information.interface";
-import {MatDialog} from "@angular/material";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {ElectronService} from "ngx-electron";
-import {CLIENTCONTEXT} from "../../../core/client-context/client-context-provider.interface";
-import {TimeZoneContext} from "../../../core/client-context/time-zone-context";
+import {ActionService} from '../../../core/actions/action.service';
+import {CustomerInformationComponent} from './customer-information.component';
+import {validateDoesNotExist, validateIcon, validateText} from '../../../utilites/test-utils';
+import {PhonePipe} from '../../pipes/phone.pipe';
+import {FormattersService} from '../../../core/services/formatters.service';
+import {CustomerDetails} from './customer-information.interface';
+import {MatDialog} from '@angular/material';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {ElectronService} from 'ngx-electron';
+import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provider.interface';
+import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
+import {Subscription} from 'rxjs';
+import {KeyPressProvider} from '../../providers/keypress.provider';
 
 class MockMatDialog {};
 class MockActionService {};
 class ClientContext {};
 class MockElectronService {};
+class MockKeyPressProvider {
+    subscribe(): Subscription {
+        return new Subscription();
+    }
+};
 
 describe('CustomerInformationComponent', () => {
     let component: CustomerInformationComponent;
@@ -32,6 +38,7 @@ describe('CustomerInformationComponent', () => {
                 { provide: MatDialog, useClass: MockMatDialog },
                 { provide: ActionService, useClass: MockActionService },
                 { provide: ElectronService, useClass: MockElectronService },
+                { provide: KeyPressProvider, useClass: MockKeyPressProvider },
                 { provide: ClientContext, useValue: {}},
                 { provide: CLIENTCONTEXT, useClass: TimeZoneContext}
             ],
@@ -54,6 +61,12 @@ describe('CustomerInformationComponent', () => {
             }
         } as CustomerDetails;
         component.customer = customer;
+        component.screenData = {
+            emailIcon: 'mail_outline',
+            phoneIcon: 'phone',
+            loyaltyNumberIcon: 'account_heart',
+            locationIcon: 'place'
+        }
         fixture.detectChanges();
     });
 
