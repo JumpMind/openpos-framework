@@ -65,7 +65,7 @@
       @extend %text-md;
       font-weight: 500;
       &.tablet-portrait {
-        font-size: $text-xs-mobile*1.75;
+        font-size: $text-sm;
       }
 
       &.mobile {
@@ -75,7 +75,7 @@
     .expiration {
       @extend %text-md;
       &.tablet-portrait {
-        font-size: $text-xs-mobile*1.75;
+        font-size: $text-sm;
       }
 
       &.mobile {
@@ -97,7 +97,7 @@
     a {
       @extend %text-md;
       &.tablet-portrait {
-        font-size: $text-xs-mobile*1.75;
+        font-size: $text-sm;
       }
 
       &.mobile {

@@ -1,4 +1,4 @@
-<mat-chip-list>
+<mat-chip-list class="membership-chips">
     <mat-chip (click)="clickEvent.emit(membership)" [ngClass]="{'in': membership.member, 'not-in': !membership.member}" [selectable]="false" responsive-class>
         <app-icon *ngIf="membership.member"
                   [iconName]="'check'"
