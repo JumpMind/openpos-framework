@@ -9,4 +9,5 @@ export interface RewardsHistoryLineItemComponentInterface {
     redeemedLabel: string;
     expiredLabel: string;
     loyaltyIcon: string;
+    expiredIcon: string;
 }

@@ -66,7 +66,9 @@ describe('RewardsHistoryLineItemComponent', () => {
             } as RewardHistory;
             component.screenData = {
                 expiredLabel: 'Expired',
-                redeemedLabel: 'Redeemed'
+                redeemedLabel: 'Redeemed',
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time'
             } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -181,7 +183,9 @@ describe('RewardsHistoryLineItemComponent', () => {
             component.reward = {} as RewardHistory;
             component.screenData = {
                 expiredLabel: 'Expired',
-                redeemedLabel: 'Redeemed'
+                redeemedLabel: 'Redeemed',
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time'
             } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -225,7 +229,8 @@ describe('RewardsHistoryLineItemComponent', () => {
             component.screenData = {
                 expiredLabel: 'Expired',
                 redeemedLabel: 'Redeemed',
-                loyaltyIcon: 'loyalty'
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time'
             } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });

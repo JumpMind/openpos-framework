@@ -33,6 +33,9 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String loyaltyIcon;
     private String loyaltyNumberIcon;
     private String locationIcon;
+    private String checkMarkIcon;
+    private String expiredIcon;
+    private String applyIcon;
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);

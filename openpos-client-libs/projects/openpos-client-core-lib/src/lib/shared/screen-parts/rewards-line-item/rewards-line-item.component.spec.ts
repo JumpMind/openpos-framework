@@ -66,7 +66,10 @@ describe('RewardsLineItemComponent', () => {
                 expirationDate: '01/01/2000'
             } as Reward;
             component.screenData = {
-                expiresLabel: 'Expires'
+                expiresLabel: 'Expires',
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time',
+                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -204,7 +207,10 @@ describe('RewardsLineItemComponent', () => {
             component = fixture.componentInstance;
             component.reward = {} as Reward;
             component.screenData = {
-                expiresLabel: 'Expires'
+                expiresLabel: 'Expires',
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time',
+                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -245,7 +251,9 @@ describe('RewardsLineItemComponent', () => {
             component.reward = {} as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
-                loyaltyIcon: 'loyalty'
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time',
+                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });
