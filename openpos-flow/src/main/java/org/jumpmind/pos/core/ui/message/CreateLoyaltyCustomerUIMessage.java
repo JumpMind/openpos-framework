@@ -13,6 +13,9 @@ import java.util.List;
 public class CreateLoyaltyCustomerUIMessage extends UIMessage implements IHasForm {
 
     private Form form = new Form();
+    private List<UIMembership> memberships;
+    private String membershipsLabel;
+    private String noMembershipsLabel;
 
     private ActionItem addPhone;
     private ActionItem removePhone;

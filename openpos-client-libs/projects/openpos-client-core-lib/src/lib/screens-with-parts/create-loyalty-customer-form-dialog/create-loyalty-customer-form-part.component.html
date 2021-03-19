@@ -32,7 +32,18 @@
                     </div>
                     <div class="Loyalty">
                         <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                        <div>No memberships yet (TODO: do proper i18 here)</div>
+                        <div>
+                            <div *ngIf="memberships && memberships.length">
+                                <div>{{membershipsLabel}}</div>
+                                <span *ngFor="let membership of memberships" class="item">
+                                    <app-membership-display [membership]="membership"></app-membership-display>
+                                </span>
+                            </div>
+
+                            <span *ngIf="!memberships || (memberships && memberships.length == 0)">
+                                {{noMembershipsLabel}}
+                            </span>
+                        </div>
                     </div>
                     <div class="Zip">
                         <app-dynamic-form-field [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>

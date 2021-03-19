@@ -5,6 +5,7 @@ import { DynamicFormPartComponent } from "../../shared/screen-parts/dynamic-form
 import {Observable} from "rxjs";
 import {IFormElement} from "../../core/interfaces/form-field.interface";
 import {IActionItem} from "../../core/actions/action-item.interface";
+import {Membership} from "../../shared/screen-parts/membership-display/memebership-display.interface";
 
 @Component({
     selector: 'app-create-loyalty-customer-form-part',
@@ -23,10 +24,16 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
     @Input()
     removeEmail: IActionItem;
 
+    @Input()
+    memberships: Membership[] = [];
+    @Input()
+    membershipsLabel: string;
+    @Input()
+    noMembershipsLabel: string;
+
     isMobile: Observable<boolean>;
     firstNameField : IFormElement;
     lastNameField : IFormElement;
-    emailField : IFormElement;
     loyaltyNumberField : IFormElement;
     postalCodeField : IFormElement;
     phoneFields : IFormElement[] = [];
@@ -38,7 +45,6 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
         super.ngOnInit();
         this.firstNameField = this.getFormElementById('firstName');
         this.lastNameField = this.getFormElementById('lastName');
-        this.emailField = this.getFormElementById('email');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
         this.postalCodeField = this.getFormElementById('postalCode');
     }
