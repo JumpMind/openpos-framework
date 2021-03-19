@@ -18,6 +18,11 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
     @Input()
     removePhone: IActionItem;
 
+    @Input()
+    addEmail: IActionItem;
+    @Input()
+    removeEmail: IActionItem;
+
     isMobile: Observable<boolean>;
     firstNameField : IFormElement;
     lastNameField : IFormElement;
@@ -26,6 +31,8 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
     postalCodeField : IFormElement;
     phoneFields : IFormElement[] = [];
     phoneLabelFields : IFormElement[] = [];
+    emailFields : IFormElement[] = [];
+    emailLabelFields : IFormElement[] = [];
 
     ngOnInit() {
         super.ngOnInit();
@@ -45,14 +52,24 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
         this.updateData();
         this.phoneFields = [];
         this.phoneLabelFields = [];
+        this.emailFields = [];
+        this.emailLabelFields = [];
         if (this.screenData && this.screenData.formElements) {
             this.screenData.formElements.forEach(element => {
-                if (element.inputType === 'Phone') {
+                if (element.id.match(/phones\d/)) {
                     this.phoneFields.push(element);
                 }
 
-                if (element.id.indexOf('phonesLabel') != -1) {
+                if (element.id.match(/phonesLabel\d/)) {
                     this.phoneLabelFields.push(element);
+                }
+
+                if(element.id.match(/emails\d/)) {
+                    this.emailFields.push(element);
+                }
+
+                if(element.id.match(/emailsLabel\d/)) {
+                    this.emailLabelFields.push(element);
                 }
             });
         }

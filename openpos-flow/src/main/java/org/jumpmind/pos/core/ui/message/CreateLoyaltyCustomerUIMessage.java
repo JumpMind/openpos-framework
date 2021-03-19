@@ -16,6 +16,8 @@ public class CreateLoyaltyCustomerUIMessage extends UIMessage implements IHasFor
 
     private ActionItem addPhone;
     private ActionItem removePhone;
+    private ActionItem addEmail;
+    private ActionItem removeEmail;
     private ActionItem submitButton;
 
     private String instructions;    // Does not show up in create-loyalty-customer-form-dialog component

@@ -14,14 +14,15 @@
                         </div>
                     </div>
                     <div class="Contact">
-<!--                        <app-icon matPrefix iconName="Email" iconClass="material-icons md"></app-icon>-->
-                        <app-dynamic-form-field [formGroup]="form" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
+                            <app-dynamic-form-field [formGroup]="form" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field *ngIf="emailLabelFields[i]" [formGroup]="form" [formField]="emailLabelFields[i]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
 
-<!--                        <app-icon matPrefix iconName="Phone" iconClass="material-icons md"></app-icon>-->
-                        <div class="Email" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
-                            <app-icon *ngIf="isFirst" matPrefix iconName="Email" iconClass="material-icons sm"></app-icon>
-                            <app-icon *ngIf="!isFirst" matPrefix iconName="Nothing" iconClass="material-icons sm"></app-icon>
+                            <app-icon matPrefix iconName="Remove" iconClass="material-icons sm" (click)="doAction(removeEmail, i)"></app-icon>
+                            <app-icon *ngIf="isLast" matPrefix iconName="Add" iconClass="material-icons sm" (click)="doAction(addEmail)"></app-icon>
+                        </div>
 
+                        <div class="phone-list" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
                             <app-dynamic-form-field [formGroup]="form" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                             <app-dynamic-form-field *ngIf="phoneLabelFields[i]" [formGroup]="form" [formField]="phoneLabelFields[i]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
 
@@ -30,12 +31,10 @@
                         </div>
                     </div>
                     <div class="Loyalty">
-<!--                        <app-icon matPrefix iconName="LoyaltyProgram" iconClass="material-icons md"></app-icon>-->
                         <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         <div>No memberships yet (TODO: do proper i18 here)</div>
                     </div>
                     <div class="Zip">
-<!--                        <app-icon matPrefix iconName="Location" iconClass="material-icons md"></app-icon>-->
                         <app-dynamic-form-field [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                     </div>
                 </div>
@@ -46,6 +45,9 @@
             </mat-card-content>
         </app-content-card>
 
+        <div>disableSubmitButton: {{disableSubmitButton}}</div>
+        <div>valid: {{form.valid}}</div>
+        <div>pending: {{form.pending}}</div>
         <mat-card-actions *ngIf="(buttons && buttons.length > 0) || submitButton" mat-dialog-actions class="buttons">
             <app-secondary-button *ngFor="let button of buttons" (click)="doAction(button)">
                 <span>{{button.label}}</span>
