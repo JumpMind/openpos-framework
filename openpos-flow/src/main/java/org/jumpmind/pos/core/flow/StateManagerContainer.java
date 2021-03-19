@@ -22,6 +22,7 @@ package org.jumpmind.pos.core.flow;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
@@ -64,8 +65,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
     private ThreadLocal<IStateManager> currentStateManager = new InheritableThreadLocal<>();
 
-    private String openposVersion;
-    private String commerceVersion;
+    private Map<String,String> versions;
 
     @Override
     public synchronized void removeSessionIdVariables(String sessionId) {
@@ -220,33 +220,17 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     }
 
     private void setClientContextVersions() {
-        clientContext.put("openposVersion", getOpenposVersion());
-        clientContext.put("commerceVersion", getCommerceVersion());
+        getVersions().entrySet().forEach(e -> {
+            clientContext.put("version." + e.getKey(), e.getValue());
+        });
     }
 
-    private String getOpenposVersion() {
-        if (null == openposVersion) {
-            Version version = Versions.getVersions().stream()
-                    .filter(v -> "openpos-server-core-lib".equalsIgnoreCase(v.getComponentName()))
-                    .findFirst().orElse(null);
-
-            openposVersion = version != null ? version.getVersion() : "?";
+    private Map<String,String> getVersions() {
+        if (null == versions) {
+            versions = Versions.getVersions().stream().collect(Collectors.toMap(Version::getComponentName, Version::getVersion));
         }
 
-        return openposVersion;
-    }
-
-    private String getCommerceVersion() {
-        if (null == commerceVersion) {
-            // Should never have both commerce and nu-commerce versions, so take whichever one is found
-            Version version = Versions.getVersions().stream()
-                    .filter(v -> "commerce".equalsIgnoreCase(v.getComponentName()) || "nu-commerce".equalsIgnoreCase(v.getComponentName()))
-                    .findFirst().orElse(null);
-
-            commerceVersion = version != null ? version.getVersion() : "?";
-        }
-
-        return commerceVersion;
+        return versions;
     }
 
 }
