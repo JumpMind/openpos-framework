@@ -141,7 +141,7 @@ public class StateManagerTest {
                 .withTransition("SetVariables", SetVariablesState.class)
                 .withTransition("UnsetVariables", UnsetVariablesState.class)
                 .withTransition("CheckVariables", CheckVariablesState.class)
-                .withTransition("CheckOverrideState", TestStates.OverrideState.class)
+                .withTransition("CheckOverrideState", TestStates.OverrideSimpleState.class)
                 .build()
         );
         config.add(FlowBuilder.addState(SetVariablesState.class).withTransition("UnsetVariables", UnsetVariablesState.class).build());
@@ -890,8 +890,8 @@ public class StateManagerTest {
         stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         doAction("CheckOverrideState");
-        TestStates.OverrideState overrideState = (TestStates.OverrideState) stateManager.getCurrentState();
-        assertEquals(TestStates.OverrideState.class, overrideState.getClass());
+        TestStates.OverrideSimpleState overrideState = (TestStates.OverrideSimpleState) stateManager.getCurrentState();
+        assertEquals(TestStates.OverrideSimpleState.class, overrideState.getClass());
         doAction("Something");
         assertEquals(overrideState.message, "Override state message");
     }

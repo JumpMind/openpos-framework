@@ -632,8 +632,8 @@ public class TestStates {
         }
     }
 
-    @StateOverride(originalState = TestStates.HomeState.class)
-    public static class OverrideState extends SimpleBaseState {
+    @StateOverride(originalState = TestStates.SimpleBaseState.class)
+    public static class OverrideSimpleState extends SimpleBaseState {
 
         @Override
         protected void doLogic() {
