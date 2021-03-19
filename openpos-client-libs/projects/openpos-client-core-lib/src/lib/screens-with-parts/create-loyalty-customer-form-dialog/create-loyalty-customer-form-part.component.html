@@ -25,9 +25,8 @@
                             <app-dynamic-form-field [formGroup]="form" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                             <app-dynamic-form-field *ngIf="phoneLabelFields[i]" [formGroup]="form" [formField]="phoneLabelFields[i]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
 
-                            <app-icon matPrefix iconName="Remove" iconClass="material-icons sm"></app-icon>
-                            <app-icon *ngIf="isLast" matPrefix iconName="Add" iconClass="material-icons sm"></app-icon>
-                            <app-icon *ngIf="!isLast" matPrefix iconName="Nothing" iconClass="material-icons sm"></app-icon>
+                            <app-icon matPrefix iconName="Remove" iconClass="material-icons sm" (click)="doAction(removePhone, i)"></app-icon>
+                            <app-icon *ngIf="isLast" matPrefix iconName="Add" iconClass="material-icons sm" (click)="doAction(addPhone)"></app-icon>
                         </div>
                     </div>
                     <div class="Loyalty">

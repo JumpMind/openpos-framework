@@ -33,7 +33,6 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
     form: FormGroup;
 
     buttons: IFormElement[];
-    phones: IFormElement[];
     disableSubmitButton: boolean;
 
     private _alternateSubmitActions: string[];
@@ -51,6 +50,10 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
     }
 
     screenDataUpdated() {
+        this.updateData();
+    }
+
+    updateData() {
         this.buttons = new Array<IFormElement>();
 
         // Before we rebuild what element has focus so we can restore
@@ -94,7 +97,6 @@ export class DynamicFormPartComponent extends ScreenPartComponent<IForm> impleme
                 }
             });
         }
-
     }
 
     updateSubmitButtonState(): void {
