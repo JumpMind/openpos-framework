@@ -1,6 +1,5 @@
 package org.jumpmind.pos.service;
 
-import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,6 +7,7 @@ import java.util.Map;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -45,7 +45,8 @@ public class ServiceConfig {
         return specificConfig;
     }
 
-    public ServiceSpecificConfig getServiceConfig(String serviceId) {
+    @Cacheable(value = "/serviceConfig", key = "#deviceId.concat('-').concat(#serviceId)")
+    public ServiceSpecificConfig getServiceConfig(String deviceId, String serviceId) {
         ServiceSpecificConfig config = getSpecificConfig().get(serviceId);
         if (config == null) {
             config = new ServiceSpecificConfig();

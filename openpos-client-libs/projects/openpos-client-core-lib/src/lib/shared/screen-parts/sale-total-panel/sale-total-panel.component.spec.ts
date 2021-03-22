@@ -59,7 +59,9 @@ describe('SaleTotalPanelComponent', () => {
             }).compileComponents();
             fixture = TestBed.createComponent(SaleTotalPanelComponent);
             component = fixture.componentInstance;
-            component.screenData = {} as SaleTotalPanelInterface;
+            component.screenData = {
+                profileIcon: 'account_circle'
+            } as SaleTotalPanelInterface;
             openposMediaSerivce = TestBed.get(OpenposMediaService);
             fixture.detectChanges();
         });
@@ -190,7 +192,7 @@ describe('SaleTotalPanelComponent', () => {
                             button = fixture.debugElement.query(By.css('.sale-total-header button.linked-customer-summary'));
                         });
 
-                        it('displays a account-circle icon', () => {
+                        it('displays a account_circle icon', () => {
                             const icon = fixture.debugElement.query(By.css('.sale-total-header .icon'));
                             expect(icon.nativeElement).toBeDefined();
                         });

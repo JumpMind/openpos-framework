@@ -3,14 +3,16 @@
     $membership-in-color: map-get($theme, membership-in-color );
     $membership-in-background: map-get($theme, membership-in-background );
 
-    mat-chip.not-in {
-        background-color: white !important;
-        border: 1px solid mat-color($foreground, secondary-text);
-        color: mat-color($foreground, secondary-text) !important;
-    }
+    .membership-chips {
+        mat-chip.not-in {
+            background-color: white !important;
+            border: 1px solid mat-color($foreground, secondary-text);
+            color: mat-color($foreground, secondary-text) !important;
+        }
 
-    mat-chip.in {
-        color: $membership-in-color !important;
-        background-color: $membership-in-background !important;
+        mat-chip.in {
+            color: $membership-in-color !important;
+            background-color: $membership-in-background !important;
+        }
     }
 }

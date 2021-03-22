@@ -3,7 +3,7 @@
     <app-content-card class="details-wrapper" >
         <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
             <div class="icon">
-                <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+                <app-icon [iconName]="screen.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
             </div>
             <div class="details">
                 <div class="customer-name">
@@ -16,7 +16,7 @@
             <div class="memberships" *ngIf="screen.membershipEnabled">
                 <div class="wrapper">
                     <div class="title" *ngIf="!(isMobile | async)">
-                        <app-icon [iconName]="'card_account_details'" [iconClass]="'material-icons mat-24'"></app-icon> {{screen.membershipLabel}}
+                        <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons mat-24'"></app-icon> {{screen.membershipLabel}}
                     </div>
                     <div class="list">
                         <div *ngIf="screen.customer.memberships && screen.customer.memberships.length">

@@ -14,7 +14,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private ActionItem editButton;
     private ActionItem doneButton;
 
-    private UICustomerDetailsItem customer;
+    private UICustomerDetails customer;
 
     private Boolean membershipEnabled;
     private String membershipLabel;
@@ -26,6 +26,16 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String expiredLabel;
     private String redeemedLabel;
     private String noMembershipsFoundLabel;
+    private String profileIcon;
+    private String membershipCardIcon;
+    private String emailIcon;
+    private String phoneIcon;
+    private String loyaltyIcon;
+    private String loyaltyNumberIcon;
+    private String locationIcon;
+    private String checkMarkIcon;
+    private String expiredIcon;
+    private String applyIcon;
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);

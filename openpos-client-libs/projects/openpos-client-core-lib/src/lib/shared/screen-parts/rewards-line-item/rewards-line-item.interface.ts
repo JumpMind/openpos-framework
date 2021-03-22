@@ -1,4 +1,4 @@
-import {IActionItem} from "../../../core/actions/action-item.interface";
+import {IActionItem} from '../../../core/actions/action-item.interface';
 
 export interface Reward {
     promotionId: string;
@@ -9,4 +9,7 @@ export interface Reward {
 
 export interface RewardsLineItemComponentInterface {
     expiresLabel: string;
+    loyaltyIcon: string;
+    expiredIcon: string;
+    applyIcon: string;
 }

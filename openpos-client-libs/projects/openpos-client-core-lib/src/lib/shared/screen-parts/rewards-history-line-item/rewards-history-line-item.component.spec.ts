@@ -1,18 +1,18 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core'
-import {MatDialog} from "@angular/material";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {Observable, of, Subscription} from "rxjs";
-import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
-import {ElectronService} from "ngx-electron";
-import {CLIENTCONTEXT} from "../../../core/client-context/client-context-provider.interface";
-import {TimeZoneContext} from "../../../core/client-context/time-zone-context";
-import {ActionService} from "../../../core/actions/action.service";
-import {KeyPressProvider} from "../../providers/keypress.provider";
-import {RewardsHistoryLineItemComponent} from "./rewards-history-line-item.component";
-import {RewardHistory, RewardsHistoryLineItemComponentInterface} from "./rewards-history-line-item.interface";
-import {validateDoesNotExist, validateExist, validateIcon, validateText} from "../../../utilites/test-utils";
-import {By} from "@angular/platform-browser";
+import {MatDialog} from '@angular/material';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {Observable, of, Subscription} from 'rxjs';
+import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
+import {ElectronService} from 'ngx-electron';
+import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provider.interface';
+import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
+import {ActionService} from '../../../core/actions/action.service';
+import {KeyPressProvider} from '../../providers/keypress.provider';
+import {RewardsHistoryLineItemComponent} from './rewards-history-line-item.component';
+import {RewardHistory, RewardsHistoryLineItemComponentInterface} from './rewards-history-line-item.interface';
+import {validateDoesNotExist, validateExist, validateIcon, validateText} from '../../../utilites/test-utils';
+import {By} from '@angular/platform-browser';
 
 class MockActionService {};
 class MockMatDialog {};
@@ -65,8 +65,10 @@ describe('RewardsHistoryLineItemComponent', () => {
                 expirationDate: '01/01/2000'
             } as RewardHistory;
             component.screenData = {
-                expiredLabel: "Expired",
-                redeemedLabel: "Redeemed"
+                expiredLabel: 'Expired',
+                redeemedLabel: 'Redeemed',
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time'
             } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -180,8 +182,10 @@ describe('RewardsHistoryLineItemComponent', () => {
             component = fixture.componentInstance;
             component.reward = {} as RewardHistory;
             component.screenData = {
-                expiredLabel: "Expired",
-                redeemedLabel: "Redeemed"
+                expiredLabel: 'Expired',
+                redeemedLabel: 'Redeemed',
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time'
             } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -223,8 +227,10 @@ describe('RewardsHistoryLineItemComponent', () => {
             component = fixture.componentInstance;
             component.reward = {} as RewardHistory;
             component.screenData = {
-                expiredLabel: "Expired",
-                redeemedLabel: "Redeemed"
+                expiredLabel: 'Expired',
+                redeemedLabel: 'Redeemed',
+                loyaltyIcon: 'loyalty',
+                expiredIcon: 'access_time'
             } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });

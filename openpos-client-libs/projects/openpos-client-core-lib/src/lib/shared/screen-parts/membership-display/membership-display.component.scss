@@ -3,7 +3,7 @@
 mat-chip {
   text-transform: uppercase;
   &.tablet-portrait {
-    font-size: $text-xs-mobile*1.75;
+    font-size: $text-sm;
   }
 
   &.mobile {
