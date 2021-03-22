@@ -1,24 +1,14 @@
 @mixin customer-search-result-dialog-theme($theme) {
-  .selection-list:not(:last-child) {
-    $border: map-get(map-get($theme, foreground), border);
-    border-bottom: 2px solid $border;
-  }
-
-  .selection-list{
-    margin-top: 0px !important;
-    margin-bottom: 0px !important;
-    padding: 5px 0px 5px 0px !important;
-  }
-
-
-  .customer-memberships{
-    .mat-standard-chip{
-      white-space: nowrap;
+  app-customer-search-result-dialog{
+    .selection-list:not(:last-child) {
+      $border: map-get(map-get($theme, foreground), border);
+      border-bottom: 2px solid $border;
     }
 
-    .mat-dialog-content{
-      margin: 0px;
-      padding: 0px 5px 0px 5px;
+    .selection-list{
+      margin-top: 0px !important;
+      margin-bottom: 0px !important;
+      padding: 5px 0px 5px 0px !important;
     }
   }
 }

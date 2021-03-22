@@ -11,9 +11,9 @@
         <div class="customer-line1">{{customer.address.line1}}</div>
         <div class="customer-line2" *ngIf="customer.address.line2">{{customer.address.line2}}</div>
         <div class="customer-cityStateZip">
-            <span *ngIf="customer.address.city != ''">{{customer.address.city}}, </span>
-            <span *ngIf="customer.address.state != ''">{{customer.address.state}} </span>
-            <span *ngIf="customer.address.postalCode != ''">{{customer.address.postalCode}}</span>
+            <span *ngIf="customer.address.city">{{customer.address.city}}, </span>
+            <span *ngIf="customer.address.state">{{customer.address.state}} </span>
+            <span *ngIf="customer.address.postalCode">{{customer.address.postalCode}}</span>
         </div>
     </div>
     <div class="customer-memberships">
