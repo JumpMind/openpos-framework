@@ -7,8 +7,10 @@ export interface CreateLoyaltyCustomerFormInterface extends IAbstractScreen {
     submitButton: IActionItem;
     alternateSubmitActions: string[];
     imageUrl: string;
+    phoneIcon: string;
     addPhone: IActionItem;
     removePhone: IActionItem;
+    emailIcon: string;
     addEmail: IActionItem;
     removeEmail: IActionItem;
     memberships: Membership[];

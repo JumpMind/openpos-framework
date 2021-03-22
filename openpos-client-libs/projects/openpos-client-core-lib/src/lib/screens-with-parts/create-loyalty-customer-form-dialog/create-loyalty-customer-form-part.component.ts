@@ -15,10 +15,14 @@ import {Membership} from "../../shared/screen-parts/membership-display/memebersh
 export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
 
     @Input()
+    phoneIcon: string;
+    @Input()
     addPhone: IActionItem;
     @Input()
     removePhone: IActionItem;
 
+    @Input()
+    emailIcon: string;
     @Input()
     addEmail: IActionItem;
     @Input()

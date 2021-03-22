@@ -2,8 +2,10 @@
 <div class="form-body">
     <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
     <app-create-loyalty-customer-form-part [formName]="'form'"
+                                           [phoneIcon]="screen.phoneIcon"
                                            [addPhone]="screen.addPhone"
                                            [removePhone]="screen.removePhone"
+                                           [emailIcon]="screen.emailIcon"
                                            [addEmail]="screen.addEmail"
                                            [removeEmail]="screen.removeEmail"
                                            [submitButton]="screen.submitButton"

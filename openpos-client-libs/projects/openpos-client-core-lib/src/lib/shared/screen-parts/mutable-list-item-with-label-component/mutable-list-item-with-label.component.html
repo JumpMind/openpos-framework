@@ -1,3 +1,6 @@
 <div>
-    it works!
+    <app-dynamic-form-field [formGroup]="formGroup" [formField]="inputField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
+    <app-dynamic-form-field *ngIf="labelField" [formGroup]="formGroup" [formField]="labelField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
+    <app-icon *ngIf="!isOnly" matPrefix [iconName]="screenData.removeIcon || 'Remove'" iconClass="material-icons sm" (click)="remove.emit()"></app-icon>
+    <app-icon *ngIf="isLast" matPrefix [iconName]="screenData.addIcon || 'Add'" iconClass="material-icons sm" (click)="add.emit()"></app-icon>
 </div>

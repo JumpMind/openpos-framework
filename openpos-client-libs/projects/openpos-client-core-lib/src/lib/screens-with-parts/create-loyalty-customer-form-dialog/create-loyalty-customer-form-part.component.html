@@ -15,21 +15,26 @@
                     </div>
                     <div class="Contact">
                         <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
-                            <app-mutable-list-item-with-label></app-mutable-list-item-with-label>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field *ngIf="emailLabelFields[i]" [formGroup]="form" [formField]="emailLabelFields[i]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-
-                            <app-icon matPrefix iconName="Remove" iconClass="material-icons sm" (click)="doAction(removeEmail, i)"></app-icon>
-                            <app-icon *ngIf="isLast" matPrefix iconName="Add" iconClass="material-icons sm" (click)="doAction(addEmail)"></app-icon>
+                            <app-mutable-list-item-with-label [formGroup]="form"
+                                                              [groupIcon]="emailIcon"
+                                                              [inputField]="emailField" [labelField]="emailLabelFields[i]"
+                                                              [isFirst]="isFirst"
+                                                              [isLast]="isLast"
+                                                              [isOnly]="emailFields.length == 1"
+                                                              (onFieldChanged)="onFieldChanged($event)"
+                                                              (add)="doAction(addEmail, i)" (remove)="doAction(removeEmail, i)"></app-mutable-list-item-with-label>
                         </div>
 
                         <div class="phone-list" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
-                            <app-mutable-list-item-with-label></app-mutable-list-item-with-label>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field *ngIf="phoneLabelFields[i]" [formGroup]="form" [formField]="phoneLabelFields[i]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-mutable-list-item-with-label [formGroup]="form"
+                                                              [groupIcon]="phoneIcon"
+                                                              [inputField]="phoneField" [labelField]="phoneLabelFields[i]"
+                                                              [isFirst]="isFirst"
+                                                              [isLast]="isLast"
+                                                              [isOnly]="phoneFields.length == 1"
+                                                              (onFieldChanged)="onFieldChanged($event)"
+                                                              (add)="doAction(addPhone, i)" (remove)="doAction(removePhone, i)"></app-mutable-list-item-with-label>
 
-                            <app-icon matPrefix iconName="Remove" iconClass="material-icons sm" (click)="doAction(removePhone, i)"></app-icon>
-                            <app-icon *ngIf="isLast" matPrefix iconName="Add" iconClass="material-icons sm" (click)="doAction(addPhone)"></app-icon>
                         </div>
                     </div>
                     <div class="Loyalty">
