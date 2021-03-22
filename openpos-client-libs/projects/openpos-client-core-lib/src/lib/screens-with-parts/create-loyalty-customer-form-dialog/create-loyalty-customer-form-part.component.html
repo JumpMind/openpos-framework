@@ -15,6 +15,7 @@
                     </div>
                     <div class="Contact">
                         <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
+                            <app-mutable-list-item-with-label></app-mutable-list-item-with-label>
                             <app-dynamic-form-field [formGroup]="form" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                             <app-dynamic-form-field *ngIf="emailLabelFields[i]" [formGroup]="form" [formField]="emailLabelFields[i]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
 
@@ -23,6 +24,7 @@
                         </div>
 
                         <div class="phone-list" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
+                            <app-mutable-list-item-with-label></app-mutable-list-item-with-label>
                             <app-dynamic-form-field [formGroup]="form" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                             <app-dynamic-form-field *ngIf="phoneLabelFields[i]" [formGroup]="form" [formField]="phoneLabelFields[i]" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
 
