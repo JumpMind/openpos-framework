@@ -4,6 +4,9 @@ import { ScreenComponent } from '../../shared/decorators/screen-component.decora
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 import { Observable } from 'rxjs';
+import { SessionService } from '../../core/services/session.service';
+import { PrinterService } from '../../core/platform-plugins/printers/printer.service';
+import { MessageTypes } from '../../core/messages/message-types';
 
 @ScreenComponent({
   name: 'TransactionDetails'
@@ -17,7 +20,11 @@ export class TransactionDetailsComponent extends PosScreen<TransactionDetailsInt
 
   isMobile: Observable<boolean>;
 
-  constructor(injector: Injector, media: OpenposMediaService) {
+  constructor(
+    injector: Injector, media: OpenposMediaService,
+    private sessionService: SessionService,
+    private printerService: PrinterService
+  ) {
     super(injector);
     this.isMobile = media.observe(new Map([
       [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -27,8 +34,14 @@ export class TransactionDetailsComponent extends PosScreen<TransactionDetailsInt
       [MediaBreakpoints.DESKTOP_PORTRAIT, false],
       [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
     ]));
+    this.sessionService.getMessages(MessageTypes.PRINT).subscribe((message) => {
+      this.printReceipt(message);
+    });
   }
 
   buildScreen() { }
 
+  printReceipt(message): void {
+    this.printerService.print("BROWSER", message.html);
+  }
 }
