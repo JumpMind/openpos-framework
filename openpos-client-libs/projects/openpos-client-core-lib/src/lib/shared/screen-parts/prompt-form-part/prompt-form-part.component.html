@@ -14,7 +14,8 @@
                                       [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
                                       [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
                                       [validationMessages]="screenData.validationMessages"
-                                      [readOnly]="!screenData.editable">
+                                      [readOnly]="!screenData.editable"
+                                      [scanActionName]="screenData.scan?.scanActionName">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
                     <div #optionsRef>
@@ -57,7 +58,8 @@
                                       [promptIcon]="screenData.promptIcon" [responseText]="screenData.responseText" [hintText]="screenData.hintText"
                                       [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
                                       [validationMessages]="screenData.validationMessages"
-                                      [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable">
+                                      [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable"
+                                      [scanActionName]="screenData.scan?.scanActionName">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
                     <div #optionsRef>

@@ -17,4 +17,5 @@ public class UICustomerDetails implements Serializable {
     private UIAddress address;
     private List<UIMembership> memberships = new ArrayList<>();
     private List<UILoyaltyReward> rewards = new ArrayList<>();
+    private List<UIRewardHistory> rewardHistory = new ArrayList<>();
 }

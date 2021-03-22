@@ -1,5 +1,9 @@
 <div *ngIf="screenData">
 
+    <mat-form-field class="options-input-invisible">
+        <input matInput cdkFocusInitial type="text" responsive-class/>
+    </mat-form-field>
+
     <div *ngIf="screenData && screenData.additionalButtons" class="options-buttons">
         <button mat-raised-button color="primary" responsive-class *ngFor="let button of screenData.additionalButtons"
             (click)="onOptionClick(button)" class="additional-options-buttons">

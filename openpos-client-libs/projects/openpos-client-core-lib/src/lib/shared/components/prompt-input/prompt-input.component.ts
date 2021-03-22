@@ -1,10 +1,10 @@
-import { Subscription } from 'rxjs';
 import { FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ErrorStateMatcher } from '@angular/material';
-import { OldPluginService } from '../../../core/services/old-plugin.service';
-import { BarcodeScannerPlugin } from '../../../core/oldplugins/barcode-scanner.plugin';
-import { Scan } from '../../../core/oldplugins/scan';
+
+import { BarcodeScanner } from '../../../core/platform-plugins/barcode-scanners/barcode-scanner.service';
+import { ScanData } from '../../../core/platform-plugins/barcode-scanners/scanner';
+import { ActionService } from '../../../core/actions/action.service';
 
 @Component({
     selector: 'app-prompt-input',
@@ -27,15 +27,19 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     @Input() scanEnabled = false;
     @Input() validationMessages: Map<string, string>;
 
+    @Input() scanActionName?: string;
+
     inputType: string;
     checked = true;
     errorMatcher = new MyErrorStateMatcher();
     keyboardLayout = 'en-US';
 
-    private barcodeEventSubscription: Subscription;
+    showScanner = false;
 
-    constructor( private pluginService: OldPluginService) {
-    }
+    constructor(
+        private _actionService: ActionService,
+        private _barcodeScanner: BarcodeScanner
+    ) {}
 
     isNumericField(): boolean {
         if (this.responseType) {
@@ -67,58 +71,33 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
-        if (this.scanEnabled) {
-            this.pluginService.getPluginWithOptions('barcodeScannerPlugin', true, { waitForCordovaInit: true }).then(plugin => {
-                // the onBarcodeScanned will only emit an event when client code passes a scan
-                // event to the plugin.  This won't be called for cordova barcodescanner plugin
-                // camera-based scan events.  It should only be used for third party scan events
-                // which come from other sources such as a scan device
-                this.barcodeEventSubscription = (<BarcodeScannerPlugin>plugin).onBarcodeScanned.subscribe({
-                    next: (scan: Scan) => {
-                        console.info(`app-prompt-input got scan event: ${scan.value}`);
-                        this.setFieldValue(scan.value);
-                    }
-                });
-                console.info(`app-prompt-input is subscribed for barcode scan events`);
-
-            }).catch(error => console.info(`Failed to get barcodeScannerPlugin.  Reason: ${error}`));
-        }
-
         this.setKeyboardLayout();
-
     }
 
     ngOnDestroy(): void {
-        if (this.barcodeEventSubscription) {
-            this.barcodeEventSubscription.unsubscribe();
-        }
     }
 
     isScanAllowed(): boolean {
-        return this.scanEnabled &&
-            ['numerictext', 'alphanumerictext'].indexOf(this.responseType.toLowerCase()) >= 0;
+        return this.scanEnabled
+            && (this.responseType && ['numerictext', 'alphanumerictext'].indexOf(this.responseType.toLowerCase()) >= 0)
+            && this._barcodeScanner.hasImageScanner;
     }
-
 
     // This method is invoked when the user presses the Scan button on the field.
     // For device-based scan events, see the ngOnInit method.
 
     onScan(): void {
-        this.pluginService.getDevicePlugin('barcodeScannerPlugin').then(plugin =>
-            plugin.processRequest(
-                { requestId: 'scan', deviceId: 'barcode-scanner', type: null, subType: null, payload: null },
-                (scan) => {
-                    if (scan instanceof Scan && !scan.cancelled) {
-                        this.setFieldValue(scan.value);
-                    }
-                },
-                (error) => {
-                    console.error('Scanning failed: ' + error);
-                }
-            )
-        ).catch(error => console.info(`Scanning failed: ${error}`)
-        );
+        this.showScanner = !this.showScanner && this.isScanAllowed();
+
+        console.log('scanner show changed', this.showScanner);
+    }
+
+    async onBarcodeScanned(data: ScanData) {
+        if (this.scanActionName) {
+            await this._actionService.doAction({ action: this.scanActionName, queueIfBlocked: true }, data);
+        } else {
+            this.setFieldValue(data.data);
+        }
     }
 
     private setFieldValue(value: any) {

@@ -1,12 +1,12 @@
 @import "../../../styles/mixins/typography";
 
-.reward-line-item-wrapper {
+.reward-history-line-item-wrapper {
   display: grid;
   grid-template-columns: 1fr 10fr 2fr 2fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "loyalty-icon details apply";
+    "loyalty-icon details status";
   .loyalty-icon {
     grid-area: loyalty-icon;
     text-align: center;
@@ -19,6 +19,9 @@
     .name {
       @extend %text-md;
       font-weight: 500;
+      &.expired {
+        text-decoration: line-through;
+      }
     }
     .expiration {
       @extend %text-md;
@@ -31,11 +34,11 @@
     }
   }
 
-  .apply {
-    grid-area: apply;
+  .status {
+    grid-area: status;
     text-align: center;
     margin: auto;
-    a {
+    span {
       @extend %text-md;
       app-icon {
         padding-left: 10px;
@@ -45,13 +48,13 @@
   }
 }
 
-.mobile-reward-line-item-wrapper {
+.mobile-reward-history-line-item-wrapper {
   display: grid;
   grid-template-columns: 2fr 1fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "details apply";
+    "details status";
   .loyalty-icon {
     grid-area: loyalty-icon;
     text-align: center;
@@ -90,11 +93,11 @@
     }
   }
 
-  .apply {
-    grid-area: apply;
+  .status {
+    grid-area: status;
     text-align: center;
     margin: auto;
-    a {
+    span {
       @extend %text-md;
       &.tablet-portrait {
         font-size: $text-sm;

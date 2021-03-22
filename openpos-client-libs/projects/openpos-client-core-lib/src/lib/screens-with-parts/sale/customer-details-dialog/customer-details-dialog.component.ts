@@ -1,9 +1,9 @@
 import {Component, Injector} from '@angular/core';
-import {CustomerDetailsDialogInterface} from "./customer-details-dialog.interface";
-import {DialogComponent} from "../../../shared/decorators/dialog-component.decorator";
-import {PosScreen} from "../../pos-screen/pos-screen.component";
-import {Observable} from "rxjs";
-import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
+import {CustomerDetailsDialogInterface} from './customer-details-dialog.interface';
+import {DialogComponent} from '../../../shared/decorators/dialog-component.decorator';
+import {PosScreen} from '../../pos-screen/pos-screen.component';
+import {Observable} from 'rxjs';
+import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
 
 @DialogComponent({
   name: 'CustomerDetailsDialog'

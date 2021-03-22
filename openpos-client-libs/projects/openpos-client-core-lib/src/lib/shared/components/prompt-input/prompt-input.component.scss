@@ -5,6 +5,8 @@
 .prompt-input {
   @extend %text-lg;
 
+  min-width: unset;
+
   &.mobile {
     font-size: $text-md-mobile;
   }
@@ -41,4 +43,41 @@ app-icon {
   @at-root app-prompt-input .tablet .mat-form-field-label {
     font-size: $text-lg-mobile;
   }
+}
+
+.input-container {
+  display: flex;
+  flex-direction: row;
+}
+
+.input-container > app-primary-button {
+  align-self: start;
+  min-height: 64px;
+  margin-top: 26px;
+  margin-left: 8px;
+
+  .barcode-icon {
+    padding-bottom: 5px;
+  }
+
+  &.tablet {
+    min-height: 48px;
+    margin-top: 20px;
+  }
+
+  &.mobile {
+    align-self: unset;
+    margin-top: 8px;
+  }
+}
+
+.grow {
+  width: 100%;
+  flex-grow: 1;
+}
+
+.barcode-scanner {
+  display: grid;
+  width: 100%;
+  min-height: 200px;
 }

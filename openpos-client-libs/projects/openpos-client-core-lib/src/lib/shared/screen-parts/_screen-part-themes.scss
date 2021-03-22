@@ -16,6 +16,7 @@
 @import './transaction-history-part/transaction-history-part-theme';
 @import './membership-display/membership-display-theme';
 @import './rewards-line-item/rewards-line-item-theme';
+@import './rewards-history-line-item/rewards-history-line-item-theme';
 @import './customer-information/customer-information-theme';
 
 @mixin screen-part-themes($theme) {
@@ -37,4 +38,5 @@
     @include membership-display-theme($theme);
     @include customer-information-theme($theme);
     @include reward-line-items-theme($theme);
+    @include reward-history-line-items-theme($theme);
 }

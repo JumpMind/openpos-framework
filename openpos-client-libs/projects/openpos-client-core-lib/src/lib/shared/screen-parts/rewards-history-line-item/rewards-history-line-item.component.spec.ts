@@ -4,16 +4,15 @@ import {MatDialog} from '@angular/material';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {Observable, of, Subscription} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
-import {RewardsLineItemComponent} from './rewards-line-item.component';
 import {ElectronService} from 'ngx-electron';
 import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provider.interface';
 import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
 import {ActionService} from '../../../core/actions/action.service';
 import {KeyPressProvider} from '../../providers/keypress.provider';
+import {RewardsHistoryLineItemComponent} from './rewards-history-line-item.component';
+import {RewardHistory, RewardsHistoryLineItemComponentInterface} from './rewards-history-line-item.interface';
 import {validateDoesNotExist, validateExist, validateIcon, validateText} from '../../../utilites/test-utils';
-import {IActionItem} from '../../../core/actions/action-item.interface';
 import {By} from '@angular/platform-browser';
-import {Reward, RewardsLineItemComponentInterface} from './rewards-line-item.interface';
 
 class MockActionService {};
 class MockMatDialog {};
@@ -25,9 +24,9 @@ class MockKeyPressProvider {
 class MockElectronService {};
 class ClientContext {};
 
-describe('RewardsLineItemComponent', () => {
-    let component: RewardsLineItemComponent;
-    let fixture: ComponentFixture<RewardsLineItemComponent>;
+describe('RewardsHistoryLineItemComponent', () => {
+    let component: RewardsHistoryLineItemComponent;
+    let fixture: ComponentFixture<RewardsHistoryLineItemComponent>;
     class MockOpenposMediaServiceMobileFalse {
         observe(): Observable<boolean> {
             return of(false);
@@ -45,7 +44,7 @@ describe('RewardsLineItemComponent', () => {
             TestBed.configureTestingModule({
                 imports: [ HttpClientTestingModule],
                 declarations: [
-                    RewardsLineItemComponent
+                    RewardsHistoryLineItemComponent
                 ],
                 providers: [
                     { provide: ActionService, useClass: MockActionService },
@@ -60,17 +59,17 @@ describe('RewardsLineItemComponent', () => {
                     NO_ERRORS_SCHEMA,
                 ]
             }).compileComponents();
-            fixture = TestBed.createComponent(RewardsLineItemComponent);
+            fixture = TestBed.createComponent(RewardsHistoryLineItemComponent);
             component = fixture.componentInstance;
             component.reward = {
                 expirationDate: '01/01/2000'
-            } as Reward;
+            } as RewardHistory;
             component.screenData = {
-                expiresLabel: 'Expires',
+                expiredLabel: 'Expired',
+                redeemedLabel: 'Redeemed',
                 loyaltyIcon: 'loyalty',
-                expiredIcon: 'access_time',
-                applyIcon: 'chevron_right'
-            } as RewardsLineItemComponentInterface;
+                expiredIcon: 'access_time'
+            } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });
 
@@ -107,6 +106,14 @@ describe('RewardsLineItemComponent', () => {
                     validateText(fixture, '.details .name', component.reward.name);
                 });
 
+                it('has the expired class when it is not redeemed', () => {
+                    component.reward.redeemed = false;
+                    fixture.detectChanges();
+
+                    const nameElement = fixture.debugElement.query(By.css('.details .name'));
+                    expect(nameElement.nativeElement.classList).toContain('expired');
+                })
+
                 describe('expiration', () => {
                     describe('when there is an expiration date', () => {
                         it('renders the access_time icon', () => {
@@ -114,70 +121,38 @@ describe('RewardsLineItemComponent', () => {
                         });
 
                         it('renders the expirationLabel', () => {
-                            component.screenData.expiresLabel = 'a label';
+                            component.screenData.expiredLabel = 'a label';
                             fixture.detectChanges();
 
-                            validateText(fixture, '.details .expiration', component.screenData.expiresLabel);
+                            validateText(fixture, '.details .expiration', component.screenData.expiredLabel);
                         });
                     });
 
                     describe('when there is no expiration date', () => {
                         beforeEach(() => {
-                            component.reward.expirationDate = undefined;
-                            fixture.detectChanges();
+                           component.reward.expirationDate = undefined;
+                           fixture.detectChanges();
                         });
 
                         it('does not display the expiration section', () => {
-                            validateDoesNotExist(fixture, '.expiration');
+                           validateDoesNotExist(fixture, '.expiration');
                         });
                     });
                 });
             });
+            describe('status', () => {
+               it('shows the redeemedLabel when the reward is redeemed', () => {
+                   component.screenData.redeemedLabel = 'redeemed label';
+                    component.reward.redeemed = true;
+                    fixture.detectChanges();
+                    validateText(fixture, '.status', component.screenData.redeemedLabel);
+               });
 
-            describe('apply button', () => {
-                describe('when applicable', () => {
-                    beforeEach(() => {
-                        component.reward.promotionId = '123';
-                        component.reward.applyButton = {title: 'a title'} as IActionItem;
-                        fixture.detectChanges();
-                    });
-
-                    it('renders the button', () => {
-                        validateExist(fixture, '.apply a');
-                    });
-
-                    it('renders the button title', () => {
-                        validateText(fixture, '.apply a', component.reward.applyButton.title);
-                    });
-
-                    it('renders the chevron icon', () => {
-                        validateIcon(fixture, '.apply a app-icon', 'chevron_right');
-                    });
-
-                    it('calls doAction with the configuration when an actionClick event is triggered', () => {
-                        spyOn(component, 'doAction');
-                        const button = fixture.debugElement.query(By.css('.apply a'));
-                        button.nativeElement.dispatchEvent(new Event('actionClick'));
-                        expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
-                    });
-
-                    it('calls doAction with the configuration and promotionId when the button is clicked', () => {
-                        spyOn(component, 'doAction');
-                        const button = fixture.debugElement.query(By.css('.apply a'));
-                        button.nativeElement.click();
-                        expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
-                    });
-                });
-
-                describe('when not applicable', () => {
-                   beforeEach(() => {
-                      component.reward.applyButton = undefined;
-                      fixture.detectChanges();
-                   });
-
-                   it('does not render the apply button', () => {
-                      validateDoesNotExist(fixture, '.apply a');
-                   });
+                it('shows the expiredLabel when the reward is not redeemed', () => {
+                    component.screenData.expiredLabel = 'expired label';
+                    component.reward.redeemed = false;
+                    fixture.detectChanges();
+                    validateText(fixture, '.status', component.screenData.expiredLabel);
                 });
             });
         });
@@ -188,7 +163,7 @@ describe('RewardsLineItemComponent', () => {
             TestBed.configureTestingModule({
                 imports: [ HttpClientTestingModule],
                 declarations: [
-                    RewardsLineItemComponent
+                    RewardsHistoryLineItemComponent
                 ],
                 providers: [
                     { provide: ActionService, useClass: MockActionService },
@@ -203,25 +178,27 @@ describe('RewardsLineItemComponent', () => {
                     NO_ERRORS_SCHEMA,
                 ]
             }).compileComponents();
-            fixture = TestBed.createComponent(RewardsLineItemComponent);
+            fixture = TestBed.createComponent(RewardsHistoryLineItemComponent);
             component = fixture.componentInstance;
-            component.reward = {} as Reward;
+            component.reward = {} as RewardHistory;
             component.screenData = {
-                expiresLabel: 'Expires',
+                expiredLabel: 'Expired',
+                redeemedLabel: 'Redeemed',
                 loyaltyIcon: 'loyalty',
-                expiredIcon: 'access_time',
-                applyIcon: 'chevron_right'
-            } as RewardsLineItemComponentInterface;
+                expiredIcon: 'access_time'
+            } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });
         describe('template', () => {
-            it('has the mobile-reward-line-item-wrapper class and not the reward-line-item-wrapper', () => {
-               validateExist(fixture, '.mobile-reward-line-item-wrapper');
-               validateDoesNotExist(fixture, '.reward-line-item-wrapper');
-            });
+            describe('template', () => {
+                it('has the mobile-reward-history-line-item-wrapper class and not the reward-history-line-item-wrapper', () => {
+                    validateExist(fixture, '.mobile-reward-history-line-item-wrapper');
+                    validateDoesNotExist(fixture, '.reward-history-line-item-wrapper');
+                });
 
-            it('does not render the loyalty-icon', () => {
-                validateDoesNotExist(fixture, '.loyalty-icon');
+                it('does not render the loyalty-icon', () => {
+                    validateDoesNotExist(fixture, '.loyalty-icon');
+                });
             });
         });
     });
@@ -231,7 +208,7 @@ describe('RewardsLineItemComponent', () => {
             TestBed.configureTestingModule({
                 imports: [ HttpClientTestingModule],
                 declarations: [
-                    RewardsLineItemComponent
+                    RewardsHistoryLineItemComponent
                 ],
                 providers: [
                     { provide: ActionService, useClass: MockActionService },
@@ -246,25 +223,25 @@ describe('RewardsLineItemComponent', () => {
                     NO_ERRORS_SCHEMA,
                 ]
             }).compileComponents();
-            fixture = TestBed.createComponent(RewardsLineItemComponent);
+            fixture = TestBed.createComponent(RewardsHistoryLineItemComponent);
             component = fixture.componentInstance;
-            component.reward = {} as Reward;
+            component.reward = {} as RewardHistory;
             component.screenData = {
-                expiresLabel: 'Expires',
+                expiredLabel: 'Expired',
+                redeemedLabel: 'Redeemed',
                 loyaltyIcon: 'loyalty',
-                expiredIcon: 'access_time',
-                applyIcon: 'chevron_right'
-            } as RewardsLineItemComponentInterface;
+                expiredIcon: 'access_time'
+            } as RewardsHistoryLineItemComponentInterface;
             fixture.detectChanges();
         });
         describe('template', () => {
-            it('has the reward-line-item-wrapper class and not the mobile-reward-line-item-wrapper', () => {
-                validateExist(fixture, '.reward-line-item-wrapper');
-                validateDoesNotExist(fixture, '.mobile-reward-line-item-wrapper');
+            it('has the reward-history-line-item-wrapper class and not the mobile-reward-history-line-item-wrapper', () => {
+                validateExist(fixture, '.reward-history-line-item-wrapper');
+                validateDoesNotExist(fixture, '.mobile-reward-history-line-item-wrapper');
             });
             it('renders the loyalty-icon', () => {
-               validateExist(fixture, '.loyalty-icon');
-               validateIcon(fixture, '.loyalty-icon app-icon', 'loyalty');
+                validateExist(fixture, '.loyalty-icon');
+                validateIcon(fixture, '.loyalty-icon app-icon', 'loyalty');
             });
         });
     });

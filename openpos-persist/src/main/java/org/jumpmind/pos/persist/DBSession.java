@@ -106,7 +106,7 @@ public class DBSession {
         try {
             return datasource.getConnection();
         } catch (SQLException e) {
-            throw new PersistException("Failed to get connection from databasePlatform " + databasePlatform);
+            throw new PersistException("Failed to get connection from databasePlatform " + databasePlatform, e);
         }
     }
 
@@ -530,7 +530,13 @@ public class DBSession {
         Object[] values = statement.getValueArray(model.getColumnNamesToValues());
         int[] types = statement.getTypes();
 
-        return jdbcTemplate.getJdbcOperations().update(sql, values, types);
+        try {
+            return jdbcTemplate.getJdbcOperations().update(sql, values, types);
+        } catch (DuplicateKeyException e) {
+            throw new DuplicateKeyException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types), e);
+        } catch (Exception ex) {
+            throw new PersistException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types), ex);
+        }
     }
 
     protected void batchInternal(List<? extends  AbstractModel> models, DmlType dmlType) {

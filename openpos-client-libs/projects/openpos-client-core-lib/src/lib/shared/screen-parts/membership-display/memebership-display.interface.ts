@@ -3,3 +3,7 @@ export interface Membership {
     name: string,
     member: boolean
 };
+
+export interface MembershipDisplayComponentInterface {
+    checkMarkIcon: string;
+}

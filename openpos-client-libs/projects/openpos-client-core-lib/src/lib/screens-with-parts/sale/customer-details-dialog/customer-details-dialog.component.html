@@ -3,7 +3,7 @@
     <app-content-card class="details-wrapper" >
         <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
             <div class="icon">
-                <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons ' + ((isMobile | async) ? 'mat-64' : '')"></app-icon>
+                <app-icon [iconName]="screen.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
             </div>
             <div class="details">
                 <div class="customer-name">
@@ -16,12 +16,19 @@
             <div class="memberships" *ngIf="screen.membershipEnabled">
                 <div class="wrapper">
                     <div class="title" *ngIf="!(isMobile | async)">
-                        <app-icon [iconName]="'card_account_details'" [iconClass]="'material-icons mat-24'"></app-icon> {{screen.membershipLabel}}
+                        <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons mat-24'"></app-icon> {{screen.membershipLabel}}
                     </div>
                     <div class="list">
-                        <span *ngFor="let membership of screen.customer.memberships" class="item">
-                            <app-membership-display [membership]="membership"></app-membership-display>
-                        </span>
+                        <div *ngIf="screen.customer.memberships && screen.customer.memberships.length">
+                            <span *ngFor="let membership of screen.customer.memberships" class="item">
+                                <app-membership-display [membership]="membership"></app-membership-display>
+                            </span>
+                        </div>
+                        <div *ngIf="!(screen.customer.memberships && screen.customer.memberships.length)">
+                            <span>
+                                {{screen.noMembershipsFoundLabel}}
+                            </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -42,6 +49,18 @@
                         </div>
                     </div>
                     <div *ngIf="!(screen.customer.rewards && screen.customer.rewards.length)" class="no-items" responsive-class>
+                        {{screen.noPromotionsText}}
+                    </div>
+                </mat-card>
+            </mat-tab>
+            <mat-tab class="rewardsHistoryTab" [label]="screen.rewardHistoryLabel">
+                <mat-card [ngClass]="{'rewardsHistoryContent': true, 'no-promotions': !(screen.customer.rewardHistory && screen.customer.rewardHistory.length)}">
+                    <div *ngIf="(screen.customer.rewardHistory && screen.customer.rewardHistory.length)" >
+                        <div *ngFor="let reward of screen.customer.rewardHistory" class="line">
+                            <app-rewards-history-line-item [reward]="reward"></app-rewards-history-line-item>
+                        </div>
+                    </div>
+                    <div *ngIf="!(screen.customer.rewardHistory && screen.customer.rewardHistory.length)" class="no-items" responsive-class>
                         {{screen.noPromotionsText}}
                     </div>
                 </mat-card>

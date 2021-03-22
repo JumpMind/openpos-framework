@@ -1,5 +1,6 @@
-import {Membership} from "../membership-display/memebership-display.interface";
-import {Reward} from "../rewards-line-item/rewards-line-item.interface";
+import {Membership} from '../membership-display/memebership-display.interface';
+import {Reward} from '../rewards-line-item/rewards-line-item.interface';
+import {RewardHistory} from '../rewards-history-line-item/rewards-history-line-item.interface';
 
 export interface CustomerDetails {
     name: string,
@@ -14,5 +15,13 @@ export interface CustomerDetails {
         postalCode: string
     },
     memberships: Membership[],
-    rewards: Reward[]
+    rewards: Reward[],
+    rewardHistory: RewardHistory[]
 };
+
+export interface CustomerInformationComponentInterface {
+    emailIcon: string;
+    phoneIcon: string;
+    loyaltyNumberIcon: string;
+    locationIcon: string;
+}

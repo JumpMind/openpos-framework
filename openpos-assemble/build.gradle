@@ -1,9 +1,9 @@
 buildscript {
     repositories {
         maven { url "https://maven.jumpmind.com/repo" }
-        jcenter()
         mavenCentral()
         maven { url "https://plugins.gradle.org/m2/" }
+        jcenter()
     }
     dependencies {
         classpath "com.github.node-gradle:gradle-node-plugin:2.2.4"
