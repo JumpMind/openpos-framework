@@ -61,12 +61,14 @@
                 {{screenData.statusMessage}}
             </app-stamp>
         </div>
-        <div *ngIf="screenData.itemCount" class="item-count">
-            <div *ngIf="screenData.itemCount.amount" responsive-class class="item-count-amount">
-                {{screenData.itemCount.amount}}
-            </div>
-            <div *ngIf="screenData.itemCount.name" responsive-class class="item-count-name">
-                <span *ngIf="screenData.itemCount.amount">&nbsp;</span>{{screenData.itemCount.name}}
+        <div class="item-counts">
+            <div *ngFor="let itemCount of screenData.itemCounts" class="item-count">
+                <div *ngIf="itemCount.amount" responsive-class class="item-count-amount">
+                    {{itemCount.amount}}
+                </div>
+                <div *ngIf="itemCount.name" responsive-class class="item-count-name">
+                    <span *ngIf="itemCount.amount">&nbsp;</span>{{itemCount.name}}
+                </div>
             </div>
         </div>
         <div class="sale-total-content" responsive-class>
