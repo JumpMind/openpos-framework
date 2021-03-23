@@ -1,7 +1,15 @@
 import { Component, Input, OnInit, DoCheck, OnChanges } from '@angular/core';
 import { LocaleService } from '../../../core/services/locale.service';
 import { CurrencyPipe } from '@angular/common';
-import { catchError } from 'rxjs/operators';
+
+const numberMatchWithRange = /^(?<lowerbound>\-?\d+(\.\d+)?)(\s*-\s*(?<upperbound>\-?\d+(\.\d+)?))?$/;
+
+interface CurrencyValue {
+    textBeforeSymbol: string;
+    textAfterSymbol: string;
+    symbolText: string;
+    isNegative: boolean;
+}
 
 /**
  * Component used to display a currency text amount in a locale-specific format.
@@ -24,64 +32,99 @@ export class CurrencyTextComponent implements OnChanges {
     @Input()
     symbol: string;
 
-    textBeforeSymbol: string;
-    textAfterSymbol: string;
-    symbolText: string;
-    isNegative: boolean;
+    lowerBound: CurrencyValue = {
+        isNegative: false,
+        symbolText: '',
+        textAfterSymbol: '',
+        textBeforeSymbol: ''
+    };
+
+    upperBound?: CurrencyValue;
 
     constructor(private localeService: LocaleService) {}
 
     ngOnChanges(): void {
+        let localAmtText = this.amountText || (typeof(this.amountText) === 'number') ? this.amountText.toString().trim() : null;
+        if (localAmtText) {
+            const rangeMatch = numberMatchWithRange.exec(localAmtText);
+
+            const lower = rangeMatch.groups.lowerbound;
+            const upper = rangeMatch.groups.upperbound;
+
+            if (lower) {
+                this.lowerBound = this._makeCurrencyValue(lower);
+            }
+
+            if (upper) {
+                this.upperBound = this._makeCurrencyValue(upper);
+            }
+        } else {
+            this.lowerBound = {
+                isNegative: false,
+                symbolText: '',
+                textAfterSymbol: '',
+                textBeforeSymbol: ''
+            };
+        }
+    }
+
+    private _makeCurrencyValue(localAmtText: string): CurrencyValue {
         const locale = this.localeService.getLocale();
         const targetSymbol = this.symbol || this.localeService.getConstant('currencySymbol');
 
-        let localAmtText = this.amountText || (typeof(this.amountText) === 'number') ? this.amountText.toString().trim() : null;
-        if (localAmtText) {
-            this.isNegative = localAmtText.indexOf('-') >= 0;
-            const hasParens = localAmtText.indexOf('(') >= 0;
-            // CurrencyPipe does not like text starting with open paren
-            localAmtText = this.normalizeNegativeAmount(localAmtText);
+        const isNegative = localAmtText.indexOf('-') >= 0;
+        const hasParens = localAmtText.indexOf('(') >= 0;
 
-            if (!this.euRegex.test(localAmtText)) {
-                localAmtText = this.removeCommas(localAmtText);
-            } else {
-                localAmtText = this.formatEuText(localAmtText);
-            }
-            let existingSymbolIdx = localAmtText.indexOf(targetSymbol);
-            if (existingSymbolIdx < 0) {
-                // No symbol in given text, use currency pipe to insert one
-                const currencyCode = this.localeService.getConstant('currencyCode');
-                const currencyPipe = new CurrencyPipe(locale);
-                try {
-                    localAmtText = currencyPipe.transform(localAmtText, currencyCode, 'symbol-narrow', '1.2', locale);
-                } catch {
-                    console.log(`Invalid Currency text ${localAmtText}`);
-                }
-                existingSymbolIdx = localAmtText.indexOf(targetSymbol);
-            }
+        var textBeforeSymbol: string;
+        var textAfterSymbol: string;
+        var symbolText: string;
+        
+        // CurrencyPipe does not like text starting with open paren
+        localAmtText = this.normalizeNegativeAmount(localAmtText);
 
-            if (existingSymbolIdx >= 0) {
-                this.textBeforeSymbol = localAmtText.substring(0, existingSymbolIdx);
-                this.textAfterSymbol = localAmtText.substring(existingSymbolIdx + targetSymbol.length, localAmtText.length);
-                this.symbolText = localAmtText.substring(existingSymbolIdx, existingSymbolIdx + targetSymbol.length);
-            } else {
-                // expected currency symbol not there
-                this.symbolText = '';
-                this.textAfterSymbol = localAmtText;
-                this.textBeforeSymbol = '';
-            }
-
-            // If we were originally given a neg. number with parens, put them back since it looks like
-            // currency pipe doesn't handle it :-/
-            if (hasParens && this.textBeforeSymbol && this.textBeforeSymbol.indexOf('-') >= 0) {
-                this.textBeforeSymbol = this.textBeforeSymbol.replace('-', '(');
-                this.textAfterSymbol = `${this.textAfterSymbol})`;
-            }
+        if (!this.euRegex.test(localAmtText)) {
+            localAmtText = this.removeCommas(localAmtText);
         } else {
-            this.symbolText = '';
-            this.textAfterSymbol = '';
-            this.textBeforeSymbol = '';
+            localAmtText = this.formatEuText(localAmtText);
         }
+
+        let existingSymbolIdx = localAmtText.indexOf(targetSymbol);
+        if (existingSymbolIdx < 0) {
+            // No symbol in given text, use currency pipe to insert one
+            const currencyCode = this.localeService.getConstant('currencyCode');
+            const currencyPipe = new CurrencyPipe(locale);
+            try {
+                localAmtText = currencyPipe.transform(localAmtText, currencyCode, 'symbol-narrow', '1.2', locale);
+            } catch {
+                console.log(`Invalid Currency text ${localAmtText}`);
+            }
+            existingSymbolIdx = localAmtText.indexOf(targetSymbol);
+        }
+
+        if (existingSymbolIdx >= 0) {
+            textBeforeSymbol = localAmtText.substring(0, existingSymbolIdx);
+            textAfterSymbol = localAmtText.substring(existingSymbolIdx + targetSymbol.length, localAmtText.length);
+            symbolText = localAmtText.substring(existingSymbolIdx, existingSymbolIdx + targetSymbol.length);
+        } else {
+            // expected currency symbol not there
+            symbolText = '';
+            textAfterSymbol = localAmtText;
+            textBeforeSymbol = '';
+        }
+
+        // If we were originally given a neg. number with parens, put them back since it looks like
+        // currency pipe doesn't handle it :-/
+        if (hasParens && textBeforeSymbol && textBeforeSymbol.indexOf('-') >= 0) {
+            textBeforeSymbol = textBeforeSymbol.replace('-', '(');
+            textAfterSymbol = `${textAfterSymbol})`;
+        }
+
+        return {
+            isNegative,
+            symbolText,
+            textAfterSymbol,
+            textBeforeSymbol
+        };
     }
 
     protected removeCommas(text: string): string {
