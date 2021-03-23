@@ -1,3 +1,16 @@
 @import "../../../styles/mixins/typography";
 
+.mutableListItem {
+  display: grid;
+  grid-template-columns: 1fr 5fr 3fr 1fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 1em;
+  grid-template-areas:
+    "groupIcon inputField labelField remove add";
+}
 
+.groupIcon { grid-area: groupIcon; margin: auto; }
+.inputField { grid-area: inputField; }
+.labelField { grid-area: labelField; }
+.remove { grid-area: remove; margin: auto; }
+.add { grid-area: add; margin: auto; }

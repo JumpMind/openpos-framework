@@ -29,6 +29,13 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
     removeEmail: IActionItem;
 
     @Input()
+    profileIcon: string;
+    @Input()
+    locationIcon: string;
+    @Input()
+    loyaltyNumberIcon: string;
+
+    @Input()
     memberships: Membership[] = [];
     @Input()
     membershipsLabel: string;

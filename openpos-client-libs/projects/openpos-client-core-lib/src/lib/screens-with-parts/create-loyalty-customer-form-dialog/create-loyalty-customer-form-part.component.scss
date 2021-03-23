@@ -57,11 +57,10 @@
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: 1fr 1fr;
     gap: 0px 5em;
     grid-template-areas:
     "BasicInfo Loyalty"
-    "Contact Zip";
+    "Contact Location";
 }
 
 .BasicInfo {
@@ -82,10 +81,44 @@
     justify-content: space-between;
 }
 
+.email-list, .phones-list {
+    display: flex
+}
+
 .Portrait { grid-area: Portrait; }
 
 .Contact { grid-area: Contact; }
 
-.Loyalty { grid-area: Loyalty; }
+.loyalty-and-membership {
+    grid-area: Loyalty;
 
-.Zip { grid-area: Zip; }
+    .newLoyalty {
+        display: grid;
+        grid-template-columns: auto 10fr;
+        grid-template-rows: 1fr;
+        gap: 0px 1em;
+        grid-template-areas:
+        ". .";
+
+        app-icon {
+            align-self: center;
+        }
+    }
+}
+
+.Location {
+    grid-area: Location;
+
+    .location {
+        display: grid;
+        grid-template-columns: auto 10fr;
+        grid-template-rows: 1fr;
+        gap: 0px 1em;
+        grid-template-areas:
+        ". .";
+
+        app-icon {
+            align-self: center;
+        }
+    }
+}

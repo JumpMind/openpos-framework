@@ -6,7 +6,7 @@
                 <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
                     <div class="BasicInfo">
                         <div class="Portrait">
-<!--                            <app-icon [iconName]="'account_circle'" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>-->
+                            <app-icon matPrefix [iconName]="profileIcon" iconClass="material-icons lg"></app-icon>
                         </div>
                         <div class="Names">
                             <app-dynamic-form-field [formGroup]="form" [formField]="firstNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
@@ -34,11 +34,13 @@
                                                               [isOnly]="phoneFields.length == 1"
                                                               (onFieldChanged)="onFieldChanged($event)"
                                                               (add)="doAction(addPhone, i)" (remove)="doAction(removePhone, i)"></app-mutable-list-item-with-label>
-
                         </div>
                     </div>
-                    <div class="Loyalty">
-                        <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                    <div class="loyalty-and-membership">
+                        <div class="newLoyalty">
+                            <app-icon matPrefix [iconName]="loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        </div>
                         <div>
                             <div *ngIf="memberships && memberships.length">
                                 <div>{{membershipsLabel}}</div>
@@ -52,8 +54,12 @@
                             </span>
                         </div>
                     </div>
-                    <div class="Zip">
-                        <app-dynamic-form-field [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                    <div class="Location">
+                        <div class="location">
+                            <app-icon matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
+                            <app-dynamic-form-field [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        </div>
+                        <div></div>
                     </div>
                 </div>
                 <mat-error>
@@ -63,9 +69,6 @@
             </mat-card-content>
         </app-content-card>
 
-        <div>disableSubmitButton: {{disableSubmitButton}}</div>
-        <div>valid: {{form.valid}}</div>
-        <div>pending: {{form.pending}}</div>
         <mat-card-actions *ngIf="(buttons && buttons.length > 0) || submitButton" mat-dialog-actions class="buttons">
             <app-secondary-button *ngFor="let button of buttons" (click)="doAction(button)">
                 <span>{{button.label}}</span>

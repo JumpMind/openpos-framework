@@ -1,6 +1,19 @@
-<div>
-    <app-dynamic-form-field [formGroup]="formGroup" [formField]="inputField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
-    <app-dynamic-form-field *ngIf="labelField" [formGroup]="formGroup" [formField]="labelField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
-    <app-icon *ngIf="!isOnly" matPrefix [iconName]="screenData.removeIcon || 'Remove'" iconClass="material-icons sm" (click)="remove.emit()"></app-icon>
-    <app-icon *ngIf="isLast" matPrefix [iconName]="screenData.addIcon || 'Add'" iconClass="material-icons sm" (click)="add.emit()"></app-icon>
+<div class="mutableListItem">
+    <div class="groupIcon">
+        <app-icon *ngIf="isFirst" matPrefix [iconName]="groupIcon" iconClass="material-icons sm"></app-icon>
+        <app-icon *ngIf="!isFirst" matPrefix [iconName]="'none'" iconClass="material-icons sm"></app-icon>
+    </div>
+    <div class="inputField">
+        <app-dynamic-form-field [formGroup]="formGroup" [formField]="inputField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
+    </div>
+    <div class="labelField">
+        <app-dynamic-form-field *ngIf="labelField" [formGroup]="formGroup" [formField]="labelField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
+    </div>
+    <div class="remove">
+        <app-icon *ngIf="!isOnly" matPrefix [iconName]="screenData.removeIcon" iconClass="material-icons sm" (click)="remove.emit()"></app-icon>
+    </div>
+    <div class="add">
+        <app-icon *ngIf="isLast" matPrefix [iconName]="screenData.addIcon" iconClass="material-icons sm" (click)="add.emit()"></app-icon>
+        <app-icon *ngIf="!isLast" matPrefix [iconName]="'none'" iconClass="material-icons md"></app-icon>
+    </div>
 </div>

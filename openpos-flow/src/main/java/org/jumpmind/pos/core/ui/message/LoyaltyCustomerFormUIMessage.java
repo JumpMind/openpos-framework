@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class CreateLoyaltyCustomerUIMessage extends UIMessage implements IHasForm {
+public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm {
 
     private Form form = new Form();
     private List<UIMembership> memberships;
@@ -23,13 +23,21 @@ public class CreateLoyaltyCustomerUIMessage extends UIMessage implements IHasFor
     private ActionItem removeEmail;
     private ActionItem submitButton;
 
-    private String instructions;    // Does not show up in create-loyalty-customer-form-dialog component
+    private String profileIcon;
+    private String loyaltyNumberIcon;
+    private String phoneIcon;
+    private String emailIcon;
+    private String locationIcon;
+    private String addIcon;
+    private String removeIcon;
+
+    private String instructions;
 
     private List<String> alternateSubmitActions = new ArrayList<String>();
 
-    private String imageUrl;        // Does not show up in create-loyalty-customer-form-dialog component
+    private String imageUrl;
 
-    public CreateLoyaltyCustomerUIMessage() {
+    public LoyaltyCustomerFormUIMessage() {
         setScreenType(UIMessageType.CREATE_LOYALTY_CUSTOMER);
     }
 
