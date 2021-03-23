@@ -1,6 +1,6 @@
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
-import {SelectableItemInterface} from "./selectable-item.interface";
+import {SelectableItemInterface} from './selectable-item.interface';
 
 export interface SelectionListInterface<T extends SelectableItemInterface> extends IAbstractScreen {
     instructions: string;

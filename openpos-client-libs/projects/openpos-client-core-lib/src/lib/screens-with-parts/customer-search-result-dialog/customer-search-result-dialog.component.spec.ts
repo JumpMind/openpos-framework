@@ -1,19 +1,19 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {CustomerSearchResultDialogComponent} from './customer-search-result-dialog.component';
-import {ICustomerDetails} from "./customer-search-result-dialog.interface";
+import {ICustomerDetails} from './customer-search-result-dialog.interface';
 import {NO_ERRORS_SCHEMA} from '@angular/core'
-import {ActionService} from "../../core/actions/action.service";
-import {IActionItem} from "../../core/actions/action-item.interface";
-import {By} from "@angular/platform-browser";
-import {SelectionListInterface} from "../selection-list/selection-list.interface";
-import {ElectronService} from "ngx-electron";
-import {CLIENTCONTEXT} from "../../core/client-context/client-context-provider.interface";
-import {TimeZoneContext} from "../../core/client-context/time-zone-context";
-import {MatDialog} from "@angular/material";
-import {HttpClientTestingModule} from "@angular/common/http/testing";
-import {SelectableItemListComponentConfiguration} from "../../shared/components/selectable-item-list/selectable-item-list.component";
-import {SelectionMode} from "../../core/interfaces/selection-mode.enum";
-import {ActionItem} from "../../core/actions/action-item";
+import {ActionService} from '../../core/actions/action.service';
+import {IActionItem} from '../../core/actions/action-item.interface';
+import {By} from '@angular/platform-browser';
+import {SelectionListInterface} from '../selection-list/selection-list.interface';
+import {ElectronService} from 'ngx-electron';
+import {CLIENTCONTEXT} from '../../core/client-context/client-context-provider.interface';
+import {TimeZoneContext} from '../../core/client-context/time-zone-context';
+import {MatDialog} from '@angular/material';
+import {HttpClientTestingModule} from '@angular/common/http/testing';
+import {SelectableItemListComponentConfiguration} from '../../shared/components/selectable-item-list/selectable-item-list.component';
+import {SelectionMode} from '../../core/interfaces/selection-mode.enum';
+import {ActionItem} from '../../core/actions/action-item';
 
 class MockActionService {
     doAction(action: IActionItem) {

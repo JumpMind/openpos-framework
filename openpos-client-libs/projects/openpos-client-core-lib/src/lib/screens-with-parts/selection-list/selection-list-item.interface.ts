@@ -1,5 +1,5 @@
 import { SelectionListItemDisplayProperty } from './selection-list-item-display-property.interface';
-import {SelectableItemInterface} from "./selectable-item.interface";
+import {SelectableItemInterface} from './selectable-item.interface';
 
 
 export class ISelectionListItem implements SelectableItemInterface {

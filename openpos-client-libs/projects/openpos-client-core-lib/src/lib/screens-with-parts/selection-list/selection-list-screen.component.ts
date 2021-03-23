@@ -1,8 +1,8 @@
 import {Component, Injector} from '@angular/core';
 import {ScreenComponent} from '../../shared/decorators/screen-component.decorator';
 import {ISelectionListItem} from './selection-list-item.interface';
-import {GenericSelectionListScreen} from "./generic-selection-list-screen";
-import {SessionService} from "../../core/services/session.service";
+import {GenericSelectionListScreen} from './generic-selection-list-screen';
+import {SessionService} from '../../core/services/session.service';
 
 @ScreenComponent({
     name: 'SelectionList'
