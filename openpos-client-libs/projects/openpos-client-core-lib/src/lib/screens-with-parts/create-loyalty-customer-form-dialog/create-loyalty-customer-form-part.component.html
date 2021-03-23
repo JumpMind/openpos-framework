@@ -1,6 +1,6 @@
 <app-scan-part></app-scan-part>
 <app-form *ngIf="screenData" (submitFormEvent)="submitForm()" [form]="form">
-    <div responsive-class class="form-part-body">
+    <div responsive-class class="form-part-body loyalty-customer-form">
         <app-content-card>
             <mat-card-content mat-dialog-conten class="form-content">
                 <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                     <div class="loyalty-and-membership">
-                        <div class="newLoyalty">
+                        <div class="loyalty-number">
                             <app-icon matPrefix [iconName]="loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>

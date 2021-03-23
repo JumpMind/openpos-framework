@@ -8,6 +8,7 @@
 @import './return/return-theme';
 @import './transaction-search/transaction-search-theme';
 @import './simulated-peripheral-viewer/simulated-peripheral-theme';
+@import './create-loyalty-customer-form-dialog/create-loyalty-customer-dialog-theme';
 
 @mixin screen-with-parts-themes($theme){
     @include sale-theme($theme);
@@ -19,4 +20,5 @@
     @include transaction-search-theme($theme);
     @include simulated-peripheral-theme($theme);
     @include customer-details-dialog-theme($theme);
+    @include create-loyalty-customer-dialog-theme($theme);
 }

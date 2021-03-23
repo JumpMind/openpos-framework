@@ -1,0 +1,9 @@
+@mixin create-loyalty-customer-dialog-theme($theme) {
+    $foreground: map-get($theme, foreground);
+
+    .loyalty-customer-form {
+        app-icon {
+            color: map_get($foreground, icon);
+        }
+    }
+}
