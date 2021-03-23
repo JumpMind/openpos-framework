@@ -14,4 +14,6 @@ export interface DialogHeaderInterface {
      *  [action-item.interface.ts](../../../core/interfaces/action-item.interface.ts)
      */
     backButton: IActionItem;
+    
+    additionalStyleName: string;
 }
