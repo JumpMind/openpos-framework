@@ -48,15 +48,24 @@ export class CurrencyTextComponent implements OnChanges {
         if (localAmtText) {
             const rangeMatch = numberMatchWithRange.exec(localAmtText);
 
-            const lower = rangeMatch.groups.lowerbound;
-            const upper = rangeMatch.groups.upperbound;
+            if (rangeMatch && rangeMatch.groups) {
+                const lower = rangeMatch.groups.lowerbound;
+                const upper = rangeMatch.groups.upperbound;
 
-            if (lower) {
-                this.lowerBound = this._makeCurrencyValue(lower);
-            }
+                if (lower) {
+                    this.lowerBound = this._makeCurrencyValue(lower);
+                }
 
-            if (upper) {
-                this.upperBound = this._makeCurrencyValue(upper);
+                if (upper) {
+                    this.upperBound = this._makeCurrencyValue(upper);
+                }
+            } else {
+                this.lowerBound = {
+                    isNegative: false,
+                    symbolText: '',
+                    textAfterSymbol: localAmtText,
+                    textBeforeSymbol: ''
+                };
             }
         } else {
             this.lowerBound = {
