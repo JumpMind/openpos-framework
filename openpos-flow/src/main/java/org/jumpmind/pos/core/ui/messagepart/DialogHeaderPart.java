@@ -13,7 +13,6 @@ public class DialogHeaderPart implements IHasBackButton, Serializable {
     private String headerText;
     private String headerIcon;
     private ActionItem backButton;
-    private String additionalStyleName;
 
     public DialogHeaderPart() {
     }
