@@ -83,15 +83,13 @@ app-scandit-native {
     grid-area: item-counts;
     display: flex;
     flex-direction: column;
-    margin-top: 12px;
-    margin-bottom: 12px;
+    padding: 8px 0;
     .item-count {
         display: flex;
         height: fit-content;
         justify-content: center;
         align-items: center;
-        padding-top: 4px;
-        padding-bottom: 4px;
+        padding: 4px 0;
     }
 }
 .status-stamp {

@@ -10,7 +10,7 @@
         }
     }
 
-    .item-count {
+    .item-counts {
         background-color: $item-count-background;
     }
 
@@ -25,7 +25,7 @@
             border-color: $disabled-border;
         }
     }
-    
+
     .sale-total-total {
         border-color: $border;
     }
@@ -44,7 +44,7 @@
             @extend %text-sm;
             .mat-button-wrapper {
                 display: grid;
-                
+
                 div {
                     line-height: normal;
                 }
@@ -68,11 +68,11 @@
             @extend %text-sm;
             .mat-button-wrapper {
                 display: grid;
-                
+
                 div {
                     line-height: normal;
                 }
-            }    
+            }
         }
 
         .sale-total-employee-sale-name {
