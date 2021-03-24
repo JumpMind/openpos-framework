@@ -61,7 +61,7 @@
                 {{screenData.statusMessage}}
             </app-stamp>
         </div>
-        <div class="item-counts">
+        <div *ngIf="screenData.itemCounts" class="item-counts">
             <div *ngFor="let itemCount of screenData.itemCounts" class="item-count">
                 <div *ngIf="itemCount.amount" responsive-class class="item-count-amount">
                     {{itemCount.amount}}
