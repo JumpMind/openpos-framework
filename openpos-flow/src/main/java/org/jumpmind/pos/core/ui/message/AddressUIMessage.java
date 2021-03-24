@@ -33,7 +33,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "Address Line 2", "", false);
         this.getForm().addTextField("locality", "City", "", true);
         this.getForm().addTextField("state", "State", "", true);
-        this.getForm().addTextField("postalCode", "Postal Code", "", true);
+        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", "", true);
         this.getForm().addTextField("country", "Country", "", true);
     }
 
@@ -42,7 +42,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "Address Line 2", addressLine2, false);
         this.getForm().addTextField("locality", "City", locality, true);
         this.getForm().addTextField("state", "State", state, true);
-        this.getForm().addTextField("postalCode", "Postal Code", postalCode, true);
+        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", postalCode, true);
         this.getForm().addTextField("country", "Country", country, true);
     }
 
@@ -52,7 +52,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "Address Line 2", "", false);
         this.getForm().addTextField("locality", "City", "", true);
         this.getForm().addComboBox("state", "State", states, true);
-        this.getForm().addTextField("postalCode", "Postal Code", "", true);
+        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", "", true);
         this.getForm().addTextField("country", "Country", "", true);
     }
 
@@ -61,7 +61,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "Address Line 2", addressLine2, false);
         this.getForm().addTextField("locality", "City", locality, true);
         this.getForm().addComboBox("state", "State", state, states, true);
-        this.getForm().addTextField("postalCode", "Postal Code", postalCode, true);
+        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", postalCode, true);
         this.getForm().addTextField("country", "Country", country, true);
     }
 

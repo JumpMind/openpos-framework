@@ -5,6 +5,7 @@ import {PhoneUSFormatter} from '../../shared/formatters/phone-us.formatter';
 import {PhoneCAFormatter} from '../../shared/formatters/phone-ca.formatter';
 import {DateTimeCAFormatter} from '../../shared/formatters/datetime-ca.formatter';
 import {PostalCodeCAFormatter} from '../../shared/formatters/postal-code-ca.formatter';
+import {PostalCodeGenericFormatter} from '../../shared/formatters/postal-code-generic.formatter';
 import {NumericFormatter} from '../../shared/formatters/numeric.formatter';
 import {GiftCodeFormatter} from '../../shared/formatters/gift-code.formatter';
 import {MoneyFormatter} from '../../shared/formatters/money.formatter';
@@ -76,6 +77,7 @@ export class FormattersService {
         NOLOCALEFormatters.set('minsec', new TimeFormatter(TimeFormat.MIN_SEC));
         NOLOCALEFormatters.set('monthdate', new DateTimeFormatter('MM/dd'));
         NOLOCALEFormatters.set('monthdateyear', new DateTimeFormatter('MM/dd/yyyy'));
+        NOLOCALEFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
     }
 
     getFormatter(name: string): IFormatter {
