@@ -24,6 +24,13 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         setSubmitButton(submitButton);
     }
 
+    public AddressUIMessage(String screenType) {
+        setScreenType(screenType);
+        ActionItem submitButton = new ActionItem("Next", "Next", IconType.Forward);
+        submitButton.setKeybind(KeyConstants.KEY_ENTER);
+        setSubmitButton(submitButton);
+    }
+
     public void addDefaultAddressFields() {
         this.getForm().addTextField("streetAddress", "Street Address", "", true);
         this.getForm().addTextField("addressLine2", "Address Line 2", "", false);
