@@ -1,7 +1,9 @@
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
-import { Component } from '@angular/core';
+import {Component, Injector} from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import {CreateLoyaltyCustomerFormInterface} from "./create-loyalty-customer-form.interface";
+import {MediaBreakpoints, OpenposMediaService} from "../../core/media/openpos-media.service";
+import {Observable} from "rxjs";
 
 @DialogComponent({
     name: 'CreateLoyaltyCustomerDialog',
@@ -13,9 +15,23 @@ import {CreateLoyaltyCustomerFormInterface} from "./create-loyalty-customer-form
 })
 export class CreateLoyaltyFormDialogComponent extends PosScreen<CreateLoyaltyCustomerFormInterface> {
 
-    buildScreen() {
-        console.log("[[ ========== CreateLoyaltyFormDialogComponent ========== ]]");
-        console.dir(this);
+    isMobile: Observable<boolean>;
+    constructor(injector: Injector, private media: OpenposMediaService) {
+        super(injector);
+        this.initIsMobile();
     }
+
+    initIsMobile(): void {
+        this.isMobile = this.media.observe(new Map([
+            [MediaBreakpoints.MOBILE_PORTRAIT, true],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, true],
+            [MediaBreakpoints.TABLET_PORTRAIT, true],
+            [MediaBreakpoints.TABLET_LANDSCAPE, true],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
+        ]));
+    }
+
+    buildScreen() { }
 
 }

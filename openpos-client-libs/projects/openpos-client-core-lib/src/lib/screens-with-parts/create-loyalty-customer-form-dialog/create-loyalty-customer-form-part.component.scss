@@ -61,19 +61,143 @@
     grid-template-areas:
     "BasicInfo Loyalty"
     "Contact Location";
+
+    .BasicInfo {
+        grid-area: BasicInfo;
+
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+        grid-template-rows: 1fr;
+        gap: 0px 5px;
+        grid-template-areas:
+        "Portrait Names";
+
+        .Portrait {
+            grid-area: Portrait;
+            justify-content: center;
+            display: flex;
+            margin: auto
+        }
+
+        .Names { grid-area: Names; }
+    }
+
+    .Location {
+        grid-area: Location;
+
+        .location {
+            display: grid;
+            grid-template-columns: auto 10fr;
+            grid-template-rows: 1fr;
+            gap: 0px 1em;
+            grid-template-areas:
+            ". .";
+
+            app-icon {
+                align-self: center;
+            }
+        }
+    }
+
+    .loyalty-and-membership {
+        grid-area: Loyalty;
+
+        .loyalty-number {
+            display: grid;
+            grid-template-columns: auto 10fr;
+            grid-template-rows: 1fr;
+            gap: 0px 1em;
+            grid-template-areas:
+        ". .";
+
+            app-icon {
+                align-self: center;
+            }
+        }
+
+        .memberships {
+            display: flex;
+            padding: 10px 0px;
+            .title {
+                @extend %text-md;
+                padding: 0.4375em 0;
+            }
+        }
+    }
 }
 
-.BasicInfo {
+.mobile-grid-container {
     display: grid;
-    grid-template-columns: 1fr 4fr;
-    grid-template-rows: 1fr;
-    gap: 0px 5px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    gap: 1em 0px;
     grid-template-areas:
-    "Portrait Names";
-    grid-area: BasicInfo;
-}
+    "BasicInfo"
+    "Contact"
+    "Location"
+    "Loyalty";
 
-.Names { grid-area: Names; }
+    .BasicInfo {
+        grid-area: BasicInfo;
+
+        display: grid;
+        grid-template-columns: 1fr 4fr;
+        grid-template-rows: 1fr;
+        gap: 0px 5px;
+        grid-template-areas:
+        "Portrait Names";
+
+        .Portrait {
+            grid-area: Portrait;
+            justify-content: center;
+            display: flex;
+            margin: auto
+        }
+
+        .Names { grid-area: Names; }
+    }
+
+    .Location {
+        grid-area: Location;
+
+        .location {
+            display: grid;
+            grid-template-columns: 1fr 8fr 7fr 1fr 1fr;
+            grid-template-rows: 1fr;
+            gap: 0px 1em;
+            grid-template-areas:
+            ". . . . .";
+
+            app-icon {
+                align-self: center;
+            }
+        }
+    }
+
+    .loyalty-and-membership {
+        grid-area: Loyalty;
+
+        .loyalty-number {
+            display: grid;
+            grid-template-columns: 1fr 8fr 7fr 1fr 1fr;
+            //grid-template-columns: 30px 8fr 7fr 30px 30px;
+            grid-template-rows: 1fr;
+            gap: 0px 1em;
+            grid-template-areas:
+            ". . . . .";
+
+            app-icon {
+                align-self: center;
+            }
+        }
+
+        .memberships {
+            display: flex;
+            padding: 10px 0px;
+            justify-content: center;
+        }
+    }
+}
 
 .Email {
     display: flex;
@@ -81,58 +205,12 @@
     justify-content: space-between;
 }
 
-.email-list, .phones-list {
+.email-list {
     display: flex
 }
 
-.Portrait {
-    grid-area: Portrait;
-    justify-content: center;
-    display: flex;
-    margin: auto
-}
+//.phones-list {
+//    display: flex
+//}
 
 .Contact { grid-area: Contact; }
-
-.loyalty-and-membership {
-    grid-area: Loyalty;
-
-    .loyalty-number {
-        display: grid;
-        grid-template-columns: auto 10fr;
-        grid-template-rows: 1fr;
-        gap: 0px 1em;
-        grid-template-areas:
-        ". .";
-
-        app-icon {
-            align-self: center;
-        }
-    }
-
-    .memberships {
-        display: flex;
-        padding: 10px 0px;
-        .title {
-            @extend %text-md;
-            padding: 0.4375em 0;
-        }
-    }
-}
-
-.Location {
-    grid-area: Location;
-
-    .location {
-        display: grid;
-        grid-template-columns: auto 10fr;
-        grid-template-rows: 1fr;
-        gap: 0px 1em;
-        grid-template-areas:
-        ". .";
-
-        app-icon {
-            align-self: center;
-        }
-    }
-}

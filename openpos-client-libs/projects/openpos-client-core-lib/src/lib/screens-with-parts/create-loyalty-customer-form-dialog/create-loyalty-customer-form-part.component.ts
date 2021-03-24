@@ -42,7 +42,9 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
     @Input()
     noMembershipsLabel: string;
 
+    @Input()
     isMobile: Observable<boolean>;
+
     firstNameField : IFormElement;
     lastNameField : IFormElement;
     loyaltyNumberField : IFormElement;
@@ -58,6 +60,8 @@ export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
         this.lastNameField = this.getFormElementById('lastName');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
         this.postalCodeField = this.getFormElementById('postalCode');
+        console.log("Form Part init complete.");
+        console.dir(this.isMobile);
     }
 
     getFormElementById(formElementId : string) {

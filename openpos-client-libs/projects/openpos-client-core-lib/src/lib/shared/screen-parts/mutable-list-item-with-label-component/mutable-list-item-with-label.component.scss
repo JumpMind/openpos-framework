@@ -2,8 +2,7 @@
 
 .mutableListItem {
   display: grid;
-  grid-template-columns: 1fr 5fr 3fr 1fr 1fr;
-  grid-template-rows: 1fr;
+  grid-template-columns: 1fr 10fr 3fr 1fr 1fr;
   gap: 0px 1em;
   grid-template-areas:
     "groupIcon inputField labelField remove add";
@@ -13,4 +12,4 @@
 .inputField { grid-area: inputField; }
 .labelField { grid-area: labelField; }
 .remove { grid-area: remove; margin: auto; }
-.add { grid-area: add; margin: auto; }
+.add { grid-area: add; margin:  auto; }

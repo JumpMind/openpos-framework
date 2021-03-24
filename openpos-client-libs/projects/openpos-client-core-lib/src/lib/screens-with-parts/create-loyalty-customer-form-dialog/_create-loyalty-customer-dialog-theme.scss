@@ -3,8 +3,9 @@
 
     .loyalty-customer-form {
 
-        .Portrait app-icon, .loyalty-number app-icon, .Location app-icon, .Contact app-icon, .memberships .title {
+        .Portrait app-icon, .loyalty-number app-icon, .Location app-icon, .Contact .groupIcon app-icon, .memberships .title {
             color: map_get($foreground, icon);
         }
     }
+
 }
