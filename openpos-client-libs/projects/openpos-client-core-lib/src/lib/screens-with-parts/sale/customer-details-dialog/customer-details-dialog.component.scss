@@ -44,11 +44,11 @@ app-content-card {
 
 .grid-container {
   display: grid;
-  grid-template-columns: .5fr 3fr 3.5fr;
+  grid-template-columns: 1fr 4fr 1fr 6fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "icon details memberships";
+    "icon details membership-icon memberships";
   .icon {
     justify-content: center;
     display: flex;
@@ -73,18 +73,8 @@ app-content-card {
   .memberships {
     padding-bottom: 10px;
     .wrapper {
-      display: grid;
-      grid-template-columns: 90px 1fr;
-      grid-template-rows: 1fr;
-      gap: 1em;
-      grid-template-areas:
-      "icon list";
       height: 100%;
-      .icon {
-        grid-area: icon;
-      }
       .list {
-        grid-area: list;
         .item {
           margin-top: 10px;
         }
@@ -129,6 +119,10 @@ app-content-card {
 
 .details {
   grid-area: details;
+}
+
+.membership-icon{
+  grid-area: membership-icon;
 }
 
 .memberships {

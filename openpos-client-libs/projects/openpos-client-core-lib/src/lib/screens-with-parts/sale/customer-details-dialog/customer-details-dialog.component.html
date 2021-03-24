@@ -13,12 +13,14 @@
                     <app-customer-information [customer]="screen.customer"></app-customer-information>
                 </div>
             </div>
+            <div class="membership-icon" *ngIf="screen.membershipEnabled">
+                <div class="icon">
+                    <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"
+                              *ngIf="!(isMobile | async)"></app-icon>
+                </div>
+            </div>
             <div class="memberships" *ngIf="screen.membershipEnabled">
                 <div class="wrapper">
-                    <div class="icon">
-                        <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"
-                                  *ngIf="!(isMobile | async)"></app-icon>
-                    </div>
                     <div class="list">
                         <div class="details-label" *ngIf="!(isMobile | async)">
                             {{screen.membershipLabel}}
@@ -48,7 +50,7 @@
             <mat-tab class="rewardsTab" [label]="getRewardsLabel()">
                 <mat-card [ngClass]="{'rewardsContent': true, 'no-promotions': !(screen.customer.rewards && screen.customer.rewards.length)}">
                     <div class="reward-list" *ngIf="(screen.customer.rewards && screen.customer.rewards.length)" >
-                        <div *ngFor="let reward of screen.customer.rewards" class=" line">
+                        <div *ngFor="let reward of screen.customer.rewards" class="line">
                             <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
                         </div>
                     </div>
