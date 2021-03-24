@@ -130,7 +130,7 @@ public class ZebraPrinter implements IOpenposPrinter {
     }
 
     @Override
-    public boolean supportPrintDivider() {
+    public boolean supportsPrintDivider() {
         return true;
     }
 

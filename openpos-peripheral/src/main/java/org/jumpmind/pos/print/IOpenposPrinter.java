@@ -12,7 +12,7 @@ public interface IOpenposPrinter extends POSPrinterService19 {
 
     public void printImage(InputStream image);
 
-    public default boolean supportPrintDivider() {
+    public default boolean supportsPrintDivider() {
         return false;
     }
 
