@@ -75,6 +75,7 @@
     <app-secondary-button responsive-class
                           class="unlink"
                           *ngIf="screen.unlinkButton"
+                          [disabled]="!screen.unlinkButton?.enabled"
                           [actionItem]="screen.unlinkButton"
                           (actionClick)="doAction(screen.unlinkButton)"
                           (click)="doAction(screen.unlinkButton)">
@@ -83,6 +84,7 @@
     <app-secondary-button responsive-class
                           class="edit"
                           *ngIf="screen.editButton"
+                          [disabled]="!screen.editButton?.enabled"
                           [actionItem]="screen.editButton"
                           (actionClick)="doAction(screen.editButton)"
                           (click)="doAction(screen.editButton)">
@@ -91,6 +93,7 @@
     <app-primary-button responsive-class
                         class="done"
                         *ngIf="screen.doneButton"
+                        [disabled]="!screen.doneButton?.enabled"
                         [actionItem]="screen.doneButton"
                         (actionClick)="doAction(screen.doneButton)"
                         (click)="doAction(screen.doneButton)">
