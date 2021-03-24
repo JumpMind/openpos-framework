@@ -24,10 +24,8 @@ public class AddressUIMessage extends DynamicFormUIMessage {
     }
 
     public AddressUIMessage(String screenType) {
+        this();
         setScreenType(screenType);
-        ActionItem submitButton = new ActionItem("Next", "Next", IconType.Forward);
-        submitButton.setKeybind(KeyConstants.KEY_ENTER);
-        setSubmitButton(submitButton);
     }
 
     public void addDefaultAddressFields() {
@@ -39,6 +37,16 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("country", "Country", "", true);
     }
 
+    public void addDefaultAddressFields(String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
+        this.getForm().addTextField("streetAddress", "Street Address", streetAddress, true);
+        this.getForm().addTextField("addressLine2", "Address Line 2", addressLine2, false);
+        this.getForm().addTextField("locality", "City", locality, true);
+        this.getForm().addTextField("state", "State", state, true);
+        this.getForm().addTextField("postalCode", "Postal Code", postalCode, true);
+        this.getForm().addTextField("country", "Country", country, true);
+    }
+
+
     public void addAddressFieldsWithComboState(List<String> states) {
         this.getForm().addTextField("streetAddress", "Street Address", "", true);
         this.getForm().addTextField("addressLine2", "Address Line 2", "", false);
@@ -46,6 +54,15 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addComboBox("state", "State", states, true);
         this.getForm().addTextField("postalCode", "Postal Code", "", true);
         this.getForm().addTextField("country", "Country", "", true);
+    }
+
+    public void addAddressFieldsWithComboState(List<String> states, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
+        this.getForm().addTextField("streetAddress", "Street Address", streetAddress, true);
+        this.getForm().addTextField("addressLine2", "Address Line 2", addressLine2, false);
+        this.getForm().addTextField("locality", "City", locality, true);
+        this.getForm().addComboBox("state", "State", state, states, true);
+        this.getForm().addTextField("postalCode", "Postal Code", postalCode, true);
+        this.getForm().addTextField("country", "Country", country, true);
     }
 
     public BaconStripPart getBaconStrip() {
