@@ -30,6 +30,7 @@ public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm 
     private String locationIcon;
     private String addIcon;
     private String removeIcon;
+    private String checkMarkIcon;
 
     private String instructions;
 

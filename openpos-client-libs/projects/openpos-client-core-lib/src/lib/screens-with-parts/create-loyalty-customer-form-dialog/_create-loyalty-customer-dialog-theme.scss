@@ -2,7 +2,8 @@
     $foreground: map-get($theme, foreground);
 
     .loyalty-customer-form {
-        app-icon {
+
+        .Portrait app-icon, .loyalty-number app-icon, .Location app-icon, .Contact app-icon, .memberships .title {
             color: map_get($foreground, icon);
         }
     }

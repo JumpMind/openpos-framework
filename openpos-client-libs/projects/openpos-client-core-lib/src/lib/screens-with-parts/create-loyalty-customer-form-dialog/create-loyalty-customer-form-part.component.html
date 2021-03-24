@@ -6,7 +6,7 @@
                 <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
                     <div class="BasicInfo">
                         <div class="Portrait">
-                            <app-icon matPrefix [iconName]="profileIcon" iconClass="material-icons lg"></app-icon>
+                            <app-icon matPrefix [iconName]="profileIcon" iconClass="material-icons mat-128"></app-icon>
                         </div>
                         <div class="Names">
                             <app-dynamic-form-field [formGroup]="form" [formField]="firstNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
@@ -41,9 +41,9 @@
                             <app-icon matPrefix [iconName]="loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
-                        <div>
+                        <div class="memberships">
                             <div *ngIf="memberships && memberships.length">
-                                <div>{{membershipsLabel}}</div>
+                                <div class="title">{{membershipsLabel}}</div>
                                 <span *ngFor="let membership of memberships" class="item">
                                     <app-membership-display [membership]="membership"></app-membership-display>
                                 </span>

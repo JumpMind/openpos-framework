@@ -1,16 +1,15 @@
 @import "../../styles/variables/spacing";
+@import "../../styles/mixins/typography";
 
 .form-part-body {
     display: grid;
     justify-self: center;
     align-content: center;
     width:100%;
-    @extend %page-spaced-content; 
 
     .form-content {
         min-height: 10%;
         overflow-y: auto;
-        padding: 24px;
         &.mobile {
             padding: 8px;
         }
@@ -20,6 +19,7 @@
     }
 
     .buttons {
+        padding-top: 24px;
         display: grid;
         grid-auto-flow: column;
         justify-content: end;
@@ -65,9 +65,9 @@
 
 .BasicInfo {
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 4fr;
     grid-template-rows: 1fr;
-    gap: 0px 0px;
+    gap: 0px 5px;
     grid-template-areas:
     "Portrait Names";
     grid-area: BasicInfo;
@@ -85,7 +85,12 @@
     display: flex
 }
 
-.Portrait { grid-area: Portrait; }
+.Portrait {
+    grid-area: Portrait;
+    justify-content: center;
+    display: flex;
+    margin: auto
+}
 
 .Contact { grid-area: Contact; }
 
@@ -102,6 +107,15 @@
 
         app-icon {
             align-self: center;
+        }
+    }
+
+    .memberships {
+        display: flex;
+        padding: 10px 0px;
+        .title {
+            @extend %text-md;
+            padding: 0.4375em 0;
         }
     }
 }
