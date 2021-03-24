@@ -12,6 +12,14 @@ public interface IOpenposPrinter extends POSPrinterService19 {
 
     public void printImage(InputStream image);
 
+    public default boolean supportPrintDivider() {
+        return false;
+    }
+
+    public default void printDivider() {
+
+    }
+
     public void openCashDrawer(String cashDrawerId);
 
     public String getCommand(String commandName);
