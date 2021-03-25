@@ -59,33 +59,33 @@
     grid-template-columns: 1fr 1fr;
     gap: 0px 2.5em;
     grid-template-areas:
-    "BasicInfo Loyalty"
-    "Contact Location";
+    "basic-info loyalty"
+    "contact location";
 
-    .BasicInfo {
-        grid-area: BasicInfo;
+    .basic-info {
+        grid-area: basic-info;
 
         display: grid;
         grid-template-columns: 1fr 4fr;
         grid-template-rows: 1fr;
         gap: 0px 1em;
         grid-template-areas:
-        "Portrait Names";
+        "portrait names";
 
-        .Portrait {
-            grid-area: Portrait;
+        .portrait {
+            grid-area: portrait;
             justify-content: center;
             display: flex;
             margin: auto
         }
 
-        .Names { grid-area: Names; }
+        .names { grid-area: names; }
     }
 
-    .Location {
-        grid-area: Location;
+    .location {
+        grid-area: location;
 
-        .location {
+        .location-content {
             display: grid;
             grid-template-columns: auto 10fr;
             grid-template-rows: 1fr;
@@ -97,10 +97,12 @@
                 align-self: center;
             }
         }
+
+        .grid-filler {}
     }
 
     .loyalty-and-membership {
-        grid-area: Loyalty;
+        grid-area: loyalty;
 
         .loyalty-number {
             display: grid;
@@ -131,8 +133,8 @@
         }
     }
 
-    .Contact {
-        grid-area: Contact;
+    .contact {
+        grid-area: contact;
         max-width: 100%;
     }
 
@@ -143,59 +145,61 @@
     grid-template-columns: 1fr;
     grid-template-rows: auto auto auto auto;
     grid-template-areas:
-    "BasicInfo"
-    "Contact"
-    "Location"
-    "Loyalty";
+    "basic-info"
+    "contact"
+    "location"
+    "loyalty";
 
-    .BasicInfo {
-        grid-area: BasicInfo;
+    .basic-info {
+        grid-area: basic-info;
 
         display: grid;
         grid-template-columns: 1fr 4fr;
         grid-template-rows: 1fr;
         gap: 0px 1em;
         grid-template-areas:
-        "Portrait Names";
+        "portrait names";
 
-        .Portrait {
-            grid-area: Portrait;
+        .portrait {
+            grid-area: portrait;
             justify-content: center;
             display: flex;
             margin: auto
         }
 
-        .Names { grid-area: Names; }
+        .names { grid-area: names; }
     }
 
-    .Contact {
-        grid-area: Contact;
+    .contact {
+        grid-area: contact;
         max-width: 100%;
         margin-top: 2em;
     }
 
-    .Location {
-        grid-area: Location;
+    .location {
+        grid-area: location;
 
-        .location {
+        .location-content {
             display: grid;
             grid-template-columns: 30px 2fr 1fr 30px 30px;
             grid-template-rows: 1fr;
             grid-template-areas:
             ". . . . .";
 
-            app-dynamic-form-field {
-                margin-left: 1em;
-            }
-
             app-icon {
                 align-self: center;
             }
+
+            app-dynamic-form-field {
+                margin-left: 1em;
+            }
         }
+
+        .grid-filler {}
     }
 
     .loyalty-and-membership {
-        grid-area: Loyalty;
+        grid-area: loyalty;
         margin-top: 2em;
 
         .loyalty-number {
@@ -205,12 +209,12 @@
             grid-template-areas:
             ". . . . .";
 
-            app-dynamic-form-field {
-                margin-left: 1em;
-            }
-
             app-icon {
                 align-self: center;
+            }
+
+            app-dynamic-form-field {
+                margin-left: 1em;
             }
         }
 
@@ -228,7 +232,7 @@
     }
 }
 
-.Email {
+.email {
     display: flex;
     align-items: center;
     justify-content: space-between;

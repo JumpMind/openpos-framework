@@ -4,17 +4,17 @@
         <app-content-card>
             <mat-card-content mat-dialog-conten class="form-content">
                 <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
-                    <div class="BasicInfo">
-                        <div class="Portrait">
+                    <div class="basic-info">
+                        <div class="portrait">
                             <app-icon [iconName]="profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-96' : ' mat-128')"></app-icon>
 <!--                            <app-icon matPrefix [iconName]="profileIcon" [ngClass]="'material-icons' + {' mat-128': !(isMobile | async), ' mat-64': (isMobile | async)}"></app-icon>-->
                         </div>
-                        <div class="Names">
+                        <div class="names">
                             <app-dynamic-form-field [formGroup]="form" [formField]="firstNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                             <app-dynamic-form-field [formGroup]="form" [formField]="lastNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
                     </div>
-                    <div class="Contact">
+                    <div class="contact">
                         <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
                             <app-mutable-list-item-with-label [formGroup]="form"
                                                               [groupIcon]="emailIcon"
@@ -56,12 +56,12 @@
                             </div>
                         </div>
                     </div>
-                    <div class="Location">
-                        <div class="location">
+                    <div class="location">
+                        <div class="location-content">
                             <app-icon matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
-                        <div></div>
+                        <div class="grid-filler"></div>
                     </div>
                 </div>
                 <mat-error>

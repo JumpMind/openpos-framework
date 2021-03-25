@@ -6,17 +6,17 @@
   grid-template-columns: 30px 2fr 1fr 30px 30px;
   align-items: center;
   grid-template-areas:
-    "groupIcon inputField labelField remove add";
+    "group-icon input-field label-field remove add";
 
-  .groupIcon { grid-area: groupIcon; }
+  .group-icon { grid-area: group-icon; }
 
-  .inputField {
-    grid-area: inputField;
+  .input-field {
+    grid-area: input-field;
     margin-left: 1em;
   }
 
-  .labelField {
-    grid-area: labelField;
+  .label-field {
+    grid-area: label-field;
     margin-left: 1em;
   }
 
