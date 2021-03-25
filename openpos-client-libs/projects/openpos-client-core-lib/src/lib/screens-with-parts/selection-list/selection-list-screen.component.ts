@@ -56,7 +56,7 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     }
 
     buildScreen() {
-        if (this.screen.selectionList && this.screen.selectionList.length > 0) {
+        if (this.screen.selectionList && this.screen.selectionList.length >= 0) {
             const allItems = new Map<number, ISelectionListItem>();
             const allDisabledItems = new Map<number, ISelectionListItem>();
             for (let i = 0; i < this.screen.selectionList.length; i++) {

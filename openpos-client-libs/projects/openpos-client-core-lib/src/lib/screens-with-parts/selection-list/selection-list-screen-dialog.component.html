@@ -2,10 +2,11 @@
     <app-dialog-header></app-dialog-header>
     <div class="selection-list-body" responsive-class>
         <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
+        <app-scan-or-search *ngIf="screen.showScan" class="scan-or-search mat-elevation-z1"></app-scan-or-search>
         <app-content-card>
             <mat-dialog-content>
                 <div class="dialog-content">
-                    <app-selectable-item-list fxFlex="0 1 100%" [listData]="listData"
+                    <app-selectable-item-list  *ngIf="screen.selectionList && screen.selectionList.length > 0" fxFlex="0 1 100%" [listData]="listData"
                         [configuration]="listConfig" [defaultSelect]="screen.defaultSelect"
                         [selectedItemList]="selectedItems"
                         [selectedItem]="selectedItem"
@@ -29,6 +30,12 @@
                             </div>
                         </ng-template>
                     </app-selectable-item-list>
+                    <div *ngIf="!screen.selectionList || screen.selectionList.length == 0" fxLayout="column" fxLayoutAlign="center center"
+                         class="muted-color">
+                        <app-icon *ngIf="screen.noListItemsPlaceholderIcon" iconClass="material-icons mat-180 muted-color"
+                                  [iconName]="screen.noListItemsPlaceholderIcon"></app-icon>
+                        <span *ngIf="screen.noListItemsPlaceholderText" class="text-md">{{screen.noListItemsPlaceholderText}}</span>
+                    </div>
                 </div>
             </mat-dialog-content>
         </app-content-card>

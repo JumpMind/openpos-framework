@@ -19,7 +19,6 @@ public class SelectionListUIMessage extends UIMessage {
     private boolean showScan = false;
     private List<ActionItem> selectionButtons = new ArrayList<>();
     private List<ActionItem> nonSelectionButtons = new ArrayList<>();
-
     private List<SelectionListItem> selectionList = new ArrayList<SelectionListItem>();
     private boolean multiSelect = false;
     private boolean defaultSelect = false;
