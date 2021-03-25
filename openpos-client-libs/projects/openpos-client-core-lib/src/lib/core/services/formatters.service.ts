@@ -33,8 +33,10 @@ export class FormattersService {
         const defaultPhoneFormatter = new PhoneUSFormatter();
 
         USFormatters.set('phone', defaultPhoneFormatter);
+        USFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
         this.formatters.set('en-us', USFormatters);
         this.formatters.set('us', USFormatters);
+        // this.formatters.set('postalcodegeneric', new PostalCodeGenericFormatter())
 
         const CAFormatters = new Map<string, IFormatter>();
         CAFormatters.set('phone', new PhoneCAFormatter());
@@ -65,8 +67,8 @@ export class FormattersService {
         NOLOCALEFormatters.set('phone', numericFormatter);
         NOLOCALEFormatters.set('percent', new PercentageFormatter());
         NOLOCALEFormatters.set('percentint', new PercentageFormatter(PercentageFormatter.INTEGER_MODE));
-        NOLOCALEFormatters.set('postalcode', new PostalCodeFormatter());
-        NOLOCALEFormatters.set('uspostalcode', numericFormatter);
+        // NOLOCALEFormatters.set('postalcode', new PostalCodeFormatter());
+        // NOLOCALEFormatters.set('uspostalcode', numericFormatter);
         NOLOCALEFormatters.set('income', new IncomeFormatter());
         NOLOCALEFormatters.set('stateidnumber', new StateIDNumberFormatter());
         NOLOCALEFormatters.set('decimal', new DecimalFormatter());

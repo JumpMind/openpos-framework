@@ -29,21 +29,21 @@ public class AddressUIMessage extends DynamicFormUIMessage {
     }
 
     public void addDefaultAddressFields() {
-        this.getForm().addTextField("streetAddress", "Street Address", "", true);
-        this.getForm().addTextField("addressLine2", "Address Line 2", "", false);
-        this.getForm().addTextField("locality", "City", "", true);
-        this.getForm().addTextField("state", "State", "", true);
-        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", "", true);
-        this.getForm().addTextField("country", "Country", "", true);
+        this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", "", true);
+        this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", "", false);
+        this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", "", true);
+        this.getForm().addTextField("state", "key:customerdisplay:customer.form.field.state", "", true);
+        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalcode", "", true);
+        this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", "", true);
     }
 
     public void addDefaultAddressFields(String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
-        this.getForm().addTextField("streetAddress", "Street Address", streetAddress, true);
-        this.getForm().addTextField("addressLine2", "Address Line 2", addressLine2, false);
-        this.getForm().addTextField("locality", "City", locality, true);
-        this.getForm().addTextField("state", "State", state, true);
-        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", postalCode, true);
-        this.getForm().addTextField("country", "Country", country, true);
+        this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", streetAddress, true);
+        this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", addressLine2, false);
+        this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", locality, true);
+        this.getForm().addTextField("state", "key:customerdisplay:customer.form.field.state", state, true);
+        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalcode", postalCode, true);
+        this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", country, true);
     }
 
 
@@ -52,7 +52,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "Address Line 2", "", false);
         this.getForm().addTextField("locality", "City", "", true);
         this.getForm().addComboBox("state", "State", states, true);
-        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", "", true);
+        this.getForm().addPostalCodeField("postalCode", "Postal Code", "", true);
         this.getForm().addTextField("country", "Country", "", true);
     }
 
@@ -61,7 +61,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "Address Line 2", addressLine2, false);
         this.getForm().addTextField("locality", "City", locality, true);
         this.getForm().addComboBox("state", "State", state, states, true);
-        this.getForm().addUSPostalCodeField("postalCode", "Postal Code", postalCode, true);
+        this.getForm().addPostalCodeField("postalCode", "Postal Code", postalCode, true);
         this.getForm().addTextField("country", "Country", country, true);
     }
 

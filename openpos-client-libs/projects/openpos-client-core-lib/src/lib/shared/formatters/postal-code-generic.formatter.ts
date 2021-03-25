@@ -1,5 +1,4 @@
 import { IFormatter } from './formatter.interface';
-import {isNumeric} from "rxjs/internal-compatibility";
 
 export class PostalCodeGenericFormatter implements IFormatter {
     static readonly FILTER_REGEXS_CA = [
