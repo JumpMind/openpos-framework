@@ -5,7 +5,6 @@ import {PhoneUSFormatter} from '../../shared/formatters/phone-us.formatter';
 import {PhoneCAFormatter} from '../../shared/formatters/phone-ca.formatter';
 import {DateTimeCAFormatter} from '../../shared/formatters/datetime-ca.formatter';
 import {PostalCodeCAFormatter} from '../../shared/formatters/postal-code-ca.formatter';
-import {PostalCodeGenericFormatter} from '../../shared/formatters/postal-code-generic.formatter';
 import {NumericFormatter} from '../../shared/formatters/numeric.formatter';
 import {GiftCodeFormatter} from '../../shared/formatters/gift-code.formatter';
 import {MoneyFormatter} from '../../shared/formatters/money.formatter';
@@ -20,6 +19,7 @@ import {TimeFormat, TimeFormatter} from '../../shared/formatters/time.formatter'
 import {DoNothingFormatter} from '../../shared/formatters/do-nothing.formatter';
 import {NonNumericFormatter} from '../../shared/formatters/non-numeric.formatter';
 import {WeightFormatter} from '../../shared/formatters/weight.formatter';
+import {PostalCodeGenericFormatter} from "../../shared/formatters/postal-code-generic.formatter";
 
 
 @Injectable({
@@ -36,12 +36,12 @@ export class FormattersService {
         USFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
         this.formatters.set('en-us', USFormatters);
         this.formatters.set('us', USFormatters);
-        // this.formatters.set('postalcodegeneric', new PostalCodeGenericFormatter())
 
         const CAFormatters = new Map<string, IFormatter>();
         CAFormatters.set('phone', new PhoneCAFormatter());
         CAFormatters.set('datetime', new DateTimeCAFormatter());
         CAFormatters.set('postalcode', new PostalCodeCAFormatter());
+        CAFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
 
         // Some screens are dependent on 'ca' value, so don't change.  If you have other
         // ca formatters that are language specific, add a second entry in the map for them.
@@ -67,8 +67,9 @@ export class FormattersService {
         NOLOCALEFormatters.set('phone', numericFormatter);
         NOLOCALEFormatters.set('percent', new PercentageFormatter());
         NOLOCALEFormatters.set('percentint', new PercentageFormatter(PercentageFormatter.INTEGER_MODE));
-        // NOLOCALEFormatters.set('postalcode', new PostalCodeFormatter());
-        // NOLOCALEFormatters.set('uspostalcode', numericFormatter);
+        NOLOCALEFormatters.set('postalcode', new PostalCodeFormatter());
+        NOLOCALEFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
+        NOLOCALEFormatters.set('uspostalcode', numericFormatter);
         NOLOCALEFormatters.set('income', new IncomeFormatter());
         NOLOCALEFormatters.set('stateidnumber', new StateIDNumberFormatter());
         NOLOCALEFormatters.set('decimal', new DecimalFormatter());
@@ -79,7 +80,6 @@ export class FormattersService {
         NOLOCALEFormatters.set('minsec', new TimeFormatter(TimeFormat.MIN_SEC));
         NOLOCALEFormatters.set('monthdate', new DateTimeFormatter('MM/dd'));
         NOLOCALEFormatters.set('monthdateyear', new DateTimeFormatter('MM/dd/yyyy'));
-        NOLOCALEFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
     }
 
     getFormatter(name: string): IFormatter {
