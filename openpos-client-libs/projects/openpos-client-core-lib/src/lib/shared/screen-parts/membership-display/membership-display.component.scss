@@ -11,6 +11,9 @@ mat-chip {
   &.mobile {
     font-size: $text-xs-mobile*1.25;
   }
+  app-icon{
+    margin-right: .5em;
+  }
 }
 
 .mat-chip-list-wrapper {

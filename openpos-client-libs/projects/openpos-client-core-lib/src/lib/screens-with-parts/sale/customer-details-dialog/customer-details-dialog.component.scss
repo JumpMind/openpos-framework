@@ -70,6 +70,11 @@ app-content-card {
       font-weight: bold;
     }
   }
+  .membership-icon {
+    .material-icons{
+      margin-top: -10px;
+    }
+  }
   .memberships {
     padding-bottom: 10px;
     .wrapper {
@@ -93,7 +98,7 @@ app-content-card {
     "memberships memberships";
 
   .details {
-    .customer-name {
+    .details-label {
       @extend %text-md;
       height: 100%;
       padding-top: 16px;
