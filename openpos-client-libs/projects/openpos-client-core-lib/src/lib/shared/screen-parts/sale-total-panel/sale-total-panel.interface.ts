@@ -6,7 +6,7 @@ import {Membership} from "../membership-display/memebership-display.interface";
 export interface SaleTotalPanelInterface extends IAbstractScreen {
     totals: ITotal[];
     grandTotal: ITotal;
-    itemCount: ITotal;
+    itemCounts: ITotal[];
     checkoutButton: IActionItem;
     helpButton: IActionItem;
     logoutButton: IActionItem;

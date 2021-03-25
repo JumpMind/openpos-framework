@@ -14,7 +14,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private ActionItem editButton;
     private ActionItem doneButton;
 
-    private UICustomerDetails customer;
+    private UICustomerDetailsItem customer;
 
     private Boolean membershipEnabled;
     private String membershipLabel;

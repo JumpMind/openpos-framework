@@ -54,7 +54,7 @@ public class ActionHandlerImpl {
     public boolean handleAnyAction(IStateManager stateManager, Object state, Action action) {
         // Get list of @BeforeAction methods in the state and execute them first
         beforeActionService.executeBeforeActionMethods(stateManager, state, action);
-        
+
         Method anyActionMethod = helper.getAnyActionMethod(state);
         if (anyActionMethod != null) {
             helper.invokeActionMethod(stateManager, state, action, anyActionMethod);
@@ -77,19 +77,21 @@ public class ActionHandlerImpl {
 
         for (StackTraceElement stackFrame : stackTrace) {
             Class<?> currentClass = helper.getClassFrom(stackFrame);
-            if (currentClass != null && !Modifier.isAbstract(currentClass.getModifiers()) && FlowUtil.isState(currentClass)
-                    && currentClass != state.getClass()) {
-                return false;
-            } else if (stackFrame.getClassName().equals(state.getClass().getName())) {
-                return true;
+            if (currentClass != null) {
+                if (!Modifier.isAbstract(currentClass.getModifiers()) && FlowUtil.isState(currentClass)
+                        && !currentClass.isAssignableFrom(state.getClass())) {
+                    return false;
+                } else if (currentClass.isAssignableFrom(state.getClass())) {
+                    return true;
+                }
             }
 
         }
 
         return false;
     }
-    
- 
+
+
     public IBeforeActionService getBeforeActionService() {
         return beforeActionService;
     }

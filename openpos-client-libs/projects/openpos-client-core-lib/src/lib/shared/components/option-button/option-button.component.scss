@@ -9,6 +9,9 @@
     &.tablet {
         padding: 12px;
         margin: 4px 0px;
+        .option-line {
+            line-height: 16px;
+        }
     }
 
     &.mobile {
@@ -16,6 +19,9 @@
         margin: 4px 0px;
         text-align: start;
         justify-self: start;
+        .option-line {
+            line-height: 16px;
+        }
     }
 
     .option-icon {
@@ -36,11 +42,13 @@
         }
         .option-line {
             grid-area: line;
+            display: block;
+            white-space: pre-line;
 
             &.sm {
                 @extend %text-sm;
             }
-        
+
             &.md {
                 @extend %text-md;
             }

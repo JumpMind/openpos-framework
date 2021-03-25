@@ -9,7 +9,7 @@
     [ngClass]="{'muted-color': !item.enabled}">
     <div responsive-class class="button-content">
       <app-icon [iconName]="item.icon" iconClass="md"></app-icon>
-      <span>{{item.title}}</span>
+      <span responsive-class class="button-text">{{item.title}}</span>
       <span *ngIf="item.keybind && keybindsEnabled" class="muted-color">{{item.keybindDisplayName}}</span>
     </div>
   </button>

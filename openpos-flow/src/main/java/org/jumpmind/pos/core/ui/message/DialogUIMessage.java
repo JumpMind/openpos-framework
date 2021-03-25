@@ -14,7 +14,7 @@ import java.util.List;
 
 public class DialogUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
-
+    private String additionalStyleName;
     private List<String> message = new ArrayList<>();
 
     private List<Line> messageLines = new ArrayList<>();
@@ -118,5 +118,13 @@ public class DialogUIMessage extends UIMessage {
 
     public void setPromptButtonRow(PromptButtonRowPart promptButtonRow) {
         this.promptButtonRow = promptButtonRow;
+    }
+
+    public String getAdditionalStyleName() {
+        return additionalStyleName;
+    }
+
+    public void setAdditionalStyleName(String additionalStyleName) {
+        this.additionalStyleName = additionalStyleName;
     }
 }

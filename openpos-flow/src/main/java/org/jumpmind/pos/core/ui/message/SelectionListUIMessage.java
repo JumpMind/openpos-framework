@@ -3,13 +3,15 @@ package org.jumpmind.pos.core.ui.message;
 import java.util.ArrayList;
 import java.util.List;
 
+import lombok.Getter;
+import lombok.Setter;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.data.SelectionListItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 @AssignKeyBindings
-public class SelectionListUIMessage extends UIMessage {
+public class SelectionListUIMessage<T extends SelectableItem> extends UIMessage {
 
     private static final long serialVersionUID = -4859870631964238380L;
 
@@ -20,7 +22,7 @@ public class SelectionListUIMessage extends UIMessage {
     private List<ActionItem> selectionButtons = new ArrayList<>();
     private List<ActionItem> nonSelectionButtons = new ArrayList<>();
 
-    private List<SelectionListItem> selectionList = new ArrayList<SelectionListItem>();
+    private List<T> selectionList = new ArrayList<>();
     private boolean multiSelect = false;
     private boolean defaultSelect = false;
     private int defaultSelectItemIndex = 0;
@@ -32,6 +34,9 @@ public class SelectionListUIMessage extends UIMessage {
     
     public SelectionListUIMessage() {
         this.setScreenType(UIMessageType.SELECTION_LIST);
+    }
+    public SelectionListUIMessage(String uiMessageType) {
+        this.setScreenType(uiMessageType);
     }
 
     public String getInstructions() {
@@ -93,11 +98,11 @@ public class SelectionListUIMessage extends UIMessage {
         this.nonSelectionButtons.add(nonSelectionButton);
     }
 
-    public List<SelectionListItem> getSelectionList() {
+    public List<T> getSelectionList() {
         return selectionList;
     }
 
-    public void setSelectionList(List<SelectionListItem> selectionList) {
+    public void setSelectionList(List<T> selectionList) {
         this.selectionList = selectionList;
     }
 

@@ -2,6 +2,8 @@
 
 mat-chip {
   text-transform: uppercase;
+  padding-right: 2em;
+  padding-left: 1em;
   &.tablet-portrait {
     font-size: $text-sm;
   }

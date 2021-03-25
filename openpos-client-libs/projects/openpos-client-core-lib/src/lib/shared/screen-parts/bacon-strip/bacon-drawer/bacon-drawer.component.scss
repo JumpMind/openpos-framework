@@ -14,5 +14,20 @@
   justify-items: left;
   @extend %text-md;
   @extend %clickable-spaced-content;
+
+  .button-text {
+    white-space: pre-line;
+    line-height: 24px;
+    display: block;
+    text-align: left;
+
+    &.tablet {
+      line-height: 16px;
+    }
+
+    &.mobile {
+      line-height: 16px;
+    }
+  }
 }
 
