@@ -1,8 +1,7 @@
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { IActionItem } from '../../core/actions/action-item.interface';
-import {IFormElement} from "../../core/interfaces/form-field.interface";
 import {Membership} from "../../shared/screen-parts/membership-display/memebership-display.interface";
-export interface CreateLoyaltyCustomerFormInterface extends IAbstractScreen {
+export interface LoyaltyCustomerFormInterface extends IAbstractScreen {
     instructions: string;
     submitButton: IActionItem;
     alternateSubmitActions: string[];

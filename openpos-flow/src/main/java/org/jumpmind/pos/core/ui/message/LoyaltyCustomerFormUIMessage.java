@@ -39,7 +39,7 @@ public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm 
     private String imageUrl;
 
     public LoyaltyCustomerFormUIMessage() {
-        setScreenType(UIMessageType.CREATE_LOYALTY_CUSTOMER);
+        setScreenType(UIMessageType.LOYALTY_CUSTOMER_DIALOG);
     }
 
 }

@@ -8,11 +8,11 @@ import {IActionItem} from "../../core/actions/action-item.interface";
 import {Membership} from "../../shared/screen-parts/membership-display/memebership-display.interface";
 
 @Component({
-    selector: 'app-create-loyalty-customer-form-part',
-    templateUrl: './create-loyalty-customer-form-part.component.html',
-    styleUrls: ['./create-loyalty-customer-form-part.component.scss']
+    selector: 'app-loyalty-customer-form-part',
+    templateUrl: './loyalty-customer-form-part.component.html',
+    styleUrls: ['./loyalty-customer-form-part.component.scss']
 })
-export class CreateLoyaltyCustomerFormPart extends DynamicFormPartComponent {
+export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
 
     @Input()
     phoneIcon: string;

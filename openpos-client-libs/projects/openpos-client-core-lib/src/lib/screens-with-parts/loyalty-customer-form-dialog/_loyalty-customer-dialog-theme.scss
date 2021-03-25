@@ -1,4 +1,4 @@
-@mixin create-loyalty-customer-dialog-theme($theme) {
+@mixin loyalty-customer-dialog-theme($theme) {
     $foreground: map-get($theme, foreground);
 
     .loyalty-customer-form {
