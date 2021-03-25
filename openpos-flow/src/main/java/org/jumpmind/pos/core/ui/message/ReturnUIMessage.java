@@ -19,7 +19,7 @@ public class ReturnUIMessage extends UIMessage {
 
     private List<Total> totals;
     private Total grandTotal;
-    private Total itemCount;
+    private List<Total> itemCounts;
 
     private List<TransactionReceipt> receipts = new ArrayList<>();
 
@@ -56,5 +56,12 @@ public class ReturnUIMessage extends UIMessage {
             this.receipts = new ArrayList<>();
         }
         this.receipts.add(receipt);
+    }
+
+    public void addItemCount(Total total) {
+        if (itemCounts == null) {
+            itemCounts = new ArrayList<>();
+        }
+        itemCounts.add(total);
     }
 }

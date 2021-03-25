@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class UICustomerDetails implements Serializable {
+public class UICustomerDetailsItem extends SelectableItem implements Serializable {
     private static final long serialVersionUID = 1L;
 
     private String name;

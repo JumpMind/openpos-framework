@@ -79,14 +79,18 @@ app-scandit-native {
     background: red;
 }
 
-.item-count {
-    grid-area: item-count;
+.item-counts {
+    grid-area: item-counts;
     display: flex;
-    height: fit-content;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    padding: 8px 0;
+    .item-count {
+        display: flex;
+        height: fit-content;
+        justify-content: center;
+        align-items: center;
+        padding: 4px 0;
+    }
 }
 .status-stamp {
     grid-area: status-stamp;
@@ -100,7 +104,7 @@ app-scandit-native {
 .sale-total-background {
     grid-template-areas:
         "status-stamp"
-        "item-count"
+        "item-counts"
         "content"
         "buttons";
     grid-template-rows: 0 min-content minmax(0, 1fr) min-content;
