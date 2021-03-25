@@ -33,7 +33,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", "", false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", "", true);
         this.getForm().addTextField("state", "key:customerdisplay:customer.form.field.state", "", true);
-        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalcode", "", true);
+        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalCode", "", true);
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", "", true);
     }
 
@@ -42,7 +42,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", addressLine2, false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", locality, true);
         this.getForm().addTextField("state", "key:customerdisplay:customer.form.field.state", state, true);
-        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalcode", postalCode, true);
+        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalCode", postalCode, true);
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", country, true);
     }
 
@@ -52,7 +52,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", "", false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", "", true);
         this.getForm().addComboBox("state", "key:customerdisplay:customer.form.field.state", states, true);
-        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalcode", "", true);
+        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalCode", "", true);
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", "", true);
     }
 
@@ -61,7 +61,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", addressLine2, false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", locality, true);
         this.getForm().addComboBox("state", "key:customerdisplay:customer.form.field.state", state, states, true);
-        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalcode", postalCode, true);
+        this.getForm().addPostalCodeField("postalCode", "key:customerdisplay:customer.form.field.postalCode", postalCode, true);
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", country, true);
     }
 
