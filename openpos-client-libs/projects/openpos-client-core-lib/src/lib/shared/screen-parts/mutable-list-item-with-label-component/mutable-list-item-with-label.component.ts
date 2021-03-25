@@ -27,6 +27,8 @@ export class MutableListItemWithLabelComponent extends ScreenPartComponent<Mutab
     isLast: boolean;
     @Input()
     isOnly: boolean;
+    @Input()
+    isMobile: Observable<boolean>;
 
     @Output()
     onFieldChanged = new EventEmitter<IFormElement>();
@@ -34,22 +36,6 @@ export class MutableListItemWithLabelComponent extends ScreenPartComponent<Mutab
     add = new EventEmitter<IFormElement>();
     @Output()
     remove = new EventEmitter<IFormElement>();
-
-    isMobile: Observable<boolean>;
-    constructor(injector: Injector, private media: OpenposMediaService) {
-        super(injector);
-        this.initIsMobile();
-    }
-    initIsMobile(): void {
-        this.isMobile = this.media.observe(new Map([
-            [MediaBreakpoints.MOBILE_PORTRAIT, true],
-            [MediaBreakpoints.MOBILE_LANDSCAPE, true],
-            [MediaBreakpoints.TABLET_PORTRAIT, true],
-            [MediaBreakpoints.TABLET_LANDSCAPE, false],
-            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
-            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
-        ]));
-    }
 
     screenDataUpdated() {
     }

@@ -6,7 +6,8 @@
                 <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
                     <div class="BasicInfo">
                         <div class="Portrait">
-                            <app-icon matPrefix [iconName]="profileIcon" iconClass="material-icons mat-128"></app-icon>
+                            <app-icon [iconName]="profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-96' : ' mat-128')"></app-icon>
+<!--                            <app-icon matPrefix [iconName]="profileIcon" [ngClass]="'material-icons' + {' mat-128': !(isMobile | async), ' mat-64': (isMobile | async)}"></app-icon>-->
                         </div>
                         <div class="Names">
                             <app-dynamic-form-field [formGroup]="form" [formField]="firstNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
@@ -21,6 +22,7 @@
                                                               [isFirst]="isFirst"
                                                               [isLast]="isLast"
                                                               [isOnly]="emailFields.length == 1"
+                                                              [isMobile]="isMobile"
                                                               (onFieldChanged)="onFieldChanged($event)"
                                                               (add)="doAction(addEmail, i)" (remove)="doAction(removeEmail, i)"></app-mutable-list-item-with-label>
                         </div>
@@ -49,9 +51,9 @@
                                 </span>
                             </div>
 
-                            <span *ngIf="!memberships || (memberships && memberships.length == 0)">
+                            <div *ngIf="!memberships || (memberships && memberships.length == 0)" class="no-memberships">
                                 {{noMembershipsLabel}}
-                            </span>
+                            </div>
                         </div>
                     </div>
                     <div class="Location">

@@ -1,15 +1,32 @@
 @import "../../../styles/mixins/typography";
 
-.mutableListItem {
+.mutable-list-item {
+  max-width: 100%;
   display: grid;
-  grid-template-columns: 1fr 10fr 3fr 1fr 1fr;
-  gap: 0px 1em;
+  grid-template-columns: 30px 2fr 1fr 30px 30px;
+  align-items: center;
   grid-template-areas:
     "groupIcon inputField labelField remove add";
-}
 
-.groupIcon { grid-area: groupIcon; margin: auto; }
-.inputField { grid-area: inputField; }
-.labelField { grid-area: labelField; }
-.remove { grid-area: remove; margin: auto; }
-.add { grid-area: add; margin:  auto; }
+  .groupIcon { grid-area: groupIcon; }
+
+  .inputField {
+    grid-area: inputField;
+    margin-left: 1em;
+  }
+
+  .labelField {
+    grid-area: labelField;
+    margin-left: 1em;
+  }
+
+  .remove {
+    grid-area: remove;
+    margin-left: .25em;
+  }
+
+  .add {
+    grid-area: add;
+    margin-left: .25em;
+  }
+}
