@@ -11,10 +11,13 @@
         justify-self: center;
         align-content: center;
         width:100%;
+
         @extend %page-spaced-content; 
 
         .dialog-content {
             overflow: auto;
+            max-height: 600px;
+
 
             .item-card-image {
                 height: 275px;
