@@ -25,6 +25,6 @@ describe('Currency Text Component', () => {
     it('Should use the input amount test if the currency pipe fails', () => {
         sut.amountText = 'N/A';
         sut.ngOnChanges();
-        expect(sut.textAfterSymbol).toBe('N/A');
+        expect(sut.lowerBound.textAfterSymbol).toBe('N/A');
       });
 });
