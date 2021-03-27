@@ -66,6 +66,8 @@ public class ZebraPrinter implements IOpenposPrinter {
         this.peripheralConnection = connectionFactory.open(this.settings);
         this.writer = new PrintWriter(peripheralConnection.getOut());
         imagePrinter = new ZebraImagePrinter();
+        writer.print(COMMAND_ENABLE_LINE_PRINT);
+        writer.flush();
     }
 
     @Override
