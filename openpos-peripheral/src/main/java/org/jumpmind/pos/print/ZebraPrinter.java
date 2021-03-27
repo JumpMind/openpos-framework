@@ -86,7 +86,7 @@ public class ZebraPrinter implements IOpenposPrinter {
 
     @Override
     public void printBarCode(int station, String data, int symbology, int height, int width, int alignment, int textPosition) throws JposException {
-        writer.println(COMMAND_PRINT_BARCODE);
+        writer.println(String.format(COMMAND_PRINT_BARCODE, data));
     }
 
     @Override
