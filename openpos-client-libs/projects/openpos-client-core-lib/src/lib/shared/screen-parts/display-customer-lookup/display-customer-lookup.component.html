@@ -1,3 +1,6 @@
+<div class="text-sm privacy" *ngIf="customer.privacyRestricted">
+    {{customer.privacyRestricted}}
+</div>
 <div *ngIf="!(isMobile | async)" class="customer-details text-sm">
     <div class="customer-name-loyaltyNumber">
         <span class="customer-name text-md">{{customer.name}}</span>
