@@ -16,11 +16,17 @@ export class PostalCodeGenericFormatter implements IFormatter {
         /[0-9]/,
         /[0-9]/
     ];
+
     allowKey(key: string, newValue: string): boolean {
         const len = newValue.length;
 
-        return PostalCodeGenericFormatter.FILTER_REGEXS_CA[len - 1].test(newValue[len - 1]) ||
-            PostalCodeGenericFormatter.FILTER_REGEXS_US[len - 1].test(newValue[len - 1 ]);
+        if (len > 0 && len <= PostalCodeGenericFormatter.FILTER_REGEXS_CA.length) {
+            return PostalCodeGenericFormatter.FILTER_REGEXS_CA[len - 1].test(newValue[len - 1]);
+        } else if (len > 0 && len <= PostalCodeGenericFormatter.FILTER_REGEXS_US.length) {
+            return PostalCodeGenericFormatter.FILTER_REGEXS_US[len - 1].test(newValue[len - 1]);
+        } else {
+            return false;
+        }
     }
 
     formatValue(value: string): string {
