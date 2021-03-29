@@ -31,7 +31,8 @@ describe('DisplayCustomerLookupComponent', () => {
             } as Membership,{
                 id: '2', name: 'testGroup2', member: true
             } as Membership
-        ]
+        ],
+        privacyRestricted: 'testRestricted'
 
     } as ICustomerDetails;
 
@@ -89,6 +90,11 @@ describe('DisplayCustomerLookupComponent', () => {
                 const membershipDisplayComponents = fixture.debugElement.queryAll(By.css('app-membership-display'));
                 expect(membershipDisplayComponents.length).toBe(testCustomer.memberships.length);
             });
+            it('should display privacy message when privacy is restricted.', function () {
+                const privacyDiv = fixture.debugElement.query(By.css(".privacy"));
+                expect(privacyDiv).toBeDefined()
+                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestricted);
+            });
         });
     });
 
@@ -114,7 +120,7 @@ describe('DisplayCustomerLookupComponent', () => {
             component = fixture.componentInstance;
             component.customer = testCustomer;
             component.isMobile = new Observable<boolean>(subscriber => {
-                subscriber.next(false);
+                subscriber.next(true);
             });
             fixture.detectChanges();
         });
@@ -138,6 +144,11 @@ describe('DisplayCustomerLookupComponent', () => {
             it('should display all memberships as badges', function () {
                 const membershipDisplayComponents = fixture.debugElement.queryAll(By.css('app-membership-display'));
                 expect(membershipDisplayComponents.length).toBe(testCustomer.memberships.length);
+            });
+            it('should display privacy message when privacy is restricted.', function () {
+                const privacyDiv = fixture.debugElement.query(By.css(".privacy"));
+                expect(privacyDiv).toBeDefined()
+                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestricted);
             });
         });
     });
