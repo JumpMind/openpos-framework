@@ -10,8 +10,7 @@
         <app-dynamic-form-field *ngIf="labelField" [formGroup]="formGroup" [formField]="labelField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
     </div>
     <div class="remove">
-        <app-icon *ngIf="!isOnly" matPrefix [iconName]="screenData.removeIcon" iconClass="material-icons sm" (click)="remove.emit()"></app-icon>
-        <app-icon *ngIf="isOnly" matPrefix [iconName]="'none'" iconClass="material-icons sm"></app-icon>
+        <app-icon matPrefix [iconName]="screenData.removeIcon" iconClass="material-icons sm" (click)="isOnly ? clear.emit() : remove.emit()"></app-icon>
     </div>
     <div class="add">
         <app-icon *ngIf="isLast" matPrefix [iconName]="screenData.addIcon" iconClass="material-icons sm" (click)="add.emit()"></app-icon>

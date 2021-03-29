@@ -20,6 +20,8 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     addPhone: IActionItem;
     @Input()
     removePhone: IActionItem;
+    @Input()
+    clearPhone: IActionItem;
 
     @Input()
     emailIcon: string;
@@ -27,6 +29,8 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     addEmail: IActionItem;
     @Input()
     removeEmail: IActionItem;
+    @Input()
+    clearEmail: IActionItem;
 
     @Input()
     profileIcon: string;
@@ -49,9 +53,11 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     lastNameField : IFormElement;
     loyaltyNumberField : IFormElement;
     postalCodeField : IFormElement;
-    phoneFields : IFormElement[] = [];
+    phoneField : IFormElement;                  // CTX_FORM_FIELD: PHONE
+    phoneFields : IFormElement[] = [];          // CTX_FORM_FIELD: PHONE_LIST
     phoneLabelFields : IFormElement[] = [];
-    emailFields : IFormElement[] = [];
+    emailField : IFormElement;                  // CTX_FORM_FIELD: EMAIL
+    emailFields : IFormElement[] = [];          // CTX_FORM_FIELD: EMAIL_LIST
     emailLabelFields : IFormElement[] = [];
 
     ngOnInit() {
@@ -60,12 +66,11 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
         this.lastNameField = this.getFormElementById('lastName');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
         this.postalCodeField = this.getFormElementById('postalCode');
-        console.log("Form Part init complete.");
-        console.dir(this.isMobile);
+        this.phoneField = this.getFormElementById('phone');
+        this.emailField = this.getFormElementById('email');
     }
 
     getFormElementById(formElementId : string) {
-        // Not a proper binding; this creates an infinite loop which is too taxing on the browser
         return this.screenData.formElements.filter(element => element.id == formElementId)[0];
     }
 

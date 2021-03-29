@@ -136,6 +136,19 @@
     .contact {
         grid-area: contact;
         max-width: 100%;
+
+        .email, .phone {
+            display: grid;
+            grid-template-columns: auto 10fr;
+            grid-template-rows: 1fr;
+            gap: 0px 1em;
+            grid-template-areas:
+            ". .";
+
+            app-icon {
+                align-self: center;
+            }
+        }
     }
 
 }
@@ -230,10 +243,4 @@
             }
         }
     }
-}
-
-.email {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
 }

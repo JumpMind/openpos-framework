@@ -31,13 +31,13 @@ import { MobileReturnReceiptsSheetComponent } from './return/mobile-return-recei
 import { OptionsScreenComponent } from './options/options-screen.component';
 import { OptionsScreenDialogComponent } from './options/options-screen-dialog.component';
 import { MobileSaleOrdersSheetComponent } from './sale/mobile-sale-orders-sheet/mobile-sale-orders-sheet.component';
-import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
+import { ErrorDialogComponent } from './error-dialog/error-dialog.component';
 import { TransactionSearchComponent } from './transaction-search/transaction-search.component';
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
-import {SimulatedPeripheralViewerComponent} from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
+import { SimulatedPeripheralViewerComponent } from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
 import { CreateLoyaltyFormDialogComponent } from "./loyalty-customer-form-dialog/loyalty-customer-form-dialog.component";
-import {LoyaltyCustomerFormPart} from "./loyalty-customer-form-dialog/loyalty-customer-form-part.component";
-import {CustomerDetailsDialogComponent} from "./sale/customer-details-dialog/customer-details-dialog.component";
+import { LoyaltyCustomerFormPart } from "./loyalty-customer-form-dialog/loyalty-customer-form-part.component";
+import { CustomerDetailsDialogComponent } from "./sale/customer-details-dialog/customer-details-dialog.component";
 
 
 const screens = [

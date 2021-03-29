@@ -19,8 +19,10 @@ public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm 
 
     private ActionItem addPhone;
     private ActionItem removePhone;
+    private ActionItem clearPhone;
     private ActionItem addEmail;
     private ActionItem removeEmail;
+    private ActionItem clearEmail;
     private ActionItem submitButton;
 
     private String profileIcon;

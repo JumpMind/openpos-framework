@@ -36,6 +36,8 @@ export class MutableListItemWithLabelComponent extends ScreenPartComponent<Mutab
     add = new EventEmitter<IFormElement>();
     @Output()
     remove = new EventEmitter<IFormElement>();
+    @Output()
+    clear = new EventEmitter<IFormElement>();
 
     screenDataUpdated() {
     }
