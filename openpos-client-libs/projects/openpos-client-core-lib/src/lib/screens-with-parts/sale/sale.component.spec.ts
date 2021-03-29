@@ -38,9 +38,9 @@ describe('SaleComponent', () => {
         };
         beforeEach( () => {
             TestBed.configureTestingModule({
-                imports: [HttpClientTestingModule, ],
+                imports: [HttpClientTestingModule],
                 declarations: [
-                    SaleComponent, BaconStripComponent,
+                    SaleComponent,
                     ImageUrlPipe
                 ],
                 providers: [
