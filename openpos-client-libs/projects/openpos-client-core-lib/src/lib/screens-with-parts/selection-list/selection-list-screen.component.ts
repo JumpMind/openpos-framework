@@ -131,7 +131,7 @@ export class SelectionListScreenComponent extends PosScreen<SelectionListInterfa
     }
 
     public doNonSelectionButtonAction(menuItem: IActionItem) {
-        if (this.isSelectionDisabled()) {
+        if (this.isSelectionDisabled() || this.screen.allowNonSelectButtonWhenSelected) {
             this.doMenuItemAction(menuItem);
         }
     }

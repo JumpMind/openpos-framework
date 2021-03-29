@@ -18,4 +18,5 @@ export interface SelectionListInterface extends IAbstractScreen {
     selectionChangedAction: string;
     fetchDataAction: string;
     sausageLinks: IActionItem[];
+    allowNonSelectButtonWhenSelected: boolean;
 }
