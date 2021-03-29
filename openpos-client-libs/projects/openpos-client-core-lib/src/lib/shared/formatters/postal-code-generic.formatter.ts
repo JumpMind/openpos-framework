@@ -70,31 +70,28 @@ export class PostalCodeGenericFormatter implements IFormatter {
     }
 
     patternMatch(value: string, reg: string, index: number): boolean {
-        let isPatternMatched: boolean;
         if (index > 0) {
             if (reg == 'ca') {
                 if (PostalCodeGenericFormatter.FILTER_REGEXS_CA[index].test(value[index])) {
-                    isPatternMatched = this.patternMatch(value, reg, index - 1);
+                    return this.patternMatch(value, reg, index - 1);
                 } else {
-                    isPatternMatched =  false;
+                    return false;
                 }
             } else if (reg == 'us') {
                 if (PostalCodeGenericFormatter.FILTER_REGEXS_US[index].test(value[index])) {
-                    isPatternMatched = this.patternMatch(value, reg, index - 1);
+                    return this.patternMatch(value, reg, index - 1);
                 } else {
-                    isPatternMatched =  false;
+                    return false;
                 }
             }
         } else {
             if (reg == 'ca') {
-                isPatternMatched =  PostalCodeGenericFormatter.FILTER_REGEXS_CA[0].test(value.charAt(0));
+                return PostalCodeGenericFormatter.FILTER_REGEXS_CA[0].test(value.charAt(0));
             } else if (reg == 'us') {
-                isPatternMatched =  PostalCodeGenericFormatter.FILTER_REGEXS_US[0].test(value.charAt(0));
+                return PostalCodeGenericFormatter.FILTER_REGEXS_US[0].test(value.charAt(0));
             } else {
-                isPatternMatched =  false;
+                return false;
             }
         }
-
-        return isPatternMatched;
     }
 }
