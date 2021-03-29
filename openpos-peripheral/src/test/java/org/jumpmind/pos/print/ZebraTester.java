@@ -10,7 +10,7 @@ public class ZebraTester {
     private static OutputStream stream;
 
     public static void main(String[] args) throws Exception {
-        Socket socket = new Socket("192.168.42.232", 6101);
+        Socket socket = new Socket("192.168.1.66", 6101);
         stream = socket.getOutputStream();
 
 //        command("! U1 setvar \"device.languages\" \"line_print\"\r\n");
@@ -47,7 +47,7 @@ public class ZebraTester {
                 " WITH THE REST OF YOUR PURCHASES.\r\n"  +
                 "! U1 SETBOLD 0\r\n" +
                 "! U1 CENTER\r\n" +
-                "! U1 B 128 1 2 100 0 0 59285691 ST 187.10 T 2.60\r\n\r\n\r\n");
+                "! U1 B 128 1 2 100 0 0 A123456789012334\r\n\r\n\r\n");
 
 
         stream.flush();

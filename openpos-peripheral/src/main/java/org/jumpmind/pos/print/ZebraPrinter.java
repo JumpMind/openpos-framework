@@ -66,6 +66,8 @@ public class ZebraPrinter implements IOpenposPrinter {
         this.peripheralConnection = connectionFactory.open(this.settings);
         this.writer = new PrintWriter(peripheralConnection.getOut());
         imagePrinter = new ZebraImagePrinter();
+        writer.print(COMMAND_ENABLE_LINE_PRINT);
+        writer.flush();
     }
 
     @Override
@@ -84,7 +86,7 @@ public class ZebraPrinter implements IOpenposPrinter {
 
     @Override
     public void printBarCode(int station, String data, int symbology, int height, int width, int alignment, int textPosition) throws JposException {
-        writer.println(COMMAND_PRINT_BARCODE);
+        writer.println(String.format(COMMAND_PRINT_BARCODE, data));
     }
 
     @Override
