@@ -20,8 +20,8 @@ public class SaleUIMessage extends UIMessage {
 
     private List<Total> totals;
     private Total grandTotal;
-    private Total itemCount;
-    
+    private List<Total> itemCounts;
+
 
     private List<OrderSummary> orders;
     private ActionItem removeOrderAction;
@@ -31,6 +31,11 @@ public class SaleUIMessage extends UIMessage {
     private ActionItem logoutButton;
     private ActionItem loyaltyButton;
     private String loyaltyIDLabel;
+    private String profileIcon;
+    private List<UIMembership> memberships;
+    private boolean membershipEnabled;
+    private String checkMarkIcon;
+    private String noMembershipsFoundLabel;
     private ActionItem mobileLoyaltyButton;
     private ActionItem linkedCustomerButton;
     private ActionItem linkedEmployeeButton;
@@ -74,8 +79,14 @@ public class SaleUIMessage extends UIMessage {
         this.taxExemptCertificateDetail = new AdditionalLabel(label, value);
     }
 
-    public void setItemCount(String name, String amount) {
-        this.setItemCount(new Total(name, amount));
+    public void addItemCount(Total total) {
+        if (itemCounts == null) {
+            itemCounts = new ArrayList<>();
+        }
+        itemCounts.add(total);
     }
-    
+
+    public void addItemCount(String name, String amount) {
+        addItemCount(new Total(name, amount));
+    }
 }

@@ -1,11 +1,12 @@
 import {IAbstractScreen} from '../../../core/interfaces/abstract-screen.interface';
 import {ITotal} from '../../../core/interfaces/total.interface';
 import {IActionItem} from '../../../core/actions/action-item.interface';
+import {Membership} from "../membership-display/memebership-display.interface";
 
 export interface SaleTotalPanelInterface extends IAbstractScreen {
     totals: ITotal[];
     grandTotal: ITotal;
-    itemCount: ITotal;
+    itemCounts: ITotal[];
     checkoutButton: IActionItem;
     helpButton: IActionItem;
     logoutButton: IActionItem;
@@ -19,5 +20,9 @@ export interface SaleTotalPanelInterface extends IAbstractScreen {
     readOnly: boolean;
     prompt: string;
     statusMessage: string;
+    profileIcon: string;
     loyaltyIDLabel: string;
+    noMembershipsFoundLabel: string;
+    membershipEnabled: boolean;
+    memberships: Membership[];
 }

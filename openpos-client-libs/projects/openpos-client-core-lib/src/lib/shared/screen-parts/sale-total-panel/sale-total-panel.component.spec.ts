@@ -15,6 +15,7 @@ import {IActionItem} from "../../../core/actions/action-item.interface";
 import {By} from "@angular/platform-browser";
 import {Configuration} from "../../../configuration/configuration";
 import {ImageUrlPipe} from "../../pipes/image-url.pipe";
+import {validateDoesNotExist, validateText} from "../../../utilites/test-utils";
 
 class MockMatDialog {};
 class MockActionService {};
@@ -58,7 +59,9 @@ describe('SaleTotalPanelComponent', () => {
             }).compileComponents();
             fixture = TestBed.createComponent(SaleTotalPanelComponent);
             component = fixture.componentInstance;
-            component.screenData = {} as SaleTotalPanelInterface;
+            component.screenData = {
+                profileIcon: 'account_circle'
+            } as SaleTotalPanelInterface;
             openposMediaSerivce = TestBed.get(OpenposMediaService);
             fixture.detectChanges();
         });
@@ -108,18 +111,13 @@ describe('SaleTotalPanelComponent', () => {
                     fixture.detectChanges();
                 };
 
-                const validateDoesNotExist = (selector: string) => {
-                    const button = fixture.debugElement.query(By.css(selector));
-                    expect(button).toBeNull();
-                };
-
                 describe('when read only', () => {
                     beforeEach(() => {
                         configureComponent(true, undefined, {} as IActionItem);
                     });
 
                     it('does not show the link customer button', () => {
-                        validateDoesNotExist('.sale-total-header .link-customer');
+                        validateDoesNotExist(fixture, '.sale-total-header .link-customer');
                     });
                 });
                 describe('when there is no screen data for the loyaltyButton', () => {
@@ -127,7 +125,7 @@ describe('SaleTotalPanelComponent', () => {
                         configureComponent(false, undefined, undefined);
                     });
                     it('does not show the link customer button', () => {
-                        validateDoesNotExist('.sale-total-header .link-customer');
+                        validateDoesNotExist(fixture, '.sale-total-header .link-customer');
                     });
                 });
                 describe('when no customer is linked', () => {
@@ -139,7 +137,7 @@ describe('SaleTotalPanelComponent', () => {
                     });
 
                     it('does not show the linked customer button', () => {
-                        validateDoesNotExist('.sale-total-header .linked-customer-summary');
+                        validateDoesNotExist(fixture, '.sale-total-header .linked-customer-summary');
                     });
 
                     it('calls doAction with the loyaltyButton when an actionClick event is triggered', () => {
@@ -166,7 +164,7 @@ describe('SaleTotalPanelComponent', () => {
                     it('hides the keybinding when keybinds are disabled', () => {
                         spyOn(component, 'keybindsEnabled').and.returnValue(false);
                         fixture.detectChanges();
-                        validateDoesNotExist('.sale-total-header .link-customer .loyalty-keybind');
+                        validateDoesNotExist(fixture, '.sale-total-header .link-customer .loyalty-keybind');
                     });
                 });
                 describe('when a customer is linked', () => {
@@ -180,7 +178,7 @@ describe('SaleTotalPanelComponent', () => {
                     });
 
                     it('does not show the link customer button', () => {
-                        validateDoesNotExist('.sale-total-header .link-customer');
+                        validateDoesNotExist(fixture, '.sale-total-header .link-customer');
                     });
 
                     it('shows the linked customer button', () => {
@@ -194,18 +192,13 @@ describe('SaleTotalPanelComponent', () => {
                             button = fixture.debugElement.query(By.css('.sale-total-header button.linked-customer-summary'));
                         });
 
-                        it('displays a account-circle icon', () => {
+                        it('displays a account_circle icon', () => {
                             const icon = fixture.debugElement.query(By.css('.sale-total-header .icon'));
                             expect(icon.nativeElement).toBeDefined();
                         });
 
                         it('displays the customers name', () => {
                             expect(button.nativeElement.textContent).toContain('bob');
-                        });
-
-                        it('displays the loyalty id', () => {
-                            expect(button.nativeElement.textContent).toContain('Loyalty ID:');
-                            expect(button.nativeElement.textContent).toContain('123');
                         });
 
                         it('calls doAction with the linkedCustomerButton when an actionClick event is triggered', () => {
@@ -220,6 +213,18 @@ describe('SaleTotalPanelComponent', () => {
                             expect(component.doAction).toHaveBeenCalledWith(component.screenData.linkedCustomerButton);
                         });
 
+                        it('calls doAction with the linkedCustomerButton when an clickEvent event is triggered on the app-membership-display component', () => {
+                            spyOn(component, 'doAction');
+                            component.screenData.membershipEnabled = true;
+                            component.screenData.memberships = [{id: '1', name: 'loyalty', member: true}];
+                            fixture.detectChanges();
+
+                            const membershipDisplay = fixture.debugElement.query(By.css('.linked-customer-summary app-membership-display'));
+                            membershipDisplay.nativeElement.dispatchEvent(new Event('clickEvent'));
+
+                            expect(component.doAction).toHaveBeenCalledWith(component.screenData.linkedCustomerButton);
+                        });
+
                         it('shows the keybinding when keybinds are enabled', () => {
                             spyOn(component, 'keybindsEnabled').and.returnValue(true);
                             fixture.detectChanges();
@@ -230,8 +235,60 @@ describe('SaleTotalPanelComponent', () => {
                         it('hides the keybinding when keybinds are disabled', () => {
                             spyOn(component, 'keybindsEnabled').and.returnValue(false);
                             fixture.detectChanges();
-                            validateDoesNotExist('.sale-total-header .linked-customer-summary .loyalty-keybind');
+                            validateDoesNotExist(fixture, '.sale-total-header .linked-customer-summary .loyalty-keybind');
                         });
+
+                        describe('when membershipEnabled is false', () => {
+                            beforeEach(() => {
+                                component.screenData.membershipEnabled = false;
+                                fixture.detectChanges();
+                                button = fixture.debugElement.query(By.css('.sale-total-header button.linked-customer-summary .loyaltyId'));
+                            });
+
+                            it('displays the loyalty id', () => {
+                                expect(button.nativeElement.textContent).toContain('Loyalty ID:');
+                                expect(button.nativeElement.textContent).toContain('123');
+                            });
+                        });
+
+                        describe('when membershipEnabled is true', () => {
+                            describe('when there are memberships', () => {
+                                beforeEach(() => {
+                                    component.screenData.membershipEnabled = true;
+                                    component.screenData.memberships = [
+                                        { id: '123', name: 'membership1', member: true},
+                                        { id: '124', name: 'membership2', member: false},
+                                        { id: '125', name: 'membership3', member: false}
+                                    ];
+                                    fixture.detectChanges();
+                                });
+
+                                it('does not display the loyalty id', () => {
+                                    validateDoesNotExist(fixture, '.memberships .loyaltyId');
+                                });
+
+                                it('displays a membership-display component for each membership', () => {
+                                    const membershipDisplays = fixture.debugElement.queryAll(By.css('app-membership-display'));
+                                    expect(membershipDisplays.length).toBe(component.screenData.memberships.length);
+                                });
+                            });
+
+                            describe('when there are no memberships', () => {
+                                beforeEach(() => {
+                                    component.screenData.membershipEnabled = true;
+                                    component.screenData.memberships = [];
+                                    component.screenData.noMembershipsFoundLabel = 'no memberships yet';
+                                    fixture.detectChanges();
+                                });
+
+                                it('shows the noMembershipsFound label', () => {
+                                    validateText(fixture, '.memberships', component.screenData.noMembershipsFoundLabel);
+                                });
+                            });
+
+
+                        });
+
                     });
                 });
             });

@@ -1,0 +1,112 @@
+@import "../../../styles/mixins/typography";
+
+.reward-line-item-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 10fr 2fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "loyalty-icon details apply";
+  .loyalty-icon {
+    grid-area: loyalty-icon;
+    text-align: center;
+    app-icon {
+      display: inline-block;
+    }
+  }
+  .details {
+    grid-area: details;
+    .name {
+      @extend %text-sm;
+      font-weight: 500;
+    }
+    .expiration {
+      @extend %text-sm;
+      app-icon {
+        padding-right: 3px;
+      }
+    }
+    app-icon {
+      display: inline-block;
+    }
+  }
+
+  .apply {
+    grid-area: apply;
+    justify-self: end;
+    a {
+      @extend %text-md;
+      app-icon {
+        padding-left: 10px;
+        display: inline-block
+      }
+    }
+  }
+}
+
+.mobile-reward-line-item-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "details apply";
+  .loyalty-icon {
+    grid-area: loyalty-icon;
+    text-align: center;
+    app-icon {
+      display: inline-block;
+    }
+  }
+  .details {
+    grid-area: details;
+    .name {
+      @extend %text-md;
+      font-weight: 500;
+      &.tablet-portrait {
+        font-size: $text-sm;
+      }
+
+      &.mobile {
+        font-size: $text-xs-mobile*1.25;
+      }
+    }
+    .expiration {
+      @extend %text-md;
+      &.tablet-portrait {
+        font-size: $text-sm;
+      }
+
+      &.mobile {
+        font-size: $text-xs-mobile*1.25;
+      }
+      app-icon {
+        padding-right: 3px;
+      }
+    }
+    app-icon {
+      display: inline-block;
+    }
+  }
+
+  .apply {
+    grid-area: apply;
+    text-align: center;
+    justify-self: end;
+    a {
+      @extend %text-md;
+      &.tablet-portrait {
+        font-size: $text-sm;
+      }
+
+      &.mobile {
+        font-size: $text-xs-mobile*1.25;
+      }
+      app-icon {
+        padding-left: 10px;
+        display: inline-block
+      }
+    }
+  }
+}
+

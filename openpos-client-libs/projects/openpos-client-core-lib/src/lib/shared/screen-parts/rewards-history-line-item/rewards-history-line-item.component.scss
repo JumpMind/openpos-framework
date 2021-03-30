@@ -1,0 +1,116 @@
+@import "../../../styles/mixins/typography";
+
+.reward-history-line-item-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 10fr 2fr 2fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "loyalty-icon details status";
+  .loyalty-icon {
+    grid-area: loyalty-icon;
+    text-align: center;
+    app-icon {
+      display: inline-block;
+    }
+  }
+  .details {
+    grid-area: details;
+    .name {
+      @extend %text-md;
+      font-weight: 500;
+      &.expired {
+        text-decoration: line-through;
+      }
+    }
+    .expiration {
+      @extend %text-md;
+      app-icon {
+        padding-right: 3px;
+      }
+    }
+    app-icon {
+      display: inline-block;
+    }
+  }
+
+  .status {
+    grid-area: status;
+    text-align: center;
+    margin: auto;
+    span {
+      @extend %text-md;
+      app-icon {
+        padding-left: 10px;
+        display: inline-block
+      }
+    }
+  }
+}
+
+.mobile-reward-history-line-item-wrapper {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "details status";
+  .loyalty-icon {
+    grid-area: loyalty-icon;
+    text-align: center;
+    app-icon {
+      display: inline-block;
+    }
+  }
+  .details {
+    grid-area: details;
+    .name {
+      @extend %text-md;
+      font-weight: 500;
+      &.tablet-portrait {
+        font-size: $text-sm;
+      }
+
+      &.mobile {
+        font-size: $text-xs-mobile*1.25;
+      }
+    }
+    .expiration {
+      @extend %text-md;
+      &.tablet-portrait {
+        font-size: $text-sm;
+      }
+
+      &.mobile {
+        font-size: $text-xs-mobile*1.25;
+      }
+      app-icon {
+        padding-right: 3px;
+      }
+    }
+    app-icon {
+      display: inline-block;
+    }
+  }
+
+  .status {
+    grid-area: status;
+    text-align: center;
+    margin: auto;
+    span {
+      @extend %text-md;
+      &.tablet-portrait {
+        font-size: $text-sm;
+      }
+
+      &.mobile {
+        font-size: $text-xs-mobile*1.25;
+      }
+      app-icon {
+        padding-left: 10px;
+        display: inline-block
+      }
+    }
+  }
+}
+

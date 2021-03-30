@@ -16,7 +16,7 @@
     margin: 15px;
     padding: 15px;
   }
-  
+
   &.mobile {
     margin: 6px;
     padding: 6px;
@@ -36,7 +36,7 @@
     font-weight: normal;
     font-size: .75rem;
   }
-  
+
   &.mobile {
     min-width: 96px;
     min-height: 96px;
@@ -59,7 +59,8 @@
 }
 
 .menu-button-title {
-  white-space: normal;
+  white-space: pre-line;
+  line-height: normal;
 }
 
 .menu-list {
@@ -113,7 +114,7 @@
     &.tablet {
       align-content: unset;
     }
-    
+
     &.mobile {
       grid-template-columns: repeat(auto-fit, 120px);
     }
