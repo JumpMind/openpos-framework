@@ -1,0 +1,21 @@
+<div class="details-row email" responsive-class>
+    <app-icon [iconName]="screenData.emailIcon" [iconClass]="'material-icons mat-18'"></app-icon>{{customer.email}}
+</div>
+<div class="details-row phone-number" responsive-class>
+    <app-icon [iconName]="screenData.phoneIcon" [iconClass]="'material-icons mat-18'"></app-icon>{{customer.phoneNumber | phone}}
+</div>
+<div class="details-row loyalty-number" responsive-class>
+    <app-icon [iconName]="screenData.loyaltyNumberIcon" [iconClass]="'material-icons mat-18'"></app-icon>{{customer.loyaltyNumber}}
+</div>
+<div class="details-row address" responsive-class>
+    <app-icon [iconName]="screenData.locationIcon" [iconClass]="'material-icons mat-18'"></app-icon>
+    <div class="address-details">
+        <div *ngIf="customer.address.line1" class="line1">{{customer.address.line1}}</div>
+        <div *ngIf="customer.address.line2" class="line2">{{customer.address.line2}}</div>
+        <div class="line3">
+            <span *ngIf="customer.address.city" class="city">{{customer.address.city}}, </span>
+            <span *ngIf="customer.address.state" class="state">{{customer.address.state}} </span>
+            <span *ngIf="customer.address.postalCode" class="postal-code">{{customer.address.postalCode}}</span>
+        </div>
+    </div>
+</div>

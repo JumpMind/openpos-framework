@@ -1,0 +1,14 @@
+@mixin accent-button-theme($theme) {
+    $accent: mat-color(map-get($theme, accent));
+    $disabled-border: map-get(map-get($theme, foreground), disabled-text);
+
+    app-accent-button {
+        button {
+            border-color: $accent;
+            border-style: solid;
+            &[disabled] {
+                border-color: $disabled-border;
+            }
+        }
+    }
+}

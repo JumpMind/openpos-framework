@@ -1,0 +1,19 @@
+@import "../../../styles/mixins/typography";
+
+.material-icons {
+  display: inline-block;
+  margin-right: 5px;
+}
+.details-row {
+  margin-top: 10px;
+  &.tablet-portrait {
+    font-size: $text-sm;
+  }
+
+  &.mobile {
+    font-size: $text-xs-mobile*1.25;
+  }
+}
+.address-details {
+  display: inline-grid;
+}

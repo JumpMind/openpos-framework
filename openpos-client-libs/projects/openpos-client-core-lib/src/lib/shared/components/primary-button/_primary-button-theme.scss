@@ -6,6 +6,8 @@
         button {
             border-color: $primary;
             border-style: solid;
+            white-space: break-spaces;
+            max-width: 100%;
             &[disabled] {
                 border-color: $disabled-border;
             }

@@ -29,8 +29,10 @@ public final class UIMessageType {
     public static String CONFIRM_DIALOG = "ConfirmDialog";
     public static String DATA_TABLE = "DataTable";
     public static String SCAN_INPUT_DIALOG = "ScanInputDialog";
+    public static String CUSTOMER_DETAILS_DIALOG = "CustomerDetailsDialog";
     public static String CUSTOMER_DISPLAY_HOME = "CustomerDisplayHome";
     public static String CUSTOMER_DISPLAY_SALE = "CustomerDisplaySale";
+    public static String CUSTOMER_SEARCH_RESULT = "CustomerSearchResultDialog";
     public static String TRANSACTION_SEARCH = "TransactionSearch";
     public static String TRANSACTION_DETAILS = "TransactionDetails";
     public static String PROMOTION_SEARCH = "PromotionSearch";

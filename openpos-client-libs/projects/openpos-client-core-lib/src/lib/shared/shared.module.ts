@@ -70,6 +70,7 @@ import {DatePartChooserComponent} from './components/date-part-chooser/date-part
 import {DatePartChooserFieldComponent} from './components/date-part-chooser/date-part-chooser-field/date-part-chooser-field.component';
 import {DatePartChooserDialogComponent} from './components/date-part-chooser/date-part-chooser-dialog/date-part-chooser-dialog.component';
 import {PrimaryButtonComponent} from './components/primary-button/primary-button.component';
+import {AccentButtonComponent} from './components/accent-button/accent-button.component';
 import {SecondaryButtonComponent} from './components/secondary-button/secondary-button.component';
 import {TrainingDialogComponent} from './components/training-dialog/training-dialog.component';
 import {TrainingWrapperComponent} from './components/training-dialog/training-wrapper.component';
@@ -160,6 +161,11 @@ import {StayFocusedDirective} from './directives/stay-focused.directive';
 import { AudioLicenseComponent } from './components/audio-license/audio-license.component';
 import { ToastComponent } from './components/toast/toast.component';
 import { WatermarkComponent } from './components/watermark/watermark.component';
+import { MembershipDisplayComponent } from "./screen-parts/membership-display/membership-display.component";
+import {RewardsLineItemComponent} from "./screen-parts/rewards-line-item/rewards-line-item.component";
+import { CustomerInformationComponent } from './screen-parts/customer-information/customer-information.component';
+import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
+import { DisplayCustomerLookupComponent } from './screen-parts/display-customer-lookup/display-customer-lookup.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -174,6 +180,10 @@ const screenParts = [
     PromptFormPartComponent,
     DynamicFormPartComponent,
     AutoCompleteAddressPartComponent,
+    MembershipDisplayComponent,
+    CustomerInformationComponent,
+    RewardsLineItemComponent,
+    RewardsHistoryLineItemComponent,
     ProgressBarPartComponent,
     WebcamViewerComponent,
     SystemStatusComponent,
@@ -218,6 +228,7 @@ const components = [
     DatePartChooserComponent,
     DatePartChooserFieldComponent,
     DatePartChooserDialogComponent,
+    AccentButtonComponent,
     PrimaryButtonComponent,
     SecondaryButtonComponent,
     WarnButtonComponent,
@@ -272,6 +283,7 @@ const components = [
     TransactionSummaryComponent,
     StampComponent,
     ToastComponent,
+    DisplayCustomerLookupComponent,
     WatermarkComponent
 ];
 

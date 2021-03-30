@@ -1,5 +1,72 @@
 @import "../../../styles/mixins/typography";
 
+.sale-total-wrapper {
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: min-content 1fr;
+    gap: 0px 0px;
+    grid-template-areas:
+            "header"
+            "body";
+    .sale-total-header { grid-area: header; }
+    .sale-total-background { grid-area: body; }
+}
+
+.sale-total-header {
+    margin-bottom: 16px;
+    .material-icons {
+        font-size: 36px;
+    }
+    .link-customer {
+        @extend %text-md;
+        border-width: 2px;
+        padding: $text-md/2 $text-md*1.25;
+        min-width: 150px;
+        .material-icons {
+            margin-top: -12px;
+        }
+        .sale-total-loyalty-button-icon {
+            width: 100%;
+            vertical-align: bottom;
+        }
+    }
+    .linked-customer-summary {
+        padding: 5px;
+        .button-wrapper {
+            vertical-align: inherit;
+            width: 100%;
+            text-align: left;
+            padding: 10px;
+            .grid-container {
+                display: grid;
+                grid-template-columns: 1fr 10fr;
+                grid-template-rows: auto 1fr;
+                gap: 0px 0px;
+                grid-template-areas:
+                    "Name Name"
+                    "Icon Memberships";
+                .name {
+                    grid-area: Name;
+                    .customer-name {
+                        font-size: 24px;
+                        .loyalty-keybind {
+                            margin-left: 10px;
+                        }
+                    }
+                }
+                .icon {
+                    grid-area: Icon;
+                    display: inline-block;
+                }
+                .memberships {
+                    grid-area: Memberships;
+                }
+            }
+        }
+    }
+}
+
 :host {
     display: grid;
 }
