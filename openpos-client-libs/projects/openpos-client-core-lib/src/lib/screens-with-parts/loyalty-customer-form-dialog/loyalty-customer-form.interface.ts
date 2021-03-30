@@ -17,7 +17,10 @@ export interface LoyaltyCustomerFormInterface extends IAbstractScreen {
     addEmail: IActionItem;
     removeEmail: IActionItem;
     clearEmail: IActionItem;
+    countrySelected: IActionItem;
+    stateSelected: IActionItem;
     memberships: Membership[];
+    membershipEnabled: boolean;
     membershipsLabel: string;
     noMembershipsLabel: string;
 }

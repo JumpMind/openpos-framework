@@ -33,12 +33,21 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     clearEmail: IActionItem;
 
     @Input()
+    countrySelected: IActionItem;
+    @Input()
+    stateSelected: IActionItem;
+
+    @Input()
     profileIcon: string;
     @Input()
     locationIcon: string;
     @Input()
     loyaltyNumberIcon: string;
 
+    @Input()
+    membershipsIcon: string;
+    @Input()
+    membershipsEnabled: boolean;
     @Input()
     memberships: Membership[] = [];
     @Input()
@@ -52,7 +61,6 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     firstNameField : IFormElement;
     lastNameField : IFormElement;
     loyaltyNumberField : IFormElement;
-    postalCodeField : IFormElement;
     phoneField : IFormElement;                  // CTX_FORM_FIELD: PHONE
     phoneFields : IFormElement[] = [];          // CTX_FORM_FIELD: PHONE_LIST
     phoneLabelFields : IFormElement[] = [];
@@ -60,14 +68,27 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     emailFields : IFormElement[] = [];          // CTX_FORM_FIELD: EMAIL_LIST
     emailLabelFields : IFormElement[] = [];
 
+    line1Field : IFormElement;
+    line2Field : IFormElement;
+    cityField : IFormElement;
+    stateField : IFormElement;
+    postalCodeField : IFormElement;
+    countryField : IFormElement;
+
     ngOnInit() {
         super.ngOnInit();
         this.firstNameField = this.getFormElementById('firstName');
         this.lastNameField = this.getFormElementById('lastName');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
-        this.postalCodeField = this.getFormElementById('postalCode');
         this.phoneField = this.getFormElementById('phone');
         this.emailField = this.getFormElementById('email');
+
+        this.line1Field = this.getFormElementById('line1');
+        this.line2Field = this.getFormElementById('line2');
+        this.cityField = this.getFormElementById('city');
+        this.stateField = this.getFormElementById('state');
+        this.postalCodeField = this.getFormElementById('postalCode');
+        this.countryField = this.getFormElementById('country');
     }
 
     getFormElementById(formElementId : string) {

@@ -13,6 +13,8 @@ import java.util.List;
 public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm {
 
     private Form form = new Form();
+
+    private Boolean membershipEnabled;
     private List<UIMembership> memberships;
     private String membershipsLabel;
     private String noMembershipsLabel;
@@ -23,6 +25,8 @@ public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm 
     private ActionItem addEmail;
     private ActionItem removeEmail;
     private ActionItem clearEmail;
+    private ActionItem countrySelected;
+    private ActionItem stateSelected;
     private ActionItem submitButton;
 
     private String profileIcon;
@@ -30,6 +34,7 @@ public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm 
     private String phoneIcon;
     private String emailIcon;
     private String locationIcon;
+    private String membershipsIcon;
     private String addIcon;
     private String removeIcon;
     private String checkMarkIcon;

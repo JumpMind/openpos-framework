@@ -4,22 +4,23 @@
         <app-content-card>
             <mat-card-content mat-dialog-conten class="form-content">
                 <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
-                    <div class="basic-info">
+                    <div class="basic-info" *ngIf="firstNameField || lastNameField">
                         <div class="portrait">
                             <app-icon [iconName]="profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-96' : ' mat-128')"></app-icon>
-<!--                            <app-icon matPrefix [iconName]="profileIcon" [ngClass]="'material-icons' + {' mat-128': !(isMobile | async), ' mat-64': (isMobile | async)}"></app-icon>-->
                         </div>
                         <div class="names">
-                            <app-dynamic-form-field [formGroup]="form" [formField]="firstNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="lastNameField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field *ngIf="firstNameField" [formGroup]="form" [formField]="firstNameField"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field *ngIf="lastNameField" [formGroup]="form" [formField]="lastNameField"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
                     </div>
-                    <div class="contact">
-                        <div *ngIf="emailField; else emailListTemplate" class="email">
+                    <div class="contact" *ngIf="emailField || emailFields || phoneField || phoneFields">
+                        <div *ngIf="emailField" class="email">
                             <app-icon matPrefix [iconName]="emailIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
-                        <ng-template #emailListTemplate>
+                        <div *ngIf="!emailField && emailFields">
                             <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
                                 <app-mutable-list-item-with-label [formGroup]="form"
                                                                   [groupIcon]="emailIcon"
@@ -33,13 +34,13 @@
                                                                   (remove)="doAction(removeEmail, i)"
                                                                   (clear)="doAction(clearEmail, i)"></app-mutable-list-item-with-label>
                             </div>
-                        </ng-template>
+                        </div>
 
-                        <div *ngIf="phoneField; else phoneListTemplate" class="phone">
+                        <div *ngIf="phoneField" class="phone">
                             <app-icon matPrefix [iconName]="phoneIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
-                        <ng-template #phoneListTemplate>
+                        <div *ngIf="!phoneField && phoneFields">
                             <div class="phone-list" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
                                 <app-mutable-list-item-with-label [formGroup]="form"
                                                                   [groupIcon]="phoneIcon"
@@ -51,32 +52,41 @@
                                                                   (add)="doAction(addPhone, i)" (remove)="doAction(removePhone, i)"
                                                                   (clear)="doAction(clearPhone, i)"></app-mutable-list-item-with-label>
                             </div>
-                        </ng-template>
+                        </div>
                     </div>
                     <div class="loyalty-and-membership">
-                        <div class="loyalty-number">
+                        <div class="loyalty-number" *ngIf="loyaltyNumberField">
                             <app-icon matPrefix [iconName]="loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
-                        <div class="memberships">
+                        <div *ngIf="membershipsEnabled" class="memberships">
                             <div *ngIf="memberships && memberships.length">
-                                <div class="title">{{membershipsLabel}}</div>
-                                <span *ngFor="let membership of memberships" class="item">
-                                    <app-membership-display [membership]="membership"></app-membership-display>
-                                </span>
+                                <div class="title" *ngIf="!(isMobile | async)">
+                                    {{membershipsLabel}}
+                                </div>
+                                <div class="memberships-list">
+                                    <div *ngIf="memberships && memberships.length" class="list">
+                                        <span *ngFor="let membership of memberships" class="item">
+                                            <app-membership-display [membership]="membership"></app-membership-display>
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-
-                            <div *ngIf="!memberships || (memberships && memberships.length == 0)" class="no-memberships">
+                            <div *ngIf="!(memberships && memberships.length)" class="no-memberships">
                                 {{noMembershipsLabel}}
                             </div>
                         </div>
                     </div>
-                    <div class="location">
-                        <div class="location-content">
+                    <div class="location" *ngIf="postalCodeField">
+                        <div class="icon">
                             <app-icon matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
-                        <div class="grid-filler"></div>
+                        <app-dynamic-form-field class="line1" [formGroup]="form" [formField]="line1Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <app-dynamic-form-field class="line2" [formGroup]="form" [formField]="line2Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <app-dynamic-form-field class="city" [formGroup]="form" [formField]="cityField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <app-dynamic-form-field class="state" [formGroup]="form" [formField]="stateField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <app-dynamic-form-field class="postalCode" [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                        <app-dynamic-form-field class="country" [formGroup]="form" [formField]="countryField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                     </div>
                 </div>
                 <mat-error>
