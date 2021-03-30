@@ -161,7 +161,7 @@ describe('CustomerDetailsDialog', () => {
             it('shows the membership label', () => {
               component.screen.membershipLabel = 'some value';
               fixture.detectChanges();
-              const membershipLabelElement = fixture.debugElement.query(By.css('.memberships .title'));
+              const membershipLabelElement = fixture.debugElement.query(By.css('.memberships .details-label'));
               expect(membershipLabelElement.nativeElement.textContent).toContain(component.screen.membershipLabel);
             });
 
