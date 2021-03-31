@@ -1,12 +1,10 @@
 package org.jumpmind.pos.persist.impl;
 
-import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.db.model.Table;
-import org.jumpmind.db.sql.InvalidSqlException;
 
 import java.util.*;
 
-public class QueryTemplates {
+public class QueryTemplates extends AbstractSqlTemplates {
     Map<String, Map<String, QueryTemplate>> queriesByDeviceMode = new HashMap<>();
 
     public QueryTemplates() {
@@ -51,8 +49,14 @@ public class QueryTemplates {
         return getQueryTemplateMapForDeviceMode(deviceMode).get(queryName);
     }
 
+    @Override
+    protected String getTemplateSuffix() {
+        return "-query.yml";
+    }
+
     //  SQL parsing.
 
+    @Override
     public void replaceModelClassNamesWithTableNames(DatabaseSchema dbSchema, List<Class<?>> modelClassList, boolean validateTablesInQueries) {
         for (String deviceMode : queriesByDeviceMode.keySet()) {
             Map<String, QueryTemplate> queryMap = queriesByDeviceMode.get(deviceMode);
@@ -101,32 +105,6 @@ public class QueryTemplates {
                         template.setOptionalWhereClauses(newOptionalWhereClauses);
                     }
                 }
-            }
-        }
-    }
-
-    private String replaceClassModelNameInSqlText(String sqlText, String modelClassName, String tableName)  {
-        if ((sqlText != null) && StringUtils.indexOf(sqlText, modelClassName) >= 0)  {
-            return sqlText.replaceAll("\\b" + modelClassName + "\\b", tableName);
-        }
-
-        return sqlText;
-    }
-
-    private void scanSqlTextForLiteralTableName(String sqlText, String textType, String templateName, String regularTableName, String shadowTableName, String modulePrefix, String modelClassName)  {
-        if (sqlText != null) {
-            boolean textContainsRegularName = sqlText.matches(".*\\b" + regularTableName + "\\b.*");
-            boolean textContainsShadowName = false;
-            if (!regularTableName.equals(shadowTableName)) {
-                textContainsShadowName = sqlText.matches(".*\\b" + shadowTableName + "\\b.*");
-            }
-
-            if (textContainsRegularName || textContainsShadowName) {
-                throw new InvalidSqlException("SQL " + textType + " contains literal table name " +
-                    (textContainsRegularName ? regularTableName : shadowTableName) + " in query " + templateName +
-                    " in file " + modulePrefix.toLowerCase() + "-query.yml. Replace it with the corresponding model class name " +
-                    modelClassName + " instead."
-                );
             }
         }
     }
