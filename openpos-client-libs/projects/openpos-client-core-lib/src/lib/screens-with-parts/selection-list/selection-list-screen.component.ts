@@ -12,6 +12,7 @@ import {SessionService} from '../../core/services/session.service';
     templateUrl: './selection-list-screen.component.html',
     styleUrls: ['./selection-list-screen.component.scss']
 })
+
 export class SelectionListScreenComponent extends GenericSelectionListScreen<ISelectionListItem>{
     constructor(injector: Injector, session: SessionService) { super(injector, session); }
 }

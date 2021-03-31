@@ -122,7 +122,7 @@ export class GenericSelectionListScreen<T extends SelectableItemInterface> exten
     }
 
     public doNonSelectionButtonAction(menuItem: IActionItem) {
-        if (this.isSelectionDisabled()) {
+        if (this.isSelectionDisabled() || this.screen.allowNonSelectButtonWhenSelected) {
             this.doMenuItemAction(menuItem);
         }
     }

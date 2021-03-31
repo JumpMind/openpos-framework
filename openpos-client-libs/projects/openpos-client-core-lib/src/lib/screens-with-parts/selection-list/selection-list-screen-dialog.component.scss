@@ -6,15 +6,30 @@
     grid-template-rows: auto 1fr;
     height: 100%;
 
+
     .selection-list-body {
         display: grid;
         justify-self: center;
         align-content: center;
         width:100%;
-        @extend %page-spaced-content; 
+
+
+        @extend %page-spaced-content;
+        &.mobile {
+            .dialog-content {
+                max-height: 300px;
+            }
+        }
+        &.tablet {
+            .dialog-content {
+                max-height: 300px;
+            }
+        }
+
 
         .dialog-content {
             overflow: auto;
+            max-height: 500px;
 
             .item-card-image {
                 height: 275px;
