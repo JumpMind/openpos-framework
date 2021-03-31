@@ -9,5 +9,5 @@ export interface ICustomerDetails extends SelectableItemInterface{
     email: string,
     address: {line1: string, line2: string, city: string, state: string, postalCode: string}
     memberships: Membership[],
-    privacyRestricted: string
+    privacyRestrictedMessage: string
 }

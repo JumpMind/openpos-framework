@@ -10,7 +10,7 @@ import java.util.List;
 public class UICustomerDetailsItem extends SelectableItem implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private String privacyRestricted;
+    private String privacyRestrictedMessage;
     private String name;
     private String loyaltyNumber;
     private String email;

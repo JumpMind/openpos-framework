@@ -63,6 +63,9 @@ describe('DisplayCustomerLookupComponent', () => {
         });
 
         describe('template', () => {
+            beforeEach(() => {
+                testCustomer.privacyRestrictedMessage = null;
+            });
             it('should display customer name', function () {
                 validateText(fixture, '.customer-name', testCustomer.name);
             });
@@ -90,11 +93,11 @@ describe('DisplayCustomerLookupComponent', () => {
                 expect(membershipDisplayComponents.length).toBe(testCustomer.memberships.length);
             });
             it('should display privacy message when privacy is restricted.', function () {
-                testCustomer.privacyRestricted = "test";
+                testCustomer.privacyRestrictedMessage = 'test';
                 fixture.detectChanges();
-                const privacyDiv = fixture.debugElement.query(By.css(".privacy"));
+                const privacyDiv = fixture.debugElement.query(By.css('.privacy'));
                 expect(privacyDiv).toBeDefined()
-                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestricted);
+                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestrictedMessage);
             });
         });
     });
@@ -130,32 +133,31 @@ describe('DisplayCustomerLookupComponent', () => {
         });
 
         describe('template', () => {
+            beforeEach(() => {
+                testCustomer.privacyRestrictedMessage = null;
+            });
             it('should display customer name', function () {
                 validateText(fixture, '.customer-name', testCustomer.name);
             });
             it('should display customer loyalty number', function () {
-                testCustomer.privacyRestricted = null;
                 validateText(fixture, '.customer-loyaltyNumber', testCustomer.loyaltyNumber);
             });
             it('should display customer email address', function () {
-                testCustomer.privacyRestricted = null;
                 validateText(fixture, '.customer-email', testCustomer.email);
             });
             it('should display customer phone number', function () {
-                testCustomer.privacyRestricted = null;
                 validateText(fixture, '.customer-phoneNumber', "(614) 234-5678");
             });
             it('should display all memberships as badges', function () {
-                testCustomer.privacyRestricted = null;
                 const membershipDisplayComponents = fixture.debugElement.queryAll(By.css('app-membership-display'));
                 expect(membershipDisplayComponents.length).toBe(testCustomer.memberships.length);
             });
             it('should display privacy message when privacy is restricted.', function () {
-                testCustomer.privacyRestricted = "test";
+                testCustomer.privacyRestrictedMessage = 'test';
                 fixture.detectChanges();
-                const privacyDiv = fixture.debugElement.query(By.css(".privacy"));
+                const privacyDiv = fixture.debugElement.query(By.css('.privacy'));
                 expect(privacyDiv).toBeDefined()
-                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestricted);
+                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestrictedMessage);
             });
         });
     });

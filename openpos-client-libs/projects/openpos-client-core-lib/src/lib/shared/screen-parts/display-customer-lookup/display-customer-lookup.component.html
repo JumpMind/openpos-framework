@@ -3,14 +3,14 @@
         <span class="customer-name text-md">{{customer.name}}</span>
         <span class="customer-loyaltyNumber muted-color">{{customer.loyaltyNumber}}</span>
     </div>
-    <div class="privacy muted-color" *ngIf="customer.privacyRestricted">
-        {{customer.privacyRestricted}}
+    <div class="privacy muted-color" *ngIf="customer.privacyRestrictedMessage">
+        {{customer.privacyRestrictedMessage}}
     </div>
-    <div class="customer-email-phone muted-color" *ngIf="!customer.privacyRestricted">
+    <div class="customer-email-phone muted-color" *ngIf="!customer.privacyRestrictedMessage">
         <div class="customer-email">{{customer.email}}</div>
         <div class="customer-phoneNumber">{{customer.phoneNumber | phone}}</div>
     </div>
-    <div class="customer-address muted-color" *ngIf="!customer.privacyRestricted">
+    <div class="customer-address muted-color" *ngIf="!customer.privacyRestrictedMessage">
         <div class="customer-line1">{{customer.address.line1}}</div>
         <div class="customer-line2" *ngIf="customer.address.line2">{{customer.address.line2}}</div>
         <div class="customer-cityStateZip">
@@ -19,7 +19,7 @@
             <span *ngIf="customer.address.postalCode">{{customer.address.postalCode}}</span>
         </div>
     </div>
-    <div class="customer-memberships" *ngIf="!customer.privacyRestricted">
+    <div class="customer-memberships" *ngIf="!customer.privacyRestrictedMessage">
         <div *ngFor="let membership of customer.memberships">
             <app-membership-display [membership]="membership"></app-membership-display>
         </div>
@@ -28,12 +28,12 @@
 <div *ngIf="(isMobile | async)" class="mobile-customer-details text-sm">
     <div class="customer-info-left">
         <div class="customer-name text-md">{{customer.name}}</div>
-        <div class="privacy muted-color" *ngIf="customer.privacyRestricted">{{customer.privacyRestricted}}</div>
+        <div class="privacy muted-color" *ngIf="customer.privacyRestrictedMessage">{{customer.privacyRestrictedMessage}}</div>
         <div class="customer-loyaltyNumber muted-color">{{customer.loyaltyNumber}}</div>
-        <div class="customer-email muted-color"*ngIf="!customer.privacyRestricted">{{customer.email}}&nbsp;</div>
-        <div class="customer-phoneNumber muted-color"*ngIf="!customer.privacyRestricted">{{customer.phoneNumber | phone}}</div>
+        <div class="customer-email muted-color"*ngIf="!customer.privacyRestrictedMessage">{{customer.email}}&nbsp;</div>
+        <div class="customer-phoneNumber muted-color"*ngIf="!customer.privacyRestrictedMessage">{{customer.phoneNumber | phone}}</div>
     </div>
-    <div class="customer-info-right customer-memberships muted-color" *ngIf="!customer.privacyRestricted">
+    <div class="customer-info-right customer-memberships muted-color" *ngIf="!customer.privacyRestrictedMessage">
         <div *ngFor="let membership of customer.memberships" class="text-sm">
             <app-membership-display [membership]="membership"></app-membership-display>
         </div>
