@@ -1,0 +1,6 @@
+<h2>{{screenData.optionName}}</h2>
+<mat-select (selectionChange)="optionSelected($event)" [placeholder]="screenData.optionPlaceholder" [value]="screenData.selectedOption">
+    <mat-option *ngFor="let option of screenData.options | keyvalue" 
+                [value]="option.key" 
+                >{{option.value}}</mat-option>
+</mat-select>

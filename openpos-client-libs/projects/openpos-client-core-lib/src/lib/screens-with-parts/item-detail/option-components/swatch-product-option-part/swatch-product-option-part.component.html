@@ -1,0 +1,2 @@
+<h2>{{screenData.optionName}}</h2>
+<img class="swatch" *ngFor="let swatch of screenData.swatches" [src]="swatch.imageUrl" (click)="selectOption(swatch)">

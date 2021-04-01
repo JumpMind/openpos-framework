@@ -31,12 +31,13 @@ public class ItemDetailUIMessage extends UIMessage {
     private List<Promotion> promotions;
     private String promotionStackingDisclaimer;
     
-    private List<String> productOptionsComponents;
+    private List<ProductOptionComponent> productOptionsComponents;
     
     private String onHandLabel;
     private String onHandCount;
     private String buddyStoreTitle;
     private String buddyStoreIcon;
+    private String buddyStoreOfflineTitle;
     private List<BuddyStore> buddyStores;
 
 
@@ -47,11 +48,11 @@ public class ItemDetailUIMessage extends UIMessage {
         itemProperties.add(property);
     }
     
-    public void addProductOptionComponent(String component){
+    public void addProductOptionComponent(String componentType, String componentName){
         if(productOptionsComponents == null){
             productOptionsComponents = new ArrayList<>();
         }
-        productOptionsComponents.add(component);
+        productOptionsComponents.add(ProductOptionComponent.builder().name(componentName).type(componentType).build());
     }
 
     @Override
