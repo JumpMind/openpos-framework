@@ -8,11 +8,11 @@ import {IActionItem} from "../../core/actions/action-item.interface";
 import {Membership} from "../../shared/screen-parts/membership-display/memebership-display.interface";
 
 @Component({
-    selector: 'app-loyalty-customer-form-part',
-    templateUrl: './loyalty-customer-form-part.component.html',
-    styleUrls: ['./loyalty-customer-form-part.component.scss']
+    selector: 'app-loyalty-customer-form',
+    templateUrl: './loyalty-customer-form.component.html',
+    styleUrls: ['./loyalty-customer-form.component.scss']
 })
-export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
+export class LoyaltyCustomerForm extends DynamicFormPartComponent {
 
     @Input()
     phoneIcon: string;
@@ -20,8 +20,6 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     addPhone: IActionItem;
     @Input()
     removePhone: IActionItem;
-    @Input()
-    clearPhone: IActionItem;
 
     @Input()
     emailIcon: string;
@@ -29,8 +27,6 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     addEmail: IActionItem;
     @Input()
     removeEmail: IActionItem;
-    @Input()
-    clearEmail: IActionItem;
 
     @Input()
     countrySelected: IActionItem;
@@ -61,11 +57,11 @@ export class LoyaltyCustomerFormPart extends DynamicFormPartComponent {
     firstNameField : IFormElement;
     lastNameField : IFormElement;
     loyaltyNumberField : IFormElement;
-    phoneField : IFormElement;                  // CTX_FORM_FIELD: PHONE
-    phoneFields : IFormElement[] = [];          // CTX_FORM_FIELD: PHONE_LIST
+    phoneField : IFormElement;
+    phoneFields : IFormElement[] = [];
     phoneLabelFields : IFormElement[] = [];
-    emailField : IFormElement;                  // CTX_FORM_FIELD: EMAIL
-    emailFields : IFormElement[] = [];          // CTX_FORM_FIELD: EMAIL_LIST
+    emailField : IFormElement;
+    emailFields : IFormElement[] = [];
     emailLabelFields : IFormElement[] = [];
 
     line1Field : IFormElement;

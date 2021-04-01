@@ -12,11 +12,9 @@ export interface LoyaltyCustomerFormInterface extends IAbstractScreen {
     phoneIcon: string;
     addPhone: IActionItem;
     removePhone: IActionItem;
-    clearPhone: IActionItem;
     emailIcon: string;
     addEmail: IActionItem;
     removeEmail: IActionItem;
-    clearEmail: IActionItem;
     countrySelected: IActionItem;
     stateSelected: IActionItem;
     memberships: Membership[];

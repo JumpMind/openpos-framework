@@ -2,8 +2,8 @@
 <app-form *ngIf="screenData" (submitFormEvent)="submitForm()" [form]="form">
     <div responsive-class class="form-part-body loyalty-customer-form">
         <app-content-card>
-            <mat-card-content mat-dialog-conten class="form-content">
-                <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
+            <mat-card-content mat-dialog-content class="form-content">
+                <div [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
                     <div class="basic-info" *ngIf="firstNameField || lastNameField">
                         <div class="portrait">
                             <app-icon [iconName]="profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-96' : ' mat-128')"></app-icon>
@@ -24,15 +24,16 @@
                             <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
                                 <app-mutable-list-item-with-label [formGroup]="form"
                                                                   [groupIcon]="emailIcon"
-                                                                  [inputField]="emailField" [labelField]="emailLabelFields[i]"
+                                                                  [inputField]="emailField"
+                                                                  [labelField]="emailLabelFields[i]"
                                                                   [isFirst]="isFirst"
                                                                   [isLast]="isLast"
                                                                   [isOnly]="emailFields.length == 1"
                                                                   [isMobile]="isMobile"
                                                                   (onFieldChanged)="onFieldChanged($event)"
                                                                   (add)="doAction(addEmail, i)"
-                                                                  (remove)="doAction(removeEmail, i)"
-                                                                  (clear)="doAction(clearEmail, i)"></app-mutable-list-item-with-label>
+                                                                  (remove)="doAction(removeEmail, i)">
+                                </app-mutable-list-item-with-label>
                             </div>
                         </div>
 
@@ -44,50 +45,66 @@
                             <div class="phone-list" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
                                 <app-mutable-list-item-with-label [formGroup]="form"
                                                                   [groupIcon]="phoneIcon"
-                                                                  [inputField]="phoneField" [labelField]="phoneLabelFields[i]"
+                                                                  [inputField]="phoneField"
+                                                                  [labelField]="phoneLabelFields[i]"
                                                                   [isFirst]="isFirst"
                                                                   [isLast]="isLast"
                                                                   [isOnly]="phoneFields.length == 1"
                                                                   (onFieldChanged)="onFieldChanged($event)"
-                                                                  (add)="doAction(addPhone, i)" (remove)="doAction(removePhone, i)"
-                                                                  (clear)="doAction(clearPhone, i)"></app-mutable-list-item-with-label>
+                                                                  (add)="doAction(addPhone, i)"
+                                                                  (remove)="doAction(removePhone, i)">
+                                </app-mutable-list-item-with-label>
                             </div>
                         </div>
                     </div>
-                    <div class="loyalty-and-membership">
-                        <div class="loyalty-number" *ngIf="loyaltyNumberField">
-                            <app-icon matPrefix [iconName]="loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
-                            <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+
+                    <!-- This different ordering of Location and Loyalty sections here is so the tab order is consistent with form field display order -->
+                    <div *ngIf="(isMobile | async);then mobileFormFieldOrder else desktopFormFieldOrder"></div>
+                    <ng-template #mobileFormFieldOrder>
+                        <ng-container *ngTemplateOutlet="locationSection"></ng-container>
+                        <ng-container *ngTemplateOutlet="loyaltySection"></ng-container>
+                    </ng-template>
+                    <ng-template #desktopFormFieldOrder>
+                        <ng-container *ngTemplateOutlet="loyaltySection"></ng-container>
+                        <ng-container *ngTemplateOutlet="locationSection"></ng-container>
+                    </ng-template>
+
+                    <ng-template #locationSection>
+                        <div class="location" *ngIf="postalCodeField">
+                            <div class="icon">
+                                <app-icon matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
+                            </div>
+                            <app-dynamic-form-field class="line1" [formGroup]="form" [formField]="line1Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="line2" [formGroup]="form" [formField]="line2Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="city" [formGroup]="form" [formField]="cityField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="state" [formGroup]="form" [formField]="stateField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="postalCode" [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="country" [formGroup]="form" [formField]="countryField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
-                        <div *ngIf="membershipsEnabled" class="memberships">
-                            <div *ngIf="memberships && memberships.length">
-                                <div class="title" *ngIf="!(isMobile | async)">
-                                    {{membershipsLabel}}
-                                </div>
-                                <div class="memberships-list">
-                                    <div *ngIf="memberships && memberships.length" class="list">
+                    </ng-template>
+                    <ng-template #loyaltySection>
+                        <div class="loyalty-and-membership">
+                            <div class="loyalty-number" *ngIf="loyaltyNumberField">
+                                <app-icon matPrefix [iconName]="loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
+                                <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            </div>
+                            <div *ngIf="membershipsEnabled" class="memberships">
+                                <div *ngIf="memberships && memberships.length">
+                                    <div class="title">
+                                        {{membershipsLabel}}
+                                    </div>
+                                    <div class="memberships-list">
+                                        <div *ngIf="memberships && memberships.length" class="list">
                                         <span *ngFor="let membership of memberships" class="item">
                                             <app-membership-display [membership]="membership"></app-membership-display>
                                         </span>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div *ngIf="!(memberships && memberships.length)" class="no-memberships">
-                                {{noMembershipsLabel}}
+                                <div *ngIf="!(memberships && memberships.length)" class="no-memberships">{{noMembershipsLabel}}</div>
                             </div>
                         </div>
-                    </div>
-                    <div class="location" *ngIf="postalCodeField">
-                        <div class="icon">
-                            <app-icon matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
-                        </div>
-                        <app-dynamic-form-field class="line1" [formGroup]="form" [formField]="line1Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                        <app-dynamic-form-field class="line2" [formGroup]="form" [formField]="line2Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                        <app-dynamic-form-field class="city" [formGroup]="form" [formField]="cityField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                        <app-dynamic-form-field class="state" [formGroup]="form" [formField]="stateField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                        <app-dynamic-form-field class="postalCode" [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                        <app-dynamic-form-field class="country" [formGroup]="form" [formField]="countryField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                    </div>
+                    </ng-template>
                 </div>
                 <mat-error>
                     <div id="formErrorsWrapper"><app-show-errors #formErrors [control]="form"></app-show-errors></div>

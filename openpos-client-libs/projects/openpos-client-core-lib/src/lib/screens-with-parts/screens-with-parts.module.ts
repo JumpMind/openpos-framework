@@ -36,7 +36,7 @@ import { TransactionSearchComponent } from './transaction-search/transaction-sea
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 import { SimulatedPeripheralViewerComponent } from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
 import { CreateLoyaltyFormDialogComponent } from "./loyalty-customer-form-dialog/loyalty-customer-form-dialog.component";
-import { LoyaltyCustomerFormPart } from "./loyalty-customer-form-dialog/loyalty-customer-form-part.component";
+import { LoyaltyCustomerForm } from "./loyalty-customer-form-dialog/loyalty-customer-form.component";
 import { CustomerDetailsDialogComponent } from "./sale/customer-details-dialog/customer-details-dialog.component";
 
 
@@ -80,7 +80,7 @@ const dialogs = [
     ErrorDialogComponent,
     DataTableDialogComponent,
     CreateLoyaltyFormDialogComponent,
-    LoyaltyCustomerFormPart
+    LoyaltyCustomerForm
 ];
 
 @NgModule({

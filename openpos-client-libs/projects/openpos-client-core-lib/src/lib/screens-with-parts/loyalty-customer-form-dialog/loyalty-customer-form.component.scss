@@ -46,14 +46,6 @@
     margin: 0;
 }
 
-.mat-dialog-content {
-    padding: 0;
-    margin: 0;
-}
-
-
-//// =======
-
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -64,8 +56,6 @@
 
     .basic-info {
         grid-area: basic-info;
-        //align-items: center;
-
         display: grid;
         grid-template-columns: 1fr 4fr;
         grid-template-rows: 1fr;
@@ -83,11 +73,10 @@
         .names { grid-area: names; }
     }
 
-    .location app-dynamic-form-field { margin-left: 1em; }
     .location {
         display: grid;
         grid-template-columns: 30px 1fr 1fr 1fr;
-        grid-template-rows: 1fr 1fr 1fr 1fr;
+        grid-template-rows: 0fr 0fr 0fr 0fr;
         gap: 0px 1em;
         grid-template-areas:
             "icon line1 line1 line1"
@@ -99,8 +88,6 @@
             grid-area: icon;
             align-self: center;
         }
-        .emptySpace { grid-area: emptySpace; }
-
         .line1 { grid-area: line1; }
         .line2 { grid-area: line2; }
         .city { grid-area: city; }
@@ -119,26 +106,16 @@
             grid-template-rows: 1fr;
             gap: 0px 1em;
             grid-template-areas:
-        ". .";
+            ". .";
 
-            app-icon {
-                align-self: center;
-            }
+            app-icon { align-self: center; }
         }
 
         .memberships {
-            height: 100%;
             border-radius: 3px;
+            padding: 10px 0px;
 
-            padding: 10px 0px;  // Needed?
-
-            .title {
-                @extend %text-md;
-                //padding: 0.4375em 0;
-                //
-                //padding-top: 20px;
-                //padding-left: 30px;
-            }
+            .title { @extend %text-md; }
 
             .memberships-list {
                 padding-top: 1em;
@@ -151,6 +128,12 @@
 
                 .item { padding: 0.5em; }
             }
+        }
+
+        .no-memberships {
+            font-size: 18px;
+            font-family: Roboto, "Helvetica Neue", sans-serif;
+            color: rgba(0, 0, 0, 0.54);
         }
     }
 
@@ -166,12 +149,9 @@
             grid-template-areas:
             ". .";
 
-            app-icon {
-                align-self: center;
-            }
+            app-icon { align-self: center; }
         }
     }
-
 }
 
 .mobile-grid-container {
@@ -186,7 +166,6 @@
 
     .basic-info {
         grid-area: basic-info;
-
         display: grid;
         grid-template-columns: 1fr 4fr;
         grid-template-rows: 1fr;
@@ -206,87 +185,81 @@
 
     .contact {
         grid-area: contact;
-        max-width: 100%;
-        margin-top: 2em;
+
+        .email, .phone {
+            display: grid;
+            grid-template-columns: auto 10fr;
+            grid-template-rows: 1fr;
+            gap: 0px 1em;
+            grid-template-areas:
+            ". .";
+
+            app-icon { align-self: center; }
+        }
     }
 
     .location {
         grid-area: location;
+        display: grid;
+        grid-template-columns: 30px 1fr 1fr 1fr;
+        grid-template-rows: 1fr 1fr 1fr 1fr;
+        gap: 0px 1em;
+        grid-template-areas:
+            "icon line1 line1 line1"
+            "emptySpace line2 line2 line2"
+            "emptySpace city state postalCode"
+            "emptySpace country country country";
 
-        .location-content {
-            display: grid;
-            grid-template-columns: 30px 2fr 1fr 30px 30px;
-            grid-template-rows: 1fr;
-            grid-template-areas:
-            ". . . . .";
-
-            app-icon {
-                align-self: center;
-            }
+        .icon {
+            grid-area: icon;
+            align-self: center;
         }
-
-        .grid-filler {}
+        .line1 { grid-area: line1; }
+        .line2 { grid-area: line2; }
+        .city { grid-area: city; }
+        .state { grid-area: state; }
+        .postalCode { grid-area: postalCode; }
+        .country { grid-area: country; }
     }
 
     .loyalty-and-membership {
         grid-area: loyalty;
-        margin-top: 2em;
 
         .loyalty-number {
+            margin-top: 1em;
             display: grid;
-            grid-template-columns: 30px 2fr 1fr 30px 30px;
+            grid-template-columns: 30px 1fr;
             grid-template-rows: 1fr;
+            grid-column-gap: 1em;
             grid-template-areas:
-            ". . . . .";
+            ". .";
 
-            app-icon {
-                align-self: center;
-            }
-
-            app-dynamic-form-field {
-                margin-left: 1em;
-            }
+            app-icon { align-self: center; }
         }
 
         .memberships {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr;
-            gap: 0px 0px;
-            grid-template-areas:
-      "title list";
-            height: 100%;
-            border-radius: 3px;
+            margin: 1em 0px 10px 0px;
 
-            .title {
-                grid-area: title;
-                padding-top: 20px;
-                padding-left: 30px;
-                app-icon {
-                    display: inline-block;
-                    margin-right: 5px;
-                }
-            }
-            .list {
-                grid-area: list;
-                padding-top: 20px;
-                .item {
-                    margin-bottom: 10px;
-                }
-            }
-
-            // Is this used anymore...?
             .no-memberships {
-                font-family: Roboto, "Helvetica Neue", sans-serif;
                 font-size: 18px;
+                font-family: Roboto, "Helvetica Neue", sans-serif;
+                text-align: center;
                 color: rgba(0, 0, 0, 0.54);
+            }
+
+            .title { @extend %text-md; }
+
+            .memberships-list {
+                padding-top: 1em;
+                margin-bottom: 1em;
+
+                .list {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .item { padding: 0.5em; }
             }
         }
     }
-}
-
-.no-memberships {
-    font-family: Roboto, "Helvetica Neue", sans-serif;
-    font-size: 18px;
-    color: rgba(0, 0, 0, 0.54);
 }
