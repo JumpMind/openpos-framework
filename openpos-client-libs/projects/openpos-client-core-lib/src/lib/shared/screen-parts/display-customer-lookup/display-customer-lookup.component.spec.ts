@@ -63,6 +63,9 @@ describe('DisplayCustomerLookupComponent', () => {
         });
 
         describe('template', () => {
+            beforeEach(() => {
+                testCustomer.privacyRestrictedMessage = null;
+            });
             it('should display customer name', function () {
                 validateText(fixture, '.customer-name', testCustomer.name);
             });
@@ -89,6 +92,13 @@ describe('DisplayCustomerLookupComponent', () => {
                 const membershipDisplayComponents = fixture.debugElement.queryAll(By.css('app-membership-display'));
                 expect(membershipDisplayComponents.length).toBe(testCustomer.memberships.length);
             });
+            it('should display privacy message when privacy is restricted.', function () {
+                testCustomer.privacyRestrictedMessage = 'test';
+                fixture.detectChanges();
+                const privacyDiv = fixture.debugElement.query(By.css('.privacy'));
+                expect(privacyDiv).toBeDefined()
+                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestrictedMessage);
+            });
         });
     });
 
@@ -114,7 +124,7 @@ describe('DisplayCustomerLookupComponent', () => {
             component = fixture.componentInstance;
             component.customer = testCustomer;
             component.isMobile = new Observable<boolean>(subscriber => {
-                subscriber.next(false);
+                subscriber.next(true);
             });
             fixture.detectChanges();
         });
@@ -123,6 +133,9 @@ describe('DisplayCustomerLookupComponent', () => {
         });
 
         describe('template', () => {
+            beforeEach(() => {
+                testCustomer.privacyRestrictedMessage = null;
+            });
             it('should display customer name', function () {
                 validateText(fixture, '.customer-name', testCustomer.name);
             });
@@ -138,6 +151,13 @@ describe('DisplayCustomerLookupComponent', () => {
             it('should display all memberships as badges', function () {
                 const membershipDisplayComponents = fixture.debugElement.queryAll(By.css('app-membership-display'));
                 expect(membershipDisplayComponents.length).toBe(testCustomer.memberships.length);
+            });
+            it('should display privacy message when privacy is restricted.', function () {
+                testCustomer.privacyRestrictedMessage = 'test';
+                fixture.detectChanges();
+                const privacyDiv = fixture.debugElement.query(By.css('.privacy'));
+                expect(privacyDiv).toBeDefined()
+                expect(privacyDiv.nativeElement.textContent).toContain(testCustomer.privacyRestrictedMessage);
             });
         });
     });

@@ -13,9 +13,21 @@
     padding-bottom: .5em;
   }
   .customer-email-phone{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1em 1em;
+    gap: 0px 0px;
+    grid-template-areas:
+    "email"
+    "phone";
+
     .customer-email{
+      grid-area: email;
       text-overflow: ellipsis;
       overflow: hidden;
+    }
+    .customer-phoneNumber{
+      grid-area: phone;
     }
   }
 
