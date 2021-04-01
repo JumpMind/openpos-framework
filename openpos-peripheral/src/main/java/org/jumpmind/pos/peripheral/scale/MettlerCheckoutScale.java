@@ -134,7 +134,7 @@ public class MettlerCheckoutScale extends CheckoutScale {
         MettlerCheckoutScale scale = new MettlerCheckoutScale();
         Map<String, Object> settings = new HashMap<>();
 
-        settings.put("connectionClass", RS232ConnectionFactory.class.getName());
+        settings.put("connectionClass", RS232JSerialCommConnectionFactory.class.getName());
         settings.put("portName", "COM7");
         scale.initialize(settings);
 
