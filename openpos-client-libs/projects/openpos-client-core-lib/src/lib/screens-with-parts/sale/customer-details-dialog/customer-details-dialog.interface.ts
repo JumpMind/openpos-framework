@@ -13,7 +13,9 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     doneButton: IActionItem;
     contactLabel: string;
     rewardsLabel: string;
+    rewardTabEnabled: boolean;
     rewardHistoryLabel: string;
+    rewardHistoryTabEnabled: boolean;
     noPromotionsText: string;
     noMembershipsFoundLabel: string;
 

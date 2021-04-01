@@ -1,22 +1,19 @@
 package org.jumpmind.pos.core.ui.data;
 
 import org.jumpmind.pos.core.ui.data.SelectionListItemDisplayProperty;
+import org.jumpmind.pos.core.ui.message.SelectableItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectionListItem implements Serializable {
+public class SelectionListItem extends SelectableItem implements Serializable{
 
     private static final long serialVersionUID = 363696137283106343L;
 
     private String title;
 
     private List<SelectionListItemDisplayProperty> properties;
-
-    private boolean selected;
-
-    private boolean enabled=true;
 
     private String itemImageUrl;
 

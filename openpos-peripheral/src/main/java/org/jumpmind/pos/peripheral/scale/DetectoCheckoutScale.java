@@ -1,6 +1,5 @@
 package org.jumpmind.pos.peripheral.scale;
 
-import gnu.io.SerialPort;
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.peripheral.IPlugAndPlayDevice;
 import org.jumpmind.pos.peripheral.PeripheralException;

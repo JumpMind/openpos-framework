@@ -1,12 +1,9 @@
 package org.jumpmind.pos.print;
 
 import com.fazecast.jSerialComm.SerialPort;
-import gnu.io.CommPortIdentifier;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.util.Map;
 
 @Slf4j
@@ -46,9 +43,9 @@ public class RS232JSerialCommConnectionFactory implements IConnectionFactory {
 
         int connectTimeout = getIntValue(CONNECT_TIMEOUT, 10000, settings);
         int baudRate = getIntValue(BAUD_RATE, 19200, settings);
-        int dataBits = getIntValue(DATA_BITS, gnu.io.SerialPort.DATABITS_8, settings);
-        int stopBits = getIntValue(STOP_BITS, gnu.io.SerialPort.STOPBITS_1, settings);
-        int parity = getIntValue(PARITY, gnu.io.SerialPort.PARITY_NONE, settings);
+        int dataBits = getIntValue(DATA_BITS, 8, settings);
+        int stopBits = getIntValue(STOP_BITS, 1, settings);
+        int parity = getIntValue(PARITY, 0, settings);
 
         port.setBaudRate(baudRate);
         port.setNumDataBits(dataBits);

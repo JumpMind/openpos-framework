@@ -300,6 +300,7 @@ export * from './lib/shared/formatters/phone-ca.formatter';
 export * from './lib/shared/formatters/phone-us.formatter';
 export * from './lib/shared/formatters/postal-code-ca.formatter';
 export * from './lib/shared/formatters/postal-code.formatter';
+export * from './lib/shared/formatters/postal-code-generic.formatter';
 export * from './lib/shared/formatters/state-id-number.formatter';
 export * from './lib/shared/formatters/time.formatter';
 export * from './lib/shared/formatters/word-text.formatter';

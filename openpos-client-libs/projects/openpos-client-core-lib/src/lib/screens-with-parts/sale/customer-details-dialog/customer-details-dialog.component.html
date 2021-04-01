@@ -6,19 +6,25 @@
                 <app-icon [iconName]="screen.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
             </div>
             <div class="details">
-                <div class="customer-name">
+                <div class="details-label">
                     {{screen.customer.name}}
                 </div>
                 <div class="customer-details muted-color" *ngIf="!(isMobile | async)">
                     <app-customer-information [customer]="screen.customer"></app-customer-information>
                 </div>
             </div>
+            <div class="membership-icon" *ngIf="screen.membershipEnabled">
+                <div class="icon">
+                    <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"
+                              *ngIf="!(isMobile | async)"></app-icon>
+                </div>
+            </div>
             <div class="memberships" *ngIf="screen.membershipEnabled">
                 <div class="wrapper">
-                    <div class="title" *ngIf="!(isMobile | async)">
-                        <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons mat-24'"></app-icon> {{screen.membershipLabel}}
-                    </div>
                     <div class="list">
+                        <div class="details-label" *ngIf="!(isMobile | async)">
+                            {{screen.membershipLabel}}
+                        </div>
                         <div *ngIf="screen.customer.memberships && screen.customer.memberships.length">
                             <span *ngFor="let membership of screen.customer.memberships" class="item">
                                 <app-membership-display [membership]="membership"></app-membership-display>
@@ -34,16 +40,18 @@
             </div>
         </div>
     </app-content-card>
-    <div class="tabs" [ngClass]="{'tabs': true, 'mobile': (isMobile | async)}" responsive-class>
+    <div *ngIf="(isMobile | async) || (!(isMobile | async) && (screen.rewardTabEnabled || screen.rewardHistoryTabEnabled))"
+         class="tabs" [ngClass]="{'tabs': true, 'mobile': (isMobile | async)}" responsive-class>
         <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
             <mat-tab class="contactTab" [label]="screen.contactLabel" *ngIf="isMobile | async">
                 <mat-card class="customer-details muted-color">
                     <app-customer-information [customer]="screen.customer"></app-customer-information>
                 </mat-card>
             </mat-tab>
-            <mat-tab class="rewardsTab" [label]="getRewardsLabel()">
+            <mat-tab *ngIf="screen.rewardTabEnabled"
+                    class="rewardsTab" [label]="getRewardsLabel()">
                 <mat-card [ngClass]="{'rewardsContent': true, 'no-promotions': !(screen.customer.rewards && screen.customer.rewards.length)}">
-                    <div *ngIf="(screen.customer.rewards && screen.customer.rewards.length)" >
+                    <div class="reward-list" *ngIf="(screen.customer.rewards && screen.customer.rewards.length)" >
                         <div *ngFor="let reward of screen.customer.rewards" class="line">
                             <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
                         </div>
@@ -53,7 +61,8 @@
                     </div>
                 </mat-card>
             </mat-tab>
-            <mat-tab class="rewardsHistoryTab" [label]="screen.rewardHistoryLabel">
+            <mat-tab *ngIf="screen.rewardHistoryTabEnabled"
+                    class="rewardsHistoryTab" [label]="screen.rewardHistoryLabel">
                 <mat-card [ngClass]="{'rewardsHistoryContent': true, 'no-promotions': !(screen.customer.rewardHistory && screen.customer.rewardHistory.length)}">
                     <div *ngIf="(screen.customer.rewardHistory && screen.customer.rewardHistory.length)" >
                         <div *ngFor="let reward of screen.customer.rewardHistory" class="line">
@@ -72,6 +81,7 @@
     <app-secondary-button responsive-class
                           class="unlink"
                           *ngIf="screen.unlinkButton"
+                          [disabled]="!screen.unlinkButton?.enabled"
                           [actionItem]="screen.unlinkButton"
                           (actionClick)="doAction(screen.unlinkButton)"
                           (click)="doAction(screen.unlinkButton)">
@@ -80,6 +90,7 @@
     <app-secondary-button responsive-class
                           class="edit"
                           *ngIf="screen.editButton"
+                          [disabled]="!screen.editButton?.enabled"
                           [actionItem]="screen.editButton"
                           (actionClick)="doAction(screen.editButton)"
                           (click)="doAction(screen.editButton)">
@@ -88,6 +99,7 @@
     <app-primary-button responsive-class
                         class="done"
                         *ngIf="screen.doneButton"
+                        [disabled]="!screen.doneButton?.enabled"
                         [actionItem]="screen.doneButton"
                         (actionClick)="doAction(screen.doneButton)"
                         (click)="doAction(screen.doneButton)">

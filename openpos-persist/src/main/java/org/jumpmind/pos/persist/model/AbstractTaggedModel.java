@@ -28,12 +28,12 @@ abstract public class AbstractTaggedModel extends AbstractModel implements ITagg
 
     @Override
     public String getTagValue(String tagName) {
-        return tags.get(tagName);
+        return tags.get(tagName.toUpperCase());
     }
 
     @Override
     public void setTagValue(String tagName, String tagValue) {
-        tags.put(tagName, tagValue);
+        tags.put(tagName.toUpperCase(), tagValue);
     }
 
     @Override

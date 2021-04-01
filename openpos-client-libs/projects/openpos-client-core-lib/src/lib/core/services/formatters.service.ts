@@ -19,6 +19,7 @@ import {TimeFormat, TimeFormatter} from '../../shared/formatters/time.formatter'
 import {DoNothingFormatter} from '../../shared/formatters/do-nothing.formatter';
 import {NonNumericFormatter} from '../../shared/formatters/non-numeric.formatter';
 import {WeightFormatter} from '../../shared/formatters/weight.formatter';
+import {PostalCodeGenericFormatter} from "../../shared/formatters/postal-code-generic.formatter";
 
 
 @Injectable({
@@ -32,6 +33,7 @@ export class FormattersService {
         const defaultPhoneFormatter = new PhoneUSFormatter();
 
         USFormatters.set('phone', defaultPhoneFormatter);
+        USFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
         this.formatters.set('en-us', USFormatters);
         this.formatters.set('us', USFormatters);
 
@@ -39,6 +41,7 @@ export class FormattersService {
         CAFormatters.set('phone', new PhoneCAFormatter());
         CAFormatters.set('datetime', new DateTimeCAFormatter());
         CAFormatters.set('postalcode', new PostalCodeCAFormatter());
+        CAFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
 
         // Some screens are dependent on 'ca' value, so don't change.  If you have other
         // ca formatters that are language specific, add a second entry in the map for them.
@@ -65,6 +68,7 @@ export class FormattersService {
         NOLOCALEFormatters.set('percent', new PercentageFormatter());
         NOLOCALEFormatters.set('percentint', new PercentageFormatter(PercentageFormatter.INTEGER_MODE));
         NOLOCALEFormatters.set('postalcode', new PostalCodeFormatter());
+        NOLOCALEFormatters.set('postalcodegeneric', new PostalCodeGenericFormatter());
         NOLOCALEFormatters.set('uspostalcode', numericFormatter);
         NOLOCALEFormatters.set('income', new IncomeFormatter());
         NOLOCALEFormatters.set('stateidnumber', new StateIDNumberFormatter());
