@@ -1,9 +1,15 @@
+import {Scanner} from '../../core/platform-plugins/barcode-scanners/scanner';
 import { ItemDetailInterface } from './item-detail.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
-import {Component, Injector, Optional} from '@angular/core';
+import {Component, InjectionToken, Injector, Optional} from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import {MediaBreakpoints, OpenposMediaService} from "../../core/media/openpos-media.service";
 import {Observable} from "rxjs";
+import {BasicProductOptionPart} from './option-components/basic-product-option-part/basic-product-option-part';
+import {SwatchProductOptionPart} from './option-components/swatch-product-option-part/swatch-product-option-part.component';
+import {ProductOptionInterface} from './product-option.interface';
+
+export const OPTION_NAME = new InjectionToken<string>('OptionName');
 
 @ScreenComponent({
     name: 'ItemDetail'
@@ -16,7 +22,12 @@ import {Observable} from "rxjs";
 export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
     isMobile: Observable<boolean>;
     carouselSize: String;
-    constructor( @Optional() injector: Injector, media: OpenposMediaService) {
+
+    optionComponents = new Map();
+
+
+
+    constructor( @Optional() private injector: Injector, media: OpenposMediaService) {
         super(injector);
         this.isMobile = media.observe(new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -37,5 +48,20 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
     }
 
     buildScreen() {
+        this.optionComponents.clear();
+        this.screen.productOptionsComponents.forEach(value => {
+            let injector = Injector.create( { providers: [{ provide: OPTION_NAME, useValue: value.name }], parent: this.injector})
+            this.optionComponents.set( injector, this.getComponentFromOptionType(value));
+        });
+    }
+    
+    getComponentFromOptionType(productOption: ProductOptionInterface) {
+        switch( productOption.type ){
+            case 'basicProductOption':
+                return BasicProductOptionPart;
+            case 'swatchProductOption':
+                return SwatchProductOptionPart;
+        }
+        
     }
 }
