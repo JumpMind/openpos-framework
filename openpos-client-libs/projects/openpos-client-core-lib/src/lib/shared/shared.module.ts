@@ -167,12 +167,13 @@ import { StatusDetailsItemComponent } from './status/status-details/item/status-
 import { StatusBarComponent } from './status/status-bar/status-bar.component';
 import { LocalizePipe } from './pipes/localize.pipe';
 import { ModalOverlayContainerDirective } from './modal-overlay-container/modal-overlay-container.directive';
-import { MembershipDisplayComponent } from "./screen-parts/membership-display/membership-display.component";
+import { DisplayCustomerLookupComponent } from './screen-parts/display-customer-lookup/display-customer-lookup.component';
+import { MembershipDisplayComponent } from './screen-parts/membership-display/membership-display.component';
 import { ImageScannerComponent } from '../core/platform-plugins/barcode-scanners/image-scanner.component';
-import {RewardsLineItemComponent} from "./screen-parts/rewards-line-item/rewards-line-item.component";
+import {RewardsLineItemComponent} from './screen-parts/rewards-line-item/rewards-line-item.component';
 import { CustomerInformationComponent } from './screen-parts/customer-information/customer-information.component';
 import {MutableListItemWithLabelComponent} from "./screen-parts/mutable-list-item-with-label-component/mutable-list-item-with-label.component";
-import {RewardsHistoryLineItemComponent} from "./screen-parts/rewards-history-line-item/rewards-history-line-item.component";
+import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
 
 const screenParts = [
     TenderPartComponent,
@@ -291,7 +292,8 @@ const components = [
     TransactionSummaryComponent,
     StampComponent,
     ToastComponent,
-    ImageScannerComponent
+    ImageScannerComponent,
+    DisplayCustomerLookupComponent
 ];
 
 const directives = [

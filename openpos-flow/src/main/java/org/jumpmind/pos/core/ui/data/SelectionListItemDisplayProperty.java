@@ -1,10 +1,12 @@
 package org.jumpmind.pos.core.ui.data;
 
+import org.jumpmind.pos.core.ui.message.SelectableItem;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SelectionListItemDisplayProperty implements Serializable {
+public class SelectionListItemDisplayProperty extends SelectableItem implements Serializable {
 
     private static final long serialVersionUID = -3667174964838343444L;
 

@@ -13,6 +13,7 @@ export enum FieldInputType {
     PercentInt,
     USPostalCode,
     PostalCode,
+    PostalCodeGeneric,
     Phone,
     Money,
     Income,

@@ -3,6 +3,7 @@ package org.jumpmind.pos.core.ui.message;
 import org.jumpmind.pos.core.model.Form;
 import org.jumpmind.pos.core.model.Tender;
 import org.jumpmind.pos.core.model.Total;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.IHasForm;
 import org.jumpmind.pos.core.ui.UIMessage;
@@ -22,6 +23,8 @@ public class TenderUIMessage extends UIMessage implements IHasForm {
     private List<Tender> amounts;
     private OptionsListPart optionsList;
     private String imageUrl;
+    private ActionItem roundUpButton;
+    private boolean roundUpAvailable;
 
     public TenderUIMessage() {
         setScreenType(UIMessageType.TENDER);
@@ -90,6 +93,22 @@ public class TenderUIMessage extends UIMessage implements IHasForm {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
+    }
+
+    public boolean isRoundUpAvailable() {
+        return roundUpAvailable;
+    }
+
+    public void setRoundUpAvailable(boolean roundUpEnabled) {
+        this.roundUpAvailable = roundUpEnabled;
+    }
+
+    public ActionItem getRoundUpButton() {
+        return roundUpButton;
+    }
+
+    public void setRoundUpButton(ActionItem roundUpButton) {
+        this.roundUpButton = roundUpButton;
     }
 
 }

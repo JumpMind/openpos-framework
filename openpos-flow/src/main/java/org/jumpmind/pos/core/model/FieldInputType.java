@@ -21,6 +21,7 @@ public enum FieldInputType {
     PercentInt,
     USPostalCode,
     PostalCode,
+    PostalCodeGeneric,
     Phone,
     Money,
     NonNumericText,

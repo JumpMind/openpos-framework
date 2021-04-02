@@ -12,6 +12,7 @@
   }
   mat-card {
     overflow: scroll;
+    margin: 0;
     .no-items {
       @extend %text-lg;
       text-align: center;
@@ -31,6 +32,7 @@
   grid-auto-flow: column;
   justify-content: end;
   grid-column-gap: 8px;
+  padding-bottom: 16px;
 }
 
 app-content-card {
@@ -42,22 +44,25 @@ app-content-card {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 3fr 4fr;
+  grid-template-columns: 1fr 4fr 1fr 6fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "icon details memberships";
+    "icon details membership-icon memberships";
   .icon {
     justify-content: center;
     display: flex;
-    app-icon {
-      margin-left: -16px;
-    }
     .material-icons {
       font-size: 90px;
       height: 90px;
       width: 90px;
     }
+  }
+
+  .details-label{
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: .5em;
   }
   .details {
     .customer-name {
@@ -65,31 +70,18 @@ app-content-card {
       font-weight: bold;
     }
   }
+  .membership-icon {
+    .material-icons{
+      margin-top: -10px;
+    }
+  }
   .memberships {
     padding-bottom: 10px;
     .wrapper {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr;
-      gap: 0px 0px;
-      grid-template-areas:
-      "title list";
       height: 100%;
-      border-radius: 3px;
-      .title {
-        padding-top: 20px;
-        padding-left: 30px;
-        grid-area: title;
-        app-icon {
-          display: inline-block;
-          margin-right: 5px;
-        }
-      }
       .list {
-        padding-top: 20px;
-        grid-area: list;
         .item {
-          margin-bottom: 10px;
+          margin-top: 10px;
         }
       }
     }
@@ -106,7 +98,7 @@ app-content-card {
     "memberships memberships";
 
   .details {
-    .customer-name {
+    .details-label {
       @extend %text-md;
       height: 100%;
       padding-top: 16px;
@@ -126,14 +118,16 @@ app-content-card {
   }
 }
 
-
-
 .icon {
   grid-area: icon;
 }
 
 .details {
   grid-area: details;
+}
+
+.membership-icon{
+  grid-area: membership-icon;
 }
 
 .memberships {
@@ -145,4 +139,3 @@ app-content-card {
   justify-content: center;
   flex-direction: column;
 }
-

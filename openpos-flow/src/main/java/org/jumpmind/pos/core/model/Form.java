@@ -294,7 +294,7 @@ public class Form implements Serializable {
     }
     
     public static FormField createPostalCodeField(String fieldId, String label, String value, boolean required) {
-        FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.PostalCode, required);
+        FormField formField = new FormField(fieldId, label, FieldElementType.Input, FieldInputType.PostalCodeGeneric, required);
         formField.setValue(value);
         return formField;
     }
