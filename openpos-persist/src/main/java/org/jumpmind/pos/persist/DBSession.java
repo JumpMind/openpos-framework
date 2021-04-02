@@ -54,12 +54,12 @@ public class DBSession {
     private TypedProperties sessionContext;
     private NamedParameterJdbcTemplate jdbcTemplate;
     private QueryTemplates queryTemplates;
-    private Map<String, DmlTemplate> dmlTemplates;
+    private DmlTemplates dmlTemplates;
     private TagHelper tagHelper;
     private AugmenterHelper augmenterHelper;
 
     public DBSession(String catalogName, String schemaName, DatabaseSchema databaseSchema, IDatabasePlatform databasePlatform,
-                     TypedProperties sessionContext, QueryTemplates queryTemplates, Map<String, DmlTemplate> dmlTemplates,
+                     TypedProperties sessionContext, QueryTemplates queryTemplates, DmlTemplates dmlTemplates,
                      TagHelper tagHelper, AugmenterHelper augmenterHelper) {
         super();
         this.dmlTemplates = dmlTemplates;
@@ -206,7 +206,7 @@ public class DBSession {
     }
 
     public int executeDml(String namedDml, Object... params) {
-        DmlTemplate template = dmlTemplates.get(namedDml);
+        DmlTemplate template = this.getDmlTemplate(namedDml);
         if (template != null && isNotBlank(template.getDml())) {
             params = Arrays.stream(params).
                     map(p -> p instanceof Boolean ? (((Boolean) p ? 1 : 0)) : p).
@@ -319,6 +319,9 @@ public class DBSession {
         return wrapper;
     }
 
+    protected DmlTemplate getDmlTemplate(String templateName) {
+        return this.dmlTemplates.getDmlTemplate(databaseSchema.getDeviceMode(), templateName);
+    }
     @SuppressWarnings("unchecked")
     protected <T> QueryTemplate getQueryTemplate(Query<T> query) {
         QueryTemplate queryTemplate = new QueryTemplate();

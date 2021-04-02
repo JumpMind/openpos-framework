@@ -6,19 +6,25 @@
                 <app-icon [iconName]="screen.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
             </div>
             <div class="details">
-                <div class="customer-name">
+                <div class="details-label">
                     {{screen.customer.name}}
                 </div>
                 <div class="customer-details muted-color" *ngIf="!(isMobile | async)">
                     <app-customer-information [customer]="screen.customer"></app-customer-information>
                 </div>
             </div>
+            <div class="membership-icon" *ngIf="screen.membershipEnabled">
+                <div class="icon">
+                    <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"
+                              *ngIf="!(isMobile | async)"></app-icon>
+                </div>
+            </div>
             <div class="memberships" *ngIf="screen.membershipEnabled">
                 <div class="wrapper">
-                    <div class="title" *ngIf="!(isMobile | async)">
-                        <app-icon [iconName]="screen.membershipCardIcon" [iconClass]="'material-icons mat-24'"></app-icon> {{screen.membershipLabel}}
-                    </div>
                     <div class="list">
+                        <div class="details-label" *ngIf="!(isMobile | async)">
+                            {{screen.membershipLabel}}
+                        </div>
                         <div *ngIf="screen.customer.memberships && screen.customer.memberships.length">
                             <span *ngFor="let membership of screen.customer.memberships" class="item">
                                 <app-membership-display [membership]="membership"></app-membership-display>
@@ -45,7 +51,7 @@
             <mat-tab *ngIf="screen.rewardTabEnabled"
                     class="rewardsTab" [label]="getRewardsLabel()">
                 <mat-card [ngClass]="{'rewardsContent': true, 'no-promotions': !(screen.customer.rewards && screen.customer.rewards.length)}">
-                    <div *ngIf="(screen.customer.rewards && screen.customer.rewards.length)" >
+                    <div class="reward-list" *ngIf="(screen.customer.rewards && screen.customer.rewards.length)" >
                         <div *ngFor="let reward of screen.customer.rewards" class="line">
                             <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
                         </div>

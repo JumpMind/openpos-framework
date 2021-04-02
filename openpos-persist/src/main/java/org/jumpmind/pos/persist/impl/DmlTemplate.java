@@ -1,6 +1,8 @@
 package org.jumpmind.pos.persist.impl;
 
-public class DmlTemplate {
+import org.jumpmind.pos.persist.PersistException;
+
+public class DmlTemplate implements Cloneable {
 
     String name;
     String dml;
@@ -20,5 +22,13 @@ public class DmlTemplate {
     public String getName() {
         return name;
     }
-    
+
+    public DmlTemplate copy() {
+        try {
+            return (DmlTemplate)this.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new PersistException(e);
+        }
+    }
+
 }

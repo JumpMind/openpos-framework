@@ -25,7 +25,7 @@ public class DBSessionFactory {
 
     DatabaseSchema databaseSchema;
     QueryTemplates queryTemplates;
-    Map<String, DmlTemplate> dmlTemplates;
+    DmlTemplates dmlTemplates;
     IDatabasePlatform databasePlatform;
     TypedProperties sessionContext;
     @Getter
@@ -82,7 +82,7 @@ public class DBSessionFactory {
             ShadowTablesConfigModel shadowTablesConfig) {
 
         this.queryTemplates = queryTemplatesObject;
-        this.dmlTemplates = buildDmlTemplatesMap(dmlTemplates);
+        this.dmlTemplates = dmlTemplates;
         this.sessionContext = sessionContext;
 
         this.databasePlatform = databasePlatform;
@@ -109,6 +109,7 @@ public class DBSessionFactory {
         );
 
         this.queryTemplates.replaceModelClassNamesWithTableNames(this.databaseSchema, this.modelClasses, (shadowTablesConfig != null) && shadowTablesConfig.validateTablesInQueries());
+        this.dmlTemplates.replaceModelClassNamesWithTableNames(this.databaseSchema, this.modelClasses, (shadowTablesConfig != null) && shadowTablesConfig.validateTablesInQueries());
     }
 
     public void createAndUpgrade() {
@@ -174,9 +175,14 @@ public class DBSessionFactory {
             URL url = Thread.currentThread().getContextClassLoader().getResource(tablePrefix + "-dml.yml");
             if (url != null) {
                 log.info(String.format("Loading %s...", url.toString()));
-                InputStream queryYamlStream = url.openStream();
-                DmlTemplates queryTemplates = new Yaml(new Constructor(DmlTemplates.class)).load(queryYamlStream);
-                return queryTemplates;
+                InputStream dmlYamlStream = url.openStream();
+                DmlTemplates dmlTemplates = new Yaml(new Constructor(DmlTemplates.class)).load(dmlYamlStream);
+                if (dmlTemplates != null) {
+                    dmlTemplates.addDmls("default", dmlTemplates.getDmls());
+                    dmlTemplates.addDmls("training", dmlTemplates.getDmls());
+                }
+
+                return dmlTemplates;
             } else {
                 log.debug("Could not locate " + tablePrefix + "-dml.yml on the classpath.");
                 return new DmlTemplates();

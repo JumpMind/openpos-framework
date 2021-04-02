@@ -2,12 +2,17 @@
 
 mat-chip {
   text-transform: uppercase;
+  padding-right: 2em;
+  padding-left: 1em;
   &.tablet-portrait {
     font-size: $text-sm;
   }
 
   &.mobile {
     font-size: $text-xs-mobile*1.25;
+  }
+  app-icon{
+    margin-right: .5em;
   }
 }
 
