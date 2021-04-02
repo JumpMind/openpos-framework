@@ -2,6 +2,7 @@ package org.jumpmind.pos.coupons;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 public class GS1Coupon {
@@ -131,7 +132,13 @@ public class GS1Coupon {
                     case 3:
                         // Expiry date
                         String date = gs1Databar.substring(i, i + 6);
-                        expirationDate = new SimpleDateFormat("yyMMdd").parse(date);
+                        Date parsedDate = new SimpleDateFormat("yyMMdd").parse(date);
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(parsedDate);
+                        calendar.set(Calendar.HOUR_OF_DAY, 23);
+                        calendar.set(Calendar.MINUTE, 59);
+                        calendar.set(Calendar.SECOND, 59);
+                        expirationDate  = calendar.getTime();
                         i += 6;
                         break;
 
