@@ -16,14 +16,24 @@
                 </li>
             </ul>
 
+            <div class="options">
+                <ng-container *ngFor="let component of optionComponents | keyvalue">
+                    <ng-container *ngComponentOutlet="component.value; injector: component.key"></ng-container>
+                </ng-container>
+            </div>
+
+            
             <app-options-list optionListSizeClass="md"></app-options-list>
         </div>
+
+    </mat-card>
+    <mat-card responsive-class class="buddy-store page-gutter padding-none">
 
     </mat-card>
     <mat-card responsive-class class=" promotions page-gutter padding-none">
         <div responsive-class class="page-gutter page-element margin-bottom">
             <h3 responsive-class>
-                {{screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
+                {{screen.promotions && screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
             </h3>
             <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
                               [instructionsSize]="'text-md'"></app-instructions>

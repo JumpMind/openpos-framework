@@ -73,7 +73,10 @@ describe('CustomerDetailsDialog', () => {
       }).compileComponents();
       fixture = TestBed.createComponent(CustomerDetailsDialogComponent);
       component = fixture.componentInstance;
-      component.screen = { customer } as CustomerDetailsDialogInterface;
+      component.screen = { customer,
+        rewardTabEnabled: true,
+        rewardHistoryTabEnabled: true
+      } as CustomerDetailsDialogInterface;
       fixture.detectChanges();
     });
 
@@ -158,7 +161,7 @@ describe('CustomerDetailsDialog', () => {
             it('shows the membership label', () => {
               component.screen.membershipLabel = 'some value';
               fixture.detectChanges();
-              const membershipLabelElement = fixture.debugElement.query(By.css('.memberships .title'));
+              const membershipLabelElement = fixture.debugElement.query(By.css('.memberships .details-label'));
               expect(membershipLabelElement.nativeElement.textContent).toContain(component.screen.membershipLabel);
             });
 
@@ -184,9 +187,6 @@ describe('CustomerDetailsDialog', () => {
         });
       })
       describe('tabs', () => {
-        it('does not have the mobile class', () => {
-
-        });
         it('displays the tabs section', () => {
           const tabsElement = fixture.debugElement.query(By.css('.tabs'));
           expect(tabsElement.nativeElement).toBeDefined();
@@ -353,7 +353,10 @@ describe('CustomerDetailsDialog', () => {
       }).compileComponents();
       fixture = TestBed.createComponent(CustomerDetailsDialogComponent);
       component = fixture.componentInstance;
-      component.screen = { customer } as CustomerDetailsDialogInterface;
+      component.screen = { customer,
+        rewardTabEnabled: true,
+        rewardHistoryTabEnabled: true
+      } as CustomerDetailsDialogInterface;
       fixture.detectChanges();
     });
     describe('template', () => {
@@ -361,6 +364,13 @@ describe('CustomerDetailsDialog', () => {
         it('has the mobile class', () => {
           const tabsElement = fixture.debugElement.query(By.css('.tabs'));
           expect(tabsElement.nativeElement.classList).toContain('mobile');
+        });
+
+        it('always shows the tab section', () => {
+          component.screen.rewardTabEnabled = false;
+          component.screen.rewardHistoryTabEnabled = false;
+          fixture.detectChanges();
+          validateExist(fixture, '.tabs');
         });
       });
     });
@@ -387,7 +397,10 @@ describe('CustomerDetailsDialog', () => {
       }).compileComponents();
       fixture = TestBed.createComponent(CustomerDetailsDialogComponent);
       component = fixture.componentInstance;
-      component.screen = { customer } as CustomerDetailsDialogInterface;
+      component.screen = { customer,
+        rewardTabEnabled: true,
+        rewardHistoryTabEnabled: true
+      } as CustomerDetailsDialogInterface;
       fixture.detectChanges();
     });
     describe('template', () => {
@@ -395,6 +408,27 @@ describe('CustomerDetailsDialog', () => {
         it('does not has the mobile class', () => {
           const tabsElement = fixture.debugElement.query(By.css('.tabs'));
           expect(tabsElement.nativeElement.classList).not.toContain('mobile');
+        });
+
+        it('does not shows the tab section when both rewardTabEnabled and rewardHistoryTab are false', () => {
+          component.screen.rewardTabEnabled = false;
+          component.screen.rewardHistoryTabEnabled = false;
+          fixture.detectChanges();
+          validateDoesNotExist(fixture, '.tabs');
+        });
+
+        it('it shows when rewardTabEnabled is true', () => {
+          component.screen.rewardTabEnabled = true;
+          component.screen.rewardHistoryTabEnabled = false;
+          fixture.detectChanges();
+          validateExist(fixture, '.tabs');
+        });
+
+        it('it shows when rewardHistoryTabEnabled is true', () => {
+          component.screen.rewardTabEnabled = false;
+          component.screen.rewardHistoryTabEnabled = true;
+          fixture.detectChanges();
+          validateExist(fixture, '.tabs');
         });
       });
     });

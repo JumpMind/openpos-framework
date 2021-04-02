@@ -1,0 +1,30 @@
+@import "../../../../styles/mixins/typography";
+
+:host{
+ display: grid;
+  justify-items: left;
+}
+
+.swatch{
+  border-radius: 16px;
+  height: 20px;
+  width: 20px;
+  padding: 3px;
+  margin-bottom: 4px;
+  margin-right: 4px;
+  
+  &.selected{
+    border: 1px solid;
+  }
+}
+
+
+h3{
+  font-weight: normal;
+  @extend %text-sm;
+
+}
+
+caption{
+  @extend %text-xs;
+}

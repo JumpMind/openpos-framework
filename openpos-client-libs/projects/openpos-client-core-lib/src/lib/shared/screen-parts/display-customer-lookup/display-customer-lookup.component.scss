@@ -1,0 +1,70 @@
+.customer-details{
+  display: grid;
+  padding: .5em;
+  grid-template-columns: 50% 50%;
+  grid-template-areas:
+          "customerInfoHeader customerInfoHeader"
+          "customerInfoLeft customerInfoRight"
+          "customerInfoFooter customerInfoFooter";
+
+  .customer-name{
+    font-weight: bold;
+    margin-right: 2em;
+    padding-bottom: .5em;
+  }
+  .customer-email-phone{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1em 1em;
+    gap: 0px 0px;
+    grid-template-areas:
+    "email"
+    "phone";
+
+    .customer-email{
+      grid-area: email;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+    .customer-phoneNumber{
+      grid-area: phone;
+    }
+  }
+
+  .customer-name-loyaltyNumber {
+    grid-area: customerInfoHeader;
+  }
+
+  .customer-memberships {
+    display: flex;
+    gap: .5em;
+    margin-top: .5em;
+    margin-left: 1.5em;
+  }
+}
+
+.mobile-customer-details{
+  display: grid;
+  padding: .5em;
+  grid-template-columns: 50% 50%;
+  grid-template-areas:
+          "customerInfoLeft customerInfoRight";
+
+  .customer-name{
+    font-weight: bold;
+    padding-bottom: .5em;
+  }
+
+  .customer-info-left{
+    grid-area: customerInfoLeft;
+    .customer-email{
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+  }
+
+  .customer-info-right{
+    grid-area: customerInfoRight;
+    margin-top: 1em;
+  }
+}

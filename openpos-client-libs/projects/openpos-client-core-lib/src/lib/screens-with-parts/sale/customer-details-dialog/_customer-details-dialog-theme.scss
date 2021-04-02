@@ -3,9 +3,14 @@
     $foreground: map-get($theme, foreground );
     $background: map-get($theme, background);
 
+    .mat-tab-body-wrapper{
+        border: 2px solid map-get($foreground, border);
+    }
 
-    .icon, .line .loyalty-icon, .line .expiration, .no-items {
-        color: map_get($foreground, icon);
+    app-customer-details-dialog{
+        .icon, .line .loyalty-icon, .line .expiration, .no-items {
+            color: map_get($foreground, icon);
+        }
     }
 
     .title app-icon {
@@ -14,12 +19,6 @@
 
     .mat-dialog-container {
         overflow: inherit;
-    }
-
-    .grid-container {
-        .memberships .wrapper {
-            border: 2px solid map_get($foreground, border);
-        }
     }
 
     .mobile-grid-container {

@@ -31,6 +31,7 @@ public final class AppUtils {
     public static void setupLogging(String appId, String deviceId) {
         if (isNotBlank(appId) && isNotBlank(deviceId)) {
             MDC.put("stateManager", String.format("%s:%s", appId, deviceId));
+            MDC.put("deviceId", deviceId);
         }
     }
     

@@ -40,7 +40,9 @@ export class IconService {
         this.icons.set('Cash', ['local_atm.svg', this.defaultIconProvider]);
         this.icons.set('CashDown', ['cash_down.svg', this.defaultIconProvider]);
         this.icons.set('CashUp', ['cash_up.svg', this.defaultIconProvider]);
+        this.icons.set('Charity', ['heart_plus_outline.svg', this.defaultIconProvider]);
         this.icons.set('Check', ['money.svg', this.defaultIconProvider]);
+        this.icons.set('Checkmark', ['check.svg', this.defaultIconProvider]);
         this.icons.set('Clock', ['watch_later.svg', this.defaultIconProvider]);
         this.icons.set('Close', ['close.svg', this.defaultIconProvider]);
         this.icons.set('Coin', ['monetization_on.svg', this.defaultIconProvider]);

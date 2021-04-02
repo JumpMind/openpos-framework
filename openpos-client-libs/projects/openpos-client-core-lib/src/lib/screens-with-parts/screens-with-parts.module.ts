@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import {AutoCompleteAddressDialogComponent} from './auto-complete-address/auto-complete-address-dialog.component';
+import {BasicProductOptionPart} from './item-detail/option-components/basic-product-option-part/basic-product-option-part';
+import {SwatchProductOptionPart} from './item-detail/option-components/swatch-product-option-part/swatch-product-option-part.component';
 
 import { SelectionListScreenComponent } from './selection-list/selection-list-screen.component';
 import { SelectionListScreenDialogComponent } from './selection-list/selection-list-screen-dialog.component';
@@ -35,7 +37,8 @@ import {ErrorDialogComponent} from './error-dialog/error-dialog.component';
 import { TransactionSearchComponent } from './transaction-search/transaction-search.component';
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 import {SimulatedPeripheralViewerComponent} from './simulated-peripheral-viewer/simulated-peripheral-viewer.component';
-import {CustomerDetailsDialogComponent} from "./sale/customer-details-dialog/customer-details-dialog.component";
+import {CustomerSearchResultDialogComponent} from './customer-search-result-dialog/customer-search-result-dialog.component';
+import {CustomerDetailsDialogComponent} from './sale/customer-details-dialog/customer-details-dialog.component';
 
 
 const screens = [
@@ -76,17 +79,26 @@ const dialogs = [
     CustomerDetailsDialogComponent,
     AutoCompleteAddressDialogComponent,
     ErrorDialogComponent,
-    DataTableDialogComponent
+    DataTableDialogComponent,
+    CustomerSearchResultDialogComponent
+
 ];
+
+const parts = [
+    BasicProductOptionPart,
+    SwatchProductOptionPart    
+]
 
 @NgModule({
     entryComponents: [
         ...screens,
-        ...dialogs
+        ...dialogs,
+        ...parts
     ],
     declarations: [
         ...screens,
-        ...dialogs
+        ...dialogs,
+        ...parts
     ],
     imports: [
         SharedModule

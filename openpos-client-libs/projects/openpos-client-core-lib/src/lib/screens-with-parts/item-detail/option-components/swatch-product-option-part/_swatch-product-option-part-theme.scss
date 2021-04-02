@@ -1,0 +1,17 @@
+@mixin swatch-product-option-part-theme($theme) {
+
+  $foreground: map-get($theme, foreground);
+
+
+  app-swatch-product-options-part{
+    caption{
+      color: map-get(map-get($theme, foreground), secondary-text);
+    }
+    
+    .swatch{
+      &.selected{
+        border-color: mat-color(map-get($theme, selected));
+      }
+    }
+  }
+}

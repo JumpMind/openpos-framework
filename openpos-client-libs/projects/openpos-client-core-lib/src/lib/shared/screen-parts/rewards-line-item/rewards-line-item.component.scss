@@ -2,7 +2,7 @@
 
 .reward-line-item-wrapper {
   display: grid;
-  grid-template-columns: 1fr 10fr 2fr 2fr;
+  grid-template-columns: 1fr 10fr 2fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
@@ -17,11 +17,11 @@
   .details {
     grid-area: details;
     .name {
-      @extend %text-md;
+      @extend %text-sm;
       font-weight: 500;
     }
     .expiration {
-      @extend %text-md;
+      @extend %text-sm;
       app-icon {
         padding-right: 3px;
       }
@@ -33,8 +33,7 @@
 
   .apply {
     grid-area: apply;
-    text-align: center;
-    margin: auto;
+    justify-self: end;
     a {
       @extend %text-md;
       app-icon {
@@ -93,7 +92,7 @@
   .apply {
     grid-area: apply;
     text-align: center;
-    margin: auto;
+    justify-self: end;
     a {
       @extend %text-md;
       &.tablet-portrait {

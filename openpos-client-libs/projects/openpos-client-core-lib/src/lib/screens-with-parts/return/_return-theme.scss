@@ -2,7 +2,7 @@
     $app-primary: mat-color(map-get($theme, returns));
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
-    
+
     $contrast: mat-color(map-get($theme, returns), default-contrast);
     $dark: map-get($mat-grey, 600);
 
@@ -25,7 +25,7 @@
                 }
             }
 
-            .item-count {
+            .item-counts {
                 background-color:$app-primary;
                 color:$contrast;
             }
