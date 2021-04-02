@@ -16,9 +16,12 @@
                 </li>
             </ul>
 
-            <ng-container *ngFor="let component of optionComponents | keyvalue">
-                <ng-container *ngComponentOutlet="component.value; injector: component.key"></ng-container>
-            </ng-container>
+            <div class="options">
+                <ng-container *ngFor="let component of optionComponents | keyvalue">
+                    <ng-container *ngComponentOutlet="component.value; injector: component.key"></ng-container>
+                </ng-container>
+            </div>
+
             
             <app-options-list optionListSizeClass="md"></app-options-list>
         </div>

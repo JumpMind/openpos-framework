@@ -15,6 +15,8 @@ import {SwatchInterface} from './swatch.interface';
 })
 export class SwatchProductOptionPart extends ScreenPartComponent<SwatchProductOptionPartInterface> implements OnInit{
     
+    selectedOptionName: String;
+    
     constructor( @Optional() private injector: Injector, @Optional() @Inject(OPTION_NAME) private optionName: string ){
         super(injector);
     }
@@ -26,6 +28,8 @@ export class SwatchProductOptionPart extends ScreenPartComponent<SwatchProductOp
     }
 
     screenDataUpdated() {
+        this.selectedOptionName = this.screenData.swatches.find(value => value.id === this.screenData.selectedOption).name;
+        console.log(this.selectedOptionName)
     }
     
     selectOption(swatch: SwatchInterface){

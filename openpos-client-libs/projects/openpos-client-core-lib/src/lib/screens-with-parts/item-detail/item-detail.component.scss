@@ -47,6 +47,7 @@ p{
     grid-template: "image title" auto
                     "image summary" auto
                     "image properties" auto
+                    "image options" auto
                     "actions actions" auto/auto;
 }
 
@@ -114,4 +115,10 @@ app-options-list {
     padding-inline-start: 0;
     @extend %text-md;
 
+}
+
+.options {
+    grid-area: options;
+    display: grid;
+    grid-auto-flow: column;
 }
