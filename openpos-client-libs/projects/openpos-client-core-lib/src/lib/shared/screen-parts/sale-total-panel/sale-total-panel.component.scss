@@ -62,6 +62,9 @@
                     display: inline-block;
                 }
                 .memberships {
+                    overflow: hidden;
+                    white-space: normal;
+                    @extend %text-xs;
                     grid-area: Memberships;
                 }
             }
