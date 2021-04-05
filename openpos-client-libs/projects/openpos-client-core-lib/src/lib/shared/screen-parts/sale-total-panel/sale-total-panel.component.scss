@@ -66,6 +66,19 @@
                     white-space: normal;
                     @extend %text-xs;
                     grid-area: Memberships;
+                    .customer-missing-info {
+                        margin-bottom: 4px;
+                        app-warn-button {
+                            font-size: $text-sm;
+                            &.tablet-portrait {
+                                font-size: $text-sm;
+                            }
+
+                            &.mobile {
+                                font-size: $text-xs-mobile*1.25;
+                            }
+                        }
+                    }
                 }
             }
         }
