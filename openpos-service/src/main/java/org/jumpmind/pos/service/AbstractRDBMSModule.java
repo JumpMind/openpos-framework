@@ -47,6 +47,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static org.apache.commons.lang3.StringUtils.*;
 import static org.jumpmind.db.util.BasicDataSourcePropertyConstants.*;
 import static org.jumpmind.pos.service.util.ClassUtils.getClassesForPackageAndAnnotation;
 
@@ -234,7 +235,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
 
     @Override
     public DataSource getDataSource() {
-        if (dataSource == null || dataSource.getClass().getSimpleName().contains("EmbeddedDataSourceProxy")) {
+        boolean isOverridden = isNotBlank(env.getProperty(String.format("%s.%s", getName(), DB_POOL_URL)));
+        if (dataSource == null || dataSource.getClass().getSimpleName().contains("EmbeddedDataSourceProxy") ||
+            isOverridden) {
             this.dataSource = null;
             setupH2Server();
             if (this.dataSourceBeanName != null) {
