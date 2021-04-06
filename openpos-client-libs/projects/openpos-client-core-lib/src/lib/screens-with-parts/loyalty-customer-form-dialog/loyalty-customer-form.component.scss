@@ -16,6 +16,10 @@
         &.tablet {
             padding: 16px;
         }
+
+        .no-scroll {
+            overflow: hidden !important;
+        }
     }
 
     .buttons {
