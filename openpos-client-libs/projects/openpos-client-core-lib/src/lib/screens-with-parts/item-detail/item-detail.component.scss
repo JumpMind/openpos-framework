@@ -15,19 +15,6 @@
     padding: 0 0 0 0;
 }
 
-h1{
-    grid-area: title;
-    @extend %text-lg;
-    font-weight: normal;
-    margin: 0;
-}
-
-p{
-    grid-area: summary;
-    @extend %text-md;
-    font-weight: normal;
-    margin: 0;
-}
 
 .page-gutter {
     @extend %page-gutter
@@ -44,21 +31,83 @@ p{
 .item-card{
     display: grid;
     overflow-y: auto;
-    grid-template: "image title" auto
-                    "image summary" auto
-                    "image properties" auto
-                    "image options" auto
-                    "actions actions" auto/auto;
+    grid-template: "image title title" auto
+                    "image properties price" auto
+                    "image options options" auto
+                    "image summary summary" auto
+                    "image actions actions" auto/auto;
+
+    .name{
+        grid-area: title;
+        @extend %text-lg;
+        font-weight: normal;
+        margin: 0;
+        margin-bottom: 16px;
+    }
+
+    .summary{
+        @extend %text-xs;
+        font-weight: normal;
+        margin: 0;
+    }
+    
+    .summary-instructions{
+        grid-area: summary;
+        min-height: 200px;
+    }
+
+    .actions {
+        grid-area: actions;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: right;
+        app-secondary-button {
+            margin-right: 8px;
+        }
+        app-icon{
+            margin-right: 8px;
+        }
+    }
+
+    .carousel {
+        grid-area: image;
+        justify-self: center;
+    }
+    
+    .item-price {
+        grid-area: price;
+        @extend %text-lg;
+        justify-self: right;
+    }
+
+    .properties {
+        grid-area: properties;
+        align-self: end;
+        list-style-type: none;
+        padding-inline-start: 0;
+        @extend %text-sm;
+
+    }
+
+    .option-instructions {
+        grid-area: option-instructions;
+        display: grid;
+        justify-content: center;
+    }
+
+    .options {
+        grid-area: options;
+        display: grid;
+        grid-auto-flow: column;
+        margin-bottom: 16px;
+    }
+
+    ul{
+        margin: 0px;
+    }
 }
 
-app-options-list {
-    grid-area: actions;
-}
 
-.carousel {
-    grid-area: image;
-    justify-self: center;
-}
 
 .promotions {
     width: 50%;
@@ -108,17 +157,3 @@ app-options-list {
     align-self: center;
 }
 
-.properties {
-    grid-area: properties;
-    align-self: end;
-    list-style-type: none;
-    padding-inline-start: 0;
-    @extend %text-md;
-
-}
-
-.options {
-    grid-area: options;
-    display: grid;
-    grid-auto-flow: column;
-}

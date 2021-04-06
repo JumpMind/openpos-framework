@@ -2,17 +2,18 @@
 <section class="item-details">
     <mat-card responsive-class class="padding-none page-gutter">
         <div responsive-class class="item-card padding-none page-gutter page-element margin-bottom">
-            <h1 responsive-class>{{screen.itemName}}</h1>
-            <p responsive-class>{{screen.summary}}</p>
+            <h1 class="name" responsive-class>{{screen.itemName}}</h1>
             <app-carousel class="carousel" [carouselSize]="carouselSize" [carouselItemClass]="'rounded-edge'">
                 <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
                     <app-image [imageUrl]="image | imageUrl" [altImageUrl]="screen.alternateImageUrl" [altText]="'Image NotFound'"></app-image>
                 </ng-template>
             </app-carousel>
+            
+            <app-currency-text class="item-price" [amountText]="screen.price"></app-currency-text>
 
             <ul responsive-class class="properties">
                 <li *ngFor="let prop of screen.itemProperties">
-                    <app-display-property [property]="prop"></app-display-property>
+                    <app-display-property [property]="prop" alignmentType="jagged"></app-display-property>
                 </li>
             </ul>
 
@@ -21,16 +22,34 @@
                     <ng-container *ngComponentOutlet="component.value; injector: component.key"></ng-container>
                 </ng-container>
             </div>
-
             
-            <app-options-list optionListSizeClass="md"></app-options-list>
+            <div class="summary-instructions">
+                <hr>                
+                <app-instructions class="option-instructions" *ngIf="screen.itemOptionInstructions" [instructions]="screen.itemOptionInstructions"></app-instructions>
+                <p class="summary" *ngIf="screen.summary" responsive-class>{{screen.summary}}</p>
+            </div>
+
+            <div class="actions">
+                <ng-container *ngFor="let button of screen.actions; let first = first;">
+                    <app-secondary-button *ngIf="!first" [ngClass]="button.additionalStyle" (buttonClick)="doAction(button)">
+                        <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
+                        <span>{{button.title}}</span>
+                    </app-secondary-button>
+                </ng-container>
+                <ng-container *ngFor="let button of screen.actions; let first = first;">
+                    <app-primary-button *ngIf="first" [ngClass]="button.additionalStyle" [disabled]="!button.enabled" (buttonClick)="doAction(button)">
+                        <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
+                        <span>{{button.title}}</span>
+                    </app-primary-button>
+                </ng-container>
+            </div>
         </div>
 
     </mat-card>
     <mat-card responsive-class class="buddy-store page-gutter padding-none">
 
     </mat-card>
-    <mat-card responsive-class class=" promotions page-gutter padding-none">
+    <mat-card responsive-class *ngIf="screen.promotions" class="promotions page-gutter padding-none">
         <div responsive-class class="page-gutter page-element margin-bottom">
             <h3 responsive-class>
                 {{screen.promotions && screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}

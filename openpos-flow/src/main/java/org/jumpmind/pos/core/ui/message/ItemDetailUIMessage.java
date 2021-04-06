@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.jumpmind.pos.core.model.DisplayProperty;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.BuddyStore;
@@ -22,6 +23,7 @@ public class ItemDetailUIMessage extends UIMessage {
 
     private String itemName;
     private String summary;
+    private String price;
     private DisplayProperty itemValueDisplay;
     private List<String> imageUrls;
     private String alternateImageUrl;
@@ -32,6 +34,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private String promotionStackingDisclaimer;
     
     private List<ProductOptionComponent> productOptionsComponents;
+    private String itemOptionInstructions;
     
     private String onHandLabel;
     private String onHandCount;
@@ -39,6 +42,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private String buddyStoreIcon;
     private String buddyStoreOfflineTitle;
     private List<BuddyStore> buddyStores;
+    private List<ActionItem> actions;
 
 
     public void addItemProperty(DisplayProperty property) {
