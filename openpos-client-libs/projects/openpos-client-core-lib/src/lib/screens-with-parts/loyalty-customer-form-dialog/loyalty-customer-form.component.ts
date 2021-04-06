@@ -87,6 +87,10 @@ export class LoyaltyCustomerForm extends DynamicFormPartComponent {
         this.countryField = this.getFormElementById('country');
     }
 
+    anyAddressFieldsPresent() {
+        return this.line1Field || this.line2Field || this.cityField || this.stateField || this.postalCodeField || this.countryField;
+    }
+
     getFormElementById(formElementId : string) {
         return this.screenData.formElements.filter(element => element.id == formElementId)[0];
     }

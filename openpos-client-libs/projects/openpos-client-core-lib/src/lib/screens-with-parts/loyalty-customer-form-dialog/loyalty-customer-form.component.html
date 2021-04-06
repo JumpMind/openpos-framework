@@ -70,16 +70,22 @@
                     </ng-template>
 
                     <ng-template #locationSection>
-                        <div class="location" *ngIf="postalCodeField">
+                        <div class="location">
                             <div class="icon">
-                                <app-icon matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
+                                <app-icon *ngIf="anyAddressFieldsPresent()" matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
                             </div>
-                            <app-dynamic-form-field class="line1" [formGroup]="form" [formField]="line1Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field class="line2" [formGroup]="form" [formField]="line2Field" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field class="city" [formGroup]="form" [formField]="cityField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field class="state" [formGroup]="form" [formField]="stateField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field class="postalCode" [formGroup]="form" [formField]="postalCodeField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
-                            <app-dynamic-form-field class="country" [formGroup]="form" [formField]="countryField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="line1" *ngIf="line1Field" [formGroup]="form" [formField]="line1Field"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="line2" *ngIf="line2Field" [formGroup]="form" [formField]="line2Field"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="city" *ngIf="cityField" [formGroup]="form" [formField]="cityField"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="state" *ngIf="stateField" [formGroup]="form" [formField]="stateField"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="postalCode" *ngIf="postalCodeField" [formGroup]="form" [formField]="postalCodeField"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            <app-dynamic-form-field class="country" *ngIf="countryField" [formGroup]="form" [formField]="countryField"
+                                                    (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
                     </ng-template>
                     <ng-template #loyaltySection>
@@ -94,6 +100,7 @@
                                         {{membershipsLabel}}
                                     </div>
                                     <div class="memberships-list">
+                                        <!-- Redundant if check -->
                                         <div *ngIf="memberships && memberships.length" class="list">
                                         <span *ngFor="let membership of memberships" class="item">
                                             <app-membership-display [membership]="membership"></app-membership-display>
