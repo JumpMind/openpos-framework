@@ -16,7 +16,7 @@ public class GS1CouponTest {
         assertEquals(1, coupon.getPrimaryPurchaseRequirement());
         assertEquals(0, coupon.getSecondaryPurchaseRequirement());
         assertEquals(0, coupon.getTertiaryPurchaseRequirement());
-        assertEquals(new SimpleDateFormat("yyyy-MM-dd").parse("2019-03-03"), coupon.getExpirationDate());        
+        assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-03-03 23:59:59"), coupon.getExpirationDate());
     }
     
     @Test
@@ -27,7 +27,7 @@ public class GS1CouponTest {
         assertEquals(1, coupon.getPrimaryPurchaseRequirement());
         assertEquals(0, coupon.getSecondaryPurchaseRequirement());
         assertEquals(0, coupon.getTertiaryPurchaseRequirement());
-        assertEquals(new SimpleDateFormat("yyyy-MM-dd").parse("2019-02-17"), coupon.getExpirationDate());
+        assertEquals(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse("2019-02-17 23:59:59"), coupon.getExpirationDate());
         System.out.println(coupon.toString());
         
     }

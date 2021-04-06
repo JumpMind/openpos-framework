@@ -25,4 +25,8 @@ export interface SaleTotalPanelInterface extends IAbstractScreen {
     noMembershipsFoundLabel: string;
     membershipEnabled: boolean;
     memberships: Membership[];
+    customerMissingInfoEnabled: boolean;
+    customerMissingInfo: boolean;
+    customerMissingInfoIcon: string;
+    customerMissingInfoLabel: string;
 }
