@@ -8,6 +8,8 @@ import {Configuration} from '../../../configuration/configuration';
 import {KebabMenuComponent} from '../kebab-menu/kebab-menu.component';
 import {FocusService} from '../../../core/focus/focus.service';
 import {IActionItem} from '../../../core/actions/action-item.interface';
+import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
+import {Observable} from "rxjs";
 
 @Component({
     selector: 'app-kebab-button',
@@ -29,6 +31,8 @@ export class KebabButtonComponent implements OnDestroy {
     iconClass;
 
     dialogRef: MatDialogRef<KebabMenuComponent>;
+    isMobile: Observable<boolean>;
+    kebabWidth: string;
 
     @Input()
     set keyBinding(key: string) {
@@ -54,7 +58,23 @@ export class KebabButtonComponent implements OnDestroy {
 
     protected subscription: Subscription;
 
-    constructor(protected dialog: MatDialog, protected keyPresses: KeyPressProvider, protected focusService: FocusService, protected actionService: ActionService) {
+    constructor(protected dialog: MatDialog, protected keyPresses: KeyPressProvider, protected focusService: FocusService, protected media: OpenposMediaService, protected actionService: ActionService) {
+        this.isMobile = media.observe(new Map([
+            [MediaBreakpoints.MOBILE_PORTRAIT, true],
+            [MediaBreakpoints.MOBILE_LANDSCAPE, true],
+            [MediaBreakpoints.TABLET_PORTRAIT, true],
+            [MediaBreakpoints.TABLET_LANDSCAPE, false],
+            [MediaBreakpoints.DESKTOP_PORTRAIT, false],
+            [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
+        ]));
+
+        this.isMobile.subscribe(mobile => {
+            if (mobile) {
+                this.kebabWidth = '100vw';
+            } else {
+                this.kebabWidth = '35vw';
+            }
+        });
     }
 
     ngOnDestroy(): void {
@@ -79,7 +99,7 @@ export class KebabButtonComponent implements OnDestroy {
                     autoFocus: false,
                     restoreFocus: false
                 },
-                width: '35vw',
+                width: this.kebabWidth,
                 autoFocus: false
             });
 
