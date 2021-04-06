@@ -28,6 +28,8 @@ export interface IActionItem {
      * If set the action service will queue up the action if the action service is currently blocked
      */
     queueIfBlocked?: boolean;
+    
+    additionalStyle?: string;
 
     /**
      * If set, a timer will be associated with this action and this action will be

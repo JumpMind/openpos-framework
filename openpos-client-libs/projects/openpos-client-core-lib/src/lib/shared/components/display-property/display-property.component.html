@@ -27,4 +27,12 @@
         <span gdArea="label" class="display-property-label colon">{{property.label}}</span>
         <span gdArea="value" *ngIf="property.value"  class="display-property-value colon">{{property.value | valueFormatter: property.valueFormatter}}</span>
     </div>
+    <div    *ngSwitchCase="DisplayPropertyAlignment.jagged"
+            class="display-property jagged"
+            gdAreas="label value"
+            gdColumns="auto 1fr"
+            gdGap="4px" >
+        <span gdArea="label" class="display-property-label column">{{property.label}}</span>
+        <span gdArea="value" *ngIf="property.value" class="display-property-value column">{{property.value | valueFormatter: property.valueFormatter}}</span>
+    </div>
 </ng-container>

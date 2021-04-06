@@ -5,6 +5,11 @@
   justify-items: left;
 }
 
+.swatch-container{
+  display: grid;
+  grid-auto-flow: column;
+}
+
 .swatch{
   border-radius: 16px;
   height: 20px;
@@ -22,7 +27,7 @@
 h3{
   font-weight: normal;
   @extend %text-sm;
-
+  margin-bottom: 4px;
 }
 
 caption{

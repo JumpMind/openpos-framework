@@ -7,6 +7,7 @@ import {IPromotionInterface} from './promotion.interface';
 
 export interface ItemDetailInterface extends IAbstractScreen {
     imageUrls: string[];
+    price: string;
     alternateImageUrl: string;
     itemName: string;
     itemValueDisplay: DisplayProperty;
@@ -17,8 +18,10 @@ export interface ItemDetailInterface extends IAbstractScreen {
     itemNoPromotionsTitle: string;
     promotions: IPromotionInterface[];
     promotionStackingDisclaimer: string;
+    actions: IActionItem[];
     
     productOptionsComponents: ProductOptionInterface[];
+    itemOptionInstructions: string;
     onHandLabel: string;
     onHandCount: string;
     buddyStoreOffline: boolean;
