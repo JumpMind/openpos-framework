@@ -54,4 +54,8 @@ export class SaleTotalPanelComponent extends ScreenPartComponent<SaleTotalPanelI
     public doMenuItemAction(menuItem: IActionItem) {
         this.doAction(menuItem);
     }
+
+    public isMissingCustomerInfo() {
+        return this.screenData.customerMissingInfoEnabled && this.screenData.customerMissingInfo
+    }
 }
