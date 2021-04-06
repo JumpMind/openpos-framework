@@ -1,4 +1,5 @@
 @import "../../styles/variables/spacing";
+@import "../../styles/mixins/typography";
 
 .selection-list-outer {
     display:grid;
@@ -18,6 +19,22 @@
         &.mobile {
             .dialog-content {
                 max-height: 300px;
+                ::ng-deep .item-list .selection-list {
+                      padding: 2px;
+                      margin:8px 0px;
+                }
+
+                .item-property-label {
+                    font-weight: bold;
+                    font-size:$text-xs-mobile*.9;
+                }
+
+                .item-property-line {
+                    margin-top:3px;
+                    margin-right:5px;
+                    margin-bottom:2px;
+                    font-size:$text-xs-mobile*.9;
+                }
             }
         }
         &.tablet {
