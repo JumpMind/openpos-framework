@@ -9,7 +9,7 @@
 </div>
 <div class="details-row address" responsive-class>
     <app-icon [iconName]="screenData.locationIcon" [iconClass]="'material-icons mat-18'"></app-icon>
-    <div class="address-details">
+    <div class="address-details" *ngIf="customer.address">
         <div *ngIf="customer.address.line1" class="line1">{{customer.address.line1}}</div>
         <div *ngIf="customer.address.line2" class="line2">{{customer.address.line2}}</div>
         <div class="line3">
