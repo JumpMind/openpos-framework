@@ -28,6 +28,7 @@ import org.jumpmind.pos.core.flow.config.FlowConfig;
 import org.jumpmind.pos.core.flow.config.StateConfig;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
+import org.jumpmind.pos.devices.model.DeviceModel;
 import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 
 /**
@@ -39,6 +40,7 @@ public class ApplicationState {
 
     private String appId;
     private String deviceId;
+    private String deviceMode = DeviceModel.DEVICE_MODE_DEFAULT;
     private Scope scope = new Scope();
     private LinkedList<StateContext> stateStack = new LinkedList<>();
     private StateContext currentContext;
@@ -75,7 +77,7 @@ public class ApplicationState {
         dataMessageProviderMap = null;
         scope.setDeviceScope("queryParams",queryParams);
         scope.setDeviceScope("personalizationProperties",personalizationProperties);
-
+        deviceMode = DeviceModel.DEVICE_MODE_DEFAULT;
     }
 
     public Scope getScope() {
@@ -227,6 +229,14 @@ public class ApplicationState {
 
     public String getDeviceId() {
         return deviceId;
+    }
+
+    public void setDeviceMode(String deviceMode) {
+        this.deviceMode = (deviceMode == null ? DeviceModel.DEVICE_MODE_DEFAULT : deviceMode);
+    }
+
+    public String getDeviceMode() {
+        return deviceMode;
     }
 
 }

@@ -13,11 +13,21 @@ import org.springframework.stereotype.Component;
 @Documented
 @Component
 public @interface Endpoint {
+    public static final String IMPLEMENTATION_DEFAULT     = "default";
+
+    public static final String IMPLEMENTATION_PAY_ADYEN   = "adyen";
+    public static final String IMPLEMENTATION_ANDROID     = "android";
+    public static final String IMPLEMENTATION_APPRISS     = "appriss";
+    public static final String IMPLEMENTATION_BLUE_FLETCH = "BlueFletch";
+    public static final String IMPLEMENTATION_PAY_NCR     = "ncr";
+    public static final String IMPLEMENTATION_SIMULATED   = "simulated";
+    public static final String IMPLEMENTATION_TRAINING    = "training";
+    public static final String IMPLEMENTATION_WINDOWS     = "windows";
 
     String path();
 
     String value() default "";
     
-    String implementation() default "default";
+    String implementation() default IMPLEMENTATION_DEFAULT;
 
 }

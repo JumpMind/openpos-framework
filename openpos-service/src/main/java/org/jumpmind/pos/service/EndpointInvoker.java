@@ -49,6 +49,9 @@ public class EndpointInvoker implements InvocationHandler {
     @Autowired
     ServiceConfig serviceConfig;
 
+    @Autowired
+    private ClientContext clientContext;
+
     final static int MAX_SUMMARY_WIDTH = 127;
 
     @Autowired
@@ -62,13 +65,11 @@ public class EndpointInvoker implements InvocationHandler {
     @Autowired
     Environment env;
 
-    @Autowired
-    private ClientContext clientContext;
-
     private final static Pattern serviceNamePattern = Pattern.compile("^(?<service>[^_]+)(_(?<version>\\d(_\\d)*))?$");
     private final static String implementationConfigPath = "openpos.services.specificConfig.%s.implementation";
 
     Map<String, Object> endPointsByPath;
+    Map<String, Object> trainingEndPointsByPath;
 
     Map<String, Endpoint> annotationsByPath;
 
@@ -85,6 +86,7 @@ public class EndpointInvoker implements InvocationHandler {
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if (endPointsByPath == null) {
             endPointsByPath = new HashMap<>();
+            trainingEndPointsByPath = new HashMap<>();
             annotationsByPath = new HashMap<>();
             Collection<Object> beans = applicationContext.getBeansWithAnnotation(RestController.class).values();
             if (beans != null) {
@@ -108,52 +110,107 @@ public class EndpointInvoker implements InvocationHandler {
             if (controller != null) {
                 String serviceName = controller.value();
                 String implementation = getServiceImplementation(serviceName);
-                if (implementation != null && !implementation.equals("default")) {
-                    log.info("Loading endpoints for the '{}' implementation of {}({})", implementation, i.getSimpleName(),
+
+                if ((implementation != null) && !implementation.equals(Endpoint.IMPLEMENTATION_DEFAULT)) {
+                    log.info("Loading endpoints for the '{}' implementation of {} ({})", implementation, i.getSimpleName(),
                             serviceName);
                 } else {
-                    log.debug("Loading endpoints for the '{}' implementation of {}({})", implementation, i.getSimpleName(),
+                    log.debug("Loading endpoints for the '{}' implementation of {} ({})", implementation, i.getSimpleName(),
                             serviceName);
                 }
+
+                //  For each endpoint, see if there is an override or special Training Mode version.
+                //  Build out lists for both regular operations and Training Mode.
+
                 Method[] methods = i.getMethods();
                 for (Method method : methods) {
                     String path = buildPath(method);
-                    Object endpointOverride = findBestEndpointOverrideMatch(path, implementation, endpointOverrides);
-                    if (endpointOverride != null) {
-                        endPointsByPath.put(path, endpointOverride);
+
+                    //  See if there is an endpoint override bean for this service and path, both normal and Training Mode.
+
+                    Object regularEndpointOverrideBean  = findBestEndpointOverrideMatch(path, implementation, endpointOverrides);
+                    Object trainingEndpointOverrideBean = findBestEndpointOverrideMatch(path, "training", endpointOverrides);
+
+                    //  Now see if there is a standard endpoint bean for this service and path. Again, both normal and
+                    //  Training Mode.
+
+                    Object regularEndpointBean  = findMatch(path, endpoints, implementation);
+                    String regularEndpointImplementaton = implementation;
+                    if (regularEndpointBean == null) {
+                        //  Nothing for the current implementation, so try the default.
+                        regularEndpointBean = findMatch(path, endpoints, Endpoint.IMPLEMENTATION_DEFAULT);
+                        regularEndpointImplementaton = Endpoint.IMPLEMENTATION_DEFAULT;
+                    }
+                    if (regularEndpointBean == null) {
+                        log.warn("No endpoint match found for service {}, path '{}', implementation '{}'", i.getSimpleName(), path, implementation);
                     }
 
-                    if (!endPointsByPath.containsKey(path)) {
-                        Object endpointBean = findMatch(path, endpoints, implementation);
-                        if (endpointBean == null) {
-                            endpointBean = findMatch(path, endpoints, "default");
+                    Object trainingEndpointBean = findMatch(path, endpoints, "training");
+                    if ((trainingEndpointBean != null) && (regularEndpointBean == null))  {
+                        log.warn("Endpoint match found for service {}, path '{}', implementation 'training', but not implementation '{}' or default", i.getSimpleName(), path, implementation);
+                    }
+
+                    //  Given the endpoint beans we discovered above, decide which one will be
+                    //  used in both normal scenarios and Training Mode.
+
+                    if (trainingEndpointOverrideBean != null) {
+                        log.info("Training override endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, "training");
+                        trainingEndPointsByPath.put(path, trainingEndpointOverrideBean);
+                        if (regularEndpointOverrideBean != null) {
+                            log.info("Regular override endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, implementation);
+                            endPointsByPath.put(path, regularEndpointOverrideBean);
                         }
 
-                        if (endpointBean != null) {
-                            endPointsByPath.put(path, endpointBean);
-                            annotationsByPath.put(path, endpointBean.getClass().getAnnotation(Endpoint.class));
-                        } else {
-                            log.warn(String.format(
-                                    "No endpoint defined for path '%s' in '%s' in the service Please define a Spring-discoverable @Endpoint class, "
-                                            + "with a method annotated like  @Endpoint(\"%s\")",
-                                    path, i.getSimpleName(), path));
+                    }  else if (regularEndpointOverrideBean != null) {
+                        log.debug("Regular override endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, implementation);
+                        endPointsByPath.put(path, regularEndpointOverrideBean);
+                        trainingEndPointsByPath.put(path, regularEndpointOverrideBean);
+
+                    }  else if (trainingEndpointBean != null) {
+                        log.info("Training endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, "training");
+                        trainingEndPointsByPath.put(path, trainingEndpointBean);
+                        if (regularEndpointBean != null)  {
+                            log.info("Regular endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, regularEndpointImplementaton);
+                            endPointsByPath.put(path, regularEndpointBean);
                         }
-                    }
-                }
+
+                    }  else if (regularEndpointBean != null)  {
+                        log.debug("Regular endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, regularEndpointImplementaton);
+                        endPointsByPath.put(path, regularEndpointBean);
+                        trainingEndPointsByPath.put(path, regularEndpointBean);
+
+                    }  else {
+                        log.warn(String.format(
+                                "No endpoint defined for path '%s' in the '%s' service. Please define a Spring-discoverable @Endpoint class, " +
+                                        "with a method annotated like  @Endpoint(\"%s\")", path, i.getSimpleName(), path));
+                    }                }
             }
         }
     }
 
+    protected Map<String, Object> getEndpointsByPathMapForImplementation(String implementation)  {
+        return ((implementation != null) && implementation.equals(Endpoint.IMPLEMENTATION_TRAINING) ? trainingEndPointsByPath : endPointsByPath);
+    }
+
     protected Object findBestEndpointOverrideMatch(String path, String implementation, Collection<Object> endpointOverrides) {
         Object bestMatch = null;
-        List<SimpleEntry<Object, EndpointOverride>> pathMatchedOverrides = endpointOverrides.stream()
-                .map(o -> new SimpleEntry<Object, EndpointOverride>(o, ClassUtils.resolveAnnotation(EndpointOverride.class, o)))
+        List<SimpleEntry<Object,EndpointOverride>> pathMatchedOverrides = endpointOverrides.stream()
+                .map(o -> new SimpleEntry<>(o, ClassUtils.resolveAnnotation(EndpointOverride.class, o)))
                 .filter(entry -> entry.getValue().path().equals(path)
                 ).collect(Collectors.toList());
 
         if (pathMatchedOverrides.size() > 0) {
-            List<SimpleEntry<Object, EndpointOverride>> implMatchedOverrides = pathMatchedOverrides.stream()
-                    .filter(entry -> entry.getValue().implementation().equals(implementation)).collect(Collectors.toList());
+            List<SimpleEntry<Object, EndpointOverride>> implMatchedOverrides;
+            if(pathMatchedOverrides.stream().anyMatch(entry -> entry.getValue().implementation().equals(implementation))) {
+                implMatchedOverrides = pathMatchedOverrides.stream()
+                        .filter(entry -> entry.getValue().implementation().equals(implementation))
+                        .collect(Collectors.toList());
+            }  else {
+                implMatchedOverrides = pathMatchedOverrides.stream()
+                        .filter(entry -> entry.getValue().implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT))
+                        .collect(Collectors.toList());
+            }
+
             if (implMatchedOverrides.size() > 1) {
                 throw new IllegalStateException(
                         String.format("Found %d EndpointOverrides having path '%s' and implementation '%s'. Expected only one.",
@@ -176,7 +233,7 @@ public class EndpointInvoker implements InvocationHandler {
             serviceNameMatcher.matches();
             String versionLessServiceName = serviceNameMatcher.group("service");
             implementation = env
-                    .getProperty(String.format(implementationConfigPath, versionLessServiceName), "default");
+                    .getProperty(String.format(implementationConfigPath, versionLessServiceName), Endpoint.IMPLEMENTATION_DEFAULT);
         }
 
         return implementation;
@@ -200,10 +257,15 @@ public class EndpointInvoker implements InvocationHandler {
             return false;
         }
         String path = buildPath(method);
-        if (endPointsByPath == null) {
-            throw new PosServerException("endPointsByPath == null.  This class has not been fully initialized by Spring");
+        if ((endPointsByPath == null) || (trainingEndPointsByPath == null)) {
+            throw new PosServerException("endPointsByPath == null and/or trainingEndPointsByPath == null.  This class has not been fully initialized by Spring");
         }
-        Object endpointObj = endPointsByPath.get(path);
+
+        String deviceMode = clientContext.get("deviceMode");
+        String implementation = ((deviceMode != null) && deviceMode.equals("training") ? Endpoint.IMPLEMENTATION_TRAINING : Endpoint.IMPLEMENTATION_DEFAULT);
+        Map<String, Object> endpointsByPathMap = getEndpointsByPathMapForImplementation(implementation);
+        Object endpointObj = endpointsByPathMap.get(path);
+
         ServiceSpecificConfig config = getSpecificConfig(method);
         EndpointSpecificConfig endConfig = null;
         String endpointImplementation = null;
@@ -247,7 +309,7 @@ public class EndpointInvoker implements InvocationHandler {
         Object result = null;
         try {
             log(method, args, endpointImplementation);
-            result = strategy.invoke(profileIds, proxy, method, endPointsByPath, args);
+            result = strategy.invoke(profileIds, proxy, method, endpointsByPathMap, args);
             endSampleSuccess(sample, config, proxy, method, args, result);
         } catch (Throwable ex) {
             endSampleError(sample, config, proxy, method, args, result, ex);
@@ -280,7 +342,7 @@ public class EndpointInvoker implements InvocationHandler {
             log.info("{}.{}() {}",
                     method.getDeclaringClass().getSimpleName(),
                     method.getName(),
-                    implementation == null || "default".equals(implementation) ? "" : implementation + " implementation");
+                    implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
         }
     }
 

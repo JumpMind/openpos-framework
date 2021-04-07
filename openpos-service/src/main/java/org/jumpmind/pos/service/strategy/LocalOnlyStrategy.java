@@ -23,16 +23,16 @@ public class LocalOnlyStrategy extends AbstractInvocationStrategy implements IIn
     @Override
     public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
         String path = buildPath(method);
-        Object obj = endpoints.get(path);
-        if (obj != null) {
+        Object endpointObj = endpoints.get(path);
+        if (endpointObj != null) {
             Method targetMethod = methodMap.get(method);
             if (targetMethod == null) {
-                targetMethod = obj.getClass().getMethod(method.getName(), method.getParameterTypes());
+                targetMethod = endpointObj.getClass().getMethod(method.getName(), method.getParameterTypes());
                 methodMap.put(method, targetMethod);
             }
             if (targetMethod != null) {
                 try {
-                    return targetMethod.invoke(obj, args);
+                    return targetMethod.invoke(endpointObj, args);
                 } catch (InvocationTargetException e) {
                     throw e.getTargetException();
                 }
