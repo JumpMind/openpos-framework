@@ -22,8 +22,8 @@ export interface ItemDetailInterface extends IAbstractScreen {
     
     productOptionsComponents: ProductOptionInterface[];
     itemOptionInstructions: string;
-    onHandLabel: string;
-    onHandCount: string;
+    inventoryMessage: string;
+
     buddyStoreOffline: boolean;
     buddyStoreTitle: string;
     buddyStoreIcon: string;

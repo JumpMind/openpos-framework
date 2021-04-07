@@ -73,9 +73,15 @@
         grid-area: image;
         justify-self: center;
     }
+
+    .inv-cost {
+        grid-area: price;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
     
     .item-price {
-        grid-area: price;
         @extend %text-lg;
         justify-self: right;
     }
