@@ -9,7 +9,10 @@
                 </ng-template>
             </app-carousel>
             
-            <app-currency-text class="item-price" [amountText]="screen.price"></app-currency-text>
+            <div class="inv-cost">
+                <app-currency-text class="item-price" [amountText]="screen.price"></app-currency-text>
+                <span>{{screen.inventoryMessage}}</span>
+            </div>
 
             <ul responsive-class class="properties">
                 <li *ngFor="let prop of screen.itemProperties">

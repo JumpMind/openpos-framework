@@ -36,8 +36,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private List<ProductOptionComponent> productOptionsComponents;
     private String itemOptionInstructions;
     
-    private String onHandLabel;
-    private String onHandCount;
+    private String inventoryMessage;
     private String buddyStoreTitle;
     private String buddyStoreIcon;
     private String buddyStoreOfflineTitle;
