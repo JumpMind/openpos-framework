@@ -22,6 +22,16 @@ public class TransactionReceipt implements Serializable {
 
     private String icon;
 
+    private String barcode;
+
+    public String getBarcode() {
+        return barcode;
+    }
+
+    public void setBarcode(String barcode) {
+        this.barcode = barcode;
+    }
+
     public long getTransactionNumber() {
         return transactionNumber;
     }
