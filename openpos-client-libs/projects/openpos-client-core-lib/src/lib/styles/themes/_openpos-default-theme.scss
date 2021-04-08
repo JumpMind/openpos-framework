@@ -4,7 +4,20 @@
     $openpos-default-app-warn : mat-palette($mat-red);
     $openpos-default-app-selected : mat-palette($mat-green);
 
-    $openpos-default-theme: openpos-theme-light($openpos-default-app-primary, $openpos-default-app-accent, $openpos-default-app-warn, $openpos-default-app-selected);
+    $link-customer-color: #ffffff;
+    $link-customer-background: #296db6;
+
+    $membership-in-color: #ffffff;
+    $membership-in-background: #64834D;
+
+    $addons: (
+            link-customer-color: $link-customer-color,
+            link-customer-background: $link-customer-background,
+            membership-in-color: $membership-in-color,
+            membership-in-background: $membership-in-background
+    );
+
+    $openpos-default-theme: openpos-theme-light($openpos-default-app-primary, $openpos-default-app-accent, $openpos-default-app-warn, $openpos-default-app-selected, $addons);
 
     // Clients can extend this using
     //   @extend %openpos-default-theme-base;
