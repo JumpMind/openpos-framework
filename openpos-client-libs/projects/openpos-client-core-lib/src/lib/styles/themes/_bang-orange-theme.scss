@@ -6,17 +6,17 @@
     $openpos-app-warn : mat-palette($mat-red);
     $openpos-app-selected :  mat-palette($mat-green, 800, 600, 900);
 
-    $link-customer-color: #ffffff;
-    $link-customer-background: #ff9800;
+    $openpos-link-customer-color: #ffffff;
+    $openpos-link-customer-background: #ff9800;
 
-    $membership-in-color: #ffffff;
-    $membership-in-background: #ff9800;
+    $openpos-membership-in-color: #ffffff;
+    $openpos-membership-in-background: #ff9800;
 
     $addons: (
-            link-customer-color: $link-customer-color,
-            link-customer-background: $link-customer-background,
-            membership-in-color: $membership-in-color,
-            membership-in-background: $membership-in-background
+            openpos-link-customer-color: $openpos-link-customer-color,
+            openpos-link-customer-background: $openpos-link-customer-background,
+            openpos-membership-in-color: $openpos-membership-in-color,
+            openpos-membership-in-background: $openpos-membership-in-background
     );
 
     $openpos-theme: openpos-theme-light($openpos-app-primary, $openpos-app-accent, $openpos-app-warn, $openpos-app-selected, $addons);
