@@ -44,8 +44,8 @@
                 grid-template-rows: auto 1fr;
                 gap: 0px 0px;
                 grid-template-areas:
-                    "Name Name"
-                    "Icon Memberships";
+                    "Icon Name"
+                    "Memberships Memberships";
                 .name {
                     grid-area: Name;
                     .customer-name {
@@ -66,6 +66,16 @@
                     white-space: normal;
                     @extend %text-xs;
                     grid-area: Memberships;
+                    display: flex;
+                    flex-direction: row;
+                    div{
+                        display: flex;
+                        flex-wrap: wrap;
+                        app-membership-display{
+                            margin: .2em .2em;
+                        }
+                    }
+
                     .customer-missing-info {
                         margin-bottom: 4px;
                         app-warn-button {

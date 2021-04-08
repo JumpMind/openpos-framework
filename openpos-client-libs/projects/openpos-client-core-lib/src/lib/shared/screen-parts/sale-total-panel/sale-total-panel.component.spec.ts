@@ -257,6 +257,23 @@ describe('SaleTotalPanelComponent', () => {
                                     validateIcon(fixture, '.customer-missing-info app-icon', component.screenData.customerMissingInfoIcon);
                                     validateText(fixture, '.customer-missing-info .text', component.screenData.customerMissingInfoLabel);
                                 });
+                                it('dose not show the customer memberships', function () {
+                                    component.screenData.membershipEnabled = true;
+                                    component.screenData.memberships = [
+                                        { id: '123', name: 'membership1', member: true},
+                                        { id: '124', name: 'membership2', member: false},
+                                        { id: '125', name: 'membership3', member: false}
+                                    ];
+                                    fixture.detectChanges();
+                                    validateDoesNotExist(fixture, 'app-membership-display');
+                                    component.screenData.membershipEnabled = false;
+                                    component.screenData.memberships = [];
+                                    fixture.detectChanges();
+
+                                });
+                                it('dose not show the no memberships label', function () {
+                                    validateDoesNotExist(fixture, '.noMembershipsFound')
+                                });
                             });
 
                             describe('when customerMissingInfo is false', () => {
