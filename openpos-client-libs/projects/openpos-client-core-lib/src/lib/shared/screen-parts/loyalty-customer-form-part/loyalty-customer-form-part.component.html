@@ -1,12 +1,11 @@
-<app-scan-part></app-scan-part>
-<app-form *ngIf="screenData" (submitFormEvent)="submitForm()" [form]="form">
+<app-form (submitFormEvent)="submitForm()" [form]="screenDataForm">
     <div responsive-class class="form-part-body loyalty-customer-form form-content">
         <app-content-card>
             <mat-card-content>
                 <div [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
                     <div class="basic-info" *ngIf="firstNameField || lastNameField">
                         <div class="portrait">
-                            <app-icon [iconName]="profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-96' : ' mat-128')"></app-icon>
+                            <app-icon [iconName]="screenData.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-96' : ' mat-128')"></app-icon>
                         </div>
                         <div class="names">
                             <app-dynamic-form-field *ngIf="firstNameField" [formGroup]="form" [formField]="firstNameField"
@@ -17,42 +16,42 @@
                     </div>
                     <div class="contact" *ngIf="emailField || emailFields || phoneField || phoneFields">
                         <div *ngIf="emailField && emailFields.length === 0" class="email">
-                            <app-icon matPrefix [iconName]="emailIcon" iconClass="material-icons sm"></app-icon>
+                            <app-icon matPrefix [iconName]="screenData.emailIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
                         <div *ngIf="emailFields.length > 0">
                             <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
                                 <app-mutable-list-item-with-label [formGroup]="form"
-                                                                  [groupIcon]="emailIcon"
+                                                                  [groupIcon]="'email'"
                                                                   [inputField]="emailField"
                                                                   [labelField]="emailLabelFields[i]"
                                                                   [isFirst]="isFirst"
                                                                   [isLast]="isLast"
                                                                   [isOnly]="emailFields.length == 1"
                                                                   [isMobile]="isMobile"
-                                                                  (onFieldChanged)="onFieldChanged($event)"
-                                                                  (add)="doAction(addEmail, i)"
-                                                                  (remove)="doAction(removeEmail, i)">
+                                                                  (onFieldChanged)="onFieldChanged($event)">
+<!--                                                                  (add)="doAction(addEmail, i)"-->
+<!--                                                                  (remove)="doAction(removeEmail, i)">-->
                                 </app-mutable-list-item-with-label>
                             </div>
                         </div>
 
                         <div *ngIf="phoneField && phoneFields.length === 0" class="phone">
-                            <app-icon matPrefix [iconName]="phoneIcon" iconClass="material-icons sm"></app-icon>
+                            <app-icon matPrefix [iconName]="screenData.phoneIcon" iconClass="material-icons sm"></app-icon>
                             <app-dynamic-form-field [formGroup]="form" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                         </div>
                         <div *ngIf="phoneFields.length > 0">
                             <div class="phone-list" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
                                 <app-mutable-list-item-with-label [formGroup]="form"
-                                                                  [groupIcon]="phoneIcon"
+                                                                  [groupIcon]="'phone'"
                                                                   [inputField]="phoneField"
                                                                   [labelField]="phoneLabelFields[i]"
                                                                   [isFirst]="isFirst"
                                                                   [isLast]="isLast"
                                                                   [isOnly]="phoneFields.length == 1"
-                                                                  (onFieldChanged)="onFieldChanged($event)"
-                                                                  (add)="doAction(addPhone, i)"
-                                                                  (remove)="doAction(removePhone, i)">
+                                                                  (onFieldChanged)="onFieldChanged($event)">
+<!--                                                                  (add)="doAction(addPhone, i)"-->
+<!--                                                                  (remove)="doAction(removePhone, i)">-->
                                 </app-mutable-list-item-with-label>
                             </div>
                         </div>
@@ -72,7 +71,7 @@
                     <ng-template #locationSection>
                         <div class="location">
                             <div class="icon">
-                                <app-icon *ngIf="anyAddressFieldsPresent()" matPrefix [iconName]="locationIcon" iconClass="material-icons sm"></app-icon>
+                                <app-icon *ngIf="anyAddressFieldsPresent()" matPrefix [iconName]="screenData.locationIcon" iconClass="material-icons sm"></app-icon>
                             </div>
                             <app-dynamic-form-field class="line1" *ngIf="line1Field" [formGroup]="form" [formField]="line1Field"
                                                     (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
@@ -91,24 +90,24 @@
                     <ng-template #loyaltySection>
                         <div class="loyalty-and-membership">
                             <div class="loyalty-number" *ngIf="loyaltyNumberField">
-                                <app-icon matPrefix [iconName]="loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
+                                <app-icon matPrefix [iconName]="screenData.loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
                                 <app-dynamic-form-field [formGroup]="form" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                             </div>
-                            <div *ngIf="membershipsEnabled" class="memberships">
-                                <div *ngIf="memberships && memberships.length">
-                                    <div class="title">
-                                        {{membershipsLabel}}
-                                    </div>
-                                    <div class="memberships-list">
-                                        <div class="list">
-                                            <span *ngFor="let membership of memberships" class="item">
-                                                <app-membership-display [membership]="membership"></app-membership-display>
-                                            </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div *ngIf="!(memberships && memberships.length)" class="no-memberships">{{noMembershipsLabel}}</div>
-                            </div>
+<!--                            <div *ngIf="membershipsEnabled" class="memberships">-->
+<!--                                <div *ngIf="memberships && memberships.length">-->
+<!--                                    <div class="title">-->
+<!--                                        {{membershipsLabel}}-->
+<!--                                    </div>-->
+<!--                                    <div class="memberships-list">-->
+<!--                                        <div class="list">-->
+<!--                                            <span *ngFor="let membership of memberships" class="item">-->
+<!--                                                <app-membership-display [membership]="membership"></app-membership-display>-->
+<!--                                            </span>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                                <div *ngIf="!(memberships && memberships.length)" class="no-memberships">{{noMembershipsLabel}}</div>-->
+<!--                            </div>-->
                         </div>
                     </ng-template>
                 </div>
@@ -119,14 +118,9 @@
             </mat-card-content>
         </app-content-card>
 
-        <mat-card-actions *ngIf="(buttons && buttons.length > 0) || submitButton" mat-dialog-actions class="buttons">
-            <app-secondary-button *ngFor="let button of buttons" (click)="doAction(button)">
-                <span>{{button.label}}</span>
-                <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
-            </app-secondary-button>
-            <app-primary-button *ngIf="submitButton" type="submit" [disabled]="disableSubmitButton || !form.valid || form.pending">
+        <mat-card-actions mat-dialog-actions class="buttons">
+            <app-primary-button *ngIf="submitButton" type="submit" [disabled]="!form.valid || form.pending">
                 <span>{{submitButton.title}}</span>
-                <app-icon *ngIf="submitButton.icon" [iconName]="submitButton.icon"></app-icon>
             </app-primary-button>
         </mat-card-actions>
     </div>

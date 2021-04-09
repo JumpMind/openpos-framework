@@ -1,58 +1,36 @@
 import {
-    Component, Input
+    Component, Injector, Input, QueryList, ViewChild, ViewChildren
 } from '@angular/core';
-import { DynamicFormPartComponent } from "../../shared/screen-parts/dynamic-form-part/dynamic-form-part.component";
+import { DynamicFormPartComponent } from "../dynamic-form-part/dynamic-form-part.component";
 import {Observable} from "rxjs";
-import {IFormElement} from "../../core/interfaces/form-field.interface";
-import {IActionItem} from "../../core/actions/action-item.interface";
-import {Membership} from "../../shared/screen-parts/membership-display/memebership-display.interface";
+import {IFormElement} from "../../../core/interfaces/form-field.interface";
+import {IActionItem} from "../../../core/actions/action-item.interface";
+import {Membership} from "../membership-display/memebership-display.interface";
+import {ScreenPart} from "../../decorators/screen-part.decorator";
+import {ScreenPartComponent} from "../screen-part";
+import {IForm} from "../../../core/interfaces/form.interface";
+import {DynamicFormFieldComponent} from "../../components/dynamic-form-field/dynamic-form-field.component";
+import {ShowErrorsComponent} from "../../components/show-errors/show-errors.component";
+import {FormGroup} from "@angular/forms";
+import {FormBuilder} from "../../../core/services/form-builder.service";
+import {LoyaltyCustomerFormInterface} from "../../../screens-with-parts/loyalty-customer-form-dialog/loyalty-customer-form.interface";
 
-@Component({
-    selector: 'app-loyalty-customer-form',
-    templateUrl: './loyalty-customer-form.component.html',
-    styleUrls: ['./loyalty-customer-form.component.scss']
+
+
+@ScreenPart({
+    name: 'LoyaltyCustomerFormPart'
 })
-export class LoyaltyCustomerForm extends DynamicFormPartComponent {
+@Component({
+    selector: 'app-loyalty-customer-form-part',
+    templateUrl: './loyalty-customer-form-part.component.html',
+    styleUrls: ['./loyalty-customer-form-part.component.scss']
+})
+export class LoyaltyCustomerFormPartComponent extends ScreenPartComponent<LoyaltyCustomerFormInterface> {
 
-    @Input()
-    phoneIcon: string;
-    @Input()
-    addPhone: IActionItem;
-    @Input()
-    removePhone: IActionItem;
-
-    @Input()
-    emailIcon: string;
-    @Input()
-    addEmail: IActionItem;
-    @Input()
-    removeEmail: IActionItem;
-
-    @Input()
-    countrySelected: IActionItem;
-    @Input()
-    stateSelected: IActionItem;
-
-    @Input()
-    profileIcon: string;
-    @Input()
-    locationIcon: string;
-    @Input()
-    loyaltyNumberIcon: string;
-
-    @Input()
-    membershipsIcon: string;
-    @Input()
-    membershipsEnabled: boolean;
-    @Input()
-    memberships: Membership[] = [];
-    @Input()
-    membershipsLabel: string;
-    @Input()
-    noMembershipsLabel: string;
-
-    @Input()
-    isMobile: Observable<boolean>;
+    @ViewChildren(DynamicFormFieldComponent) children: QueryList<DynamicFormFieldComponent>;
+    @ViewChild('formErrors') formErrors: ShowErrorsComponent;
+    form: FormGroup;
+    screenDataForm: FormGroup;
 
     firstNameField : IFormElement;
     lastNameField : IFormElement;
@@ -71,8 +49,29 @@ export class LoyaltyCustomerForm extends DynamicFormPartComponent {
     postalCodeField : IFormElement;
     countryField : IFormElement;
 
+    @Input() set formName(name: string) {
+        this.screenPartName = name;
+    }
+
+    @Input() isMobile: Observable<boolean>;
+    @Input() submitButton: IActionItem;
+
+    @Input() memberships: Membership[] = [];
+    @Input() membershipsLabel: string;
+    @Input() noMembershipsLabel: string;
+    @Input() membershipsEnabled: boolean;
+
+    constructor(private formBuilder: FormBuilder, injector: Injector) {
+        super(injector);
+    }
+
     ngOnInit() {
         super.ngOnInit();
+        console.log('[ ======  LoyaltyCustomerFormPartComponent  ====== ]');
+        console.dir(this.screenData);
+        console.dir(this.screenData['form']);
+        this.screenDataForm = this.screenData['form'];
+
         this.firstNameField = this.getFormElementById('firstName');
         this.lastNameField = this.getFormElementById('lastName');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
@@ -87,16 +86,38 @@ export class LoyaltyCustomerForm extends DynamicFormPartComponent {
         this.countryField = this.getFormElementById('country');
     }
 
+    onFieldChanged(formElement: IFormElement) {
+        if (formElement.valueChangedAction) {
+            console.log('[onFieldChanged]');
+            // console.dir(formElement);
+            let form = this.formBuilder.buildFormPayload(this.form, this.screenData);
+            this.doAction( formElement.valueChangedAction, form);
+        }
+        // console.dir(this.form);
+    }
+
+    submitForm() {
+        this.formBuilder.buildFormPayload(this.form, this.screenDataForm);
+        this.doAction(this.submitButton, this.screenData);
+    }
+
     anyAddressFieldsPresent() {
         return this.line1Field || this.line2Field || this.cityField || this.stateField || this.postalCodeField || this.countryField;
     }
 
     getFormElementById(formElementId : string) {
-        return this.screenData.formElements.filter(element => element.id == formElementId)[0];
+        return this.screenDataForm['formElements'].filter(element => element.id == formElementId)[0];
     }
 
+    // This gets called automatically when screenData gets updated. This also runs before ngOnInit.
     screenDataUpdated(): void {
-        this.updateData();
+        console.log("[ SCREEN DATA UPDATED ]");
+        console.dir(this.screenData);
+        this.form = this.formBuilder.group(this.screenData);
+        // console.dir(this.screenData);
+        // console.dir(this.form);
+
+        // this.updateData();
         this.phoneFields = [];
         this.phoneLabelFields = [];
         this.emailFields = [];
