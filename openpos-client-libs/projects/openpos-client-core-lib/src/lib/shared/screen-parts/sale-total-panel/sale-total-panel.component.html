@@ -37,22 +37,22 @@
                     </div>
                     <div class="icon"><app-icon [iconName]="screenData.profileIcon" [iconClass]="(isMobile | async) ? null: 'material-icons mat-36'"></app-icon></div>
                     <div class="memberships">
-                        <div *ngIf="screenData.customerMissingInfoEnabled && screenData.customerMissingInfo" class="customer-missing-info">
+                        <div *ngIf="isMissingCustomerInfo()" class="customer-missing-info">
                             <app-warn-button responsive-class>
                                 <app-icon [iconName]="screenData.customerMissingInfoIcon"
                                           [iconClass]="'material-icons mat-24'"></app-icon>
                                 <span class="text">{{screenData.customerMissingInfoLabel}}</span>
                             </app-warn-button>
                         </div>
-                        <span *ngIf="!screenData.membershipEnabled" class="loyaltyId">
+                        <span *ngIf="!screenData.membershipEnabled && !isMissingCustomerInfo()" class="loyaltyId">
                             {{screenData.loyaltyIDLabel}}: {{screenData.customer.id}}
                         </span>
-                        <div *ngIf="screenData.membershipEnabled">
+                        <div *ngIf="screenData.membershipEnabled && !isMissingCustomerInfo()">
                             <div *ngFor="let membership of screenData.memberships">
                                 <app-membership-display (clickEvent)="doAction(screenData.linkedCustomerButton)" [membership]="membership"></app-membership-display>
                             </div>
                             <div *ngIf="!(screenData.memberships && screenData.memberships.length)">
-                                <span>
+                                <span class="noMembershipsFound">
                                     {{screenData.noMembershipsFoundLabel}}
                                 </span>
                             </div>

@@ -1,6 +1,7 @@
 package org.jumpmind.pos.util;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.mutable.MutableLong;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,8 +20,6 @@ import static org.apache.commons.beanutils.BeanUtils.copyProperty;
 
 @Slf4j
 public class ReflectUtils {
-
-    static final Logger log = LoggerFactory.getLogger(ReflectUtils.class);
 
     public static void setProperty(Field field, Object target, Object value) {
         value = messageNulls(field, value);
@@ -69,6 +68,8 @@ public class ReflectUtils {
             value = ((Number) value).intValue();
         } else if (field.getType().equals(BigDecimal.class) && value instanceof Number) {
             value = new BigDecimal(value.toString());
+        } else if ((field.getType().equals(MutableLong.class) || field.getType().equals(Long.class)) && value instanceof Number) {
+            value = ((Number) value).longValue();
         } else if ((field.getType().equals(Boolean.class) || field.getType().equals(boolean.class))
                 && (value instanceof Number)) {
             Number number = (Number) value;

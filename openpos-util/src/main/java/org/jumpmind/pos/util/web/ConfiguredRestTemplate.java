@@ -62,7 +62,25 @@ public class ConfiguredRestTemplate extends RestTemplate {
     public ConfiguredRestTemplate(int timeout) {
         super(build(timeout));
         this.mapper = DefaultObjectMapper.build();
-        getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(this.mapper));
+        getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(this.mapper) {
+
+            @Override
+            public boolean canRead(java.lang.Class<?> clazz,
+                                   org.springframework.http.MediaType mediaType) {
+                return true;
+            }
+            @Override
+            public boolean canRead(java.lang.reflect.Type type,
+                                   java.lang.Class<?> contextClass,
+                                   org.springframework.http.MediaType mediaType) {
+                return true;
+            }
+            @Override
+            protected boolean canRead(
+                    org.springframework.http.MediaType mediaType) {
+                return true;
+            }
+        });
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
         interceptors.add(new LoggingRequestInterceptor());
         setInterceptors(interceptors);

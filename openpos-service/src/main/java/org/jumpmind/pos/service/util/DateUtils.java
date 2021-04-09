@@ -18,62 +18,61 @@ public final class DateUtils {
     private static final String ISO_DATE_TIME_SECONDS = "yyyy-MM-dd HH:mm:ss";
     private static final String ISO_DATE_TIME_SECONDS_T = "yyyy-MM-dd'T'HH:mm:ss";
     private static final String ISO_DATE = "yyyy-MM-dd";
-    
+
+    public static final String SAFE_NULL_STR_VALUE = "null";
+
     private DateUtils() {
     }
-    
-    private static String[] FORMATS = new String[] {
+
+    private static final String[] FORMATS = new String[] {
             ISO_DATE_TIME_MILLIS,
             ISO_DATE_TIME_MILLIS_T,
             ISO_DATE_TIME_SECONDS,
             ISO_DATE_TIME_SECONDS_T,
             ISO_DATE
     };
-    
+
     public static Date parseDateTimeISO(String date) {
-        if (!StringUtils.isEmpty(date)) {
-            Exception originalException = null;
-            for (String format : FORMATS) {
-                if (date.length() == format.length() || date.length() == format.length()-2) {                    
-                    SimpleDateFormat dateFormat = new SimpleDateFormat(format);
-                    try {
-                        return dateFormat.parse(date);
-                    } catch (ParseException ex) {
-                        originalException = ex;
-                    }
+        if (StringUtils.isEmpty(date)) {
+            return null;
+        }
+        Exception originalException = null;
+        for (String format : FORMATS) {
+            if (date.length() == format.length() || date.length() == format.length() - 2 || date.length() == format.length() + 4) {
+                SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+                try {
+                    return dateFormat.parse(date);
+                } catch (ParseException ex) {
+                    originalException = ex;
                 }
             }
-            if (originalException != null) {
-                throw new PosServerException("Failed to parse date as ISO format: '" + date + "'", originalException);                
-            } else {                
-                throw new PosServerException("Failed to parse date as ISO format: '" + date + "'");
-            }
+        }
+        if (originalException != null) {
+            throw new PosServerException("Failed to parse date as ISO format: '" + date + "'", originalException);
         } else {
-            return null;            
+            throw new PosServerException("Failed to parse date as ISO format: '" + date + "'");
         }
     }
-    
+
     public static String formatDateTimeISO(Date date) {
         if (date != null) {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            SimpleDateFormat dateFormat = new SimpleDateFormat(ISO_DATE_TIME_SECONDS);
             return dateFormat.format(date);
-        } else {
-            return "null";            
         }
+        return SAFE_NULL_STR_VALUE;
     }
 
     public static long daysBetween(Date date1, Date date2) {
-        Calendar cal1 = Calendar.getInstance(); 
+        Calendar cal1 = Calendar.getInstance();
         cal1.setTime(date1);
-        Calendar cal2 = Calendar.getInstance(); 
+        Calendar cal2 = Calendar.getInstance();
         cal2.setTime(date2);
-        
-        long diffDays = (cal2.getTimeInMillis()-cal1.getTimeInMillis()) / (24 * 60 * 60 * 1000);
-        return diffDays;
+
+        return (cal2.getTimeInMillis() - cal1.getTimeInMillis()) / (24 * 60 * 60 * 1000);
     }
 
     public static String changeFormat(String value, String existingFormat, String newFormat) {
-        if(StringUtils.isBlank(value)) {
+        if (StringUtils.isBlank(value)) {
             return value;
         }
 

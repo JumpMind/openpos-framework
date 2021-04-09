@@ -286,10 +286,38 @@ public class DBSession {
                     if (value instanceof Long) {
                         int intValue = Math.toIntExact(((Long) value).longValue());
                         return new Integer(intValue);
+                    } else if (value instanceof Number) {
+                        return ((Number) value).intValue();
+                    } else if (value == null) {
+                        return null;
+                    } else {
+                        throw new PersistException("Unexpected result: " + value);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            throw new PersistException("Failed to execute query. Name: " + query.getName() + " Parameters: " + params, ex);
+        }
+        throw new PersistException("Invalid results: Failed to execute query. Name: " + query.getName() + " Parameters: " + params + " Results: " + results);
+    }
 
-                    } else if (value instanceof Integer) {
-                        return (Integer) value;
+    public Long queryForLong(Query query, Map<String, Object> params) {
+        QueryTemplate queryTemplate = getQueryTemplate(query);
+        List results = null;
+        try {
+            SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
+            results = queryInternal(null, sqlStatement, 1000);
 
+            if (results.size() == 1) {
+                Row row = (Row) results.get(0);
+
+                if (row.keySet().size() == 1) {
+                    Object value = row.values().iterator().next();
+
+                    if (value instanceof Number) {
+                        return ((Number) value).longValue();
+                    } else if (value == null) {
+                        return null;
                     } else {
                         throw new PersistException("Unexpected result: " + value);
                     }
