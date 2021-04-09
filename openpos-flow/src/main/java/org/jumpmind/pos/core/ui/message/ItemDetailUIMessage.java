@@ -42,6 +42,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private String buddyStoreOfflineTitle;
     private List<BuddyStore> buddyStores;
     private List<ActionItem> actions;
+    private List<String> detailSections;
 
 
     public void addItemProperty(DisplayProperty property) {

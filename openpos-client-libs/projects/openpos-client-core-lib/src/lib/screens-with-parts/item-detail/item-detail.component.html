@@ -29,7 +29,9 @@
             <div class="summary-instructions">
                 <hr>                
                 <app-instructions class="option-instructions" *ngIf="screen.itemOptionInstructions" [instructions]="screen.itemOptionInstructions"></app-instructions>
-                <p class="summary" *ngIf="screen.summary" responsive-class>{{screen.summary}}</p>
+                <div class="summary" *ngIf="screen.summary" responsive-class>
+                    <div class="detail-section" *ngFor="let section of screen.detailSections" [innerHtml]="section | markdownFormatter"></div>
+                </div>
             </div>
 
             <div class="actions">
