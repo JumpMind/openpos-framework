@@ -51,17 +51,17 @@
     </mat-card>
     
     <div class="inv-prom-container" responsive-class>
-        <mat-card responsive-class class="buddy-store page-gutter padding-none">
+        <mat-card *ngIf="screen.buddyStores" responsive-class class="buddy-store page-gutter padding-none">
             <div responsive-class class="page-gutter page-element margin-bottom">
                 <h3 responsive-class>
-                    {{screen.buddyStoreTitle}} "Buddy Stores"
+                    {{!screen.buddyStoreOffline ? screen.buddyStoreTitle : screen.buddyStoreOfflineTitle}}
                 </h3>
 
-                <table class="item-details-table buddy-stores">
+                <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">
                     <thead>
                         <tr>
-                            <th>Store</th>
-                            <th>Count</th>
+                            <th>{{screen.buddyStoreTableStoreHeader}}</th>
+                            <th>{{screen.buddyStoreTableCountHeader}}</th>
                         </tr>
                     </thead>
                     

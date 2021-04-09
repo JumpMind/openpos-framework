@@ -28,5 +28,7 @@ export interface ItemDetailInterface extends IAbstractScreen {
     buddyStoreTitle: string;
     buddyStoreIcon: string;
     buddyStoreOfflineTitle: string;
+    buddyStoreTableStoreHeader: string;
+    buddyStoreTableCountHeader: string;
     buddyStores: BuddyStoreInterface[];
 }
