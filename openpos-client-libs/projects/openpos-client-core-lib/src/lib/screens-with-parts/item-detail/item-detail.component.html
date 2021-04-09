@@ -57,28 +57,21 @@
                     {{screen.buddyStoreTitle}} "Buddy Stores"
                 </h3>
 
-                <span class="buddy-store-table-header promotion-item-gray">
-                    <!-- <div class="promotion-item-icon">
-                        <app-icon iconClass="md"></app-icon>
-                    </div> -->
-                    <div class="promotion-item-name">
-                        Store
-                    </div>
-                    <div class="price">
-                        Count
-                    </div>
-                </span>
-                <span *ngFor="let store of screen.buddyStores; let i = index" class="promotion-items" [class.promotion-item-gray]="i % 2">
-                    <!-- <div class="promotion-item-icon">
-                        <app-icon [iconName]="" color="primary" class="promotion-icon" iconClass="md"></app-icon>
-                    </div> -->
-                    <div class="promotion-item-name">
-                        {{store.storeName}}
-                    </div>
-                    <div class="price">
-                        {{store.storeCount}}
-                    </div>
-                </span>
+                <table class="item-details-table buddy-stores">
+                    <thead>
+                        <tr>
+                            <th>Store</th>
+                            <th>Count</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <tr *ngFor="let store of screen.buddyStores">
+                            <td>{{store.storeName}}</td>
+                            <td>{{store.storeCount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </mat-card>
         
@@ -93,7 +86,7 @@
                 <table class="item-details-table promotions">
                     <thead>
                         <tr>
-                            <th><app-icon iconClass="md"></app-icon></th>
+                            <th></th>
                             <th>{{screen.itemValueDisplay.label}}</th>
                             <th>{{screen.itemValueDisplay.value}}</th>
                         </tr>
@@ -107,28 +100,6 @@
                         </tr>
                     </tbody>
                 </table>
-                <!-- <span class="promotion-items promotion-item-gray">
-                    <div class="promotion-item-icon">
-                        <app-icon iconClass="md"></app-icon>
-                    </div>
-                    <div class="promotion-item-name">
-                        {{screen.itemValueDisplay.label}}
-                    </div>
-                    <div class="price">
-                        {{screen.itemValueDisplay.value}}
-                    </div>
-                </span>
-                <span *ngFor="let promo of screen.promotions; let i = index" class="promotion-items" [class.promotion-item-gray]="i % 2">
-                    <div class="promotion-item-icon">
-                        <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon>
-                    </div>
-                    <div class="promotion-item-name">
-                        {{promo.promotionName}}
-                    </div>
-                    <div class="price">
-                        {{promo.promotionPrice}}
-                    </div>
-                </span> -->
             </div>
         </mat-card>
     </div>
