@@ -5,8 +5,10 @@
         color: $app-primary;
     }
 
-    .promotion-item-gray {
-        background-color: $background;
+    .item-details-table {
+        thead {
+            background-color: $background;
+        }
     }
 
     .rounded-edge {
