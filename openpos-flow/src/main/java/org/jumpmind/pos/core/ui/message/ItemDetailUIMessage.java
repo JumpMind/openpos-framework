@@ -37,6 +37,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private String itemOptionInstructions;
     
     private String inventoryMessage;
+    private boolean buddyStoreOffline;
     private String buddyStoreTitle;
     private String buddyStoreIcon;
     private String buddyStoreOfflineTitle;
