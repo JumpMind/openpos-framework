@@ -57,14 +57,7 @@
                     {{!screen.buddyStoreOffline ? screen.buddyStoreTitle : screen.buddyStoreOfflineTitle}}
                 </h3>
 
-                <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">
-                    <thead>
-                        <tr>
-                            <th>{{screen.buddyStoreTableStoreHeader}}</th>
-                            <th>{{screen.buddyStoreTableCountHeader}}</th>
-                        </tr>
-                    </thead>
-                    
+                <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">                    
                     <tbody>
                         <tr *ngFor="let store of screen.buddyStores">
                             <td>{{store.storeName}}</td>
@@ -83,16 +76,13 @@
                 <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
                                 [instructionsSize]="'text-md'"></app-instructions>
 
-                <table class="item-details-table promotions">
-                    <thead>
+                <table class="item-details-table promotions">                    
+                    <tbody>
                         <tr>
                             <th></th>
                             <th>{{screen.itemValueDisplay.label}}</th>
                             <th>{{screen.itemValueDisplay.value}}</th>
                         </tr>
-                    </thead>
-                    
-                    <tbody>
                         <tr *ngFor="let promo of screen.promotions">
                             <td><app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon></td>
                             <td>{{promo.promotionName}}</td>
