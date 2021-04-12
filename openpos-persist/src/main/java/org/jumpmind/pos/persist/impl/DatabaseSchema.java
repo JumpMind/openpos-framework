@@ -34,6 +34,9 @@ import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.model.ITypeCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationConfigurationException;
+
+import javax.lang.model.element.UnknownAnnotationValueException;
 
 public class DatabaseSchema {
 
@@ -59,8 +62,8 @@ public class DatabaseSchema {
         this.entityExtensionClasses = entityExtensionClasses;
         this.augmenterHelper = augmenterHelper;
         if (clientContext == null)  {
-            log.error("ClientContext is null in {}, initialization error", this.getClass().getSimpleName());
-            //  TODO  Should this throw an exception instead?
+            log.error("Autowired ClientContext is null in {}: Initialization error", this.getClass().getSimpleName());
+            throw new AnnotationConfigurationException("Failed to autowire the ClientContext for database initialization, see AbstractRDBMSModule.clientContext");
         }
         this.clientContext = clientContext;
         this.shadowTablesConfig = shadowTablesConfig;

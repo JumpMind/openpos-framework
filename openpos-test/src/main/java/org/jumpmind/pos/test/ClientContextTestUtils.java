@@ -15,6 +15,22 @@ public class ClientContextTestUtils {
         clientContext.put( "appId", appId);
     }
 
+    public void setDefaultDeviceMode() {
+        clientContext.put("deviceMode", "default");
+    }
+
+    public void setTrainingDeviceMode() {
+        clientContext.put("deviceMode", "training");
+    }
+
+    public void setTrainingMode(boolean trainingMode)  {
+        if (trainingMode) {
+            setTrainingDeviceMode();
+        } else {
+            setDefaultDeviceMode();
+        }
+    }
+
     public void setTimezoneOffset(String offset){
         clientContext.put("timezoneOffset", offset);
     }

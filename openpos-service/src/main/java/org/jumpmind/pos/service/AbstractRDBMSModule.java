@@ -315,31 +315,41 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             sessionContext.put(DBSession.JDBC_FETCH_SIZE, env.getProperty(DBSession.JDBC_FETCH_SIZE));
             sessionContext.put(DBSession.JDBC_QUERY_TIMEOUT, env.getProperty(DBSession.JDBC_QUERY_TIMEOUT));
 
-            ShadowTablesConfigModel shadowTablesConfig = null;
-            String shadowTablesDeviceMode = getEnvironmentConfig("db.shadowTables.deviceMode", "");
-            String shadowTablePrefix = getEnvironmentConfig("db.shadowTables.tablePrefix", "tng");
-            String validateQueries = getEnvironmentConfig("db.shadowTables.validateQueries", "true");
-
-            if (StringUtils.isNotEmpty(shadowTablesDeviceMode) && StringUtils.isNotEmpty(shadowTablePrefix)) {
-                List<String> includesList = getEnvironmentConfigList("db.shadowTables.includes");
-                List<String> excludesList = getEnvironmentConfigList("db.shadowTables.excludes");
-
-                if (hasShadowTables(getTablePrefix(), includesList)) {
-                    log.info("Module {} has shadow table(s) for device mode {}", getTablePrefix().toUpperCase(), shadowTablesDeviceMode);
-                    shadowTablesConfig = new ShadowTablesConfigModel(
-                            shadowTablesDeviceMode,
-                            shadowTablePrefix,
-                            validateQueries.equalsIgnoreCase("true") || validateQueries.equalsIgnoreCase("yes") || validateQueries.equalsIgnoreCase("on"),
-                            includesList,
-                            getEnvironmentConfigList("db.shadowTables.excludes")
-                    );
-                }
-            }
+            ShadowTablesConfigModel shadowTablesConfig = initializeShadowTables();
 
             sessionFactory.init(getDatabasePlatform(), sessionContext, tableClasses, tableExtensionClasses, tagHelper, augmenterHelper, clientContext, shadowTablesConfig);
         }
 
         return sessionFactory;
+    }
+
+    protected ShadowTablesConfigModel initializeShadowTables()  {
+        ShadowTablesConfigModel shadowTablesConfig = null;
+        String shadowTablesDeviceMode = getEnvironmentConfig("db.shadowTables.deviceMode", "");
+        String shadowTablePrefix = getEnvironmentConfig("db.shadowTables.tablePrefix", "tng");
+        String validateQueries = getEnvironmentConfig("db.shadowTables.validateQueries", "true");
+
+        if (StringUtils.isNotEmpty(shadowTablesDeviceMode) && StringUtils.isNotEmpty(shadowTablePrefix)) {
+            List<String> includesList = getEnvironmentConfigList("db.shadowTables.includes");
+            List<String> excludesList = getEnvironmentConfigList("db.shadowTables.excludes");
+
+            if (hasShadowTables(getTablePrefix(), includesList)) {
+                log.info("Module {} has shadow table(s) for device mode {}", getTablePrefix().toUpperCase(), shadowTablesDeviceMode);
+                shadowTablesConfig = new ShadowTablesConfigModel(
+                    shadowTablesDeviceMode,
+                    shadowTablePrefix,
+                    validateQueries.equalsIgnoreCase("true") || validateQueries.equalsIgnoreCase("yes") || validateQueries.equalsIgnoreCase("on"),
+                    includesList,
+                    getEnvironmentConfigList("db.shadowTables.excludes")
+                );
+            }
+        }
+
+        if (clientContext == null) {
+            log.error("Autowired ClientContext is null in {}: Initialization error", this.getClass().getSimpleName());
+        }
+
+        return shadowTablesConfig;
     }
 
     @Override

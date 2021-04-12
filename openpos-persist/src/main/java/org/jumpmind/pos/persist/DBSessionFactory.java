@@ -44,20 +44,6 @@ public class DBSessionFactory {
             List<Class<?>> entities,
             List<Class<?>> extensionEntities,
             TagHelper tagHelper,
-            AugmenterHelper augmenterHelper) {
-
-        QueryTemplates queryTemplates = getQueryTemplates(sessionContext.get("module.tablePrefix"));
-        DmlTemplates dmlTemplates = getDmlTemplates(sessionContext.get("module.tablePrefix"));
-
-        init(databasePlatform, sessionContext, entities, extensionEntities, queryTemplates, dmlTemplates, tagHelper, augmenterHelper, null, null);
-    }
-
-    public void init(
-            IDatabasePlatform databasePlatform,
-            TypedProperties sessionContext,
-            List<Class<?>> entities,
-            List<Class<?>> extensionEntities,
-            TagHelper tagHelper,
             AugmenterHelper augmenterHelper,
             ClientContext clientContext,
             ShadowTablesConfigModel shadowTablesConfig) {
