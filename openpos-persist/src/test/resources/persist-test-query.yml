@@ -17,7 +17,7 @@ queries:
   name: carCountByModelWithIn
   select: >
     select count(*) as count, model
-    from car_car
+    from CarModel
     where make in (${make})
     group by model
     order by model
@@ -25,13 +25,13 @@ queries:
   name: carCountByModel
   select: > 
     select count(*) as count, model 
-    from car_car 
+    from CarModel
     where make = ${make} 
     group by model 
     order by model
 -
   name: carCountByModel_Segmented
-  select: select count(*) as count, model from car_car
+  select: select count(*) as count, model from CarModel
   where: make = ${make}
   groupBy: model
   orderBy: model
@@ -39,7 +39,7 @@ queries:
   name: carReport
   select: > 
     select count(*) as count, model 
-    from car_car 
+    from CarModel
     where make = ${make} 
       AND model = ${model}
     group by model 
@@ -49,7 +49,7 @@ queries:
   where: $${columnName} = ${columnValue}
 - 
   name: carsByLiteralReplacementInSelectClause
-  select: select VIN, MODEL_YEAR, MAKE, MODEL, CREATE_TIME, CREATE_BY, LAST_UPDATE_TIME, LAST_UPDATE_BY, COLOR from CAR_CAR WHERE $${columnName} = ${columnValue}  
+  select: select VIN, MODEL_YEAR, MAKE, MODEL, CREATE_TIME, CREATE_BY, LAST_UPDATE_TIME, LAST_UPDATE_BY, COLOR from CarModel WHERE $${columnName} = ${columnValue}
 - 
   name: carsByLiteralReplacementInOptionalWhereClause
   optionalWhereClauses: 

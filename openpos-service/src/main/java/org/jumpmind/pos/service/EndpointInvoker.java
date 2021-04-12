@@ -339,7 +339,7 @@ public class EndpointInvoker implements InvocationHandler {
                     }
                 }
             }
-            log.info("{}.{}() {}",
+            log.debug("{}.{}() {}",
                     method.getDeclaringClass().getSimpleName(),
                     method.getName(),
                     implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
