@@ -1,5 +1,15 @@
 <h3>{{screenData.optionName}}</h3>
 <div class="swatch-container">
-    <img class="swatch"  *ngFor="let swatch of screenData.swatches" [class.selected]="swatch.id==screenData.selectedOption" [src]="swatch.imageUrl" (click)="selectOption(swatch)">
+    <div class="swatch" *ngFor="let swatch of screenData.swatches" 
+         (click)="selectOption(swatch)" 
+         [class.disabled]="swatch.disabled"
+         [class.selected]="swatch.id==screenData.selectedOption">
+        <div class="swatch-wrapper">
+            <img class="swatch-img"
+                 [src]="swatch.imageUrl">
+        </div>
+    </div>
+
+
 </div>
 <caption>{{selectedOptionName}}</caption>
