@@ -67,6 +67,8 @@ public class AsyncExecutor {
                 } else if (handleCancel != null) {
                     handleCancel.accept(null);
                 }
+            } finally {
+                this.beforeCancel = null;
             }
         });
     }
