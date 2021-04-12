@@ -51,41 +51,49 @@
         </div>
 
     </mat-card>
-    <mat-card responsive-class class="buddy-store page-gutter padding-none">
+    
+    <div class="inv-prom-container" responsive-class>
+        <mat-card *ngIf="screen.buddyStores" responsive-class class="buddy-store page-gutter padding-none">
+            <div responsive-class class="page-gutter page-element margin-bottom">
+                <h3 responsive-class>
+                    {{!screen.buddyStoreOffline ? screen.buddyStoreTitle : screen.buddyStoreOfflineTitle}}
+                </h3>
 
-    </mat-card>
-    <mat-card responsive-class *ngIf="screen.promotions" class="promotions page-gutter padding-none">
-        <div responsive-class class="page-gutter page-element margin-bottom">
-            <h3 responsive-class>
-                {{screen.promotions && screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
-            </h3>
-            <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
-                              [instructionsSize]="'text-md'"></app-instructions>
-            <span class="promotion-items promotion-item-gray">
-            <div class="promotion-item-icon">
-                <app-icon iconClass="md"></app-icon>
+                <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">                    
+                    <tbody>
+                        <tr *ngFor="let store of screen.buddyStores">
+                            <td>{{store.storeName}}</td>
+                            <td>{{store.storeCount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="promotion-item-name">
-                {{screen.itemValueDisplay.label}}
+        </mat-card>
+        
+        <mat-card responsive-class *ngIf="screen.promotions" class="promotions page-gutter padding-none">
+            <div responsive-class class="page-gutter page-element margin-bottom">
+                <h3 responsive-class>
+                    {{screen.promotions && screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
+                </h3>
+                <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
+                                [instructionsSize]="'text-md'"></app-instructions>
+
+                <table class="item-details-table promotions">                    
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th>{{screen.itemValueDisplay.label}}</th>
+                            <th>{{screen.itemValueDisplay.value}}</th>
+                        </tr>
+                        <tr *ngFor="let promo of screen.promotions">
+                            <td><app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon></td>
+                            <td>{{promo.promotionName}}</td>
+                            <td>{{promo.promotionPrice}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="price">
-                {{screen.itemValueDisplay.value}}
-            </div>
-        </span>
-            <ng-container *ngFor="let promo of screen.promotions; let i = index">
-            <span class="promotion-items" [ngClass]="{'promotion-item-gray': 0 === (i + 1) % 2}">
-                <div class="promotion-item-icon">
-                    <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon>
-                </div>
-                <div class="promotion-item-name">
-                    {{promo.promotionName}}
-                </div>
-                <div class="price">
-                    {{promo.promotionPrice}}
-                </div>
-            </span>
-            </ng-container>
-        </div>
-    </mat-card>
+        </mat-card>
+    </div>
 </section>
 
