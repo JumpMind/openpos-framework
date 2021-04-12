@@ -8,7 +8,7 @@
       color: map-get(map-get($theme, foreground), secondary-text);
     }
     
-    .swatch{
+    .swatch-wrapper{
       &.selected{
         border-color: mat-color(map-get($theme, selected));
       }
