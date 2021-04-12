@@ -30,9 +30,9 @@
     }
 
     .link-customer {
-        color: mat-color($theme, link-customer-color);
-        background-color: mat-color($theme, link-customer-background);
-        border-color: mat-color($theme, link-customer-background);
+        color: mat-color($theme, openpos-link-customer-color);
+        background-color: mat-color($theme, openpos-link-customer-background);
+        border-color: mat-color($theme, openpos-link-customer-background);
         border-style: solid;
         white-space: break-spaces;
         max-width: 100%;
