@@ -73,6 +73,9 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Value("${openpos.general.rebuildDatabase.enabled:true}")
     protected boolean rebuildDatabaseEnabled;
 
+    @Value(("${server.datasource.initialize:false}"))
+    protected boolean useInjectedDatasource;
+
     @Autowired
     protected TagHelper tagHelper;
 
@@ -236,8 +239,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Override
     public DataSource getDataSource() {
         boolean isOverridden = isNotBlank(env.getProperty(String.format("%s.%s", getName(), DB_POOL_URL)));
-        if (dataSource == null || dataSource.getClass().getSimpleName().contains("EmbeddedDataSourceProxy") ||
-            isOverridden) {
+        if (dataSource == null || isOverridden || !useInjectedDatasource) {
             this.dataSource = null;
             setupH2Server();
             if (this.dataSourceBeanName != null) {
