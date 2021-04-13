@@ -3,10 +3,7 @@
     <mat-card responsive-class class="padding-none page-gutter">
         <div responsive-class class="item-card padding-none page-gutter page-element margin-bottom">
             <h1 class="name" responsive-class>{{screen.itemName}}</h1>
-            <app-carousel class="carousel" [carouselSize]="carouselSize" [carouselItemClass]="'rounded-edge'">
-                <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
-                    <app-image [imageUrl]="image | imageUrl" [altImageUrl]="screen.alternateImageUrl" [altText]="'Image NotFound'"></app-image>
-                </ng-template>
+            <app-carousel class="carousel" [imgUrls]="screen.imageUrls">
             </app-carousel>
             
             <div class="inv-cost">

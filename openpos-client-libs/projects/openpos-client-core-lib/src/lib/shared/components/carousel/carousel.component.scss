@@ -1,44 +1,21 @@
 :host {
-    display: grid;
+    display: flex;
+    flex-direction: row;
+    max-height: 300px;
 }
 
-.carousel{
-    display: grid;
-    grid-template-columns: auto;
-    align-items: center;
-    justify-items: center;
-    justify-self: start;
+.thumbnails {
+    display: flex;
+    flex-direction: column;
+    max-width: 75px;
+
+    overflow-y: auto;
 }
 
-.item {
-    grid-area: 1/1/1/1;
-    position: relative;
-    overflow: hidden;
-}
+img {
+    object-fit: contain;
+    object-position: top;
 
-.left-arrow {
-    grid-area: 1/1/1/1;
-    justify-self:start;
-    z-index: 100;
-}
-
-.right-arrow {
-    grid-area: 1/1/1/1;
-    justify-self:end;
-    z-index: 100;
-}
-
-.carousel-nav-dots {
-    grid-area: 2/1/2/1;
-    margin-top: 5px;
-}
-
-.dot {
-    border: 1px solid;
-    border-radius: 10px;
-    display: inline-block;
-    height: 10px;
-    width: 10px;
-    margin-left:5px;
-    margin-right:5px
+    max-width: 300px;
+    max-height: 300px;
 }
