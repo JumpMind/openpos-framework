@@ -159,6 +159,7 @@ import { WarnButtonComponent } from './components/warn-button/warn-button.compon
 import {StayFocusedDirective} from './directives/stay-focused.directive';
 import { AudioLicenseComponent } from './components/audio-license/audio-license.component';
 import { ToastComponent } from './components/toast/toast.component';
+import { WatermarkComponent } from './components/watermark/watermark.component';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { ModalOverlayContainer } from './modal-overlay-container/modal-overlay-container';
 import { StatusDetailsComponent } from './status/status-details/status-details.component';
@@ -291,7 +292,8 @@ const components = [
     StampComponent,
     ToastComponent,
     ImageScannerComponent,
-    DisplayCustomerLookupComponent
+    DisplayCustomerLookupComponent,
+    WatermarkComponent
 ];
 
 const directives = [

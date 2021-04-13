@@ -53,13 +53,13 @@ public class DBSession {
     private IDatabasePlatform databasePlatform;
     private TypedProperties sessionContext;
     private NamedParameterJdbcTemplate jdbcTemplate;
-    private Map<String, QueryTemplate> queryTemplates;
-    private Map<String, DmlTemplate> dmlTemplates;
+    private QueryTemplates queryTemplates;
+    private DmlTemplates dmlTemplates;
     private TagHelper tagHelper;
     private AugmenterHelper augmenterHelper;
 
     public DBSession(String catalogName, String schemaName, DatabaseSchema databaseSchema, IDatabasePlatform databasePlatform,
-                     TypedProperties sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates,
+                     TypedProperties sessionContext, QueryTemplates queryTemplates, DmlTemplates dmlTemplates,
                      TagHelper tagHelper, AugmenterHelper augmenterHelper) {
         super();
         this.dmlTemplates = dmlTemplates;
@@ -206,7 +206,7 @@ public class DBSession {
     }
 
     public int executeDml(String namedDml, Object... params) {
-        DmlTemplate template = dmlTemplates.get(namedDml);
+        DmlTemplate template = this.getDmlTemplate(namedDml);
         if (template != null && isNotBlank(template.getDml())) {
             params = Arrays.stream(params).
                     map(p -> p instanceof Boolean ? (((Boolean) p ? 1 : 0)) : p).
@@ -347,13 +347,17 @@ public class DBSession {
         return wrapper;
     }
 
+    protected DmlTemplate getDmlTemplate(String templateName) {
+        return this.dmlTemplates.getDmlTemplate(databaseSchema.getDeviceMode(), templateName);
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> QueryTemplate getQueryTemplate(Query<T> query) {
         QueryTemplate queryTemplate = new QueryTemplate();
         boolean isEntityResult = AbstractModel.class.isAssignableFrom(query.getResultClass());
         // defined in config
-        if (queryTemplates.containsKey(query.getName())) {
-            queryTemplate = queryTemplates.get(query.getName()).copy();
+        if (queryTemplates.containsQueryTemplate(databaseSchema.getDeviceMode(), query.getName())) {
+            queryTemplate = queryTemplates.getQueryTemplate(databaseSchema.getDeviceMode(), query.getName()).copy();
         } else {
             queryTemplate.setName(query.getName());
         }
@@ -646,7 +650,7 @@ public class DBSession {
     }
 
     protected List<Table> getValidatedTables(Class<?> entityClass) {
-        List<Table> tables = databaseSchema.getTables(entityClass);
+        List<Table> tables = databaseSchema.getTables(databaseSchema.getDeviceMode(), entityClass);
         if (tables == null || tables.size() == 0) {
             throw new PersistException("Failed to locate a database table for entity class: '" + entityClass
                     + "'. Make sure the correct dbSession is used with the module by using the correct @Qualifier");

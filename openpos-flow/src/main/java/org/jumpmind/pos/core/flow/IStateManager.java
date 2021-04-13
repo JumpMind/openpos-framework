@@ -40,6 +40,8 @@ public interface IStateManager {
     public void init(String appId, String deviceId);
     public String getDeviceId();
     public String getAppId();
+    public String getDeviceMode();
+    public void setDeviceMode(String mode);
     public void doAction(String action);
     public void doAction(String action, Map<String, String> params);
     public void doAction(Action action);    

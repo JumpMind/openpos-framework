@@ -8,7 +8,9 @@ import org.jumpmind.pos.persist.DBSessionFactory;
 import org.jumpmind.pos.persist.DatabaseScriptContainer;
 import org.jumpmind.pos.persist.driver.Driver;
 import org.jumpmind.pos.persist.impl.QueryTemplates;
+import org.jumpmind.pos.persist.impl.ShadowTablesConfigModel;
 import org.jumpmind.pos.persist.model.*;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.PropertySource;
@@ -90,6 +92,16 @@ public class TestPersistCarsConfig {
             AugmenterHelper augmenterHelper = new AugmenterHelper();
             augmenterHelper.setAugmenterConfigs(augmenterConfigs);
 
+            ClientContext clientContext = new ClientContext();
+
+            ShadowTablesConfigModel shadowTablesConfig = new ShadowTablesConfigModel(
+                    "training",
+                    "tng",
+                    true,
+                    Arrays.asList("car_*"),
+                    Arrays.asList("car_stats")
+            );
+
             sessionFactory.init(
                     PersistTestUtil.testDbPlatform(), 
                     PersistTestUtil.getSessionContext(), 
@@ -98,7 +110,9 @@ public class TestPersistCarsConfig {
                     queryTemplates,
                     DBSessionFactory.getDmlTemplates("persist-test"),
                     tagHelper,
-                    augmenterHelper);
+                    augmenterHelper,
+                    clientContext,
+                    shadowTablesConfig);
             
 
             DBSession session = sessionFactory.createDbSession();

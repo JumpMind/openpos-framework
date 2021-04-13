@@ -30,7 +30,7 @@ import java.util.Map;
 public class ConfiguredRestTemplate extends RestTemplate {
 
     ObjectMapper mapper;
-    
+
     private Map<String, String> additionalHeaders;
 
     static BufferingClientHttpRequestFactory build(int timeout) {
@@ -67,18 +67,13 @@ public class ConfiguredRestTemplate extends RestTemplate {
             @Override
             public boolean canRead(java.lang.Class<?> clazz,
                                    org.springframework.http.MediaType mediaType) {
-                return true;
+                return super.canRead(mediaType);
             }
             @Override
             public boolean canRead(java.lang.reflect.Type type,
                                    java.lang.Class<?> contextClass,
                                    org.springframework.http.MediaType mediaType) {
-                return true;
-            }
-            @Override
-            protected boolean canRead(
-                    org.springframework.http.MediaType mediaType) {
-                return true;
+                return super.canRead(mediaType);
             }
         });
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
@@ -111,7 +106,7 @@ public class ConfiguredRestTemplate extends RestTemplate {
         });
 
     }
-    
+
     public void addHeader(String name, String value){
         if( additionalHeaders == null){
             additionalHeaders = new HashMap<>();
@@ -147,11 +142,11 @@ public class ConfiguredRestTemplate extends RestTemplate {
     public HttpHeaders buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        
+
         if( additionalHeaders != null){
             additionalHeaders.forEach((s, s2) -> headers.set(s, s2));
         }
-        
+
         return headers;
     }
 
