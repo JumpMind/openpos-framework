@@ -1,15 +1,24 @@
 <h3>{{screenData.optionName}}</h3>
-<div class="swatch-container">
-    <div class="swatch" *ngFor="let swatch of screenData.swatches" 
-         (click)="selectOption(swatch)" 
-         [class.disabled]="swatch.disabled"
-         [class.selected]="swatch.id==screenData.selectedOption">
-        <div class="swatch-wrapper">
-            <img class="swatch-img"
-                 [src]="swatch.imageUrl">
+<div *ngIf="useImageSwatch; else imageSwatchBackup">
+    <div class="swatch-container">
+        <div class="swatch" *ngFor="let swatch of screenData.swatches" 
+             (click)="selectOption(swatch.id)" 
+             [class.disabled]="swatch.disabled"
+             [class.selected]="swatch.id==screenData.selectedOption">
+            <div class="swatch-wrapper">
+                <img class="swatch-img"
+                     (error)="onImageLoadFailed()"
+                     [src]="swatch.imageUrl">
+            </div>
         </div>
     </div>
-
-
+    <caption>{{selectedOptionName}}</caption>
 </div>
-<caption>{{selectedOptionName}}</caption>
+<ng-template #imageSwatchBackup>
+    <mat-select (selectionChange)="selectOption($event.value)" [value]="screenData.selectedOption" [placeholder]="screenData.optionPlaceholder">
+        <mat-option *ngFor="let option of screenData.swatches"
+                    [value]="option.id">
+            {{option.name}}
+        </mat-option>
+    </mat-select>
+</ng-template>

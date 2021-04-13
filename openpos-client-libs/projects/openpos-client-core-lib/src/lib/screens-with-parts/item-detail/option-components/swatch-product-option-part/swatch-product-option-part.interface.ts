@@ -6,5 +6,5 @@ export interface SwatchProductOptionPartInterface {
     optionName: string;
     selectedOption: string;
     selectOptionAction: IActionItem;
-
+    optionPlaceholder: string;
 }

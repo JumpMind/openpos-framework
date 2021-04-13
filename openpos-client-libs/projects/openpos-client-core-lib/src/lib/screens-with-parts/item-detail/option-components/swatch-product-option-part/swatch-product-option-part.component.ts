@@ -13,11 +13,11 @@ import {SwatchInterface} from './swatch.interface';
     templateUrl: './swatch-product-option-part.component.html',
     styleUrls: ['./swatch-product-option-part.scss']
 })
-export class SwatchProductOptionPart extends ScreenPartComponent<SwatchProductOptionPartInterface> implements OnInit{
+export class SwatchProductOptionPart extends ScreenPartComponent<SwatchProductOptionPartInterface> implements OnInit {
+    selectedOptionName: string;
+    useImageSwatch = true;
     
-    selectedOptionName: String;
-    
-    constructor( @Optional() private injector: Injector, @Optional() @Inject(OPTION_NAME) private optionName: string ){
+    constructor( @Optional() injector: Injector, @Optional() @Inject(OPTION_NAME) private optionName: string ) {
         super(injector);
     }
 
@@ -28,12 +28,27 @@ export class SwatchProductOptionPart extends ScreenPartComponent<SwatchProductOp
     }
 
     screenDataUpdated() {
-        this.selectedOptionName = this.screenData.swatches.find(value => value.id === this.screenData.selectedOption).name;
+        if (this.screenData && this.screenData.swatches) {
+            let swatch = this.screenData.swatches.find(value => value.id === this.screenData.selectedOption);
+            
+            if (swatch) {
+                this.selectedOptionName = swatch.name;
+            } else {
+                this.selectedOptionName = '';
+            }
+        } else {
+            this.selectedOptionName = '';
+        }
+
         console.log(this.selectedOptionName)
     }
     
-    selectOption(swatch: SwatchInterface){
-        this.doAction(this.screenData.selectOptionAction, swatch.id)
+    selectOption(swatchId: string){
+        console.log("selected", swatchId);
+        this.doAction(this.screenData.selectOptionAction, swatchId);
     }
 
+    onImageLoadFailed() {
+        this.useImageSwatch = false;
+    }
 }
