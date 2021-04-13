@@ -29,9 +29,15 @@ export class SwatchProductOptionPart extends ScreenPartComponent<SwatchProductOp
 
     screenDataUpdated() {
         if (this.screenData && this.screenData.swatches) {
-            this.selectedOptionName = this.screenData.swatches.find(value => value.id === this.screenData.selectedOption).name;
+            let swatch = this.screenData.swatches.find(value => value.id === this.screenData.selectedOption);
+            
+            if (swatch) {
+                this.selectedOptionName = swatch.name;
+            } else {
+                this.selectedOptionName = '';
+            }
         } else {
-            this.selectedOptionName = "";
+            this.selectedOptionName = '';
         }
 
         console.log(this.selectedOptionName)

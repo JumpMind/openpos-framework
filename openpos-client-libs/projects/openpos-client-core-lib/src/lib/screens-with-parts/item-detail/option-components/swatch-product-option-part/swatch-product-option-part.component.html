@@ -15,8 +15,8 @@
     <caption>{{selectedOptionName}}</caption>
 </div>
 <ng-template #imageSwatchBackup>
-    <mat-select (selectionChange)="selectOption($event.value)" [value]="screenData.selectedOption">
-        <mat-option *ngFor="let option of screenData.swatches" 
+    <mat-select (selectionChange)="selectOption($event.value)" [value]="screenData.selectedOption" [placeholder]="screenData.optionPlaceholder">
+        <mat-option *ngFor="let option of screenData.swatches"
                     [value]="option.id">
             {{option.name}}
         </mat-option>
