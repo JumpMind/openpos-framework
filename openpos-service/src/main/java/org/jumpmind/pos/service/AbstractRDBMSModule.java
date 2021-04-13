@@ -256,7 +256,11 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                 String jdbcUrl = getURL();
                 String realDriverClassName = getDriver();
                 String openposDriverName = Driver.class.getName(); // Also triggers load of openpos driver wrapper.
-                if (jdbcUrl.startsWith(Driver.DRIVER_PREFIX) && !StringUtils.equals(openposDriverName, realDriverClassName)) {
+                if (realDriverClassName.equals(openposDriverName)) {
+                    throw new PersistException("The openpos jdbc driver class ('" + openposDriverName + "') should not be used directly. " +
+                            "Rather use the real driver name such as org.postgresql.Driver");
+                }
+                if (jdbcUrl.startsWith(Driver.DRIVER_PREFIX)) {
                     registerDriver(realDriverClassName);
                     properties.put(DB_POOL_DRIVER, openposDriverName);
                     properties.put("db.wrapped.driver", realDriverClassName);
