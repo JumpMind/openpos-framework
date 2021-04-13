@@ -251,13 +251,20 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
             }
 
             if (dataSource == null) {
-                Driver.class.getName(); // Load openpos driver wrapper.
                 TypedProperties properties = new TypedProperties();
 
-                String driverClassName = getDriver();
+                String jdbcUrl = getURL();
+                String realDriverClassName = getDriver();
+                String openposDriverName = Driver.class.getName(); // Also triggers load of openpos driver wrapper.
+                if (jdbcUrl.startsWith(Driver.DRIVER_PREFIX) && !StringUtils.equals(openposDriverName, realDriverClassName)) {
+                    registerDriver(realDriverClassName);
+                    properties.put(DB_POOL_DRIVER, openposDriverName);
+                    properties.put("db.wrapped.driver", realDriverClassName);
+                } else {
+                    properties.put(DB_POOL_DRIVER, realDriverClassName);
+                }
 
-                properties.put(DB_POOL_DRIVER, driverClassName);
-                properties.put(DB_POOL_URL, getURL());
+                properties.put(DB_POOL_URL, jdbcUrl);
                 properties.put(DB_POOL_USER, getDbProperties(DB_POOL_USER, null));
                 properties.put(DB_POOL_PASSWORD, getDbProperties(DB_POOL_PASSWORD, null));
                 properties.put(DB_POOL_INITIAL_SIZE, getDbProperties(DB_POOL_INITIAL_SIZE, "5"));
@@ -275,12 +282,22 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                 log.info(String.format(
                         "About to initialize the '%s' module datasource using the following driver:"
                                 + " '%s' and the following url: '%s' and the following user: '%s'",
-                        getName(), driverClassName, properties.get(DB_POOL_URL), properties.get(DB_POOL_USER)));
+                        getName(), realDriverClassName, properties.get(DB_POOL_URL), properties.get(DB_POOL_USER)));
 
                 dataSource = BasicDataSourceFactory.create(properties, securityService());
             }
         }
         return dataSource;
+    }
+
+    protected void registerDriver(String driverClassName) {
+        log.info("Loading JDBC driver '" + driverClassName + "'");
+        try {
+            Thread.currentThread().getContextClassLoader().loadClass(driverClassName);
+        } catch (Exception ex) {
+            throw new PersistException("Failed to load JDBC driver '" + driverClassName + "'", ex);
+        }
+
     }
 
     protected DBSessionFactory sessionFactory() {
