@@ -4,6 +4,7 @@ export interface Reward {
     promotionId: string;
     name: string;
     expirationDate: string;
+    amount: number;
     applyButton: IActionItem;
 };
 

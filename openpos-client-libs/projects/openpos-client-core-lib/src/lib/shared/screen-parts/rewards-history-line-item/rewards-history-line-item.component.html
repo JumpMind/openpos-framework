@@ -4,6 +4,9 @@
         <div [ngClass]="{'name': true, 'expired': !reward.redeemed}" responsive-class>{{reward.name}}</div>
         <div *ngIf="reward.expirationDate"  class="expiration" responsive-class><app-icon [iconName]="screenData.expiredIcon" [iconClass]="'material-icons' + (isMobile | async) ? ' mat-16' : 'mat-24'"></app-icon>{{screenData.expiredLabel}} {{reward.expirationDate}}</div>
     </div>
+    <div [ngClass]="{'reward': true, 'expired': !reward.redeemed}" responsive-class>
+        <app-currency-text *ngIf="reward.amount" [amountText]="reward.amount"></app-currency-text>
+    </div>
     <div class="status" >
         <span responsive-class>{{(reward.redeemed) ? screenData.redeemedLabel : screenData.expiredLabel}}</span>
     </div>

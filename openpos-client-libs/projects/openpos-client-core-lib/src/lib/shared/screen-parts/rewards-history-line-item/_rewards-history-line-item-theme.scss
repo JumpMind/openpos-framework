@@ -4,4 +4,12 @@
     .reward-history-line-item-wrapper .status, .mobile-reward-history-line-item-wrapper .status {
         color: $primary;
     }
+
+    .reward {
+        &.expired {
+            .currency-text-after-symbol {
+                text-decoration: line-through;
+            }
+        }
+    }
 }
