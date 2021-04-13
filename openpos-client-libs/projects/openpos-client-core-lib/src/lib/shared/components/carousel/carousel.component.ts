@@ -45,4 +45,22 @@ export class CarouselComponent {
             this.selectedImageUrl = undefined;
         }
     }
+    
+    onThumbnailError(index: number) {
+        let url = this.displayImageUrls[index];
+
+        this.displayImageUrls.splice(index, 1);
+
+        if (this.selectedImageUrl === url) {
+            if (this.displayImageUrls.length > 0) {
+                this.selectedImageUrl = this.displayImageUrls[0];
+            } else {
+                this.selectedImageUrl = undefined;
+            }
+        }
+    }
+
+    onSelectedImageError() {
+        this.selectedImageUrl = undefined;
+    }
 }

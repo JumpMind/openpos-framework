@@ -3,7 +3,7 @@
     <mat-card responsive-class class="padding-none page-gutter">
         <div responsive-class class="item-card padding-none page-gutter page-element margin-bottom">
             <h1 class="name" responsive-class>{{screen.itemName}}</h1>
-            <app-carousel class="carousel" [imgUrls]="screen.imageUrls">
+            <app-carousel class="carousel" [imgUrls]="screen.imageUrls" [altImageUrl]="screen.alternateImageUrl" altImageText="Image Not Found">
             </app-carousel>
             
             <div class="inv-cost">
