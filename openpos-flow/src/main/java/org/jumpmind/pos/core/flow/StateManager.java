@@ -1128,6 +1128,16 @@ public class StateManager implements IStateManager {
         return applicationState.getAppId();
     }
 
+    @Override
+    public String getDeviceMode() {
+        return applicationState.getDeviceMode();
+    }
+
+    @Override
+    public void setDeviceMode(String deviceMode) {
+        applicationState.setDeviceMode(deviceMode);
+    }
+
     // called from a Timer thread.
     public void checkSessionTimeout() {
         // TODO come back to this, not working well with queue based state manager..

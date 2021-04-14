@@ -8,6 +8,21 @@
         .icon {
             color: map_get($foreground, icon);
         }
+        .memberships {
+            .customer-missing-info {
+                button {
+                    font-size: inherit;
+                    flex: inherit !important;
+                    overflow-x: hidden !important;
+                    white-space: pre-wrap !important;
+                    max-width: 100%;
+                    padding: 0px 10px;
+                    app-icon {
+                        padding-right: 10px;
+                    }
+                }
+            }
+        }
     }
 
     .item-counts {
@@ -15,9 +30,9 @@
     }
 
     .link-customer {
-        color: mat-color($theme, link-customer-color);
-        background-color: mat-color($theme, link-customer-background);
-        border-color: mat-color($theme, link-customer-background);
+        color: mat-color($theme, openpos-link-customer-color);
+        background-color: mat-color($theme, openpos-link-customer-background);
+        border-color: mat-color($theme, openpos-link-customer-background);
         border-style: solid;
         white-space: break-spaces;
         max-width: 100%;

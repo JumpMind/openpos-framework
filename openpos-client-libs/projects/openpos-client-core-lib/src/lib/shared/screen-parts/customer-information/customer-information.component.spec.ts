@@ -83,10 +83,24 @@ describe('CustomerInformationComponent', () => {
             validateIcon(fixture, '.email app-icon', 'mail_outline');
         });
 
+        it('does not display the email when the user does not have one', () => {
+            component.customer.email = undefined;
+            fixture.detectChanges();
+
+            validateDoesNotExist(fixture, '.email');
+        });
+
         it('displays the customer phone number and icon', () => {
             const phonePipe: PhonePipe = new PhonePipe(TestBed.get(FormattersService));
             validateText(fixture, '.phone-number', phonePipe.transform(component.customer.phoneNumber));
             validateIcon(fixture, '.phone-number app-icon', 'phone');
+        });
+
+        it('does not display the customer phone when the user does not have one', () => {
+            component.customer.phoneNumber = undefined;
+            fixture.detectChanges();
+
+            validateDoesNotExist(fixture, '.phone-number');
         });
 
         it('displays the customer loyalty number and icon', () => {
@@ -94,7 +108,21 @@ describe('CustomerInformationComponent', () => {
             validateIcon(fixture, '.loyalty-number app-icon', 'account_heart');
         });
 
+        it('does not display the customer loyalty number when the user does not have one', () => {
+            component.customer.loyaltyNumber = undefined;
+            fixture.detectChanges();
+
+            validateDoesNotExist(fixture, '.loyalty-number');
+        });
+
         describe('customer address', () => {
+            it('does not display the customer loyalty number when the user does not have one', () => {
+                component.customer.address = undefined;
+                fixture.detectChanges();
+
+                validateDoesNotExist(fixture, '.address');
+            });
+
             it('displays the icon', () => {
                 validateIcon(fixture, '.address app-icon', 'place');
             });

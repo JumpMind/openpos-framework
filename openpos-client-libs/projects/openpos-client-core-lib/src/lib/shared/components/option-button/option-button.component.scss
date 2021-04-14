@@ -92,6 +92,7 @@
 
     &.mobile {
         .mat-button-wrapper {
+            grid-template-columns: 16px 1fr 16px;
             display: grid !important;
             column-gap: 4px;
         }

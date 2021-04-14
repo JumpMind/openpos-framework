@@ -30,9 +30,13 @@ import org.jumpmind.pos.persist.model.AugmenterConfig;
 import org.jumpmind.pos.persist.model.AugmenterHelper;
 import org.jumpmind.pos.persist.model.AugmenterIndexConfig;
 import org.jumpmind.pos.persist.model.AugmenterModel;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.model.ITypeCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.AnnotationConfigurationException;
+
+import javax.lang.model.element.UnknownAnnotationValueException;
 
 public class DatabaseSchema {
 
@@ -46,19 +50,29 @@ public class DatabaseSchema {
     private static ModelValidator modelClassValidator = new ModelValidator();
     private String tablePrefix;
     private AugmenterHelper augmenterHelper;
+    private ShadowTablesConfigModel shadowTablesConfig;
+    private ClientContext clientContext;
+    private Map<Class<?>, ModelClassMetaData> shadowTables;
 
     @SneakyThrows
-    public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses, AugmenterHelper augmenterHelper) {
+    public void init(String tablePrefix, IDatabasePlatform platform, List<Class<?>> entityClasses, List<Class<?>> entityExtensionClasses, AugmenterHelper augmenterHelper, ClientContext clientContext, ShadowTablesConfigModel shadowTablesConfig) {
         this.platform = platform;
         this.tablePrefix = tablePrefix;
         this.entityClasses = entityClasses;
         this.entityExtensionClasses = entityExtensionClasses;
         this.augmenterHelper = augmenterHelper;
+        if (clientContext == null)  {
+            log.error("Autowired ClientContext is null in {}: Initialization error", this.getClass().getSimpleName());
+            throw new AnnotationConfigurationException("Failed to autowire the ClientContext for database initialization, see AbstractRDBMSModule.clientContext");
+        }
+        this.clientContext = clientContext;
+        this.shadowTablesConfig = shadowTablesConfig;
         desiredModel = buildDesiredModel();
     }
 
     protected Database buildDesiredModel() {
         Collection<Table> tables = loadTables(tablePrefix);
+        this.shadowTables = buildTrainingModeShadowTableList();
 
         Database db = new Database();
         db.addTables(tables);
@@ -69,34 +83,76 @@ public class DatabaseSchema {
                 table.setName(tableName.substring(0, tableName.length() - 1));
             }
         }
+
+        for (ModelClassMetaData shadowMeta : shadowTables.values())  {
+            db.addTable(shadowMeta.getShadowTable());
+            log.info("Adding shadow table, regular table name {}, shadow table name {}", getTableName(tablePrefix, shadowMeta.getTable().getName()), shadowMeta.getShadowTable().getName());
+        }
+
         return db;
     }
 
     public Table getTable(Class<?> entityClass, Class<?> superClass) {
-        List<ModelClassMetaData> metas = classToModelMetaData.get(entityClass).getModelClassMetaData();
-        if (metas != null) {
-            for (ModelClassMetaData modelMetaData : metas) {
-                if (modelMetaData.getClazz().equals(superClass)) {
-                    return modelMetaData.getTable();
+        return getTableForDeviceMode(getDeviceMode(), entityClass, superClass);
+    }
+
+    public Table getTableForDeviceMode(String deviceMode, Class<?> entityClass, Class<?> superClass)  {
+        ModelMetaData modelMetaData = classToModelMetaData.get(entityClass);
+
+        if (modelMetaData != null) {
+            List<ModelClassMetaData> metas = modelMetaData.getModelClassMetaData();
+
+            if (metas != null) {
+                //  Handle special Device Modes here.
+
+                if (deviceMode.equalsIgnoreCase("training")) {
+                    for (ModelClassMetaData regularMeta : metas) {
+                        if (regularMeta.getClazz().equals(superClass)) {
+                            ModelClassMetaData shadowMeta = shadowTables.get(superClass);
+                            return ((shadowMeta != null) && shadowMeta.hasShadowTable() ? shadowMeta.getShadowTable() : regularMeta.getTable());
+                        }
+                    }
+                }
+
+                //  If no special Device Mode, use the default approach.
+
+                for (ModelClassMetaData meta : metas) {
+                    if (meta.getClazz().equals(superClass)) {
+                        return meta.getTable();
+                    }
                 }
             }
         }
+
         return null;
     }
 
-    public List<Table> getTables(Class<?> entityClass) {
+    public List<Table> getTables(String deviceMode, Class<?> entityClass) {
         if (entityClass == null) {
             throw new PersistException("Cannot lookup a table for a null entity class.");
         }
 
         List<Table> tables = new ArrayList<>();
-        List<ModelClassMetaData> metas = classToModelMetaData.get(entityClass).getModelClassMetaData();
+        List<ModelClassMetaData> metas = getModelClassMetaDataList(deviceMode, entityClass);
         if (metas != null) {
-            for (ModelClassMetaData ModelMetaData : metas) {
-                tables.add(ModelMetaData.getTable());
+            for (ModelClassMetaData modelClassMetaData : metas) {
+                tables.add(modelClassMetaData.getTableForDeviceMode(deviceMode));
             }
         }
         return tables;
+    }
+
+    protected List<ModelClassMetaData> getModelClassMetaDataList(String deviceMode, Class<?> entityClass)  {
+        if (deviceMode.equalsIgnoreCase("training"))  {
+            List<ModelClassMetaData> metaList = new ArrayList<>();
+            for (ModelClassMetaData regularMeta : classToModelMetaData.get(entityClass).getModelClassMetaData()) {
+                ModelClassMetaData shadowMeta = shadowTables.get(regularMeta.getClazz());
+                metaList.add((shadowMeta != null) && shadowMeta.hasShadowTable() ? shadowMeta : regularMeta);
+            }
+            return metaList;
+        }
+
+        return classToModelMetaData.get(entityClass).getModelClassMetaData();
     }
 
     protected void refreshMetaData(Database actualModel) {
@@ -686,5 +742,171 @@ public class DatabaseSchema {
         }
     }
 
+    /**
+    **  This gets the shadow table list for this module.
+    */
+    private Map<Class<?>, ModelClassMetaData> buildTrainingModeShadowTableList()  {
+        Map<Class<?>, ModelClassMetaData> trainingModeShadowTableList = new HashMap<>();
 
+        //  We will configure Training Mode shadow tables if we got a shadow table configuration object
+        //  and the Device Mode is training.
+
+        if ((shadowTablesConfig != null) && shadowTablesConfig.getDeviceMode().equalsIgnoreCase("training")) {
+            //  Get a map of full table names (with prefix) to meta data for this module.
+
+            Map<String, ModelClassMetaData> tableMap = getTableMap();
+
+            //  Now figure out what tables to include and exclude.
+
+            Map<String, ModelClassMetaData> includeTableList = new HashMap<>();
+
+            //  Expand the includes list by replacing any wildcards.
+
+            for (String includeName : shadowTablesConfig.getIncludesList()) {
+                //  See if the given include entry matches the desired module.
+
+                if (includeName.toLowerCase().startsWith(tablePrefix.toLowerCase())) {
+                    log.info("Included shadow table name entry {} matches module prefix {}", includeName, tablePrefix);
+
+                    String leadingPortion = null;
+                    String trailingPortion = null;
+
+                    if (includeName.contains("*")) {
+                        //  Need to replace wildcards with the actual matching table names.
+                        log.info("Included shadow table name {} contains a wild card", includeName);
+
+                        //  Parse out the wildcard.
+
+                        int index = includeName.indexOf('*');
+                        leadingPortion = includeName.substring(0, index);
+
+                        if (!includeName.endsWith("*")) {
+                            trailingPortion = includeName.substring(index + 1);
+                        }
+
+                    } else {
+                        log.info("Included shadow table name {} does not contain a wild card", includeName);
+                    }
+
+                    //  See what table name(s) match the current include name.
+
+                    for (String tableName : tableMap.keySet()) {
+                        if (leadingPortion == null) {
+                            //  This is a valid table name without a wild card.
+
+                            if (tableName.equalsIgnoreCase(includeName)) {
+                                ModelClassMetaData meta = tableMap.get(tableName);
+                                meta.setShadowTable(shadowTablesConfig.getTablePrefix(), tablePrefix);
+                                includeTableList.put(tableName, meta);
+                            }
+
+                        } else {
+                            //  This is a table name that contained a wild card.
+
+                            if (tableName.startsWith(leadingPortion.toLowerCase()) || ((trailingPortion != null) && tableName.endsWith(trailingPortion.toLowerCase()))) {
+                                ModelClassMetaData meta = tableMap.get(tableName);
+                                meta.setShadowTable(shadowTablesConfig.getTablePrefix(), tablePrefix);
+                                includeTableList.put(tableName, meta);
+                            }
+                        }
+                    }
+
+                    log.info("Processed included shadow table entry {}, there are now {} shadow table(s) for this module", includeName, includeTableList.size());
+                }
+            }
+
+            //  Remove exclude table names from the list.
+
+            for (String excludeName : shadowTablesConfig.getExcludesList()) {
+                //  See if the given include entry matches the desired module.
+
+                if (excludeName.toLowerCase().startsWith(tablePrefix.toLowerCase())) {
+                    log.info("Excluded shadow table name entry {} matches module prefix {}", excludeName, tablePrefix);
+
+                    if (excludeName.contains("*")) {
+                        //  Need to replace wildcards with the actual matching table names.
+                        log.info("Excluded shadow table name {} contains a wild card", excludeName);
+
+                        //  Parse out the wildcard.
+
+                        int index = excludeName.indexOf('*');
+                        String leadingPortion = excludeName.substring(0, index);
+                        String trailingPortion = null;
+
+                        if (!excludeName.endsWith("*")) {
+                            trailingPortion = excludeName.substring(index + 1);
+                        }
+
+                        //  See what tables match the wild card we found.
+
+                        for (String tableName : tableMap.keySet()) {
+                            if (tableName.startsWith(leadingPortion.toLowerCase()) || ((trailingPortion != null) && tableName.endsWith(trailingPortion.toLowerCase()))) {
+                                includeTableList.remove(tableName);
+                                log.info("Removed excluded table name {} from the shadow table list", tableName);
+                            }
+                        }
+
+                    } else {
+                        //  For an exclude, if it does not contain a wildcard, just remove it.
+
+                        log.info("Excluded shadow table name {} does not contain a wild card", excludeName);
+                        includeTableList.remove(excludeName.toLowerCase());
+                    }
+
+                    log.info("Processed excluded shadow table name {}, there are now {} shadow table(s)", excludeName, includeTableList.size());
+                }
+            }
+
+            //  Finally, build the list of actual shadow tables.  This a map whose key is the
+            //  entity class corresponding to the given table, as opposed to the list we already
+            //  have whose key is the table name.
+
+            for (String tableName : includeTableList.keySet()) {
+                ModelClassMetaData tableClassMetaData = includeTableList.get(tableName);
+                trainingModeShadowTableList.put(tableClassMetaData.getClazz(), tableClassMetaData);
+            }
+
+            //  At this point, we've processed the table list.
+
+            log.info("Configuration specifies {} shadow table(s) for module {}", trainingModeShadowTableList.size(), tablePrefix.toUpperCase());
+        }
+
+        return trainingModeShadowTableList;
+    }
+
+    /**
+    **  Build a map of table names to ModelClassMetaData for this module.
+    */
+    private  Map<String, ModelClassMetaData> getTableMap() {
+        Map<String, ModelClassMetaData> modelClassMetaDataMap = new HashMap<>();
+
+        for (Class<?> tableClass : entityClasses) {
+            ModelMetaData modelMetaData = createMetaData(tableClass, entityExtensionClasses, platform);
+
+            for (ModelClassMetaData meta : modelMetaData.getModelClassMetaData()) {
+                Table entityTable = meta.getTable();
+                String tableName = entityTable.getName();
+
+                if (tableName.endsWith("_")) {
+                    tableName = tableName.substring(0, tableName.length() - 1);
+                    entityTable.setName(tableName);
+                }
+
+                //  Prepend the prefix to the table name and add it to the map if it
+                //  isn't already there.
+
+                String fullTableName = tablePrefix + "_" + tableName;
+                if (!modelClassMetaDataMap.containsKey(fullTableName)) {
+                    modelClassMetaDataMap.put(fullTableName.toLowerCase(), meta);
+                }
+            }
+        }
+
+        return modelClassMetaDataMap;
+    }
+
+    public String getDeviceMode()  {
+        String deviceMode = clientContext.get("deviceMode");
+        return (deviceMode == null ? "default" : deviceMode);
+    }
 }

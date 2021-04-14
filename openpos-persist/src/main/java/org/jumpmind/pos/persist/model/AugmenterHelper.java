@@ -96,7 +96,7 @@ public class AugmenterHelper {
             int counter = 1;
             for (AugmenterConfig config : configs) {
                 for (AugmenterModel augmenter : config.getAugmenters()) {
-                    String columnValue = augmentedModel.getAugmentValue(augmenter.getName());
+                    String columnValue = augmentedModel != null ? augmentedModel.getAugmentValue(augmenter.getName()) : null;
                     if (columnValue != null) {
                         String columnName = config.getPrefix() + augmenter.getName();
                         String columnNameKey = String.format("augment%dColumnName", counter);

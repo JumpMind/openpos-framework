@@ -53,13 +53,13 @@ public class DBSession {
     private IDatabasePlatform databasePlatform;
     private TypedProperties sessionContext;
     private NamedParameterJdbcTemplate jdbcTemplate;
-    private Map<String, QueryTemplate> queryTemplates;
-    private Map<String, DmlTemplate> dmlTemplates;
+    private QueryTemplates queryTemplates;
+    private DmlTemplates dmlTemplates;
     private TagHelper tagHelper;
     private AugmenterHelper augmenterHelper;
 
     public DBSession(String catalogName, String schemaName, DatabaseSchema databaseSchema, IDatabasePlatform databasePlatform,
-                     TypedProperties sessionContext, Map<String, QueryTemplate> queryTemplates, Map<String, DmlTemplate> dmlTemplates,
+                     TypedProperties sessionContext, QueryTemplates queryTemplates, DmlTemplates dmlTemplates,
                      TagHelper tagHelper, AugmenterHelper augmenterHelper) {
         super();
         this.dmlTemplates = dmlTemplates;
@@ -206,7 +206,7 @@ public class DBSession {
     }
 
     public int executeDml(String namedDml, Object... params) {
-        DmlTemplate template = dmlTemplates.get(namedDml);
+        DmlTemplate template = this.getDmlTemplate(namedDml);
         if (template != null && isNotBlank(template.getDml())) {
             params = Arrays.stream(params).
                     map(p -> p instanceof Boolean ? (((Boolean) p ? 1 : 0)) : p).
@@ -286,10 +286,38 @@ public class DBSession {
                     if (value instanceof Long) {
                         int intValue = Math.toIntExact(((Long) value).longValue());
                         return new Integer(intValue);
+                    } else if (value instanceof Number) {
+                        return ((Number) value).intValue();
+                    } else if (value == null) {
+                        return null;
+                    } else {
+                        throw new PersistException("Unexpected result: " + value);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            throw new PersistException("Failed to execute query. Name: " + query.getName() + " Parameters: " + params, ex);
+        }
+        throw new PersistException("Invalid results: Failed to execute query. Name: " + query.getName() + " Parameters: " + params + " Results: " + results);
+    }
 
-                    } else if (value instanceof Integer) {
-                        return (Integer) value;
+    public Long queryForLong(Query query, Map<String, Object> params) {
+        QueryTemplate queryTemplate = getQueryTemplate(query);
+        List results = null;
+        try {
+            SqlStatement sqlStatement = queryTemplate.generateSQL(query, params);
+            results = queryInternal(null, sqlStatement, 1000);
 
+            if (results.size() == 1) {
+                Row row = (Row) results.get(0);
+
+                if (row.keySet().size() == 1) {
+                    Object value = row.values().iterator().next();
+
+                    if (value instanceof Number) {
+                        return ((Number) value).longValue();
+                    } else if (value == null) {
+                        return null;
                     } else {
                         throw new PersistException("Unexpected result: " + value);
                     }
@@ -319,13 +347,17 @@ public class DBSession {
         return wrapper;
     }
 
+    protected DmlTemplate getDmlTemplate(String templateName) {
+        return this.dmlTemplates.getDmlTemplate(databaseSchema.getDeviceMode(), templateName);
+    }
+
     @SuppressWarnings("unchecked")
     protected <T> QueryTemplate getQueryTemplate(Query<T> query) {
         QueryTemplate queryTemplate = new QueryTemplate();
         boolean isEntityResult = AbstractModel.class.isAssignableFrom(query.getResultClass());
         // defined in config
-        if (queryTemplates.containsKey(query.getName())) {
-            queryTemplate = queryTemplates.get(query.getName()).copy();
+        if (queryTemplates.containsQueryTemplate(databaseSchema.getDeviceMode(), query.getName())) {
+            queryTemplate = queryTemplates.getQueryTemplate(databaseSchema.getDeviceMode(), query.getName()).copy();
         } else {
             queryTemplate.setName(query.getName());
         }
@@ -618,7 +650,7 @@ public class DBSession {
     }
 
     protected List<Table> getValidatedTables(Class<?> entityClass) {
-        List<Table> tables = databaseSchema.getTables(entityClass);
+        List<Table> tables = databaseSchema.getTables(databaseSchema.getDeviceMode(), entityClass);
         if (tables == null || tables.size() == 0) {
             throw new PersistException("Failed to locate a database table for entity class: '" + entityClass
                     + "'. Make sure the correct dbSession is used with the module by using the correct @Qualifier");
