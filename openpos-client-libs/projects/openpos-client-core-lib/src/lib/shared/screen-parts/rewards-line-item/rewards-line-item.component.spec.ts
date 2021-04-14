@@ -134,6 +134,28 @@ describe('RewardsLineItemComponent', () => {
                 });
             });
 
+            describe('reward', () => {
+                describe('when reward has an amount', () => {
+                    beforeEach(() => {
+                        component.reward.amount = 200;
+                        fixture.detectChanges();
+                    });
+                    it('renders the app-currency-text', () => {
+                        validateExist(fixture, '.reward app-currency-text');
+                    });
+                });
+
+                describe('when reward does not have an amount', () => {
+                    beforeEach(() => {
+                        component.reward.amount = undefined;
+                        fixture.detectChanges();
+                    });
+                    it('does not render the app-currency-text', () => {
+                        validateDoesNotExist(fixture, '.reward app-currency-text');
+                    });
+                });
+            });
+
             describe('apply button', () => {
                 describe('when applicable', () => {
                     beforeEach(() => {

@@ -2,6 +2,7 @@ export interface RewardHistory {
     promotionId: string;
     name: string;
     expirationDate: string;
+    amount: number;
     redeemed: boolean;
 };
 

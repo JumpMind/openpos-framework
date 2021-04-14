@@ -4,6 +4,7 @@ import lombok.Data;
 import org.jumpmind.pos.core.ui.ActionItem;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
@@ -14,5 +15,6 @@ public class UILoyaltyReward implements Serializable {
     private String name;
     private String expirationDate;
     private String expirationLabel;
+    private BigDecimal amount;
     private ActionItem applyButton;
 }

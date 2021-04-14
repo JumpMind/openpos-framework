@@ -6,7 +6,7 @@
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "loyalty-icon details status";
+    "loyalty-icon details reward status";
   .loyalty-icon {
     grid-area: loyalty-icon;
     text-align: center;
@@ -34,6 +34,17 @@
     }
   }
 
+  .reward {
+    @extend %text-md;
+    grid-area: reward;
+    align-self: center;
+    &.expired {
+      .currency-text-after-symbol {
+        text-decoration: line-through;
+      }
+    }
+  }
+
   .status {
     grid-area: status;
     text-align: center;
@@ -54,7 +65,7 @@
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "details status";
+    "details reward status";
   .loyalty-icon {
     grid-area: loyalty-icon;
     text-align: center;
@@ -67,6 +78,9 @@
     .name {
       @extend %text-md;
       font-weight: 500;
+      &.expired {
+        text-decoration: line-through;
+      }
       &.tablet-portrait {
         font-size: $text-sm;
       }
@@ -90,6 +104,25 @@
     }
     app-icon {
       display: inline-block;
+    }
+  }
+
+  .reward {
+    @extend %text-md;
+    grid-area: reward;
+    align-self: center;
+    text-align: center;
+    &.expired {
+      .currency-text-after-symbol {
+        text-decoration: line-through;
+      }
+    }
+    &.tablet-portrait {
+      font-size: $text-sm;
+    }
+
+    &.mobile {
+      font-size: $text-xs-mobile*1.25;
     }
   }
 
