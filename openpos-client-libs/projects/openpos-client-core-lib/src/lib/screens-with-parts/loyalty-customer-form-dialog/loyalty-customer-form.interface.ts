@@ -3,8 +3,17 @@ import { IActionItem } from '../../core/actions/action-item.interface';
 import {Membership} from "../../shared/screen-parts/membership-display/memebership-display.interface";
 import {IForm} from "../../core/interfaces/form.interface";
 import {IFormElement} from "../../core/interfaces/form-field.interface";
-import {Form} from "@angular/forms";
-export interface LoyaltyCustomerFormInterface extends IAbstractScreen, IForm {
+import {Form, FormGroup} from "@angular/forms";
+export interface LoyaltyCustomerFormInterface extends IAbstractScreen {
+    form: IForm;
+    formGroup: FormGroup;
+
+    // IForm parts
+    formElements: IFormElement[];
+    requiresAtLeastOneValue: boolean;
+    formErrors: string[];
+    name: string;
+
     instructions: string;
     memberships: Membership[];
     membershipEnabled: boolean;

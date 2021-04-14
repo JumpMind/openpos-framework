@@ -1,9 +1,12 @@
-import {Component, Injector} from '@angular/core';
+import {Component, Injector, QueryList, ViewChild, ViewChildren} from '@angular/core';
 import { DialogComponent } from '../../shared/decorators/dialog-component.decorator';
 import { PosScreen } from '../pos-screen/pos-screen.component';
 import {LoyaltyCustomerFormInterface} from "./loyalty-customer-form.interface";
 import {Observable} from "rxjs/internal/Observable";
 import {MediaBreakpoints, OpenposMediaService} from "../../core/media/openpos-media.service";
+import {IFormElement} from "../../core/interfaces/form-field.interface";
+import {FormBuilder} from "../../core/services/form-builder.service";
+import {ShowErrorsComponent} from "../../shared/components/show-errors/show-errors.component";
 
 @DialogComponent({
     name: 'LoyaltyCustomerDialog',
@@ -16,14 +19,32 @@ import {MediaBreakpoints, OpenposMediaService} from "../../core/media/openpos-me
 export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustomerFormInterface> {
 
     isMobile: Observable<boolean>;
-    constructor(injector: Injector, private media: OpenposMediaService) {
+    @ViewChild('formErrors') formErrors: ShowErrorsComponent;
+
+    firstNameField : IFormElement;
+    lastNameField : IFormElement;
+    loyaltyNumberField : IFormElement;
+    phoneField : IFormElement;
+    phoneFields : IFormElement[] = [];
+    phoneLabelFields : IFormElement[] = [];
+    emailField : IFormElement;
+    emailFields : IFormElement[] = [];
+    emailLabelFields : IFormElement[] = [];
+
+    line1Field : IFormElement;
+    line2Field : IFormElement;
+    cityField : IFormElement;
+    stateField : IFormElement;
+    postalCodeField : IFormElement;
+    countryField : IFormElement;
+    addressIconLocationClass : string;
+
+    constructor(injector: Injector, private media: OpenposMediaService, private formBuilder: FormBuilder) {
         super(injector);
         this.initIsMobile();
-        console.log('[ =====  LoyaltyCustomerFormDialogComponent  ===== ]');
-        console.dir(this);
-        console.dir(this.screen);
-        console.dir(screen);
     }
+
+    ngOnInit() {}
 
     initIsMobile(): void {
         this.isMobile = this.media.observe(new Map([
@@ -36,6 +57,75 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
         ]));
     }
 
-    buildScreen() { }
+    getFormElementById(formElementId : string) {
+        return this.screen.form.formElements.filter(element => element.id == formElementId)[0];
+    }
+
+    anyAddressFieldsPresent() {
+        return this.line1Field || this.line2Field || this.cityField || this.stateField || this.postalCodeField || this.countryField;
+    }
+
+    onFieldChanged(formElement: IFormElement) {
+        if (formElement.valueChangedAction) {
+            let form = this.formBuilder.buildFormPayload(this.screen.formGroup, this.screen.form);
+            this.doAction(formElement.valueChangedAction, form);
+        }
+    }
+
+    submitForm() {
+        this.formBuilder.buildFormPayload(this.screen.formGroup, this.screen.form);
+        this.doAction(this.screen.submitButton, this.screen.form);
+    }
+
+    buildScreen() {
+        this.firstNameField = this.getFormElementById('firstName');
+        this.lastNameField = this.getFormElementById('lastName');
+        this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
+        this.phoneField = this.getFormElementById('phone');
+        this.emailField = this.getFormElementById('email');
+
+        this.line1Field = this.getFormElementById('line1');
+        this.line2Field = this.getFormElementById('line2');
+        this.cityField = this.getFormElementById('city');
+        this.stateField = this.getFormElementById('state');
+        this.postalCodeField = this.getFormElementById('postalCode');
+        this.countryField = this.getFormElementById('country');
+
+        if(this.line1Field) {
+            this.addressIconLocationClass = 'icon1';
+        } else if (this.line2Field) {
+            this.addressIconLocationClass = 'icon2';
+        } else if (this.cityField || this.stateField || this.postalCodeField) {
+            this.addressIconLocationClass = 'icon3';
+        } else if (this.countryField) {
+            this.addressIconLocationClass = 'icon4';
+        }
+
+        this.phoneFields = [];
+        this.phoneLabelFields = [];
+        this.emailFields = [];
+        this.emailLabelFields = [];
+        if (this.screen && this.screen.form && this.screen.form.formElements) {
+            this.screen.form.formElements.forEach(element => {
+                if (element.id.match(/phones\d/)) {
+                    this.phoneFields.push(element);
+                }
+
+                if (element.id.match(/phonesLabel\d/)) {
+                    this.phoneLabelFields.push(element);
+                }
+
+                if(element.id.match(/emails\d/)) {
+                    this.emailFields.push(element);
+                }
+
+                if(element.id.match(/emailsLabel\d/)) {
+                    this.emailLabelFields.push(element);
+                }
+            });
+        }
+
+        this.screen.formGroup = this.formBuilder.group(this.screen.form);
+    }
 
 }

@@ -54,15 +54,9 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
     }
 
     ngOnInit(): void {
-        console.log('[ ==========    ngOnInit: screen-part    ========== ]');
         this.subscriptions.add(this.messageProvider.getScopedMessages$<UIMessage>()
             .pipe(filter(s => s.screenType !== 'Loading')).subscribe(s => {
                 const screenPartData = getValue(s, this.screenPartName);
-                console.log('[ ====> ] screenPartName: ' + this.screenPartName);
-                console.log('[ ====> ] s');
-                console.dir(s);
-                console.log('[ ====> ] screenPartData');
-                console.dir(screenPartData);
                 if (screenPartData !== undefined && screenPartData !== null) {
                     this.screenData = deepAssign(this.screenData, screenPartData);
 
@@ -72,13 +66,10 @@ export abstract class ScreenPartComponent<T> implements OnDestroy, OnInit {
                 } else {
                     this.screenData = deepAssign(this.screenData, s);
                 }
-                console.log('[ SCREEN PART DATA DEEP ASSIGN ] this.screenData:');
-                console.dir(this.screenData);
                 this.beforeScreenDataUpdated$.next(this.screenData);
                 this.screenDataUpdated();
                 this.afterScreenDataUpdated$.next(this.screenData);
             }));
-        console.log('[ ================================================= ]');
         this.subscriptions.add(this.messageProvider.getAllMessages$().pipe(
             filter( message => message.type === MessageTypes.LIFE_CYCLE_EVENT )
         ).subscribe( message => this.handleLifeCycleEvent(message as LifeCycleMessage)));
