@@ -43,6 +43,7 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     String locale;
 
     @ColumnDef(description = "The timezone offset under which this Device currently operates")
+    @Builder.Default
     String timezoneOffset = AppUtils.getTimezoneOffset();
 
     @ColumnDef(description = "The Business Unit under which this Device currently operates")
@@ -51,6 +52,7 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     @ColumnDef(size = "255", description = "A user defined name for the Device")
     private String description;
 
+    @Builder.Default
     private Map<String, String> tags = new CaseInsensitiveMap<>();
 
     @ToString.Include
@@ -59,22 +61,6 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
 
     public static final String DEVICE_MODE_DEFAULT  = "default";
     public static final String DEVICE_MODE_TRAINING = "training";
-
-    public DeviceModel(String deviceId, String appId, String locale, String timezoneOffset, String businessUnitId, String description, String deviceMode, Map<String, String> tags, List<DeviceParamModel> deviceParamModels) {
-        this.deviceId = deviceId;
-        this.appId = appId;
-        this.locale = locale;
-        this.timezoneOffset = timezoneOffset;
-        this.businessUnitId = businessUnitId;
-        this.description = description;
-        this.deviceMode = (StringUtils.isEmpty(deviceMode) ? DEVICE_MODE_DEFAULT : deviceMode);
-        this.tags = new CaseInsensitiveMap<>(tags != null ? tags : new HashMap<>());
-        this.deviceParamModels = deviceParamModels;
-    }
-
-    public DeviceModel(String deviceId, String appId, String locale, String timezoneOffset, String businessUnitId, String description, Map<String, String> tags, List<DeviceParamModel> deviceParamModels) {
-        this(deviceId, appId, locale, timezoneOffset, businessUnitId, description, DEVICE_MODE_DEFAULT, tags, deviceParamModels);
-    }
 
     @Override
     public String getTagValue(String tagName) {
