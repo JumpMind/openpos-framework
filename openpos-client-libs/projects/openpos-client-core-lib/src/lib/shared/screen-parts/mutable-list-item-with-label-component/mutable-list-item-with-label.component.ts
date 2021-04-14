@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Injector, Input, Output} from '@angular/core';
 import {ScreenPartComponent} from "../screen-part";
 import {MutableListItemWithLabelComponentInterface} from "./mutable-list-item-with-label.interface";
-import {Observable} from "rxjs/internal/Observable";
-import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
 import {FormGroup} from "@angular/forms";
 import {IFormElement} from "../../../core/interfaces/form-field.interface";
 
@@ -27,8 +25,6 @@ export class MutableListItemWithLabelComponent extends ScreenPartComponent<Mutab
     isLast: boolean;
     @Input()
     isOnly: boolean;
-    @Input()
-    isMobile: Observable<boolean>;
 
     @Output()
     onFieldChanged = new EventEmitter<IFormElement>();
