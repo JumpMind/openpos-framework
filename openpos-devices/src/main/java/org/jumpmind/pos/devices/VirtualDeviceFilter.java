@@ -35,7 +35,9 @@ public class VirtualDeviceFilter implements Filter {
             String s = new String(wrappedResponse.getContentAsByteArray());
             final String BODY_TAG = "<body>";
             StringBuilder content = new StringBuilder();
-            content.append(s.substring(0, s.indexOf(BODY_TAG) - 1));
+            if(s != null && s.contains(BODY_TAG)) {
+                content.append(s.substring(0, s.indexOf(BODY_TAG) - 1));
+            }
             content.append("<body><script type=\"text/javascript\">\n");
             content.append("localStorage.setItem(\"serverName\", \"");
             content.append(request.getServerName());
@@ -59,7 +61,9 @@ public class VirtualDeviceFilter implements Filter {
             content.append(deviceToken);
             content.append("\");\n");
             content.append("</script>\n");
-            content.append(s.substring(s.indexOf(BODY_TAG) + BODY_TAG.length()));
+            if(s != null && s.contains(BODY_TAG)) {
+                content.append(s.substring(s.indexOf(BODY_TAG) + BODY_TAG.length()));
+            }
             response.setContentLength(content.length());
             try (PrintWriter writer = new PrintWriter(response.getOutputStream())) {
                 writer.print(content.toString());
