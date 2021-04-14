@@ -5,7 +5,21 @@
     $openpos-app-accent :  mat-palette($mat-blue, 600, 600, 900);
     $openpos-app-warn : mat-palette($mat-red);
     $openpos-app-selected :  mat-palette($mat-green, 800, 600, 900);
-    $openpos-theme: openpos-theme-light($openpos-app-primary, $openpos-app-accent, $openpos-app-warn, $openpos-app-selected);
+
+    $openpos-link-customer-color: #ffffff;
+    $openpos-link-customer-background: #ff9800;
+
+    $openpos-membership-in-color: #ffffff;
+    $openpos-membership-in-background: #ff9800;
+
+    $addons: (
+            openpos-link-customer-color: $openpos-link-customer-color,
+            openpos-link-customer-background: $openpos-link-customer-background,
+            openpos-membership-in-color: $openpos-membership-in-color,
+            openpos-membership-in-background: $openpos-membership-in-background
+    );
+
+    $openpos-theme: openpos-theme-light($openpos-app-primary, $openpos-app-accent, $openpos-app-warn, $openpos-app-selected, $addons);
 
     .bang-orange-theme {
 

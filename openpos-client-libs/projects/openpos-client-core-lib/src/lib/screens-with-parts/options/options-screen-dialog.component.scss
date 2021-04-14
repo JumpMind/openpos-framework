@@ -31,7 +31,7 @@
         display: grid;
         justify-self: center;
         align-content: center;
-        width:100%;
+        width: auto;
         @extend %page-spaced-content; 
     
         .options-image {

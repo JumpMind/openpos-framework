@@ -21,10 +21,10 @@ public class SelectionListUIMessage<T extends SelectableItem> extends UIMessage 
     private boolean showScan = false;
     private List<ActionItem> selectionButtons = new ArrayList<>();
     private List<ActionItem> nonSelectionButtons = new ArrayList<>();
-
     private List<T> selectionList = new ArrayList<>();
     private boolean multiSelect = false;
     private boolean defaultSelect = false;
+    private boolean allowNonSelectButtonWhenSelected = false;
     private int defaultSelectItemIndex = 0;
     private int numberItemsPerPage;
     private int numberTotalItems;
@@ -45,6 +45,14 @@ public class SelectionListUIMessage<T extends SelectableItem> extends UIMessage 
 
     public void setInstructions(String instructions) {
         this.instructions = instructions;
+    }
+
+    public boolean isAllowNonSelectButtonWhenSelected() {
+        return allowNonSelectButtonWhenSelected;
+    }
+
+    public void setAllowNonSelectButtonWhenSelected(boolean allowNonSelectButtonWhenSelected) {
+        this.allowNonSelectButtonWhenSelected = allowNonSelectButtonWhenSelected;
     }
 
     public String getNoListItemsPlaceholderText() {

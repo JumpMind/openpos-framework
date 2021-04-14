@@ -1,7 +1,5 @@
 package org.jumpmind.pos.persist.cars;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Properties;
 
 import lombok.extern.slf4j.Slf4j;

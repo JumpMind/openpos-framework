@@ -5,8 +5,6 @@
     padding: 8px 16px !important;
 
     .mat-button-wrapper {
-        grid-template-columns: 30% 70%;
-        display: grid;
         margin: 0px;
     }
 }
@@ -45,8 +43,6 @@
     width: 100%;
 
     .mat-button-wrapper {
-        grid-template-columns: auto 1fr;
-        display: grid;
         margin: 0px;
         line-height: normal;
     }
@@ -54,7 +50,7 @@
 
 .mobile-loyalty-customer-name {
     display: grid;
-    justify-self: end;
+    justify-self: center;
 }
 
 .mobile-loyalty-image {
@@ -65,10 +61,10 @@
 
 .mobile-loyalty-name {
     @extend %text-sm;
-    justify-self: end;
+    justify-self: center;
 }
 
 .mobile-loyalty-id {
     @extend %text-sm;
-    justify-self: end;
+    justify-self: center;
 }

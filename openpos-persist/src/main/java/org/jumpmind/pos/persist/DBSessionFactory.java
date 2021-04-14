@@ -12,12 +12,9 @@ import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.db.model.Column;
 import org.jumpmind.db.model.Table;
 import org.jumpmind.db.platform.IDatabasePlatform;
-import org.jumpmind.pos.persist.impl.DatabaseSchema;
-import org.jumpmind.pos.persist.impl.DmlTemplate;
-import org.jumpmind.pos.persist.impl.DmlTemplates;
-import org.jumpmind.pos.persist.impl.QueryTemplate;
-import org.jumpmind.pos.persist.impl.QueryTemplates;
+import org.jumpmind.pos.persist.impl.*;
 import org.jumpmind.pos.persist.model.*;
+import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.properties.TypedProperties;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.Constructor;
@@ -26,8 +23,8 @@ import org.yaml.snakeyaml.constructor.Constructor;
 public class DBSessionFactory {
 
     DatabaseSchema databaseSchema;
-    Map<String, QueryTemplate> queryTemplates;
-    Map<String, DmlTemplate> dmlTemplates;
+    QueryTemplates queryTemplates;
+    DmlTemplates dmlTemplates;
     IDatabasePlatform databasePlatform;
     TypedProperties sessionContext;
     @Getter
@@ -36,15 +33,25 @@ public class DBSessionFactory {
     List<Class<?>> modelExtensionClasses;
     TagHelper tagHelper;
     AugmenterHelper augmenterHelper;
+    ClientContext clientContext;
+    ShadowTablesConfigModel shadowTablesConfig;
 
     private static final String DEFAULT_COLUMN_SIZE = "32";
 
-    public void init(IDatabasePlatform databasePlatform, TypedProperties sessionContext, List<Class<?>> entities, List<Class<?>> extensionEntities, TagHelper tagHelper, AugmenterHelper augmenterHelper) {
+    public void init(
+            IDatabasePlatform databasePlatform,
+            TypedProperties sessionContext,
+            List<Class<?>> entities,
+            List<Class<?>> extensionEntities,
+            TagHelper tagHelper,
+            AugmenterHelper augmenterHelper,
+            ClientContext clientContext,
+            ShadowTablesConfigModel shadowTablesConfig) {
 
         QueryTemplates queryTemplates = getQueryTemplates(sessionContext.get("module.tablePrefix"));
         DmlTemplates dmlTemplates = getDmlTemplates(sessionContext.get("module.tablePrefix"));
 
-        init(databasePlatform, sessionContext, entities, extensionEntities, queryTemplates, dmlTemplates, tagHelper, augmenterHelper);
+        init(databasePlatform, sessionContext, entities, extensionEntities, queryTemplates, dmlTemplates, tagHelper, augmenterHelper, clientContext, shadowTablesConfig);
     }
 
     public void init(
@@ -55,10 +62,12 @@ public class DBSessionFactory {
             QueryTemplates queryTemplatesObject,
             DmlTemplates dmlTemplates,
             TagHelper tagHelper,
-            AugmenterHelper augmenterHelper) {
+            AugmenterHelper augmenterHelper,
+            ClientContext clientContext,
+            ShadowTablesConfigModel shadowTablesConfig) {
 
-        this.queryTemplates = buildQueryTemplatesMap(queryTemplatesObject);
-        this.dmlTemplates = buildDmlTemplatesMap(dmlTemplates);
+        this.queryTemplates = queryTemplatesObject;
+        this.dmlTemplates = dmlTemplates;
         this.sessionContext = sessionContext;
 
         this.databasePlatform = databasePlatform;
@@ -66,6 +75,9 @@ public class DBSessionFactory {
         this.modelExtensionClasses = extensionEntities;
         this.tagHelper = tagHelper;
         this.augmenterHelper = augmenterHelper;
+
+        this.clientContext = clientContext;
+        this.shadowTablesConfig = shadowTablesConfig;
 
         this.initSchema();
     }
@@ -76,7 +88,13 @@ public class DBSessionFactory {
                 this.modelClasses.stream().filter(e -> e.getAnnotation(org.jumpmind.pos.persist.TableDef.class) != null)
                         .collect(Collectors.toList()),
                 this.modelExtensionClasses,
-                this.augmenterHelper);
+                this.augmenterHelper,
+                this.clientContext,
+                this.shadowTablesConfig
+        );
+
+        this.queryTemplates.replaceModelClassNamesWithTableNames(this.databaseSchema, this.modelClasses, (shadowTablesConfig != null) && shadowTablesConfig.validateTablesInQueries());
+        this.dmlTemplates.replaceModelClassNamesWithTableNames(this.databaseSchema, this.modelClasses, (shadowTablesConfig != null) && shadowTablesConfig.validateTablesInQueries());
     }
 
     public void createAndUpgrade() {
@@ -90,7 +108,8 @@ public class DBSessionFactory {
         List<Class<?>> toExclude = exclude != null ? Arrays.asList(exclude) : Collections.emptyList();
         for (Class<?> modelClazz : this.modelClasses) {
             if (!toExclude.contains(modelClazz)) {
-                List<Table> tables = this.databaseSchema.getTables(modelClazz);
+                //  Note that the list below returns regular tables only, NOT shadow tables.
+                List<Table> tables = this.databaseSchema.getTables("default", modelClazz);
                 list.addAll(tables);
             }
         }
@@ -102,7 +121,7 @@ public class DBSessionFactory {
     }
 
     public org.jumpmind.db.model.Table getTableForEnhancement(Class<?> entityClazz) {
-        List<org.jumpmind.db.model.Table> tables = this.databaseSchema.getTables(entityClazz);
+        List<org.jumpmind.db.model.Table> tables = this.databaseSchema.getTables("default", entityClazz);
         return tables != null && tables.size() > 0 ? tables.get(0) : null;
     }
 
@@ -122,14 +141,16 @@ public class DBSessionFactory {
                 log.info(String.format("Loading %s...", url.toString()));
                 InputStream queryYamlStream = url.openStream();
                 QueryTemplates queryTemplates = new Yaml(new Constructor(QueryTemplates.class)).load(queryYamlStream);
-                if(queryTemplates != null){
-                    templates.getQueries().addAll(queryTemplates.getQueries());
+                if (queryTemplates != null) {
+                    templates.addQueries("default", queryTemplates.getQueries());
+                    templates.addQueries("training", queryTemplates.getQueries());
                 }
             }
             
             return templates;
 
         } catch (Exception ex) {
+            log.error("ERROR: Failed to load query file " + tablePrefix + "-query.yml");
             throw new PersistException("Failed to load " + tablePrefix + "-query.yml", ex);
         }
     }
@@ -140,33 +161,23 @@ public class DBSessionFactory {
             if (url != null) {
                 log.info(String.format("Loading %s...", url.toString()));
                 InputStream queryYamlStream = url.openStream();
-                DmlTemplates queryTemplates = new Yaml(new Constructor(DmlTemplates.class)).load(queryYamlStream);
-                return queryTemplates;
+                DmlTemplates dmlTemplates = new Yaml(new Constructor(DmlTemplates.class)).load(queryYamlStream);
+                if (dmlTemplates != null) {
+                    dmlTemplates.addDmls("default", dmlTemplates.getDmls());
+                    dmlTemplates.addDmls("training", dmlTemplates.getDmls());
+                }
+
+                return dmlTemplates;
             } else {
                 log.debug("Could not locate " + tablePrefix + "-dml.yml on the classpath.");
                 return new DmlTemplates();
             }
         } catch (Exception ex) {
+            log.error("ERROR: Failed to load DML query file " + tablePrefix + "-dml.yml");
             throw new PersistException("Failed to load " + tablePrefix + "-dml.yml", ex);
         }
     }
 
-    protected Map<String, QueryTemplate> buildQueryTemplatesMap(QueryTemplates queryTemplates) {
-        Map<String, QueryTemplate> queryTemplatesMap = new HashMap<>();
-        if (queryTemplates != null) {
-            queryTemplates.getQueries().stream().forEach((q) -> queryTemplatesMap.put(q.getName(), q));
-        }
-        return queryTemplatesMap;
-    }
-
-    protected Map<String, DmlTemplate> buildDmlTemplatesMap(DmlTemplates dmlTemplates) {
-        Map<String, DmlTemplate> dmlTemplatesMap = new HashMap<>();
-        if (dmlTemplates != null && dmlTemplates.getDmls() != null) {
-            dmlTemplates.getDmls().stream().forEach((q) -> dmlTemplatesMap.put(q.getName(), q));
-        }
-        return dmlTemplatesMap;
-    }
-    
     protected void augmentModels() {
         if (augmenterHelper != null) {
             AugmenterConfigs augmenterConfigs = augmenterHelper.getAugmenterConfigs();

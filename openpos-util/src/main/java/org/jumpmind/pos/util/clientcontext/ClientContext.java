@@ -23,9 +23,16 @@ public class ClientContext {
     @Value("${openpos.businessunitId:'not set'}")
     String businessUnitId;
 
+    @Value("${openpos.deviceMode:'not set'}")
+    String deviceMode;
+
     public void put(String name, String value) {
         if (propertiesMap.get() == null) {
             propertiesMap.set(new HashMap<>());
+        }
+
+        if ("deviceMode".equals(name))  {
+            value = ((value == null) || value.equals("'not set'") ? "default" : value);
         }
 
         propertiesMap.get().put(name, value);
@@ -41,6 +48,8 @@ public class ClientContext {
                 return businessUnitId;
             } else if ("appId".equals(name)) {
                 return "server";
+            } else if ("deviceMode".equals(name)) {
+                return deviceMode;
             } else if ("timezoneOffset".equals(name)) {
                 return AppUtils.getTimezoneOffset();
             }
@@ -49,6 +58,17 @@ public class ClientContext {
         }
 
         return props.get(name);
+    }
+
+    /**
+     * Removes the given property from the ClientContext
+     * @param name The name of the property to remove.
+     */
+    public void remove(String name) {
+        Map<String, String> props = propertiesMap.get();
+        if (props != null && name != null) {
+            props.remove(name);
+        }
     }
 
     public Set<String> getPropertyNames() {

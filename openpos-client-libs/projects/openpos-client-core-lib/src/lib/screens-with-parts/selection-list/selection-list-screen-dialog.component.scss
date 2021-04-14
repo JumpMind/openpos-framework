@@ -1,4 +1,5 @@
 @import "../../styles/variables/spacing";
+@import "../../styles/mixins/typography";
 
 .selection-list-outer {
     display:grid;
@@ -6,15 +7,46 @@
     grid-template-rows: auto 1fr;
     height: 100%;
 
+
     .selection-list-body {
         display: grid;
         justify-self: center;
         align-content: center;
         width:100%;
-        @extend %page-spaced-content; 
+
+
+        @extend %page-spaced-content;
+        &.mobile {
+            .dialog-content {
+                max-height: 300px;
+                ::ng-deep .item-list .selection-list {
+                      padding: 2px;
+                      margin:8px 0px;
+                }
+
+                .item-property-label {
+                    font-weight: bold;
+                    font-size:$text-xs-mobile*.9;
+                }
+
+                .item-property-line {
+                    margin-top:3px;
+                    margin-right:5px;
+                    margin-bottom:2px;
+                    font-size:$text-xs-mobile*.9;
+                }
+            }
+        }
+        &.tablet {
+            .dialog-content {
+                max-height: 300px;
+            }
+        }
+
 
         .dialog-content {
             overflow: auto;
+            max-height: 500px;
 
             .item-card-image {
                 height: 275px;

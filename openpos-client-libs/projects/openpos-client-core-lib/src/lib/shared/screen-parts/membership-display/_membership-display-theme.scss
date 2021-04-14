@@ -1,7 +1,7 @@
 @mixin membership-display-theme($theme) {
     $foreground: map-get($theme, foreground );
-    $membership-in-color: map-get($theme, membership-in-color );
-    $membership-in-background: map-get($theme, membership-in-background );
+    $openpos-membership-in-color: map-get($theme, openpos-membership-in-color );
+    $openpos-membership-in-background: map-get($theme, openpos-membership-in-background );
 
     .membership-chips {
         mat-chip.not-in {
@@ -11,8 +11,8 @@
         }
 
         mat-chip.in {
-            color: $membership-in-color !important;
-            background-color: $membership-in-background !important;
+            color: $openpos-membership-in-color !important;
+            background-color: $openpos-membership-in-background !important;
         }
     }
 }

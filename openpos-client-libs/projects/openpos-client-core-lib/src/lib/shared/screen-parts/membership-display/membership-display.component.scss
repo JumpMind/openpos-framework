@@ -3,7 +3,7 @@
 mat-chip {
   text-transform: uppercase;
   padding-right: 2em;
-  padding-left: 1em;
+  padding-left: 2em;
   &.tablet-portrait {
     font-size: $text-sm;
   }
@@ -13,6 +13,7 @@ mat-chip {
   }
   app-icon{
     margin-right: .5em;
+    margin-left: -.5em;
   }
 }
 
