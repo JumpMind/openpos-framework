@@ -21,7 +21,7 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
     isMobile: Observable<boolean>;
     @ViewChild('formErrors') formErrors: ShowErrorsComponent;
 
-    firstNameField : IFormElement;
+    firstNameField : any;
     lastNameField : IFormElement;
     loyaltyNumberField : IFormElement;
     phoneField : IFormElement;
@@ -57,27 +57,27 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
         ]));
     }
 
-    getFormElementById(formElementId : string) {
+    getFormElementById(formElementId : string) : IFormElement {
         return this.screen.form.formElements.filter(element => element.id == formElementId)[0];
     }
 
-    anyAddressFieldsPresent() {
-        return this.line1Field || this.line2Field || this.cityField || this.stateField || this.postalCodeField || this.countryField;
+    anyAddressFieldsPresent() : boolean {
+        return !!(this.line1Field || this.line2Field || this.cityField || this.stateField || this.postalCodeField || this.countryField);
     }
 
-    onFieldChanged(formElement: IFormElement) {
+    onFieldChanged(formElement: IFormElement) : void {
         if (formElement.valueChangedAction) {
             let form = this.formBuilder.buildFormPayload(this.screen.formGroup, this.screen.form);
             this.doAction(formElement.valueChangedAction, form);
         }
     }
 
-    submitForm() {
+    submitForm() : void {
         this.formBuilder.buildFormPayload(this.screen.formGroup, this.screen.form);
         this.doAction(this.screen.submitButton, this.screen.form);
     }
 
-    buildScreen() {
+    buildScreen() : void {
         this.firstNameField = this.getFormElementById('firstName');
         this.lastNameField = this.getFormElementById('lastName');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
