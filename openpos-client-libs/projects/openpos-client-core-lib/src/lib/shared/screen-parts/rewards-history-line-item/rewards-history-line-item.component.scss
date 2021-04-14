@@ -78,6 +78,9 @@
     .name {
       @extend %text-md;
       font-weight: 500;
+      &.expired {
+        text-decoration: line-through;
+      }
       &.tablet-portrait {
         font-size: $text-sm;
       }
