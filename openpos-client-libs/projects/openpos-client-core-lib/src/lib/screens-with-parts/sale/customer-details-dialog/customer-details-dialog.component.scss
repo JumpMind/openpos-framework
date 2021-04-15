@@ -139,3 +139,18 @@ app-content-card {
   justify-content: center;
   flex-direction: column;
 }
+
+.rewardsContent.with-points, .rewardsHistoryContent.with-points {
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "reward-list points";
+  .reward-list {
+    grid-area: reward-list;
+  }
+  .points {
+    grid-area: points;
+  }
+}
