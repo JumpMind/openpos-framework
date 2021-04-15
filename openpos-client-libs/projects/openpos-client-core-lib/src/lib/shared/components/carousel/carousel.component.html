@@ -1,21 +1,8 @@
-<section class="carousel">
-    <app-icon-button *ngIf="items.length > 1 && backwardEnabled()" class="left-arrow" 
-        [iconName]="'Back'" 
-        [iconClass]="carouselSize"
-        (buttonClick)="moveBackward()"
-        (swiperight)="moveBackward()">
-    </app-icon-button>
-    <div [@moveInOut]="index" aria-label="Carousel Item" responsive-class class="item" [ngClass]="[carouselSize, carouselItemClass]">
-        <ng-container *ngTemplateOutlet="currentItem"></ng-container>
-    </div>
-    <app-icon-button *ngIf="items.length > 1 && forwardEnabled()" class="right-arrow"
-        [iconName]="'Forward'" 
-        [iconClass]="carouselSize"
-        (buttonClick)="moveForward()"
-        (swipeleft)="moveForward()">
-    </app-icon-button>
-    <div aria-label="Carousel Navigation Dots" *ngIf="items.length > 1" class="carousel-nav-dots">
-        <span aria-label="Carousel Dot" *ngFor="let item of items; index as i" [ngClass]="isDotActive(i) ? 'dot active': 'dot'"></span>
-    </div>
-</section>
+<div class="thumbnails" *ngIf="displayImageUrls.length > 1">
+    <img *ngFor="let thumbnailUrl of displayImageUrls; let i = index"
+        (error)="onThumbnailError(i)"
+        (click)="selectImage(i)"
+        [src]="thumbnailUrl | imageUrl">
+</div>
 
+<img [src]="(selectedImageUrl || altImageUrl) | imageUrl" [alt]="altImageText" (error)="onSelectedImageError()">
