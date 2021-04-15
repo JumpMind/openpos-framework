@@ -107,19 +107,19 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
         this.emailLabelFields = [];
         if (this.screen && this.screen.form && this.screen.form.formElements) {
             this.screen.form.formElements.forEach(element => {
-                if (element.id.match(/phones\d/)) {
+                if (element.id.match(/phonesList\d/)) {
                     this.phoneFields.push(element);
                 }
 
-                if (element.id.match(/phonesLabel\d/)) {
+                if (element.id.match(/phonesListLabel\d/)) {
                     this.phoneLabelFields.push(element);
                 }
 
-                if(element.id.match(/emails\d/)) {
+                if(element.id.match(/emailsList\d/)) {
                     this.emailFields.push(element);
                 }
 
-                if(element.id.match(/emailsLabel\d/)) {
+                if(element.id.match(/emailsListLabel\d/)) {
                     this.emailLabelFields.push(element);
                 }
             });
