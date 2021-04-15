@@ -17,6 +17,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private UICustomerDetailsItem customer;
 
     private Boolean membershipEnabled;
+    private Boolean membershipPointsEnabled;
     private Boolean rewardTabEnabled;
     private Boolean rewardHistoryTabEnabled;
 
@@ -27,10 +28,13 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String expiresLabel;
     private String rewardHistoryLabel;
     private String expiredLabel;
+    private String loyaltyProgramNameLabel;
+    private String pointsLabel;
     private String redeemedLabel;
     private String noMembershipsFoundLabel;
     private String profileIcon;
     private String membershipCardIcon;
+    private String membershipPointsIcon;
     private String emailIcon;
     private String phoneIcon;
     private String loyaltyIcon;

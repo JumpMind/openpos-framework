@@ -3,6 +3,7 @@ package org.jumpmind.pos.core.ui.message;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +14,7 @@ public class UICustomerDetailsItem extends SelectableItem implements Serializabl
     private String privacyRestricted;
     private String name;
     private String loyaltyNumber;
+    private BigDecimal loyaltyPoints;
     private String email;
     private String phoneNumber;
     private UIAddress address;

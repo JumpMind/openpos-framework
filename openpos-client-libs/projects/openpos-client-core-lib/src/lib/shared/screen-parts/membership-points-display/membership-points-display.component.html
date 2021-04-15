@@ -1,0 +1,4 @@
+<div>
+    <app-icon [iconName]="screenData.membershipPointsIcon" [iconClass]="'material-icons' + (isMobile | async) ? ' mat-16' : ' mat-24'"></app-icon>
+    {{screenData.loyaltyProgramNameLabel}}: {{screenData.customer.loyaltyPoints}} {{screenData.pointsLabel}}
+</div>

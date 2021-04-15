@@ -166,6 +166,7 @@ import {RewardsLineItemComponent} from "./screen-parts/rewards-line-item/rewards
 import { CustomerInformationComponent } from './screen-parts/customer-information/customer-information.component';
 import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
 import { DisplayCustomerLookupComponent } from './screen-parts/display-customer-lookup/display-customer-lookup.component';
+import {MembershipPointsDisplayComponent} from "./screen-parts/membership-points-display/membership-points-display.component";
 
 const screenParts = [
     TenderPartComponent,
@@ -181,6 +182,7 @@ const screenParts = [
     DynamicFormPartComponent,
     AutoCompleteAddressPartComponent,
     MembershipDisplayComponent,
+    MembershipPointsDisplayComponent,
     CustomerInformationComponent,
     RewardsLineItemComponent,
     RewardsHistoryLineItemComponent,

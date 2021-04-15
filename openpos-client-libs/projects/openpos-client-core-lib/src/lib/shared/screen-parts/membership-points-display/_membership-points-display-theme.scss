@@ -1,0 +1,5 @@
+@mixin membership-points-display-theme($theme) {
+    $primary: mat-color(map-get($theme, primary));
+
+
+}

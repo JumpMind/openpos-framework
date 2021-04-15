@@ -56,6 +56,7 @@
                             <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
                         </div>
                     </div>
+                    <app-membership-points-display *ngIf="screen.membershipPointsEnabled"></app-membership-points-display>
                     <div *ngIf="!(screen.customer.rewards && screen.customer.rewards.length)" class="no-items" responsive-class>
                         {{screen.noPromotionsText}}
                     </div>
@@ -69,6 +70,7 @@
                             <app-rewards-history-line-item [reward]="reward"></app-rewards-history-line-item>
                         </div>
                     </div>
+                    <app-membership-points-display *ngIf="screen.membershipPointsEnabled"></app-membership-points-display>
                     <div *ngIf="!(screen.customer.rewardHistory && screen.customer.rewardHistory.length)" class="no-items" responsive-class>
                         {{screen.noPromotionsText}}
                     </div>
