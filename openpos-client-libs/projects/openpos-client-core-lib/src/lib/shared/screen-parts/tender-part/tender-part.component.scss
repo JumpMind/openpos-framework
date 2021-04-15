@@ -7,11 +7,9 @@
     align-content: center;
     row-gap: 32px;
 
+    &.desktop-landscape,
+    &.tablet,
     &.mobile {
-        row-gap: 16px;
-    }
-
-    &.tablet {
         row-gap: 16px;
     }
 }
@@ -181,6 +179,7 @@
     justify-self: center;
     text-align: center;
     max-width: 50%;
+    margin: -16px 0;
 
     &.mobile {
         max-width: 75%;
