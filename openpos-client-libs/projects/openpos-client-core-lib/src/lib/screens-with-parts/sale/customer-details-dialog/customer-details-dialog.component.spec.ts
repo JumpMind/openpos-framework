@@ -360,6 +360,29 @@ describe('CustomerDetailsDialog', () => {
       fixture.detectChanges();
     });
     describe('template', () => {
+      describe('details', () => {
+        describe('when membershipPoints is enabled', () => {
+          beforeEach(() => {
+            component.screen.membershipPointsEnabled = true;
+            fixture.detectChanges();
+          });
+
+          it('shows the app-membership-points-display', () => {
+            validateExist(fixture, '.details-wrapper app-membership-points-display');
+          });
+        });
+
+        describe('when memberhsipPoints is disabled', () => {
+          beforeEach(() => {
+            component.screen.membershipPointsEnabled = false;
+            fixture.detectChanges();
+          });
+
+          it('does not show the app-membership-points-display', () => {
+            validateDoesNotExist(fixture, '.details-wrapper app-membership-points-display');
+          });
+        });
+      });
       describe('tabs', () => {
         it('has the mobile class', () => {
           const tabsElement = fixture.debugElement.query(By.css('.tabs'));
@@ -404,6 +427,11 @@ describe('CustomerDetailsDialog', () => {
       fixture.detectChanges();
     });
     describe('template', () => {
+      describe('details', () => {
+        it('does not show the app-membership-points-display', () => {
+          validateDoesNotExist(fixture, '.details-wrapper app-membership-points-display');
+        });
+      });
       describe('tabs', () => {
         it('does not has the mobile class', () => {
           const tabsElement = fixture.debugElement.query(By.css('.tabs'));

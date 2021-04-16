@@ -1,4 +1,8 @@
-<div>
-    <app-icon [iconName]="screenData.membershipPointsIcon" [iconClass]="'material-icons' + (isMobile | async) ? ' mat-16' : ' mat-24'"></app-icon>
-    {{screenData.loyaltyProgramNameLabel}}: {{screenData.customer.loyaltyPoints}} {{screenData.pointsLabel}}
+<div class="grid-container">
+    <div class="icon">
+        <app-icon [iconName]="screenData.membershipPointsIcon" [iconClass]="'material-icons mat-36'"></app-icon>
+    </div>
+    <div class="details">
+        {{screenData.loyaltyProgramNameLabel}}: <span class="value">{{screenData.customer.loyaltyPoints}} {{screenData.pointsLabel}}</span>
+    </div>
 </div>

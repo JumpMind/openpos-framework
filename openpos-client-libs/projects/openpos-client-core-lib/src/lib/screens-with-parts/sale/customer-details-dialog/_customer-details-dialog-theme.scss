@@ -33,6 +33,17 @@
         }
     }
 
+    app-membership-points-display {
+        .grid-container {
+            border: 1px solid mat-color($foreground, secondary-text);
+            padding: 2em;
+            border-radius: 3px;
+            .details {
+                align-self: center;
+            }
+        }
+    }
+
 
     .mat-ink-bar {
         display: none !important;
@@ -58,6 +69,15 @@
         min-height: inherit;
         .content {
             overflow-y: inherit;
+        }
+
+        app-membership-points-display {
+            .grid-container {
+                margin-top: 5px;
+                border: 1px solid mat-color($foreground, secondary-text);
+                padding: 1em;
+                border-radius: 3px;
+            }
         }
     }
 

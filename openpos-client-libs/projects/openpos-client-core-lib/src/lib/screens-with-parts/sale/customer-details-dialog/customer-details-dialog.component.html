@@ -71,10 +71,10 @@
                             <app-rewards-history-line-item [reward]="reward"></app-rewards-history-line-item>
                         </div>
                     </div>
-                    <app-membership-points-display *ngIf="!(isMobile | async) && screen.membershipPointsEnabled"></app-membership-points-display>
                     <div *ngIf="!(screen.customer.rewardHistory && screen.customer.rewardHistory.length)" class="no-items" responsive-class>
                         {{screen.noPromotionsText}}
                     </div>
+                    <app-membership-points-display *ngIf="!(isMobile | async) && screen.membershipPointsEnabled"></app-membership-points-display>
                 </mat-card>
             </mat-tab>
         </mat-tab-group>
