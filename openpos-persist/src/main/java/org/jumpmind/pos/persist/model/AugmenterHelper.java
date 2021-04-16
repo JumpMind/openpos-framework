@@ -111,4 +111,9 @@ public class AugmenterHelper {
         }
         return params;
     }
+    
+    public boolean augmentValueCombinationExists(List<? extends IAugmentedModel> augmentedModels, Map<String,String> values){
+        return augmentedModels.stream().anyMatch(iAugmentedModel -> 
+                values.entrySet().stream().allMatch(augmentEntry -> iAugmentedModel.getAugmentValue(augmentEntry.getKey()).equals(augmentEntry.getValue())));
+    }
 }

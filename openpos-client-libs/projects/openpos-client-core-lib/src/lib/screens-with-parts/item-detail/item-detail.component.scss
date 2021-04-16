@@ -15,19 +15,6 @@
     padding: 0 0 0 0;
 }
 
-h1{
-    grid-area: title;
-    @extend %text-lg;
-    font-weight: normal;
-    margin: 0;
-}
-
-p{
-    grid-area: summary;
-    @extend %text-md;
-    font-weight: normal;
-    margin: 0;
-}
 
 .page-gutter {
     @extend %page-gutter
@@ -44,24 +31,96 @@ p{
 .item-card{
     display: grid;
     overflow-y: auto;
-    grid-template: "image title" auto
-                    "image summary" auto
-                    "image properties" auto
-                    "actions actions" auto/auto;
+    grid-template: "image title title" auto
+                    "image properties price" auto
+                    "image options options" auto
+                    "image summary summary" auto
+                    "image actions actions" auto/auto;
+
+    .name{
+        grid-area: title;
+        @extend %text-lg;
+        font-weight: normal;
+        margin: 0;
+        margin-bottom: 16px;
+    }
+
+    .summary{
+        @extend %text-xs;
+        font-weight: normal;
+        margin: 0;
+        display: grid;
+        grid-auto-flow: column;
+        .detail-section{
+            margin: 0px 8px;
+        }
+    }
+    
+    .summary-instructions{
+        grid-area: summary;
+        min-height: 200px;
+    }
+
+    .actions {
+        grid-area: actions;
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: right;
+        app-secondary-button {
+            margin-right: 8px;
+        }
+        app-icon{
+            margin-right: 8px;
+        }
+    }
+
+    .carousel {
+        grid-area: image;
+        justify-self: center;
+    }
+
+    .inv-cost {
+        grid-area: price;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    
+    .item-price {
+        @extend %text-lg;
+        justify-self: right;
+    }
+
+    .properties {
+        grid-area: properties;
+        align-self: end;
+        list-style-type: none;
+        padding-inline-start: 0;
+        @extend %text-sm;
+
+    }
+
+    .option-instructions {
+        grid-area: option-instructions;
+        display: grid;
+        justify-content: center;
+    }
+
+    .options {
+        grid-area: options;
+        display: grid;
+        grid-auto-flow: column;
+        margin-bottom: 16px;
+    }
+
+    ul{
+        margin: 0px;
+    }
 }
 
-app-options-list {
-    grid-area: actions;
-}
 
-.carousel {
-    grid-area: image;
-    justify-self: center;
-}
 
 .promotions {
-    width: 50%;
-    align-self: flex-end;
     overflow: auto;
     /* for Firefox */
     min-height: 0;
@@ -91,7 +150,6 @@ app-options-list {
     align-self: center;
     list-style-type: none;
     padding-inline-start: 0;
-    @extend %text-md;
 }
 
 .promotion-item-name {
@@ -107,11 +165,54 @@ app-options-list {
     align-self: center;
 }
 
-.properties {
-    grid-area: properties;
-    align-self: end;
-    list-style-type: none;
-    padding-inline-start: 0;
-    @extend %text-md;
+.inv-prom-container {
+    display: flex;
 
+    flex: 1;
+    align-items: stretch;
+
+    mat-card {
+        flex: 1 1 0px;
+        @extend %text-md;
+    }
+}
+
+.inv-prom-container.mobile, .inv-prom-container.tablet {
+    flex-direction: column-reverse;
+
+    * + * {
+        margin-bottom: 0px;
+    }
+}
+
+.inv-prom-container.desktop, .inv-prom-container.tablet-landscape {
+    flex-direction: row;
+
+    mat-card {
+        margin-top: 0px;
+    }
+
+    * + * {
+        margin-left: 0px;
+    }
+}
+
+.buddy-store-table-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.item-details-table {
+    width: 100%;
+}
+
+table.item-details-table {
+    border-collapse: collapse;
+
+    th {
+        text-align: left;
+        min-height: 40px;
+    }
 }

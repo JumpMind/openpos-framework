@@ -1,0 +1,9 @@
+@import "../../../../styles/mixins/typography";
+
+
+
+h3{
+  font-weight: normal;
+  @extend %text-sm;
+  margin-bottom: 4px;
+}

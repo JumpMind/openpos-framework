@@ -131,6 +131,14 @@
     .order-background {
         background-color: $order-color;
     }
+    
+    .order-button {
+        button{
+            border-color: $order-color;
+            background-color: $order-color;
+            color: mat-color(map-get($theme, orders), default-contrast);
+        }
+    }
 
     .muted,
     .muted-color {

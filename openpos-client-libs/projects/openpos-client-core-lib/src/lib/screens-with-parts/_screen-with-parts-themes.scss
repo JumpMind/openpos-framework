@@ -5,6 +5,8 @@
 @import './return/return-theme';
 @import './tender/tender-theme';
 @import './item-detail/item-detail-theme';
+@import './item-detail/option-components/basic-product-option-part/basic-product-option-part-theme';
+@import './item-detail/option-components/swatch-product-option-part/swatch-product-option-part-theme';
 @import './return/return-theme';
 @import './transaction-search/transaction-search-theme';
 @import './simulated-peripheral-viewer/simulated-peripheral-theme';
@@ -22,5 +24,7 @@
     @include simulated-peripheral-theme($theme);
     @include customer-details-dialog-theme($theme);
     @include customer-search-result-dialog-theme($theme);
+    @include basic-product-option-part-theme($theme);
+    @include swatch-product-option-part-theme($theme);
     @include loyalty-customer-form-dialog-theme($theme);
 }

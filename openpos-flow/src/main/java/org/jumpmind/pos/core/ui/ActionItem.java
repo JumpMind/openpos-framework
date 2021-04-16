@@ -59,6 +59,10 @@ public class ActionItem implements Serializable {
     protected String additionalText;
     protected ActionTimer actionTimer;
 
+
+
+    protected String additionalStyle;
+
     @JsonIgnore
     @Builder.Default
     protected boolean autoAssignEnabled = true;
@@ -131,6 +135,15 @@ public class ActionItem implements Serializable {
         this.title = title;
         this.enabled = enabled;
         this.sensitive = sensitive;
+    }
+
+    public ActionItem(String title, String action, String icon, String additionalStyle, boolean enabled) {
+        this();
+        this.action = action;
+        this.title = title;
+        this.enabled = enabled;
+        this.icon = icon;
+        this.additionalStyle = additionalStyle;
     }
 
 
@@ -341,5 +354,12 @@ public class ActionItem implements Serializable {
 
     public void setAdditionalText(String additionalText) {
         this.additionalText = additionalText;
+    }
+    public String getAdditionalStyle() {
+        return additionalStyle;
+    }
+
+    public void setAdditionalStyle(String additionalStyle) {
+        this.additionalStyle = additionalStyle;
     }
 }
