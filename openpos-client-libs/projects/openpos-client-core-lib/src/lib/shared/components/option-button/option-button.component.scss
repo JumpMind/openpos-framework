@@ -72,6 +72,7 @@
 
 .option-right {
     min-width: 64px;
+    text-align: end;
 }
 
 ::ng-deep .option-item {
@@ -84,6 +85,7 @@
 
     &.mobile {
         .mat-button-wrapper {
+            grid-template-columns: 16px 1fr auto;
             display: grid !important;
             column-gap: 4px;
         }
