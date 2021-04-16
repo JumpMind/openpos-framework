@@ -18,4 +18,5 @@ export interface SelectionListInterface<T extends SelectableItemInterface> exten
     selectionChangedAction: string;
     fetchDataAction: string;
     sausageLinks: IActionItem[];
+    allowNonSelectButtonWhenSelected: boolean;
 }

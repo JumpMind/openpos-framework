@@ -30,7 +30,7 @@ import java.util.Map;
 public class ConfiguredRestTemplate extends RestTemplate {
 
     ObjectMapper mapper;
-    
+
     private Map<String, String> additionalHeaders;
 
     static BufferingClientHttpRequestFactory build(int timeout) {
@@ -62,7 +62,20 @@ public class ConfiguredRestTemplate extends RestTemplate {
     public ConfiguredRestTemplate(int timeout) {
         super(build(timeout));
         this.mapper = DefaultObjectMapper.build();
-        getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(this.mapper));
+        getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(this.mapper) {
+
+            @Override
+            public boolean canRead(java.lang.Class<?> clazz,
+                                   org.springframework.http.MediaType mediaType) {
+                return super.canRead(mediaType);
+            }
+            @Override
+            public boolean canRead(java.lang.reflect.Type type,
+                                   java.lang.Class<?> contextClass,
+                                   org.springframework.http.MediaType mediaType) {
+                return super.canRead(mediaType);
+            }
+        });
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
         interceptors.add(new LoggingRequestInterceptor());
         setInterceptors(interceptors);
@@ -93,7 +106,7 @@ public class ConfiguredRestTemplate extends RestTemplate {
         });
 
     }
-    
+
     public void addHeader(String name, String value){
         if( additionalHeaders == null){
             additionalHeaders = new HashMap<>();
@@ -129,11 +142,11 @@ public class ConfiguredRestTemplate extends RestTemplate {
     public HttpHeaders buildHeaders() {
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
-        
+
         if( additionalHeaders != null){
             additionalHeaders.forEach((s, s2) -> headers.set(s, s2));
         }
-        
+
         return headers;
     }
 

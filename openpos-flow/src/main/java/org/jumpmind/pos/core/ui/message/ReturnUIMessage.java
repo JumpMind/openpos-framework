@@ -28,6 +28,7 @@ public class ReturnUIMessage extends UIMessage {
     private ActionItem linkedCustomerButton;
     private ActionItem linkedEmployeeButton;
     private ActionItem removeReceiptAction;
+    private String loyaltyIDLabel;
 
     private boolean transactionActive = false;
 

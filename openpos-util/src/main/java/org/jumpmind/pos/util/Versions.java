@@ -1,20 +1,17 @@
 package org.jumpmind.pos.util;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
-import java.util.Properties;
-
-import javax.annotation.PostConstruct;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import javax.annotation.PostConstruct;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
 @Component
 public class Versions {
@@ -23,11 +20,13 @@ public class Versions {
 
     static final Logger log = LoggerFactory.getLogger(Versions.class);
 
-    protected static List<InputStream> loadResources(final String name, final ClassLoader classLoader) throws IOException {
+    List<InputStream> loadResources(final String name) throws IOException {
         final List<InputStream> list = new ArrayList<InputStream>();
-        final Enumeration<URL> systemResources = (classLoader == null ? ClassLoader.getSystemClassLoader() : classLoader).getResources(name);
-        while (systemResources.hasMoreElements()) {
-            list.add(systemResources.nextElement().openStream());
+        Resource[] resources = ResourceUtils.getResources("openpos-version.properties");
+        if (resources != null) {
+            for (Resource resource : resources) {
+                list.add(resource.getInputStream());
+            }
         }
         return list;
     }
@@ -36,7 +35,7 @@ public class Versions {
     protected synchronized void init() {
         try {
             List<Version> building = new ArrayList<>();
-            List<InputStream> resources = loadResources("openpos-version.properties", Thread.currentThread().getContextClassLoader());
+            List<InputStream> resources = loadResources("openpos-version.properties");
             log.info(BoxLogging.box("Versions"));
             for (InputStream is : resources) {
                 Properties properties = new Properties();

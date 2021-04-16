@@ -1,13 +1,13 @@
-<div class="details-row email" responsive-class>
+<div *ngIf="customer.email" class="details-row email" responsive-class>
     <app-icon [iconName]="screenData.emailIcon" [iconClass]="'material-icons mat-18'"></app-icon>{{customer.email}}
 </div>
-<div class="details-row phone-number" responsive-class>
+<div *ngIf="customer.phoneNumber" class="details-row phone-number" responsive-class>
     <app-icon [iconName]="screenData.phoneIcon" [iconClass]="'material-icons mat-18'"></app-icon>{{customer.phoneNumber | phone}}
 </div>
-<div class="details-row loyalty-number" responsive-class>
+<div *ngIf="customer.loyaltyNumber" class="details-row loyalty-number" responsive-class>
     <app-icon [iconName]="screenData.loyaltyNumberIcon" [iconClass]="'material-icons mat-18'"></app-icon>{{customer.loyaltyNumber}}
 </div>
-<div class="details-row address" responsive-class>
+<div *ngIf="customer.address" class="details-row address" responsive-class>
     <app-icon [iconName]="screenData.locationIcon" [iconClass]="'material-icons mat-18'"></app-icon>
     <div class="address-details" *ngIf="customer.address">
         <div *ngIf="customer.address.line1" class="line1">{{customer.address.line1}}</div>

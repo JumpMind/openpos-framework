@@ -96,7 +96,7 @@ public class AugmenterHelper {
             int counter = 1;
             for (AugmenterConfig config : configs) {
                 for (AugmenterModel augmenter : config.getAugmenters()) {
-                    String columnValue = augmentedModel.getAugmentValue(augmenter.getName());
+                    String columnValue = augmentedModel != null ? augmentedModel.getAugmentValue(augmenter.getName()) : null;
                     if (columnValue != null) {
                         String columnName = config.getPrefix() + augmenter.getName();
                         String columnNameKey = String.format("augment%dColumnName", counter);
@@ -110,5 +110,10 @@ public class AugmenterHelper {
             }
         }
         return params;
+    }
+    
+    public boolean augmentValueCombinationExists(List<? extends IAugmentedModel> augmentedModels, Map<String,String> values){
+        return augmentedModels.stream().anyMatch(iAugmentedModel -> 
+                values.entrySet().stream().allMatch(augmentEntry -> iAugmentedModel.getAugmentValue(augmentEntry.getKey()).equals(augmentEntry.getValue())));
     }
 }

@@ -22,6 +22,7 @@ export class MessageTypes {
     static AUDIO_PRELOAD = 'AudioPreload';
     static LOADING = 'Loading';
     static PERIPHERAL_DEVICE_SELECTION = 'PeripheralDeviceSelection';
+    static WATERMARK = 'Watermark';
+    static HIDE_WATERMARK = 'HideWatermark';
     static CLIENT_EXECUTABLE = 'ClientExecutable';
-
 }

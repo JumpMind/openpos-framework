@@ -2,56 +2,95 @@
 <section class="item-details">
     <mat-card responsive-class class="padding-none page-gutter">
         <div responsive-class class="item-card padding-none page-gutter page-element margin-bottom">
-            <h1 responsive-class>{{screen.itemName}}</h1>
-            <p responsive-class>{{screen.summary}}</p>
-            <app-carousel class="carousel" [carouselSize]="carouselSize" [carouselItemClass]="'rounded-edge'">
-                <ng-template *ngFor="let image of screen.imageUrls" #carouselItem>
-                    <app-image [imageUrl]="image | imageUrl" [altImageUrl]="screen.alternateImageUrl" [altText]="'Image NotFound'"></app-image>
-                </ng-template>
+            <h1 class="name" responsive-class>{{screen.itemName}}</h1>
+            <app-carousel class="carousel" [imgUrls]="screen.imageUrls" [altImageUrl]="screen.alternateImageUrl" altImageText="Image Not Found">
             </app-carousel>
+            
+            <div class="inv-cost">
+                <app-currency-text class="item-price" [amountText]="screen.price"></app-currency-text>
+                <span>{{screen.inventoryMessage}}</span>
+            </div>
 
             <ul responsive-class class="properties">
                 <li *ngFor="let prop of screen.itemProperties">
-                    <app-display-property [property]="prop"></app-display-property>
+                    <app-display-property [property]="prop" alignmentType="jagged"></app-display-property>
                 </li>
             </ul>
 
-            <app-options-list optionListSizeClass="md"></app-options-list>
+            <div class="options">
+                <ng-container *ngFor="let component of optionComponents | keyvalue">
+                    <ng-container *ngComponentOutlet="component.value; injector: component.key"></ng-container>
+                </ng-container>
+            </div>
+            
+            <div class="summary-instructions">
+                <hr>                
+                <app-instructions class="option-instructions" *ngIf="screen.itemOptionInstructions" [instructions]="screen.itemOptionInstructions"></app-instructions>
+                <div class="summary" *ngIf="screen.summary" responsive-class>
+                    <div class="detail-section" *ngFor="let section of screen.detailSections" [innerHtml]="section | markdownFormatter"></div>
+                </div>
+            </div>
+
+            <div class="actions">
+                <ng-container *ngFor="let button of screen.actions; let first = first;">
+                    <app-secondary-button *ngIf="!first" [ngClass]="button.additionalStyle" (buttonClick)="doAction(button)">
+                        <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
+                        <span>{{button.title}}</span>
+                    </app-secondary-button>
+                </ng-container>
+                <ng-container *ngFor="let button of screen.actions; let first = first;">
+                    <app-primary-button *ngIf="first" [ngClass]="button.additionalStyle" [disabled]="!button.enabled" (buttonClick)="doAction(button)">
+                        <app-icon *ngIf="button.icon" [iconName]="button.icon"></app-icon>
+                        <span>{{button.title}}</span>
+                    </app-primary-button>
+                </ng-container>
+            </div>
         </div>
 
     </mat-card>
-    <mat-card responsive-class class=" promotions page-gutter padding-none">
-        <div responsive-class class="page-gutter page-element margin-bottom">
-            <h3 responsive-class>
-                {{screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
-            </h3>
-            <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
-                              [instructionsSize]="'text-md'"></app-instructions>
-            <span class="promotion-items promotion-item-gray">
-            <div class="promotion-item-icon">
-                <app-icon iconClass="md"></app-icon>
+    
+    <div class="inv-prom-container" responsive-class>
+        <mat-card *ngIf="screen.buddyStores" responsive-class class="buddy-store page-gutter padding-none">
+            <div responsive-class class="page-gutter page-element margin-bottom">
+                <h3 responsive-class>
+                    {{!screen.buddyStoreOffline ? screen.buddyStoreTitle : screen.buddyStoreOfflineTitle}}
+                </h3>
+
+                <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">                    
+                    <tbody>
+                        <tr *ngFor="let store of screen.buddyStores">
+                            <td>{{store.storeName}}</td>
+                            <td>{{store.storeCount}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="promotion-item-name">
-                {{screen.itemValueDisplay.label}}
+        </mat-card>
+        
+        <mat-card responsive-class *ngIf="screen.promotions" class="promotions page-gutter padding-none">
+            <div responsive-class class="page-gutter page-element margin-bottom">
+                <h3 responsive-class>
+                    {{screen.promotions && screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
+                </h3>
+                <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
+                                [instructionsSize]="'text-md'"></app-instructions>
+
+                <table class="item-details-table promotions">                    
+                    <tbody>
+                        <tr>
+                            <th></th>
+                            <th>{{screen.itemValueDisplay.label}}</th>
+                            <th>{{screen.itemValueDisplay.value}}</th>
+                        </tr>
+                        <tr *ngFor="let promo of screen.promotions">
+                            <td><app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon></td>
+                            <td>{{promo.promotionName}}</td>
+                            <td>{{promo.promotionPrice}}</td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
-            <div class="price">
-                {{screen.itemValueDisplay.value}}
-            </div>
-        </span>
-            <ng-container *ngFor="let promo of screen.promotions; let i = index">
-            <span class="promotion-items" [ngClass]="{'promotion-item-gray': 0 === (i + 1) % 2}">
-                <div class="promotion-item-icon">
-                    <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon>
-                </div>
-                <div class="promotion-item-name">
-                    {{promo.promotionName}}
-                </div>
-                <div class="price">
-                    {{promo.promotionPrice}}
-                </div>
-            </span>
-            </ng-container>
-        </div>
-    </mat-card>
+        </mat-card>
+    </div>
 </section>
 

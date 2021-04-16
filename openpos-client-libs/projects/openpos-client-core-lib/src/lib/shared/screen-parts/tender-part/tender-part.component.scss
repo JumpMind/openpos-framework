@@ -7,11 +7,9 @@
     align-content: center;
     row-gap: 32px;
 
+    &.desktop-landscape,
+    &.tablet,
     &.mobile {
-        row-gap: 16px;
-    }
-
-    &.tablet {
         row-gap: 16px;
     }
 }
@@ -105,22 +103,55 @@
     @extend %text-md;
 }
 
-.tender-amount-row {
+.tender-balance-row {
     display: grid;
     grid-template-columns: auto auto;
     column-gap: 16px;
 }
 
+.tender-amount-row {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-template-areas: "name cardnumber amount";
+    column-gap: 16px;
+
+    &.mobile {
+        grid-template-columns: auto auto;
+        grid-template-areas:
+                "name amount"
+                "cardnumber cardnumber";
+    }
+}
+
 .void-tender-row {
-    grid-template-columns: auto 1fr 1fr;
+    grid-template-columns: auto 1fr 2fr 1fr;
+    grid-template-areas: "void name cardnumber amount";
+
+    &.mobile {
+        grid-template-columns: auto 1fr 1fr;
+        grid-template-areas:
+                "void name amount"
+                ". cardnumber cardnumber";
+    }
 }
 
 .tender-amount {
+    grid-area: amount;
     justify-self: end;
     align-self: center;
 }
 
+.tender-amount-void {
+    grid-area: void;
+}
+
+.tender-amount-card-number {
+    grid-area: cardnumber;
+    align-self: center;
+}
+
 .tender-amount-name {
+    grid-area: name;
     align-self: center;
 }
 
@@ -148,6 +179,7 @@
     justify-self: center;
     text-align: center;
     max-width: 50%;
+    margin: -16px 0;
 
     &.mobile {
         max-width: 75%;

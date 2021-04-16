@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../shared/shared.module';
 import {AutoCompleteAddressDialogComponent} from './auto-complete-address/auto-complete-address-dialog.component';
+import {BasicProductOptionPart} from './item-detail/option-components/basic-product-option-part/basic-product-option-part';
+import {SwatchProductOptionPart} from './item-detail/option-components/swatch-product-option-part/swatch-product-option-part.component';
 
 import { SelectionListScreenComponent } from './selection-list/selection-list-screen.component';
 import { SelectionListScreenDialogComponent } from './selection-list/selection-list-screen-dialog.component';
@@ -82,14 +84,21 @@ const dialogs = [
 
 ];
 
+const parts = [
+    BasicProductOptionPart,
+    SwatchProductOptionPart    
+]
+
 @NgModule({
     entryComponents: [
         ...screens,
-        ...dialogs
+        ...dialogs,
+        ...parts
     ],
     declarations: [
         ...screens,
-        ...dialogs
+        ...dialogs,
+        ...parts
     ],
     imports: [
         SharedModule

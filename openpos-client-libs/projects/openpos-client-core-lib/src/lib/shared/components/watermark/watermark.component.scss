@@ -1,0 +1,32 @@
+.watermark {
+    position: fixed;
+    width: 100%;
+    top: 2%;
+    z-index: 999999;
+    transform: rotate(-2deg) scale(1.1,1);
+    font-size: 5em;
+    opacity: 0.35;
+    color: white;
+    text-align: center;
+    white-space: nowrap;
+    letter-spacing: 0.4em;
+    pointer-events: none;
+    text-shadow: #000 1px 0 60px;
+
+
+    &.tablet-landscape {
+        font-size: 3em;
+    }
+
+    &.desktop-portrait,
+    &.mobile-landscape,
+    &.tablet-portrait {
+        letter-spacing: 0;
+        font-size: 4em;
+    }
+
+    &.mobile-portrait {
+        letter-spacing: 0;
+        font-size: 3em;
+    }
+}

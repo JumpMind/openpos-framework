@@ -36,7 +36,7 @@ export class ReceiptCardComponent {
 
   onRemoveAction() {
     if (this.actionService) {
-      this.actionService.doAction(this.removeReceiptAction, this.receipt.transactionNumber);
+      this.actionService.doAction(this.removeReceiptAction, this.receipt.barcode);
     } else {
       this.removeButtonClick.emit(this.receipt);
     }

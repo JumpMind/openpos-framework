@@ -1,92 +1,66 @@
-import { Component, ContentChildren, QueryList, TemplateRef, AfterContentInit, Input } from '@angular/core';
-import { trigger, style, animate, transition, query, group} from '@angular/animations';
+import { 
+    Component,
+    Input,
+    Output,
+    EventEmitter
+} from '@angular/core';
 
 @Component({
     selector: 'app-carousel',
     templateUrl: './carousel.component.html',
-    styleUrls: ['./carousel.component.scss'],
-    animations: [
-        trigger('moveInOut', [
-            transition(':increment', group([
-                style({
-                    position: 'relative'
-                }),
-                query(':enter, :leave', [
-                    style({
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%'
-                    })
-                ]),
-                query(':enter', [
-                  style({ left: '-100%'})
-                ]),
-                group([
-                  query(':leave', [
-                    animate('800ms ease-out', style({ left: '100%'}))
-                  ]),
-                  query(':enter', [
-                    animate('800ms ease-out', style({ left: '0%'}))
-                  ])
-                ]),
-            ])),
-            transition(':decrement', group([
-                style({
-                    position: 'relative'
-                }),
-                query(':enter, :leave', [
-                    style({
-                        position: 'absolute',
-                        top: 0,
-                        left: 0,
-                        width: '100%'
-                    })
-                ]),
-                query(':enter', [
-                    style({ left: '100%'})
-                ]),
-                query(':enter', [
-                  animate('800ms ease-out', style({ left: '0%'}))
-                ]),
-                query(':leave', [
-                  animate('800ms ease-out', style({ left: '-100%' }))
-                ])
-            ]))
-        ])
-    ]
+    styleUrls: ['./carousel.component.scss']
 })
-export class CarouselComponent implements AfterContentInit {
-    @Input() carouselSize = 'lg';
-    @Input() carouselItemClass: string;
+export class CarouselComponent {
+    @Input()
+    get imgUrls(): string[] {
+        return this._imgUrls;
+    }
+    
+    set imgUrls(value: string[]) {
+        if (!value) {
+            value = new Array<string>();
+        }
 
-    @ContentChildren('carouselItem') items: QueryList<TemplateRef<any>>;
-    currentItem: TemplateRef<any>;
-    index = 0;
+        this.displayImageUrls = this._imgUrls = value;
 
-    ngAfterContentInit(): void {
-        this.currentItem = this.items.toArray()[this.index];
+        this.selectImage(0);
     }
 
-    moveForward(): void {
-        this.index++;
-        this.currentItem = this.items.toArray()[this.index];
+    @Input()
+    altImageUrl?: string;
+
+    @Input()
+    altImageText?: string;
+    
+    displayImageUrls: string[];
+    selectedImageUrl?: string;
+
+    private _imgUrls = new Array<string>();
+
+    selectImage(index: number) {
+        if (this.displayImageUrls.length > 0) {
+            index = Math.max(0, Math.min(index, this.displayImageUrls.length - 1));
+            this.selectedImageUrl = this.displayImageUrls[index];
+        } else {
+            this.selectedImageUrl = undefined;
+        }
+    }
+    
+    onThumbnailError(index: number) {
+        let url = this.displayImageUrls[index];
+
+        this.displayImageUrls.splice(index, 1);
+
+        if (this.selectedImageUrl === url) {
+            if (this.displayImageUrls.length > 0) {
+                this.selectedImageUrl = this.displayImageUrls[0];
+            } else {
+                this.selectedImageUrl = undefined;
+            }
+        }
     }
 
-    moveBackward(): void {
-        this.index--;
-        this.currentItem = this.items.toArray()[this.index];
-    }
-
-    forwardEnabled(): boolean {
-        return this.index < this.items.length - 1;
-    }
-
-    backwardEnabled(): boolean {
-        return this.index > 0;
-    }
-
-    isDotActive(dotIndex: number): boolean {
-        return dotIndex === this.index;
+    onSelectedImageError() {
+        this.selectedImageUrl = undefined;
     }
 }

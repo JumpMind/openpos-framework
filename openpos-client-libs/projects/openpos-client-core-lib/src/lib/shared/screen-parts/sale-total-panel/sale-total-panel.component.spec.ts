@@ -15,7 +15,7 @@ import {IActionItem} from "../../../core/actions/action-item.interface";
 import {By} from "@angular/platform-browser";
 import {Configuration} from "../../../configuration/configuration";
 import {ImageUrlPipe} from "../../pipes/image-url.pipe";
-import {validateDoesNotExist, validateText} from "../../../utilites/test-utils";
+import {validateDoesNotExist, validateExist, validateIcon, validateText} from "../../../utilites/test-utils";
 
 class MockMatDialog {};
 class MockActionService {};
@@ -236,6 +236,68 @@ describe('SaleTotalPanelComponent', () => {
                             spyOn(component, 'keybindsEnabled').and.returnValue(false);
                             fixture.detectChanges();
                             validateDoesNotExist(fixture, '.sale-total-header .linked-customer-summary .loyalty-keybind');
+                        });
+
+                        describe('when customerMissingInfoEnabled is true', () => {
+                            beforeEach(() => {
+                                component.screenData.customerMissingInfoEnabled = true;
+                                fixture.detectChanges();
+                            });
+
+                            describe('when customerMissingInfo is true', () => {
+                                beforeEach(() => {
+                                    component.screenData.customerMissingInfo = true;
+                                    component.screenData.customerMissingInfoIcon = 'some icon';
+                                    component.screenData.customerMissingInfoLabel = 'some label';
+                                    fixture.detectChanges();
+                                });
+
+                                it('shows the customer missing info button', () => {
+                                    validateExist(fixture, '.customer-missing-info');
+                                    validateIcon(fixture, '.customer-missing-info app-icon', component.screenData.customerMissingInfoIcon);
+                                    validateText(fixture, '.customer-missing-info .text', component.screenData.customerMissingInfoLabel);
+                                });
+                                it('dose not show the customer memberships', function () {
+                                    component.screenData.membershipEnabled = true;
+                                    component.screenData.memberships = [
+                                        { id: '123', name: 'membership1', member: true},
+                                        { id: '124', name: 'membership2', member: false},
+                                        { id: '125', name: 'membership3', member: false}
+                                    ];
+                                    fixture.detectChanges();
+                                    validateDoesNotExist(fixture, 'app-membership-display');
+                                    component.screenData.membershipEnabled = false;
+                                    component.screenData.memberships = [];
+                                    fixture.detectChanges();
+
+                                });
+                                it('dose not show the no memberships label', function () {
+                                    validateDoesNotExist(fixture, '.noMembershipsFound')
+                                });
+                            });
+
+                            describe('when customerMissingInfo is false', () => {
+                                beforeEach(() => {
+                                    component.screenData.customerMissingInfo = false;
+                                    component.screenData.customerMissingInfoIcon = 'some icon';
+                                    component.screenData.customerMissingInfoLabel = 'some label';
+                                    fixture.detectChanges();
+                                });
+                                it('does not show the customer missing info button', () => {
+                                    validateDoesNotExist(fixture, 'customer-missing-info');
+                                });
+                            });
+                        });
+
+                        describe('when customerMissingInfoEnabled is false', () => {
+                            beforeEach(() => {
+                                component.screenData.customerMissingInfoEnabled = false;
+                                fixture.detectChanges();
+                            });
+
+                            it('does not show the customer missing info button', () => {
+                                validateDoesNotExist(fixture, 'customer-missing-info');
+                            });
                         });
 
                         describe('when membershipEnabled is false', () => {
