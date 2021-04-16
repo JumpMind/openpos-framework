@@ -44,7 +44,8 @@
 </app-instructions>
 
 <app-options-list *ngIf="screenData.optionsList" (optionClick)="doAction($event)" responsive-class
-    class="tender-options" listSize="3" [overflowPanelClass]="'tender-options'" [overflowPanelWidth]="'60vw'">
+    class="tender-options" listSize="3" [overflowPanelClass]="'tender-options'" 
+    [optionListSizeClass]="'md'" [overflowPanelWidth]="'60vw'">
 </app-options-list>
 
 <img *ngIf="screenData.imageUrl" [src]="screenData.imageUrl | imageUrl" class="tender-payment-auth-image">
