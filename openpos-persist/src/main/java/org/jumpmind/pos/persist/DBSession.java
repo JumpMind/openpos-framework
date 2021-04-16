@@ -569,9 +569,9 @@ public class DBSession {
         try {
             return jdbcTemplate.getJdbcOperations().update(sql, values, types);
         } catch (DuplicateKeyException e) {
-            throw new DuplicateKeyException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types));
+            throw new DuplicateKeyException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types), e);
         } catch (Exception ex) {
-            throw new PersistException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types));
+            throw new PersistException("Failed to execute " + type + " statement: " + new LogSqlBuilder().buildDynamicSqlForLog(sql, values, types), ex);
         }
     }
 

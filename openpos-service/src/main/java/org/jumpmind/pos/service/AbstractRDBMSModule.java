@@ -122,6 +122,8 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Setter
     private ModuleLoaderConfig loaderConfig;
 
+    protected boolean dataSourceInitialized = false;
+
     static Server h2Server;
 
     @Override
@@ -248,7 +250,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
     @Override
     public DataSource getDataSource() {
         boolean isOverridden = isNotBlank(env.getProperty(String.format("%s.%s", getName(), DB_POOL_URL)));
-        if (dataSource == null || isOverridden || !useInjectedDatasource) {
+        if (!dataSourceInitialized && (isOverridden || !useInjectedDatasource)) {
             this.dataSource = null;
             setupH2Server();
             if (this.dataSourceBeanName != null) {
@@ -302,6 +304,7 @@ abstract public class AbstractRDBMSModule extends AbstractServiceFactory impleme
                 dataSource = BasicDataSourceFactory.create(properties, securityService());
             }
         }
+        dataSourceInitialized = true;
         return dataSource;
     }
 
