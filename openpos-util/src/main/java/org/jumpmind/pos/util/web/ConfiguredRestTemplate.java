@@ -33,10 +33,10 @@ public class ConfiguredRestTemplate extends RestTemplate {
 
     private Map<String, String> additionalHeaders;
 
-    static BufferingClientHttpRequestFactory build(int timeout) {
+    static BufferingClientHttpRequestFactory build(int timeout, int connectTimeout) {
         HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         httpRequestFactory.setConnectionRequestTimeout(timeout * 1000);
-        httpRequestFactory.setConnectTimeout(timeout * 1000);
+        httpRequestFactory.setConnectTimeout(connectTimeout * 1000);
         httpRequestFactory.setReadTimeout(timeout * 1000);
 
         try {
@@ -60,7 +60,11 @@ public class ConfiguredRestTemplate extends RestTemplate {
     }
 
     public ConfiguredRestTemplate(int timeout) {
-        super(build(timeout));
+        this(timeout, timeout);
+    }
+
+    public ConfiguredRestTemplate(int timeout, int connectTimeout) {
+        super(build(timeout, connectTimeout));
         this.mapper = DefaultObjectMapper.build();
         getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(this.mapper) {
 
