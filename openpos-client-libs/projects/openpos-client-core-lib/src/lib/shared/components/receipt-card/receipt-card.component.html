@@ -1,7 +1,5 @@
 <div class="receipt-card" [ngClass]="{'mat-elevation-z4':hover, 'mat-elevation-z1':!hover}">
 
-    <img *ngIf="receipt.icon" [src]="receipt.icon | imageUrl" class="receipt-icon">
-
     <div *ngIf="receipt.webOrderId" responsive-class class="muted-color web-order">
         <app-icon iconName="computer" iconClass="material-icons sm"></app-icon>
         <kbd>Web Order</kbd>
