@@ -1,25 +1,15 @@
 package org.jumpmind.pos.service;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class ProfileConfig implements Cloneable {
 
     protected int httpTimeout;
+    protected int connectTimeout;
     protected String url;
-
-    public int getHttpTimeout() {
-        return httpTimeout;
-    }
-
-    public void setHttpTimeout(int httpTimeout) {
-        this.httpTimeout = httpTimeout;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
 
     public ProfileConfig copy() {
         ProfileConfig copy;
