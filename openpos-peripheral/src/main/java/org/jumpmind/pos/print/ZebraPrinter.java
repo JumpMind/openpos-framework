@@ -86,7 +86,9 @@ public class ZebraPrinter implements IOpenposPrinter {
 
     @Override
     public void printBarCode(int station, String data, int symbology, int height, int width, int alignment, int textPosition) throws JposException {
+        writer.println(COMMAND_ENABLE_TEXT_UNDER_BARCODE);
         writer.println(String.format(COMMAND_PRINT_BARCODE, data));
+        writer.println(COMMAND_DISABLE_TEXT_UNDER_BARCODE);
     }
 
     @Override
@@ -138,7 +140,7 @@ public class ZebraPrinter implements IOpenposPrinter {
 
     @Override
     public void printDivider() {
-        writer.println(String.format(COMMAND_CPCL_MODE_Y, 10));
+        writer.println(String.format(COMMAND_CPCL_MODE_Y, 5));
         writer.println("LINE 0 0 575 0 1");
         writer.println(COMMAND_PRINT);
     }
@@ -206,7 +208,7 @@ public class ZebraPrinter implements IOpenposPrinter {
 
     @Override
     public PeripheralConnection getPeripheralConnection() {
-        return null;
+        return peripheralConnection;
     }
 
     @Override
