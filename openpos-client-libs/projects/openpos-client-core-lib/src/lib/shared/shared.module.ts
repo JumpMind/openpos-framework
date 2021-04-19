@@ -174,6 +174,7 @@ import { ImageScannerComponent } from '../core/platform-plugins/barcode-scanners
 import {RewardsLineItemComponent} from './screen-parts/rewards-line-item/rewards-line-item.component';
 import { CustomerInformationComponent } from './screen-parts/customer-information/customer-information.component';
 import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
+import {MembershipPointsDisplayComponent} from "./screen-parts/membership-points-display/membership-points-display.component";
 
 const screenParts = [
     TenderPartComponent,
@@ -189,6 +190,7 @@ const screenParts = [
     DynamicFormPartComponent,
     AutoCompleteAddressPartComponent,
     MembershipDisplayComponent,
+    MembershipPointsDisplayComponent,
     CustomerInformationComponent,
     RewardsLineItemComponent,
     RewardsHistoryLineItemComponent,

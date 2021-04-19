@@ -1,0 +1,21 @@
+@import "../../../styles/mixins/typography";
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 10fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-gap: 1em;
+  grid-template-areas:
+    "icon details";
+  .icon {
+    grid-area: icon;
+  }
+  .details {
+    grid-area: details;
+    @extend %text-sm;
+    .value {
+      font-weight: 500;
+    }
+  }
+}
