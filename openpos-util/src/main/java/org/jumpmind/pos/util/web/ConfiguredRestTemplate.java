@@ -1,40 +1,30 @@
 package org.jumpmind.pos.util.web;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jumpmind.pos.util.DefaultObjectMapper;
+import org.jumpmind.pos.util.model.ErrorResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.*;
+import org.springframework.http.client.*;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jumpmind.pos.util.DefaultObjectMapper;
-import org.jumpmind.pos.util.model.ErrorResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpRequest;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.client.BufferingClientHttpRequestFactory;
-import org.springframework.http.client.ClientHttpRequestExecution;
-import org.springframework.http.client.ClientHttpRequestInterceptor;
-import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.web.client.DefaultResponseErrorHandler;
-import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 public class ConfiguredRestTemplate extends RestTemplate {
 
     ObjectMapper mapper;
 
-    static BufferingClientHttpRequestFactory build(int timeout) {
+    static BufferingClientHttpRequestFactory build(int timeout, int connectTimeout) {
         HttpComponentsClientHttpRequestFactory httpRequestFactory = new HttpComponentsClientHttpRequestFactory();
         httpRequestFactory.setConnectionRequestTimeout(timeout * 1000);
-        httpRequestFactory.setConnectTimeout(timeout * 1000);
+        httpRequestFactory.setConnectTimeout(connectTimeout * 1000);
         httpRequestFactory.setReadTimeout(timeout * 1000);
         return new BufferingClientHttpRequestFactory(httpRequestFactory);
     }
@@ -44,7 +34,11 @@ public class ConfiguredRestTemplate extends RestTemplate {
     }
 
     public ConfiguredRestTemplate(int timeout) {
-        super(build(timeout));
+        this(timeout, timeout);
+    }
+
+    public ConfiguredRestTemplate(int timeout, int connectTimeout) {
+        super(build(timeout, connectTimeout));
         this.mapper = DefaultObjectMapper.build();
         getMessageConverters().add(0, new MappingJackson2HttpMessageConverter(this.mapper));
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
