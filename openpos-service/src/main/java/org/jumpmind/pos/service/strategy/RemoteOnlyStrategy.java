@@ -117,7 +117,9 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
                                  Map<String, Object> endpoints, Object[] args) throws ResourceAccessException {
 
         int httpTimeoutInSecond = profileConfig.getHttpTimeout();
-        ConfiguredRestTemplate template = new ConfiguredRestTemplate(httpTimeoutInSecond);
+        int connectTimeoutInSecond = profileConfig.getConnectTimeout() > 0 ? profileConfig.getConnectTimeout() : httpTimeoutInSecond;
+        ConfiguredRestTemplate template = new ConfiguredRestTemplate(httpTimeoutInSecond, connectTimeoutInSecond);
+
         RequestMapping mapping = method.getAnnotation(RequestMapping.class);
         RequestMethod[] requestMethods = mapping.method();
 
