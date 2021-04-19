@@ -372,7 +372,7 @@ describe('CustomerDetailsDialog', () => {
           });
         });
 
-        describe('when memberhsipPoints is disabled', () => {
+        describe('when membershipPoints is disabled', () => {
           beforeEach(() => {
             component.screen.membershipPointsEnabled = false;
             fixture.detectChanges();
