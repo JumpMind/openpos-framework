@@ -36,6 +36,7 @@ import { TransactionSearchComponent } from './transaction-search/transaction-sea
 import { TransactionDetailsComponent } from './transaction-details/transaction-details.component';
 import {CustomerDetailsDialogComponent} from "./sale/customer-details-dialog/customer-details-dialog.component";
 import {CustomerSearchResultDialogComponent} from './customer-search-result-dialog/customer-search-result-dialog.component';
+import { LoyaltyCustomerFormDialogComponent } from "./loyalty-customer-form-dialog/loyalty-customer-form-dialog.component";
 
 
 const screens = [
@@ -76,8 +77,9 @@ const dialogs = [
     AutoCompleteAddressDialogComponent,
     ErrorDialogComponent,
     DataTableDialogComponent,
-    CustomerSearchResultDialogComponent
-
+    CustomerSearchResultDialogComponent,
+    DataTableDialogComponent,
+    LoyaltyCustomerFormDialogComponent
 ];
 
 @NgModule({

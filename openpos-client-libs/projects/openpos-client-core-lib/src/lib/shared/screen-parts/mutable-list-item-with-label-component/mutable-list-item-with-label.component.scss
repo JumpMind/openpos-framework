@@ -1,0 +1,32 @@
+@import "../../../styles/mixins/typography";
+
+.mutable-list-item {
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 30px 2fr 1fr 30px 30px;
+  align-items: center;
+  grid-template-areas:
+    "group-icon input-field label-field remove add";
+
+  .group-icon { grid-area: group-icon; }
+
+  .input-field {
+    grid-area: input-field;
+    margin-left: 1em;
+  }
+
+  .label-field {
+    grid-area: label-field;
+    margin-left: 1em;
+  }
+
+  .remove {
+    grid-area: remove;
+    margin-left: auto;
+  }
+
+  .add {
+    grid-area: add;
+    margin-left: auto;
+  }
+}

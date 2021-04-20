@@ -92,7 +92,7 @@
     // this is a hack to get around a default value in angular material that they removed in future versions
     // if we ever upgrade we can probably remove this. This allows the field to be sized by flex instead of being
     // limited to 200px min size
-    .mat-form-field{
+    .mat-form-field {
         width: unset;
     }
 

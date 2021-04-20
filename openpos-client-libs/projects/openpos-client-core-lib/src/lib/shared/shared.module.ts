@@ -164,6 +164,7 @@ import { WatermarkComponent } from './components/watermark/watermark.component';
 import { MembershipDisplayComponent } from "./screen-parts/membership-display/membership-display.component";
 import {RewardsLineItemComponent} from "./screen-parts/rewards-line-item/rewards-line-item.component";
 import { CustomerInformationComponent } from './screen-parts/customer-information/customer-information.component';
+import {MutableListItemWithLabelComponent} from "./screen-parts/mutable-list-item-with-label-component/mutable-list-item-with-label.component";
 import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
 import { DisplayCustomerLookupComponent } from './screen-parts/display-customer-lookup/display-customer-lookup.component';
 import {MembershipPointsDisplayComponent} from "./screen-parts/membership-points-display/membership-points-display.component";
@@ -184,6 +185,7 @@ const screenParts = [
     MembershipDisplayComponent,
     MembershipPointsDisplayComponent,
     CustomerInformationComponent,
+    MutableListItemWithLabelComponent,
     RewardsLineItemComponent,
     RewardsHistoryLineItemComponent,
     ProgressBarPartComponent,
