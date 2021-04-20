@@ -15,6 +15,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Pattern;
@@ -158,6 +159,94 @@ public class EndpointInvokerTest {
         ServiceSampleModel result = endpointInvoker.startSample(path, invocationStrategy, config, null, method, null);
 
         assertNotNull(result, "EndpointInvoker.startSample should return not null when the method passed is configured to be sampled.");
+    }
+
+    @Test
+    public void maintainCacheAddsUnseenPathsToCache(){
+        String path = "/test/one";
+        ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
+
+        EndpointInvoker endpointInvoker = new EndpointInvoker();
+        HashMap<String, Boolean> endpointCache = spy(new HashMap<>());
+        endpointInvoker.endpointEnabledCache = endpointCache;
+
+        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+
+        verify(endpointCache, atLeastOnce()).get(path);
+        verify(endpointCache, atLeastOnce()).put(path, true);
+        assertEquals(endpointCache.size(), 1);
+    }
+
+    @Test
+    public void maintainCacheDoseNotAddSeenPathsToCache(){
+        String path = "/test/one";
+        ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
+
+        EndpointInvoker endpointInvoker = new EndpointInvoker();
+        HashMap<String, Boolean> endpointCache = spy(new HashMap<>());
+        endpointInvoker.endpointEnabledCache = endpointCache;
+
+        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+
+        verify(endpointCache, atLeastOnce()).get(path);
+        verify(endpointCache, atLeastOnce()).put(path, true);
+        assertEquals(endpointCache.size(), 1);
+    }
+
+    @Test
+    public void maintainCacheDoseNotAddDisabledEndpointsAtEndpointLevel(){
+        String path = "/test/one";
+        ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
+
+        EndpointInvoker endpointInvoker = new EndpointInvoker();
+        HashMap<String, Boolean> endpointCache = spy(new HashMap<>());
+        endpointInvoker.endpointEnabledCache = endpointCache;
+
+        serviceSpecificConfig.getEndpoints().get(0).getSamplingConfig().setEnabled(false);
+        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+
+        serviceSpecificConfig.getEndpoints().get(0).getSamplingConfig().setEnabled(true);
+        serviceSpecificConfig.getSamplingConfig().setEnabled(false);
+        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+
+        verify(endpointCache, atLeastOnce()).get(path);
+        verify(endpointCache, atLeastOnce()).put(path, false);
+        assertEquals(endpointCache.size(), 1);
+    }
+
+    @Test
+    public void maintainCacheDoseNotAddDisabledEndpointsAtModuleLevel(){
+        String path = "/test/one";
+        ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
+
+        EndpointInvoker endpointInvoker = new EndpointInvoker();
+        HashMap<String, Boolean> endpointCache = spy(new HashMap<>());
+        endpointInvoker.endpointEnabledCache = endpointCache;
+
+        serviceSpecificConfig.getSamplingConfig().setEnabled(false);
+        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+
+        verify(endpointCache, atLeastOnce()).get(path);
+        verify(endpointCache, atLeastOnce()).put(path, false);
+        assertEquals(endpointCache.size(), 1);
+    }
+
+    private ServiceSpecificConfig serviceSpecificConfigSetup(String path) {
+        ServiceSpecificConfig serviceSpecificConfig = new ServiceSpecificConfig();
+        SamplingConfig samplingConfig = new SamplingConfig();
+        samplingConfig.setEnabled(true);
+        serviceSpecificConfig.setSamplingConfig(samplingConfig);
+
+        List<EndpointSpecificConfig> endpoints = new ArrayList<>();
+        EndpointSpecificConfig endpointSpecificConfig = new EndpointSpecificConfig();
+        endpointSpecificConfig.setPath(path);
+        endpointSpecificConfig.setSamplingConfig(samplingConfig);
+        endpoints.add(endpointSpecificConfig);
+
+        serviceSpecificConfig.setEndpoints(endpoints);
+
+        return serviceSpecificConfig;
     }
 
     @Test

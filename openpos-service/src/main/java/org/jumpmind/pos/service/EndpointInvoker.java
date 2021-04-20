@@ -76,6 +76,7 @@ public class EndpointInvoker implements InvocationHandler {
             build();
 
     private static final ExecutorService instrumentationExecutor = Executors.newSingleThreadExecutor(factory);
+    protected HashMap<String, Boolean> endpointEnabledCache = new HashMap<String, Boolean>();
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -367,25 +368,32 @@ public class EndpointInvoker implements InvocationHandler {
             Object proxy,
             Method method,
             Object[] args) {
-        Optional<ServiceSampleModel> serviceSampleModel = Optional.empty();
-        if (config != null && config.getSamplingConfig() != null && config.getSamplingConfig().isEnabled()
-            && config.getEndpoints() != null) {
-            serviceSampleModel = config.getEndpoints()
-                    .stream()
-                    .filter(endpoint -> endpoint.getSamplingConfig().isEnabled() && path.equals(endpoint.getPath()))
-                    .findFirst()
-                    .map( notUsed -> {
-                        ServiceSampleModel sampleInner = new ServiceSampleModel();
-                        sampleInner.setSampleId(installationId + System.currentTimeMillis());
-                        sampleInner.setInstallationId(installationId);
-                        sampleInner.setHostname(AppUtils.getHostName());
-                        sampleInner.setServiceName(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-                        sampleInner.setServiceType(strategy.getStrategyName());
-                        sampleInner.setStartTime(new Date());
-                        return sampleInner;
-                    });
+        maintainCache(path, config);
+        if(endpointEnabledCache.get(path)){
+                ServiceSampleModel serviceSampleModel = new ServiceSampleModel();
+                serviceSampleModel.setSampleId(installationId + System.currentTimeMillis());
+                serviceSampleModel.setInstallationId(installationId);
+                serviceSampleModel.setHostname(AppUtils.getHostName());
+                serviceSampleModel.setServiceName(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+                serviceSampleModel.setServiceType(strategy.getStrategyName());
+                serviceSampleModel.setStartTime(new Date());
+                return serviceSampleModel;
         }
-        return serviceSampleModel.orElse(null);
+        return null;
+    }
+
+    protected void maintainCache(String path, ServiceSpecificConfig config) {
+        if(endpointEnabledCache.get(path) == null) {
+            Optional<EndpointSpecificConfig> endpointSpecificConfig = Optional.empty();
+            if (config != null && config.getSamplingConfig() != null && config.getSamplingConfig().isEnabled()
+                    && config.getEndpoints() != null) {
+                endpointSpecificConfig = config.getEndpoints()
+                        .stream()
+                        .filter(endpoint -> endpoint.getSamplingConfig().isEnabled() && path.equals(endpoint.getPath()))
+                        .findFirst();
+            }
+            endpointEnabledCache.put(path, endpointSpecificConfig.isPresent());
+        }
     }
 
     protected void endSampleSuccess(
