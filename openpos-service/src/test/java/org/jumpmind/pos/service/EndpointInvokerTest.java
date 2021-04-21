@@ -162,7 +162,7 @@ public class EndpointInvokerTest {
     }
 
     @Test
-    public void maintainCacheAddsUnseenPathsToCache(){
+    public void isSamplingEnabledAddsUnseenPathsToCache(){
         String path = "/test/one";
         ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
 
@@ -170,15 +170,16 @@ public class EndpointInvokerTest {
         HashMap<String, Boolean> endpointCache = spy(new HashMap<>());
         endpointInvoker.endpointEnabledCache = endpointCache;
 
-        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+        boolean result = endpointInvoker.isSamplingEnabled(path, serviceSpecificConfig);
 
         verify(endpointCache, atLeastOnce()).get(path);
         verify(endpointCache, atLeastOnce()).put(path, true);
         assertEquals(endpointCache.size(), 1);
+        assertEquals(result, true);
     }
 
     @Test
-    public void maintainCacheDoseNotAddSeenPathsToCache(){
+    public void isSamplingEnabledDoseNotAddSeenPathsToCache(){
         String path = "/test/one";
         ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
 
@@ -186,16 +187,17 @@ public class EndpointInvokerTest {
         HashMap<String, Boolean> endpointCache = spy(new HashMap<>());
         endpointInvoker.endpointEnabledCache = endpointCache;
 
-        endpointInvoker.maintainCache(path, serviceSpecificConfig);
-        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+        endpointInvoker.isSamplingEnabled(path, serviceSpecificConfig);
+        boolean result = endpointInvoker.isSamplingEnabled(path, serviceSpecificConfig);
 
         verify(endpointCache, atLeastOnce()).get(path);
         verify(endpointCache, atLeastOnce()).put(path, true);
         assertEquals(endpointCache.size(), 1);
+        assertEquals(result, true);
     }
 
     @Test
-    public void maintainCacheDoseNotAddDisabledEndpointsAtEndpointLevel(){
+    public void isSamplingEnabledDoseNotAddDisabledEndpointsAtEndpointLevel(){
         String path = "/test/one";
         ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
 
@@ -204,19 +206,20 @@ public class EndpointInvokerTest {
         endpointInvoker.endpointEnabledCache = endpointCache;
 
         serviceSpecificConfig.getEndpoints().get(0).getSamplingConfig().setEnabled(false);
-        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+        boolean result = endpointInvoker.isSamplingEnabled(path, serviceSpecificConfig);
 
         serviceSpecificConfig.getEndpoints().get(0).getSamplingConfig().setEnabled(true);
         serviceSpecificConfig.getSamplingConfig().setEnabled(false);
-        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+        endpointInvoker.isSamplingEnabled(path, serviceSpecificConfig);
 
         verify(endpointCache, atLeastOnce()).get(path);
         verify(endpointCache, atLeastOnce()).put(path, false);
         assertEquals(endpointCache.size(), 1);
+        assertEquals(result, false);
     }
 
     @Test
-    public void maintainCacheDoseNotAddDisabledEndpointsAtModuleLevel(){
+    public void isSamplingEnabledDoseNotAddDisabledEndpointsAtModuleLevel(){
         String path = "/test/one";
         ServiceSpecificConfig serviceSpecificConfig = serviceSpecificConfigSetup(path);
 
@@ -225,11 +228,28 @@ public class EndpointInvokerTest {
         endpointInvoker.endpointEnabledCache = endpointCache;
 
         serviceSpecificConfig.getSamplingConfig().setEnabled(false);
-        endpointInvoker.maintainCache(path, serviceSpecificConfig);
+        boolean result = endpointInvoker.isSamplingEnabled(path, serviceSpecificConfig);
 
         verify(endpointCache, atLeastOnce()).get(path);
         verify(endpointCache, atLeastOnce()).put(path, false);
         assertEquals(endpointCache.size(), 1);
+        assertEquals(result, false);
+    }
+
+    @Test
+    public void isSamplingEnabledReturnsNullWithConfigNull(){
+        String path = "/test/one";
+
+        EndpointInvoker endpointInvoker = new EndpointInvoker();
+        HashMap<String, Boolean> endpointCache = spy(new HashMap<>());
+        endpointInvoker.endpointEnabledCache = endpointCache;
+
+        boolean result = endpointInvoker.isSamplingEnabled(path, null);
+
+        verify(endpointCache, atLeastOnce()).get(path);
+        verify(endpointCache, atLeastOnce()).put(path, false);
+        assertEquals(endpointCache.size(), 1);
+        assertEquals(result, false);
     }
 
     private ServiceSpecificConfig serviceSpecificConfigSetup(String path) {

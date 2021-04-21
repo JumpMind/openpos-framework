@@ -291,7 +291,7 @@ public class EndpointInvoker implements InvocationHandler {
 
         IInvocationStrategy strategy;
         List<String> profileIds = new ArrayList<>();
-        if (endConfig != null) {
+        if (endConfig != null && endConfig.getStrategy() != null) {
             strategy = strategies.get(endConfig.getStrategy().name());
             profileIds.add(endConfig.getProfile());
         } else {
@@ -368,8 +368,7 @@ public class EndpointInvoker implements InvocationHandler {
             Object proxy,
             Method method,
             Object[] args) {
-        maintainCache(path, config);
-        if(endpointEnabledCache.get(path)){
+        if(isSamplingEnabled(path, config)){
                 ServiceSampleModel serviceSampleModel = new ServiceSampleModel();
                 serviceSampleModel.setSampleId(installationId + System.currentTimeMillis());
                 serviceSampleModel.setInstallationId(installationId);
@@ -382,7 +381,7 @@ public class EndpointInvoker implements InvocationHandler {
         return null;
     }
 
-    protected void maintainCache(String path, ServiceSpecificConfig config) {
+    protected boolean isSamplingEnabled(String path, ServiceSpecificConfig config) {
         if(endpointEnabledCache.get(path) == null) {
             Optional<EndpointSpecificConfig> endpointSpecificConfig = Optional.empty();
             if (config != null && config.getSamplingConfig() != null && config.getSamplingConfig().isEnabled()
@@ -394,6 +393,7 @@ public class EndpointInvoker implements InvocationHandler {
             }
             endpointEnabledCache.put(path, endpointSpecificConfig.isPresent());
         }
+        return endpointEnabledCache.get(path);
     }
 
     protected void endSampleSuccess(
