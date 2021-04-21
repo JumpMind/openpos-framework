@@ -1,6 +1,10 @@
 @import "../../styles/mixins/typography";
 @import "../../styles/variables/spacing";
 
+app-bacon-strip{
+    height: 100%;
+}
+
 .item-details {
     display: flex;
     flex-direction: column;
