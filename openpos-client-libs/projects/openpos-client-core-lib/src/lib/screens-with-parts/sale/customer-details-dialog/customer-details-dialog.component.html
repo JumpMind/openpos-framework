@@ -82,6 +82,15 @@
 </div>
 <mat-dialog-actions align="end" class="buttons">
     <app-secondary-button responsive-class
+                          *ngFor="let menuItem of screen.additionalActions"
+                          [disabled]="!menuItem?.enabled"
+                          [actionItem]="menuItem"
+                          (actionClick)="doAction(menuItem)"
+                          (click)="doAction(menuItem)">
+        <span responsive-class>{{menuItem.title}}</span>
+        <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
+    </app-secondary-button>
+    <app-secondary-button responsive-class
                           class="unlink"
                           *ngIf="screen.unlinkButton"
                           [disabled]="!screen.unlinkButton?.enabled"

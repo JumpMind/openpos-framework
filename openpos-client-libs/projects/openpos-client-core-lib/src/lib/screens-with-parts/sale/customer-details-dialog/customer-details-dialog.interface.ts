@@ -12,6 +12,7 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     editButton: IActionItem;
     unlinkButton: IActionItem;
     doneButton: IActionItem;
+    additionalActions: IActionItem[];
     contactLabel: string;
     rewardsLabel: string;
     rewardTabEnabled: boolean;
