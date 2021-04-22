@@ -49,10 +49,17 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
 
     buildScreen() {
         this.optionComponents.clear();
-        this.screen.productOptionsComponents.forEach(value => {
-            let injector = Injector.create( { providers: [{ provide: OPTION_NAME, useValue: value.name }], parent: this.injector})
-            this.optionComponents.set( injector, this.getComponentFromOptionType(value));
-        });
+
+        if (this.screen.productOptionsComponents) {
+            this.screen.productOptionsComponents.forEach(value => {
+                let injector = Injector.create({ 
+                    providers: [{ provide: OPTION_NAME, useValue: value.name }], 
+                    parent: this.injector
+                });
+
+                this.optionComponents.set(injector, this.getComponentFromOptionType(value));
+            });
+        }
     }
     
     getComponentFromOptionType(productOption: ProductOptionInterface) {
