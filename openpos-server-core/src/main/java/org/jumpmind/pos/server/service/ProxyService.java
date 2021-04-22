@@ -43,11 +43,11 @@ public class ProxyService implements IActionListener {
         return types;
     }
 
-    public CompletableFuture<ProxyResponse> sendMessage( ProxyMessage message) {
+    public CompletableFuture<ProxyResponse> sendMessage(String appId, ProxyMessage message) {
         CompletableFuture<ProxyResponse> futureResponse = new CompletableFuture<>();
         this.requestToResponseMap.put(message.getMessageId(), new ProxyResponseMapEntry(futureResponse));
 
-        messageService.sendMessage(clientContext.get("appId"), clientContext.get("deviceId"), message);
+        messageService.sendMessage(appId, clientContext.get("deviceId"), message);
 
         return futureResponse;
     }
