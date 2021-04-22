@@ -31,6 +31,8 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
     emailFields : IFormElement[] = [];
     emailLabelFields : IFormElement[] = [];
 
+    handledFormFields : string[] = [];
+
     line1Field : IFormElement;
     line2Field : IFormElement;
     cityField : IFormElement;
@@ -78,6 +80,28 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
     }
 
     buildScreen() : void {
+        if(this.screen.isStructuredForm) {
+            this.buildStructuredForm();
+        }
+
+        this.screen.formGroup = this.formBuilder.group(this.screen.form);
+    }
+
+    private buildStructuredForm(): void {
+        this.handledFormFields = [
+            'firstName',
+            'lastName',
+            'loyaltyNumber',
+            'phone',
+            'email',
+            'line1',
+            'line2',
+            'city',
+            'state',
+            'postalCode',
+            'country',
+        ];
+
         this.firstNameField = this.getFormElementById('firstName');
         this.lastNameField = this.getFormElementById('lastName');
         this.loyaltyNumberField = this.getFormElementById('loyaltyNumber');
@@ -124,8 +148,6 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
                 }
             });
         }
-
-        this.screen.formGroup = this.formBuilder.group(this.screen.form);
     }
 
 }
