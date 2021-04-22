@@ -14,6 +14,7 @@ public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm 
 
     private Form form = new Form();
 
+    private Boolean isStructuredForm;
     private Boolean membershipEnabled;
     private List<UIMembership> memberships;
     private String membershipsLabel;

@@ -98,7 +98,7 @@
                                     <app-icon matPrefix [iconName]="screen.loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
                                     <app-dynamic-form-field [formGroup]="screen.formGroup" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
                                 </div>
-                                <div *ngIf="screen.membershipEnabled" class="memberships">
+                                <div *ngIf="screen.membershipEnabled && screen.isStructuredForm" class="memberships">
                                     <div *ngIf="screen.memberships && screen.memberships.length">
                                         <div class="title">
                                             {{screen.membershipsLabel}}
@@ -115,6 +115,13 @@
                                 </div>
                             </div>
                         </ng-template>
+
+                        <div class="extraFormFields">
+                            <div *ngFor="let formElement of screen.form.formElements">
+                                <app-dynamic-form-field *ngIf="handledFormFields.indexOf(formElement.id) == -1"
+                                        [formGroup]="screen.formGroup" [formField]="formElement" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            </div>
+                        </div>
                     </div>
                     <mat-error>
                         <div id="formErrorsWrapper"><app-show-errors #formErrors [control]="screen.formGroup"></app-show-errors></div>

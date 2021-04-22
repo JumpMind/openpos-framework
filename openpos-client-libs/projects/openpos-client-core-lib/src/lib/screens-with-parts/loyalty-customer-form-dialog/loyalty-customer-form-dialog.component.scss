@@ -70,7 +70,8 @@
     gap: 0px 2.5em;
     grid-template-areas:
     "basic-info loyalty"
-    "contact location";
+    "contact location"
+    "extraFormFields extraFormFields";
 
     .basic-info {
         grid-area: basic-info;
@@ -185,6 +186,7 @@
         }
     }
 
+    .extraFormFields { grid-area: extraFormFields; }
 }
 
 .mobile-grid-container {
@@ -194,7 +196,8 @@
     "basic-info"
     "contact"
     "location"
-    "loyalty";
+    "loyalty"
+    "extraFormFields";
 
     .basic-info {
         grid-area: basic-info;
@@ -309,4 +312,6 @@
             }
         }
     }
+
+    .extraFormFields { grid-area: extraFormFields; }
 }
