@@ -124,9 +124,10 @@ public abstract class AbstractFileContentProvider implements IContentProvider {
     }
 
     public boolean isFileSupported(String filename) {
-        if (this.supportedFileTypes != null) {
+        if (this.supportedFileTypes != null && filename != null) {
+            String lowerFilename = filename.toLowerCase();
             for (String fileType : this.supportedFileTypes) {
-                if (filename.endsWith(fileType)) {
+                if (lowerFilename.endsWith(fileType.toLowerCase())) {
                     return true;
                 }
             }
