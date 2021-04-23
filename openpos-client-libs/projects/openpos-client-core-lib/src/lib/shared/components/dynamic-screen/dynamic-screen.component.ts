@@ -5,6 +5,8 @@ import {ToastContainerDirective, ToastrService} from "ngx-toastr";
 import { SessionService } from '../../../core/services/session.service';
 import { WatermarkMessage } from '../../../core/messages/watermark-message';
 import { MessageTypes } from '../../../core/messages/message-types';
+import { ConfigurationService } from '../../../core/services/configuration.service';
+import { Observable } from 'rxjs';
 
 @Component({
     selector: 'app-dynamic-screen',
@@ -18,6 +20,7 @@ export class DynamicScreenComponent implements OnInit{
     showWatermark = false;
     watermarkMessage: string;
     constructor(
+        private configuration: ConfigurationService,
                 messageProvider: MessageProvider,
                 private toastrService: ToastrService,
                 private sessionService: SessionService) {
@@ -34,5 +37,9 @@ export class DynamicScreenComponent implements OnInit{
 
     ngOnInit() {
         this.toastrService.overlayContainer = this.toastContainer;
+    }
+
+    public getLocalTheme(): Observable<string> {
+        return this.configuration.theme$;
     }
 }
