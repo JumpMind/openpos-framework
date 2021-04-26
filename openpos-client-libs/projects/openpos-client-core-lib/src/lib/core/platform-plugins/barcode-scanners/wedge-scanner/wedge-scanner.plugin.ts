@@ -21,7 +21,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
     private startSequenceObj = this.getControlStrings(this.startSequence);
     private endSequenceObj = this.getControlStrings(this.endSequence);
 
-    private scanObservable = new Observable(observer => {
+    private readonly scanObservable = new Observable(observer => {
         this.scannerActive = true;
 
         const subscription = this.createScanBuffer().subscribe({
@@ -106,7 +106,7 @@ interface ControlSequence { modifiers: string[]; key: string; }
         });
 
         // buffer up all keydown events and prevent them from propagating while scanning
-        return this.scanObservable = this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
+        return this.domEventManager.createEventObserver(window, 'keydown', {capture: true}).pipe(
             bufferToggle(
                 startScanBuffer,
                 () => stopScanBuffer
