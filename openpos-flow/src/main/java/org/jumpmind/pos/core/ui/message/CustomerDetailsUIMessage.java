@@ -4,6 +4,9 @@ import lombok.Data;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.UIMessage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Data
 public class CustomerDetailsUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
@@ -13,6 +16,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private ActionItem unlinkButton;
     private ActionItem editButton;
     private ActionItem doneButton;
+    private List<ActionItem> additionalActions;
 
     private UICustomerDetailsItem customer;
 
@@ -46,5 +50,12 @@ public class CustomerDetailsUIMessage extends UIMessage {
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);
+    }
+
+    public void addAdditionalAction(ActionItem action) {
+        if (additionalActions == null) {
+            additionalActions = new ArrayList<>();
+        }
+        additionalActions.add(action);
     }
 }
