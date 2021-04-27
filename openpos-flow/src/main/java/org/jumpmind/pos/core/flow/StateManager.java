@@ -38,6 +38,7 @@ import org.jumpmind.pos.core.clientconfiguration.IClientConfigSelector;
 import org.jumpmind.pos.core.clientconfiguration.LocaleChangedMessage;
 import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
+import org.jumpmind.pos.core.event.DeviceResetEvent;
 import org.jumpmind.pos.core.flow.config.*;
 import org.jumpmind.pos.core.model.MessageType;
 import org.jumpmind.pos.core.model.StartupMessage;
@@ -54,6 +55,7 @@ import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.ClassUtils;
 import org.jumpmind.pos.util.Versions;
 import org.jumpmind.pos.util.event.Event;
+import org.jumpmind.pos.util.event.EventPublisher;
 import org.jumpmind.pos.util.model.Message;
 import org.jumpmind.pos.util.model.PrintMessage;
 import org.jumpmind.pos.util.startup.DeviceStartupTaskConfig;
@@ -63,6 +65,7 @@ import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
+import org.springframework.scheduling.annotation.ScheduledAnnotationBeanPostProcessor;
 import org.springframework.stereotype.Component;
 
 @Component()
@@ -123,6 +126,12 @@ public class StateManager implements IStateManager {
     @Value("${openpos.general.failOnUnmatchedAction:false}")
     boolean failOnUnmatchedAction;
 
+    @Autowired
+    ScheduledAnnotationBeanPostProcessor scheduledAnnotationBeanPostProcessor;
+
+    @Autowired
+    EventPublisher eventPublisher;
+
     ApplicationState applicationState = new ApplicationState();
 
     List<TransitionStepConfig> transitionStepConfigs;
@@ -159,7 +168,7 @@ public class StateManager implements IStateManager {
 
     @Override
     public void reset() {
-        log.info("StateManager resetting.");
+        log.info("StateManager reset queued");
         this.actionQueue.clear();
         this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_RESET_ACTION)));
     }
@@ -172,12 +181,13 @@ public class StateManager implements IStateManager {
     }
 
     public void init(String appId, String nodeId) {
-        this.applicationState.reset();
+        this.applicationState.reset(scheduledAnnotationBeanPostProcessor);
         this.applicationState.setAppId(appId);
         this.applicationState.setDeviceId(nodeId);
         this.eventBroadcaster = new EventBroadcaster(this);
 
         applicationState.getScope().setDeviceScope("stateManager", this);
+
         initDefaultScopeObjects();
 
         if (initialFlowConfig != null) {
@@ -231,18 +241,19 @@ public class StateManager implements IStateManager {
                 if (actionContext != null) {
                     busyFlag.set(true);
                     if (actionContext.getAction().getName().equals(STATE_MANAGER_RESET_ACTION)) {
+                        log.info("StateManager reset queued");
                         actionContext.getAction().markProcessed();
                         runningFlag.set(false);
                         busyFlag.set(false);
                         init(this.getAppId(), this.getDeviceId());
-                        this.messageService.sendMessage(getAppId(), getDeviceId(), new Message(MessageType.Connected));
-                        log.info("StateManager reset.");
+                        log.info("StateManager reset");
+                        this.eventPublisher.publish(new DeviceResetEvent(getDeviceId(), getAppId()));
                         break;
                     } else if (actionContext.getAction().getName().equals(STATE_MANAGER_STOP_ACTION)) {
                         actionContext.getAction().markProcessed();
                         runningFlag.set(false);
                         busyFlag.set(false);
-                        log.info("StateManager stopped.");
+                        log.info("StateManager stopped");
                         break;
                     } else if (actionContext.getAction().getName().equals(STATE_MANAGER_PROCESS_EVENT_ACTION)) {
                         processEvent(actionContext.getAction().getData());

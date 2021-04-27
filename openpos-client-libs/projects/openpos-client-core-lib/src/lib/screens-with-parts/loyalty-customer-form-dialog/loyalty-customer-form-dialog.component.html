@@ -1,0 +1,141 @@
+<app-dialog-header></app-dialog-header>
+<app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
+<mat-dialog-content>
+    <app-form (submitFormEvent)="submitForm()" [form]="screen.formGroup">
+        <div responsive-class class="form-part-body loyalty-customer-form form-content">
+            <app-content-card>
+                <mat-card-content>
+                    <div [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
+                        <div class="basic-info" *ngIf="firstNameField || lastNameField">
+                            <div class="portrait">
+                                <app-icon [iconName]="screen.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-96' : ' mat-128')"></app-icon>
+                            </div>
+                            <div class="names">
+                                <app-dynamic-form-field *ngIf="firstNameField" [formGroup]="screen.formGroup" [formField]="firstNameField"
+                                                        (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                                <app-dynamic-form-field *ngIf="lastNameField" [formGroup]="screen.formGroup" [formField]="lastNameField"
+                                                        (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            </div>
+                        </div>
+                        <div class="contact" *ngIf="emailField || emailFields || phoneField || phoneFields">
+                            <div *ngIf="emailField && emailFields.length === 0" class="email">
+                                <app-icon matPrefix [iconName]="screen.emailIcon" iconClass="material-icons sm"></app-icon>
+                                <app-dynamic-form-field [formGroup]="screen.formGroup" [formField]="emailField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            </div>
+                            <div *ngIf="emailFields.length > 0">
+                                <div class="email-list" *ngFor="let emailField of emailFields; let i = index; first as isFirst; last as isLast;">
+                                    <app-mutable-list-item-with-label [formGroup]="screen.formGroup"
+                                                                      [groupIcon]="screen.emailIcon"
+                                                                      [inputField]="emailField"
+                                                                      [labelField]="emailLabelFields[i]"
+                                                                      [isFirst]="isFirst"
+                                                                      [isLast]="isLast"
+                                                                      [isOnly]="emailFields.length == 1"
+                                                                      (onFieldChanged)="onFieldChanged($event)"
+                                                                      (add)="doAction(screen.addEmail, i)"
+                                                                      (remove)="doAction(screen.removeEmail, i)">
+                                    </app-mutable-list-item-with-label>
+                                </div>
+                            </div>
+
+                            <div *ngIf="phoneField && phoneFields.length === 0" class="phone">
+                                <app-icon matPrefix [iconName]="screen.phoneIcon" iconClass="material-icons sm"></app-icon>
+                                <app-dynamic-form-field [formGroup]="screen.formGroup" [formField]="phoneField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            </div>
+                            <div *ngIf="phoneFields.length > 0">
+
+                                <div class="phone-list" *ngFor="let phoneField of phoneFields; let i = index; first as isFirst; last as isLast;">
+                                    <app-mutable-list-item-with-label [formGroup]="screen.formGroup"
+                                                                      [groupIcon]="screen.phoneIcon"
+                                                                      [inputField]="phoneField"
+                                                                      [labelField]="phoneLabelFields[i]"
+                                                                      [isFirst]="isFirst"
+                                                                      [isLast]="isLast"
+                                                                      [isOnly]="phoneFields.length == 1"
+                                                                      (onFieldChanged)="onFieldChanged($event)"
+                                                                      (add)="doAction(screen.addPhone, screen.form)"
+                                                                      (remove)="doAction(screen.removePhone, i)">
+                                    </app-mutable-list-item-with-label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!--This different ordering of Location and Loyalty sections here is so the tab order is consistent with form field display order.-->
+                        <div *ngIf="(isMobile | async);then mobileFormFieldOrder else desktopFormFieldOrder"></div>
+                        <ng-template #mobileFormFieldOrder>
+                            <ng-container *ngTemplateOutlet="locationSection"></ng-container>
+                            <ng-container *ngTemplateOutlet="loyaltySection"></ng-container>
+                        </ng-template>
+                        <ng-template #desktopFormFieldOrder>
+                            <ng-container *ngTemplateOutlet="loyaltySection"></ng-container>
+                            <ng-container *ngTemplateOutlet="locationSection"></ng-container>
+                        </ng-template>
+
+                        <ng-template #locationSection>
+                            <div class="location">
+                                <div [ngClass]="addressIconLocationClass" *ngIf="anyAddressFieldsPresent()">
+                                    <app-icon matPrefix [iconName]="screen.locationIcon" iconClass="material-icons sm"></app-icon>
+                                </div>
+                                <app-dynamic-form-field class="line1" *ngIf="line1Field" [formGroup]="screen.formGroup" [formField]="line1Field"
+                                                        (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                                <app-dynamic-form-field class="line2" *ngIf="line2Field" [formGroup]="screen.formGroup" [formField]="line2Field"
+                                                        (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                                <div class="cityStateZip">
+                                    <app-dynamic-form-field class="city" *ngIf="cityField" [formGroup]="screen.formGroup" [formField]="cityField"
+                                                            (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                                    <app-dynamic-form-field class="state" *ngIf="stateField" [formGroup]="screen.formGroup" [formField]="stateField"
+                                                            (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                                    <app-dynamic-form-field class="postalCode" *ngIf="postalCodeField" [formGroup]="screen.formGroup" [formField]="postalCodeField"
+                                                            (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                                </div>
+                                <app-dynamic-form-field class="country" *ngIf="countryField" [formGroup]="screen.formGroup" [formField]="countryField"
+                                                        (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            </div>
+                        </ng-template>
+                        <ng-template #loyaltySection>
+                            <div class="loyalty-and-membership">
+                                <div class="loyalty-number" *ngIf="loyaltyNumberField">
+                                    <app-icon matPrefix [iconName]="screen.loyaltyNumberIcon" iconClass="material-icons sm"></app-icon>
+                                    <app-dynamic-form-field [formGroup]="screen.formGroup" [formField]="loyaltyNumberField" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                                </div>
+                                <div *ngIf="screen.membershipEnabled && screen.isStructuredForm" class="memberships">
+                                    <div *ngIf="screen.memberships && screen.memberships.length">
+                                        <div class="title">
+                                            {{screen.membershipsLabel}}
+                                        </div>
+                                        <div class="memberships-list">
+                                            <div class="list">
+                                                <span *ngFor="let membership of screen.memberships" class="item">
+                                                    <app-membership-display [membership]="membership"></app-membership-display>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="!(screen.memberships && screen.memberships.length)" class="no-memberships">{{screen.noMembershipsLabel}}</div>
+                                </div>
+                            </div>
+                        </ng-template>
+
+                        <div class="extraFormFields">
+                            <div *ngFor="let formElement of screen.form.formElements">
+                                <app-dynamic-form-field *ngIf="handledFormFields.indexOf(formElement.id) == -1"
+                                        [formGroup]="screen.formGroup" [formField]="formElement" (onFieldChanged)="onFieldChanged($event)"></app-dynamic-form-field>
+                            </div>
+                        </div>
+                    </div>
+                    <mat-error>
+                        <div id="formErrorsWrapper"><app-show-errors #formErrors [control]="screen.formGroup"></app-show-errors></div>
+                        <div *ngFor="let error of screen.formErrors">{{error}}</div>
+                    </mat-error>
+                </mat-card-content>
+            </app-content-card>
+
+            <mat-card-actions mat-dialog-actions class="buttons">
+                <app-primary-button *ngIf="screen.submitButton" type="submit" [disabled]="!screen.formGroup.valid || screen.formGroup.pending">
+                    <span>{{screen.submitButton.title}}</span>
+                </app-primary-button>
+            </mat-card-actions>
+        </div>
+
+    </app-form>
+</mat-dialog-content>

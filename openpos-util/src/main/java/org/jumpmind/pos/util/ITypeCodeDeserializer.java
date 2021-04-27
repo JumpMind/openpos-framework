@@ -1,6 +1,7 @@
 package org.jumpmind.pos.util;
 
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.ArrayUtils;
@@ -11,6 +12,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.deser.std.StdDeserializer;
 import org.jumpmind.pos.util.model.ITypeCodeRegistry;
+import org.springframework.cache.support.NullValue;
 
 @Slf4j
 public class ITypeCodeDeserializer extends StdDeserializer<ITypeCode> {
@@ -20,6 +22,8 @@ public class ITypeCodeDeserializer extends StdDeserializer<ITypeCode> {
     public ITypeCodeDeserializer() {
         super(ITypeCode.class);
     }
+
+    private static java.util.Map<String, Class<?>> typeCodeClasses = new ConcurrentHashMap();
 
     @Override
     public ITypeCode deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
@@ -40,12 +44,20 @@ public class ITypeCodeDeserializer extends StdDeserializer<ITypeCode> {
 
         ITypeCode returnTypeCode = null;
         for (int i = 0; i < classesToTry.length; i++) {
-            try {
-                Class typeCodeClass = Thread.currentThread().getContextClassLoader().loadClass(classesToTry[i]);
-                returnTypeCode = ITypeCode.make(typeCodeClass, wrapper.value);
+            if (! typeCodeClasses.containsKey(classesToTry[i])) {
+                try {
+                    Class typeCodeClass = Thread.currentThread().getContextClassLoader().loadClass(classesToTry[i]);
+                    typeCodeClasses.put(classesToTry[i], typeCodeClass);
+                } catch (ClassNotFoundException ex) {
+                    typeCodeClasses.put(classesToTry[i], NullValue.INSTANCE.getClass());
+                    log.debug("ITypeCode class {} not found, will search for other locations if they are provided", classesToTry[i]);
+                }
+            }
+
+            Class<?> potentialTypeCodeClass = typeCodeClasses.get(classesToTry[i]);
+            if (potentialTypeCodeClass != NullValue.INSTANCE.getClass()) {
+                returnTypeCode = ITypeCode.make((Class)potentialTypeCodeClass, wrapper.value);
                 break;
-            } catch (ClassNotFoundException ex) {
-                log.debug("ITypeCode class {} not found, will search for other locations if they are provided", classesToTry[i]);
             }
         }
 

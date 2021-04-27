@@ -1,0 +1,17 @@
+<div class="mutable-list-item">
+    <div class="group-icon">
+        <app-icon *ngIf="isFirst" matPrefix [iconName]="groupIcon" iconClass="material-icons sm"></app-icon>
+    </div>
+    <div class="input-field">
+        <app-dynamic-form-field [formGroup]="formGroup" [formField]="inputField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
+    </div>
+    <div class="label-field">
+        <app-dynamic-form-field *ngIf="labelField" [formGroup]="formGroup" [formField]="labelField" (onFieldChanged)="onFieldChanged.emit($event)"></app-dynamic-form-field>
+    </div>
+    <div class="remove">
+        <app-icon matPrefix [iconName]="screenData.removeIcon" iconClass="material-icons sm" (click)="remove.emit()"></app-icon>
+    </div>
+    <div class="add">
+        <app-icon *ngIf="isLast" matPrefix [iconName]="screenData.addIcon" iconClass="material-icons sm" (click)="add.emit()"></app-icon>
+    </div>
+</div>
