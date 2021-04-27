@@ -1,5 +1,6 @@
 import { ITransactionReceiptLine } from './transaction-receipt-line.interface';
 import { ITotal } from '../../../core/interfaces/total.interface';
+import { ITenderItem } from '../../../core/interfaces/tender-item.interface';
 
 export interface ITransactionReceipt {
     transactionNumber: number;
@@ -8,4 +9,6 @@ export interface ITransactionReceipt {
     totalsInfoSection: ITransactionReceiptLine[];
     transactionTotal: ITotal;
     icon: string;
+    tenderInfoSection: ITenderItem[];
+    tenderInfoSectionTitle: string;
 }

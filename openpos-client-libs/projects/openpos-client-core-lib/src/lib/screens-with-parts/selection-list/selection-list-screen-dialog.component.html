@@ -23,8 +23,12 @@
                                     <div fxHide fxHide.xs="false" fxHide.lg="true" *ngIf="item.title" class="text-md" [innerHtml]="item.title | markdownFormatter"></div>
                                     <div *ngIf="item.properties" fxLayoutAlign="space-between">
                                         <div *ngFor="let property of item.properties">
-                                            <div *ngIf="property.label" class="item-property-label">{{property.label}}</div>
-                                            <p class="item-property-line" *ngFor="let line of property.lines">{{line}}</p>
+                                            <div *ngIf="property.label" class="item-property-label" [ngStyle]="{'text-align': property.textAlignment}">
+                                                {{property.label}}
+                                            </div>
+                                            <p class="item-property-line" *ngFor="let line of property.lines" [ngStyle]="{'text-align': property.textAlignment}">
+                                                {{line}}
+                                            </p>
                                         </div>
                                     </div>
                                 </div>
