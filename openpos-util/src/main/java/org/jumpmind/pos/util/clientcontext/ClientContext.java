@@ -1,5 +1,6 @@
 package org.jumpmind.pos.util.clientcontext;
 
+import org.apache.commons.collections4.map.CaseInsensitiveMap;
 import org.jumpmind.pos.util.AppUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +29,7 @@ public class ClientContext {
 
     public void put(String name, String value) {
         if (propertiesMap.get() == null) {
-            propertiesMap.set(new HashMap<>());
+            propertiesMap.set(new CaseInsensitiveMap<>());
         }
 
         if ("deviceMode".equals(name))  {

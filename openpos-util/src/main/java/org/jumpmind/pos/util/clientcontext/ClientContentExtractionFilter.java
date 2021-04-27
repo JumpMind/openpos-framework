@@ -27,7 +27,7 @@ public class ClientContentExtractionFilter extends OncePerRequestFilter {
         clientContext.clear();
         while( headerNames.hasMoreElements() ) {
             String header = headerNames.nextElement();
-            if(header.startsWith("ClientContext-")){
+            if(header.toLowerCase().startsWith("clientcontext-")){
                 //Get the name after the prepended ClientContext- and put the value in the client context map
                 String contextName = header.substring(header.indexOf('-') + 1);
                 clientContext.put(contextName, request.getHeader(header));
