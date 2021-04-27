@@ -35,6 +35,24 @@
                 <kbd *ngFor="let line of receipt.totalsInfoSection">{{line.value}}</kbd>
             </div>
         </aside>
+        <aside *ngIf="receipt.tenderInfoSection" responsive-class class="tender-info-section"
+               [ngClass]="{'has-single-item': receipt.tenderInfoSection.length === 1}">
+            <div class="tender-info-section-title">{{receipt.tenderInfoSectionTitle}}</div>
+            <div class="tender-list">
+                <div *ngFor="let tenderItem of receipt.tenderInfoSection"
+                     class="tender-item {{tenderItem.typeName.toLowerCase()}}"
+                     [ngClass]="{'is-card': !!tenderItem.cardLastFourDigits}">
+                    <app-icon [iconName]="tenderItem.icon" iconClass="tender-icon mat-36" [attr.title]="tenderItem.text"></app-icon>
+                    <div class="tender-text" [attr.title]="tenderItem.text">
+                        {{tenderItem.text}}
+                    </div>
+                    <div [attr.title]="tenderItem.cardLastFourDigits" class="tender-card-last-four-digits">
+                        {{tenderItem.cardLastFourDigits}}
+                    </div>
+                    <app-currency-text class="tender-total" [amountText]="tenderItem.amount"></app-currency-text>
+                </div>
+            </div>
+        </aside>
         <aside responsive-class class="total-price">
             <strong class="totals-info-labels"><kbd>{{receipt.transactionTotal.name}}</kbd></strong>
             <strong class="totals-info-values">

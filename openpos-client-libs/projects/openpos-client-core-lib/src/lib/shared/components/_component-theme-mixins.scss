@@ -13,6 +13,7 @@
 @import './kebab-menu/kebab-menu-theme';
 @import './task-check-all-box/task-check-all-box-theme';
 @import './task-check-box/task-check-box-theme';
+@import './receipt-card/receipt-card-theme';
 @import './rounded-input/rounded-input-theme';
 @import './mobile-footer/mobile-footer-theme';
 @import './carousel/carousel-theme';
@@ -44,6 +45,7 @@
     @include kebab-menu-theme($theme);
     @include task-check-all-box-theme($theme);
     @include task-check-box-theme($theme);
+    @include receipt-card-theme($theme);
     @include rounded-input-theme($theme);
     @include mobile-footer-theme($theme);
     @include carousel-theme($theme);
