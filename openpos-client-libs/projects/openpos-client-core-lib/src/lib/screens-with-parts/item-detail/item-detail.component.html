@@ -11,7 +11,7 @@
                 <span>{{screen.inventoryMessage}}</span>
             </div>
 
-            <ul responsive-class class="properties">
+            <ul class="properties">
                 <li *ngFor="let prop of screen.itemProperties">
                     <app-display-property [property]="prop" alignmentType="jagged"></app-display-property>
                 </li>
@@ -26,7 +26,7 @@
             <div class="summary-instructions">
                 <hr>                
                 <app-instructions class="option-instructions" *ngIf="screen.itemOptionInstructions" [instructions]="screen.itemOptionInstructions"></app-instructions>
-                <div class="summary" *ngIf="screen.summary" responsive-class>
+                <div responsive-class class="summary" *ngIf="screen.summary">
                     <div class="detail-section" *ngFor="let section of screen.detailSections" [innerHtml]="section | markdownFormatter"></div>
                 </div>
             </div>
@@ -78,12 +78,14 @@
                 <table class="item-details-table promotions">                    
                     <tbody>
                         <tr>
-                            <th></th>
+                            <th class="promotion-icon"></th>
                             <th>{{screen.itemValueDisplay.label}}</th>
                             <th>{{screen.itemValueDisplay.value}}</th>
                         </tr>
                         <tr *ngFor="let promo of screen.promotions">
-                            <td><app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon></td>
+                            <td class="promotion-icon">
+                                <app-icon [iconName]="promo.icon" color="primary" class="promotion-icon" iconClass="md"></app-icon>
+                            </td>
                             <td>{{promo.promotionName}}</td>
                             <td>{{promo.promotionPrice}}</td>
                         </tr>
