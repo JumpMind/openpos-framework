@@ -1,4 +1,13 @@
-import { Component, Injector, ElementRef, ViewChildren, QueryList, AfterViewInit } from '@angular/core';
+import {
+  Component,
+  Injector,
+  ElementRef,
+  ViewChildren,
+  QueryList,
+  AfterViewInit,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { SaleItemCardListInterface } from './sale-item-card-list.interface';
 import { ScreenPart } from '../../decorators/screen-part.decorator';
 import { ScreenPartComponent } from '../screen-part';
@@ -25,6 +34,7 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
   numItems = 0;
   items$: Observable<ISellItem[]>;
   @ViewChildren('items', {read: ElementRef }) private itemsRef: QueryList<ElementRef>;
+  @Output() itemsChanged = new EventEmitter<ISellItem[]>();
 
   constructor(injector: Injector, private dataMessageService: UIDataMessageService,
               protected keyPresses: KeyPressProvider) {
@@ -70,9 +80,10 @@ export class SaleItemCardListComponent extends ScreenPartComponent<SaleItemCardL
   onSellItemsChange(sellItems: ISellItem[]): void {
     this.addSellItemsGlobalKeybinds(sellItems);
 
-    this.items$.forEach(i => {
-      this.numItems = i.length;
-      this.expandedIndex = i.length - 1;
+    this.items$.forEach(items => {
+      this.numItems = items.length;
+      this.itemsChanged.emit(items);
+      this.expandedIndex = items.length - 1;
     });
     this.scrollToView(this.expandedIndex);
   }
