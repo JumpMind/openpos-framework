@@ -1,6 +1,6 @@
 <app-bacon-strip class="sale-bacon-strip" [(sidenavOpened)]="sidenavOpened">
     <div class="sale-outer">
-        <div *ngIf="!(isMobile | async)" class="sale-body">
+        <div *ngIf="!(isMobile$ | async)" class="sale-body">
             <section class="orders" *ngIf="screen.orders && screen.orders.length > 0">
                 <div class="orders-content">
                     <strong class="orders-label muted-color" responsiveClass>
@@ -21,19 +21,19 @@
                 <app-scan-or-search class="scan-or-search mat-elevation-z1" [defaultAction]="screen.checkoutButton" [focusInitial]="false" [allowImageScanner]="!sidenavOpened">
                 </app-scan-or-search>
 
-                <app-sale-item-card-list class="sale-list-background"></app-sale-item-card-list>
+                <app-sale-item-card-list [ngClass]="{'is-empty': isEmpty}" (itemsChanged)="onItemsChanged($event)" class="sale-list-background"></app-sale-item-card-list>
 
                 <app-status-strip></app-status-strip>
             </div>
             <app-sale-total-panel class="sale-total-panel"></app-sale-total-panel>
         </div>
-        <div *ngIf="(isMobile | async)" class="sale-body-mobile">
+        <div *ngIf="(isMobile$ | async)" class="sale-body-mobile">
             <app-mobile-employee-part class="sale-employee-mobile"></app-mobile-employee-part>
             <app-mobile-loyalty-part class="sale-loyalty-mobile"></app-mobile-loyalty-part>
             <app-mobile-sale-item-list class="sale-list-background-mobile"></app-mobile-sale-item-list>
         </div>
-        <app-mobile-totals-part *ngIf="(isMobile | async)"></app-mobile-totals-part>
-        <div *ngIf="(isMobile | async) && screen.orders && screen.orders.length > 0" class="orders-mobile-swipe-up-container dark-background" (swipeup)="openSheet()" responsive-class>
+        <app-mobile-totals-part *ngIf="(isMobile$ | async)"></app-mobile-totals-part>
+        <div *ngIf="(isMobile$ | async) && screen.orders && screen.orders.length > 0" class="orders-mobile-swipe-up-container dark-background" (swipeup)="openSheet()" responsive-class>
             <strong class="orders-label-mobile contrast-color">
                 <app-icon iconName="double_arrow" iconClass="double-arrow md"></app-icon>
                 {{screen.orders.length}} Linked Order(s)
