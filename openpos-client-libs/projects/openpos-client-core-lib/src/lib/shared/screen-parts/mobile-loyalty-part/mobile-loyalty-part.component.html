@@ -1,21 +1,25 @@
 <button *ngIf="!screenData.customer && screenData.mobileLoyaltyButton" mat-raised-button class="mobile-loyalty-button"
     (click)="doAction(screenData.mobileLoyaltyButton)">
-    <img *ngIf="screenData.mobileLoyaltyButton.icon" [src]="screenData.mobileLoyaltyButton.icon | imageUrl"
-        class="mobile-loyalty-button-image">
-    <div class="mobile-loyalty-button-wrapper">
-        <span responsive-class class="mobile-loyalty-button-text">{{screenData.mobileLoyaltyButton.title}}</span>
-        <app-icon class="mobile-loyalty-button-icon" [iconName]="'Increment'" [iconClass]="'primary md'"></app-icon>
+    <div class="mobile-loyalty-button-content">
+        <img *ngIf="screenData.mobileLoyaltyButton.icon" [src]="screenData.mobileLoyaltyButton.icon | imageUrl"
+             class="mobile-loyalty-button-image">
+        <div class="mobile-loyalty-button-wrapper">
+            <span responsive-class class="mobile-loyalty-button-text">{{screenData.mobileLoyaltyButton.title}}</span>
+            <app-icon class="mobile-loyalty-button-icon" [iconName]="'Increment'" [iconClass]="'primary md'"></app-icon>
+        </div>
     </div>
 </button>
 <button *ngIf="screenData.customer && screenData.linkedCustomerButton" mat-raised-button
     class="mobile-loyalty-customer-outer" (click)="doAction(screenData.linkedCustomerButton)">
-    <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="mobile-loyalty-image">
-    <div class="mobile-loyalty-customer-name">
-        <div responsive-class *ngIf="screenData.customer.name" class="mobile-loyalty-name">
-            {{screenData.customer.name}}
-        </div>
-        <div responsive-class *ngIf="screenData.customer.label && screenData.customer.id" class="mobile-loyalty-id">
-            {{screenData.customer.label}}: {{screenData.customer.id}}
+    <div class="mobile-loyalty-customer-content">
+        <img *ngIf="screenData.customer.icon" [src]="screenData.customer.icon | imageUrl" class="mobile-loyalty-image">
+        <div class="mobile-loyalty-customer-name">
+            <div responsive-class *ngIf="screenData.customer.name" class="mobile-loyalty-name">
+                {{screenData.customer.name}}
+            </div>
+            <div responsive-class *ngIf="screenData.customer.label && screenData.customer.id" class="mobile-loyalty-id">
+                {{screenData.customer.label}}: {{screenData.customer.id}}
+            </div>
         </div>
     </div>
 </button>

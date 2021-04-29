@@ -2,12 +2,14 @@
     $app-primary: mat-color(map-get($theme, primary));
     $app-accent: mat-color(map-get($theme, accent));
     $app-warn: mat-color(map-get($theme, warn));
+    $app-text: mat-color(map-get($theme, foreground), text);
 
     $foreground: map-get($theme, foreground);
     $background: map-get($theme, background);
     $dark: map-get($mat-grey, 600);
 
     .mobile-loyalty-button {
+        font-weight: bold;
         background-color: white;
     }
 
@@ -16,7 +18,7 @@
     }
 
     .mobile-loyalty-name {
-        color: $dark;
+        color: $app-text;
     }
 
     .mobile-loyalty-id {
