@@ -8,7 +8,8 @@ export class PercentageFormatter implements IFormatter {
 
     mode: 'decimal'|'integer';
 
-    constructor(mode = PercentageFormatter.DECIMAL_MODE) {
+    constructor(mode:string = PercentageFormatter.DECIMAL_MODE) {
+        this.mode = mode === PercentageFormatter.DECIMAL_MODE ? 'decimal' : 'integer';
     }
 
     allowKey(key: string, newValue: string): boolean {
