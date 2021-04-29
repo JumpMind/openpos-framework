@@ -57,15 +57,14 @@
 .mobile-loyalty-image {
     max-height: 48px;
     max-width: 100%;
-    margin-right: 16px;
 }
 
 .mobile-loyalty-name {
     font-size: 1rem;
-    justify-self: left;
+    justify-self: center;
 }
 
 .mobile-loyalty-id {
     @extend %text-sm;
-    justify-self: left;
+    justify-self: center;
 }
