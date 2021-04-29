@@ -1,0 +1,12 @@
+@import "../../../styles/mixins/typography";
+
+.instructions {
+    @extend %text-md;
+
+    &.tablet-landscape {
+        ::ng-deep p {
+            margin-top: .5rem;
+            margin-bottom: .5rem;
+        }
+    }
+}
