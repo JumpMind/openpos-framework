@@ -42,7 +42,7 @@
                 display: grid;
                 grid-template-columns: 1fr 10fr;
                 grid-template-rows: auto 1fr;
-                gap: 0px 0px;
+                gap: 10px 5px;
                 grid-template-areas:
                     "Icon Name"
                     "Memberships Memberships";
@@ -51,7 +51,7 @@
                     .customer-name {
                         overflow: hidden;
                         white-space: normal;
-                        @extend %text-sm;
+                        @extend %text-md;
                         .loyalty-keybind {
                             margin-left: 10px;
                         }
