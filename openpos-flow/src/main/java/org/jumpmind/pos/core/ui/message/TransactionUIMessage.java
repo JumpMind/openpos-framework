@@ -14,9 +14,9 @@ public class TransactionUIMessage extends UIMessage {
 
     private String providerKey;
 
-    private List<Total> totals;
-    private Total grandTotal;
-    private Total itemCount;
+    protected List<Total> totals;
+    protected Total grandTotal;
+    private List<Total> itemCounts;
 
     private ActionItem checkoutButton;
     private ActionItem loyaltyButton;
@@ -52,6 +52,16 @@ public class TransactionUIMessage extends UIMessage {
         totals.add(new Total(name, amount));
     }
 
+    public void addItemCount(Total total) {
+        if (itemCounts == null) {
+            itemCounts = new ArrayList<>();
+        }
+        itemCounts.add(total);
+    }
+
+    public void addItemCount(String name, String amount) {
+        addItemCount(new Total(name, amount));
+    }
 
     public void setGrandTotal(String name, String amount) {
         this.grandTotal = new Total(name, amount);

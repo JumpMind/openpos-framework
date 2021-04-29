@@ -40,9 +40,5 @@ public class SaleUIMessage extends TransactionUIMessage {
     public void setTaxExemptCertificateDetail(String label, String value) {
         this.taxExemptCertificateDetail = new AdditionalLabel(label, value);
     }
-
-    public void setItemCount(String name, String amount) {
-        this.setItemCount(new Total(name, amount));
-    }
     
 }
