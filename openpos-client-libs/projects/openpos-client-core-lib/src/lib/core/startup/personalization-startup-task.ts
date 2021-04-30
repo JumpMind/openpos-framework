@@ -1,19 +1,15 @@
-import {
-    filter,
-    retryWhen,
-    switchMap,
-    take,
-    tap
-} from 'rxjs/operators';
-import { IStartupTask } from './startup-task.interface';
-import { PersonalizationService } from '../personalization/personalization.service';
+import {filter, retryWhen, switchMap, take, tap} from 'rxjs/operators';
+import {IStartupTask} from './startup-task.interface';
+import {PersonalizationService} from '../personalization/personalization.service';
 import {concat, interval, merge, Observable, of, Subject, throwError} from 'rxjs';
-import { MatDialog } from '@angular/material';
-import { StartupTaskNames } from './startup-task-names';
-import { Injectable } from '@angular/core';
-import { StartupTaskData } from './startup-task-data';
-import { Params } from '@angular/router';
-import { PersonalizationComponent } from '../personalization/personalization.component';
+import {MatDialog} from '@angular/material';
+import {StartupTaskNames} from './startup-task-names';
+import {Injectable} from '@angular/core';
+import {StartupTaskData} from './startup-task-data';
+import {Params} from '@angular/router';
+import {PersonalizationComponent} from '../personalization/personalization.component';
+import {Capacitor} from "@capacitor/core";
+import {Zeroconf} from "@ionic-native/zeroconf";
 
 @Injectable({
     providedIn: 'root',
@@ -29,18 +25,24 @@ export class PersonalizationStartupTask implements IStartupTask {
     }
 
     execute(data: StartupTaskData): Observable<string> {
+        if (Capacitor.isNative) {
+            Zeroconf.watch('_jmc-personalize._tcp.', 'local.').subscribe(conf => {
+                console.log("ZeroConf", conf);
+            });
+        }
 
-        if(this.hasPersonalizationQueryParams(data.route.queryParams) || this.personalization.hasSavedSession()){
+
+        if (this.hasPersonalizationQueryParams(data.route.queryParams) || this.personalization.hasSavedSession()) {
 
             let personalize$: Observable<string>;
 
             let messages = new Subject<string>();
             let attemptMessage;
 
-            if(this.hasPersonalizationQueryParams(data.route.queryParams)){
+            if (this.hasPersonalizationQueryParams(data.route.queryParams)) {
                 attemptMessage = 'Attempting to personalize using query parameters';
                 personalize$ = this.personalizeFromQueueParams(data.route.queryParams);
-            } else if(this.personalization.hasSavedSession()){
+            } else if (this.personalization.hasSavedSession()) {
 
                 attemptMessage = 'Attempting to personalize from saved token';
                 personalize$ = this.personalization.personalizeFromSavedSession();
@@ -51,31 +53,31 @@ export class PersonalizationStartupTask implements IStartupTask {
                 merge(
                     messages,
                     personalize$.pipe(
-                        retryWhen( errors =>
+                        retryWhen(errors =>
                             errors.pipe(
-                                switchMap( () => interval(1000),
-                                    (error, time) => `${error} \n Retry in ${5-time}`),
+                                switchMap(() => interval(1000),
+                                    (error, time) => `${error} \n Retry in ${5 - time}`),
                                 tap(result => messages.next(result)),
-                                filter( result => result.endsWith('0')),
-                                tap( () => messages.next(attemptMessage))
+                                filter(result => result.endsWith('0')),
+                                tap(() => messages.next(attemptMessage))
                             )
                         ),
                         take(1),
                         tap(() => messages.complete())
                     ))
-                );
+            );
 
         }
 
         return concat(
             of("No saved session found prompting manual personalization"),
             this.matDialog.open(
-            PersonalizationComponent, {
-                disableClose: true,
-                hasBackdrop: false,
-                panelClass: 'openpos-default-theme'
-            }
-        ).afterClosed().pipe(take(1)));
+                PersonalizationComponent, {
+                    disableClose: true,
+                    hasBackdrop: false,
+                    panelClass: 'openpos-default-theme'
+                }
+            ).afterClosed().pipe(take(1)));
     }
 
     hasPersonalizationQueryParams(queryParams: Params): boolean {
@@ -83,7 +85,7 @@ export class PersonalizationStartupTask implements IStartupTask {
 
     }
 
-    personalizeFromQueueParams(queryParams: Params) : Observable<string>{
+    personalizeFromQueueParams(queryParams: Params): Observable<string> {
         const deviceId = queryParams.deviceId;
         const appId = queryParams.appId;
         const serverName = queryParams.serverName;
