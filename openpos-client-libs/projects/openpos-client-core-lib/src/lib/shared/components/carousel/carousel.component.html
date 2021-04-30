@@ -4,5 +4,5 @@
         (click)="selectImage(i)"
         [src]="thumbnailUrl | imageUrl">
 </div>
-
-<img [src]="(selectedImageUrl || altImageUrl) | imageUrl" [alt]="altImageText" (error)="onSelectedImageError()">
+<img *ngIf="displayImageUrls.length == 1" [src]="(displayImageUrls[0] || altImageUrl) | imageUrl" [alt]="altImageText" (error)="onSelectedImageError()">
+<img *ngIf="displayImageUrls.length > 1" [src]="(selectedImageUrl || altImageUrl) | imageUrl" [alt]="altImageText" (error)="onSelectedImageError()">
