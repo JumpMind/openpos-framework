@@ -3,8 +3,8 @@ import { ItemDetailInterface } from './item-detail.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import {Component, InjectionToken, Injector, Optional} from '@angular/core';
 import { PosScreen } from '../pos-screen/pos-screen.component';
-import {MediaBreakpoints, OpenposMediaService} from "../../core/media/openpos-media.service";
-import {Observable} from "rxjs";
+import {MediaBreakpoints, OpenposMediaService} from '../../core/media/openpos-media.service';
+import {Observable} from 'rxjs';
 import {BasicProductOptionPart} from './option-components/basic-product-option-part/basic-product-option-part';
 import {SwatchProductOptionPart} from './option-components/swatch-product-option-part/swatch-product-option-part.component';
 import {ProductOptionInterface} from './product-option.interface';
@@ -21,11 +21,9 @@ export const OPTION_NAME = new InjectionToken<string>('OptionName');
 })
 export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
     isMobile: Observable<boolean>;
-    carouselSize: String;
+    carouselSize: string;
 
     optionComponents = new Map();
-
-
 
     constructor( @Optional() private injector: Injector, media: OpenposMediaService) {
         super(injector);
@@ -52,8 +50,8 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
 
         if (this.screen.productOptionsComponents) {
             this.screen.productOptionsComponents.forEach(value => {
-                let injector = Injector.create({ 
-                    providers: [{ provide: OPTION_NAME, useValue: value.name }], 
+                const injector = Injector.create({
+                    providers: [{ provide: OPTION_NAME, useValue: value.name }],
                     parent: this.injector
                 });
 
@@ -61,14 +59,13 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
             });
         }
     }
-    
+
     getComponentFromOptionType(productOption: ProductOptionInterface) {
-        switch( productOption.type ){
+        switch ( productOption.type ) {
             case 'basicProductOption':
                 return BasicProductOptionPart;
             case 'swatchProductOption':
                 return SwatchProductOptionPart;
         }
-        
     }
 }

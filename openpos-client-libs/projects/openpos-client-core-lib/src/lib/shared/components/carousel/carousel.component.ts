@@ -1,8 +1,6 @@
-import { 
+import {
     Component,
     Input,
-    Output,
-    EventEmitter
 } from '@angular/core';
 
 @Component({
@@ -15,7 +13,7 @@ export class CarouselComponent {
     get imgUrls(): string[] {
         return this._imgUrls;
     }
-    
+
     set imgUrls(value: string[]) {
         if (!value) {
             value = new Array<string>();
@@ -31,7 +29,7 @@ export class CarouselComponent {
 
     @Input()
     altImageText?: string;
-    
+
     displayImageUrls: string[];
     selectedImageUrl?: string;
 
@@ -45,9 +43,9 @@ export class CarouselComponent {
             this.selectedImageUrl = undefined;
         }
     }
-    
+
     onThumbnailError(index: number) {
-        let url = this.displayImageUrls[index];
+        const url = this.displayImageUrls[index];
 
         this.displayImageUrls.splice(index, 1);
 
