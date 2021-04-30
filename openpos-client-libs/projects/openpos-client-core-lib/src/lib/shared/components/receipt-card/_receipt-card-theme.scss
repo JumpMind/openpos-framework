@@ -1,0 +1,15 @@
+@mixin receipt-card-theme($theme) {
+    $app-disabled: mat-color(map-get($theme, foreground), disabled);
+
+    app-receipt-card {
+        .transaction-totals {
+            .tender-icon {
+                color: $app-disabled;
+            }
+
+            .total-price {
+                border-color: map-get($mat-grey, 300);
+            }
+        }
+    }
+}

@@ -73,6 +73,7 @@
         .totals-info {
             display: grid;
             grid-template-columns: 1fr 1fr;
+            margin-bottom: 10px;
             @extend %text-sm;
         }
         
@@ -86,9 +87,88 @@
         }
         
         .total-price {
+            padding-top: 10px;
+            border-top-width: 1px;
+            border-top-style: solid;
             display: grid;
             grid-template-columns: 1fr 1fr;
             @extend %text-md;
+        }
+
+        .tender-info-section {
+            @extend %text-sm;
+            font-family: monospace, sans-serif;
+            display: grid;
+            grid-template-areas: "title      "
+                                 "tender-list";
+            margin-bottom: 10px;
+
+            .tender-info-section-title {
+                grid-area: title;
+                margin-bottom: 5px;
+            }
+
+            &.has-single-item {
+                grid-template-areas: "title tender-list";
+                grid-template-columns: 1fr 1fr;
+                align-items: center;
+
+                .tender-list {
+                    justify-self: end;
+                }
+
+                .tender-item {
+                    grid-template-areas: 'icon text last-four-digits';
+                    grid-template-columns: repeat(3, min-content);
+
+                    &:not(.is-card) {
+                        .tender-card-last-four-digits {
+                            display: none;
+                        }
+                    }
+                }
+
+                .tender-total {
+                    display: none;
+                }
+            }
+
+            .tender-list {
+                grid-area: tender-list;
+            }
+
+            .tender-item {
+                display: grid;
+                grid-auto-flow: column;
+                grid-template-columns: repeat(3, min-content) 1fr;
+                grid-template-areas: 'icon text last-four-digits total';
+                align-items: center;
+                justify-items: start;
+                font-size: 14px;
+            }
+
+            .tender-text,
+            .tender-card-last-four-digits {
+                align-content: center;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                margin-left: 5px;
+            }
+
+            .tender-text {
+                grid-area: text;
+            }
+
+            .tender-card-last-four-digits {
+                grid-area: last-four-digits;
+            }
+
+            .tender-total {
+                grid-area: total;
+                justify-self: end;
+                margin-left: 5px;
+            }
         }
     }
 

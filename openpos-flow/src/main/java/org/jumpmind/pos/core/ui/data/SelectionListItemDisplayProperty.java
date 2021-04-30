@@ -1,21 +1,22 @@
 package org.jumpmind.pos.core.ui.data;
 
+import lombok.Data;
 import org.jumpmind.pos.core.ui.message.SelectableItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@Data
 public class SelectionListItemDisplayProperty extends SelectableItem implements Serializable {
-
     private static final long serialVersionUID = -3667174964838343444L;
 
     private String label;
-
     private List<String> lines;
+    private String textAlignment = TextAlignment.Left;
 
     public SelectionListItemDisplayProperty() {
-        this.lines = new ArrayList<String>();
+        this.lines = new ArrayList<>();
     }
 
     public SelectionListItemDisplayProperty(String label) {
@@ -24,7 +25,7 @@ public class SelectionListItemDisplayProperty extends SelectableItem implements 
 
     public SelectionListItemDisplayProperty(String label, String line) {
         this.label = label;
-        this.lines = new ArrayList<String>();
+        this.lines = new ArrayList<>();
         this.lines.add(line);
     }
 
@@ -32,27 +33,10 @@ public class SelectionListItemDisplayProperty extends SelectableItem implements 
         this.lines = columnRows;
     }
 
-    public String getLabel() {
-        return label;
-    }
-
-    public void setLabel(String label) {
-        this.label = label;
-    }
-
-    public List<String> getLines() {
-        return lines;
-    }
-
-    public void setLines(List<String> lines) {
-        this.lines = lines;
-    }
-
     public void addLine(String line) {
         if (this.lines == null) {
-            this.lines = new ArrayList<String>();
+            this.lines = new ArrayList<>();
         }
         this.lines.add(line);
     }
-
 }

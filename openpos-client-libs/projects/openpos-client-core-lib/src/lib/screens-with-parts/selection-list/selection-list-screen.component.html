@@ -23,9 +23,11 @@
                                 <span *ngIf="item.title" class="text-sm item-title">{{item.title}}</span>
                                 <div *ngIf="item.properties" fxLayout="row wrap" fxLayoutAlign="space-between">
                                     <div *ngFor="let property of item.properties">
-                                        <div *ngIf="property.label" class="item-property-label">{{property.label}}
+                                        <div *ngIf="property.label" class="item-property-label" [ngStyle]="{'text-align': property.textAlignment}">
+                                            {{property.label}}
                                         </div>
-                                        <p class="item-property-line" *ngFor="let line of property.lines">{{line}}
+                                        <p class="item-property-line" *ngFor="let line of property.lines" [ngStyle]="{'text-align': property.textAlignment}">
+                                            {{line}}
                                         </p>
                                     </div>
                                 </div>
