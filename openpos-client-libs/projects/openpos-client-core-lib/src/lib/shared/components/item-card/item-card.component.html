@@ -44,11 +44,9 @@
         <div class="right-side">
             <div class="promos" [class.collapsed]="!expanded">
                 <ul responsive-class class="item-card-details">
-                    <ng-container *ngFor="let label of item.promoLabels">
-                        <li class="muted-color">
-                            <span class="item-card-details-label">{{label.label}}</span><span class="item-card-details-value">{{label.value}}</span>
-                        </li>
-                    </ng-container>
+                    <li *ngFor="let label of item.promoLabels" class="muted-color">
+                        <span class="item-card-details-label">{{label.label}}</span><span class="item-card-details-value">{{label.value}}</span>
+                    </li>
                 </ul>
             </div>
             <section class="price" [ngClass]="{'collapsed': !expanded}">
