@@ -42,6 +42,10 @@
             height: 60px;
         }
 
+        .item-card-icon {
+            align-self: center;
+        }
+
         .left-side {
             grid-area: 1/2/1/2;
             display: grid;

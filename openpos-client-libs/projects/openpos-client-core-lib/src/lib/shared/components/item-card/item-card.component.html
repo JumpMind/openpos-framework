@@ -7,7 +7,7 @@
                    [altText]="item.description"
                    [class.collapsed]="!expanded">
         </app-image>
-        <app-icon *ngIf="item.imageUrl && item.svgImage" [iconName]="item.imageUrl"
+        <app-icon *ngIf="item.imageUrl && item.svgImage" [iconName]="item.imageUrl"  class="item-card-icon"
             [iconClass]="expanded ? 'material-icons mat-128' : 'material-icons mat-48'" [ngClass]="{'collapsed': !expanded}">
         </app-icon>
         <div class="left-side" [ngClass]="{'collapsed': !expanded}">
