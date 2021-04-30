@@ -23,10 +23,11 @@ export interface ISellItem extends IItem {
     labels: string[];
     icon: string;
     showSellingPrice: boolean;
-    additionalLabels: IAdditionalLabel [];
-    returnItemLabels: IAdditionalLabel [];
-    orderItemLabels: IAdditionalLabel [];
-    collapsedAdditionalLabels : IAdditionalLabel [];
+    additionalLabels: IAdditionalLabel[];
+    returnItemLabels: IAdditionalLabel[];
+    orderItemLabels: IAdditionalLabel[];
+    collapsedAdditionalLabels : IAdditionalLabel[];
+    promoLabels: IAdditionalLabel[];
     optionsLabel: string;
     isOrderItem: boolean;
     isTender: boolean;

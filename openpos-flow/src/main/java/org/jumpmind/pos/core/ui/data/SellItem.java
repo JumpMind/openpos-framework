@@ -2,11 +2,8 @@ package org.jumpmind.pos.core.ui.data;
 
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -34,6 +31,7 @@ public class SellItem extends DefaultItem {
     private List<AdditionalLabel> returnItemLabels;
     private List<AdditionalLabel> orderItemLabels;
     private List<AdditionalLabel> collapsedAdditionalLabels = new ArrayList<>();
+    private List<AdditionalLabel> promoLabels = new ArrayList<>();
     private String imageUrl;
     private String optionsLabel;
     private boolean isTender;
@@ -365,4 +363,23 @@ public class SellItem extends DefaultItem {
         this.collapsedAdditionalLabels = collapsedAdditionalLabels;
     }
 
+    public List<AdditionalLabel> getPromoLabels() {
+        return promoLabels;
+    }
+
+    public void setPromoLabels(List<AdditionalLabel> promoLabels) {
+        this.promoLabels = promoLabels;
+    }
+
+    public void addPromoLabels(AdditionalLabel... labels) {
+        addPromoLabels(Arrays.asList(labels));
+    }
+
+    public void addPromoLabels(Collection<AdditionalLabel> labels) {
+        if (getPromoLabels() == null) {
+            setPromoLabels(new ArrayList<>(labels));
+        } else {
+            getPromoLabels().addAll(labels);
+        }
+    }
 }
