@@ -21,6 +21,10 @@ public class DialogHeaderPart implements IHasBackButton, Serializable {
         this(headerText, null, null);
     }
 
+    public DialogHeaderPart(String headerText, ActionItem backButton) {
+        this(headerText, null, backButton);
+    }
+
     public DialogHeaderPart(String headerText, String headerIcon) {
         this(headerText, headerIcon, null);
     }
