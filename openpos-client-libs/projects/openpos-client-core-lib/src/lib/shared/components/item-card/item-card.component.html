@@ -1,7 +1,7 @@
 <mat-card class="item-card" [class]="item.lineItemType | lowercase" [ngClass]="{'mat-elevation-z5':hover, 'mat-elevation-z1':!hover}">
     <mat-card-content class="item-content">
         <img responsive-class class="item-card-image" *ngIf="item.imageUrl && !item.svgImage" [src]="item.imageUrl | imageUrl" alt="{{item.description}}" [ngClass]="{'collapsed': !expanded}">
-        <app-icon *ngIf="item.imageUrl && item.svgImage" [iconName]="item.imageUrl"
+        <app-icon *ngIf="item.imageUrl && item.svgImage" [iconName]="item.imageUrl" class="item-card-icon"
             [iconClass]="expanded ? 'material-icons mat-128' : 'material-icons mat-48'" [ngClass]="{'collapsed': !expanded}">
         </app-icon>
         <div class="left-side" [ngClass]="{'collapsed': !expanded}">
