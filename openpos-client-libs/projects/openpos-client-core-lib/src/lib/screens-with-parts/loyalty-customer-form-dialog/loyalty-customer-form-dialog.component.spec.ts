@@ -10,7 +10,7 @@ import {TimeZoneContext} from "../../core/client-context/time-zone-context";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {MatDialog} from "@angular/material";
 import {LoyaltyCustomerFormInterface} from "./loyalty-customer-form.interface";
-import {it} from "@angular/core/testing/src/testing_internal";
+import {IFormElement} from "../../core/interfaces/form-field.interface";
 
 class ClientContext {};
 class MockActionService {};
@@ -97,22 +97,62 @@ describe('LoyaltyCustomerFormDialog', () => {
             });
 
             describe("anyAddressFieldsPresent()", () => {
+                beforeEach(() => {
+                    component.line1Field = null;
+                    component.line2Field = null;
+                    component.cityField = null;
+                    component.stateField = null;
+                    component.postalCodeField = null;
+                    component.countryField = null;
+                })
                 it("returns true when any address fields are present", () => {
+                    component.line1Field = {} as IFormElement;
+                    expect(component.anyAddressFieldsPresent()).toBeTruthy();
+                    component.line1Field = null;
 
+                    component.line2Field = {} as IFormElement;
+                    expect(component.anyAddressFieldsPresent()).toBeTruthy();
+                    component.line2Field = null;
+
+                    component.cityField = {} as IFormElement;
+                    expect(component.anyAddressFieldsPresent()).toBeTruthy();
+                    component.cityField = null;
+
+                    component.stateField = {} as IFormElement;
+                    expect(component.anyAddressFieldsPresent()).toBeTruthy();
+                    component.stateField = null;
+
+                    component.postalCodeField = {} as IFormElement;
+                    expect(component.anyAddressFieldsPresent()).toBeTruthy();
+                    component.postalCodeField = null;
+
+                    component.countryField = {} as IFormElement;
+                    expect(component.anyAddressFieldsPresent()).toBeTruthy();
+                    component.countryField = null;
                 });
 
                 it("returns false when none of the address fields are present", () => {
-
+                    expect(component.anyAddressFieldsPresent()).toBeFalsy();
                 });
             });
 
             describe("buildScreen()", () => {
                 it("can build a structured form", () => {
+                    spyOn<any>(component, 'buildStructuredForm');
+                    component.screen.isStructuredForm = true;
+                    component.buildScreen();
+                    expect(component['buildStructuredForm']).toHaveBeenCalledTimes(1);
+                    expect(component.screen.formGroup).toBeTruthy();
 
+                    component.screen.isStructuredForm = true;
                 });
 
                 it("does not have to build a structured form", () => {
-
+                    spyOn<any>(component, 'buildStructuredForm');
+                    component.screen.isStructuredForm = false;
+                    component.buildScreen();
+                    expect(component['buildStructuredForm']).toHaveBeenCalledTimes(0);
+                    expect(component.screen.formGroup).toBeTruthy();
                 });
             });
 
