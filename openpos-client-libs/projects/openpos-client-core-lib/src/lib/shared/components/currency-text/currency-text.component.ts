@@ -44,6 +44,8 @@ export class CurrencyTextComponent implements OnChanges {
     constructor(private localeService: LocaleService) {}
 
     ngOnChanges(): void {
+        this.upperBound = undefined;
+
         let localAmtText = this.amountText || (typeof(this.amountText) === 'number') ? this.amountText.toString().trim() : null;
         if (localAmtText) {
             const rangeMatch = numberMatchWithRange.exec(localAmtText);
