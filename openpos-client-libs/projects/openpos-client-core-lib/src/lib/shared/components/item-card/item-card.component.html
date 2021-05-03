@@ -42,6 +42,13 @@
             </ul>
         </div>
         <div class="right-side">
+            <div class="promos" [class.collapsed]="!expanded">
+                <ul responsive-class class="item-card-details">
+                    <li *ngFor="let label of item.promoLabels" class="muted-color">
+                        <span class="item-card-details-label">{{label.label}}</span><span class="item-card-details-value">{{label.value}}</span>
+                    </li>
+                </ul>
+            </div>
             <section class="price" [ngClass]="{'collapsed': !expanded}">
                 <div class="item-price-and-indicators">
                     <app-icon *ngIf="item.isGiftReceipt" class="giftReceipt" [iconName]="'Gift'" [iconClass]="'material-icons sm muted-color'"></app-icon>

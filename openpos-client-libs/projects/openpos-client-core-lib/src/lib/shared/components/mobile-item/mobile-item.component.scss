@@ -89,33 +89,21 @@
                     }
                 }
             }
-        
-            .item-card-details {
-                grid-area: 4/1/4/1;
-                @extend %text-sm;
-                align-self: end;
-                list-style-type: none;
-                padding: unset;
-                margin: unset;
-                >*{
-                    margin-top: 4px;
-                    min-height: 1rem;
-                }
-
-                .item-card-details-label:not(:empty)::after {
-                    content: ': ';
-                }
-            }
         }
 
         .right-side {
-            grid-area: 1/3/1/3;
             display:grid;
+            grid-area: 1/3/1/3;
+            grid-template-areas: 
+                "promo price"
+                "promo options";
+
             height: 100%;
             .price {
                 display:grid;
                 grid-template-rows: auto 1fr;
                 justify-self: end;
+                grid-area: price;
 
                 .item-price-and-indicators {
                     display: grid;
@@ -142,10 +130,33 @@
                 }
             }
             .menu-items {
+                grid-area: options;
                 justify-self:end;
                 align-self: end;
             }
+
+            .promos {
+                grid-area: promo;
+                margin: 8px 32px;
+            }
         }
+    }
+}
+        
+.item-card-details {
+    grid-area: 4/1/4/1;
+    @extend %text-sm;
+    align-self: end;
+    list-style-type: none;
+    padding: unset;
+    margin: unset;
+    >*{
+        margin-top: 4px;
+        min-height: 1rem;
+    }
+
+    .item-card-details-label:not(:empty)::after {
+        content: ': ';
     }
 }
 
