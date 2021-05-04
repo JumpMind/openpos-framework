@@ -1,6 +1,7 @@
 <div responsive-class class="mobile-item-outer">
     <div class="item-content">
-        <app-image responsive-class
+        <app-image *ngIf="item.imageUrl"
+                   responsive-class
                    class="item-card-image"
                    [imageUrl]="item.imageUrl | imageUrl"
                    [altText]="item.description"

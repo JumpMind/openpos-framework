@@ -89,6 +89,7 @@ public class ZebraPrinter implements IOpenposPrinter {
         writer.println(COMMAND_ENABLE_TEXT_UNDER_BARCODE);
         writer.println(String.format(COMMAND_PRINT_BARCODE, data));
         writer.println(COMMAND_DISABLE_TEXT_UNDER_BARCODE);
+        writer.println("\n\n\n\n\n\n\n");
     }
 
     @Override
@@ -283,7 +284,7 @@ public class ZebraPrinter implements IOpenposPrinter {
 
     @Override
     public void cutPaper(int percentage) throws JposException {
-        writer.println("\r\n\r\n\r\n");
+        writer.print("\n\n");
     }
 
     @Override

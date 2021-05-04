@@ -59,8 +59,20 @@
                 }
                 
                 .sale-list-background {
+                    display: flex;
+                    flex-direction: column;
+                    align-content: center;
+                    overflow-x: hidden;
+                    align-self: stretch;
+                    justify-self: stretch;
+                    padding-right: 16px;
+                    justify-content: space-between;
                     overflow-y: auto;
                     margin-bottom: 8px;
+
+                    &.is-empty {
+                        justify-content: center;
+                    }
                 }
             }
 
@@ -87,7 +99,7 @@
             }
             
             .sale-loyalty-mobile {
-                margin-bottom: 8px;
+                margin-bottom: 16px;
             }
             
             .sale-list-background-mobile {

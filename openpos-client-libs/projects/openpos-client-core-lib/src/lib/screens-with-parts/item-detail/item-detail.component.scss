@@ -12,7 +12,7 @@ app-bacon-strip{
     bottom: 0;
     left: 0;
     right: 0;
-    top: 100px;
+    top: 0;
 }
 
 .padding-none {
@@ -39,28 +39,38 @@ app-bacon-strip{
                     "image properties price" auto
                     "image options options" auto
                     "image summary summary" auto
-                    "image actions actions" auto/auto;
+                    "image actions actions" auto/min-content;
 
     .name{
         grid-area: title;
         @extend %text-lg;
-        font-weight: normal;
         margin: 0;
         margin-bottom: 16px;
     }
 
-    .summary{
-        @extend %text-xs;
+    .summary {
         font-weight: normal;
         margin: 0;
         display: grid;
         grid-auto-flow: column;
-        .detail-section{
-            margin: 0px 8px;
+        grid-column-gap: 2rem;
+
+        ::ng-deep h1 {
+            font-weight: normal;
+        }
+
+        ::ng-deep ul {
+            padding-left: 1rem;
+        }
+
+        &.tablet-portrait,
+        &.mobile-portrait {
+            grid-auto-flow: row;
         }
     }
     
-    .summary-instructions{
+    .summary-instructions {
+        font-size: 1rem;
         grid-area: summary;
         min-height: 200px;
     }
@@ -70,17 +80,14 @@ app-bacon-strip{
         display: grid;
         grid-auto-flow: column;
         justify-content: right;
-        app-secondary-button {
-            margin-right: 8px;
-        }
-        app-icon{
-            margin-right: 8px;
-        }
+        grid-column-gap: 1rem;
+        margin-top: 2rem;
     }
 
     .carousel {
         grid-area: image;
         justify-self: center;
+        margin-right: 2rem;
     }
 
     .inv-cost {
@@ -100,8 +107,6 @@ app-bacon-strip{
         align-self: end;
         list-style-type: none;
         padding-inline-start: 0;
-        @extend %text-sm;
-
     }
 
     .option-instructions {
@@ -161,8 +166,9 @@ app-bacon-strip{
     font-weight: 525;
 }
 
-.promotion-icon {
-    margin-right: 1rem;
+th.promotion-icon,
+td.promotion-icon {
+    width: 40px;
 }
 
 .promotion-item-icon {
@@ -218,5 +224,10 @@ table.item-details-table {
     th {
         text-align: left;
         min-height: 40px;
+        font-weight: normal;
+    }
+
+    th, td {
+        padding: 5px;
     }
 }

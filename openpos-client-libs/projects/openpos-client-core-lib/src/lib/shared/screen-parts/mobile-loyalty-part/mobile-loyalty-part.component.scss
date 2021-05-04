@@ -3,6 +3,7 @@
 ::ng-deep .mobile-loyalty-button {
     width: 100%;
     padding: 8px 16px !important;
+    text-align: left;
 
     .mat-button-wrapper {
         margin: 0px;
@@ -14,6 +15,7 @@
     max-width: 100%;
     align-self: center;
     justify-self: start;
+    margin-right: 16px;
 }
 
 .mobile-loyalty-button-wrapper {
@@ -49,18 +51,16 @@
 }
 
 .mobile-loyalty-customer-name {
-    display: grid;
-    justify-self: center;
+    margin-bottom: 8px;
 }
 
 .mobile-loyalty-image {
-    max-height: 32px;
+    max-height: 48px;
     max-width: 100%;
-    align-self: center;
 }
 
 .mobile-loyalty-name {
-    @extend %text-sm;
+    font-size: 1rem;
     justify-self: center;
 }
 
