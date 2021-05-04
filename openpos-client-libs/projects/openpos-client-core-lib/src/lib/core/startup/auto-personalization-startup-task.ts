@@ -1,4 +1,4 @@
-import {first, flatMap, take, tap} from 'rxjs/operators';
+import {catchError, first, flatMap, take, tap} from 'rxjs/operators';
 import {IStartupTask} from './startup-task.interface';
 import {PersonalizationService} from '../personalization/personalization.service';
 import {concat, from, Observable, of} from 'rxjs';
@@ -60,17 +60,20 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
         return this.personalization.getDevicePersonalization(deviceName, serviceConfig)
             .pipe(
                 flatMap(info => {
-                    if (info.personalization) {
+                    if (info) {
                         return this.personalization.personalize(
-                            info.personalization.serverAddress,
-                            info.personalization.serverPort,
-                            info.personalization.deviceId,
-                            info.personalization.appId,
-                            info.personalization.personalizationParams,
-                            info.personalization.sslEnabled);
+                            info.serverAddress,
+                            info.serverPort,
+                            info.deviceId,
+                            info.appId,
+                            info.personalizationParams,
+                            info.sslEnabled).pipe(
+                            catchError(() => this.manualPersonalization()),
+                        );
                     }
                     return this.manualPersonalization();
-                })
+                }),
+                catchError(() => this.manualPersonalization()),
             )
     }
 }

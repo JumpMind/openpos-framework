@@ -38,8 +38,8 @@ export class PersonalizationService {
         return this.http.get<DevicePersonalizationResponse>(url, { params: { deviceName: deviceName }})
             .pipe(
                 tap(response => {
-                    if (response.personalization) {
-                        response.personalization.sslEnabled = this.sslEnabled$.getValue();
+                    if (response) {
+                        response.sslEnabled = this.sslEnabled$.getValue();
                     }
                 }));
     }

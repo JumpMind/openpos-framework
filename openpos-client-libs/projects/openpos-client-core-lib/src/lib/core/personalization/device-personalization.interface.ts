@@ -1,8 +1,4 @@
 export interface DevicePersonalizationResponse {
-    personalization: DevicePersonalization;
-}
-
-export interface DevicePersonalization {
     deviceName: string;
     serverAddress: string;
     serverPort: string;
