@@ -7,7 +7,6 @@ import {PersonalizationRequest} from './personalization-request';
 import {PersonalizationResponse} from './personalization-response.interface';
 import {AutoPersonalizationParametersResponse} from "./device-personalization.interface";
 import {ZeroconfService} from "@ionic-native/zeroconf";
-import {CapacitorService} from "../services/capacitor.service";
 import {Configuration} from "../../configuration/configuration";
 import {WrapperService} from "../services/wrapper.service";
 
@@ -27,7 +26,7 @@ export class PersonalizationService {
     private isManagedServer$ = new BehaviorSubject<boolean>('true' === localStorage.getItem(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY));
     private personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: HttpClient, private capacitorService: CapacitorService, private wrapperService: WrapperService, private injector: Injector) {
+    constructor(private http: HttpClient, private wrapperService: WrapperService, private injector: Injector) {
     }
 
     public shouldAutoPersonalize(): boolean {
