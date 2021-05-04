@@ -2,12 +2,13 @@ import {Injectable, Injector} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {PersonalizationConfigResponse} from './personalization-config-response.interface';
 import {BehaviorSubject, Observable, throwError} from 'rxjs';
-import {catchError, map, tap} from 'rxjs/operators';
+import {catchError, map, tap, timeout} from 'rxjs/operators';
 import {PersonalizationRequest} from './personalization-request';
 import {PersonalizationResponse} from './personalization-response.interface';
 import {DevicePersonalizationResponse} from "./device-personalization.interface";
 import {ZeroconfService} from "@ionic-native/zeroconf";
 import {CapacitorService} from "../services/capacitor.service";
+import {Configuration} from "../../configuration/configuration";
 
 @Injectable({
     providedIn: 'root'
@@ -37,6 +38,7 @@ export class PersonalizationService {
         url += `${config.hostname}:${config.port}/${config.txtRecord.path}`;
         return this.http.get<DevicePersonalizationResponse>(url, { params: { deviceName: deviceName }})
             .pipe(
+                timeout(Configuration.personalizationRequestTimeoutMillis),
                 tap(response => {
                     if (response) {
                         response.sslEnabled = this.sslEnabled$.getValue();

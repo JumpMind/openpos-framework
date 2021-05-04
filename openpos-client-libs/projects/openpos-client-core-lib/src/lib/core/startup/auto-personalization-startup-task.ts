@@ -25,7 +25,10 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
     }
 
     execute(data: StartupTaskData): Observable<string> {
-        if (this.personalization.shouldAutoPersonalize()) {
+        if(this.personalization.hasSavedSession()) {
+            return this.personalization.personalizeFromSavedSession();
+        }
+        else if (this.personalization.shouldAutoPersonalize()) {
             let name: string = null;
             let serviceConfig: ZeroconfService = null;
 
