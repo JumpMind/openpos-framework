@@ -3,10 +3,11 @@ import {InfineaPlugin, IPlatformPlugin} from '../../../platform-plugin.interface
 import {IScanner} from '../../scanner.interface';
 import {Observable, of} from 'rxjs';
 import {IScanData} from '../../scan.interface';
-import {Capacitor, Plugins as CapacitorPlugins} from "@capacitor/core";
+import {Plugins as CapacitorPlugins} from "@capacitor/core";
 import {ConfigurationService} from "../../../../services/configuration.service";
 import {ConfigChangedMessage} from "../../../../messages/config-changed-message";
 import {InfineaBarcodeUtils} from "../infinea-to-openpos-barcode-type";
+import {CapacitorService} from "../../../../services/capacitor.service";
 
 declare module '@capacitor/core' {
     interface PluginRegistry {
@@ -18,7 +19,7 @@ declare module '@capacitor/core' {
     providedIn: 'root'
 })
 export class InfineaScannerCapacitorPlugin implements IPlatformPlugin, IScanner {
-    constructor(config: ConfigurationService) {
+    constructor(config: ConfigurationService, private capacitorService: CapacitorService) {
         if(this.pluginPresent()) {
             config.getConfiguration('InfineaCapacitor').subscribe( (config: ConfigChangedMessage & any) => {
                 if (config.licenseKey) {
@@ -35,7 +36,7 @@ export class InfineaScannerCapacitorPlugin implements IPlatformPlugin, IScanner 
     }
 
     pluginPresent(): boolean {
-        return Capacitor.isNative && Capacitor.isPluginAvailable('InfineaScannerCapacitor');
+        return this.capacitorService.isRunningInCapacitor() && this.capacitorService.isPluginAvailable('InfineaScannerCapacitor');
     }
 
     initialize(): Observable<string> {

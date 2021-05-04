@@ -45,7 +45,7 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
 
     manualPersonalization(): Observable<string> {
         return concat(
-            of("No saved session found prompting manual personalization"),
+            of("Auto-personalization failed, reverting to manual personalization"),
             this.matDialog.open(
                 PersonalizationComponent, {
                     disableClose: true,

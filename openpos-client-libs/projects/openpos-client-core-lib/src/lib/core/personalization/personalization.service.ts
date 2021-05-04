@@ -6,8 +6,8 @@ import {catchError, map, tap} from 'rxjs/operators';
 import {PersonalizationRequest} from './personalization-request';
 import {PersonalizationResponse} from './personalization-response.interface';
 import {DevicePersonalizationResponse} from "./device-personalization.interface";
-import {Capacitor} from "@capacitor/core";
 import {ZeroconfService} from "@ionic-native/zeroconf";
+import {CapacitorService} from "../services/capacitor.service";
 
 @Injectable({
     providedIn: 'root'
@@ -25,11 +25,11 @@ export class PersonalizationService {
     private isManagedServer$ = new BehaviorSubject<boolean>('true' === localStorage.getItem(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY));
     private personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: HttpClient, private injector: Injector) {
+    constructor(private http: HttpClient, private capacitorService: CapacitorService, private injector: Injector) {
     }
 
     public shouldAutoPersonalize(): boolean {
-        return Capacitor.isNative;
+        return this.capacitorService.isRunningInCapacitor();
     }
 
     public getDevicePersonalization(deviceName: string, config: ZeroconfService): Observable<DevicePersonalizationResponse> {

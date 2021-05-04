@@ -6,6 +6,7 @@ import {Plugins as CapacitorPlugins} from "@capacitor/core/dist/esm/global";
 import {Injectable} from "@angular/core";
 import {ConfigChangedMessage} from "../../messages/config-changed-message";
 import {ConfigurationService} from "../../services/configuration.service";
+import {CapacitorService} from "../../services/capacitor.service";
 
 declare module '@capacitor/core' {
     interface PluginRegistry {
@@ -18,7 +19,7 @@ declare module '@capacitor/core' {
 })
 export class Dpp255CapacitorPlugin implements IPrinter, IPlatformPlugin {
     id: string = 'DPP255CAP';
-    constructor(config: ConfigurationService) {
+    constructor(config: ConfigurationService, private capacitorService: CapacitorService) {
         if(this.pluginPresent()) {
             config.getConfiguration('InfineaCapacitor').subscribe( (config: ConfigChangedMessage & any) => {
                 if (config.licenseKey) {
@@ -43,6 +44,6 @@ export class Dpp255CapacitorPlugin implements IPrinter, IPlatformPlugin {
     }
 
     pluginPresent(): boolean {
-        return Capacitor.isNative && Capacitor.isPluginAvailable('Dpp255Capacitor');
+        return this.capacitorService.isRunningInCapacitor() && this.capacitorService.isPluginAvailable('Dpp255Capacitor');
     }
 }
