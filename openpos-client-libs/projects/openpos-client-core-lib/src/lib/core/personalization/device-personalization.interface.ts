@@ -1,4 +1,4 @@
-export interface DevicePersonalizationResponse {
+export interface AutoPersonalizationParametersResponse {
     deviceName: string;
     serverAddress: string;
     serverPort: string;

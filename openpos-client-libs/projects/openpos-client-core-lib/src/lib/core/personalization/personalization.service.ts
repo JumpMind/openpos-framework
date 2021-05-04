@@ -5,7 +5,7 @@ import {BehaviorSubject, Observable, throwError} from 'rxjs';
 import {catchError, map, tap, timeout} from 'rxjs/operators';
 import {PersonalizationRequest} from './personalization-request';
 import {PersonalizationResponse} from './personalization-response.interface';
-import {DevicePersonalizationResponse} from "./device-personalization.interface";
+import {AutoPersonalizationParametersResponse} from "./device-personalization.interface";
 import {ZeroconfService} from "@ionic-native/zeroconf";
 import {CapacitorService} from "../services/capacitor.service";
 import {Configuration} from "../../configuration/configuration";
@@ -34,12 +34,12 @@ export class PersonalizationService {
         return this.wrapperService.shouldAutoPersonalize();
     }
 
-    public getDevicePersonalization(deviceName: string, config: ZeroconfService): Observable<DevicePersonalizationResponse> {
+    public getAutoPersonalizationParameters(deviceName: string, config: ZeroconfService): Observable<AutoPersonalizationParametersResponse> {
         let url = this.sslEnabled$.getValue() ? 'https://' : 'http://';
         url += `${config.hostname}:${config.port}/${config.txtRecord.path}`;
-        return this.http.get<DevicePersonalizationResponse>(url, { params: { deviceName: deviceName }})
+        return this.http.get<AutoPersonalizationParametersResponse>(url, { params: { deviceName: deviceName }})
             .pipe(
-                timeout(Configuration.personalizationRequestTimeoutMillis),
+                timeout(Configuration.autoPersonalizationRequestTimeoutMillis),
                 tap(response => {
                     if (response) {
                         response.sslEnabled = this.sslEnabled$.getValue();

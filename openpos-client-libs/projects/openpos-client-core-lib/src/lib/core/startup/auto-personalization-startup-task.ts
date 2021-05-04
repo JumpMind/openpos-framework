@@ -60,7 +60,7 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
 
 
     private attemptAutoPersonalize(serviceConfig: ZeroconfService, deviceName: string): Observable<string> {
-        return this.personalization.getDevicePersonalization(deviceName, serviceConfig)
+        return this.personalization.getAutoPersonalizationParameters(deviceName, serviceConfig)
             .pipe(
                 flatMap(info => {
                     if (info) {
