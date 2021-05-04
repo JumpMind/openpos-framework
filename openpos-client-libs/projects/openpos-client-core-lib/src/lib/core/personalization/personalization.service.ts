@@ -9,6 +9,7 @@ import {DevicePersonalizationResponse} from "./device-personalization.interface"
 import {ZeroconfService} from "@ionic-native/zeroconf";
 import {CapacitorService} from "../services/capacitor.service";
 import {Configuration} from "../../configuration/configuration";
+import {WrapperService} from "../services/wrapper.service";
 
 @Injectable({
     providedIn: 'root'
@@ -26,11 +27,11 @@ export class PersonalizationService {
     private isManagedServer$ = new BehaviorSubject<boolean>('true' === localStorage.getItem(PersonalizationService.OPENPOS_MANAGED_SERVER_PROPERTY));
     private personalizationSuccessFul$ = new BehaviorSubject<boolean>(false);
 
-    constructor(private http: HttpClient, private capacitorService: CapacitorService, private injector: Injector) {
+    constructor(private http: HttpClient, private capacitorService: CapacitorService, private wrapperService: WrapperService, private injector: Injector) {
     }
 
     public shouldAutoPersonalize(): boolean {
-        return this.capacitorService.isRunningInCapacitor();
+        return this.wrapperService.shouldAutoPersonalize();
     }
 
     public getDevicePersonalization(deviceName: string, config: ZeroconfService): Observable<DevicePersonalizationResponse> {
