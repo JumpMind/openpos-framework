@@ -1041,7 +1041,7 @@ public class StateManager implements IStateManager {
 
         applicationState.setStateStack(new LinkedList<>());
         applicationState.setAppId(this.getAppId());
-        applicationState.setDeviceId(this.getNodeId());
+        applicationState.setDeviceId(this.getDeviceId());
         applicationState.getScope().setDeviceScope("stateManager", this);
         applicationState.setCurrentContext(new StateContext(initialFlowConfig, null, null));
 
