@@ -8,8 +8,6 @@ import {Injectable} from '@angular/core';
 import {StartupTaskData} from './startup-task-data';
 import {Params} from '@angular/router';
 import {PersonalizationComponent} from '../personalization/personalization.component';
-import {Capacitor} from "@capacitor/core";
-import {Zeroconf} from "@ionic-native/zeroconf";
 
 @Injectable({
     providedIn: 'root',
@@ -25,13 +23,9 @@ export class PersonalizationStartupTask implements IStartupTask {
     }
 
     execute(data: StartupTaskData): Observable<string> {
-        if (Capacitor.isNative) {
-            Zeroconf.watch('_jmc-personalize._tcp.', 'local.').subscribe(conf => {
-                console.log("ZeroConf", conf);
-            });
+        if (this.personalization.shouldAutoPersonalize()) {
+            return of("Auto-personalizing Capacitor app");
         }
-
-
         if (this.hasPersonalizationQueryParams(data.route.queryParams) || this.personalization.hasSavedSession()) {
 
             let personalize$: Observable<string>;

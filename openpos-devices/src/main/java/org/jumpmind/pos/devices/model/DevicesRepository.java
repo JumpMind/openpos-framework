@@ -3,7 +3,6 @@ package org.jumpmind.pos.devices.model;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
-import org.jumpmind.pos.devices.DeviceNotAuthorizedException;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.ModelId;
@@ -39,7 +38,7 @@ public class DevicesRepository {
     public String getDeviceAuth(String deviceId, String appId) {
         DeviceAuthModel deviceAuthModel = devSession.findByNaturalId(DeviceAuthModel.class, new ModelId("deviceId", deviceId, "appId", appId));
 
-        if( deviceAuthModel != null){
+        if (deviceAuthModel != null) {
             return deviceAuthModel.getAuthToken();
         } else {
             throw new DeviceNotFoundException();
@@ -52,7 +51,7 @@ public class DevicesRepository {
 
         DeviceAuthModel authModel = devSession.findFirstByFields(DeviceAuthModel.class, params, 1);
 
-        if(authModel == null){
+        if (authModel == null) {
             throw new DeviceNotFoundException();
         }
 
@@ -62,7 +61,7 @@ public class DevicesRepository {
 
         DeviceModel deviceModel = devSession.findFirstByFields(DeviceModel.class, params, 1);
 
-        if(deviceModel == null){
+        if (deviceModel == null) {
             throw new DeviceNotFoundException();
         }
 
@@ -76,8 +75,8 @@ public class DevicesRepository {
 
         devSession.save(device);
 
-        if(CollectionUtils.isNotEmpty(device.getDeviceParamModels())) {
-            for (DeviceParamModel paramModel : device.getDeviceParamModels() ) {
+        if (CollectionUtils.isNotEmpty(device.getDeviceParamModels())) {
+            for (DeviceParamModel paramModel : device.getDeviceParamModels()) {
                 paramModel.setAppId(device.getAppId());
                 paramModel.setDeviceId(device.getDeviceId());
                 devSession.save(paramModel);
@@ -85,7 +84,7 @@ public class DevicesRepository {
         }
     }
 
-    public void saveDeviceAuth(String appId, String deviceId, String authToken ){
+    public void saveDeviceAuth(String appId, String deviceId, String authToken) {
 
         DeviceAuthModel authModel = new DeviceAuthModel();
         authModel.setAppId(appId);
@@ -93,6 +92,10 @@ public class DevicesRepository {
         authModel.setAuthToken(authToken);
 
         devSession.save(authModel);
+    }
+
+    public DevicePersonalizationModel findDevicePersonalizationModel(String deviceName) {
+        return devSession.findByNaturalId(DevicePersonalizationModel.class, new ModelId("deviceName", deviceName));
     }
 
     private List<DeviceParamModel> getDeviceParams(String deviceId, String appId) {

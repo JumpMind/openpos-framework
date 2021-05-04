@@ -74,6 +74,7 @@ import { AudioConsolePlugin } from './audio/audio-console.plugin';
 import {ClientExecutableService} from "./services/client-executable.service";
 import {InfineaScannerCapacitorPlugin} from "./platform-plugins/scanners/infinea-scanner/infinea-scanner-capacitor/infinea-scanner-capacitor.plugin";
 import {Dpp255CapacitorPlugin} from "./platform-plugins/printers/dpp-255-capacitor.plugin";
+import {AutoPersonalizationStartupTask} from "./startup/auto-personalization-startup-task";
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -121,6 +122,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         MediaMatcher,
         StompRService,
         ScannerService,
+        { provide: STARTUP_TASKS, useClass: AutoPersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
         { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
