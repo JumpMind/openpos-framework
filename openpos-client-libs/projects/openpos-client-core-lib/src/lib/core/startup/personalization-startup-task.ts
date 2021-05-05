@@ -24,7 +24,7 @@ export class PersonalizationStartupTask implements IStartupTask {
 
     execute(data: StartupTaskData): Observable<string> {
         if (this.personalization.shouldAutoPersonalize()) {
-            return of("Auto-personalizing Capacitor app");
+            return of("Auto-personalizing client");
         }
         if (this.hasPersonalizationQueryParams(data.route.queryParams) || this.personalization.hasSavedSession()) {
 
