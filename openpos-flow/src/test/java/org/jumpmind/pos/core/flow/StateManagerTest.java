@@ -66,13 +66,13 @@ public class StateManagerTest {
 
     @InjectMocks
     Injector injector;
- 
+
     @Mock
     private ScreenService screenService;
 
     @Mock
     private IMessageService messageService;
-    
+
     @Mock
     private IErrorHandler errorHandler;
 
@@ -92,12 +92,12 @@ public class StateManagerTest {
                 FlowBuilder.addState(CustomerSignupState.class).withTransition("CustomerSignedup", CompleteState.class)
                 .withTransition("Back", CompleteState.class)
                 .build());
-        
+
         FlowConfig testFlowScopeFlow2 = new FlowConfig();
         testFlowScopeFlow2.setInitialState(FlowBuilder.addState(SubStateFlowScopePropogation2.class)
                 .withTransition("Back", CompleteState.class)
                 .build());
-        
+
         FlowConfig testFlowScopeFlow = new FlowConfig();
         testFlowScopeFlow.setInitialState(FlowBuilder.addState(SubStateFlowScopePropogation1.class)
                 .withTransition("Back", CompleteState.class)
@@ -114,7 +114,7 @@ public class StateManagerTest {
         customerFlow.addGlobalTransitionOrActionHandler("Help", HelpState.class);
         customerFlow.addGlobalSubTransition("CustomerSignup", customerSignupFlow);
         customerFlow.add(FlowBuilder.addState(HelpState.class).withTransition("Back", CustomerState.class).build());
-        
+
         FlowConfig multiReturnActionSubFlow = new FlowConfig();
         multiReturnActionSubFlow.setInitialState(FlowBuilder.addState(MultiReturnActionInitialState.class).build());
 
@@ -141,6 +141,7 @@ public class StateManagerTest {
                 .withTransition("SetVariables", SetVariablesState.class)
                 .withTransition("UnsetVariables", UnsetVariablesState.class)
                 .withTransition("CheckVariables", CheckVariablesState.class)
+                .withTransition("CheckOverrideState", TestStates.OverrideSimpleState.class)
                 .build()
         );
         config.add(FlowBuilder.addState(SetVariablesState.class).withTransition("UnsetVariables", UnsetVariablesState.class).build());
@@ -157,7 +158,7 @@ public class StateManagerTest {
                 .withTransition("MultiReturnAction1", MultiReturnAction1State.class)
                 .withTransition("MultiReturnAction2", MultiReturnAction2State.class)
                 .build());
-        
+
 
 
         config.addGlobalTransitionOrActionHandler("Help", HelpState.class);
@@ -205,23 +206,23 @@ public class StateManagerTest {
     @Test
     public void testSubStateTransitionBackToAnotherState() {
         stateManagerInit();
-        
+
         HomeState homeState = (HomeState) stateManager.getCurrentState();
         homeState.departGeneralCalled = false;
         homeState.departToSubflowCalled = false;
         homeState.departStateCalled = false;
-        
+
         assertEquals(HomeState.class, homeState.getClass());
         assertTrue(homeState.arriveCalled);
         doAction("ToSubState1");
-        
+
         assertTrue(homeState.departGeneralCalled);
         assertTrue(homeState.departToSubflowCalled);
         assertFalse(homeState.departStateCalled);
-        
+
         assertEquals(ActionTestingState.class, stateManager.getCurrentState().getClass());
     }
-    
+
     @Test
     public void testSubStateTransitionBackToAnotherSubState() {
         stateManagerInit();
@@ -267,7 +268,7 @@ public class StateManagerTest {
         homeState.departGeneralCalled = false;
         homeState.departToSubflowCalled = false;
         homeState.departStateCalled = false;
-        
+
         assertEquals(HomeState.class, homeState.getClass());
         doAction("Sell");
         assertTrue(homeState.departGeneralCalled);
@@ -353,7 +354,7 @@ public class StateManagerTest {
         assertNull("stateManager.getScopeValue(\"selectedCustomer\")", stateManager.getScopeValue("selectedCustomer"));
         assertEquals(SellState.class, stateManager.getCurrentState().getClass());
     }
-    
+
     @Test
     public void testFlowScopePropogation() {
         stateManagerInit();
@@ -363,7 +364,7 @@ public class StateManagerTest {
         assertEquals(SubStateFlowScopePropogation1.class, stateManager.getCurrentState().getClass());
         doAction("SubStateFlowScopePropogation2Action");
         assertEquals(SubStateFlowScopePropogation2.class, stateManager.getCurrentState().getClass());
-        assertEquals("flowScopeValue1", stateManager.getScopeValue("flowScopeValue1"));        
+        assertEquals("flowScopeValue1", stateManager.getScopeValue("flowScopeValue1"));
         doAction("Back");
         assertEquals(SubStateFlowScopePropogation1.class, stateManager.getCurrentState().getClass());
         assertEquals("flowScopeValue1", stateManager.getScopeValue("flowScopeValue1"));
@@ -447,10 +448,10 @@ public class StateManagerTest {
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
         assertEquals(FlowException.class, exArgument.getValue().getClass());
         assertTrue(exArgument.getValue().getMessage().contains("UnhandledAction"));
-        
+
     }
-    
-    
+
+
     @Test
     public void testInjectionFailure() {
         stateManagerInit();
@@ -489,7 +490,7 @@ public class StateManagerTest {
         assertEquals(FlowException.class, exArgument.getValue().getClass());
         assertTrue(exArgument.getValue().getMessage().contains("inject"));
     }
-    
+
     @Test
     public void testOptionalInjections() {
         stateManagerInit();
@@ -573,7 +574,7 @@ public class StateManagerTest {
         class Invoked { boolean invoked = false; }
         final Invoked i = new Invoked();
         Runnable r = () -> i.invoked = true;
-        
+
         assertFalse(i.invoked);
         doAction(new Action("SomeGlobalAction", r));
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
@@ -621,7 +622,7 @@ public class StateManagerTest {
         assertEquals(NullPointerException.class, exArgument.getValue().getCause().getCause().getClass());
         assertTrue( exArgument.getValue().getCause().getCause().getMessage().contains("Global"));
     }
-    
+
     @Test
     public void testTransitionProceed() {
         stateManagerInit();
@@ -669,7 +670,7 @@ public class StateManagerTest {
         this.testStackOverflow();
         verify(errorHandler, atLeastOnce()).handleError(eq(stateManager), isA(FlowException.class));
     }
-    
+
     @Test
     public void testMultiSubFlowReturnActions1() {
         stateManagerInit();
@@ -681,7 +682,7 @@ public class StateManagerTest {
         doAction("MultiReturnAction1");
         assertEquals(MultiReturnAction1State.class, stateManager.getCurrentState().getClass());
     }
-    
+
     @Test
     public void testMultiSubFlowReturnActions2() {
         stateManagerInit();
@@ -693,7 +694,7 @@ public class StateManagerTest {
         doAction("MultiReturnAction2");
         assertEquals(MultiReturnAction2State.class, stateManager.getCurrentState().getClass());
     }
-    
+
     @Test
     public void testMultiSubFlowReturnActions1_NoFlowConfig() {
         stateManagerInit();
@@ -705,7 +706,7 @@ public class StateManagerTest {
         doAction("MultiReturnAction1");
         assertEquals(MultiReturnAction1State.class, stateManager.getCurrentState().getClass());
     }
-    
+
     @Test
     public void testMultiSubFlowReturnActions2_NoFlowConfig() {
         stateManagerInit();
@@ -717,7 +718,7 @@ public class StateManagerTest {
         doAction("MultiReturnAction2");
         assertEquals(MultiReturnAction2State.class, stateManager.getCurrentState().getClass());
     }
-    
+
 
     @Test
     public void testOnArriveThatThrowsException( ) {
@@ -744,25 +745,25 @@ public class StateManagerTest {
             stateManager.setErrorHandler(existingErrorHandler);
         }
     }
-    
+
     @Test
     public void testOnArriveThatThrowsException_WithErrorHandler( ) {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
-        
+
         stateManager.setErrorHandler(errorHandler);
         stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         doAction("TestExceptionOnArriveAction");
-        
+
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
-        
+
         assertEquals(ExceptionOnArriveState.class, stateManager.getCurrentState().getClass());
         assertEquals(FlowException.class, exArgument.getValue().getClass());
         assertEquals(InvocationTargetException.class, exArgument.getValue().getCause().getClass());
         assertEquals(NullPointerException.class, exArgument.getValue().getCause().getCause().getClass());
         assertTrue(exArgument.getValue().getCause().getCause().getMessage().contains("arrive"));
     }
-    
+
     @Test
     public void testOnDepartThatThrowsException( ) {
         stateManagerInit();
@@ -789,13 +790,13 @@ public class StateManagerTest {
             stateManager.setErrorHandler(existingErrorHandler);
         }
     }
-    
+
     @Test
     public void testOnDepartThatThrowsException_WithErrorHandler( ) {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
-        
+
         stateManager.setErrorHandler(errorHandler);
-        
+
         stateManagerInit();
         assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
         doAction("TestExceptionOnDepartAction");
@@ -856,7 +857,7 @@ public class StateManagerTest {
         }
 
     }
-    
+
     @Test
     public void testExceptionInActionHandler_WithErrorHandler( ) {
         ArgumentCaptor<Throwable> exArgument = ArgumentCaptor.forClass(Throwable.class);
@@ -868,7 +869,7 @@ public class StateManagerTest {
         assertEquals(ExceptionInActionHandlerState.class, stateManager.getCurrentState().getClass());
 
         doAction("ThrowsExceptionAction");
-        
+
         verify(errorHandler).handleError(eq(stateManager), exArgument.capture());
         assertEquals(FlowException.class, exArgument.getValue().getClass());
         assertEquals(InvocationTargetException.class, exArgument.getValue().getCause().getClass());
@@ -882,5 +883,16 @@ public class StateManagerTest {
         doAction("ToSubFlowWithActionActionHandlerForTerminatingState");
         doAction("TerminatingAction");
         assertTrue(stateManager.getScopeValue("actionHandlerCalled"));
+    }
+
+    @Test
+    public void testOverrideStateThatExtendsBaseState() {
+        stateManagerInit();
+        assertEquals(HomeState.class, stateManager.getCurrentState().getClass());
+        doAction("CheckOverrideState");
+        TestStates.OverrideSimpleState overrideState = (TestStates.OverrideSimpleState) stateManager.getCurrentState();
+        assertEquals(TestStates.OverrideSimpleState.class, overrideState.getClass());
+        doAction("Something");
+        assertEquals(overrideState.message, "Override state message");
     }
 }

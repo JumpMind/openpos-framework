@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.server.model.Action;
 
 public class TestStates {
@@ -14,7 +15,7 @@ public class TestStates {
 
         @Out(scope = ScopeType.Conversation, required = false)
         private String optionalInjectionFullfiled = "optionalInjectionFullfiled";
-        
+
         boolean departToSubflowCalled = false;
         boolean departStateCalled = false;
         boolean departGeneralCalled = false;
@@ -32,26 +33,31 @@ public class TestStates {
         public void arrivedAtHome(Action action) {
             arriveCalled = true;
         }
-        
+
         @OnDepart
         public void depart(Action action) {
             departGeneralCalled = true;
-        }          
-        
+        }
+
         @OnDepart(toAnotherState=false)
         public void departToSubflow() {
             departToSubflowCalled = true;
         }
-        
+
         @OnDepart(toSubflow=false)
         public void departState(Action action) {
             departStateCalled = true;
             departAction = action;
         }
-        
+
         @ActionHandler
         protected void onReturn() {
-            
+
+        }
+
+        @ActionHandler
+        protected void onSell(Action action) {
+            stateManager.doAction(action);
         }
     }
 
@@ -166,32 +172,32 @@ public class TestStates {
     public static class SubStateFlowScopePropogation1 implements IState {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
-        
+
         @Out(scope = ScopeType.Flow)
         private String flowScopeValue1;
-        
+
         @Override
         public void arrive(Action action) {
             flowScopeValue1 = "flowScopeValue1";
             //stateManager.doAction("SubStateFlowScopePropogation2Action");
         }
-        
+
         @ActionHandler
         public void onSubStateFlowScopePropogation2DONE(Action action) {
-            
+
         }
     }
-    
+
     public static class SubStateFlowScopePropogation2 implements IState {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
-        
+
         @In(scope = ScopeType.Flow)
         private String flowScopeValue1; // should be inherited.
-        
+
         @Out(scope = ScopeType.Flow)
         private String flowScopeValue2;
-        
+
         @Override
         public void arrive(Action action) {
             flowScopeValue2 = "flowScopeValue2";
@@ -199,7 +205,7 @@ public class TestStates {
             //stateManager.doAction("SubStateFlowScopePropogation2DONE");
         }
     }
-    
+
     public static class SubStateReturnsWithTransitionState implements IState {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
@@ -329,7 +335,7 @@ public class TestStates {
     public static class StackOverflowState extends AbstractStackOverflowState {
 
     }
-    
+
     public static class MultiReturnActionTestState implements IState {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
@@ -337,29 +343,29 @@ public class TestStates {
         public void arrive(Action action) {
 
         }
-    }    
+    }
     public static class MultiReturnActionInitialState implements IState {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
         @Override
         public void arrive(Action action) {
-            
+
         }
-    }    
+    }
     public static class MultiReturnAction1State implements IState {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
         @Override
         public void arrive(Action action) {
-            
+
         }
-    }    
+    }
     public static class MultiReturnAction2State implements IState {
         @In(scope = ScopeType.Device)
         private IStateManager stateManager;
         @Override
         public void arrive(Action action) {
-            
+
         }
     }
     public static class SetVariablesState {
@@ -407,20 +413,20 @@ public class TestStates {
     }
 
     public static class StateWithBeforeActionMethod {
-        
+
         boolean onAction1Invoked = false;
         boolean beforeActionInvoked = false;
 
         @OnArrive
         public void arrive() {
         }
-        
+
         @ActionHandler
         public void onAction1(Action action) {
             assertTrue(this.beforeActionInvoked);
             this.onAction1Invoked = true;
         }
-        
+
         @BeforeAction
         public void onBeforeAnyAction(Action action) {
             assertFalse(this.beforeActionInvoked);
@@ -432,15 +438,15 @@ public class TestStates {
     }
 
     public static class StateWithBeforeActionMethodThatThrowsException extends StateWithBeforeActionMethod {
-        
+
         @BeforeAction
         @Override
         public void onBeforeAnyAction(Action action) {
-            throw new RuntimeException("Throwing this exception should halt execution of the action since default value of failOnException is true"); 
+            throw new RuntimeException("Throwing this exception should halt execution of the action since default value of failOnException is true");
         }
-        
+
     }
-    
+
     public static class StateWithMultipleBeforeActionMethods {
 
         boolean onAction1Invoked = false;
@@ -451,7 +457,7 @@ public class TestStates {
         @OnArrive
         public void arrive() {
         }
-        
+
         @ActionHandler
         public void onAction1(Action action) {
             assertTrue(this.beforeAction_AInvoked);
@@ -459,8 +465,8 @@ public class TestStates {
             assertTrue(this.beforeAction_CInvoked);
             this.onAction1Invoked = true;
         }
-        
-        
+
+
         @BeforeAction(order=2)
         public void onBeforeAnyAction_B(Action action) {
             assertEquals("Action1", action.getName());
@@ -470,7 +476,7 @@ public class TestStates {
             assertTrue(this.beforeAction_CInvoked);
             this.beforeAction_BInvoked = true;
         }
-        
+
         @BeforeAction(order=1)
         public void onBeforeAnyAction_A(Action action) {
             assertEquals("Action1", action.getName());
@@ -478,9 +484,9 @@ public class TestStates {
             assertFalse(this.beforeAction_AInvoked);
             assertFalse(this.beforeAction_BInvoked);
             assertTrue(this.beforeAction_CInvoked);
-            this.beforeAction_AInvoked = true;            
+            this.beforeAction_AInvoked = true;
         }
-        
+
         @BeforeAction(order=-1)
         public void onBeforeAnyAction_C(Action action) {
             assertEquals("Action1", action.getName());
@@ -488,11 +494,11 @@ public class TestStates {
             assertFalse(this.beforeAction_AInvoked);
             assertFalse(this.beforeAction_BInvoked);
             assertFalse(this.beforeAction_CInvoked);
-            this.beforeAction_CInvoked = true;                        
+            this.beforeAction_CInvoked = true;
         }
-        
+
     }
-    
+
     public static class StateWithMultipleBeforeActionAndFailOnExceptionIsFalse extends StateWithMultipleBeforeActionMethods {
         boolean beforeAction_DInvoked = false;
 
@@ -529,9 +535,9 @@ public class TestStates {
         }
 
     }
-    
+
     public static class GlobalActionHandler {
-        
+
         @OnGlobalAction
         public void onSomeGlobalAction(Action action) {
             Runnable r = action.getData();
@@ -541,14 +547,14 @@ public class TestStates {
     }
 
     public static class GlobalActionHandlerWithException {
-        
+
         @OnGlobalAction
         public void onSomeGlobalActionWithException(Action action) {
             assertEquals("SomeGlobalActionWithException", action.getName());
             throw new NullPointerException("Throwing NPE on Global Action");
         }
     }
-    
+
     public static class ExceptionOnArriveState {
         @OnArrive
         public void arrive(Action action) {
@@ -561,13 +567,13 @@ public class TestStates {
         @OnArrive
         public void arrive() {
         }
-        
+
         @OnDepart
         public void depart() {
             throw new NullPointerException("Raising exception on departure");
         }
     }
-    
+
     public static class ExceptionInActionHandlerState {
         @OnArrive
         public void arrive() {
@@ -604,5 +610,34 @@ public class TestStates {
 
         }
     }
-    
+
+    public static class SimpleBaseState {
+        @In(scope = ScopeType.Device)
+        private IStateManager stateManager;
+
+        public String message;
+
+        @OnArrive
+        public void arrive() {
+        }
+
+        protected void doLogic() {
+            this.message = "Base state message";
+        }
+
+        @ActionHandler
+        public void onSomething(Action action) {
+            doLogic();
+            stateManager.doAction(action);
+        }
+    }
+
+    @StateOverride(originalState = TestStates.SimpleBaseState.class)
+    public static class OverrideSimpleState extends SimpleBaseState {
+
+        @Override
+        protected void doLogic() {
+            this.message = "Override state message";
+        }
+    }
 }
