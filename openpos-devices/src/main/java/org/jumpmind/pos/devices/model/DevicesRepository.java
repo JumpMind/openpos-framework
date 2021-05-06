@@ -2,6 +2,7 @@ package org.jumpmind.pos.devices.model;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.ModelId;
@@ -25,7 +26,7 @@ public class DevicesRepository {
     @Autowired
     VirtualDeviceRepository virtualDeviceRepository;
 
-    @Cacheable(value="/devices/device", key="#deviceId + '-' + #appId")
+    @Cacheable(value = "/devices/device", key = "#deviceId + '-' + #appId")
     public DeviceModel getDevice(String deviceId, String appId) {
         DeviceModel device = devSession.findByNaturalId(DeviceModel.class, new ModelId("deviceId", deviceId, "appId", appId));
         if (device != null) {
@@ -46,10 +47,43 @@ public class DevicesRepository {
         return devSession.findByFields(DeviceModel.class, params, 1000);
     }
 
+    public List<DeviceModel> getUnpairedDevices(String businessUnitId) {
+        return findDevices(businessUnitId)
+                .stream()
+                .filter(device -> StringUtils.isBlank(device.getPairedDeviceId()))
+                .collect(Collectors.toList());
+    }
+
+    public List<DeviceModel> getUnpairedDevicesByAppId(String businessUnitId, String appId) {
+        return getUnpairedDevices(businessUnitId).stream()
+                .filter(device -> device.getAppId().equals(appId))
+                .collect(Collectors.toList());
+    }
+
+    public void pairDevice(String deviceId, String appId, String pairedDeviceId, String pairedAppId) {
+        DeviceModel device = getDevice(deviceId, appId);
+        device.setPairedDeviceId(pairedDeviceId);
+        saveDevice(device);
+
+        DeviceModel pairedDevice = getDevice(pairedDeviceId, pairedAppId);
+        pairedDevice.setPairedDeviceId(deviceId);
+        saveDevice(pairedDevice);
+    }
+
+    public void unpairDevice(String deviceId, String appId, String pairedDeviceId, String pairedAppId) {
+        DeviceModel device = getDevice(deviceId, appId);
+        device.setPairedDeviceId(null);
+        saveDevice(device);
+
+        DeviceModel pairedDevice = getDevice(pairedDeviceId, pairedAppId);
+        pairedDevice.setPairedDeviceId(null);
+        saveDevice(pairedDevice);
+    }
+
     public String getDeviceAuth(String deviceId, String appId) {
         DeviceAuthModel deviceAuthModel = devSession.findByNaturalId(DeviceAuthModel.class, new ModelId("deviceId", deviceId, "appId", appId));
 
-        if( deviceAuthModel != null){
+        if (deviceAuthModel != null) {
             return deviceAuthModel.getAuthToken();
         } else {
             throw new DeviceNotFoundException();
@@ -59,13 +93,13 @@ public class DevicesRepository {
     public List<DeviceAuthModel> getDisconnectedDevices(String businessUnitId) {
         Map<String, Object> statusParams = new HashMap<>();
         statusParams.put("deviceStatus", DeviceStatusConstants.CONNECTED);
-        Set<String> connectedDevices = devSession.findByFields(DeviceStatusModel.class, statusParams, 10000).stream().map(d-> d.getDeviceId()+":"+d.getAppId()).collect(Collectors.toSet());
+        Set<String> connectedDevices = devSession.findByFields(DeviceStatusModel.class, statusParams, 10000).stream().map(d -> d.getDeviceId() + ":" + d.getAppId()).collect(Collectors.toSet());
 
         Map<String, Object> deviceParams = new HashMap<>();
         deviceParams.put("businessUnitId", businessUnitId);
-        final Set<String> devices = devSession.findByFields(DeviceModel.class, deviceParams,10000).stream().map(d-> d.getDeviceId()+":"+d.getAppId()).collect(Collectors.toSet());
+        final Set<String> devices = devSession.findByFields(DeviceModel.class, deviceParams, 10000).stream().map(d -> d.getDeviceId() + ":" + d.getAppId()).collect(Collectors.toSet());
         devices.removeAll(connectedDevices);
-        return devSession.findAll(DeviceAuthModel.class, 10000).stream().filter(d-> devices.contains(d.getDeviceId()+":"+d.getAppId())).sorted().collect(Collectors.toList());
+        return devSession.findAll(DeviceAuthModel.class, 10000).stream().filter(d -> devices.contains(d.getDeviceId() + ":" + d.getAppId())).sorted().collect(Collectors.toList());
     }
 
     public DeviceModel getDeviceByAuth(String auth) {
@@ -74,7 +108,7 @@ public class DevicesRepository {
 
         DeviceAuthModel authModel = devSession.findFirstByFields(DeviceAuthModel.class, params, 1);
 
-        if(authModel == null){
+        if (authModel == null) {
             throw new DeviceNotFoundException();
         }
 
@@ -84,7 +118,7 @@ public class DevicesRepository {
 
         DeviceModel deviceModel = devSession.findFirstByFields(DeviceModel.class, params, 1);
 
-        if(deviceModel == null){
+        if (deviceModel == null) {
             throw new DeviceNotFoundException();
         }
 
@@ -93,13 +127,13 @@ public class DevicesRepository {
         return deviceModel;
     }
 
-    @CacheEvict(value = "/devices/device", key="#device.deviceId + '-' + #device.appId")
+    @CacheEvict(value = "/devices/device", key = "#device.deviceId + '-' + #device.appId")
     public void saveDevice(DeviceModel device) {
 
         devSession.save(device);
 
-        if(CollectionUtils.isNotEmpty(device.getDeviceParamModels())) {
-            for (DeviceParamModel paramModel : device.getDeviceParamModels() ) {
+        if (CollectionUtils.isNotEmpty(device.getDeviceParamModels())) {
+            for (DeviceParamModel paramModel : device.getDeviceParamModels()) {
                 paramModel.setAppId(device.getAppId());
                 paramModel.setDeviceId(device.getDeviceId());
                 devSession.save(paramModel);
@@ -107,7 +141,7 @@ public class DevicesRepository {
         }
     }
 
-    public void saveDeviceAuth(String appId, String deviceId, String authToken ){
+    public void saveDeviceAuth(String appId, String deviceId, String authToken) {
 
         DeviceAuthModel authModel = new DeviceAuthModel();
         authModel.setAppId(appId);
@@ -128,8 +162,8 @@ public class DevicesRepository {
     public void updateDeviceStatus(String deviceId, String appId, String status) {
         DeviceStatusModel statusModel = devSession.findByNaturalId(DeviceStatusModel.class,
                 ModelId.builder().
-                key("deviceId", deviceId).
-                key("appId", appId).build());
+                        key("deviceId", deviceId).
+                        key("appId", appId).build());
         if (statusModel == null) {
             statusModel = DeviceStatusModel.builder().deviceId(deviceId).appId(appId).build();
         }
