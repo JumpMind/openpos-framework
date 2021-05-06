@@ -39,6 +39,7 @@ public interface IStateManager {
 
     public void init(String appId, String deviceId);
     public String getDeviceId();
+    public String getPairedDeviceId();
     public String getAppId();
     public String getDeviceMode();
     public void setDeviceMode(String mode);

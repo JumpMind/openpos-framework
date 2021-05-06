@@ -52,6 +52,9 @@ public class EventBroadcaster {
                                 processEvent = true;
                             }
                         }
+                        if (onEvent.receiveEventsFromPairedDevice() && stateManager.getDeviceId().equals(((AppEvent) event).getPairedDeviceId())) {
+                            processEvent = true;
+                        }
                     }
                 } catch (Exception ex) {
                     throw new FlowException("Failed to execute method on state. Method: " + method + " object: " + object, ex);

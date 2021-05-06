@@ -37,6 +37,11 @@ public @interface OnEvent {
     boolean receiveEventsFromSelf() default false;
 
     /**
+     * TODO describe
+     */
+    boolean receiveEventsFromPairedDevice() default false;
+
+    /**
      * If this is set, then all event types will be received.  Ignored if {@link #ofTypes()} identifies specific
      * Event types that are to be handled.
      */

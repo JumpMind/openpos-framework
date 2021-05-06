@@ -11,8 +11,8 @@ public class DeviceDisconnectedEvent extends AppEvent {
     @SuppressWarnings("unused")
     private DeviceDisconnectedEvent() {}
     
-    public DeviceDisconnectedEvent(String deviceId, String appId) {
-        super(deviceId, appId);
+    public DeviceDisconnectedEvent(String deviceId, String appId, String pairedDeviceId) {
+        super(deviceId, appId, pairedDeviceId);
     }
 
 }

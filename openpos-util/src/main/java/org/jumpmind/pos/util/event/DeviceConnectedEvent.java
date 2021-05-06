@@ -12,7 +12,7 @@ public class DeviceConnectedEvent extends AppEvent {
     @SuppressWarnings("unused")
     private DeviceConnectedEvent() {}
     
-    public DeviceConnectedEvent(String deviceId, String appId) {
-        super(deviceId, appId);
+    public DeviceConnectedEvent(String deviceId, String appId, String pairedDeviceId) {
+        super(deviceId, appId, pairedDeviceId);
     }
 }
