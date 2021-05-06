@@ -52,18 +52,20 @@
     <div class="inv-prom-container" responsive-class>
         <mat-card *ngIf="screen.buddyStores" responsive-class class="buddy-store page-gutter padding-none">
             <div responsive-class class="page-gutter page-element margin-bottom">
-                <h3 responsive-class>
-                    {{!screen.buddyStoreOffline ? screen.buddyStoreTitle : screen.buddyStoreOfflineTitle}}
-                </h3>
+                <h3 responsive-class>{{screen.buddyStoreTitle}}</h3>
 
-                <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">                    
-                    <tbody>
-                        <tr *ngFor="let store of screen.buddyStores">
-                            <td>{{store.storeName}}</td>
-                            <td>{{store.storeCount}}</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <p *ngIf="screen.buddyStoreOffline; else buddyStoreTable" class="muted-color">{{screen.buddyStoreOfflineTitle}}</p>
+
+                <ng-template #buddyStoreTable>
+                    <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">                    
+                        <tbody>
+                            <tr *ngFor="let store of screen.buddyStores">
+                                <td>{{store.storeName}}</td>
+                                <td>{{store.storeCount}}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </ng-template>
             </div>
         </mat-card>
         
