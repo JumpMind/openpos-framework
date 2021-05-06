@@ -171,6 +171,10 @@ public class DevicesRepository {
         devSession.save(authModel);
     }
 
+    public DevicePersonalizationModel findDevicePersonalizationModel(String deviceName) {
+        return devSession.findByNaturalId(DevicePersonalizationModel.class, new ModelId("deviceName", deviceName));
+    }
+
     private List<DeviceParamModel> getDeviceParams(String deviceId, String appId) {
         Map<String, Object> params = new HashMap<>();
         params.put("deviceId", deviceId);
