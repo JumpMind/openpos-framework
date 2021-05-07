@@ -9,6 +9,7 @@ import org.jumpmind.pos.persist.ModelId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Repository
 @Slf4j
 public class DevicesRepository {
+    private final static String CACHE_NAME = "/devices/device";
 
     @Autowired
     @Lazy
@@ -26,7 +28,7 @@ public class DevicesRepository {
     @Autowired
     VirtualDeviceRepository virtualDeviceRepository;
 
-    @Cacheable(value = "/devices/device", key = "#deviceId + '-' + #appId")
+    @Cacheable(value = CACHE_NAME, key = "#deviceId + '-' + #appId")
     public DeviceModel getDevice(String deviceId, String appId) {
         DeviceModel device = devSession.findByNaturalId(DeviceModel.class, new ModelId("deviceId", deviceId, "appId", appId));
         if (device != null) {
@@ -60,6 +62,10 @@ public class DevicesRepository {
                 .collect(Collectors.toList());
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = CACHE_NAME, key = "#deviceId + '-' + #appId"),
+            @CacheEvict(value = CACHE_NAME, key = "#pairedDeviceId + '-' + #pairedAppId")
+    })
     public void pairDevice(String deviceId, String appId, String pairedDeviceId, String pairedAppId) {
         DeviceModel device = getDevice(deviceId, appId);
         device.setPairedDeviceId(pairedDeviceId);
@@ -70,6 +76,10 @@ public class DevicesRepository {
         saveDevice(pairedDevice);
     }
 
+    @Caching(evict = {
+            @CacheEvict(value = CACHE_NAME, key = "#deviceId + '-' + #appId"),
+            @CacheEvict(value = CACHE_NAME, key = "#pairedDeviceId + '-' + #pairedAppId")
+    })
     public void unpairDevice(String deviceId, String appId, String pairedDeviceId, String pairedAppId) {
         DeviceModel device = getDevice(deviceId, appId);
         device.setPairedDeviceId(null);
@@ -127,7 +137,7 @@ public class DevicesRepository {
         return deviceModel;
     }
 
-    @CacheEvict(value = "/devices/device", key = "#device.deviceId + '-' + #device.appId")
+    @CacheEvict(value = CACHE_NAME, key = "#device.deviceId + '-' + #device.appId")
     public void saveDevice(DeviceModel device) {
 
         devSession.save(device);
