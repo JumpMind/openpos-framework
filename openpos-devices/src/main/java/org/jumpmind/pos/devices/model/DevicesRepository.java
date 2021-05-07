@@ -184,7 +184,7 @@ public class DevicesRepository {
                 ModelId.builder().
                         key("deviceId", deviceId).
                         key("appId", appId).build());
-        if (statusModel == null) {
+        if (statusModel == null || !statusModel.getDeviceId().equals(deviceId)) {
             statusModel = DeviceStatusModel.builder().deviceId(deviceId).appId(appId).build();
         }
         statusModel.setDeviceStatus(status);
