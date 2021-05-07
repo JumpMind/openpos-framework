@@ -1,9 +1,6 @@
 package org.jumpmind.pos.core.ui.message;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.jumpmind.pos.core.model.DisplayProperty;
 import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
@@ -19,6 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@EqualsAndHashCode(callSuper = true)
 public class ItemDetailUIMessage extends UIMessage {
 
     private String itemName;
@@ -41,6 +39,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private String buddyStoreTitle;
     private String buddyStoreIcon;
     private String buddyStoreOfflineTitle;
+    private String noBuddyStoresMessage;
     private List<BuddyStore> buddyStores;
     private List<ActionItem> actions;
     private List<String> detailSections;

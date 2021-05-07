@@ -28,6 +28,7 @@ export interface ItemDetailInterface extends IAbstractScreen {
     buddyStoreTitle: string;
     buddyStoreIcon: string;
     buddyStoreOfflineTitle: string;
+    noBuddyStoresMessage: string;
     buddyStores: BuddyStoreInterface[];
     
     detailSections: string[];

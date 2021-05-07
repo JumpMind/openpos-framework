@@ -54,7 +54,9 @@
             <div responsive-class class="page-gutter page-element margin-bottom">
                 <h3 responsive-class>{{screen.buddyStoreTitle}}</h3>
 
-                <p *ngIf="screen.buddyStoreOffline; else buddyStoreTable" class="muted-color">{{screen.buddyStoreOfflineTitle}}</p>
+                <p *ngIf="screen.buddyStoreOffline && screen.buddyStores.length <= 0; else buddyStoreTable" class="muted-color">
+                    {{screen.buddyStoreOffline ? screen.buddyStoreOfflineTitle : screen.noBuddyStoresMessage}}
+                </p>
 
                 <ng-template #buddyStoreTable>
                     <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">                    
