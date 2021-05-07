@@ -74,9 +74,11 @@ public class DevicesRepository {
             unpairDevice(deviceId, appId, device.getPairedDeviceId(), pairedAppId);
         }
 
+        // Pair device
         device.setPairedDeviceId(pairedDeviceId);
         saveDevice(device);
 
+        // Link paired device to device it's paired with
         DeviceModel pairedDevice = getDevice(pairedDeviceId, pairedAppId);
         pairedDevice.setPairedDeviceId(deviceId);
         saveDevice(pairedDevice);
@@ -87,10 +89,12 @@ public class DevicesRepository {
             @CacheEvict(value = CACHE_NAME, key = "#pairedDeviceId + '-' + #pairedAppId")
     })
     public void unpairDevice(String deviceId, String appId, String pairedDeviceId, String pairedAppId) {
+        // Unpair device
         DeviceModel device = getDevice(deviceId, appId);
         device.setPairedDeviceId(null);
         saveDevice(device);
 
+        // Unlink paired device to device it was paired with
         DeviceModel pairedDevice = getDevice(pairedDeviceId, pairedAppId);
         pairedDevice.setPairedDeviceId(null);
         saveDevice(pairedDevice);
