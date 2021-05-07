@@ -68,6 +68,12 @@ public class DevicesRepository {
     })
     public void pairDevice(String deviceId, String appId, String pairedDeviceId, String pairedAppId) {
         DeviceModel device = getDevice(deviceId, appId);
+
+        // First unpair an existing paired device
+        if (StringUtils.isNotBlank(device.getPairedDeviceId())) {
+            unpairDevice(deviceId, appId, device.getPairedDeviceId(), pairedAppId);
+        }
+
         device.setPairedDeviceId(pairedDeviceId);
         saveDevice(device);
 
