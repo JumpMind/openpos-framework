@@ -12,7 +12,7 @@ import java.util.List;
 public class PeripheralDeviceSelectionMessage extends Message {
     CategoryDescriptor category;
     List<PeripheralDeviceDescription> available;
-    String selectedId;
+    PeripheralDeviceDescription selectedDevice;
 
     @Override
     public String getType() {
