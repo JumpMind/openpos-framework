@@ -81,6 +81,7 @@ import { Storage } from './storage/storage.service';
 import { STORAGE_CONTAINERS } from './storage/storage-container';
 import { CapacitorPrinterPlugin } from './platform-plugins/printers/capacitor-printer.plugin';
 import {AutoPersonalizationStartupTask} from "./startup/auto-personalization-startup-task";
+import {WrapperService} from "./services/wrapper.service";
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -126,7 +127,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         MediaMatcher,
         StompRService,
         BarcodeScanner,
-        { provide: STARTUP_TASKS, useClass: AutoPersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
+        { provide: STARTUP_TASKS, useClass: AutoPersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog, WrapperService]},
         { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
         { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
