@@ -39,7 +39,7 @@ public class DevicesRepository {
             if (virtualDevice != null) {
                 return virtualDevice;
             }
-            throw new DeviceNotFoundException("No device found for appId=" + appId + " deviceId=" + deviceId);
+            return null;
         }
     }
 
@@ -184,7 +184,7 @@ public class DevicesRepository {
                 ModelId.builder().
                         key("deviceId", deviceId).
                         key("appId", appId).build());
-        if (statusModel == null) {
+        if (statusModel == null || !statusModel.getDeviceId().equals(deviceId)) {
             statusModel = DeviceStatusModel.builder().deviceId(deviceId).appId(appId).build();
         }
         statusModel.setDeviceStatus(status);
