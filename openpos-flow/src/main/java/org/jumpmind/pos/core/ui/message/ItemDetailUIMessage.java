@@ -27,6 +27,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private String alternateImageUrl;
     private List<DisplayProperty> itemProperties;
     private String itemPromotionsTitle;
+    private String itemPromotionsIcon;
     private String itemNoPromotionsTitle;
     private List<Promotion> promotions;
     private String promotionStackingDisclaimer;

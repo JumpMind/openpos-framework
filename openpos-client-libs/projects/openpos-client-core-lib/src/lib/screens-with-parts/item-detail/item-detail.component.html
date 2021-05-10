@@ -54,7 +54,7 @@
             <div responsive-class class="page-gutter page-element margin-bottom">
                 <h3 responsive-class class="icon-heading">
                     {{screen.buddyStoreTitle}}
-                    <app-icon *ngIf="screen.buddyStoreIcon" iconName="screen.buddyStoreIcon"></app-icon>
+                    <app-icon *ngIf="screen.buddyStoreIcon" [iconName]="screen.buddyStoreIcon"></app-icon>
                 </h3>
 
                 <p *ngIf="screen.buddyStoreOffline && screen.buddyStores.length <= 0; else buddyStoreTable" class="muted-color">
@@ -78,7 +78,7 @@
             <div responsive-class class="page-gutter page-element margin-bottom">
                 <h3 responsive-class class="icon-heading">
                     {{screen.promotions && screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
-                    <app-icon *ngIf="screen.itemPromotionsIcon" iconName="screen.itemPromotionsIcon"></app-icon>
+                    <app-icon *ngIf="screen.itemPromotionsIcon" [iconName]="screen.itemPromotionsIcon"></app-icon>
                 </h3>
                 
                 <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
