@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {InfineaPlugin, IPlatformPlugin} from '../../../platform-plugin.interface';
 import {IScanner} from '../../scanner.interface';
-import {Observable, of} from 'rxjs';
+import {Observable} from 'rxjs';
 import {IScanData} from '../../scan.interface';
 import {Plugins as CapacitorPlugins} from "@capacitor/core";
 import {ConfigurationService} from "../../../../services/configuration.service";
-import {ConfigChangedMessage} from "../../../../messages/config-changed-message";
 import {InfineaBarcodeUtils} from "../infinea-to-openpos-barcode-type";
 import {CapacitorService} from "../../../../services/capacitor.service";
 
@@ -20,15 +19,6 @@ declare module '@capacitor/core' {
 })
 export class InfineaScannerCapacitorPlugin implements IPlatformPlugin, IScanner {
     constructor(config: ConfigurationService, private capacitorService: CapacitorService) {
-        if(this.pluginPresent()) {
-            config.getConfiguration('InfineaCapacitor').subscribe( (config: ConfigChangedMessage & any) => {
-                if (config.licenseKey) {
-                    CapacitorPlugins.InfineaScannerCapacitor.initialize({
-                        apiKey: config.licenseKey
-                    });
-                }
-            });
-        }
     }
 
     name(): string {
@@ -40,7 +30,12 @@ export class InfineaScannerCapacitorPlugin implements IPlatformPlugin, IScanner 
     }
 
     initialize(): Observable<string> {
-        return of("Infinea Scanner for Capacitor initialized")
+        return new Observable(observer => {
+            CapacitorPlugins.InfineaScannerCapacitor.initialize();
+            return CapacitorPlugins.InfineaScannerCapacitor.addListener('status', (e) => {
+                observer.next("Infinea Scanner status: " + JSON.stringify(e));
+            });
+        });
     }
 
     startScanning(): Observable<IScanData> {
