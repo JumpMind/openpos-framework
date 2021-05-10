@@ -1,7 +1,9 @@
-import { Injectable } from '@angular/core';
-import {Capacitor, Plugins as CapacitorPlugins} from "@capacitor/core";
+import {Injectable} from '@angular/core';
+import {Capacitor, DeviceInfo, Plugins} from "@capacitor/core";
+import {from, Observable} from "rxjs";
+import {map} from "rxjs/operators";
 
-declare var cordova: any;
+const {Device} = Plugins;
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +16,12 @@ export class CapacitorService {
 
     public isPluginAvailable(plugin: string): boolean {
         return Capacitor.isPluginAvailable(plugin);
+    }
+
+    public getDeviceName(): Observable<string> {
+        return from(Device.getInfo()).pipe(
+            map((info: DeviceInfo) => info.name)
+        );
     }
 }
 

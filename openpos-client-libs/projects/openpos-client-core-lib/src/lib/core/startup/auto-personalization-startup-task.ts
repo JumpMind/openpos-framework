@@ -1,16 +1,15 @@
 import {catchError, first, flatMap, take, tap} from 'rxjs/operators';
 import {IStartupTask} from './startup-task.interface';
 import {PersonalizationService} from '../personalization/personalization.service';
-import {concat, from, Observable, of} from 'rxjs';
+import {concat, Observable, of} from 'rxjs';
 import {MatDialog} from '@angular/material';
 import {Injectable} from '@angular/core';
 import {StartupTaskData} from './startup-task-data';
 import {PersonalizationComponent} from '../personalization/personalization.component';
-import {DeviceInfo, Plugins} from "@capacitor/core";
 import {Zeroconf, ZeroconfService} from "@ionic-native/zeroconf";
 import {StartupTaskNames} from "./startup-task-names";
+import {WrapperService} from "../services/wrapper.service";
 
-const {Device} = Plugins;
 
 @Injectable({
     providedIn: 'root',
@@ -21,14 +20,13 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
     private readonly TYPE = '_jmc-personalize._tcp.';
     private readonly DOMAIN = 'local.';
 
-    constructor(protected personalization: PersonalizationService, protected matDialog: MatDialog) {
+    constructor(protected personalization: PersonalizationService, protected matDialog: MatDialog, protected wrapperService: WrapperService) {
     }
 
     execute(data: StartupTaskData): Observable<string> {
-        if(this.personalization.hasSavedSession()) {
+        if (this.personalization.hasSavedSession()) {
             return this.personalization.personalizeFromSavedSession();
-        }
-        else if (this.personalization.shouldAutoPersonalize()) {
+        } else if (this.personalization.shouldAutoPersonalize()) {
             let name: string = null;
             let serviceConfig: ZeroconfService = null;
 
@@ -37,8 +35,8 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                 tap(conf => {
                     serviceConfig = conf.service;
                 }),
-                flatMap(() => from(Device.getInfo())),
-                tap((info: DeviceInfo) => name = info.name),
+                flatMap(() => this.wrapperService.getDeviceName()),
+                tap(deviceName => name = deviceName),
                 flatMap(() => this.attemptAutoPersonalize(serviceConfig, name))
             );
         } else {
