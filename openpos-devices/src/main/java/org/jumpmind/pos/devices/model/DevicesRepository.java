@@ -39,7 +39,7 @@ public class DevicesRepository {
             if (virtualDevice != null) {
                 return virtualDevice;
             }
-            return null;
+            throw new DeviceNotFoundException("No device found for appId=" + appId + " deviceId=" + deviceId);
         }
     }
 
