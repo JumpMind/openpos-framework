@@ -1,10 +1,8 @@
 import {IPrinter} from "./printer.interface";
 import {InfineaPlugin, IPlatformPlugin} from "../platform-plugin.interface";
-import {Observable, of} from "rxjs";
-import {Capacitor} from "@capacitor/core";
+import {Observable} from "rxjs";
 import {Plugins as CapacitorPlugins} from "@capacitor/core/dist/esm/global";
 import {Injectable} from "@angular/core";
-import {ConfigChangedMessage} from "../../messages/config-changed-message";
 import {ConfigurationService} from "../../services/configuration.service";
 import {CapacitorService} from "../../services/capacitor.service";
 
@@ -20,15 +18,6 @@ declare module '@capacitor/core' {
 export class Dpp255CapacitorPlugin implements IPrinter, IPlatformPlugin {
     id: string = 'DPP255CAP';
     constructor(config: ConfigurationService, private capacitorService: CapacitorService) {
-        if(this.pluginPresent()) {
-            config.getConfiguration('InfineaCapacitor').subscribe( (config: ConfigChangedMessage & any) => {
-                if (config.licenseKey) {
-                    CapacitorPlugins.InfineaScannerCapacitor.initialize({
-                        apiKey: config.licenseKey
-                    });
-                }
-            });
-        }
     }
 
     print(html: String) {
@@ -36,7 +25,12 @@ export class Dpp255CapacitorPlugin implements IPrinter, IPlatformPlugin {
     }
 
     initialize(): Observable<string> {
-        return of("DPP-255 for Capacitor initialized")
+        return new Observable(observer => {
+            CapacitorPlugins.Dpp255Capacitor.initialize();
+            return CapacitorPlugins.Dpp255Capacitor.addListener('status', (e) => {
+                observer.next("Infinea printer status: " + JSON.stringify(e));
+            });
+        });
     }
 
     name(): string {

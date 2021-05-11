@@ -76,6 +76,7 @@ import {InfineaScannerCapacitorPlugin} from "./platform-plugins/scanners/infinea
 import {Dpp255CapacitorPlugin} from "./platform-plugins/printers/dpp-255-capacitor.plugin";
 import {AutoPersonalizationStartupTask} from "./startup/auto-personalization-startup-task";
 import {WrapperService} from "./services/wrapper.service";
+import {InfineaSdkPlugin} from "./platform-plugins/capacitor-plugins/infinea-sdk.plugin";
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -140,6 +141,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: SCANNERS, useExisting: ConsoleScannerPlugin, multi: true},
         { provide: SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: InfineaScannerCapacitorPlugin, multi: true },
+        { provide: PLUGINS, useExisting: InfineaSdkPlugin, multi: true},
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
