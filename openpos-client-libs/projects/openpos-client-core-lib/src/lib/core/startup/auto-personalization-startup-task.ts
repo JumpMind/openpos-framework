@@ -24,24 +24,27 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
     }
 
     execute(data: StartupTaskData): Observable<string> {
-        if (this.personalization.hasSavedSession()) {
-            return this.personalization.personalizeFromSavedSession();
-        } else if (this.personalization.shouldAutoPersonalize()) {
-            let name: string = null;
-            let serviceConfig: ZeroconfService = null;
+        if (this.personalization.shouldAutoPersonalize()) {
+            if (this.personalization.hasSavedSession()) {
+                return this.personalization.personalizeFromSavedSession();
+            } else {
+                let name: string = null;
+                let serviceConfig: ZeroconfService = null;
 
-            return Zeroconf.watch(this.TYPE, this.DOMAIN).pipe(
-                first(conf => conf.action === 'resolved'),
-                tap(conf => {
-                    serviceConfig = conf.service;
-                }),
-                flatMap(() => this.wrapperService.getDeviceName()),
-                tap(deviceName => name = deviceName),
-                flatMap(() => this.attemptAutoPersonalize(serviceConfig, name))
-            );
+                return Zeroconf.watch(this.TYPE, this.DOMAIN).pipe(
+                    first(conf => conf.action === 'resolved'),
+                    tap(conf => {
+                        serviceConfig = conf.service;
+                    }),
+                    flatMap(() => this.wrapperService.getDeviceName()),
+                    tap(deviceName => name = deviceName),
+                    flatMap(() => this.attemptAutoPersonalize(serviceConfig, name))
+                );
+            }
         } else {
             return of("No auto personalization available for device");
         }
+
     }
 
     manualPersonalization(): Observable<string> {
