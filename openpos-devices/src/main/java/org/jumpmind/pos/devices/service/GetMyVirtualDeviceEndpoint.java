@@ -1,5 +1,6 @@
 package org.jumpmind.pos.devices.service;
 
+import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.service.model.GetDeviceRequest;
 import org.jumpmind.pos.devices.service.model.GetDeviceResponse;
 import org.jumpmind.pos.service.Endpoint;
@@ -16,10 +17,11 @@ public class GetMyVirtualDeviceEndpoint {
     GetVirtualDeviceEndpoint endpoint;
 
     public GetDeviceResponse getMyDevice() {
+        DeviceModel device = endpoint.getDevice(
+                GetDeviceRequest.builder().deviceId(clientContext.get("deviceId")).build()
+        ).getDeviceModel();
         return GetDeviceResponse.builder()
-                .deviceModel(endpoint.getDevice(
-                        GetDeviceRequest.builder().
-                                deviceId(clientContext.get("deviceId")).build()).getDeviceModel())
+                .deviceModel(device)
                 .build();
     }
 }
