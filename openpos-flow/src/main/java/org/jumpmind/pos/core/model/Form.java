@@ -102,13 +102,22 @@ public class Form implements Serializable {
         return field;        
 
     }
-    
+
     public ComboField addComboBox(String fieldId, String label, String value, List<String> values, boolean required) {
         ComboField field = new ComboField(fieldId, label, null, values);
         field.setRequired(required);
         field.setValue(value);
         formElements.add(field);
-        return field;        
+        return field;
+    }
+
+    public ComboField addComboBox(String fieldId, String label, String value, List<String> values, boolean required, boolean dynamicListEnabled) {
+        ComboField field = new ComboField(fieldId, label, null, values);
+        field.setRequired(required);
+        field.setDynamicListEnabled(dynamicListEnabled);
+        field.setValue(value);
+        formElements.add(field);
+        return field;
     }
     
     public PopTartField addPopTart(String fieldId, String label, String... values) {
