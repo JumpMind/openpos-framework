@@ -14,6 +14,7 @@ export interface ItemDetailInterface extends IAbstractScreen {
     itemProperties: DisplayProperty[];
     itemActions: IActionItem[];
     itemPromotionsTitle: string;
+    itemPromotionsIcon?: string;
     itemNoPromotionsTitle: string;
     promotions: IPromotionInterface[];
     promotionStackingDisclaimer: string;
@@ -23,8 +24,9 @@ export interface ItemDetailInterface extends IAbstractScreen {
     itemOptionInstructions: string;
 
     buddyStoreTitle: string;
-    buddyStoreIcon: string;
+    buddyStoreIcon?: string;
     buddyStoreOfflineTitle: string;
+    noBuddyStoresMessage: string;
     inventoryMessageProviderKey: string;
     buddyStoreProviderKey: string;
     

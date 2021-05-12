@@ -12,6 +12,7 @@ public class AppEvent extends Event implements Serializable {
 
     String deviceId;
     String appId;
+    String pairedDeviceId;
     boolean remote;
 
     public AppEvent() {
@@ -22,14 +23,26 @@ public class AppEvent extends Event implements Serializable {
         this(deviceId, appId, false);
     }
 
+    public AppEvent(String deviceId, String appId, String pairedDeviceId) { this(deviceId, appId, pairedDeviceId, false); }
+
     public AppEvent(String deviceId, String appId, boolean remote) {
         super(createSourceString(appId, deviceId));
         this.deviceId = deviceId;
         this.appId = appId;
     }
 
+    public AppEvent(String deviceId, String appId, String pairedDeviceId, boolean remote) {
+        super(createSourceString(deviceId, appId, pairedDeviceId));
+        this.deviceId = deviceId;
+        this.appId = appId;
+        this.pairedDeviceId = pairedDeviceId;
+    }
+
     public static String createSourceString(String appId, String deviceId) {
         return appId + "/" + deviceId;
     }
 
+    public static String createSourceString(String appId, String deviceId, String pairedDeviceId) {
+        return appId + "/" + deviceId + "/" + pairedDeviceId;
+    }
 }

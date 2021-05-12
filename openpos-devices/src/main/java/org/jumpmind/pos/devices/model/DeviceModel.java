@@ -39,6 +39,11 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     @ColumnDef
     private String appId;
 
+    @ToString.Include
+    @EqualsAndHashCode.Include
+    @ColumnDef
+    private String pairedDeviceId;
+
     @ColumnDef(size = "10", description = "The locale under which this Device currently operates")
     String locale;
 

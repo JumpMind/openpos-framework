@@ -8,4 +8,4 @@
 (click)="updateExpandedIndex(i)" >
 </app-item-card>
 </div>
-<app-image-text-panel [instructionsSize]="'text-xl'"></app-image-text-panel>
+<app-image-text-panel *ngIf="(items$ | async).length === 0" [instructionsSize]="'text-xl'"></app-image-text-panel>

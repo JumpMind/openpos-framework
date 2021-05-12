@@ -37,6 +37,13 @@ public @interface OnEvent {
     boolean receiveEventsFromSelf() default false;
 
     /**
+     * Only applies if the event type is AppEvent (or subclass) and the device ID of the current StateManager
+     * is the same as the paired device ID of the event. In that case, setting this value to {@code true}
+     * will allow the event to be processed regardless of the app ID value of the event.
+     */
+    boolean receiveEventsFromPairedDevice() default false;
+
+    /**
      * If this is set, then all event types will be received.  Ignored if {@link #ofTypes()} identifies specific
      * Event types that are to be handled.
      */
