@@ -19,8 +19,7 @@ public class GetMyVirtualDeviceEndpoint {
         return GetDeviceResponse.builder()
                 .deviceModel(endpoint.getDevice(
                         GetDeviceRequest.builder().
-                                deviceId(clientContext.get("deviceId")).
-                                appId(clientContext.get("appId")).build()).getDeviceModel())
+                                deviceId(clientContext.get("deviceId")).build()).getDeviceModel())
                 .build();
     }
 }
