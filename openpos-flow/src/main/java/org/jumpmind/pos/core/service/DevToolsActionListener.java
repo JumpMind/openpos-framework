@@ -154,7 +154,7 @@ public class DevToolsActionListener implements IActionListener {
         DeviceModel deviceModel = null;
         String authToken = null;
         try {
-            deviceModel = devicesRepository.getDevice(deviceId, simAppId);
+            deviceModel = devicesRepository.getDevice(deviceId);
         } catch (DeviceNotFoundException ex) {
         }
         if (deviceModel == null) {
@@ -164,7 +164,7 @@ public class DevToolsActionListener implements IActionListener {
             devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
         } else {
             try {
-                authToken = devicesRepository.getDeviceAuth(deviceId, simAppId);
+                authToken = devicesRepository.getDeviceAuth(deviceId);
             } catch (DeviceNotFoundException ex) {
                 authToken = UUID.randomUUID().toString();
                 devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
@@ -181,7 +181,7 @@ public class DevToolsActionListener implements IActionListener {
         Map<String, String> customDeviceMap = new HashMap<>();
         String authToken = "";
         try{
-            authToken = devicesRepository.getDeviceAuth(deviceId, customerDisplayAppId);
+            authToken = devicesRepository.getDeviceAuth(deviceId);
         } catch (DeviceNotFoundException ex){
             authToken = "";
         }
