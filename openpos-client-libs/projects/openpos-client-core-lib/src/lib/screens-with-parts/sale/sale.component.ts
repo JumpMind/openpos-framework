@@ -24,7 +24,7 @@ import { ISellItem } from '../../core/interfaces/sell-item.interface';
     templateUrl: './sale.component.html',
     styleUrls: ['./sale.component.scss']
 })
-export class SaleComponent extends PosScreen<SaleInterface> implements AfterViewInit {
+export class SaleComponent extends PosScreen<SaleInterface> {
     @ViewChild('scrollList') private saleItemCardList: SaleItemCardListComponent;
 
     isMobile$: Observable<boolean>;
@@ -68,12 +68,6 @@ export class SaleComponent extends PosScreen<SaleInterface> implements AfterView
             this.keyPressProvider.globalSubscribe(this.screen.logoutButton).pipe(
                 takeUntil(this.stop$)
             ).subscribe(action => this.doAction(action));
-        }
-    }
-
-    ngAfterViewInit() {
-        if (this.saleItemCardList && this.saleItemCardList.items$) {
-            this.saleItemCardList.items$.subscribe(items => this.isEmpty === !items || items.length === 0);
         }
     }
 
