@@ -15,7 +15,7 @@ public class GetVirtualDeviceEndpoint {
     VirtualDeviceRepository devicesRepository;
 
     public GetDeviceResponse getDevice(GetDeviceRequest request) {
-        DeviceModel deviceModel = devicesRepository.getByDeviceIdAppId(request.getDeviceId(), request.getAppId());
+        DeviceModel deviceModel = devicesRepository.getByDeviceId(request.getDeviceId());
         if (deviceModel != null) {
             return GetDeviceResponse.builder()
                     .deviceModel(deviceModel)

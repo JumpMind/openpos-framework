@@ -23,7 +23,7 @@ public class DevicesRepositoryTest {
 
     @Test
     public void testFindDevice() {
-        DeviceModel device = devicesRepository.getDevice("00100-001", "pos");
+        DeviceModel device = devicesRepository.getDevice("00100-001");
         assertNotNull(device);
         assertEquals("00100-001", device.getDeviceId());
         assertEquals("Store 100 Register 1", device.getDescription());

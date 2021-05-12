@@ -9,22 +9,14 @@ import org.jumpmind.pos.devices.model.DeviceParamModel;
 import org.jumpmind.pos.devices.model.DevicesRepository;
 import org.jumpmind.pos.devices.service.model.PersonalizationRequest;
 import org.jumpmind.pos.devices.service.model.PersonalizationResponse;
-import org.jumpmind.pos.persist.ITagProvider;
 import org.jumpmind.pos.service.Endpoint;
-import org.jumpmind.util.AppUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.AbstractEnvironment;
-import org.springframework.core.env.EnumerablePropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.core.env.MutablePropertySources;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
@@ -49,7 +41,7 @@ public class PersonalizeEndpoint {
             // TODO add a configuration map of appIds that are allowed to share deviceIds. IE probably shouldn't allow a self-checkout share with pos
             try{
                 log.info("Validating auth request of {} as {}", deviceId, appId);
-                String auth = devicesRepository.getDeviceAuth(request.getDeviceId(), request.getAppId());
+                String auth = devicesRepository.getDeviceAuth(request.getDeviceId());
 
                 if( !auth.equals(authToken)) {
                     throw new DeviceNotAuthorizedException();

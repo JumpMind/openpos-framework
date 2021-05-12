@@ -9,7 +9,7 @@ import org.jumpmind.pos.persist.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableDef(name = "device_auth",
-        primaryKey = {"deviceId", "appId"})
+        primaryKey = {"deviceId"})
 @IndexDefs({
         @IndexDef(name = "idx_devices_auth_token", column = "authToken")
 })

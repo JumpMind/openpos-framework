@@ -44,4 +44,7 @@ public interface IDevicesService {
 
     @RequestMapping(path = "/unpair", method = RequestMethod.POST)
     public UnpairDeviceResponse unpairDevice(@RequestBody UnpairDeviceRequest request);
+
+    @RequestMapping(path = "/setAppId", method = RequestMethod.POST)
+    public SetAppIdResponse setAppId(@RequestBody SetAppIdRequest request);
 }
