@@ -1,4 +1,7 @@
+import {map, tap} from 'rxjs/operators';
 import {Scanner} from '../../core/platform-plugins/barcode-scanners/scanner';
+import {UIDataMessageService} from '../../core/ui-data-message/ui-data-message.service';
+import {BuddyStoreInterface} from './buddy-store.interface';
 import { ItemDetailInterface } from './item-detail.interface';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import {Component, InjectionToken, Injector, Optional} from '@angular/core';
@@ -24,10 +27,12 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
     carouselSize: String;
 
     optionComponents = new Map();
+    
+    buddyStores$: Observable<BuddyStoreInterface[]>;
+    buddyStoresOnline$: Observable<boolean>;
+    inventoryMessage$: Observable<string>;
 
-
-
-    constructor( @Optional() private injector: Injector, media: OpenposMediaService) {
+    constructor( @Optional() private injector: Injector, media: OpenposMediaService, private dataMessageService: UIDataMessageService) {
         super(injector);
         this.isMobile = media.observe(new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -60,6 +65,12 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
                 this.optionComponents.set(injector, this.getComponentFromOptionType(value));
             });
         }
+        
+        this.buddyStores$ = this.dataMessageService.getData$(this.screen.buddyStoreProviderKey);
+        this.buddyStoresOnline$ = this.buddyStores$
+            .pipe(map( stores => stores != null || stores != undefined));
+        this.inventoryMessage$ = this.dataMessageService.getData$(this.screen.inventoryMessageProviderKey)
+            .pipe(map(value => value != null ? value[0] : null));
     }
     
     getComponentFromOptionType(productOption: ProductOptionInterface) {

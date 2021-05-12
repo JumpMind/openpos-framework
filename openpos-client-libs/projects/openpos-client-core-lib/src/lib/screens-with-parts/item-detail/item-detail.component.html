@@ -8,7 +8,7 @@
             
             <div class="inv-cost">
                 <app-currency-text class="item-price" [amountText]="screen.price"></app-currency-text>
-                <span>{{screen.inventoryMessage}}</span>
+                <span *ngIf="inventoryMessage$">{{inventoryMessage$ | async}}</span>
             </div>
 
             <ul class="properties">
@@ -50,15 +50,15 @@
     </mat-card>
     
     <div class="inv-prom-container" responsive-class>
-        <mat-card *ngIf="screen.buddyStores" responsive-class class="buddy-store page-gutter padding-none">
+        <mat-card *ngIf="screen.buddyStoreProviderKey && buddyStores$" responsive-class class="buddy-store page-gutter padding-none">
             <div responsive-class class="page-gutter page-element margin-bottom">
                 <h3 responsive-class>
-                    {{!screen.buddyStoreOffline ? screen.buddyStoreTitle : screen.buddyStoreOfflineTitle}}
+                    {{(buddyStoresOnline$ | async) ? screen.buddyStoreTitle : screen.buddyStoreOfflineTitle}}
                 </h3>
 
-                <table *ngIf="!screen.buddyStoreOffline" class="item-details-table buddy-stores">                    
+                <table *ngIf="buddyStoresOnline$ | async" class="item-details-table buddy-stores">                    
                     <tbody>
-                        <tr *ngFor="let store of screen.buddyStores">
+                        <tr *ngFor="let store of buddyStores$ | async">
                             <td>{{store.storeName}}</td>
                             <td>{{store.storeCount}}</td>
                         </tr>
