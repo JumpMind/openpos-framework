@@ -68,7 +68,7 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
         
         this.buddyStores$ = this.dataMessageService.getData$(this.screen.buddyStoreProviderKey);
         this.buddyStoresOnline$ = this.buddyStores$
-            .pipe(map( stores => stores != null || stores != undefined));
+            .pipe(map( stores => stores != null && stores != undefined));
         this.inventoryMessage$ = this.dataMessageService.getData$(this.screen.inventoryMessageProviderKey)
             .pipe(map(value => value != null ? value[0] : null));
     }
