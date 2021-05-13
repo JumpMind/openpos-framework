@@ -74,6 +74,7 @@ export * from './lib/core/messages/ui-data-message';
 export * from './lib/core/discovery/discovery-params.interface';
 export * from './lib/core/discovery/discovery-response.interface';
 export * from './lib/core/discovery/discovery-status.enum';
+export * from './lib/core/peripherals/peripheral-selection.service';
 
 export * from './lib/core/oldplugins/barcode-scanner.plugin';
 export * from './lib/core/oldplugins/cordova-device-plugin';

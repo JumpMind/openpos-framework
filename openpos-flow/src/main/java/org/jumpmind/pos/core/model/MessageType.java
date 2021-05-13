@@ -27,4 +27,5 @@ public final class MessageType {
     public static final String StatusBar = "StatusBar";
     public static final String HideStatusBar = "HideStatusBar";
     public static final String ClientExecutable = "ClientExecutable";
+    public static final String PeripheralDeviceStateChanged = "PeripheralDeviceStateChanged";
 }

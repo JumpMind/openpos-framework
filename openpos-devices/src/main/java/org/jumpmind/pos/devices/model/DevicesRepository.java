@@ -62,6 +62,19 @@ public class DevicesRepository {
                 .collect(Collectors.toList());
     }
 
+    public List<DeviceModel> getPairedDevices(String businessUnitId) {
+        return findDevices(businessUnitId)
+                .stream()
+                .filter(device -> StringUtils.isNotBlank(device.getPairedDeviceId()))
+                .collect(Collectors.toList());
+    }
+
+    public List<DeviceModel> getPairedDevicesByAppId(String businessUnitId, String appId) {
+        return getPairedDevices(businessUnitId).stream()
+                .filter(device -> device.getAppId().equals(appId))
+                .collect(Collectors.toList());
+    }
+
     @Caching(evict = {
             @CacheEvict(value = CACHE_NAME, key = "#deviceId"),
             @CacheEvict(value = CACHE_NAME, key = "#pairedDeviceId")
