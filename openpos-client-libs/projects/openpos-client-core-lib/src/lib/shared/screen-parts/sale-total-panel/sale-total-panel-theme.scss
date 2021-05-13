@@ -5,9 +5,8 @@
     $foreground: map-get($theme, foreground );
 
     .linked-customer-summary {
-        .icon {
-            color: map_get($foreground, icon);
-        }
+        color: mat-color($theme, openpos-linked-customer-color);
+        background-color: mat-color($theme, openpos-linked-customer-background);
         .memberships {
             .customer-missing-info {
                 button {
