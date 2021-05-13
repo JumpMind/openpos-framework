@@ -7,12 +7,17 @@
     $openpos-link-customer-color: #ffffff;
     $openpos-link-customer-background: #296db6;
 
+    $openpos-linked-customer-color: #ffffff;
+    $openpos-linked-customer-background: #296db6;
+
     $openpos-membership-in-color: #ffffff;
     $openpos-membership-in-background: #64834D;
 
     $addons: (
             openpos-link-customer-color: $openpos-link-customer-color,
             openpos-link-customer-background: $openpos-link-customer-background,
+            openpos-linked-customer-color: $openpos-linked-customer-color,
+            openpos-linked-customer-background: $openpos-linked-customer-background,
             openpos-membership-in-color: $openpos-membership-in-color,
             openpos-membership-in-background: $openpos-membership-in-background
     );
