@@ -32,8 +32,8 @@ public class AudioActionListener implements IActionListener {
     }
 
     @Override
-    public void actionOccured(String appId, String deviceId, Action action) {
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+    public void actionOccurred(String deviceId, Action action) {
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         audioConfig = audioConfig != null ? audioConfig : new AudioConfig();
 
         if ("GetConfig".equals(action.getName())) {
@@ -48,7 +48,7 @@ public class AudioActionListener implements IActionListener {
     public void onGetConfig(IStateManager stateManager) {
         AudioConfigMessage message = AudioUtil.getInteractionMessageFromConfig(stateManager, audioConfig);
         log.debug("Sending audio configuration", message);
-        this.messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+        this.messageService.sendMessage(stateManager.getDeviceId(), message);
     }
 
     public void onPreload(IStateManager stateManager) {
@@ -62,7 +62,7 @@ public class AudioActionListener implements IActionListener {
         }
 
         AudioPreloadMessage message = AudioPreloadMessage.builder().urls(urls).build();
-        this.messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+        this.messageService.sendMessage(stateManager.getDeviceId(), message);
     }
 
     public void onPlay(IStateManager stateManager, Action action) {

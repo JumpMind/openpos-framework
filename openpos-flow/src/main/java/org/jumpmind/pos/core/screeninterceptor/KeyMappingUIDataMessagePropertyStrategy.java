@@ -27,7 +27,6 @@ public class KeyMappingUIDataMessagePropertyStrategy implements IMessageProperty
 
     @Override
     public Object doStrategy(
-            String appId,
             String deviceId,
             Object property,
             Class<?> clazz,

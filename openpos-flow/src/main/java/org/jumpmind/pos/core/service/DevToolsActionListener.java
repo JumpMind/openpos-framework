@@ -77,8 +77,8 @@ public class DevToolsActionListener implements IActionListener {
     }
     
     @Override
-    public void actionOccured(String appId, String deviceId, Action action) {
-        IStateManager stateManager = stateManagerFactory.retrieve(appId, deviceId);
+    public void actionOccurred(String deviceId, Action action) {
+        IStateManager stateManager = stateManagerFactory.retrieve(deviceId);
         
         if (action.getName().contains("DevTools::Scan")) {
             SimulatedScannerService service = SimulatedScannerService.instance;
@@ -108,7 +108,7 @@ public class DevToolsActionListener implements IActionListener {
 
         }
 
-        messageService.sendMessage(appId, deviceId, createMessage(stateManager, deviceId));
+        messageService.sendMessage(deviceId, createMessage(stateManager, deviceId));
     }
     
     private Message createMessage(IStateManager sm, String deviceId) {
@@ -254,8 +254,10 @@ public class DevToolsActionListener implements IActionListener {
         Set<String> keys = map.keySet();
         List<ScopeField> res = new ArrayList<>();
         for (String key : keys) {
-            res.add(new ScopeField(key, map.get(key).getCreatedTime().toString(),
-                    map.get(key).getCreatedStackTrace().replaceAll("at ", "\nat_")));
+            if (map.get(key).getCreatedStackTrace() != null) {
+                res.add(new ScopeField(key, map.get(key).getCreatedTime().toString(),
+                        map.get(key).getCreatedStackTrace().replaceAll("at ", "\nat_")));
+            }
         }
         return res;
     }

@@ -55,6 +55,6 @@ public class AudioService implements IAudioService {
 
 
         log.info(String.format("Sending sound '%s' to be played on device '%s'", url, stateManager.getDeviceId()), message);
-        messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), new AudioMessage(requestCopy));
+        messageService.sendMessage(stateManager.getDeviceId(), new AudioMessage(requestCopy));
     }
 }

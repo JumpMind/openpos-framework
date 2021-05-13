@@ -25,7 +25,7 @@ public class StateManagerDoubleExistSubTest {
     @Test
     public void testDoubleSubTransitionExit() throws Exception {
 
-        doNothing().when(messageService).sendMessage(any(String.class), any(String.class), any(Message.class));
+        doNothing().when(messageService).sendMessage(any(String.class), any(Message.class));
 
         StateManager stateManager = StateManagerTestUtils.buildStateManager(injector, "testflows/test-double-sub-exit-flow.yml");
         

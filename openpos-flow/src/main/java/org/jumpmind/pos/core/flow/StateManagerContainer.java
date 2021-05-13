@@ -20,28 +20,21 @@
  */
 package org.jumpmind.pos.core.flow;
 
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.flow.config.IFlowConfigProvider;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.core.service.IScreenService;
-import org.jumpmind.pos.util.AppUtils;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
-import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+
+import java.util.*;
 
 import static org.jumpmind.pos.util.AppUtils.setupLogging;
 
@@ -67,54 +60,35 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     @Autowired(required = false)
     List<IClientContextUpdater> clientContextUpdaters;
 
-    Map<String, Map<String, StateManager>> stateManagersByAppIdByNodeId = new HashMap<>();
+    Map<String, StateManager> stateManagersByDeviceId = new HashMap<>();
 
     ThreadLocal<IStateManager> currentStateManager = new InheritableThreadLocal<>();
 
     @Override
     public synchronized void removeSessionIdVariables(String sessionId) {
-        for (Map<String, StateManager> map : stateManagersByAppIdByNodeId.values()) {
-            for (StateManager stateManager : map.values()) {
-                stateManager.removeSessionAuthentication(sessionId);
-                stateManager.removeSessionCompatible(sessionId);
-            }
+        for (StateManager stateManager : stateManagersByDeviceId.values()) {
+            stateManager.removeSessionAuthentication(sessionId);
+            stateManager.removeSessionCompatible(sessionId);
         }
     }
 
     @Override
-    public synchronized IStateManager retrieve(String appId, String deviceId) {
-        Map<String, StateManager> stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
-        if (stateManagersByNodeId != null) {
-            IStateManager stateManager = stateManagersByNodeId.get(deviceId);
-            setCurrentStateManager(stateManager);
-            return stateManager;
-        } else {
-            return null;
-        }
+    public synchronized IStateManager retrieve(String deviceId) {
+        IStateManager stateManager = stateManagersByDeviceId.get(deviceId);
+        setCurrentStateManager(stateManager);
+        return stateManager;
     }
 
     @Override
     public IStateManager create(String appId, String deviceId, Map<String, Object> queryParams, Map<String, String> personalizationProperties) {
-
-        Map<String, StateManager> stateManagersByNodeId;
-        synchronized (this) {
-            stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
-            if (stateManagersByNodeId == null) {
-                if (stateManagersByNodeId == null) {
-                    stateManagersByNodeId = new ConcurrentHashMap<>();
-                    stateManagersByAppIdByNodeId.put(appId, stateManagersByNodeId);
-                }
-            }
-        }
-
-        StateManager stateManager = stateManagersByNodeId.get(deviceId);
+        StateManager stateManager = stateManagersByDeviceId.get(deviceId);
         if (stateManager == null) {
             stateManager = applicationContext.getBean(StateManager.class);
             setCurrentStateManager(stateManager);
             clientContext.put("deviceId", deviceId);
             clientContext.put("appId", appId);
-            if(personalizationProperties != null){
-                personalizationProperties.entrySet().forEach(entry -> clientContext.put(entry.getKey(), entry.getValue()) );
+            if (personalizationProperties != null) {
+                personalizationProperties.entrySet().forEach(entry -> clientContext.put(entry.getKey(), entry.getValue()));
             }
 
             stateManager.setTransitionSteps(createTransitionSteps(appId, deviceId));
@@ -122,7 +96,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
             stateManager.registerPersonalizationProperties(personalizationProperties);
             stateManager.setErrorHandler(errorHandler);
             stateManager.setInitialFlowConfig(flowConfigProvider.getConfig(appId, deviceId));
-            stateManagersByNodeId.put(deviceId, stateManager);
+            stateManagersByDeviceId.put(deviceId, stateManager);
             stateManager.init(appId, deviceId);
         }
         return stateManager;
@@ -164,23 +138,17 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     }
 
     @Override
-    public synchronized void remove(String appId, String deviceId) {
-        Map<String, StateManager> stateManagersByNodeId = stateManagersByAppIdByNodeId.get(appId);
-        if (stateManagersByNodeId != null) {
-            IStateManager stateManager = stateManagersByNodeId.remove(deviceId);
-            if (stateManager != null) {
-                stateManager.stop();
-            }
+    public synchronized void remove(String deviceId) {
+        IStateManager stateManager = stateManagersByDeviceId.remove(deviceId);
+        if (stateManager != null) {
+            stateManager.stop();
         }
     }
 
     public synchronized List<StateManager> getAllStateManagers() {
         List<StateManager> allStateManagers = new ArrayList<>();
-
-        for (Map<String, StateManager> stateManagersByNodeId : stateManagersByAppIdByNodeId.values()) {
-            for (StateManager stateManager : stateManagersByNodeId.values()) {
-                allStateManagers.add(stateManager);
-            }
+        for (StateManager stateManager : stateManagersByDeviceId.values()) {
+            allStateManagers.add(stateManager);
         }
 
         return allStateManagers;
@@ -189,7 +157,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     public void setCurrentStateManager(IStateManager stateManager) {
         currentStateManager.set(stateManager);
         if (stateManager != null && stateManager.getClientContext() != null) {
-            setupLogging(stateManager.getAppId(), stateManager.getDeviceId());
+            setupLogging(stateManager.getDeviceId());
             for (String property : stateManager.getClientContext().keySet()) {
                 clientContext.put(property, stateManager.getClientContext().get(property));
             }
@@ -197,7 +165,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
             clientContext.put("deviceId", stateManager.getDeviceId());
             clientContext.put("appId", stateManager.getAppId());
             if (clientContextUpdaters != null) {
-                for(IClientContextUpdater clientContextUpdater: clientContextUpdaters) {
+                for (IClientContextUpdater clientContextUpdater : clientContextUpdaters) {
                     clientContextUpdater.update(clientContext, stateManager);
                 }
             }
@@ -213,14 +181,12 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
 
     @Override
     public void onApplicationEvent(Event event) {
-        for (Map<String, StateManager> map : new ArrayList<>(stateManagersByAppIdByNodeId.values())) {
-            for (StateManager stateManager : new ArrayList<>(map.values())) {
-                try {
-                    setCurrentStateManager(stateManager);
-                    stateManager.onEvent(event);
-                } finally {
-                    setCurrentStateManager(null);
-                }
+        for (StateManager stateManager : new ArrayList<>(stateManagersByDeviceId.values())) {
+            try {
+                setCurrentStateManager(stateManager);
+                stateManager.onEvent(event);
+            } finally {
+                setCurrentStateManager(null);
             }
         }
     }

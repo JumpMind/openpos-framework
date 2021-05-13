@@ -52,7 +52,7 @@ public class ScreenServiceTest {
      */
     @Test
     public void test_Action_sent_withLinkedHashMap_onMessageWithForm() {
-        when(stateMgrCtr.retrieve(anyString(), anyString())).thenReturn(stateMgr);
+        when(stateMgrCtr.retrieve(anyString())).thenReturn(stateMgr);
         ApplicationState appState = new ApplicationState();
         appState.setLastScreen(new DummyFormUIMessage());
         when(stateMgr.getApplicationState()).thenReturn(appState);
@@ -60,7 +60,7 @@ public class ScreenServiceTest {
         LinkedHashMap<String, Object> customActionData = new LinkedHashMap<>();
         customActionData.put("attr1", "value1");
         Action action = new Action("DoSomething", customActionData);
-        screenService.actionOccured("app", "00000-000", action);
+        screenService.actionOccurred("00000-000", action);
         
         assertNotNull(action.getData());
         assertFalse(action.getData() instanceof Form);

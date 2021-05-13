@@ -85,7 +85,7 @@ public class StateManagerTest {
     @Before
     public void setup() throws Exception {
 
-        doNothing().when(messageService).sendMessage(any(String.class), any(String.class), any(Message.class));
+        doNothing().when(messageService).sendMessage(any(String.class), any(Message.class));
 
         FlowConfig customerSignupFlow = new FlowConfig();
         customerSignupFlow.setInitialState(

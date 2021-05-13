@@ -113,7 +113,6 @@ public class SessionSubscribedListenerTest {
                         "1"));
 
         Mockito.verify(messageService).sendMessage(
-                Mockito.matches("pos"),
                 Mockito.matches("11111-111"),
                 dialogMessageCaptor.capture() );
 
@@ -135,7 +134,6 @@ public class SessionSubscribedListenerTest {
                         "1"));
 
         Mockito.verify(messageService).sendMessage(
-                Mockito.matches("pos"),
                 Mockito.matches("11111-111"),
                 dialogMessageCaptor.capture() );
 
@@ -146,7 +144,7 @@ public class SessionSubscribedListenerTest {
     public void onApplicationEventCreateNewStateManager() {
         Mockito.when(sessionAuthTracker.isSessionAuthenticated(Mockito.any())).thenReturn(true);
         Mockito.when(sessionAuthTracker.isSessionCompatible(Mockito.any())).thenReturn(true);
-        Mockito.when(stateManagerContainer.retrieve(Mockito.anyString(), Mockito.anyString())).thenReturn(null);
+        Mockito.when(stateManagerContainer.retrieve(Mockito.anyString())).thenReturn(null);
         IStateManager stateManager = makeMockStateManager();
         Mockito.when(stateManagerContainer.create(Mockito.anyString(), Mockito.anyString(), Mockito.any(), Mockito.any())).thenReturn(stateManager);
 
@@ -172,7 +170,7 @@ public class SessionSubscribedListenerTest {
         Mockito.when(sessionAuthTracker.isSessionCompatible(Mockito.any())).thenReturn(true);
 
         IStateManager stateManager = makeMockStateManager();
-        Mockito.when(stateManagerContainer.retrieve(Mockito.anyString(), Mockito.anyString())).thenReturn(stateManager);
+        Mockito.when(stateManagerContainer.retrieve(Mockito.anyString())).thenReturn(stateManager);
 
         sessionSubscribedListener.onApplicationEvent(
                 makeMockEvent(

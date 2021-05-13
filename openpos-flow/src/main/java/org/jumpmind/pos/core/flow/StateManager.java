@@ -284,15 +284,13 @@ public class StateManager implements IStateManager {
     }
 
     public void sendStartupCompleteMessage() {
-        String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
-        messageService.sendMessage(appId, deviceId, new StartupMessage(true, "StateManager Startup Complete"));
+        messageService.sendMessage(deviceId, new StartupMessage(true, "StateManager Startup Complete"));
     }
 
     public void sendPrintMessage(PrintMessage message) {
-        String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
-        messageService.sendMessage(appId, deviceId, message);
+        messageService.sendMessage(deviceId, message);
     }
 
     protected void setTransitionSteps(List<TransitionStepConfig> transitionStepConfigs) {
@@ -624,8 +622,8 @@ public class StateManager implements IStateManager {
          * Hang onto the dialog since showing the last screen first will clear
          * the last dialog from the screen service
          */
-        UIMessage lastDialog = screenService.getLastPreInterceptedDialog(applicationState.getAppId(), applicationState.getDeviceId());
-        UIMessage lastScreen = screenService.getLastPreInterceptedScreen(applicationState.getAppId(), applicationState.getDeviceId());
+        UIMessage lastDialog = screenService.getLastPreInterceptedDialog(applicationState.getDeviceId());
+        UIMessage lastScreen = screenService.getLastPreInterceptedScreen(applicationState.getDeviceId());
         if (lastScreen != null) {
             lastScreen.put("refreshAlways", true);
             showScreen(lastScreen, dataProviders);
@@ -1062,7 +1060,7 @@ public class StateManager implements IStateManager {
             throw new FlowException("Persistent toast message requires ID");
         }
 
-        screenService.showToast(applicationState.getAppId(), applicationState.getDeviceId(), toast);
+        screenService.showToast(applicationState.getDeviceId(), toast);
 
         lastShowTimeInMs.set(System.currentTimeMillis());
     }
@@ -1077,7 +1075,7 @@ public class StateManager implements IStateManager {
                         "There is no applicationState.getCurrentContext() on this StateManager.  HINT: States should use @In(scope=ScopeType.Node) to get the StateManager, not @Autowired.");
             }
             CloseToast closeToast = new CloseToast(toast.getPersistedId());
-            screenService.closeToast(applicationState.getAppId(), applicationState.getDeviceId(), closeToast);
+            screenService.closeToast(applicationState.getDeviceId(), closeToast);
 
             lastShowTimeInMs.set(System.currentTimeMillis());
         }
@@ -1094,7 +1092,7 @@ public class StateManager implements IStateManager {
         }
         if (applicationState.getCurrentContext().getState() != null
                 && applicationState.getCurrentContext().getState() instanceof IMessageInterceptor) {
-            ((IMessageInterceptor<UIMessage>) applicationState.getCurrentContext().getState()).intercept(applicationState.getAppId(),
+            ((IMessageInterceptor<UIMessage>) applicationState.getCurrentContext().getState()).intercept(
                     applicationState.getDeviceId(), screen);
         }
 
@@ -1108,7 +1106,7 @@ public class StateManager implements IStateManager {
             sessionTimeoutAction = null;
         }
 
-        screenService.showScreen(applicationState.getAppId(), applicationState.getDeviceId(), screen, dataMessageProviderMap);
+        screenService.showScreen(applicationState.getDeviceId(), screen, dataMessageProviderMap);
 
         lastShowTimeInMs.set(System.currentTimeMillis());
     }
@@ -1205,18 +1203,18 @@ public class StateManager implements IStateManager {
         try {
             if (clientConfigSelector != null) {
                 Map<String, Map<String, String>> configs = clientConfigSelector.getConfigurations(properties, additionalTags);
-                configs.forEach((name, clientConfiguration) -> messageService.sendMessage(appId, deviceId,
+                configs.forEach((name, clientConfiguration) -> messageService.sendMessage(deviceId,
                         new ClientConfigChangedMessage(name, clientConfiguration)));
             }
 
             // Send versions
             ClientConfigChangedMessage versionConfiguration = new ClientConfigChangedMessage("versions");
             versionConfiguration.put("versions", Versions.getVersions());
-            messageService.sendMessage(appId, deviceId, versionConfiguration);
+            messageService.sendMessage(deviceId, versionConfiguration);
 
             // Send supported locales
             LocaleChangedMessage localeMessage = localeMessageFactory.getMessage();
-            messageService.sendMessage(appId, deviceId, localeMessage);
+            messageService.sendMessage(deviceId, localeMessage);
 
         } catch (NoSuchBeanDefinitionException e) {
             log.info("An {} is not configured. Will not be sending client configuration to the client",

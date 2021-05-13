@@ -35,7 +35,7 @@ public class StateManagerTestUtils {
         StateManager stateManager = new StateManager();
 
         IMessageService messageService = Mockito.mock(IMessageService.class);
-        doNothing().when(messageService).sendMessage(any(String.class), any(String.class), any(Message.class));
+        doNothing().when(messageService).sendMessage(any(String.class), any(Message.class));
 
         DeviceStartupTaskConfig deviceStartupTaskConfig = Mockito.mock(DeviceStartupTaskConfig.class);
         TestUtil.setField(stateManager, "deviceStartupTaskConfig", deviceStartupTaskConfig);
