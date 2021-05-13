@@ -13,7 +13,7 @@ import org.jumpmind.pos.persist.TableDef;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableDef(name="device_param",
-        primaryKey = {"deviceId", "appId", "paramName"})
+        primaryKey = {"deviceId", "paramName"})
 public class DeviceParamModel extends AbstractModel {
 
     @ColumnDef

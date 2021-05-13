@@ -13,7 +13,7 @@ import org.jumpmind.pos.persist.TableDef;
 @NoArgsConstructor
 @AllArgsConstructor
 @TableDef(name="device_status",
-        primaryKey = {"deviceId", "appId"})
+        primaryKey = {"deviceId"})
 public class DeviceStatusModel extends AbstractModel {
     @ColumnDef
     private String deviceId;
