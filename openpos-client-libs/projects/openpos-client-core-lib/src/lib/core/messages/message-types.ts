@@ -28,4 +28,5 @@ export class MessageTypes {
     static STATUS_BAR = 'StatusBar';
     static HIDE_STATUS_BAR = 'HideStatusBar';
     static CLIENT_EXECUTABLE = 'ClientExecutable';
+    static CLOSE_STATUS_DETAILS = 'CloseStatusDetails';
 }

@@ -33,6 +33,7 @@ export class StatusService {
             filter(message => (message as ConfigChangedMessage).configType === 'SystemInfo'),
             tap(message => console.log("SystemInfo Updated ", message))
         ).subscribe(message => this.configUpdated(message));
+        sessionService.getMessages(MessageTypes.CLOSE_STATUS_DETAILS).subscribe(() => { this.closeDetails(); });
     }
 
     public openDetails() {
