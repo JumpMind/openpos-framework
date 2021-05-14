@@ -106,12 +106,12 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
         List<TransitionStepConfig> transitionStepConfigs = flowConfigProvider.getTransitionStepConfig(appId, deviceId);
         if (CollectionUtils.isEmpty(transitionStepConfigs)) {
             log.info("No configured transition steps found for appId {} deviceId {}. Using discovered steps from Spring.", appId, deviceId);
-            transitionStepConfigs = createTransitionStepsFromSpring(appId, deviceId);
+            transitionStepConfigs = createTransitionStepsFromSpring();
         }
         return transitionStepConfigs;
     }
 
-    private List<TransitionStepConfig> createTransitionStepsFromSpring(String appId, String deviceId) {
+    private List<TransitionStepConfig> createTransitionStepsFromSpring() {
         List<TransitionStepConfig> steps = new ArrayList<>();
         String[] names = applicationContext.getBeanNamesForType(ITransitionStep.class);
         for (String name : names) {
