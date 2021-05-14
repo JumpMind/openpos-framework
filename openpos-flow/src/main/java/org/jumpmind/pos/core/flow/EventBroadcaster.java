@@ -2,6 +2,7 @@ package org.jumpmind.pos.core.flow;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
+import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.util.event.AppEvent;
 import org.jumpmind.pos.util.event.Event;
 import org.jumpmind.pos.util.event.OnEvent;
@@ -52,8 +53,13 @@ public class EventBroadcaster {
                                 processEvent = true;
                             }
                         }
-                        if (event instanceof AppEvent && onEvent.receiveEventsFromPairedDevice() && stateManager.getDeviceId().equals(((AppEvent) event).getPairedDeviceId())) {
-                            processEvent = true;
+                        if (event instanceof AppEvent && onEvent.receiveEventsFromPairedDevice()) {
+                            DeviceModel deviceModel = stateManager.getApplicationState().getScopeValue("device");
+                            if (deviceModel.getPairedDeviceId().equals(((AppEvent) event).getDeviceId())) {
+                                processEvent = true;
+                            } else if (stateManager.getDeviceId().equals(((AppEvent) event).getPairedDeviceId())) {
+                                processEvent = true;
+                            }
                         }
                     }
                 } catch (Exception ex) {

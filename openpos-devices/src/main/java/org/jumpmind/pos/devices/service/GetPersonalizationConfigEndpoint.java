@@ -42,8 +42,8 @@ public class GetPersonalizationConfigEndpoint {
         Map<String, String> availableDevices = null;
         if( disconnectedDevices != null && disconnectedDevices.size() > 0){
             availableDevices = disconnectedDevices.stream()
-                    .map( deviceStatusModel -> new DeviceAuthModel(deviceStatusModel.getDeviceId(), deviceStatusModel.getAppId(), repository.getDeviceAuth(deviceStatusModel.getDeviceId()) ))
-                    .collect(Collectors.toMap( DeviceAuthModel::getAuthToken, m -> m.getDeviceId() + "/" + m.getAppId()));
+                    .map( deviceStatusModel -> new DeviceAuthModel(deviceStatusModel.getDeviceId(), repository.getDeviceAuth(deviceStatusModel.getDeviceId()) ))
+                    .collect(Collectors.toMap( DeviceAuthModel::getAuthToken, m -> m.getDeviceId()));
         }
 
 

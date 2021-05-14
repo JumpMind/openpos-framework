@@ -153,21 +153,26 @@ public class DevToolsActionListener implements IActionListener {
         Map<String, String> simulatorMap = new HashMap<>();
         DeviceModel deviceModel = null;
         String authToken = null;
+        String simulatorDeviceId = deviceId + "-sim";
         try {
-            deviceModel = devicesRepository.getDevice(deviceId);
+            deviceModel = devicesRepository.getDevice(simulatorDeviceId);
         } catch (DeviceNotFoundException ex) {
         }
         if (deviceModel == null) {
-            deviceModel = DeviceModel.builder().deviceId(deviceId).appId(simAppId).build();
+            deviceModel = DeviceModel.builder().
+                    deviceId(simulatorDeviceId).
+                    appId(simAppId).
+                    pairedDeviceId(deviceId).
+                    build();
             devicesRepository.saveDevice(deviceModel);
             authToken = UUID.randomUUID().toString();
-            devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
+            devicesRepository.saveDeviceAuth(simulatorDeviceId, authToken);
         } else {
             try {
-                authToken = devicesRepository.getDeviceAuth(deviceId);
+                authToken = devicesRepository.getDeviceAuth(simulatorDeviceId);
             } catch (DeviceNotFoundException ex) {
                 authToken = UUID.randomUUID().toString();
-                devicesRepository.saveDeviceAuth(simAppId, deviceId, authToken);
+                devicesRepository.saveDeviceAuth(simulatorDeviceId, authToken);
             }
         }
         simulatorMap.put("simAuthToken", authToken);

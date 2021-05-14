@@ -51,7 +51,7 @@ public class PersonalizeEndpoint {
                 log.info("Registering {} as {}", deviceId, appId);
                 // if device doesn't exist create a new unique code
                 authToken = UUID.randomUUID().toString();
-                devicesRepository.saveDeviceAuth(appId, deviceId, authToken);
+                devicesRepository.saveDeviceAuth(deviceId, authToken);
             }
 
             deviceModel = new DeviceModel();

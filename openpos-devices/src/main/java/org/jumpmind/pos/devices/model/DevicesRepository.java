@@ -123,7 +123,7 @@ public class DevicesRepository {
         }
         device.setAppId(newAppId);
         saveDevice(device);
-        saveDeviceAuth(newAppId, deviceId, deviceAuth);
+        saveDeviceAuth(deviceId, deviceAuth);
     }
 
     public String getDeviceAuth(String deviceId) {
@@ -190,10 +190,9 @@ public class DevicesRepository {
         }
     }
 
-    public void saveDeviceAuth(String appId, String deviceId, String authToken) {
+    public void saveDeviceAuth(String deviceId, String authToken) {
 
         DeviceAuthModel authModel = new DeviceAuthModel();
-        authModel.setAppId(appId);
         authModel.setDeviceId(deviceId);
         authModel.setAuthToken(authToken);
 
