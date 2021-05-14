@@ -31,4 +31,5 @@ export interface ItemDetailInterface extends IAbstractScreen {
     buddyStores: BuddyStoreInterface[];
     
     detailSections: string[];
+    eligibleMessage: String;
 }
