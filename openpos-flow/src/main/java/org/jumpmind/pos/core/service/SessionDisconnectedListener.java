@@ -42,7 +42,7 @@ public class SessionDisconnectedListener implements ApplicationListener<SessionD
             devicesService.disconnectDevice(new DisconnectDeviceRequest(deviceModel.getDeviceId(), deviceModel.getAppId()));
 
             try {
-                eventPublisher.publish(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId()));
+                eventPublisher.publish(new DeviceDisconnectedEvent(deviceModel.getDeviceId(), deviceModel.getAppId(), deviceModel.getPairedDeviceId()));
             } catch (Exception ex) {
                 log.warn("Error publishing DeviceDisconnectedEvent", ex);
             }

@@ -1,7 +1,6 @@
 import {IActionItem} from '../../core/actions/action-item.interface';
 import { IAbstractScreen } from '../../core/interfaces/abstract-screen.interface';
 import { DisplayProperty } from '../../shared/components/display-property/display-property.interface';
-import {BuddyStoreInterface} from './buddy-store.interface';
 import {ProductOptionInterface} from './product-option.interface';
 import {IPromotionInterface} from './promotion.interface';
 
@@ -15,6 +14,7 @@ export interface ItemDetailInterface extends IAbstractScreen {
     itemProperties: DisplayProperty[];
     itemActions: IActionItem[];
     itemPromotionsTitle: string;
+    itemPromotionsIcon?: string;
     itemNoPromotionsTitle: string;
     promotions: IPromotionInterface[];
     promotionStackingDisclaimer: string;
@@ -22,13 +22,13 @@ export interface ItemDetailInterface extends IAbstractScreen {
     
     productOptionsComponents: ProductOptionInterface[];
     itemOptionInstructions: string;
-    inventoryMessage: string;
 
-    buddyStoreOffline: boolean;
     buddyStoreTitle: string;
-    buddyStoreIcon: string;
+    buddyStoreIcon?: string;
     buddyStoreOfflineTitle: string;
-    buddyStores: BuddyStoreInterface[];
+    noBuddyStoresMessage: string;
+    inventoryMessageProviderKey: string;
+    buddyStoreProviderKey: string;
     
     detailSections: string[];
     eligibleMessage: String;
