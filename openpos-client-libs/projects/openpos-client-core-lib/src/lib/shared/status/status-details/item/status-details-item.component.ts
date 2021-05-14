@@ -14,14 +14,17 @@ export class StatusDetailsItemComponent {
     icon?: string;
 
     @Input()
-    title: string
+    title: string;
 
     @Input()
     actionText?: string;
 
     @Input()
-    titleTransparency: string
+    titleTransparency: string;
 
     @Output()
     actionExecuted = new EventEmitter<void>();
+
+    @Input()
+    enabled: boolean;
 }
