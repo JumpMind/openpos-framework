@@ -44,6 +44,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private List<BuddyStore> buddyStores;
     private List<ActionItem> actions;
     private List<String> detailSections;
+    private String eligibleMessage;
 
 
     public void addItemProperty(DisplayProperty property) {
