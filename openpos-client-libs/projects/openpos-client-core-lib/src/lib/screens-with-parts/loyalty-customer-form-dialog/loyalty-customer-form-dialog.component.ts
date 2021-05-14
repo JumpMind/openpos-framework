@@ -133,18 +133,22 @@ export class LoyaltyCustomerFormDialogComponent extends PosScreen<LoyaltyCustome
             this.screen.form.formElements.forEach(element => {
                 if (element.id.match(/phonesList\d/)) {
                     this.phoneFields.push(element);
+                    this.handledFormFields.push(element.id);
                 }
 
                 if (element.id.match(/phonesListLabel\d/)) {
                     this.phoneLabelFields.push(element);
+                    this.handledFormFields.push(element.id);
                 }
 
                 if(element.id.match(/emailsList\d/)) {
                     this.emailFields.push(element);
+                    this.handledFormFields.push(element.id);
                 }
 
                 if(element.id.match(/emailsListLabel\d/)) {
                     this.emailLabelFields.push(element);
+                    this.handledFormFields.push(element.id);
                 }
             });
         }
