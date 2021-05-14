@@ -231,3 +231,15 @@ table.item-details-table {
         padding: 5px;
     }
 }
+
+.icon-heading {
+    display: flex;
+    flex-direction: row;
+}
+
+h3.icon-heading > app-icon {
+    align-self: center;
+    width: 32px;
+    height: 32px;
+    margin-left: 12px;
+}

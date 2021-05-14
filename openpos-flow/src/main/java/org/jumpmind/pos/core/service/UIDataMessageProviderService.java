@@ -1,8 +1,7 @@
 package org.jumpmind.pos.core.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.jumpmind.pos.core.flow.ApplicationState;
-import org.jumpmind.pos.core.flow.IMessageInterceptor;
+import org.jumpmind.pos.core.flow.*;
 import org.jumpmind.pos.core.ui.UIDataMessage;
 import org.jumpmind.pos.core.ui.data.IHasObservableUIDataMessageProviderProperty;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
@@ -109,19 +108,18 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
         String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, UIDataMessage.class));
         UIDataMessage message = UIDataMessage.builder()
                 .data(data)
-                .dataType( dataType )
-                .seriesId( series )
+                .dataType(dataType)
+                .seriesId(series)
                 .build();
 
         if (screenInterceptorBeanNames != null) {
-            for (String beanName: screenInterceptorBeanNames) {
+            for (String beanName : screenInterceptorBeanNames) {
                 @SuppressWarnings("unchecked")
-                IMessageInterceptor<UIDataMessage> screenInterceptor =  (IMessageInterceptor<UIDataMessage>) applicationContext.getBean(beanName);
+                IMessageInterceptor<UIDataMessage> screenInterceptor = (IMessageInterceptor<UIDataMessage>) applicationContext.getBean(beanName);
                 screenInterceptor.intercept(appId, deviceId, message);
 
             }
         }
-
         messageService.sendMessage(appId, deviceId, message);
     }
 
