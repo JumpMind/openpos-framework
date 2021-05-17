@@ -47,14 +47,19 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
 
     }
 
-    manualPersonalization(): Observable<string> {
+    manualPersonalization(serverAddress?: string, serverPort?: string, appId?: string): Observable<string> {
         return concat(
             of("Auto-personalization failed, reverting to manual personalization"),
             this.matDialog.open(
                 PersonalizationComponent, {
                     disableClose: true,
                     hasBackdrop: false,
-                    panelClass: 'openpos-default-theme'
+                    panelClass: 'openpos-default-theme',
+                    data: {
+                        serverAddress,
+                        serverPort,
+                        appId
+                    }
                 }
             ).afterClosed().pipe(take(1)));
     }
@@ -71,10 +76,12 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                             info.deviceId,
                             info.appId,
                             info.personalizationParams,
-                            info.sslEnabled).pipe(
-                            catchError(() => this.manualPersonalization()),
+                            info.sslEnabled
+                        ).pipe(
+                            catchError(() => this.manualPersonalization(info.serverAddress, info.serverPort, info.appId)),
                         );
                     }
+
                     return this.manualPersonalization();
                 }),
                 catchError(() => this.manualPersonalization()),
