@@ -45,8 +45,6 @@ export class BaconDrawerComponent extends ScreenPartComponent<BaconStripInterfac
     }
   }
 
-  private
-
   buttonClick(action: IActionItem ) {
     this.buttonClicked.emit();
     super.doAction(action);
