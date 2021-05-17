@@ -100,7 +100,7 @@
         </div>
 
         <div class="sale-total-buttons">
-            <div responsive-class *ngIf="!screenData.customer && screenData.taxExemptCertificateDetail"
+            <div responsive-class *ngIf="screenData.taxExemptCertificateDetail"
                  class="muted-color sale-total-tax-exempt-label-no-customer">
                 {{screenData.taxExemptCertificateDetail.label}}: {{screenData.taxExemptCertificateDetail.value}}
             </div>
