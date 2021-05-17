@@ -42,6 +42,7 @@ public class TransactionSummary implements Serializable {
     private String transactionTypeIcon;
     private List<String> tenderTypeIcons;
     private List<ActionItem> actions;
+    private String loyaltyNumber;
 
     private Map<String, String> labels;
 

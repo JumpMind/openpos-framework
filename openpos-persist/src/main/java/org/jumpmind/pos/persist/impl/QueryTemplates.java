@@ -22,7 +22,11 @@ public class QueryTemplates extends AbstractSqlTemplates {
     }
 
     public void addQueries(String deviceMode, List<QueryTemplate> queries) {
-        queriesByDeviceMode.put(deviceMode, buildQueryTemplatesByNameMap(queries));
+        if(queriesByDeviceMode.containsKey(deviceMode)){
+            queriesByDeviceMode.get(deviceMode).putAll(buildQueryTemplatesByNameMap(queries));
+        } else {
+            queriesByDeviceMode.put(deviceMode, buildQueryTemplatesByNameMap(queries));
+        }    
     }
 
     //  For backward compatibility...
