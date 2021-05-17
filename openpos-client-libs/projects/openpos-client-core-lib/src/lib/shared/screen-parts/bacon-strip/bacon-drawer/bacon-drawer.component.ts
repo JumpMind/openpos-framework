@@ -28,15 +28,24 @@ export class BaconDrawerComponent extends ScreenPartComponent<BaconStripInterfac
   screenDataUpdated() {
     this.keybindsEnabled = Configuration.enableKeybinds;
 
-    if(this.keybindsEnabled && this.screenData.actions) {
-      // Give these keys low priority so that keybindings inside the screen can take priority
-      this.keyPressProvider.subscribe(this.screenData.actions, 90, (event, action) => this.doAction(action), this.stop$);
+    if(this.keybindsEnabled) {
+      this.subscribeToActionKeybinds(this.screenData.actions);
+      this.subscribeToActionKeybinds(this.screenData.operatorMenu);
+    }
+  }
 
-      this.keyPressProvider.globalSubscribe(this.screenData.actions).pipe(
+  private subscribeToActionKeybinds(actions) {
+    // Give these keys low priority so that keybindings inside the screen can take priority
+    if(actions) {
+      this.keyPressProvider.subscribe(actions, 90, (event, action) => this.doAction(action), this.stop$);
+
+      this.keyPressProvider.globalSubscribe(actions).pipe(
           takeUntil(this.stop$)
       ).subscribe(action => super.doAction(action));
     }
   }
+
+  private
 
   buttonClick(action: IActionItem ) {
     this.buttonClicked.emit();
