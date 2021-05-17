@@ -10,6 +10,8 @@ import { IActionItem } from '../../core/actions/action-item.interface';
 import { OpenposMediaService, MediaBreakpoints } from '../../core/media/openpos-media.service';
 import { Configuration } from './../../configuration/configuration';
 import { MobileSaleOrdersSheetComponent } from './mobile-sale-orders-sheet/mobile-sale-orders-sheet.component';
+import {KeyPressProvider} from '../../shared/providers/keypress.provider';
+import {takeUntil} from 'rxjs/operators';
 
 
 @ScreenComponent({
@@ -32,7 +34,8 @@ export class SaleComponent extends PosScreen<SaleInterface> {
     constructor(protected dialog: MatDialog,
                 injector: Injector,
                 media: OpenposMediaService,
-                private bottomSheet: MatBottomSheet) {
+                private bottomSheet: MatBottomSheet,
+                private keyPressProvider: KeyPressProvider) {
         super(injector);
         this.isMobile = media.observe(new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -53,6 +56,12 @@ export class SaleComponent extends PosScreen<SaleInterface> {
             this.screen.customerName.substring(0, 10) + '...' : this.screen.customerName;
         this.removeOrderAction = this.screen.removeOrderAction;
         this.dialog.closeAll();
+
+        if(this.screen.logoutButton) {
+            this.keyPressProvider.globalSubscribe(this.screen.logoutButton).pipe(
+                takeUntil(this.stop$)
+            ).subscribe(action => this.doAction(action));
+        }
     }
 
     onEnter(value: string) {
