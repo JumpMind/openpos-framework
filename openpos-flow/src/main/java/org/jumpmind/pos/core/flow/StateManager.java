@@ -50,6 +50,7 @@ import org.jumpmind.pos.core.service.IScreenService;
 import org.jumpmind.pos.core.service.spring.DeviceScope;
 import org.jumpmind.pos.core.ui.UIMessage;
 import org.jumpmind.pos.core.ui.data.UIDataMessageProvider;
+import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.server.model.Action;
 import org.jumpmind.pos.server.service.IMessageService;
 import org.jumpmind.pos.util.ClassUtils;
@@ -1121,6 +1122,12 @@ public class StateManager implements IStateManager {
     @Override
     public String getDeviceId() {
         return applicationState.getDeviceId();
+    }
+
+    @Override
+    public String getPairedDeviceId() {
+        DeviceModel currentDevice = ((DeviceModel) applicationState.getScopeValue(ScopeType.Device, "device"));
+        return currentDevice != null ? currentDevice.getPairedDeviceId() : null;
     }
 
     @Override

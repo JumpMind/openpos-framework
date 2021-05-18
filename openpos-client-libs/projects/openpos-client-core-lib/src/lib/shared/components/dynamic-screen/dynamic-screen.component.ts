@@ -19,6 +19,7 @@ export class DynamicScreenComponent implements OnInit{
     toastContainer: ToastContainerDirective;
     showWatermark = false;
     watermarkMessage: string;
+    showStatusBar = true;
     constructor(
         private configuration: ConfigurationService,
                 messageProvider: MessageProvider,
@@ -33,6 +34,8 @@ export class DynamicScreenComponent implements OnInit{
             this.showWatermark = false;
             this.watermarkMessage = '';
         });
+        this.sessionService.getMessages(MessageTypes.STATUS_BAR).subscribe(() => this.showStatusBar = true);
+        this.sessionService.getMessages(MessageTypes.HIDE_STATUS_BAR).subscribe(() => this.showStatusBar = false);
     }
 
     ngOnInit() {

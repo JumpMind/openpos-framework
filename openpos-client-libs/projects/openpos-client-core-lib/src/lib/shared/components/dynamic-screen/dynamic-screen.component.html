@@ -1,6 +1,6 @@
 <app-loader></app-loader>
 <div [class]="(getLocalTheme() | async) + ' container'" inactivityMonitor appKeypressSource appStayFocused>
-    <app-status-bar></app-status-bar>
+    <app-status-bar *ngIf="showStatusBar"></app-status-bar>
     <div class="content-area">
         <app-watermark *ngIf="showWatermark" class="display-contents" [message]="watermarkMessage"></app-watermark>
         <ng-template openposScreenOutlet>

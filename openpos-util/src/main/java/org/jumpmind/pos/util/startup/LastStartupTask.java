@@ -19,10 +19,20 @@ public class LastStartupTask extends AbstractStartupTask {
     @Value("${server.port:?}")
     String serverPort;
 
+    @Value("${secured.port:?}")
+    String securedPort;
+
+    @Value("${secured.enabled:false}")
+    boolean securedEnabled;
+
     @Override
     protected void doTask() throws Exception {
         initialized.setTrue();
-        logger.info(BoxLogging.box(String.format("Server started on port %s", serverPort)));
+        String msg = String.format("Server started on port %s (http)", serverPort);
+        if (securedEnabled) {
+            msg += String.format(" and on port %s (https)", securedPort);
+        }
+        logger.info(BoxLogging.box(msg));
     }
     
 }

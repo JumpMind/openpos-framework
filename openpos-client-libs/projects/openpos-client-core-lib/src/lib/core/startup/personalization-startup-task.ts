@@ -1,14 +1,12 @@
-import {
-    catchError,
+import {catchError,
     filter,
     map,
     retryWhen,
     switchMap,
     take,
-    timeout
-} from 'rxjs/operators';
-import { IStartupTask } from './startup-task.interface';
-import { PersonalizationService } from '../personalization/personalization.service';
+    timeout} from 'rxjs/operators';
+import {IStartupTask} from './startup-task.interface';
+import {PersonalizationService} from '../personalization/personalization.service';
 import {concat, defer, iif, interval, Observable, of, throwError} from 'rxjs';
 import { MatDialog } from '@angular/material';
 import { StartupTaskNames } from './startup-task-names';
@@ -28,6 +26,9 @@ export class PersonalizationStartupTask implements IStartupTask {
     constructor(protected personalization: PersonalizationService, protected matDialog: MatDialog) {}
 
     execute(data: StartupTaskData): Observable<string> {
+        if (this.personalization.shouldAutoPersonalize()) {
+            return of("Auto-personalizing client");
+        }
         return concat(
             of('initializing personalization...'),
             this.personalization.personalizationInitialized$.pipe(
@@ -49,10 +50,10 @@ export class PersonalizationStartupTask implements IStartupTask {
                 // else
                 iif(
                     () => this.personalization.hasSavedSession(),
-                    
+
                     concat(
                         of('personalizing from saved session'),
-                        defer(() => this.personalization.personalizeFromSavedSession()),                        
+                        defer(() => this.personalization.personalizeFromSavedSession()),
                     ),
 
                     // else
@@ -84,7 +85,7 @@ export class PersonalizationStartupTask implements IStartupTask {
 
     }
 
-    personalizeFromQueueParams(queryParams: Params) : Observable<string>{
+    personalizeFromQueueParams(queryParams: Params): Observable<string> {
         const deviceId = queryParams.deviceId;
         const appId = queryParams.appId;
         const serverName = queryParams.serverName;
