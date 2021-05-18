@@ -23,7 +23,7 @@
                 </ul>
             </section>
             <section class="order-info order-color" *ngIf="item.orderItemLabels">
-                <app-icon [iconName]="item.iconName"></app-icon>
+                <app-icon [iconName]="item.orderIcon"></app-icon>
                 <ul responsive-class class="order-info-text">
                     <li *ngFor="let orderItemLabel of item.orderItemLabels">
                         {{orderItemLabel.label}} {{orderItemLabel.value}}
