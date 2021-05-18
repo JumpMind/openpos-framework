@@ -32,5 +32,5 @@ export interface ISellItem extends IItem {
     isOrderItem: boolean;
     isTender: boolean;
     svgImage: boolean;
-    orderIcon:string;
+    orderIcon: string;
 }
