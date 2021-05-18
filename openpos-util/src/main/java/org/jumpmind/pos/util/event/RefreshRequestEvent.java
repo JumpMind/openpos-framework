@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 public class RefreshRequestEvent extends AppEvent {
 
     @Builder
-    public RefreshRequestEvent(String deviceId, String appId, boolean remote) {
-        super(deviceId, appId, remote);
+    public RefreshRequestEvent(String deviceId, String appId, String pairedDeviceId, boolean remote) {
+        super(deviceId, appId, pairedDeviceId, remote);
     }
 }

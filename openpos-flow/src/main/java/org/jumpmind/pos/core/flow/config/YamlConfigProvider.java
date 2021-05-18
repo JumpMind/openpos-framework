@@ -20,7 +20,7 @@ public class YamlConfigProvider implements IFlowConfigProvider {
     protected Map<String, List<YamlFlowConfig>> loadedYamlFlowConfigs = new HashMap<String, List<YamlFlowConfig>>();
     protected Map<String, String> appIdToStartFlowName = new HashMap<>();
 
-    private List<TransitionStepConfig> transitionSteps;
+    private Map<String, List<TransitionStepConfig>> transitionSteps = new HashMap<>();
 
     public YamlConfigProvider() {
         this(null);
@@ -59,7 +59,7 @@ public class YamlConfigProvider implements IFlowConfigProvider {
             // second pass here needed to convert
             loadYamlFlowConfigs(appId, yamlFlowConfigs);
 
-            transitionSteps = flowConfigConverter.convertTransitionSteps(new YamlTransitionStepProvider().loadTransitionSteps(resolver, appId, path, flowConfigLoader), yamlFlowConfigs);
+            transitionSteps.put(appId, flowConfigConverter.convertTransitionSteps(new YamlTransitionStepProvider().loadTransitionSteps(resolver, appId, path, flowConfigLoader), yamlFlowConfigs));
 
         } catch (Exception ex) {
             throw new FlowException(String.format("Failed to load YML flow config for appId '%s' and path '%s'", appId, path), ex);
@@ -75,7 +75,7 @@ public class YamlConfigProvider implements IFlowConfigProvider {
 
     @Override
     public List<TransitionStepConfig> getTransitionStepConfig(String appId, String nodeId) {
-        return transitionSteps;
+        return transitionSteps.get(appId);
     }
 
     @Override

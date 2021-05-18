@@ -34,6 +34,7 @@ public class PersonalizeEndpoint {
         String authToken = request.getDeviceToken();
         final String deviceId = request.getDeviceId();
         final String appId = request.getAppId();
+        final String pairedDeviceId = request.getPairedDeviceId();
 
         DeviceModel deviceModel;
 
@@ -55,8 +56,9 @@ public class PersonalizeEndpoint {
             }
 
             deviceModel = new DeviceModel();
-            deviceModel.setAppId(request.getAppId());
-            deviceModel.setDeviceId(request.getDeviceId());
+            deviceModel.setAppId(appId);
+            deviceModel.setDeviceId(deviceId);
+            deviceModel.setPairedDeviceId(pairedDeviceId);
             if( request.getPersonalizationParameters() != null ) {
                 deviceModel.setDeviceParamModels(
                         request.getPersonalizationParameters().keySet().stream().map( key -> new DeviceParamModel( key, request.getPersonalizationParameters().get(key))).collect(Collectors.toList())
