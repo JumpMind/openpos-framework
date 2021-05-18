@@ -55,7 +55,7 @@ public class EventBroadcaster {
                         }
                         if (event instanceof AppEvent && onEvent.receiveEventsFromPairedDevice()) {
                             DeviceModel deviceModel = stateManager.getApplicationState().getScopeValue("device");
-                            if (deviceModel.getPairedDeviceId().equals(((AppEvent) event).getDeviceId())) {
+                            if (deviceModel.getPairedDeviceId() != null && deviceModel.getPairedDeviceId().equals(((AppEvent) event).getDeviceId())) {
                                 processEvent = true;
                             } else if (stateManager.getDeviceId().equals(((AppEvent) event).getPairedDeviceId())) {
                                 processEvent = true;
