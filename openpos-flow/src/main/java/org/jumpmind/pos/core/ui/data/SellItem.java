@@ -36,6 +36,7 @@ public class SellItem extends DefaultItem {
     private String optionsLabel;
     private boolean isTender;
     private boolean svgImage;
+    private String iconName;
 
     /**
      * Put properties in this map if they are optional. When not set, they don't
@@ -57,6 +58,14 @@ public class SellItem extends DefaultItem {
             }
         }
         return subtitle;
+    }
+
+    public String getIconName() {
+        return iconName;
+    }
+
+    public void setIconName(String iconName) {
+        this.iconName = iconName;
     }
 
     @Override
