@@ -117,10 +117,7 @@ public class DevicesRepository {
     public void setAppId(String deviceId, String newAppId) {
         String deviceAuth = getDeviceAuth(deviceId);
         DeviceModel device = getDeviceByAuth(deviceAuth);
-        if (StringUtils.isNotEmpty(device.getPairedDeviceId())) {
-            unpairDevice(deviceId, device.getPairedDeviceId());
-            device = getDevice(deviceId);
-        }
+
         device.setAppId(newAppId);
         saveDevice(device);
         saveDeviceAuth(deviceId, deviceAuth);
