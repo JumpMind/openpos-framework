@@ -31,10 +31,23 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                 let name: string = null;
                 let serviceConfig: ZeroconfService = null;
 
+                console.log('Registering...');
+
+
+                Zeroconf.register('_jmc-personalize._tcp.', 'local.', '', 6143, {
+                  "path": "/admin/personalizeMe"
+                }).then(result => {
+                  console.log('Service registered', result.service);
+                });
+
+                console.log('Starting watch...');
+                console.log('Device Name:', this.wrapperService.getDeviceName());
+
                 return Zeroconf.watch(this.TYPE, this.DOMAIN).pipe(
-                    first(conf => conf.action === 'resolved'),
+                    first(conf => conf.action === 'added'),
                     tap(conf => {
                         serviceConfig = conf.service;
+                        console.log('service added', conf.service);
                     }),
                     flatMap(() => this.wrapperService.getDeviceName()),
                     tap(deviceName => name = deviceName),

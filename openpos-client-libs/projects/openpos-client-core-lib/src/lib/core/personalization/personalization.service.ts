@@ -35,12 +35,13 @@ export class PersonalizationService {
 
     public getAutoPersonalizationParameters(deviceName: string, config: ZeroconfService): Observable<AutoPersonalizationParametersResponse> {
         let url = this.sslEnabled$.getValue() ? 'https://' : 'http://';
-        url += `${config.hostname}:${config.port}/${config.txtRecord.path}`;
+        url += `192.168.0.133:6143/admin/personalizeMe`;
         return this.http.get<AutoPersonalizationParametersResponse>(url, { params: { deviceName: deviceName }})
             .pipe(
                 timeout(Configuration.autoPersonalizationRequestTimeoutMillis),
                 tap(response => {
                     if (response) {
+                        console.log('response received', response);
                         response.sslEnabled = this.sslEnabled$.getValue();
                     }
                 }));
