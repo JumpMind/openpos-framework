@@ -7,7 +7,7 @@ import { IStartupTask } from './startup-task.interface';
 import { getTestScheduler } from 'jasmine-marbles';
 
 describe('PluginStartupTask', () => {
-    abstract class TestPlugin implements IPlatformPlugin {
+    class TestPlugin implements IPlatformPlugin {
         constructor( private isPresent: boolean, private pluginName: string ) { }
 
         name(): string {

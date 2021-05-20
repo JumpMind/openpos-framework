@@ -1,4 +1,5 @@
 import { Observable } from 'rxjs';
+import {PluginListenerHandle} from "@capacitor/core";
 
 export interface IPlatformPlugin {
 
@@ -17,4 +18,8 @@ export interface IPlatformPlugin {
      * status messages and complete when done.
      */
     initialize(): Observable<string>;
+}
+
+export interface InfineaPlugin {
+    addListener(event: 'scan', callback: (e) => void): PluginListenerHandle;
 }

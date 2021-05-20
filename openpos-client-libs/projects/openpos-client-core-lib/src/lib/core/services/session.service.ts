@@ -1,33 +1,34 @@
-import { VERSION } from './../../version';
-import { ILoading } from './../interfaces/loading.interface';
+import {VERSION} from './../../version';
+import {ILoading} from './../interfaces/loading.interface';
 
-import { Configuration } from './../../configuration/configuration';
-import { IMessageHandler } from './../interfaces/message-handler.interface';
-import { PersonalizationService } from '../personalization/personalization.service';
+import {Configuration} from './../../configuration/configuration';
+import {IMessageHandler} from './../interfaces/message-handler.interface';
+import {PersonalizationService} from '../personalization/personalization.service';
 
-import { Observable, Subscription, BehaviorSubject, Subject, merge, timer } from 'rxjs';
-import { map, filter, takeWhile } from 'rxjs/operators';
-import { Message } from '@stomp/stompjs';
-import { Injectable, NgZone, Inject, } from '@angular/core';
-import { StompState, StompRService } from '@stomp/ng2-stompjs';
-import { MatDialog } from '@angular/material';
+import {BehaviorSubject, merge, Observable, Subject, Subscription, timer} from 'rxjs';
+import {filter, map, takeWhile} from 'rxjs/operators';
+import {Message} from '@stomp/stompjs';
+import {Inject, Injectable, NgZone,} from '@angular/core';
+import {StompRService, StompState} from '@stomp/ng2-stompjs';
+import {MatDialog} from '@angular/material';
 // Importing the ../components barrel causes a circular reference since dynamic-screen references back to here,
 // so we will import those files directly
-import { LoaderState } from '../../shared/components/loader/loader-state';
-import { IDeviceResponse } from '../oldplugins/device-response.interface';
-import { HttpClient } from '@angular/common/http';
-import { PingParams } from '../interfaces/ping-params.interface';
-import { PingResult } from '../interfaces/ping-result.interface';
-import { ElectronService } from 'ngx-electron';
-import { OpenposMessage } from '../messages/message';
-import { MessageTypes } from '../messages/message-types';
-import { ActionMessage } from '../messages/action-message';
-import { CLIENTCONTEXT, IClientContext } from '../client-context/client-context-provider.interface';
-import { DiscoveryService } from '../discovery/discovery.service';
-import { UnlockScreenMessage } from '../messages/unlock-screen-message';
-import { SplashScreen } from '../messages/splash-screen-message';
+import {LoaderState} from '../../shared/components/loader/loader-state';
+import {IDeviceResponse} from '../oldplugins/device-response.interface';
+import {HttpClient} from '@angular/common/http';
+import {PingParams} from '../interfaces/ping-params.interface';
+import {PingResult} from '../interfaces/ping-result.interface';
+import {ElectronService} from 'ngx-electron';
+import {OpenposMessage} from '../messages/message';
+import {MessageTypes} from '../messages/message-types';
+import {ActionMessage} from '../messages/action-message';
+import {CLIENTCONTEXT, IClientContext} from '../client-context/client-context-provider.interface';
+import {DiscoveryService} from '../discovery/discovery.service';
+import {UnlockScreenMessage} from '../messages/unlock-screen-message';
+import {SplashScreen} from '../messages/splash-screen-message';
 
 declare var window: any;
+
 export class QueueLoadingMessage implements ILoading {
     type = 'Loading';
     title: string;
@@ -67,10 +68,10 @@ export class ConnectedMessage {
 // as outlined here: https://github.com/stomp-js/ng2-stompjs/issues/58
 export class OpenposStompService extends StompRService {
     disconnect() {
-      if (this.client) {
-        this.client.reconnect_delay = 0;
-      }
-      super.disconnect();
+        if (this.client) {
+            this.client.reconnect_delay = 0;
+        }
+        super.disconnect();
     }
 }
 
@@ -128,7 +129,7 @@ export class SessionService implements IMessageHandler<any> {
     }
 
     public sendMessage<T extends OpenposMessage>(message: T) {
-        if ( message.type === MessageTypes.ACTION && message instanceof ActionMessage ) {
+        if (message.type === MessageTypes.ACTION && message instanceof ActionMessage) {
             const actionMessage = message as ActionMessage;
             this.publish(actionMessage.actionName, 'Screen', actionMessage.payload, actionMessage.doNotBlockForResponse);
         } else if (message.type === MessageTypes.PROXY && message instanceof ActionMessage) {
@@ -147,8 +148,7 @@ export class SessionService implements IMessageHandler<any> {
     public registerMessageHandler(handler: IMessageHandler<any>, ...types: string[]): Subscription {
         return merge(
             this.stompJsonMessages$,
-            this.sessionMessages$).pipe(filter(s => types && types.length > 0 ? types.includes(s.type) : true)).
-            subscribe(s => this.zone.run(() => handler.handle(s)));
+            this.sessionMessages$).pipe(filter(s => types && types.length > 0 ? types.includes(s.type) : true)).subscribe(s => this.zone.run(() => handler.handle(s)));
     }
 
     public isRunningInBrowser(): boolean {
@@ -171,6 +171,7 @@ export class SessionService implements IMessageHandler<any> {
     public connected(): boolean {
         return this.stompService && this.stompService.connected();
     }
+
     private appendPersonalizationProperties(headers: any) {
         const personalizationProperties = this.personalization.getPersonalizationProperties$().getValue();
         if (personalizationProperties && headers) {
@@ -211,9 +212,9 @@ export class SessionService implements IMessageHandler<any> {
             version: JSON.stringify(VERSION)
         };
         this.appendPersonalizationProperties(headers);
-        this.clientContexts.forEach( context => {
+        this.clientContexts.forEach(context => {
             const contextsToAdd = context.getContextProperties();
-            contextsToAdd.forEach( (value, key ) => {
+            contextsToAdd.forEach((value, key) => {
                 headers[key] = value;
             });
         });
@@ -305,9 +306,9 @@ export class SessionService implements IMessageHandler<any> {
 
     private async negotiateWebsocketUrl(): Promise<string> {
         if (this.personalization.getIsManagedServer$().getValue()) {
-            if (! this.discovery.getWebsocketUrl()) {
+            if (!this.discovery.getWebsocketUrl()) {
                 const discoverResp = await this.discovery.discoverDeviceProcess();
-                if (!discoverResp || ! discoverResp.success) {
+                if (!discoverResp || !discoverResp.success) {
                     console.error(`Failed to get websocket url from OpenPOS Management Server. Reason: ` +
                         `${!!discoverResp ? discoverResp.message : 'unknown'}`);
                     return null;
@@ -344,8 +345,8 @@ export class SessionService implements IMessageHandler<any> {
         return {
             type: 'Dialog',
             screenType: 'Dialog',
-            template: { dialog: true, type: 'BlankWithBar' },
-            dialogProperties: { closeable: false },
+            template: {dialog: true, type: 'BlankWithBar'},
+            dialogProperties: {closeable: false},
             title: 'Incompatible Versions',
             message: Configuration.incompatibleVersionMessage.split('\n')
         };
@@ -384,9 +385,9 @@ export class SessionService implements IMessageHandler<any> {
             const httpResult = await this.http.get(url, {}).toPromise();
             if (httpResult) {
                 console.info('successful validation of ' + url);
-                return { success: true };
+                return {success: true};
             } else {
-                pingError = { message: '?' };
+                pingError = {message: '?'};
             }
         } catch (error) {
             pingError = error;
@@ -394,7 +395,7 @@ export class SessionService implements IMessageHandler<any> {
 
         if (pingError) {
             console.info('bad validation of ' + url + ' with an error message of :' + pingError.message);
-            return { success: false, message: pingError.message };
+            return {success: false, message: pingError.message};
         }
     }
 
@@ -419,7 +420,7 @@ export class SessionService implements IMessageHandler<any> {
                 } else {
                     console.debug(`Management server is not alive`);
                 }
-            } );
+            });
         }
     }
 
@@ -483,10 +484,15 @@ export class SessionService implements IMessageHandler<any> {
         }
         const deviceId = this.personalization.getDeviceId$().getValue();
         const appId = this.personalization.getAppId$().getValue();
-        if ( appId && deviceId) {
+        if (appId && deviceId) {
             console.info(`Publishing action '${actionString}' of type '${type}' to server...`);
             this.stompService.publish('/app/action/app/' + appId + '/node/' + deviceId,
-                JSON.stringify({ name: actionString, type, data: payload, doNotBlockForResponse: doNotBlockForResponse }));
+                JSON.stringify({
+                    name: actionString,
+                    type,
+                    data: payload,
+                    doNotBlockForResponse: doNotBlockForResponse
+                }));
             return true;
         } else {
             console.info(`Can't publish action '${actionString}' of type '${type}' ` +
