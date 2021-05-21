@@ -25,6 +25,12 @@ public class SaleUIMessage extends TransactionUIMessage {
 
     private AdditionalLabel taxExemptCertificateDetail;
 
+    private boolean locationEnabled;
+    private String locationOverridePrompt;
+
+    private boolean enableCollapsibleItems = true;
+    private String iconName;
+
     public SaleUIMessage() {
         this.setScreenType(UIMessageType.SALE);
         this.setId("sale");

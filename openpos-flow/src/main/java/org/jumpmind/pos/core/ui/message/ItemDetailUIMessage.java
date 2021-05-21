@@ -43,6 +43,7 @@ public class ItemDetailUIMessage extends UIMessage {
     private List<String> detailSections;
     private String inventoryMessageProviderKey;
     private String buddyStoreProviderKey;
+    private String eligibleMessage;
 
 
     public void addItemProperty(DisplayProperty property) {

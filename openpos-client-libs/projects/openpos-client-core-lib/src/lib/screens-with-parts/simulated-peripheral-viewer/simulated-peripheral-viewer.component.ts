@@ -18,6 +18,9 @@ import {DiscoveryService} from "../../core/discovery/discovery.service";
 export class SimulatedPeripheralViewerComponent extends PosScreen<SimulatedPeripheralInterface> implements OnInit {
 
     receiptUrl: SafeResourceUrl;
+    receiptsUrlHistory = new Array<SafeResourceUrl>();
+    readonly receiptsUrlHistoryMaxLength = 128;
+    currentReceiptUrlIndex = -1;
 
     constructor(injector: Injector, private simulatedPeripheralService : SimulatedPeripheralService,
                 private domSanitizer : DomSanitizer, private personalizationService : PersonalizationService,
@@ -33,6 +36,37 @@ export class SimulatedPeripheralViewerComponent extends PosScreen<SimulatedPerip
         if (deviceToken) {
             const url = `${this.discoveryService.getServerBaseURL()}/document/previewDocument/${deviceToken}`;
             this.receiptUrl = this.domSanitizer.bypassSecurityTrustResourceUrl(url);
+            this.addReceiptUrlToHistory(this.receiptUrl);
+        }
+    }
+
+    addReceiptUrlToHistory(receiptUrl : SafeResourceUrl) {
+        if (this.receiptsUrlHistory.length >= this.receiptsUrlHistoryMaxLength) {
+            this.receiptsUrlHistory.shift();
+        }
+        this.receiptsUrlHistory.push(receiptUrl);
+        this.currentReceiptUrlIndex = this.receiptsUrlHistory.length - 1;
+    }
+
+    hasNextReceipt() {
+        return this.currentReceiptUrlIndex + 1 < this.receiptsUrlHistory.length;
+    }
+
+    getNextReceipt() {
+        if (this.hasNextReceipt()) {
+            this.currentReceiptUrlIndex++;
+            this.receiptUrl = this.receiptsUrlHistory[this.currentReceiptUrlIndex];
+        }
+    }
+
+    hasPreviousReceipt() {
+        return this.currentReceiptUrlIndex > 0;
+    }
+
+    getPreviousReceipt() {
+        if (this.hasPreviousReceipt()) {
+            this.currentReceiptUrlIndex--;
+            this.receiptUrl = this.receiptsUrlHistory[this.currentReceiptUrlIndex];
         }
     }
 
