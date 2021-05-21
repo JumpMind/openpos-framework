@@ -22,7 +22,7 @@ export class MessageTypes {
     static AUDIO_PRELOAD = 'AudioPreload';
     static LOADING = 'Loading';
     static PERIPHERAL_DEVICE_SELECTION = 'PeripheralDeviceSelection';
-    static PERIPHERAL_DEVICE_STATE_CHANGED = 'PeripheralDeviceStateChanged';
+    static DEVICE_PAIRING_CHANGED = 'DevicePairingChanged';
     static WATERMARK = 'Watermark';
     static HIDE_WATERMARK = 'HideWatermark';
     static STATUS_BAR = 'StatusBar';
