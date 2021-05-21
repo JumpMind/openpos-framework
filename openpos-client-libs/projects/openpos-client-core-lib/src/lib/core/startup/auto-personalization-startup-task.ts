@@ -71,7 +71,6 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
 
 
     private attemptAutoPersonalize(serviceConfig: ZeroconfService, deviceName: string): Observable<string> {
-        console.log('attempt to auto personalize', {serviceConfig, deviceName});
         return this.personalization.getAutoPersonalizationParameters(deviceName, serviceConfig)
             .pipe(
                 flatMap(info => {
@@ -99,11 +98,9 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                         );
                     }
 
-                    console.log("no info");
                     return this.manualPersonalization();
                 }),
                 catchError(e => {
-                    console.log("some error", e);
                     return this.manualPersonalization()
                 }),
             )
