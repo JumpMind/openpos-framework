@@ -44,7 +44,6 @@
     "hammer-timejs": "^1.1.0",
     "hammerjs": "^2.0.8",
     "js-logger": "^1.4.1",
-    "mdns": "^2.7.2",
     "ngx-electron": "^2.1.1",
     "ngx-markdown": "^7.1.3",
     "ngx-toastr": "^10.1.0",
