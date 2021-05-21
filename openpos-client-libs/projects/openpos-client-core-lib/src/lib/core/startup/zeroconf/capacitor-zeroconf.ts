@@ -9,7 +9,7 @@ export class CapacitorZeroconf implements Zeroconf {
     constructor(private capacitorService: CapacitorService) {}
     
     isAvailable(): Observable<boolean> {
-        return of(this.capacitorService.isRunningInCapacitor() && CAP.ZeroconfOriginal.installed());
+        return of(this.capacitorService.isRunningInCapacitor());
     }
 
     watch(type: string, domain: string): Observable<ZeroconfResult> {

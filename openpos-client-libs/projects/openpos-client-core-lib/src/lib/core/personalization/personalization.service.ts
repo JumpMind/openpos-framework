@@ -32,8 +32,7 @@ export class PersonalizationService {
 
     constructor(
         private storage: Storage,
-        private http: HttpClient,
-        @Inject(ZEROCONF_TOKEN) @Optional() private mdns: Array<Zeroconf>
+        private http: HttpClient
     ) {
         zip(
             storage.getValue('deviceToken'),
@@ -66,10 +65,6 @@ export class PersonalizationService {
         });
     }
 
-    public shouldAutoPersonalize(): boolean {
-        return this.mdns && this.mdns.length > 0;
-    }
-
     public getAutoPersonalizationParameters(deviceName: string, config: ZeroconfService): Observable<AutoPersonalizationParametersResponse> {
         let url = this.sslEnabled$.getValue() ? 'https://' : 'http://';
         url += `${config.ipv4Addresses[0]}:${config.port}/${config.txtRecord.path}`;
@@ -77,7 +72,6 @@ export class PersonalizationService {
             .pipe(
                 timeout(Configuration.autoPersonalizationRequestTimeoutMillis),
                 tap(response => {
-                    console.log("got personalization response", response);
                     if (response) {
                         response.sslEnabled = this.sslEnabled$.getValue();
                     }
