@@ -80,7 +80,6 @@ import { CapacitorStorageService } from './storage/capacitor/capacitor-storage.s
 import { Storage } from './storage/storage.service';
 import { STORAGE_CONTAINERS } from './storage/storage-container';
 import { CapacitorPrinterPlugin } from './platform-plugins/printers/capacitor-printer.plugin';
-import { AutoPersonalizationStartupTask } from "./startup/auto-personalization-startup-task";
 import { ZEROCONF_TOKEN } from './startup/zeroconf/zeroconf';
 import { MDnsZeroconf } from './startup/zeroconf/mdns-zeroconf';
 import { CapacitorZeroconf } from './startup/zeroconf/capacitor-zeroconf';
