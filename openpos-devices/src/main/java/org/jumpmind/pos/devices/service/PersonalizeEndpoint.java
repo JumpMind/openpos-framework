@@ -15,13 +15,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.*;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.apache.commons.lang3.StringUtils.isNotBlank;
 
 @Slf4j
-@Endpoint(path="/devices/personalize")
+@Endpoint(path = "/devices/personalize")
 public class PersonalizeEndpoint {
 
     @Autowired
@@ -30,7 +30,7 @@ public class PersonalizeEndpoint {
     @Autowired
     DeviceUpdater deviceUpdater;
 
-    public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request){
+    public PersonalizationResponse personalize(@RequestBody PersonalizationRequest request) {
         String authToken = request.getDeviceToken();
         final String deviceId = request.getDeviceId();
         final String appId = request.getAppId();
@@ -38,17 +38,17 @@ public class PersonalizeEndpoint {
 
         DeviceModel deviceModel;
 
-        if(isNotBlank(deviceId) && isNotBlank(appId)){
+        if (isNotBlank(deviceId) && isNotBlank(appId)) {
             // TODO add a configuration map of appIds that are allowed to share deviceIds. IE probably shouldn't allow a self-checkout share with pos
-            try{
+            try {
                 log.info("Validating auth request of {} as {}", deviceId, appId);
                 String auth = devicesRepository.getDeviceAuth(request.getDeviceId());
 
-                if( !auth.equals(authToken)) {
+                if (!auth.equals(authToken)) {
                     throw new DeviceNotAuthorizedException();
                 }
 
-            } catch (DeviceNotFoundException ex){
+            } catch (DeviceNotFoundException ex) {
                 log.info("Registering {} as {}", deviceId, appId);
                 // if device doesn't exist create a new unique code
                 authToken = UUID.randomUUID().toString();
@@ -59,12 +59,12 @@ public class PersonalizeEndpoint {
             deviceModel.setAppId(appId);
             deviceModel.setDeviceId(deviceId);
             deviceModel.setPairedDeviceId(pairedDeviceId);
-            if( request.getPersonalizationParameters() != null ) {
+            if (request.getPersonalizationParameters() != null) {
                 deviceModel.setDeviceParamModels(
-                        request.getPersonalizationParameters().keySet().stream().map( key -> new DeviceParamModel( key, request.getPersonalizationParameters().get(key))).collect(Collectors.toList())
+                        request.getPersonalizationParameters().keySet().stream().map(key -> new DeviceParamModel(key, request.getPersonalizationParameters().get(key))).collect(Collectors.toList())
                 );
             }
-        } else if ( isNotBlank(authToken)){
+        } else if (isNotBlank(authToken)) {
             deviceModel = devicesRepository.getDeviceByAuth(authToken);
         } else {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "DeviceId and AppId or AuthToken are required for personalization");

@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.service;
 
 import org.jumpmind.pos.core.model.StartupMessage;
+import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.util.event.DeviceConnectedEvent;
 import org.jumpmind.pos.core.flow.IStateManager;
 import org.jumpmind.pos.core.flow.IStateManagerContainer;
@@ -108,7 +109,8 @@ public class SessionSubscribedListener implements ApplicationListener<SessionSub
 
             IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
             boolean created = false;
-            String appId = sessionAuthTracker.getDeviceModel(sessionId).getAppId();
+            DeviceModel sessionDevice = sessionAuthTracker.getDeviceModel(sessionId);
+            String appId = sessionDevice != null ? sessionDevice.getAppId() : null;
             if (stateManager == null) {
                 // If your first state has a
                 stateManager = stateManagerContainer.create(appId, deviceId, queryParams, personalizationProperties);

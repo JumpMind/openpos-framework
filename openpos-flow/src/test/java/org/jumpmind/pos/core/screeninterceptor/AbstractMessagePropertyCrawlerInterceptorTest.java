@@ -63,7 +63,7 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
         return new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                return invocation.getArguments()[2];
+                return invocation.getArguments()[1];
             }
         };
     }

@@ -80,7 +80,7 @@ public class StateManagerContainer implements IStateManagerContainer, Applicatio
     }
 
     @Override
-    public IStateManager create(String appId, String deviceId, Map<String, Object> queryParams, Map<String, String> personalizationProperties) {
+    public synchronized IStateManager create(String appId, String deviceId, Map<String, Object> queryParams, Map<String, String> personalizationProperties) {
         StateManager stateManager = stateManagersByDeviceId.get(deviceId);
         if (stateManager == null) {
             stateManager = applicationContext.getBean(StateManager.class);
