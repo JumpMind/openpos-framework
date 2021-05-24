@@ -10,8 +10,8 @@ import {TimeZoneContext} from "../../core/client-context/time-zone-context";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
 import {MatDialog} from "@angular/material";
 import {LoyaltyCustomerFormInterface} from "./loyalty-customer-form.interface";
+import {IForm} from "../../core/interfaces/form.interface";
 import {IFormElement} from "../../core/interfaces/form-field.interface";
-import {IForm} from "openpos-client-core-lib";
 import {By} from "@angular/platform-browser";
 import {Membership} from "../../shared/screen-parts/membership-display/memebership-display.interface";
 
