@@ -1,4 +1,7 @@
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { ActionService } from '../../actions/action.service';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { MessageTypes } from '../../messages/message-types';
 import { PrintMessage } from '../../messages/print-message';
 import { SessionService } from '../../services/session.service';
@@ -7,13 +10,12 @@ import { IPrinter } from './printer.interface';
 
 export const PRINTERS = new InjectionToken<IPrinter[]>('Printers');
 
-@Injectable({
-    providedIn: 'root'
-})
+@Injectable()
 export class PrinterService {
     private readonly _selectedPrinter: IPrinter;
 
     constructor(
+        actionService: ActionService,
         @Optional() @Inject(PRINTERS) private printers: Array<IPrinter>, 
         sessionService: SessionService,
 
@@ -31,10 +33,19 @@ export class PrinterService {
 
         console.log(`using '${this._selectedPrinter.name()}' printer`);
 
-        sessionService.getMessages(MessageTypes.PRINT).subscribe(m => this.print((m as PrintMessage).html));
+        sessionService.getMessages(MessageTypes.PRINT).pipe(
+            switchMap(m => {
+                console.log('printing a doc...')
+                return this.print((m as PrintMessage).html)
+            }),
+            switchMap(() => {
+                console.log('requesting next page....');
+                return actionService.doAction({ action: 'PrintNextDocument', doNotBlockForResponse: true })
+            })
+        ).subscribe();
     }
 
-    print(html: string) {
-        this._selectedPrinter.print(html);
+    print(html: string): Observable<void> {
+        return this._selectedPrinter.print(html);
     }
 }
