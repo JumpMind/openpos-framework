@@ -6,7 +6,13 @@
 
     .linked-customer-summary {
         color: mat-color($theme, openpos-linked-customer-color);
-        background-color: mat-color($theme, openpos-linked-customer-background);
+        &.header {
+            background-color: mat-color($theme, openpos-linked-customer-background);
+            border-radius: 4px 4px 0px 0px;
+        }
+        &.content {
+            border-radius: 0px 0px 4px 4px;
+        }
         .memberships {
             .customer-missing-info {
                 button {

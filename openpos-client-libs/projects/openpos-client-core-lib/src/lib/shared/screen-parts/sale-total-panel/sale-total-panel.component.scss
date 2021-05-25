@@ -40,12 +40,12 @@
             padding: 10px;
             .grid-container {
                 display: grid;
-                grid-template-columns: 1fr 10fr;
+                grid-template-columns: 1fr 7fr 3fr;
                 grid-template-rows: auto 1fr;
                 gap: 10px 5px;
                 grid-template-areas:
-                    "Icon Name"
-                    "Memberships Memberships";
+                    "Icon Name LoyaltyIcon"
+                    "Memberships Memberships Memberships";
                 .name {
                     grid-area: Name;
                     .customer-name {
@@ -60,6 +60,14 @@
                 .icon {
                     grid-area: Icon;
                     display: inline-block;
+                }
+                .loyalty-icon {
+                    grid-area: LoyaltyIcon;
+                    display: inline-block;
+                    .sale-total-loyalty-button-icon {
+                        max-height: 36px;
+                        vertical-align: middle;
+                    }
                 }
                 .memberships {
                     overflow: hidden;
