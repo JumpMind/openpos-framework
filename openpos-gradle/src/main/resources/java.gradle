@@ -136,6 +136,48 @@ task sourcesJar(type: Jar, dependsOn:classes) {
     from sourceSets.main.allSource
 }
 
+// example usage:
+// commerce-assemble$ ./gradlew commerce-context:patchJar -PpatchClasses=SqlPurgeJob,CustomerGroupModel
+task patchJar(type: Jar, dependsOn:classes) {
+    includeEmptyDirs = false
+    outputs.upToDateWhen { false }
+
+    if (!project.hasProperty("patchClasses")) {
+            throw new InvalidUserDataException("patchClasses property not found. Please specify one or more patch classes with a -P properties, such as -PpatchClasses=SqlPurgeJob,SomeOtherClass");
+    }
+
+    def classNames = project.patchClasses.split(",");
+    ext.patchClassFiles = classNames.collect{className -> ["**/${className}.class", "**/${className}\$*.class"]}.flatten()
+    ext.patchSourceFiles = classNames.collect{className -> "**/${className}.java"}
+
+    doFirst {
+        if (!project.hasProperty("patchName")) {
+            ext.patchName = 'patch.jar'
+        }   
+        patchJar.archiveName = ext.patchName;
+    }
+
+    from(sourceSets.main.allSource) {
+        for (sourceFileName in ext.patchSourceFiles) {
+              include sourceFileName;
+        }        
+        include '**/SqlPurgeJob.java'
+    }
+    from(sourceSets.main.output.classesDirs ) {
+        for (className in ext.patchClassFiles) {
+              include className;
+        }
+    }        
+
+    eachFile { file ->
+        println "** Including file in patch: " + file;
+    }
+
+    doLast {
+        println "Patch jar written to ${patchJar.archiveName}";
+    }
+}
+
 task extraClean {
     doFirst {
         println 'Removing bin and .settings directories'
