@@ -8,7 +8,7 @@
   grid-template-areas:
     "header header"
     "left right"
-    "footer footer";
+    "footer buttons";
 }
 
 .header {
@@ -25,6 +25,11 @@
 
 .footer {
   grid-area: footer;
+}
+
+.buttons {
+  grid-area: buttons;
+  justify-self: center;
 }
 
 .receipt-container {

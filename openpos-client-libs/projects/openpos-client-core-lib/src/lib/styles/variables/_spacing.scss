@@ -21,11 +21,9 @@ $xx-large-space: 2rem;
 
 %sub-element{
   padding: $large-space;
-  &.mobile{
-    padding: $large-space/$mobile-factor;
-  }
+  &.mobile,
   &.mobile-landscape{
-    padding: $large-space/($mobile-factor*2);
+    padding: $large-space/$mobile-factor;
   }
 }
 

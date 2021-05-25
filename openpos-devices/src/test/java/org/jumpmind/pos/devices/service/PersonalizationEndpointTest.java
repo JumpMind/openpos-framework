@@ -20,15 +20,15 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest()
 @ActiveProfiles("test")
 @AutoConfigureMockMvc
-@ContextConfiguration(classes = { TestDevicesConfig.class })
+@ContextConfiguration(classes = {TestDevicesConfig.class})
 public class PersonalizationEndpointTest {
 
     ObjectMapper mapper = new ObjectMapper();
@@ -40,31 +40,10 @@ public class PersonalizationEndpointTest {
     public void personalizationRequestForNewDeviceShouldReturnNewAuthToken() throws Exception {
         String result = mvc.perform(
                 new MockPostRequestBuilder("/devices/personalize")
-                    .content(
-                            PersonalizationRequest.builder()
-                                    .deviceId("00100-002")
-                                    .appId("pos")
-                                    .build()
-                    )
-                    .build()
-                )
-                .andExpect(status().isOk())
-                .andReturn().getResponse().getContentAsString();
-
-        PersonalizationResponse response = mapper.readValue(result, PersonalizationResponse.class);
-        assertNotNull(response.getDeviceModel());
-        assertNotNull(response.getAuthToken());
-
-    }
-
-    @Test
-    public void personalizationRequestForDeviceWithSameDeviceIdNewAppIdShouldReturnNewAuthToken() throws Exception{
-        String result = mvc.perform(
-                new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00145-001")
-                                        .appId("customer-display")
+                                        .deviceId("00100-002")
+                                        .appId("pos")
                                         .build()
                         )
                         .build()
@@ -73,17 +52,35 @@ public class PersonalizationEndpointTest {
                 .andReturn().getResponse().getContentAsString();
 
         PersonalizationResponse response = mapper.readValue(result, PersonalizationResponse.class);
-        assertNotNull(response.getAuthToken());
         assertNotNull(response.getDeviceModel());
+        assertNotNull(response.getAuthToken());
+
     }
 
     @Test
-    public void personalizationRequestForExistingDevicesShouldSucceedIfAuthTokenMatches() throws Exception{
+    public void personalizationRequestForDeviceWithSameDeviceIdNewAppIdShouldFail() throws Exception {
+        String deviceId = "00145-001";
+        personalizeNewDeviceToGenerateAuth(deviceId);
+        mvc.perform(
+                new MockPostRequestBuilder("/devices/personalize")
+                        .content(
+                                PersonalizationRequest.builder()
+                                        .deviceId(deviceId)
+                                        .appId("customerdisplay")
+                                        .build()
+                        )
+                        .build()
+        )
+                .andExpect(status().is5xxServerError());
+    }
+
+    @Test
+    public void personalizationRequestForExistingDevicesShouldSucceedIfAuthTokenMatches() throws Exception {
         String result = mvc.perform(
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00145-001")
+                                        .deviceId("00145-002")
                                         .appId("pos")
                                         .deviceToken("123456789")
                                         .build()
@@ -99,27 +96,31 @@ public class PersonalizationEndpointTest {
     }
 
     @Test
-    public void personalizationRequestForExistingDeviceShouldFailIfAuthTokenIsNotProvided() throws Exception{
+    public void personalizationRequestForExistingDeviceShouldFailIfAuthTokenIsNotProvided() throws Exception {
+        String deviceId = "0145-003";
+        personalizeNewDeviceToGenerateAuth(deviceId);
         mvc.perform(
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00145-001")
+                                        .deviceId(deviceId)
                                         .appId("pos")
                                         .build()
                         )
                         .build()
         )
-        .andExpect(status().is5xxServerError());
+                .andExpect(status().is5xxServerError());
     }
 
     @Test
-    public void personalizationRequestForExistingDeviceShouldFailIfAuthTokenDoesntMatch() throws Exception{
+    public void personalizationRequestForExistingDeviceShouldFailIfAuthTokenDoesntMatch() throws Exception {
+        String deviceId = "00145-004";
+        personalizeNewDeviceToGenerateAuth(deviceId);
         mvc.perform(
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00145-001")
+                                        .deviceId(deviceId)
                                         .deviceToken("foo")
                                         .appId("pos")
                                         .build()
@@ -136,7 +137,7 @@ public class PersonalizationEndpointTest {
                 new MockPostRequestBuilder("/devices/personalize")
                         .content(
                                 PersonalizationRequest.builder()
-                                        .deviceId("00145-001")
+                                        .deviceId("00145-005")
                                         .deviceToken("123456789")
                                         .appId("pos")
                                         .personalizationParameters(params)
@@ -145,7 +146,7 @@ public class PersonalizationEndpointTest {
                         .build()
         ).andDo(result -> {
             String response = mvc.perform(
-                    new MockGetRequestBuilder("/devices/myDevice").deviceId("00145-001").appId("pos").build()
+                    new MockGetRequestBuilder("/devices/myDevice").deviceId("00145-005").appId("pos").build()
             ).andReturn().getResponse().getContentAsString();
 
             assertTrue(mapper.readValue(response, GetDeviceResponse.class)
@@ -154,5 +155,18 @@ public class PersonalizationEndpointTest {
                     .stream()
                     .anyMatch(deviceParamModel -> "deviceType".equals(deviceParamModel.getParamName()) && "register".equals(deviceParamModel.getParamValue())));
         });
+    }
+
+    private void personalizeNewDeviceToGenerateAuth(String deviceId) throws Exception {
+        mvc.perform(
+                new MockPostRequestBuilder("/devices/personalize")
+                        .content(
+                                PersonalizationRequest.builder()
+                                        .deviceId(deviceId)
+                                        .appId("pos")
+                                        .build()
+                        )
+                        .build()
+        );
     }
 }

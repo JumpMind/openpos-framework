@@ -14,8 +14,8 @@ public class RequestEvent<T> extends AppEvent {
     T payload;
 
     @Builder
-    public RequestEvent(String deviceId, String appId, String targetDeviceId, String targetAppId, String request, T payload, boolean remote) {
-        super(deviceId, appId);
+    public RequestEvent(String deviceId, String appId, String pairedDeviceId, String targetDeviceId, String targetAppId, String request, T payload, boolean remote) {
+        super(deviceId, appId, pairedDeviceId);
         this.targetDeviceId = targetDeviceId;
         this.targetAppId = targetAppId;
         this.request = request;

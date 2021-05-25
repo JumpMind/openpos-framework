@@ -4,27 +4,28 @@ Uncomment when statuses are supported.
     <app-icon [iconName]="icon"></app-icon>
 </div> 
 -->
-<button responsive-class *ngIf="title" mat-flat-button (click)="actionExecuted.emit()"
-        color=primary-inverse class="status-item">
+<button responsive-class *ngIf="title" mat-flat-button (click)="actionExecuted.emit()" color=primary-inverse
+    class="status-item" disabled="{{!enabled}}">
     <app-icon class="status-icon" [iconName]="icon"></app-icon>
     <div class="status-content">
-        <span responsive-class class="status-line {{titleTransparency ? '': 'status-title-transparency'}}">{{title}}</span>&nbsp;(<u>Change</u>)
+        <span responsive-class
+            class="status-line {{titleTransparency ? '': 'status-title-transparency'}}">{{title}}</span>&nbsp;(<u>Change</u>)
         <!--
-            Uncomment when statuses are supported.
-            <div class="caption" [ngSwitch]="status">
-                <ng-container *ngSwitchCase="'online'">
-                    Online
-                </ng-container>
-                <ng-container *ngSwitchCase="'offline'">
-                    Offline
-                </ng-container>
-                <ng-container *ngSwitchCase="'error'">
-                    Error
-                </ng-container>
-                <ng-container *ngSwitchDefault>
-                    Unknown
-                </ng-container>
-            </div>
+        Uncomment when statuses are supported.
+        <div class="caption" [ngSwitch]="status">
+            <ng-container *ngSwitchCase="'online'">
+                Online
+            </ng-container>
+            <ng-container *ngSwitchCase="'offline'">
+                Offline
+            </ng-container>
+            <ng-container *ngSwitchCase="'error'">
+                Error
+            </ng-container>
+            <ng-container *ngSwitchDefault>
+                Unknown
+            </ng-container>
+        </div>
         -->
         <ng-content></ng-content>
     </div>

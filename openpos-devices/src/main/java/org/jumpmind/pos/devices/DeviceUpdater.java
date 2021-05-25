@@ -81,7 +81,7 @@ public class DeviceUpdater implements ApplicationListener<DeviceConnectedEvent> 
     @Override
     public void onApplicationEvent(DeviceConnectedEvent event) {
         try {
-            updateDevice(devicesRepository.getDevice(event.getDeviceId(), event.getAppId()));
+            updateDevice(devicesRepository.getDevice(event.getDeviceId()));
             log.info("A device just connected.  Updated the device model in the database. {}-{}", event.getDeviceId(), event.getAppId());
             if (cacheManager != null) {
                 cacheManager.getCache("/context/config").clear();

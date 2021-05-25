@@ -116,11 +116,11 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
             for (String beanName : screenInterceptorBeanNames) {
                 @SuppressWarnings("unchecked")
                 IMessageInterceptor<UIDataMessage> screenInterceptor = (IMessageInterceptor<UIDataMessage>) applicationContext.getBean(beanName);
-                screenInterceptor.intercept(appId, deviceId, message);
+                screenInterceptor.intercept(deviceId, message);
 
             }
         }
-        messageService.sendMessage(appId, deviceId, message);
+        messageService.sendMessage(deviceId, message);
     }
 
     @Override

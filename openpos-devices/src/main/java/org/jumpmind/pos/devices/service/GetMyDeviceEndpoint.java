@@ -17,7 +17,7 @@ public class GetMyDeviceEndpoint {
 
     public GetDeviceResponse getMyDevice(){
         return GetDeviceResponse.builder()
-                .deviceModel(devicesRepository.getDevice(clientContext.get("deviceId"), clientContext.get("appId")))
+                .deviceModel(devicesRepository.getDevice(clientContext.get("deviceId")))
                 .build();
     }
 }

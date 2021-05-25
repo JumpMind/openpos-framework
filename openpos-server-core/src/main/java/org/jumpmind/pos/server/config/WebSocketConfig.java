@@ -180,7 +180,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                 SimpMessageType messageType = accessor.getMessageType();
                 if (messageType == SimpMessageType.MESSAGE && loggingEnabled) {
                     String[] tokens = accessor.getDestination().split("/");
-                    setupLogging(tokens[3], tokens[5]);
+                    setupLogging(tokens[2]);
                     log.info("Post send of message for session " + accessor.getSessionId() + " with destination " + accessor.getDestination() + ":\n" + new String((byte[]) message.getPayload()));
                 }
             }

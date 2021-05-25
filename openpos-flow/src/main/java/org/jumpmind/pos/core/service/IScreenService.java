@@ -10,17 +10,17 @@ import java.util.Map;
 
 public interface IScreenService {
 
-    public void showScreen(String appId, String nodeId, UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProvider);
+    public void showScreen(String nodeId, UIMessage screen, Map<String, UIDataMessageProvider<?>> dataMessageProvider);
 
-    public void showScreen(String appId, String nodeId, UIMessage screen);
+    public void showScreen(String nodeId, UIMessage screen);
 
-    public void showToast(String appId, String nodeId, Toast toast);
+    public void showToast(String nodeId, Toast toast);
 
-    public void closeToast(String appId, String nodeId, CloseToast toast);
+    public void closeToast(String nodeId, CloseToast toast);
 
-    public UIMessage getLastScreen(String appId, String nodeId);
+    public UIMessage getLastScreen(String nodeId);
 
-    public UIMessage getLastDialog(String appId, String nodeId);
+    public UIMessage getLastDialog(String nodeId);
 
 //    public void addToastInterceptor(IMessageInterceptor<Toast> interceptor);
 //
@@ -30,8 +30,8 @@ public interface IScreenService {
 //
 //    public void removeScreenInterceptor(IMessageInterceptor<UIMessage> interceptor);
 
-    public UIMessage getLastPreInterceptedScreen(String appId, String deviceId);
+    public UIMessage getLastPreInterceptedScreen(String deviceId);
 
-    public UIMessage getLastPreInterceptedDialog(String appId, String deviceId);
+    public UIMessage getLastPreInterceptedDialog(String deviceId);
 
 }

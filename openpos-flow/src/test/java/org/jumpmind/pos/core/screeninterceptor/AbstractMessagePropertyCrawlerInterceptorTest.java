@@ -44,14 +44,14 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
         // else, for all other cases just return the given unmodified value back
         when(
             mockStrategy.doStrategy(
-                anyString(), anyString(), and(isA(String.class), startsWith("@")), 
+                anyString(), and(isA(String.class), startsWith("@")),
                 any(Class.class), isA(TestMessage.class), anyMapOf(String.class, Object.class)
             )
         ).thenReturn("foo");
         
         when(
             mockStrategy.doStrategy(
-                anyString(), anyString(), not(and(isA(String.class), startsWith("@"))), 
+                anyString(), not(and(isA(String.class), startsWith("@"))),
                 any(Class.class), isA(TestMessage.class), anyMapOf(String.class, Object.class)
             )
         ).then(returnCurrentPropertyValue());
@@ -63,7 +63,7 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
         return new Answer<Object>() {
             @Override
             public Object answer(InvocationOnMock invocation) throws Throwable {
-                return invocation.getArguments()[2];
+                return invocation.getArguments()[1];
             }
         };
     }
@@ -75,7 +75,7 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
     @Test
     public void testStringArrayProperty() {
         testMessage.stringList = new String[] {"@replace-me", "dont-replace", "@do-replace"};
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals(3, testMessage.stringList.length);
         assertEquals("foo", testMessage.stringList[0]);
         assertEquals("dont-replace", testMessage.stringList[1]);
@@ -88,7 +88,7 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
     @Test
     public void testArbitraryObjectArrayProperty() {
         testMessage.arbitraryObjectArray = new ArbitraryClass[] {new ArbitraryClass("@should-not-be-replaced"), new ArbitraryClass("also-should-not-be")};
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals(2, testMessage.arbitraryObjectArray.length);
         assertEquals("@should-not-be-replaced", testMessage.arbitraryObjectArray[0].someProperty);
         assertEquals("also-should-not-be", testMessage.arbitraryObjectArray[1].someProperty);
@@ -100,7 +100,7 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
     @Test
     public void testArbitraryObjectListProperty() {
         testMessage.arbitraryObjectList = Arrays.asList(new ArbitraryClass[] {new ArbitraryClass("@should-be-replaced"), new ArbitraryClass("should-not-be-replaced")});
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals(2, testMessage.arbitraryObjectList.size());
         assertEquals("foo", testMessage.arbitraryObjectList.get(0).someProperty);
         assertEquals("should-not-be-replaced", testMessage.arbitraryObjectList.get(1).someProperty);
@@ -115,7 +115,7 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
         testMessage.arbitraryObjectSet.add(new ArbitraryClass("@should-be-replaced"));
         testMessage.arbitraryObjectSet.add(new ArbitraryClass("should-not-be-replaced"));
         
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals(2, testMessage.arbitraryObjectSet.size());
         assertTrue(testMessage.arbitraryObjectSet.stream().filter(o -> "foo".equals(o.someProperty)).count() == 1);
         assertTrue(testMessage.arbitraryObjectSet.stream().filter(o -> "should-not-be-replaced".equals(o.someProperty)).count() == 1);
@@ -130,7 +130,7 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
         testMessage.arbitraryObjectMap.put("key1", new ArbitraryClass("@should-be-replaced"));
         testMessage.arbitraryObjectMap.put("key2", new ArbitraryClass("should-not-be-replaced"));
         
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals(2, testMessage.arbitraryObjectMap.size());
         assertEquals("foo", testMessage.arbitraryObjectMap.get("key1").someProperty);
         assertEquals("should-not-be-replaced", testMessage.arbitraryObjectMap.get("key2").someProperty);
@@ -143,11 +143,11 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
     @Test
     public void testStringProperty() {
         testMessage.someMessageProperty = "@should-be-replaced";
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals("foo", testMessage.someMessageProperty);
         
         testMessage.someMessageProperty = "should-not-be-replaced";
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals("should-not-be-replaced", testMessage.someMessageProperty);
     }
     
@@ -158,11 +158,11 @@ public class AbstractMessagePropertyCrawlerInterceptorTest {
     @Test
     public void testArbitraryObjectProperty() {
         testMessage.arbitraryObject = new ArbitraryClass("@should-be-replaced");
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals("foo", testMessage.arbitraryObject.someProperty);
         
         testMessage.arbitraryObject = new ArbitraryClass("should-not-be-replaced");
-        interceptor.intercept("someApp", "someDevice", testMessage);
+        interceptor.intercept("someDevice", testMessage);
         assertEquals("should-not-be-replaced", testMessage.arbitraryObject.someProperty);
     }
     

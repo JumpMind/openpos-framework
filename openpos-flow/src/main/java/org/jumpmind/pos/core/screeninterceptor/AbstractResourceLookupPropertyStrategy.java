@@ -37,7 +37,7 @@ public abstract class AbstractResourceLookupPropertyStrategy<T extends Message> 
      * 
 	 */
 	@Override
-	public Object doStrategy(String appId, String deviceId, Object property, Class<?> clazz, T message, Map<String, Object> screenContext) {
+	public Object doStrategy(String deviceId, Object property, Class<?> clazz, T message, Map<String, Object> screenContext) {
 		if( String.class.equals(clazz)) {
 			String value = (String)property;
 			if(value != null && value.startsWith("{")) {
@@ -45,7 +45,7 @@ public abstract class AbstractResourceLookupPropertyStrategy<T extends Message> 
 					ResourceLookupStringBuilder lookupObject = ResourceLookupStringBuilder.fromJson(value);
 
 					String group = lookupObject.getGroup() != null ? lookupObject.getGroup() : "common";
-					String originalValue = lookupService.getString(appId, deviceId, group, lookupObject.getKey()); 
+					String originalValue = lookupService.getString(deviceId, group, lookupObject.getKey());
 					String newValue = originalValue;
 					if(lookupObject.getParameters() != null) {
 						newValue = lookupObject.getParameters().keySet().stream().reduce( newValue, (acc, key) -> acc.replace("{{" + key + "}}", lookupObject.getParameters().get(key)));
@@ -64,7 +64,7 @@ public abstract class AbstractResourceLookupPropertyStrategy<T extends Message> 
 					    atLeastOneMatch = true;
 					    String match = m.group(1);
 					    String param = match.substring(2,match.length()-2);
-					    String replacement = this.lookupService.getString(appId, deviceId, group, param);
+					    String replacement = this.lookupService.getString(deviceId, group, param);
 					    if (replacement != null) {
     					    // Make sure the replacement doesn't also have additional
     					    // property references in it.  We don't support that (yet).
@@ -104,7 +104,7 @@ public abstract class AbstractResourceLookupPropertyStrategy<T extends Message> 
 	            }
 
 	            if (key != null) {
-	                return lookupService.getString(appId, deviceId,group, key);
+	                return lookupService.getString(deviceId,group, key);
 	            }
 	        }
 		}

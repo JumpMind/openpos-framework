@@ -31,6 +31,10 @@
                 </div>
             </div>
 
+            <div class="notify">
+                <h1>{{screen.eligibleMessage}}</h1>
+            </div>
+
             <div class="actions">
                 <ng-container *ngFor="let button of screen.actions; let first = first;">
                     <app-secondary-button *ngIf="!first" [ngClass]="button.additionalStyle" (buttonClick)="doAction(button)">

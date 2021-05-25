@@ -11,5 +11,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class GetDeviceRequest {
     private String deviceId;
-    private String appId;
 }

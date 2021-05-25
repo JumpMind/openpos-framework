@@ -49,7 +49,7 @@ public class ClientLocaleService {
 
     private void sendMessage() {
         LocaleChangedMessage message = localeMessageFactory.getMessage(locale, displayLocale);
-        messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+        messageService.sendMessage(stateManager.getDeviceId(), message);
     }
 
 }

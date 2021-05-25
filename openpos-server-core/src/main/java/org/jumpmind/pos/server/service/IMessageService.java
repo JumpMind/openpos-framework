@@ -4,6 +4,6 @@ import org.jumpmind.pos.util.model.Message;
 
 public interface IMessageService {
 
-    public void sendMessage(String appId, String deviceId, Message message);
+    public void sendMessage(String deviceId, Message message);
         
 }

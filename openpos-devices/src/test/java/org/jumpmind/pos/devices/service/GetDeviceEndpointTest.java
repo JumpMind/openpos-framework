@@ -41,7 +41,6 @@ public class GetDeviceEndpointTest {
                             .content(
                                     GetDeviceRequest.builder()
                                             .deviceId("00100-001")
-                                            .appId("pos")
                                             .build()
                             ).build())
             .andExpect(status().isOk())
@@ -56,7 +55,6 @@ public class GetDeviceEndpointTest {
                 .content(
                         GetDeviceRequest.builder()
                                 .deviceId("xxxxx")
-                                .appId("pos")
                                 .build())
                 .build())
                 .andExpect(status().is5xxServerError());

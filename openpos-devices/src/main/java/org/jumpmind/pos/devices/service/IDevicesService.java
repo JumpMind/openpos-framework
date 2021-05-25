@@ -39,9 +39,15 @@ public interface IDevicesService {
     @RequestMapping(path = "/unpaired", method = RequestMethod.POST)
     public GetUnpairedDevicesResponse getUnpairedDevices(@RequestBody GetUnpairedDevicesRequest request);
 
+    @RequestMapping(path = "/paired", method = RequestMethod.POST)
+    public GetPairedDevicesResponse getPairedDevices(@RequestBody GetPairedDevicesRequest request);
+
     @RequestMapping(path = "/pair", method = RequestMethod.POST)
     public PairDeviceResponse pairDevice(@RequestBody PairDeviceRequest request);
 
     @RequestMapping(path = "/unpair", method = RequestMethod.POST)
     public UnpairDeviceResponse unpairDevice(@RequestBody UnpairDeviceRequest request);
+
+    @RequestMapping(path = "/setAppId", method = RequestMethod.POST)
+    public SetAppIdResponse setAppId(@RequestBody SetAppIdRequest request);
 }

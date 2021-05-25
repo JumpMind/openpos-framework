@@ -24,13 +24,9 @@ public final class AppUtils {
     private AppUtils() {
     }
 
-    public static void setupLogging(String appId) {
-        MDC.put("stateManager", appId);
-    }
-
-    public static void setupLogging(String appId, String deviceId) {
-        if (isNotBlank(appId) && isNotBlank(deviceId)) {
-            MDC.put("stateManager", String.format("%s:%s", appId, deviceId));
+    public static void setupLogging(String deviceId) {
+        if (isNotBlank(deviceId)) {
+            MDC.put("stateManager", String.format("%s", deviceId));
             MDC.put("deviceId", deviceId);
         }
     }

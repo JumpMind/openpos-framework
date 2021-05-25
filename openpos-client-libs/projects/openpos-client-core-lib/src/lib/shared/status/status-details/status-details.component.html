@@ -20,7 +20,8 @@
                 status="online"
                 [icon]="s.icon"
                 [titleTransparency]="s.selectedDevice?.displayName"
-                (actionExecuted)="onChangeSelectedPeripheral(s)">
+                (actionExecuted)="onChangeSelectedPeripheral(s)"
+                [enabled]="s.enabled">
         </app-status-details-item>
     </div>
 </div>

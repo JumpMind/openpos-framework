@@ -11,7 +11,7 @@ public class ResourceBundleLookupService implements IResourceLookupService{
     protected ResourceBundle screenProperties;
 	
 	@Override
-	public String getString(String appId, String deviceId, String group, String key) {
+	public String getString(String deviceId, String group, String key) {
         String value = null;
         try {
             value = screenProperties.getString(key);
