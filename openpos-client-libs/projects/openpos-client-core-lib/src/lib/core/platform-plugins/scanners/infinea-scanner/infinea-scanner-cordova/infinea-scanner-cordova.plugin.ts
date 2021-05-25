@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { IPlatformPlugin } from '../../platform-plugin.interface';
-import { IScanner } from '../scanner.interface';
+import { IPlatformPlugin } from '../../../platform-plugin.interface';
+import { IScanner } from '../../scanner.interface';
 import { Observable, Subject } from 'rxjs';
-import { IScanData } from '../scan.interface';
-import { InfineaBarcodeUtils } from './infinea-to-openpos-barcode-type';
+import { IScanData } from '../../scan.interface';
+import { InfineaBarcodeUtils } from '../infinea-to-openpos-barcode-type';
 
 @Injectable({
     providedIn: 'root'

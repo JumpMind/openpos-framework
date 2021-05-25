@@ -14,10 +14,8 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.awt.print.PrinterException;
 import java.io.*;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+
 
 @Slf4j
 public class EscpPOSPrinter implements IOpenposPrinter {

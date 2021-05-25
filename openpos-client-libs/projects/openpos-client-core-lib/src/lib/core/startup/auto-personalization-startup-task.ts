@@ -1,4 +1,4 @@
-import {catchError, first, flatMap, take, tap} from 'rxjs/operators';
+import {catchError, first, flatMap, take, tap, timeout} from 'rxjs/operators';
 import {IStartupTask} from './startup-task.interface';
 import {PersonalizationService} from '../personalization/personalization.service';
 import {concat, Observable, of} from 'rxjs';
@@ -32,13 +32,15 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                 let serviceConfig: ZeroconfService = null;
 
                 return Zeroconf.watch(this.TYPE, this.DOMAIN).pipe(
+                    timeout(10000),
                     first(conf => conf.action === 'resolved'),
                     tap(conf => {
                         serviceConfig = conf.service;
                     }),
                     flatMap(() => this.wrapperService.getDeviceName()),
                     tap(deviceName => name = deviceName),
-                    flatMap(() => this.attemptAutoPersonalize(serviceConfig, name))
+                    flatMap(() => this.attemptAutoPersonalize(serviceConfig, name)),
+                    catchError(() => this.manualPersonalization())
                 );
             }
         } else {

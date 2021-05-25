@@ -264,6 +264,7 @@ public class QueryTemplate implements Cloneable {
         while (matcher.find()) {
             StringBuilder replacement = new StringBuilder();
             replacement.append("(");
+            int parameterIndex = 0;
             for (Map.Entry<Integer, ? extends List> indexEntry : indexToList.entrySet()) {
                 if (indexEntry.getKey() > 0) {
                     if (matcher.group(2) != null) {
@@ -273,8 +274,18 @@ public class QueryTemplate implements Cloneable {
                         replacement.append(" OR ");
                     }
                 }
-                replacement.append(matcher.group(1)).append(matcher.group(3)).append("$").append(indexEntry.getKey()).append(matcher.group(4));
-                newParams.put(entry.getKey() + "$" + indexEntry.getKey(), indexEntry.getValue());
+                replacement.append(matcher.group(1));
+                List<?> entries = indexEntry.getValue();
+                for (int i = 0; i < entries.size(); i++) {
+                    replacement.append(matcher.group(3)).append("$").append(parameterIndex);
+
+                    newParams.put(entry.getKey() + "$" + parameterIndex, entries.get(i));
+                    if(i != entries.size() - 1) {
+                        replacement.append(",");
+                    }
+                    parameterIndex++;
+                }
+                replacement.append(matcher.group(4));
             }
             replacement.append(")");
             buffer.replace(matcher.start(), matcher.end(), replacement.toString());

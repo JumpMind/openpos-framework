@@ -45,7 +45,7 @@ import { SCANNERS, ScannerService } from './platform-plugins/scanners/scanner.se
 import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-startup-task';
 import { WedgeScannerPlugin } from './platform-plugins/scanners/wedge-scanner/wedge-scanner.plugin';
 import { CordovaPlatform } from './platforms/cordova.platform';
-import { InfineaScannerCordovaPlugin } from './platform-plugins/scanners/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
+import { InfineaScannerCordovaPlugin } from './platform-plugins/scanners/infinea-scanner/infinea-scanner-cordova/infinea-scanner-cordova.plugin';
 import { NCRPaymentPlugin } from './platform-plugins/cordova-plugins/ncr-payment-plugin';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
 import { ScanditCameraViewComponent } from './platform-plugins/scanners/scandit-scanner-cordova/scandit-camera-view/scandit-camera-view.component';
@@ -72,8 +72,11 @@ import { AudioRepositoryService } from './audio/audio-repository.service';
 import { AudioInteractionService } from './audio/audio-interaction.service';
 import { AudioConsolePlugin } from './audio/audio-console.plugin';
 import {ClientExecutableService} from "./services/client-executable.service";
+import {InfineaScannerCapacitorPlugin} from "./platform-plugins/scanners/infinea-scanner/infinea-scanner-capacitor/infinea-scanner-capacitor.plugin";
+import {Dpp255CapacitorPlugin} from "./platform-plugins/printers/dpp-255-capacitor.plugin";
 import {AutoPersonalizationStartupTask} from "./startup/auto-personalization-startup-task";
 import {WrapperService} from "./services/wrapper.service";
+import {InfineaSdkPlugin} from "./platform-plugins/capacitor-plugins/infinea-sdk.plugin";
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -137,15 +140,21 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: SCANNERS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: SCANNERS, useExisting: ConsoleScannerPlugin, multi: true},
         { provide: SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        { provide: SCANNERS, useExisting: InfineaScannerCapacitorPlugin, multi: true },
+        { provide: PLUGINS, useExisting: InfineaSdkPlugin, multi: true},
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},
         { provide: PLUGINS, useExisting: AndroidContentProviderPlugin, multi: true },
         { provide: PLUGINS, useExisting: ScanditScannerCordovaPlugin, multi: true},
+        { provide: PLUGINS, useExisting: InfineaScannerCapacitorPlugin, multi: true },
+        { provide: PLUGINS, useExisting: Dpp255CapacitorPlugin, multi: true },
         { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: PLATFORMS, useExisting: CordovaPlatform, multi: true},
         BrowserPrinterPlugin,
         { provide: PRINTERS, useExisting: BrowserPrinterPlugin, multi: true},
+        { provide: PRINTERS, useExisting: Dpp255CapacitorPlugin, multi: true},
+
         LocationService,
         { provide: PROVIDERS, useExisting: LocationProviderDefault, multi: true},
         TrainingOverlayService,
