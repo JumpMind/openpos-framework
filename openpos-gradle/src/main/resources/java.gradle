@@ -168,7 +168,6 @@ task patchJar(type: Jar, dependsOn:classes) {
         for (sourceFileName in ext.patchSourceFiles) {
               include sourceFileName;
         }        
-        include '**/SqlPurgeJob.java'
     }
     from(sourceSets.main.output.classesDirs ) {
         for (className in ext.patchClassFiles) {
