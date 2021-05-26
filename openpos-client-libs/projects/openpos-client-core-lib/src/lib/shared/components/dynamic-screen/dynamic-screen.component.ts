@@ -13,7 +13,7 @@ import { PrinterService } from '../../../core/platform-plugins/printers/printer.
     selector: 'app-dynamic-screen',
     templateUrl: './dynamic-screen.component.html',
     styleUrls: ['./dynamic-screen.component.scss'],
-    providers: [MessageProvider, ActionService, PrinterService]
+    providers: [MessageProvider, ActionService]
 })
 export class DynamicScreenComponent implements OnInit{
     @ViewChild(ToastContainerDirective)
