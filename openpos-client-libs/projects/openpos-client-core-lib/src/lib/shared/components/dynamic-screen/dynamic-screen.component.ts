@@ -7,7 +7,6 @@ import { WatermarkMessage } from '../../../core/messages/watermark-message';
 import { MessageTypes } from '../../../core/messages/message-types';
 import { ConfigurationService } from '../../../core/services/configuration.service';
 import { Observable } from 'rxjs';
-import { PrinterService } from '../../../core/platform-plugins/printers/printer.service';
 
 @Component({
     selector: 'app-dynamic-screen',
@@ -23,11 +22,9 @@ export class DynamicScreenComponent implements OnInit{
     showStatusBar = true;
     constructor(
         private configuration: ConfigurationService,
-        messageProvider: MessageProvider,
-        private toastrService: ToastrService,
-        private sessionService: SessionService,
-        printService: PrinterService
-    ) {
+                messageProvider: MessageProvider,
+                private toastrService: ToastrService,
+                private sessionService: SessionService) {
         messageProvider.setMessageType('Screen');
         this.sessionService.getMessages(MessageTypes.WATERMARK).subscribe((message: WatermarkMessage) => {
             this.showWatermark = true;

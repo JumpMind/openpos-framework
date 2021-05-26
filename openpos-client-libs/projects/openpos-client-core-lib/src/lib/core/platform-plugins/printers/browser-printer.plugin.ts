@@ -21,9 +21,9 @@ export class BrowserPrinterPlugin implements IPrinter {
             hiddenPrintFrame.onload = e => {
                 let frame = e.target as HTMLIFrameElement;
                 let contentWindow = frame.contentWindow;
-                // contentWindow.onbeforeunload = () => {
-                    // document.body.removeChild(hiddenPrintFrame);
-                // };
+                contentWindow.onbeforeunload = () => {
+                    document.body.removeChild(hiddenPrintFrame);
+                };
 
                 contentWindow.onafterprint = () => {
                     console.log('after print.');
