@@ -26,7 +26,6 @@ export class BrowserPrinterPlugin implements IPrinter {
                 };
 
                 contentWindow.onafterprint = () => {
-                    console.log('after print.');
                     observer.next();
                     observer.complete();
 
