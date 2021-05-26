@@ -19,7 +19,7 @@
             <mat-icon class="material-icons" style="vertical-align: top">keyboard_arrow_right</mat-icon>
         </button>
         <button *ngIf="!screenData.readOnly && screenData.linkedCustomerButton && screenData.customer"
-                class="linked-customer-summary"
+                class="linked-customer-summary header"
                 style="width: 100%;"
                 responsive-class
                 mat-flat-button
@@ -31,10 +31,25 @@
                     <div class="name">
                         <div class="customer-name">
                             {{screenData.customer.name}}
-                            <span *ngIf="keybindsEnabled(screenData.linkedCustomerButton)"
-                                  class="muted-color loyalty-keybind">{{screenData.linkedCustomerButton.keybindDisplayName}}</span></div>
                         </div>
+                    </div>
                     <div class="icon"><app-icon [iconName]="screenData.profileIcon" [iconClass]="(isMobile | async) ? null: 'material-icons mat-36'"></app-icon></div>
+                    <div class="loyalty-icon">
+                        <img *ngIf="screenData.loyaltyButton.icon" [src]="screenData.loyaltyButton.icon | imageUrl" class="sale-total-loyalty-button-icon">
+                    </div>
+                </div>
+            </div>
+        </button>
+        <button *ngIf="!screenData.readOnly && screenData.linkedCustomerButton && screenData.customer"
+                class="linked-customer-summary content"
+                style="width: 100%;"
+                responsive-class
+                mat-flat-button
+                [actionItem]="screenData.linkedCustomerButton"
+                (actionClick)="doAction(screenData.linkedCustomerButton)"
+                (click)="doAction(screenData.linkedCustomerButton)">
+            <div class="button-wrapper">
+                <div class="grid-container">
                     <div class="memberships">
                         <div *ngIf="isMissingCustomerInfo()" class="customer-missing-info">
                             <app-warn-button responsive-class>
