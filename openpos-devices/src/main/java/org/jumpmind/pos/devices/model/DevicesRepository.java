@@ -198,7 +198,7 @@ public class DevicesRepository {
 
     public DevicePersonalizationModel findDevicePersonalizationModel(String deviceName) {
         final DevicePersonalizationModel model = devSession.findByNaturalId(DevicePersonalizationModel.class, new ModelId("deviceName", deviceName));
-        List<DeviceParamModel> params = getDeviceParams(model.getDeviceId(), model.getAppId());
+        List<DeviceParamModel> params = getDeviceParams(model.getDeviceId());
 
         if (params == null) {
             params = new ArrayList<>();
