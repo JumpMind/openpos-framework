@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MatDialogRef } from '@angular/material';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
 
 import { StatusMessage } from '../status.message';
 import { StatusService } from '../status.service';
@@ -15,10 +15,13 @@ import { PeripheralSelectorComponent, PeripheralSelectorDialogData } from './sel
 export class StatusDetailsComponent {
     readonly status$: Observable<StatusMessage[]>;
 
+    private _openSelectorDialog?: MatDialogRef<PeripheralSelectorComponent>;
+
     constructor(
         status: StatusService, 
         public peripheralSelection: PeripheralSelectionService,
-        private dialog: MatDialog
+        private dialog: MatDialog,
+        private dialogRef: MatDialogRef<PeripheralSelectorComponent>
     ) {
         this.status$ = status.getStatus().pipe(
             map(s => Array.from(s.values()))
@@ -26,15 +29,23 @@ export class StatusDetailsComponent {
     }
 
     onChangeSelectedPeripheral(category: PeripheralCategory) {
-        this.dialog.open(PeripheralSelectorComponent, {
+        this._openSelectorDialog = this.dialog.open(PeripheralSelectorComponent, {
             data: <PeripheralSelectorDialogData> {
                 category: category
             },
             width: '75%'
         });
+
+        this._openSelectorDialog.afterClosed().pipe(take(1)).subscribe(() => {
+            this._openSelectorDialog = undefined;
+        });
     }
 
     close() {
-        this.dialog.closeAll();
+        if (this._openSelectorDialog) {
+            this._openSelectorDialog.close();
+        }
+
+        this.dialogRef.close();
     }
 }
