@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
+import {from, of, Observable} from "rxjs";
 import { Subject, BehaviorSubject } from 'rxjs';
+import {Capacitor, DeviceInfo, Plugins} from "@capacitor/core";
+import {map} from "rxjs/operators";
+
 
 declare var cordova: any;
 
@@ -41,6 +45,11 @@ export class CordovaService {
     public isRunningInBrowser(): boolean {
         const app = document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1;
         return !app;
+    }
+
+    public getDeviceName(): Observable<string> {
+        console.log(window['device']['serial']);
+        return of(window['device']['serial']);
     }
 }
 

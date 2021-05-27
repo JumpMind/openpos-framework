@@ -72,6 +72,7 @@ export class PersonalizationService {
                 timeout(Configuration.autoPersonalizationRequestTimeoutMillis),
                 tap(response => {
                     if (response) {
+                        console.log('Auto personalization response received.', response);
                         response.sslEnabled = this.sslEnabled$.getValue();
                     }
                 }));
