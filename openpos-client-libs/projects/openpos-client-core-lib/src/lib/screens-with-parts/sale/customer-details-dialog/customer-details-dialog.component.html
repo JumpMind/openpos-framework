@@ -89,6 +89,9 @@
                           (click)="doAction(menuItem)">
         <span responsive-class>{{menuItem.title}}</span>
         <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
+        <span *ngIf="keybindsEnabled(menuItem)" class="muted-color keybinding" >
+            {{menuItem.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-secondary-button responsive-class
                           class="unlink"
@@ -98,6 +101,9 @@
                           (actionClick)="doAction(screen.unlinkButton)"
                           (click)="doAction(screen.unlinkButton)">
         <span>{{screen.unlinkButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.unlinkButton)" class="muted-color keybinding" >
+            {{screen.unlinkButton.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-secondary-button responsive-class
                           class="edit"
@@ -107,6 +113,9 @@
                           (actionClick)="doAction(screen.editButton)"
                           (click)="doAction(screen.editButton)">
         <span>{{screen.editButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.editButton)" class="muted-color keybinding" >
+            {{screen.editButton.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-primary-button responsive-class
                         class="done"
@@ -116,5 +125,8 @@
                         (actionClick)="doAction(screen.doneButton)"
                         (click)="doAction(screen.doneButton)">
         <span>{{screen.doneButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.doneButton)" class="muted-color keybinding" >
+            {{screen.doneButton.keybindDisplayName}}
+        </span>
     </app-primary-button>
 </mat-dialog-actions>

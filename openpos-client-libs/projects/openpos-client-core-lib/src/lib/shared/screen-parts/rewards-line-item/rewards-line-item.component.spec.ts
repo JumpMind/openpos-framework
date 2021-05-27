@@ -63,7 +63,8 @@ describe('RewardsLineItemComponent', () => {
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
             component.reward = {
-                expirationDate: '01/01/2000'
+                expirationDate: '01/01/2000',
+                applyButton: {title: 'a title', enabled: true}
             } as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
@@ -157,49 +158,50 @@ describe('RewardsLineItemComponent', () => {
             });
 
             describe('apply button', () => {
-                describe('when applicable', () => {
-                    beforeEach(() => {
-                        component.reward.promotionId = '123';
-                        component.reward.applyButton = {title: 'a title'} as IActionItem;
-                        fixture.detectChanges();
-                    });
-
-                    it('renders the button', () => {
-                        validateExist(fixture, '.apply a');
-                    });
-
-                    it('renders the button title', () => {
-                        validateText(fixture, '.apply a', component.reward.applyButton.title);
-                    });
-
-                    it('renders the chevron icon', () => {
-                        validateIcon(fixture, '.apply a app-icon', 'chevron_right');
-                    });
-
-                    it('calls doAction with the configuration when an actionClick event is triggered', () => {
-                        spyOn(component, 'doAction');
-                        const button = fixture.debugElement.query(By.css('.apply a'));
-                        button.nativeElement.dispatchEvent(new Event('actionClick'));
-                        expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
-                    });
-
-                    it('calls doAction with the configuration and promotionId when the button is clicked', () => {
-                        spyOn(component, 'doAction');
-                        const button = fixture.debugElement.query(By.css('.apply a'));
-                        button.nativeElement.click();
-                        expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
-                    });
+                beforeEach(() => {
+                    component.reward.promotionId = '123';
+                    component.reward.applyButton = {title: 'a title', enabled: true} as IActionItem;
+                    fixture.detectChanges();
                 });
 
-                describe('when not applicable', () => {
-                   beforeEach(() => {
-                      component.reward.applyButton = undefined;
-                      fixture.detectChanges();
-                   });
+                it('renders the button', () => {
+                    validateExist(fixture, '.apply a');
+                });
 
-                   it('does not render the apply button', () => {
-                      validateDoesNotExist(fixture, '.apply a');
-                   });
+                it('renders the button title', () => {
+                    validateText(fixture, '.apply a', component.reward.applyButton.title);
+                });
+
+                it('renders the chevron icon', () => {
+                    validateIcon(fixture, '.apply a app-icon', 'chevron_right');
+                });
+
+                it('calls doAction with the configuration when an actionClick event is triggered', () => {
+                    spyOn(component, 'doAction');
+                    const button = fixture.debugElement.query(By.css('.apply a'));
+                    button.nativeElement.dispatchEvent(new Event('actionClick'));
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
+                });
+
+                it('calls doAction with the configuration and promotionId when the button is clicked', () => {
+                    spyOn(component, 'doAction');
+                    const button = fixture.debugElement.query(By.css('.apply a'));
+                    button.nativeElement.click();
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
+                });
+
+                it('is enabled when the button is enabled', () => {
+                    component.reward.applyButton.enabled = true;
+                    fixture.detectChanges();
+                    const button = fixture.debugElement.query(By.css('.apply a'));
+                    expect(button.properties.disabled).toBe(false);
+                });
+
+                it('is disabled when the button is disabled', () => {
+                    component.reward.applyButton.enabled = false;
+                    fixture.detectChanges();
+                    const button = fixture.debugElement.query(By.css('.apply a'));
+                    expect(button.properties.disabled).toBe(true);
                 });
             });
         });
@@ -227,7 +229,9 @@ describe('RewardsLineItemComponent', () => {
             }).compileComponents();
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
-            component.reward = {} as Reward;
+            component.reward = {
+                applyButton: {title: 'a title', enabled: true}
+            } as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',
@@ -270,7 +274,9 @@ describe('RewardsLineItemComponent', () => {
             }).compileComponents();
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
-            component.reward = {} as Reward;
+            component.reward = {
+                applyButton: {title: 'a title', enabled: true}
+            } as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',

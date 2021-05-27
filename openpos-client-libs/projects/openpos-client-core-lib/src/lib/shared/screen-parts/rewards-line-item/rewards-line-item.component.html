@@ -8,10 +8,10 @@
         <app-currency-text *ngIf="reward.amount" [amountText]="reward.amount"></app-currency-text>
     </div>
     <div class="apply" >
-        <a *ngIf="reward.applyButton"
-           [actionItem]="reward.applyButton"
+        <a [actionItem]="reward.applyButton"
            (actionClick)="doAction(reward.applyButton, reward.promotionId)"
            (click)="doAction(reward.applyButton, reward.promotionId)"
+           [disabled]="!reward.applyButton.enabled"
            mat-button
            responsive-class>
             {{reward.applyButton.title}} <app-icon [iconName]="screenData.applyIcon" [iconClass]="'material-icons mat-24'"></app-icon>

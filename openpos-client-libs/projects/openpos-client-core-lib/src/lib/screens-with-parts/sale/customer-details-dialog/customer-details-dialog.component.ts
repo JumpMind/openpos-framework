@@ -4,6 +4,8 @@ import {DialogComponent} from '../../../shared/decorators/dialog-component.decor
 import {PosScreen} from '../../pos-screen/pos-screen.component';
 import {Observable} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
+import {IActionItem} from "../../../core/actions/action-item.interface";
+import {Configuration} from "../../../configuration/configuration";
 
 @DialogComponent({
   name: 'CustomerDetailsDialog'
@@ -36,5 +38,9 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
 
   getRewardsLabel() : string {
     return this.screen.rewardsLabel + ((this.screen.customer.rewards) ? ' (' + this.screen.customer.rewards.length + ')': '');
+  }
+
+  public keybindsEnabled(menuItem: IActionItem): boolean {
+    return Configuration.enableKeybinds && !!menuItem.keybind && menuItem.keybind !== 'Enter';
   }
 }

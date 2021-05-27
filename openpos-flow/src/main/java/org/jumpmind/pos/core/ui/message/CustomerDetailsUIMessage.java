@@ -2,12 +2,14 @@ package org.jumpmind.pos.core.ui.message;
 
 import lombok.Data;
 import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@AssignKeyBindings
 public class CustomerDetailsUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
