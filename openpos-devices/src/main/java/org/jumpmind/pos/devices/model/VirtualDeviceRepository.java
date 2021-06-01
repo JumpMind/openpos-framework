@@ -17,8 +17,8 @@ public class VirtualDeviceRepository {
         return virtualDevices.get(authToken);
     }
 
-    public DeviceModel getByDeviceIdAppId(String deviceId, String appId) {
-        return virtualDevices.values().stream().filter(d->d.getDeviceId().equals(deviceId) && d.getAppId().equals(appId)).findFirst().orElse(null);
+    public DeviceModel getByDeviceId(String deviceId) {
+        return virtualDevices.values().stream().filter(d -> d.getDeviceId().equals(deviceId)).findFirst().orElse(null);
     }
 
     public void removeByDeviceIdAppId(String deviceId, String appId) {

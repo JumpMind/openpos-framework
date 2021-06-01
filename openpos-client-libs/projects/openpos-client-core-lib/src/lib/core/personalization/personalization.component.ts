@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Inject, OnInit, Optional } from '@angular/core';
 import {FormBuilder, FormGroup, Validators, AbstractControl, AsyncValidatorFn, ValidationErrors} from '@angular/forms';
 import {Router} from '@angular/router';
 import {Observable, of} from 'rxjs';
@@ -7,7 +7,7 @@ import { IScreen } from '../../shared/components/dynamic-screen/screen.interface
 import { PersonalizationService } from './personalization.service';
 import { PersonalizationConfigResponse } from './personalization-config-response.interface';
 import { ClientUrlService } from './client-url.service';
-import { MatDialog } from '@angular/material';
+import { MatDialog, MAT_DIALOG_DATA } from '@angular/material';
 import { DiscoveryService } from '../discovery/discovery.service';
 import { DiscoveryStatus } from '../discovery/discovery-status.enum';
 import { DiscoveryResponse } from '../discovery/discovery-response.interface';
@@ -43,8 +43,9 @@ export class PersonalizationComponent implements IScreen, OnInit {
         private formBuilder: FormBuilder, private clientUrlService: ClientUrlService,
         private personalizationService: PersonalizationService,
         private discoveryService: DiscoveryService,
-        private matDialog: MatDialog
-    ) { }
+        private matDialog: MatDialog,
+        @Inject(MAT_DIALOG_DATA) @Optional() private data?: { serverAddress?: string, serverPort?: string, appId?: string }
+    ) {}
 
     show(screen: any): void {
     }
@@ -53,8 +54,15 @@ export class PersonalizationComponent implements IScreen, OnInit {
 
         this.navigateExternal = this.clientUrlService.navigateExternal;
         this.serverIsSSL = window.location.protocol.includes('https');
-        this.appServerAddress = window.location.hostname;
-        this.appServerPort = window.location.port? window.location.port : this.serverIsSSL? '443': '';
+        this.appServerAddress = this.data && this.data.serverAddress ? this.data.serverAddress : window.location.hostname;
+
+        if (this.data && this.data.serverPort) {
+            this.appServerPort = this.data.serverPort;
+        } else {
+            this.appServerPort = window.location.port 
+                ? window.location.port 
+                : this.serverIsSSL ? '443': '';
+        }
 
         if (this.navigateExternal && localStorage.getItem('clientUrl')) {
             this.clientUrlService.renavigate();
@@ -105,10 +113,16 @@ export class PersonalizationComponent implements IScreen, OnInit {
             this.openposMgmtServerPresent = !!this.serverResponse.openposManagementServer;
         }
 
-        if( this.manualPersonalization ) {
+        if (this.manualPersonalization) {
+            let defaultDeviceId = '';
+
+            if (this.data && this.data.appId) {
+                defaultDeviceId = this.data.appId;
+            }
+
             const formGroup = {
                 deviceId: ['', [Validators.required, Validators.pattern(devicePattern)]],
-                appId: ['', [Validators.required]]
+                appId: [defaultDeviceId, [Validators.required]]
             };
 
             this.thirdFormGroup = this.formBuilder.group(formGroup);

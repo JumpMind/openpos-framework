@@ -8,6 +8,6 @@ public interface IActionListener {
 
     Collection<String> getRegisteredTypes();
     
-    void actionOccured(String appId, String deviceId, Action action);
+    void actionOccurred(String deviceId, Action action);
     
 }

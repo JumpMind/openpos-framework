@@ -42,12 +42,12 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
     public abstract void setMessagePropertyStrategies(List<IMessagePropertyStrategy<T>> strategies);
     
     @Override
-    public void intercept(String appId, String deviceId, T message) {
+    public void intercept(String deviceId, T message) {
         Map<String, Object> messageContext = new HashMap<>();
-        processFields(appId, deviceId, message, message, messageContext);
+        processFields(deviceId, message, message, messageContext);
     }
 
-    private final void processFields(String appId, String deviceId, Object obj, T message, Map<String, Object> messageContext) {
+    private final void processFields(String deviceId, Object obj, T message, Map<String, Object> messageContext) {
         Class<?> clazz = obj.getClass();
         if (ClassUtils.isSimpleType(clazz)) {
             return;
@@ -63,16 +63,16 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
 
                     try {
                         if (!Modifier.isFinal(field.getModifiers())) {
-                            field.set(obj, doStrategies(appId, deviceId, field, obj, message, messageContext));
+                            field.set(obj, doStrategies(deviceId, field, obj, message, messageContext));
                         }
                     } catch (IllegalArgumentException | IllegalAccessException e) {
                         logger.error("Failed to set property value", e);
                     }
 
-                    if (!processCollections(appId, deviceId, value, message, messageContext) && shouldProcess(field) && shouldProcess(type)) {
+                    if (!processCollections(deviceId, value, message, messageContext) && shouldProcess(field) && shouldProcess(type)) {
 
                         if (value != null) {
-                            processFields(appId, deviceId, value, message, messageContext);
+                            processFields(deviceId, value, message, messageContext);
                         }
 
                     }
@@ -86,16 +86,16 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
 
     }
 
-    private boolean processCollections(String appId, String deviceId, Object value, T message, Map<String, Object> messageContext) {
+    private boolean processCollections(String deviceId, Object value, T message, Map<String, Object> messageContext) {
         if (value instanceof List<?>) {
             @SuppressWarnings("unchecked")
             List<Object> list = (List<Object>) value;
             for (int i = 0; i < list.size(); i++) {
                 Object fieldObj = list.get(i);
                 if (fieldObj != null) {
-                    list.set(i, doStrategies(appId, deviceId, fieldObj, fieldObj.getClass(), message, messageContext));
-                    if (!processCollections(appId, deviceId, fieldObj, message, messageContext) && shouldProcess(fieldObj.getClass())) {
-                        processFields(appId, deviceId, fieldObj, message, messageContext);
+                    list.set(i, doStrategies(deviceId, fieldObj, fieldObj.getClass(), message, messageContext));
+                    if (!processCollections(deviceId, fieldObj, message, messageContext) && shouldProcess(fieldObj.getClass())) {
+                        processFields(deviceId, fieldObj, message, messageContext);
                     }
                 }
             }
@@ -106,9 +106,9 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
             Iterator<?> i = collection.iterator();
             while (i.hasNext()) {
                 Object fieldObj = i.next();
-                if (fieldObj != null && !processCollections(appId, deviceId, fieldObj, message, messageContext)
+                if (fieldObj != null && !processCollections(deviceId, fieldObj, message, messageContext)
                         && shouldProcess(fieldObj.getClass())) {
-                    processFields(appId, deviceId, fieldObj, message, messageContext);
+                    processFields(deviceId, fieldObj, message, messageContext);
                 }
             }
             return true;
@@ -116,7 +116,7 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
             for (int i = 0; i < Array.getLength(value); i++) {
                 Object arrayElem = Array.get(value, i);
                 if (arrayElem != null) {
-                    Array.set(value, i, doStrategies(appId, deviceId, arrayElem, arrayElem.getClass(), message, messageContext));
+                    Array.set(value, i, doStrategies(deviceId, arrayElem, arrayElem.getClass(), message, messageContext));
                 }
             }
             return true;
@@ -126,10 +126,10 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
             for (Entry<Object, Object> entry : map.entrySet()) {
                 Object entryValue = entry.getValue();
                 if (entryValue != null) {
-                    entry.setValue(doStrategies(appId, deviceId, entryValue, entryValue.getClass(), message, messageContext));
-                    if (entryValue != null && !processCollections(appId, deviceId, entryValue, message, messageContext)
+                    entry.setValue(doStrategies(deviceId, entryValue, entryValue.getClass(), message, messageContext));
+                    if (entryValue != null && !processCollections(deviceId, entryValue, message, messageContext)
                             && shouldProcess(entryValue.getClass())) {
-                        processFields(appId, deviceId, entryValue, message, messageContext);
+                        processFields(deviceId, entryValue, message, messageContext);
                     }
                 }
             }
@@ -140,11 +140,11 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
         }
     }
 
-    private Object doStrategies(String appId, String deviceId, Field field, Object obj, T message, Map<String, Object> messageContext) {
+    private Object doStrategies(String deviceId, Field field, Object obj, T message, Map<String, Object> messageContext) {
         try {
             Object property = field.get(obj);
             Class<?> clazz = (property != null ? property.getClass() : field.getType());
-            return doStrategies(appId, deviceId, property, clazz, message, messageContext);
+            return doStrategies(deviceId, property, clazz, message, messageContext);
         } catch (IllegalArgumentException | IllegalAccessException e) {
             logger.error("Failed to crawl message property", e);
         }
@@ -152,7 +152,6 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
     }
 
     private Object doStrategies(
-            String appId,
             String deviceId,
             Object property,
             Class<?> clazz,
@@ -161,7 +160,7 @@ public abstract class AbstractMessagePropertyCrawlerInterceptor<T extends Messag
         List<IMessagePropertyStrategy<T>> strategies = this.getMessagePropertyStrategies();
         if (strategies != null) {
             for (IMessagePropertyStrategy<T> s : strategies) {
-                property = s.doStrategy(appId, deviceId, property, clazz, message, messageContext);
+                property = s.doStrategy(deviceId, property, clazz, message, messageContext);
             }
         }
         return property;

@@ -26,7 +26,7 @@ import org.springframework.core.env.MutablePropertySources;
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @TableDef(name = "device", description = "A device used to transaction commerce for a Business Unit",
-        primaryKey = {"deviceId", "appId"})
+        primaryKey = {"deviceId"})
 public class DeviceModel extends AbstractModel implements ITaggedModel {
 
     @ToString.Include

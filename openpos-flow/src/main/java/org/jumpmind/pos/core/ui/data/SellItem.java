@@ -3,7 +3,6 @@ package org.jumpmind.pos.core.ui.data;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -36,6 +35,7 @@ public class SellItem extends DefaultItem {
     private String optionsLabel;
     private boolean isTender;
     private boolean svgImage;
+    private String orderIcon;
 
     /**
      * Put properties in this map if they are optional. When not set, they don't
@@ -57,6 +57,14 @@ public class SellItem extends DefaultItem {
             }
         }
         return subtitle;
+    }
+
+    public String getOrderIcon() {
+        return orderIcon;
+    }
+
+    public void setOrderIcon(String orderIcon) {
+        this.orderIcon = orderIcon;
     }
 
     @Override

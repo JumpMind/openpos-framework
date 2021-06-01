@@ -4,5 +4,5 @@ import org.jumpmind.pos.util.model.Message;
 
 public interface IMessageInterceptor<T extends Message> {
 
-    void intercept(String appId, String nodeId, T message);
+    void intercept(String nodeId, T message);
 }

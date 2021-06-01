@@ -103,7 +103,7 @@ public class ScreenService implements IScreenService, IActionListener {
 
         logger.debug("Received a request for content: {}", contentPath);
 
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         if (stateManager != null) {
             String contentType = MimeTypeUtil.getContentType(contentPath);
             response.setContentType(contentType);
@@ -152,9 +152,9 @@ public class ScreenService implements IScreenService, IActionListener {
             @RequestParam(name = "searchTerm", required = false) String searchTerm,
             @RequestParam(name = "sizeLimit", defaultValue = "1000") Integer sizeLimit) {
         logger.info("Received a request to load component values for {} {} {}", appId, deviceId, controlId);
-        String result = getComponentValues(appId, deviceId, controlId, getLastScreen(appId, deviceId), searchTerm, sizeLimit);
+        String result = getComponentValues(appId, deviceId, controlId, getLastScreen(deviceId), searchTerm, sizeLimit);
         if (result == null) {
-            result = getComponentValues(appId, deviceId, controlId, getLastDialog(appId, deviceId), searchTerm, sizeLimit);
+            result = getComponentValues(appId, deviceId, controlId, getLastDialog(deviceId), searchTerm, sizeLimit);
         }
         if (result == null) {
             result = "[]";
@@ -202,21 +202,20 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public void actionOccured(String appId, String deviceId, Action action) {
-        logger.trace("actionOccurred -> appId: {}, deviceId: {}, action: {}", appId, deviceId, action != null ? action.getName() : null);
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
-
+    public void actionOccurred(String deviceId, Action action) {
+        logger.trace("actionOccurred -> deviceId: {}, action: {}", deviceId, action != null ? action.getName() : null);
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         if (stateManager != null) {
             try {
-
+                String appId = stateManager.getAppId();
                 stateManagerContainer.setCurrentStateManager(stateManager);
                 if (SessionTimer.ACTION_KEEP_ALIVE.equals(action.getName())) {
                     stateManager.keepAlive();
                 } else if ("Refresh".equals(action.getName())) {
-                    UIMessage lastDialog = getLastDialog(appId, deviceId);
+                    UIMessage lastDialog = getLastDialog(deviceId);
                     logger.info("Received Refresh action from {}", deviceId);
-                    showScreen(appId, deviceId, getLastScreen(appId, deviceId));
-                    showScreen(appId, deviceId, lastDialog);
+                    showScreen(deviceId, getLastScreen(deviceId));
+                    showScreen(deviceId, lastDialog);
                 } else if ( uiDataMessageProviderService.handleAction(action, stateManager.getApplicationState())){
                     logger.info("Action handled by UIMessageDataProvider from {}\n{}", deviceId, logFormatter.toJsonString(action));
                 } else {
@@ -235,7 +234,7 @@ public class ScreenService implements IScreenService, IActionListener {
                             errorHandler.handleError(stateManager, ex);
                         } else {
                             logger.error(String.format("Unexpected exception while processing action from %s: %s", deviceId, action), ex);
-                            messageService.sendMessage(appId, deviceId, Toast.createWarningToast(
+                            messageService.sendMessage(deviceId, Toast.createWarningToast(
                                     "The application received an unexpected error. Please report to the appropriate technical personnel"));
                         }
                     }
@@ -246,8 +245,8 @@ public class ScreenService implements IScreenService, IActionListener {
         }
     }
 
-    protected UIMessage removeLastDialog(String appId, String deviceId) {
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+    protected UIMessage removeLastDialog(String deviceId) {
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         ApplicationState applicationState = stateManager != null ? stateManager.getApplicationState() : null;
         if (applicationState != null && applicationState.getLastDialog() != null) {
             UIMessage lastDialog = applicationState.getLastDialog();
@@ -259,8 +258,8 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public UIMessage getLastDialog(String appId, String deviceId) {
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+    public UIMessage getLastDialog(String deviceId) {
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         ApplicationState applicationState = stateManager != null ? stateManager.getApplicationState() : null;
         if (applicationState != null) {
             return applicationState.getLastDialog();
@@ -270,8 +269,8 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public UIMessage getLastScreen(String appId, String deviceId) {
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+    public UIMessage getLastScreen(String deviceId) {
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         ApplicationState applicationState = stateManager != null ? stateManager.getApplicationState() : null;
         if (applicationState != null) {
             return applicationState.getLastScreen();
@@ -281,8 +280,8 @@ public class ScreenService implements IScreenService, IActionListener {
     }
     
     @Override
-    public UIMessage getLastPreInterceptedScreen(String appId, String deviceId) {
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+    public UIMessage getLastPreInterceptedScreen(String deviceId) {
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         ApplicationState applicationState = stateManager != null ? stateManager.getApplicationState() : null;
         if (applicationState != null) {
             return applicationState.getLastPreInterceptedScreen();
@@ -292,8 +291,8 @@ public class ScreenService implements IScreenService, IActionListener {
     }
     
     @Override
-    public UIMessage getLastPreInterceptedDialog(String appId, String deviceId) {
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+    public UIMessage getLastPreInterceptedDialog(String deviceId) {
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         ApplicationState applicationState = stateManager != null ? stateManager.getApplicationState() : null;
         if (applicationState != null) {
             return applicationState.getLastPreInterceptedDialog();
@@ -303,25 +302,25 @@ public class ScreenService implements IScreenService, IActionListener {
     }
 
     @Override
-    public void showToast(String appId, String deviceId, Toast toast) {
-        interceptToast(appId, deviceId, toast);
-        messageService.sendMessage(appId, deviceId, toast);
+    public void showToast(String deviceId, Toast toast) {
+        interceptToast(deviceId, toast);
+        messageService.sendMessage(deviceId, toast);
     }
 
     @Override
-    public void closeToast(String appId, String deviceId, CloseToast toast) {
-        interceptCloseToast(appId, deviceId, toast);
-        messageService.sendMessage(appId, deviceId, toast);
+    public void closeToast(String deviceId, CloseToast toast) {
+        interceptCloseToast(deviceId, toast);
+        messageService.sendMessage(deviceId, toast);
     }
 
     @Override
-    public void showScreen(String appId, String deviceId, UIMessage screen) {
-        showScreen(appId, deviceId, screen, null);
+    public void showScreen(String deviceId, UIMessage screen) {
+        showScreen(deviceId, screen, null);
     }
 
     @Override
-    public void showScreen(String appId, String deviceId, UIMessage screen, Map<String, UIDataMessageProvider<?>> uiDataMessageProviders) {
-        IStateManager stateManager = stateManagerContainer.retrieve(appId, deviceId);
+    public void showScreen(String deviceId, UIMessage screen, Map<String, UIDataMessageProvider<?>> uiDataMessageProviders) {
+        IStateManager stateManager = stateManagerContainer.retrieve(deviceId);
         if (screen != null && stateManager != null) {
             ApplicationState applicationState = stateManager.getApplicationState();
             screen.setSequenceNumber(applicationState.incrementAndScreenSequenceNumber());
@@ -329,7 +328,7 @@ public class ScreenService implements IScreenService, IActionListener {
             UIMessage preInterceptedScreen = null;
             try {
                 preInterceptedScreen = SerializationUtils.clone(screen);
-                interceptScreen(appId, deviceId, screen);
+                interceptScreen(deviceId, screen);
                 logScreenTransition(deviceId, screen);
             } catch (Exception ex) {
                 if (ex.toString().contains("org.jumpmind.pos.core.screen.ChangeScreen")) {
@@ -347,7 +346,7 @@ public class ScreenService implements IScreenService, IActionListener {
 
             } else {
                 uiDataMessageProviderService.updateProviders(applicationState, uiDataMessageProviders);
-                messageService.sendMessage(appId, deviceId, screen);
+                messageService.sendMessage(deviceId, screen);
             }
 
             if (screen.isDialog()) {
@@ -362,36 +361,36 @@ public class ScreenService implements IScreenService, IActionListener {
         }
     }
 
-    protected void interceptToast(String appId, String deviceId, Toast toast) {
+    protected void interceptToast(String deviceId, Toast toast) {
         String[] toastInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, Toast.class));
 
         if (toastInterceptorBeanNames != null) {
             for (String beanName: toastInterceptorBeanNames) {
                 @SuppressWarnings("unchecked")
                 IMessageInterceptor<Toast> toastInterceptor =  (IMessageInterceptor<Toast>) applicationContext.getBean(beanName);
-                toastInterceptor.intercept(appId, deviceId, toast);
+                toastInterceptor.intercept(deviceId, toast);
             }
         }
     }
 
-    protected void interceptCloseToast(String appId, String deviceId, CloseToast closeToast) {
+    protected void interceptCloseToast(String deviceId, CloseToast closeToast) {
         String[] closeToastInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, CloseToast.class));
 
         for (String beanName: closeToastInterceptorBeanNames) {
             @SuppressWarnings("unchecked")
             IMessageInterceptor<CloseToast> toastInterceptor =  (IMessageInterceptor<CloseToast>) applicationContext.getBean(beanName);
-            toastInterceptor.intercept(appId, deviceId, closeToast);
+            toastInterceptor.intercept(deviceId, closeToast);
         }
     }
     
-    protected void interceptScreen(String appId, String deviceId, UIMessage screen) {
+    protected void interceptScreen(String deviceId, UIMessage screen) {
         String[] screenInterceptorBeanNames = applicationContext.getBeanNamesForType(ResolvableType.forClassWithGenerics(IMessageInterceptor.class, UIMessage.class));
 
         if (screenInterceptorBeanNames != null) {
             for (String beanName: screenInterceptorBeanNames) {
                 @SuppressWarnings("unchecked")
                 IMessageInterceptor<UIMessage> screenInterceptor =  (IMessageInterceptor<UIMessage>) applicationContext.getBean(beanName);
-                screenInterceptor.intercept(appId, deviceId, screen);
+                screenInterceptor.intercept(deviceId, screen);
                 
             }
         }

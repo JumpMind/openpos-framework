@@ -46,7 +46,7 @@ public class BeforeActionStateLifeCycleServiceIT {
     
     @Before
     public void setUp() throws Exception {
-        doNothing().when(messageService).sendMessage(any(String.class), any(String.class), any(Message.class));
+        doNothing().when(messageService).sendMessage(any(String.class), any(Message.class));
 
         FlowConfig config = new FlowConfig();
         config.setInitialState(FlowBuilder.addState(HomeState.class)

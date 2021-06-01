@@ -42,10 +42,10 @@ public class StateManagerContainerTest {
         for (int i = 0; i < 10; i++) {
             for (int j = 0; j < 50; j++) {
                 container.create("pos", "0000-"+i, null, null);
-                container.retrieve("pos", "0000-"+j);
+                container.retrieve("0000-"+j);
                 container.removeSessionIdVariables("blah");
                 container.getAllStateManagers();
-                container.remove("pos", "0000-"+j);
+                container.remove("0000-"+j);
             }
         }
     }

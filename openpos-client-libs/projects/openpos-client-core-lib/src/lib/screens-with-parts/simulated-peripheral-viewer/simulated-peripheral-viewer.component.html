@@ -8,5 +8,11 @@
             <iframe width="400rem" height="100%" *ngIf="receiptUrl" [src]="receiptUrl"></iframe>
         </div>
     </div>
+    <div class="buttons">
+        <button *ngIf="receiptUrl" mat-button [disabled]="!hasPreviousReceipt()"
+                (click)="getPreviousReceipt()">Previous</button>
+        <button *ngIf="receiptUrl" mat-button [disabled]="!hasNextReceipt()"
+                (click)="getNextReceipt()">Next</button>
+    </div>
     <div class="footer"></div>
 </div>

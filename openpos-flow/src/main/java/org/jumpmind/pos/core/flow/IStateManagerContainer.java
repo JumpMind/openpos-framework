@@ -6,9 +6,9 @@ public interface IStateManagerContainer {
 
     IStateManager create(String appId, String deviceId, Map<String, Object> queryParams, Map<String, String> personalizationProperties);
     
-    IStateManager retrieve(String appId, String deviceId);
+    IStateManager retrieve(String deviceId);
     
-    void remove(String appId, String deviceId);
+    void remove(String deviceId);
     
     void removeSessionIdVariables(String sessionId);
     

@@ -13,13 +13,13 @@ public class DisableActionItemScreenPropertyStrategy implements IMessageProperty
 	IDisableActionItemService disableActionItemService;
 	
 	@Override
-	public Object doStrategy(String appId, String deviceId, Object property, Class<?> clazz, UIMessage screen, Map<String, Object> screenContext) {
+	public Object doStrategy(String deviceId, Object property, Class<?> clazz, UIMessage screen, Map<String, Object> screenContext) {
 		if(property != null && ActionItem.class.equals(clazz)) {
 			ActionItem item = (ActionItem)property;
 			// Only try to disable if it is currently disabled. This way we don't enable buttons that were
 			// explicitly disabled.
 			if( item.isEnabled() ) {
-				item.setEnabled(!disableActionItemService.isActionDisabled(appId, deviceId, item.getAction()));
+				item.setEnabled(!disableActionItemService.isActionDisabled(deviceId, item.getAction()));
 			}
 			return item;
 		}

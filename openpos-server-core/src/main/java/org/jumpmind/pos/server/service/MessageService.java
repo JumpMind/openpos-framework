@@ -58,10 +58,8 @@ public class MessageService implements IMessageService {
 
     private Map<String, CachedMessage> cachedMessageMap;
 
-
     @PostConstruct
     public void init() {
-
         cachedMessageMap = Collections.synchronizedMap( new PassiveExpiringMap<>(messageCacheTimeout));
 
         if (!jsonIncludeNulls) {
@@ -76,8 +74,8 @@ public class MessageService implements IMessageService {
         return "{ \"pong\": \"true\" }";
     }
 
-    @MessageMapping("action/app/{appId}/node/{deviceId}")
-    public void action(@DestinationVariable String appId, @DestinationVariable String deviceId, @Payload Action action, Message<?> message) {
+    @MessageMapping("action/device/{deviceId}")
+    public void action(@DestinationVariable String deviceId, @Payload Action action, Message<?> message) {
         if (action.getType() == null) {
             throw new ServerException("Message/action must have a type. " + message);
         }        
@@ -86,7 +84,7 @@ public class MessageService implements IMessageService {
             if (action.getType() != null && actionListener.getRegisteredTypes() != null &&
                     actionListener.getRegisteredTypes().contains(action.getType())) {
                 handled = true;
-                actionListener.actionOccured(appId, deviceId, action);
+                actionListener.actionOccurred(deviceId, action);
             }
         }
         
@@ -97,10 +95,10 @@ public class MessageService implements IMessageService {
     }
 
     @Override
-    public void sendMessage(String appId, String deviceId, org.jumpmind.pos.util.model.Message message) {
+    public void sendMessage(String deviceId, org.jumpmind.pos.util.model.Message message) {
         try {
             StringBuilder topic = new StringBuilder(128);
-            topic.append("/topic/app/").append(appId).append("/node/").append(deviceId);
+            topic.append("/topic/app/device/").append(deviceId);
 
             String jsonString = messageToJson(message);
 
@@ -121,9 +119,9 @@ public class MessageService implements IMessageService {
         }
     }
 
-    @RequestMapping(method = RequestMethod.GET,  value = "api/app/{appId}/node/{deviceId}/message/{id}")
+    @RequestMapping(method = RequestMethod.GET,  value = "api/app/device/{deviceId}/message/{id}")
     @ResponseBody
-    public String getCachedMessage(@PathVariable("appId") String appId, @PathVariable("deviceId") String deviceId, @PathVariable("id") String id){
+    public String getCachedMessage(@PathVariable("deviceId") String deviceId, @PathVariable("id") String id){
 
         try{
             if(cachedMessageMap.containsKey(id)){
@@ -140,7 +138,7 @@ public class MessageService implements IMessageService {
         } catch (Exception e){
             Action errorAction = new Action("GlobalError", e);
             errorAction.setType("Screen");
-            action(appId, deviceId, errorAction, null);
+            action(deviceId, errorAction, null);
             throw e;
         }
     }

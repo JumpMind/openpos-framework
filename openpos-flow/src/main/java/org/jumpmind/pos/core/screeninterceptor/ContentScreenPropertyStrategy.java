@@ -18,7 +18,7 @@ public class ContentScreenPropertyStrategy implements IMessagePropertyStrategy<U
     ContentProviderService contentProviderService;
 
     @Override
-    public Object doStrategy(String appId, String deviceId, Object property, Class<?> clazz, UIMessage screen,
+    public Object doStrategy(String deviceId, Object property, Class<?> clazz, UIMessage screen,
             Map<String, Object> screenContext) {
 
         if (contentProviderService != null && String.class.equals(clazz)) {

@@ -31,7 +31,7 @@ public class DefaultErrorHandler implements IErrorHandler {
         } else if (message instanceof Toast) {
             stateManager.showToast((Toast) message);
         } else {
-            messageService.sendMessage(stateManager.getAppId(), stateManager.getDeviceId(), message);
+            messageService.sendMessage(stateManager.getDeviceId(), message);
         }
 
         ApplicationState applicationState = stateManager.getApplicationState();

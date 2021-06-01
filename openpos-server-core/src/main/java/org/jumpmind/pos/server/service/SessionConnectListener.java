@@ -38,6 +38,9 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
 
     Map<String, Map<String, Object>> sessionQueryParamsMap = Collections.synchronizedMap(new HashMap<>());
 
+    Map<String, String> sessionAppIdMap = Collections.synchronizedMap(new HashMap<>());
+
+
     Map<String, Map<String, String>> clientContext = Collections.synchronizedMap(new HashMap<>());
 
     Map<String, DeviceModel> deviceModelMap = Collections.synchronizedMap(new HashMap<>());
@@ -66,6 +69,7 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
         log.info(BoxLogging.box("Session Connected " + sessionId) + "\n" + clientVersion + "\n");
         String compatibilityVersion = getHeader(event.getMessage(), COMPATIBILITY_VERSION_HEADER);
         String queryParams = getHeader(event.getMessage(), QUERY_PARAMS_HEADER);
+        sessionAppIdMap.put(sessionId, getHeader(event.getMessage(), APPID_HEADER));
         sessionQueryParamsMap.put(sessionId, toQueryParams(queryParams));
 
         DeviceModel deviceModel = devicesService.authenticateDevice(

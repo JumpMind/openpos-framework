@@ -14,14 +14,12 @@ public class PairDeviceEndpoint {
     public PairDeviceResponse pairDevice(PairDeviceRequest request) {
         devicesRepository.pairDevice(
                 request.getDeviceId(),
-                request.getAppId(),
-                request.getPairedDeviceId(),
-                request.getPairedAppId()
+                request.getPairedDeviceId()
         );
 
         return PairDeviceResponse.builder()
-                .device(devicesRepository.getDevice(request.getDeviceId(), request.getAppId()))
-                .pairedDevice(devicesRepository.getDevice(request.getPairedDeviceId(), request.getPairedAppId()))
+                .device(devicesRepository.getDevice(request.getDeviceId()))
+                .pairedDevice(devicesRepository.getDevice(request.getPairedDeviceId()))
                 .build();
     }
 }

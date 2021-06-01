@@ -1,5 +1,7 @@
 
 export interface IDevice {
-    deviceName: string;
-    online: boolean;
+    deviceId?: string;
+    pairedDeviceId?: string;
+    deviceName?: string;
+    online?: boolean;
 }

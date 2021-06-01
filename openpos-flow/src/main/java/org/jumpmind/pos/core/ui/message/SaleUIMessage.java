@@ -55,6 +55,7 @@ public class SaleUIMessage extends UIMessage {
     private String locationOverridePrompt;
 
     private boolean enableCollapsibleItems = true;
+    private String iconName;
 
     public SaleUIMessage() {
         this.setScreenType(UIMessageType.SALE);
