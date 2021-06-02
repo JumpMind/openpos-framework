@@ -10,8 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import static org.jumpmind.pos.util.RestApiSupport.REST_API_CONTEXT_PATH;
+
 @Slf4j
-@Endpoint(path = "/admin/personalizeMe")
+@Endpoint(path = REST_API_CONTEXT_PATH + "/admin/personalizeMe")
 public class GetDevicePersonalizationModelEndpoint {
     @Autowired
     private DevicesRepository repository;
