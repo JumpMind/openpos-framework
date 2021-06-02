@@ -25,6 +25,7 @@ import { IVersion } from '../../../core/interfaces/version.interface';
 import { Observable } from 'rxjs';
 import { DiscoveryService } from '../../../core/discovery/discovery.service';
 import { AudioLicense, AudioLicenseLabels } from '../audio-license/audio-license.interface';
+import { KioskModeController } from '../../../core/platform-plugins/kiosk/kiosk-controller.service';
 
 @Component({
     selector: 'app-dev-menu',
@@ -138,7 +139,9 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         private elRef: ElementRef, public renderer: Renderer2,
         private electron: ElectronService,
         private configurationService: ConfigurationService,
-        private discovery: DiscoveryService) {
+        private discovery: DiscoveryService,
+        public kioskMode: KioskModeController,
+    ) {
 
         if (Configuration.useTouchListener) {
             this.renderer.listen(elRef.nativeElement, 'touchstart', (event) => {

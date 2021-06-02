@@ -22,6 +22,12 @@
                 <div>
                     <h1>Options</h1>
                     <ul [style.height.px]="'250'">
+                        <li *ngIf="kioskMode.isKioskModeAvailable">
+                            <button *ngIf="!kioskMode.isInKioskMode else exitKioskModeButton" mat-button (click)="kioskMode.enterKioskMode()">Enter Kiosk Mode</button>
+                            <ng-template #exitKioskModeButton>
+                                <button mat-button (click)="kioskMode.exitKioskMode()">Exit Kiosk Mode</button>
+                            </ng-template>
+                        </li>
                         <li>
                             <button mat-button (click)="onPersonalize()">Personalize</button>
                         </li>

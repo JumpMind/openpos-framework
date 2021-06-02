@@ -176,6 +176,7 @@ import { CustomerInformationComponent } from './screen-parts/customer-informatio
 import {MutableListItemWithLabelComponent} from "./screen-parts/mutable-list-item-with-label-component/mutable-list-item-with-label.component";
 import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
 import {MembershipPointsDisplayComponent} from "./screen-parts/membership-points-display/membership-points-display.component";
+import { KioskModeController } from '../core/platform-plugins/kiosk/kiosk-controller.service';
 
 const screenParts = [
     TenderPartComponent,
@@ -406,7 +407,8 @@ const pipes = [
         ...pipes
     ],
     providers: [
-        { provide: OverlayContainer, useClass: ModalOverlayContainer }
+        { provide: OverlayContainer, useClass: ModalOverlayContainer },
+        KioskModeController
     ]
 })
 export class SharedModule { }
