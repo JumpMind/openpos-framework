@@ -5,7 +5,7 @@
             <h1 class="name" responsive-class>{{screen.itemName}}</h1>
             <app-carousel class="carousel" [imgUrls]="screen.imageUrls" [altImageUrl]="screen.alternateImageUrl" altImageText="Image Not Found">
             </app-carousel>
-            
+
             <div class="inv-cost">
                 <app-currency-text class="item-price" [amountText]="screen.price"></app-currency-text>
                 <span *ngIf="inventoryMessage$">{{inventoryMessage$ | async}}</span>
@@ -22,9 +22,9 @@
                     <ng-container *ngComponentOutlet="component.value; injector: component.key"></ng-container>
                 </ng-container>
             </div>
-            
+
             <div class="summary-instructions">
-                <hr>                
+                <hr>
                 <app-instructions class="option-instructions" *ngIf="screen.itemOptionInstructions" [instructions]="screen.itemOptionInstructions"></app-instructions>
                 <div responsive-class class="summary" *ngIf="screen.summary">
                     <div class="detail-section" *ngFor="let section of screen.detailSections" [innerHtml]="section | markdownFormatter"></div>
@@ -52,7 +52,7 @@
         </div>
 
     </mat-card>
-    
+
     <div class="inv-prom-container" responsive-class>
         <mat-card *ngIf="screen.buddyStoreProviderKey && buddyStores$" responsive-class class="buddy-store page-gutter padding-none">
             <div responsive-class class="page-gutter page-element margin-bottom">
@@ -66,7 +66,7 @@
                 </p>
 
                 <ng-template #buddyStoreTable>
-                    <table *ngIf="buddyStoresOnline$ | async" class="item-details-table buddy-stores">                    
+                    <table *ngIf="buddyStoresOnline$ | async" class="item-details-table buddy-stores">
                         <tbody>
                             <tr *ngFor="let store of buddyStores$ | async">
                                 <td>{{store.storeName}}</td>
@@ -77,18 +77,18 @@
                 </ng-template>
             </div>
         </mat-card>
-        
+
         <mat-card responsive-class *ngIf="screen.promotions" class="promotions page-gutter padding-none">
             <div responsive-class class="page-gutter page-element margin-bottom">
                 <h3 responsive-class class="icon-heading">
                     {{screen.promotions && screen.promotions.length > 0 ? screen.itemPromotionsTitle : screen.itemNoPromotionsTitle}}
                     <app-icon *ngIf="screen.itemPromotionsIcon" [iconName]="screen.itemPromotionsIcon"></app-icon>
                 </h3>
-                
+
                 <app-instructions *ngIf="screen.promotions && screen.promotions.length > 1"  [instructions]="screen.promotionStackingDisclaimer"
                                 [instructionsSize]="'text-md'"></app-instructions>
 
-                <table class="item-details-table promotions">                    
+                <table class="item-details-table promotions">
                     <tbody>
                         <tr>
                             <th class="promotion-icon"></th>
@@ -107,5 +107,6 @@
             </div>
         </mat-card>
     </div>
+    <app-scan-part></app-scan-part>
 </section>
 </app-bacon-strip>
