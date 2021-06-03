@@ -5,7 +5,9 @@ export const KIOSK_MODE_PLATFORM = new InjectionToken<KioskModePlatform[]>('KIOS
 export interface KioskModePlatform {
     name(): string;
     isAvailable(): Promise<boolean>;
-    enter(): Promise<KioskModeHandle>;
+    isInKioskMode(): Promise<boolean>;
+    enter(): Promise<void>;
+    exit(): Promise<void>;
 }
 
 export class KioskModeHandle {

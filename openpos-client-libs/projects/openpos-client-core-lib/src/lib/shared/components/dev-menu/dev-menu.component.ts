@@ -22,10 +22,11 @@ import { IconService } from '../../../core/services/icon.service';
 import { OldPluginService } from '../../../core/services/old-plugin.service';
 import { FileUploadService } from '../../../core/services/file-upload.service';
 import { IVersion } from '../../../core/interfaces/version.interface';
-import { Observable } from 'rxjs';
+import { from, Observable, timer } from 'rxjs';
 import { DiscoveryService } from '../../../core/discovery/discovery.service';
 import { AudioLicense, AudioLicenseLabels } from '../audio-license/audio-license.interface';
 import { KioskModeController } from '../../../core/platform-plugins/kiosk/kiosk-controller.service';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
     selector: 'app-dev-menu',
@@ -126,6 +127,8 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     private disableDevMenu = false;
 
+    isInKioskMode = false;
+
     @ViewChild('devMenuPanel') devMenuPanel: MatExpansionPanel;
 
     constructor(
@@ -156,9 +159,13 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
         }
     }
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         const self = this;
         this.session.registerMessageHandler(this, 'DevTools');
+
+        if (this.kioskMode.isKioskModeAvailable) {
+            this.isInKioskMode = await this.kioskMode.isInKioskMode();
+        }
     }
 
     private populateDevTables(message: any) {

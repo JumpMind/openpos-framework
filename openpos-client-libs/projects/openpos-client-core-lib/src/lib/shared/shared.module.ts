@@ -177,6 +177,8 @@ import {MutableListItemWithLabelComponent} from "./screen-parts/mutable-list-ite
 import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
 import {MembershipPointsDisplayComponent} from "./screen-parts/membership-points-display/membership-points-display.component";
 import { KioskModeController } from '../core/platform-plugins/kiosk/kiosk-controller.service';
+import { KIOSK_MODE_PLATFORM } from '../core/platform-plugins/kiosk/kiosk-mode-platform';
+import { CapacitorKioskModePlatform } from '../core/platform-plugins/kiosk/capacitor-kiosk/capacitor-kiosk-platform.service';
 
 const screenParts = [
     TenderPartComponent,
@@ -408,7 +410,8 @@ const pipes = [
     ],
     providers: [
         { provide: OverlayContainer, useClass: ModalOverlayContainer },
-        KioskModeController
+        KioskModeController,
+        { provide: KIOSK_MODE_PLATFORM, useClass: CapacitorKioskModePlatform, multi: true }
     ]
 })
 export class SharedModule { }

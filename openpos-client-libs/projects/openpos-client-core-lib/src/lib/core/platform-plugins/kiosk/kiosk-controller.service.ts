@@ -9,7 +9,6 @@ import { KIOSK_MODE_PLATFORM, KioskModePlatform, KioskModeHandle } from './kiosk
 @Injectable()
 export class KioskModeController {
     private _selectedPlatform?: KioskModePlatform;
-    private _activeHandle?: KioskModeHandle;
 
     constructor(
         private _config: ConfigurationService,
@@ -22,7 +21,7 @@ export class KioskModeController {
                 first(),
                 map(p => p.platform)
             ).subscribe(platform => {
-                console.log(`using kiosk mode platform: '${platform.name()}`);
+                console.log(`using kiosk mode platform: '${platform.name()}'`);
                 this._selectedPlatform = platform;
             });
         }
@@ -32,28 +31,41 @@ export class KioskModeController {
         return !!this._selectedPlatform;
     }
 
-    get isInKioskMode(): boolean {
-        return !!this._activeHandle;
+    async isInKioskMode(): Promise<boolean> {
+        if (!this.isKioskModeAvailable) {
+            return false;
+        }
+
+        return await this._selectedPlatform.isInKioskMode();
     }
 
     async enterKioskMode(): Promise<void> {
         this._verifyKioskModePlatformExists();
 
-        if (this._activeHandle) {
+        if (await this.isInKioskMode()) {
             return;
         }
 
         console.debug(`attempting to enter kiosk mode on platform: '${this._selectedPlatform.name()}`);
-        this._activeHandle = await this._selectedPlatform.enter();
+        
+        try {
+            await this._selectedPlatform.enter();
+        } catch (e) {
+            console.error('failed to enter kiosk mode', e);
+        }
     }
 
     async exitKioskMode(): Promise<void> {
         this._verifyKioskModePlatformExists();
 
-        if (this._activeHandle) {
+        if (await this.isInKioskMode()) {
             console.debug(`attempting to exit kiosk mode on platform: '${this._selectedPlatform.name()}`);
-            await this._activeHandle.exit();
-            this._activeHandle = undefined;
+
+            try {
+                await this._selectedPlatform.exit();
+            } catch (e) {
+                console.error('failed to exit kiosk mode', e);
+            }
         }
     }
 

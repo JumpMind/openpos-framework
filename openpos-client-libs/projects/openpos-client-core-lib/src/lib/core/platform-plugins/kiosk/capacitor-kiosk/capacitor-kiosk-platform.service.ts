@@ -12,17 +12,31 @@ export class CapacitorKioskModePlatform implements KioskModePlatform {
         return Promise.resolve(Capacitor.isPluginAvailable("KioskMode"));
     }
 
-    async enter(): Promise<KioskModeHandle> {
+    async isInKioskMode(): Promise<boolean> {
+        await this._verifyCapacitorPluginIsLoaded();
+
+        return (await KioskMode.isInKioskMode()).enabled;
+    }
+
+    async enter(): Promise<void> {
+        await this._verifyCapacitorPluginIsLoaded();
+
+        if (!(await KioskMode.enter()).success) {
+            throw Error('failed to enter kiosk mode');
+        }
+    }
+
+    async exit(): Promise<void> {
+        await this._verifyCapacitorPluginIsLoaded();
+
+        if (!(await KioskMode.exit()).success) {
+            throw Error('failed to exit kiosk mode');
+        }
+    }
+
+    private async _verifyCapacitorPluginIsLoaded(): Promise<void> {
         if (!await this.isAvailable()) {
             throw 'capacitor plugin is not available';
         }
-
-        if (!await KioskMode.enterKioskMode()) {
-            throw Error('failed to enter kiosk mode');
-        }
-
-        return new KioskModeHandle(async () => {
-            KioskMode.exitKioskMode();
-        });
     }
 }
