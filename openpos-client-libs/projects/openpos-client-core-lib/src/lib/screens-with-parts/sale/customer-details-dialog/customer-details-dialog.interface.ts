@@ -8,6 +8,7 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     membershipEnabled: boolean;
     membershipPointsEnabled: boolean;
     membershipLabel: String;
+    appliedLabel: string;
     loyaltyPromotions: IActionItem;
     editButton: IActionItem;
     unlinkButton: IActionItem;
@@ -21,6 +22,8 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     noPromotionsText: string;
     noMembershipsFoundLabel: string;
 
+    statusIcon: string;
+    checkMarkIcon: string;
     profileIcon: string;
     membershipCardIcon: string;
 }

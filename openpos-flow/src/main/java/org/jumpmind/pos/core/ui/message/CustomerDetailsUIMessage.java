@@ -27,6 +27,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private Boolean rewardTabEnabled;
     private Boolean rewardHistoryTabEnabled;
 
+    private String appliedLabel;
     private String membershipLabel;
     private String contactLabel;
     private String noPromotionsText;
@@ -49,6 +50,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String checkMarkIcon;
     private String expiredIcon;
     private String applyIcon;
+    private String statusIcon;
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);
