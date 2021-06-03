@@ -31,11 +31,14 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                 let name: string = null;
                 let serviceConfig: ZeroconfService = null;
 
+                console.log('Starting ZeroConf watch on device ', this.wrapperService.getDeviceName());
+
                 return Zeroconf.watch(this.TYPE, this.DOMAIN).pipe(
                     timeout(10000),
                     first(conf => conf.action === 'resolved'),
                     tap(conf => {
                         serviceConfig = conf.service;
+                        console.log('service resolved', conf.service);
                     }),
                     flatMap(() => this.wrapperService.getDeviceName()),
                     tap(deviceName => name = deviceName),
