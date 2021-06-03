@@ -10,7 +10,6 @@ import {ZeroconfService} from "@ionic-native/zeroconf";
 import {Configuration} from "../../configuration/configuration";
 
 import { Storage } from '../storage/storage.service';
-import { Zeroconf, ZEROCONF_TOKEN } from '../startup/zeroconf/zeroconf';
 
 @Injectable({
     providedIn: 'root'
@@ -32,8 +31,7 @@ export class PersonalizationService {
 
     constructor(
         private storage: Storage,
-        private http: HttpClient,
-        private wrapperService: WrapperService
+        private http: HttpClient
     ) {
         zip(
             storage.getValue('deviceToken'),

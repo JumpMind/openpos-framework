@@ -41,9 +41,6 @@ export class PersonalizationStartupTask implements IStartupTask {
     ) {}
 
     execute(data: StartupTaskData): Observable<string> {
-        if (this.personalization.shouldAutoPersonalize()) {
-            return of("Auto-personalizing client");
-        }
         return concat(
             of('initializing personalization...'),
 
