@@ -1,21 +1,24 @@
-<div [ngClass]="{'mobile-reward-line-item-wrapper': isMobile | async, 'reward-line-item-wrapper': !(isMobile | async)}">
+<div [ngClass]="{'mobile-reward-line-item-wrapper': isMobile | async, 'reward-line-item-wrapper': !(isMobile | async),
+                    'line-item-focused': isFocused}">
     <div *ngIf="!(isMobile | async)" class="loyalty-icon"><app-icon [iconName]="screenData.loyaltyIcon" [iconClass]="'material-icons mat-36'"></app-icon></div>
     <div class="details">
         <div class="name" responsive-class>{{reward.name}}</div>
         <div *ngIf="reward.expirationDate" class="expiration" responsive-class><app-icon [iconName]="screenData.expiredIcon" [iconClass]="'material-icons' + (isMobile | async) ? ' mat-16' : ' mat-24'"></app-icon>{{screenData.expiresLabel}} {{reward.expirationDate}}</div>
     </div>
     <div class="status-icon" responsive-class>
-        <app-icon [iconName]="screenData.statusIcon" [iconClass]="'material-icons mat-24'"></app-icon>
+        <app-icon *ngIf="reward.loadedReward" [iconName]="screenData.statusIcon" [iconClass]="'material-icons mat-24'"></app-icon>
     </div>
     <div class="reward" responsive-class>
         <app-currency-text *ngIf="reward.amount" [amountText]="reward.amount"></app-currency-text>
     </div>
-    <div class="apply" >
+    <div class="apply">
         <a *ngIf="reward.applyButton"
            [actionItem]="reward.applyButton"
-           (actionClick)="doAction(reward.applyButton, reward.promotionId)"
-           (click)="doAction(reward.applyButton, reward.promotionId)"
+           (actionClick)="doAction(reward.applyButton, reward.barcode)"
+           (click)="doAction(reward.applyButton, reward.barcode)"
            [disabled]="!reward.applyButton.enabled"
+           (focusin)="setFocus(true)"
+           (focusout)="setFocus(false)"
            mat-button
            responsive-class>
             {{reward.applyButton.title}} <app-icon [iconName]="screenData.applyIcon" [iconClass]="'material-icons mat-24'"></app-icon>
@@ -24,7 +27,7 @@
            [disabled]="true"
            mat-button
            responsive-class>
-            {{screenData.appliedLabel}} <app-icon [iconName]="screenData.checkMarkIcon" [iconClass]="'material-icons mat-24'"></app-icon>
+            {{screenData.appliedLabel}} <app-icon [iconName]="screenData.appliedIcon" [iconClass]="'material-icons mat-24'"></app-icon>
         </a>
     </div>
 </div>

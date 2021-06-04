@@ -50,6 +50,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String checkMarkIcon;
     private String expiredIcon;
     private String applyIcon;
+    private String appliedIcon;
     private String statusIcon;
 
     public CustomerDetailsUIMessage() {

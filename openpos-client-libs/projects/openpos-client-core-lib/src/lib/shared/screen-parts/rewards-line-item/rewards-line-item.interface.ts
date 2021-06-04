@@ -7,6 +7,7 @@ export interface Reward {
     amount: number;
     applyButton: IActionItem;
     isApplied: boolean;
+    loadedReward: boolean;
     barcode: string;
 };
 
@@ -16,6 +17,6 @@ export interface RewardsLineItemComponentInterface {
     loyaltyIcon: string;
     expiredIcon: string;
     applyIcon: string;
-    checkMarkIcon: string;
+    appliedIcon: string;
     statusIcon: string;
 }

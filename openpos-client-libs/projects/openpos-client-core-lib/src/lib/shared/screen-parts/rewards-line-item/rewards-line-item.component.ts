@@ -13,6 +13,7 @@ export class RewardsLineItemComponent extends ScreenPartComponent<RewardsLineIte
     @Input()
     reward: Reward;
     isMobile: Observable<boolean>;
+    isFocused: boolean;
     constructor(injector: Injector, private media: OpenposMediaService) {
         super(injector);
         this.initIsMobile();
@@ -30,4 +31,6 @@ export class RewardsLineItemComponent extends ScreenPartComponent<RewardsLineIte
 
     screenDataUpdated() {
     }
+
+    setFocus(focused: boolean) { this.isFocused = !this.isFocused; }
 }

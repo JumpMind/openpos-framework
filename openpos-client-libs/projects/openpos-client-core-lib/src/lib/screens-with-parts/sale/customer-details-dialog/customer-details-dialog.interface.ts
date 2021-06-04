@@ -22,8 +22,8 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     noPromotionsText: string;
     noMembershipsFoundLabel: string;
 
-    statusIcon: string;
-    checkMarkIcon: string;
-    profileIcon: string;
+    appliedIcon: string;
     membershipCardIcon: string;
+    profileIcon: string;
+    statusIcon: string;
 }
