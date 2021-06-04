@@ -3,7 +3,7 @@ import {ScreenPartComponent} from '../screen-part';
 import {Reward, RewardsLineItemComponentInterface} from './rewards-line-item.interface';
 import {Observable} from "rxjs";
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
-
+import {KeyPressProvider} from "../../providers/keypress.provider";
 
 @Component({
     selector: 'app-rewards-line-item',
@@ -13,11 +13,11 @@ export class RewardsLineItemComponent extends ScreenPartComponent<RewardsLineIte
     @Input()
     reward: Reward;
     isMobile: Observable<boolean>;
-    isFocused: boolean;
     constructor(injector: Injector, private media: OpenposMediaService) {
         super(injector);
         this.initIsMobile();
     }
+
     initIsMobile(): void {
         this.isMobile = this.media.observe(new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],
@@ -31,6 +31,4 @@ export class RewardsLineItemComponent extends ScreenPartComponent<RewardsLineIte
 
     screenDataUpdated() {
     }
-
-    setFocus(focused: boolean) { this.isFocused = !this.isFocused; }
 }

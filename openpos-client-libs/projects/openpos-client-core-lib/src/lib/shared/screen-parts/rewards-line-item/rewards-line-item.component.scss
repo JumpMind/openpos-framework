@@ -1,8 +1,5 @@
 @import "../../../styles/mixins/typography";
 
-.line-item-focused { background: #CCCCCC; }
-.apply a.mat-button:focus { background: none; }
-
 .reward-line-item-wrapper {
   display: grid;
   grid-template-columns: 1fr 9fr 1fr 1fr 3fr;

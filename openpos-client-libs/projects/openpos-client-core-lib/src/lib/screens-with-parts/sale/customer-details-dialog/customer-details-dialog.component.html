@@ -56,6 +56,14 @@
                         <div *ngFor="let reward of screen.customer.rewards" class="line">
                             <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
                         </div>
+                        <div>{{selectedReward ? '[Selected Reward] ' + selectedReward.name + ', ' + selectedReward.barcode
+                            + ', Enabled: ' + selectedReward.enabled : 'None Selected'}}</div>
+                        <app-selectable-item-list [listData]="listData" [configuration]="listConfig"
+                                                  (selectedItemChange)="onItemChange($event)">
+                            <ng-template let-reward>
+                                <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
+                            </ng-template>
+                        </app-selectable-item-list>
                     </div>
                     <app-membership-points-display *ngIf="!(isMobile | async) && screen.membershipPointsEnabled" class="points"></app-membership-points-display>
                     <div *ngIf="!(screen.customer.rewards && screen.customer.rewards.length)" class="no-items" responsive-class>

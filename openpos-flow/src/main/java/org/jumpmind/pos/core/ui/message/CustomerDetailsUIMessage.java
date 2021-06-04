@@ -15,6 +15,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
 
     private String title;
 
+    private ActionItem backButton;
     private ActionItem unlinkButton;
     private ActionItem editButton;
     private ActionItem doneButton;

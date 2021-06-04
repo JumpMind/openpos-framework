@@ -9,6 +9,9 @@ export interface Reward {
     isApplied: boolean;
     loadedReward: boolean;
     barcode: string;
+
+    selected: boolean;
+    enabled: boolean;
 };
 
 export interface RewardsLineItemComponentInterface {
