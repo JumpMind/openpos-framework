@@ -6,7 +6,7 @@ export interface Reward {
     expirationDate: string;
     amount: number;
     applyButton: IActionItem;
-    loadedReward: boolean;
+    otherStatusIcon: string;
     barcode: string;
 
     selected: boolean;
@@ -20,5 +20,4 @@ export interface RewardsLineItemComponentInterface {
     expiredIcon: string;
     applyIcon: string;
     appliedIcon: string;
-    statusIcon: string;
 }

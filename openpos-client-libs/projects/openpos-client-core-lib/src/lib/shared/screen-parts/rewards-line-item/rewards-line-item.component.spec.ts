@@ -163,7 +163,7 @@ describe('RewardsLineItemComponent', () => {
             describe('reward loaded status', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.loadedReward = true;
+                    component.reward.otherStatusIcon = 'check_decagram_outline';
                     component.reward.applyButton = {title: 'a title', enabled: true} as IActionItem;
                     fixture.detectChanges();
                 });
@@ -176,7 +176,7 @@ describe('RewardsLineItemComponent', () => {
             describe('apply button disabled when reward applied', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.loadedReward = true;
+                    component.reward.otherStatusIcon = 'check_decagram_outline';
                     component.reward.enabled = false;
                     component.reward.applyButton = undefined;
                     fixture.detectChanges();

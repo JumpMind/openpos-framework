@@ -11,7 +11,7 @@ import java.util.Date;
 public class UILoyaltyReward implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private boolean isLoadedReward;
+    private String otherStatusIcon;
     private String promotionId;
     private String name;
     private String expirationDate;

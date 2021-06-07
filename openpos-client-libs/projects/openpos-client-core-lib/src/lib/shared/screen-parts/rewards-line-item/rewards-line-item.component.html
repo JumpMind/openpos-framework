@@ -5,7 +5,7 @@
         <div *ngIf="reward.expirationDate" class="expiration" responsive-class><app-icon [iconName]="screenData.expiredIcon" [iconClass]="'material-icons' + (isMobile | async) ? ' mat-16' : ' mat-24'"></app-icon>{{screenData.expiresLabel}} {{reward.expirationDate}}</div>
     </div>
     <div class="status-icon" responsive-class>
-        <app-icon *ngIf="reward.loadedReward" [iconName]="screenData.statusIcon" [iconClass]="'material-icons mat-24'"></app-icon>
+        <app-icon *ngIf="reward.otherStatusIcon" [iconName]="reward.otherStatusIcon" [iconClass]="'material-icons mat-24'"></app-icon>
     </div>
     <div class="reward" responsive-class>
         <app-currency-text *ngIf="reward.amount" [amountText]="reward.amount"></app-currency-text>
