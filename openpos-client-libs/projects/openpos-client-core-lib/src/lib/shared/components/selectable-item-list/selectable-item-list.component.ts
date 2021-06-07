@@ -1,6 +1,6 @@
 import {
     OnDestroy, Component, Input, Output, EventEmitter, ContentChild, TemplateRef, ElementRef, OnInit,
-    ViewChildren, QueryList, AfterViewInit, AfterContentInit, AfterViewChecked, SimpleChanges
+    ViewChildren, QueryList, AfterViewInit
 } from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Observable } from 'rxjs';
@@ -178,7 +178,6 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
         if (this.configuration.fetchDataAction) {
             this.actionService.doAction({ action: this.configuration.fetchDataAction, doNotBlockForResponse: true }, this.currentPage);
         }
-        console.dir(this);
     }
 
     ngAfterViewInit(): void {
@@ -196,10 +195,6 @@ export class SelectableItemListComponent<ItemType> implements OnDestroy, OnInit,
         if (this.selectedItemSubscription) {
             this.selectedItemSubscription.unsubscribe();
         }
-    }
-
-    ngOnChanges(changes: SimpleChanges): void {
-        this.updateResultsToShow();
     }
 
     updateResultsToShow(): void {

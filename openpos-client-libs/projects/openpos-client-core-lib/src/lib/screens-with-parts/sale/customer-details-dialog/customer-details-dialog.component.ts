@@ -14,7 +14,6 @@ import {KeyPressProvider} from "../../../shared/providers/keypress.provider";
 import {Subscription} from "rxjs/internal/Subscription";
 import {KeyboardClassKey} from "../../../keyboard/enums/keyboard-class-key.enum";
 import {ActionService} from "../../../core/actions/action.service";
-import {ActionItem} from "../../../core/actions/action-item";
 
 @DialogComponent({
   name: 'CustomerDetailsDialog'
@@ -36,11 +35,8 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
 
   public subscribeSpacebar() {
     this.spacebarSubscription = this.keyPresses.subscribe(KeyboardClassKey.Space, 1, (event: KeyboardEvent) => {
-      if ( event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) {
-        return;
-      }
+      if (event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) { return; }
       if (event.type === 'keydown' && this.selectedReward) {
-        console.dir(this.selectedReward);
         if(this.selectedReward.applyButton && this.selectedReward.applyButton.enabled) {
           this.actionService.doAction(this.selectedReward.applyButton, this.selectedReward.barcode);
         }
@@ -59,7 +55,7 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
     ]));
   }
 
-  index = -1;
+  index = 0;
   selectedReward: Reward;
   public onItemChange(event: any): void {
     if(event == -1) {
@@ -67,36 +63,41 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
     } else {
       this.index = event;
       this.selectedReward = this.screen.customer.rewards[event];
-      this.actionService.doAction(new ActionItem('Redraw'));
     }
   }
 
   listData: Observable<ISelectableListData<Reward>>;
   listConfig: SelectableItemListComponentConfiguration;
+
+  allRewards: Map<number, Reward> = new Map<number, Reward>();
+  allDisabledRewards: Map<number, Reward> = new Map<number, Reward>();
   buildScreen() {
-    const allRewards = new Map<number, Reward>();
-    const allDisabledRewards = new Map<number, Reward>();
     for (let i = 0; i < this.screen.customer.rewards.length; i++) {
       const reward = this.screen.customer.rewards[i];
       reward.enabled = (reward.applyButton && reward.applyButton.enabled == true);
-      allRewards.set(i, reward);
+      this.allRewards.set(i, reward);
       if(!reward.enabled) {
-        allDisabledRewards.set(i, reward);
+        this.allDisabledRewards.set(i, reward);
       }
     }
 
-    this.listData = new Observable<ISelectableListData<Reward>>((observer) => {
-      observer.next({
-        items: allRewards,
-        disabledItems: allDisabledRewards
-      } as ISelectableListData<Reward>);
-    });
+      this.listData = new Observable<ISelectableListData<Reward>>((observer) => {
+        observer.next({
+          items: this.allRewards,
+          disabledItems: this.allDisabledRewards
+        } as ISelectableListData<Reward>);
+      });
 
     this.listConfig = new SelectableItemListComponentConfiguration();
+    if(this.allRewards.size === this.allDisabledRewards.size) {
+      this.index = -1;
+    } else {
+      this.listConfig.defaultSelectItemIndex = this.index;
+      this.selectedReward = this.screen.customer.rewards[this.index];
+    }
     this.listConfig.selectionMode = SelectionMode.Single;
     this.listConfig.numItemsPerPage = Number.MAX_VALUE;
     this.listConfig.totalNumberOfItems = this.screen.customer.rewards.length;
-    console.dir(this);
   }
 
   getRewardsLabel() : string {
