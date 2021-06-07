@@ -6,7 +6,6 @@ export interface Reward {
     expirationDate: string;
     amount: number;
     applyButton: IActionItem;
-    isApplied: boolean;
     loadedReward: boolean;
     barcode: string;
 
