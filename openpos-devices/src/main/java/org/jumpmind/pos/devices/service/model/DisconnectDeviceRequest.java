@@ -9,5 +9,4 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class DisconnectDeviceRequest {
     private String deviceId;
-    private String appId;
 }

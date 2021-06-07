@@ -161,11 +161,9 @@ public class StateManager implements IStateManager {
     AtomicBoolean busyFlag = new AtomicBoolean(false);
 
     AtomicReference<Date> lastInteractionTime = new AtomicReference<Date>(new Date());
-    AtomicInteger activeCalls = new AtomicInteger(0);
     AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
     AtomicLong lastActionTimeInMs = new AtomicLong(0);
     AtomicLong lastShowTimeInMs = new AtomicLong(0);
-    AtomicReference<Thread> activeThread = new AtomicReference<>();
 
     @Override
     public void reset() {
@@ -1194,7 +1192,6 @@ public class StateManager implements IStateManager {
     }
 
     public void sendConfigurationChangedMessage() {
-        String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
 
         Map<String, String> properties = applicationState.getScopeValue("personalizationProperties");

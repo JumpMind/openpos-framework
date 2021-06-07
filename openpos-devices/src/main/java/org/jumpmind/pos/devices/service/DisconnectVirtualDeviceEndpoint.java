@@ -13,6 +13,6 @@ public class DisconnectVirtualDeviceEndpoint {
     VirtualDeviceRepository devicesRepository;
 
     public void disconnectDevice(@RequestBody DisconnectDeviceRequest request) {
-        devicesRepository.removeByDeviceIdAppId(request.getDeviceId(), request.getAppId());
+        devicesRepository.removeByDeviceIdAppId(request.getDeviceId());
     }
 }

@@ -57,6 +57,9 @@ public class DeviceModel extends AbstractModel implements ITaggedModel {
     @ColumnDef(size = "255", description = "A user defined name for the Device")
     private String description;
 
+    @ColumnDef
+    private String installationId;
+
     @Builder.Default
     private Map<String, String> tags = new CaseInsensitiveMap<>();
 
