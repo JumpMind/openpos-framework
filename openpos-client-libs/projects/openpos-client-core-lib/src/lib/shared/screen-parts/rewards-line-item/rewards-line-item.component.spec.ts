@@ -179,7 +179,6 @@ describe('RewardsLineItemComponent', () => {
                     component.reward.loadedReward = true;
                     component.reward.enabled = false;
                     component.reward.applyButton = undefined;
-                    // component.reward.applyButton = {title: 'Applied', enabled: false} as IActionItem;
                     fixture.detectChanges();
                 });
 
