@@ -21,7 +21,7 @@ public class VirtualDeviceRepository {
         return virtualDevices.values().stream().filter(d -> d.getDeviceId().equals(deviceId)).findFirst().orElse(null);
     }
 
-    public void removeByDeviceIdAppId(String deviceId) {
+    public void removeByDeviceId(String deviceId) {
         String matchingAuthId = null;
         for (Map.Entry<String,DeviceModel> e : virtualDevices.entrySet()) {
             if (e.getValue().getDeviceId().equals(deviceId)) {

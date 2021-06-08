@@ -34,7 +34,7 @@ public interface IDevicesService {
     public void disconnectDevice(@RequestBody DisconnectDeviceRequest request);
 
     @SuppressMethodLogging
-    @RequestMapping(path = "/connectedDevices", method = RequestMethod.POST)
+    @RequestMapping(path = "/connectedDeviceIds", method = RequestMethod.POST)
     public GetConnectedDeviceIdsResponse getConnectedDeviceIds(@RequestBody GetConnectedDeviceIdsRequest request);
 
     @RequestMapping(path = "/find", method = RequestMethod.POST)
