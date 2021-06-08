@@ -6,9 +6,7 @@ import org.jumpmind.pos.devices.service.model.GetDeviceResponse;
 import org.jumpmind.pos.service.Endpoint;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import static org.jumpmind.pos.util.RestApiSupport.REST_API_CONTEXT_PATH;
-
-@Endpoint(path = REST_API_CONTEXT_PATH + "/devices/device")
+@Endpoint(path="/devices/device")
 public class GetDeviceEndpoint {
 
     @Autowired

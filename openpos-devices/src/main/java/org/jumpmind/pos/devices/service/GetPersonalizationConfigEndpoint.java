@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ResponseStatusException;
 
-import static org.jumpmind.pos.util.RestApiSupport.REST_API_CONTEXT_PATH;
-
-@Endpoint(path = REST_API_CONTEXT_PATH + "/devices/personalizationConfig")
+@Endpoint(path="/devices/personalizationConfig")
 public class GetPersonalizationConfigEndpoint {
 
     @Autowired(required=false)
