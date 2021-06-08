@@ -18,6 +18,6 @@ public class GetConnectedDeviceIdsEndpoint {
 
     public GetConnectedDeviceIdsResponse getConnectedDeviceIds(GetConnectedDeviceIdsRequest request) {
         return GetConnectedDeviceIdsResponse.builder().deviceIds(
-                devicesRepository.getConnectedDevices(request.getBusinessUnitId(), installationId)).build();
+                devicesRepository.getConnectedDeviceIds(request.getBusinessUnitId(), installationId)).build();
     }
 }

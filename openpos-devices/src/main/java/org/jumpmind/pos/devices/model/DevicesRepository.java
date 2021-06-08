@@ -143,7 +143,7 @@ public class DevicesRepository {
     public List<DeviceAuthModel> getDisconnectedDevices(String businessUnitId, String installationId) {
         Map<String, Object> statusParams = new HashMap<>();
         statusParams.put("deviceStatus", DeviceStatusConstants.CONNECTED);
-        Set<String> connectedDevices = getConnectedDevices(businessUnitId, installationId);
+        Set<String> connectedDevices = getConnectedDeviceIds(businessUnitId, installationId);
 
         Map<String, Object> deviceParams = new HashMap<>();
         deviceParams.put("businessUnitId", businessUnitId);
@@ -152,7 +152,7 @@ public class DevicesRepository {
         return devSession.findAll(DeviceAuthModel.class, 10000).stream().filter(d -> devices.contains(d.getDeviceId())).sorted().collect(Collectors.toList());
     }
 
-    public Set<String> getConnectedDevices(String businessUnitId, String installationId) {
+    public Set<String> getConnectedDeviceIds(String businessUnitId, String installationId) {
         Map<String, Object> statusParams = new HashMap<>();
         statusParams.put("businessUnitId", businessUnitId);
         statusParams.put("installationId", installationId);
