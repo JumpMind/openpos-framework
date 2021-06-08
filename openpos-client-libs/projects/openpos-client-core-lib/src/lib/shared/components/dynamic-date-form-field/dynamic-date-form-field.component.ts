@@ -33,6 +33,7 @@ import { DateUtils, DatePartPositions } from '../../utils/date.utils';
     @Input() placeholder: string;
     @Input() isPrompt = false;
     @Input() hideCalendar = false;
+    @Input() required = false;
     @Input() hintText = '';
     @Input() controlName: string;
     @Input() hiddenControl: string;

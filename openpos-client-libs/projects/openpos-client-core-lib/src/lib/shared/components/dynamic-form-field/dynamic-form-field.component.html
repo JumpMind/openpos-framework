@@ -47,11 +47,11 @@
     <ng-container *ngIf="isDateInput() && formField.elementType!='Display'">
         <app-dynamic-date-form-field *ngIf="formField.hideCalendar" [type]="formField.inputType" [(value)]="formField.value" [placeholder]="getPlaceholderText(formField)" 
         [hideCalendar]="formField.hideCalendar" [controlName]="formField.id" [hiddenControl]="formField.id+'Hidden'" [keyboardLayout]="keyboardLayout" [form]="formGroup" 
-        [minDate]="formField.minDate" [maxDate]="formField.maxDate"
+        [minDate]="formField.minDate" [maxDate]="formField.maxDate" [required]="formField.required"
         (valueChange)="onFormElementChanged(formField)"></app-dynamic-date-form-field>
         <app-dynamic-date-form-field *ngIf="!formField.hideCalendar" [type]="formField.inputType" [(value)]="formField.value" [placeholder]="getPlaceholderText(formField)" 
         [controlName]="formField.id" [hiddenControl]="formField.id+'Hidden'" [keyboardLayout]="keyboardLayout" [form]="formGroup"
-        [minDate]="formField.minDate" [maxDate]="formField.maxDate"
+        [minDate]="formField.minDate" [maxDate]="formField.maxDate" [required]="formField.required"
         (valueChange)="onFormElementChanged(formField)"></app-dynamic-date-form-field>
         <mat-error>
             <app-show-errors [control]="formGroup.controls[formField.id]" [additionalValidationMessages]="formField.validationMessages"></app-show-errors>

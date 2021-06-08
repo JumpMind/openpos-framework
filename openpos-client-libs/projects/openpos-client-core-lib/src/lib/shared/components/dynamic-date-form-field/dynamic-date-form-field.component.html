@@ -2,7 +2,7 @@
     <mat-form-field fxFlexFill [ngClass]="{'text-lg': isPrompt}">
         <input matInput cdkFocusInitial [(ngModel)]="value" [formControlName]="controlName" [placeholder]="placeholder"
                 [textMask]="{mask: dateMask, pipe: autoCorrectedDatePipe, keepCharPositions: true}" [keyboardLayout]="keyboardLayout" [attr.type]="'tel'"
-                (keyup.enter)="onDateEntered()" (change)="onDateChange()">
+                [required]="required" (keyup.enter)="onDateEntered()" (change)="onDateChange()">
         <input matInput hidden [formControlName]="hiddenControl" [min]="minimumDate" [max]="maximumDate"
                 [matDatepicker]="picker" (dateChange)="onDatePicked($event)" [keyboardLayout]="keyboardLayout" [attr.type]="'tel'">
         <mat-datepicker-toggle *ngIf="!isPrompt && !hideCalendar" matSuffix [for]="picker" class="primary"></mat-datepicker-toggle>
