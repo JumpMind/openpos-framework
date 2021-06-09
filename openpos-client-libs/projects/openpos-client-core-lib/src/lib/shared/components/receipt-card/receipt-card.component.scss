@@ -99,7 +99,12 @@
         padding-right:15px;
 
         .mat-icon-button {
-            width:70px;
+            min-width: fit-content;
+
+            .app-icon {
+                top: -3px;
+                position: relative;
+            }
         }
     }
 }

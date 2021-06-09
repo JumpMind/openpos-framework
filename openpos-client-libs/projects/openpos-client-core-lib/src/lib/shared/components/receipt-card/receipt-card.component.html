@@ -46,7 +46,7 @@
     <div class="remove-button" *ngIf="receipt && removeReceiptAction">
         <button mat-icon-button (click)="onRemoveAction(); $event.stopPropagation()" color="primary">
             {{removeReceiptAction.title}}
-            <app-icon [iconClass]="'material-icons'" [iconName]="removeReceiptAction.icon"></app-icon>
+            <app-icon [iconClass]="'material-icons xs'" [iconName]="removeReceiptAction.icon"></app-icon>
         </button>
     </div>
 </div>
