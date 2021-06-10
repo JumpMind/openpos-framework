@@ -234,6 +234,15 @@ app-content-card {
 
   > .links-cont {
     grid-area: links;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+
+    a {
+      font-size: 1.2em;
+    }
   }
 }
  

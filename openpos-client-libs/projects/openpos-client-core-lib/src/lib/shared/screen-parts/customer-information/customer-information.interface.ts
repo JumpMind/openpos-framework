@@ -1,6 +1,7 @@
 import {Membership} from '../membership-display/memebership-display.interface';
 import {Reward} from '../rewards-line-item/rewards-line-item.interface';
 import {RewardHistory} from '../rewards-history-line-item/rewards-history-line-item.interface';
+import { IActionItem } from '../../../core/actions/action-item.interface';
 
 export interface CustomerDetails {
     name: string,
@@ -33,6 +34,7 @@ export interface PurchasedItem {
     originalPrice: string;
     imageUrl: string;
     labels: UILabel[];
+    actions: IActionItem[];
 }
 
 export interface UILabel {

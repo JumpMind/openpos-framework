@@ -3,6 +3,7 @@ package org.jumpmind.pos.core.ui.message;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.jumpmind.pos.core.ui.ActionItem;
 
 import java.io.Serializable;
 import java.util.List;
@@ -18,4 +19,6 @@ public class UIPurchasedItem implements Serializable {
     private String imageUrl;
     private String salePrice;
     private String originalPrice;
+
+    private List<ActionItem> actions;
 }
