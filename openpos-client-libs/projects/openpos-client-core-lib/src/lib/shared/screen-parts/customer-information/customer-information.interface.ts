@@ -16,7 +16,8 @@ export interface CustomerDetails {
     },
     memberships: Membership[],
     rewards: Reward[],
-    rewardHistory: RewardHistory[]
+    rewardHistory: RewardHistory[],
+    itemHistory: PurchasedItem[]
 };
 
 export interface CustomerInformationComponentInterface {
@@ -24,4 +25,17 @@ export interface CustomerInformationComponentInterface {
     phoneIcon: string;
     loyaltyNumberIcon: string;
     locationIcon: string;
+}
+
+export interface PurchasedItem {
+    title: string;
+    salePrice: string;
+    originalPrice: string;
+    imageUrl: string;
+    labels: UILabel[];
+}
+
+export interface UILabel {
+    icon: string;
+    text: string;
 }

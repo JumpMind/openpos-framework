@@ -20,6 +20,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private Boolean membershipPointsEnabled;
     private Boolean rewardTabEnabled;
     private Boolean rewardHistoryTabEnabled;
+    private Boolean itemHistoryEnabled;
 
     private String membershipLabel;
     private String contactLabel;
