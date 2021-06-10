@@ -282,9 +282,8 @@ public class StateManager implements IStateManager {
     }
 
     public void sendDataClearMessage() {
-        String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
-        messageService.sendMessage(appId, deviceId, new DataClearMessage());
+        messageService.sendMessage(deviceId, new DataClearMessage());
     }
 
     public void sendStartupCompleteMessage() {
