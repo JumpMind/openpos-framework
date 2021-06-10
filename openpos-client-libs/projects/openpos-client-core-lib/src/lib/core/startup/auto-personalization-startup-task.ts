@@ -57,15 +57,21 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
 
 
     personalizeWithHostname(): Observable<string> {
-        let name: string = null;
-        return concat(
-            of("Attempting to retrieve personalization params via hostname"),
-            this.wrapperService.getDeviceName().pipe(
-                tap(deviceName => name = deviceName),
-                flatMap(() => this.attemptAutoPersonalize(Configuration.autoPersonalizationServicePath, name)),
-                catchError(() => this.manualPersonalization())
-            ),
-        )
+        const servicePath = Configuration.autoPersonalizationServicePath;
+        if (!!servicePath) {
+            let name: string = null;
+            return concat(
+                of("Attempting to retrieve personalization params via hostname"),
+                this.wrapperService.getDeviceName().pipe(
+                    tap(deviceName => name = deviceName),
+                    flatMap(() => this.attemptAutoPersonalize(Configuration.autoPersonalizationServicePath, name)),
+                    catchError(() => this.manualPersonalization())
+                ),
+            )
+        }
+        else {
+            return this.manualPersonalization();
+        }
     }
 
     manualPersonalization(): Observable<string> {
