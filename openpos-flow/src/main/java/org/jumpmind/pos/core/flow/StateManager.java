@@ -40,7 +40,7 @@ import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.event.DeviceResetEvent;
 import org.jumpmind.pos.core.flow.config.*;
-import org.jumpmind.pos.core.model.MessageType;
+import org.jumpmind.pos.core.model.DataClearMessage;
 import org.jumpmind.pos.core.model.StartupMessage;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
 import org.jumpmind.pos.core.ui.CloseToast;
@@ -246,6 +246,7 @@ public class StateManager implements IStateManager {
                         init(this.getAppId(), this.getDeviceId());
                         log.info("StateManager reset");
                         this.eventPublisher.publish(new DeviceResetEvent(getDeviceId(), getAppId()));
+                        sendDataClearMessage();
                         break;
                     } else if (actionContext.getAction().getName().equals(STATE_MANAGER_STOP_ACTION)) {
                         actionContext.getAction().markProcessed();
@@ -278,6 +279,12 @@ public class StateManager implements IStateManager {
             }
         }
         log.info("State action actionLoop is exiting.");
+    }
+
+    public void sendDataClearMessage() {
+        String appId = applicationState.getAppId();
+        String deviceId = applicationState.getDeviceId();
+        messageService.sendMessage(appId, deviceId, new DataClearMessage());
     }
 
     public void sendStartupCompleteMessage() {
