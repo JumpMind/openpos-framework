@@ -12,6 +12,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,10 @@ public class DevicesRepository {
     @Autowired
     @Lazy
     DBSession devSession;
+
+    public List<DeviceModel> getAllDevices() {
+        return devSession.findAll(DeviceModel.class, 1000000);
+    }
 
     @Cacheable("/devices/device")
     public DeviceModel getDevice(String deviceId, String appId) {
