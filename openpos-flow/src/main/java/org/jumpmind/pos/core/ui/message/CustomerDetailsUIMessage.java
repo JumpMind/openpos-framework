@@ -2,17 +2,20 @@ package org.jumpmind.pos.core.ui.message;
 
 import lombok.Data;
 import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@AssignKeyBindings
 public class CustomerDetailsUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
     private String title;
 
+    private ActionItem backButton;
     private ActionItem unlinkButton;
     private ActionItem editButton;
     private ActionItem doneButton;
@@ -25,6 +28,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private Boolean rewardTabEnabled;
     private Boolean rewardHistoryTabEnabled;
 
+    private String appliedLabel;
     private String membershipLabel;
     private String contactLabel;
     private String noPromotionsText;
@@ -47,6 +51,8 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String checkMarkIcon;
     private String expiredIcon;
     private String applyIcon;
+    private String appliedIcon;
+    private String statusIcon;
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);

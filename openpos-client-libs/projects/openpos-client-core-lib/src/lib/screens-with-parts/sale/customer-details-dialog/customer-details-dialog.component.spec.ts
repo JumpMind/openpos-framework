@@ -12,10 +12,16 @@ import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ElectronService} from 'ngx-electron';
 import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provider.interface';
 import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
-import {Observable, of} from 'rxjs';
+import {Observable, of, Subscription} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
 import {Reward} from '../../../shared/screen-parts/rewards-line-item/rewards-line-item.interface';
+import {KeyPressProvider} from "../../../shared/providers/keypress.provider";
 
+class MockKeyPressProvider {
+  subscribe(): Subscription {
+    return new Subscription();
+  }
+};
 class MockActionService {};
 class MockMatDialog {};
 class MockElectronService {};
@@ -60,6 +66,7 @@ describe('CustomerDetailsDialog', () => {
           CustomerDetailsDialogComponent, PhonePipe
         ],
         providers: [
+          { provide: KeyPressProvider, useClass: MockKeyPressProvider },
           { provide: ActionService, useClass: MockActionService },
           { provide: MatDialog, useClass: MockMatDialog },
           { provide: OpenposMediaService, useClass: MockOpenposMediaServiceMobileFalse },
@@ -340,6 +347,7 @@ describe('CustomerDetailsDialog', () => {
           CustomerDetailsDialogComponent, PhonePipe
         ],
         providers: [
+          { provide: KeyPressProvider, useClass: MockKeyPressProvider },
           { provide: ActionService, useClass: MockActionService },
           { provide: MatDialog, useClass: MockMatDialog },
           { provide: OpenposMediaService, useClass: MockOpenposMediaServiceMobileTrue },
@@ -407,6 +415,7 @@ describe('CustomerDetailsDialog', () => {
           CustomerDetailsDialogComponent, PhonePipe
         ],
         providers: [
+          { provide: KeyPressProvider, useClass: MockKeyPressProvider },
           { provide: ActionService, useClass: MockActionService },
           { provide: MatDialog, useClass: MockMatDialog },
           { provide: OpenposMediaService, useClass: MockOpenposMediaServiceMobileFalse },
