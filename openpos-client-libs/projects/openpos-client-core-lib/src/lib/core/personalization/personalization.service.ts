@@ -33,9 +33,9 @@ export class PersonalizationService {
         return this.wrapperService.shouldAutoPersonalize();
     }
 
-    public getAutoPersonalizationParameters(deviceName: string, config: ZeroconfService): Observable<AutoPersonalizationParametersResponse> {
-        let url = this.sslEnabled$.getValue() ? 'https://' : 'http://';
-        url += `${config.hostname}:${config.port}/${config.txtRecord.path}`;
+    public getAutoPersonalizationParameters(deviceName: string, url: string): Observable<AutoPersonalizationParametersResponse> {
+        const protocol = this.sslEnabled$.getValue() ? 'https://' : 'http://';
+        url = protocol + url;
         return this.http.get<AutoPersonalizationParametersResponse>(url, { params: { deviceName: deviceName }})
             .pipe(
                 timeout(Configuration.autoPersonalizationRequestTimeoutMillis),

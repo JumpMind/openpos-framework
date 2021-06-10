@@ -16,6 +16,7 @@ export const Configuration = {
     loadingDialogDelay: 4000,
     confirmConnectionTimeoutMillis: 172800000,
     autoPersonalizationRequestTimeoutMillis: 10000,
+    autoPersonalizationServicePath: 'personalization.jumpmind-commerce.com/admin/personalizeMe',
     // These properties are static on the client and not overriden by configuration.service.ts
     compatibilityVersion: 'v1',
     incompatibleVersionMessage: 'Application is not compatible with the server.',

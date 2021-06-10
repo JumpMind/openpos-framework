@@ -9,6 +9,7 @@ import {PersonalizationComponent} from '../personalization/personalization.compo
 import {Zeroconf, ZeroconfService} from "@ionic-native/zeroconf";
 import {StartupTaskNames} from "./startup-task-names";
 import {WrapperService} from "../services/wrapper.service";
+import {Configuration} from "../../configuration/configuration";
 
 
 @Injectable({
@@ -26,7 +27,7 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
     execute(data: StartupTaskData): Observable<string> {
         if (this.personalization.shouldAutoPersonalize()) {
             if (this.personalization.hasSavedSession()) {
-                return this.personalization.personalizeFromSavedSession();
+                return this.personalization.personalizeFromSavedSession().pipe(catchError(() => this.manualPersonalization()));
             } else {
                 let name: string = null;
                 let serviceConfig: ZeroconfService = null;
@@ -34,7 +35,7 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                 console.log('Starting ZeroConf watch on device ', this.wrapperService.getDeviceName());
 
                 return Zeroconf.watch(this.TYPE, this.DOMAIN).pipe(
-                    timeout(10000),
+                    timeout(Configuration.autoPersonalizationRequestTimeoutMillis),
                     first(conf => conf.action === 'resolved'),
                     tap(conf => {
                         serviceConfig = conf.service;
@@ -42,14 +43,29 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                     }),
                     flatMap(() => this.wrapperService.getDeviceName()),
                     tap(deviceName => name = deviceName),
-                    flatMap(() => this.attemptAutoPersonalize(serviceConfig, name)),
-                    catchError(() => this.manualPersonalization())
+                    flatMap(() => {
+                        const url = `${serviceConfig.hostname}:${serviceConfig.port}/${serviceConfig.txtRecord.path}`
+                        return this.attemptAutoPersonalize(url, name)
+                    }),
+                    catchError(() => this.personalizeWithHostname())
                 );
             }
         } else {
             return of("No auto personalization available for device");
         }
+    }
 
+
+    personalizeWithHostname(): Observable<string> {
+        let name: string = null;
+        return concat(
+            of("Attempting to retrieve personalization params via hostname"),
+            this.wrapperService.getDeviceName().pipe(
+                tap(deviceName => name = deviceName),
+                flatMap(() => this.attemptAutoPersonalize(Configuration.autoPersonalizationServicePath, name)),
+                catchError(() => this.manualPersonalization())
+            ),
+        )
     }
 
     manualPersonalization(): Observable<string> {
@@ -65,8 +81,8 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
     }
 
 
-    private attemptAutoPersonalize(serviceConfig: ZeroconfService, deviceName: string): Observable<string> {
-        return this.personalization.getAutoPersonalizationParameters(deviceName, serviceConfig)
+    private attemptAutoPersonalize(url: string, deviceName: string): Observable<string> {
+        return this.personalization.getAutoPersonalizationParameters(deviceName, url)
             .pipe(
                 flatMap(info => {
                     if (info) {
