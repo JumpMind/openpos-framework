@@ -25,4 +25,5 @@ public final class MessageType {
     public static final String Watermark = "Watermark";
     public static final String HideWatermark = "HideWatermark";
     public static final String ClientExecutable = "ClientExecutable";
+    public static final String DataClear = "DataClear";
 }

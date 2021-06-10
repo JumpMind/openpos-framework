@@ -44,7 +44,7 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
                             ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
                         }
                         if(provider.isNewSeries()) {
-                            provider.setSeriesId( provider.getSeriesId() + 1);
+                            provider.setSeriesId(getNextSeriesId());
                             provider.setNewSeries(false);
                         }
                         //If it is a new provider or series add it and initialize it
@@ -65,12 +65,19 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
                     ((IHasObservableUIDataMessageProviderProperty)provider).addPropertyChangeListener(this);
                 }
                 if(provider.isNewSeries()) {
-                    provider.setSeriesId( provider.getSeriesId() + 1);
+                    provider.setSeriesId(getNextSeriesId());
                     provider.setNewSeries(false);
                 }
                 sendDataMessage(applicationState.getAppId(), applicationState.getDeviceId(), provider.getNextDataChunk(), key, provider.getSeriesId());
             });
         }
+    }
+
+    // sets series ID to a random int
+    // resolves issue with matching series ID 1 when a device is reset
+    private int getNextSeriesId() {
+        Random random = new Random();
+        return random.nextInt(Integer.MAX_VALUE);
     }
 
     public boolean handleAction(Action action, ApplicationState applicationState){
@@ -130,7 +137,7 @@ public class UIDataMessageProviderService implements PropertyChangeListener {
         if(evt instanceof UIDataMessageProviderPropertyChangeEvent) {
             UIDataMessageProvider uiDataMessageProvider = (UIDataMessageProvider) evt.getSource();
             if(uiDataMessageProvider.isNewSeries()) {
-                uiDataMessageProvider.setSeriesId( uiDataMessageProvider.getSeriesId() + 1);
+                uiDataMessageProvider.setSeriesId(getNextSeriesId());
                 uiDataMessageProvider.setNewSeries(false);
             }
             sendDataMessage(((UIDataMessageProviderPropertyChangeEvent) evt).getAppId(),

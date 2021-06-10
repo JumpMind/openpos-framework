@@ -24,4 +24,5 @@ export class MessageTypes {
     static WATERMARK = 'Watermark';
     static HIDE_WATERMARK = 'HideWatermark';
     static CLIENT_EXECUTABLE = 'ClientExecutable';
+    static DATA_CLEAR = 'DataClear';
 }
