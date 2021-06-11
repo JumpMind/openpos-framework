@@ -27,7 +27,11 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
     execute(data: StartupTaskData): Observable<string> {
         if (this.personalization.shouldAutoPersonalize()) {
             if (this.personalization.hasSavedSession()) {
-                return this.personalization.personalizeFromSavedSession().pipe(catchError(() => this.manualPersonalization()));
+                return this.personalization.personalizeFromSavedSession().pipe(
+                    catchError(e => {
+                        this.logPersonalizationError(e);
+                        return this.manualPersonalization();
+                    }));
             } else {
                 let name: string = null;
                 let serviceConfig: ZeroconfService = null;
@@ -44,10 +48,13 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                     flatMap(() => this.wrapperService.getDeviceName()),
                     tap(deviceName => name = deviceName),
                     flatMap(() => {
-                        const url = `${serviceConfig.hostname}:${serviceConfig.port}/${serviceConfig.txtRecord.path}`
-                        return this.attemptAutoPersonalize(url, name)
+                        const url = `${serviceConfig.hostname}:${serviceConfig.port}/${serviceConfig.txtRecord.path}`;
+                        return this.attemptAutoPersonalize(url, name);
                     }),
-                    catchError(() => this.personalizeWithHostname())
+                    catchError(e => {
+                        this.logPersonalizationError(e);
+                        return this.personalizeWithHostname();
+                    })
                 );
             }
         } else {
@@ -65,11 +72,12 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                 this.wrapperService.getDeviceName().pipe(
                     tap(deviceName => name = deviceName),
                     flatMap(() => this.attemptAutoPersonalize(Configuration.autoPersonalizationServicePath, name)),
-                    catchError(() => this.manualPersonalization())
-                ),
-            )
-        }
-        else {
+                    catchError(e => {
+                        this.logPersonalizationError(e);
+                        return this.manualPersonalization();
+                    })),
+            );
+        } else {
             return this.manualPersonalization();
         }
     }
@@ -99,12 +107,21 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                             info.appId,
                             info.personalizationParams,
                             info.sslEnabled).pipe(
-                            catchError(() => this.manualPersonalization()),
+                            catchError(e => {
+                                this.logPersonalizationError(e);
+                                return this.manualPersonalization();
+                            })
                         );
                     }
                     return this.manualPersonalization();
                 }),
-                catchError(() => this.manualPersonalization()),
-            )
+                catchError(e => {
+                    this.logPersonalizationError(e);
+                    return this.personalizeWithHostname();
+                }));
+    }
+
+    private logPersonalizationError(error: any): void {
+        console.log("Error during auto-personalization: " + JSON.stringify(error))
     }
 }
