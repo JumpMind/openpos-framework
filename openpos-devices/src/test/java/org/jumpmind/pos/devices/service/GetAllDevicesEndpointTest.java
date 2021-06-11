@@ -2,9 +2,9 @@ package org.jumpmind.pos.devices.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jumpmind.pos.devices.TestDevicesConfig;
+import org.jumpmind.pos.devices.model.DeviceModel;
+import org.jumpmind.pos.devices.model.DevicesRepository;
 import org.jumpmind.pos.devices.service.model.GetAllDevicesResponse;
-import org.jumpmind.pos.devices.service.model.GetDeviceRequest;
-import org.jumpmind.pos.devices.service.model.GetDeviceResponse;
 import org.jumpmind.pos.service.utils.MockGetRequestBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +15,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -32,6 +34,9 @@ public class GetAllDevicesEndpointTest {
     @Autowired
     MockMvc mvc;
 
+    @Autowired
+    DevicesRepository repository;
+
     @Test
     public void getDeviceShouldReturnMatchingDevice() throws Exception {
 
@@ -40,6 +45,8 @@ public class GetAllDevicesEndpointTest {
             .andExpect(status().isOk())
             .andReturn().getResponse().getContentAsString();
 
-        assertEquals(10, mapper.readValue(result, GetAllDevicesResponse.class).getDevices().size());
+        List<DeviceModel> expected = repository.getAllDevices();
+
+        assertEquals(expected.size(), mapper.readValue(result, GetAllDevicesResponse.class).getDevices().size());
     }
 }
