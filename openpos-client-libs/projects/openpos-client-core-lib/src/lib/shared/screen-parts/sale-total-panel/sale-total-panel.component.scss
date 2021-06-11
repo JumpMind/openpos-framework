@@ -23,6 +23,7 @@
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
         min-width: 150px;
+        max-height: 93.59px;
         .material-icons {
             margin-top: -12px;
         }
@@ -37,7 +38,7 @@
             vertical-align: inherit;
             width: 100%;
             text-align: left;
-            padding: 10px;
+            padding: 0px 10px;
             .grid-container {
                 display: grid;
                 grid-template-columns: 1fr 7fr 3fr;
@@ -106,8 +107,8 @@
     grid-area: item-count;
     display: flex;
     height: fit-content;
-    padding-top: 12px;
-    padding-bottom: 12px;
+    padding-top: 8px;
+    padding-bottom: 8px;
     justify-content: center;
     align-items: center;
 }
@@ -152,8 +153,8 @@
 
             .sale-total-subtotal-title {
                 @extend %text-sm;
-                padding-bottom: 8px;
-                padding-top: 8px;
+                padding-bottom: 4px;
+                padding-top: 4px;
             }
 
             .sale-total-subtotal-amount {
@@ -172,9 +173,9 @@
 
             .sale-total-total-title {
                 @extend %text-lg;
-                padding-top: 8px;
-                padding-bottom: 8px;
-
+                padding-top: 4px;
+                padding-bottom: 4px;
+                margin-bottom: -7px;
                 &.small-desktop-landscape {
                     @extend %text-md;
                 }
@@ -195,7 +196,7 @@
             .sale-total-itemcount-title {
                 @extend %text-lg;
                 padding-top: 16px;
-                padding-bottom: 8px;
+                padding-bottom: 4px;
             }
 
             .sale-total-itemcount-amount {
