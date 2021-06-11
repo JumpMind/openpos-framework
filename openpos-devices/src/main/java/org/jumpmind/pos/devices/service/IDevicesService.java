@@ -5,12 +5,14 @@ import org.jumpmind.pos.devices.model.DeviceModel;
 import org.jumpmind.pos.devices.service.model.*;
 import org.springframework.web.bind.annotation.*;
 
-import static org.jumpmind.pos.util.RestApiSupport.REST_API_CONTEXT_PATH;
-
 @Api(tags = "Devices Service")
 @RestController("devices")
-@RequestMapping(REST_API_CONTEXT_PATH + "/devices")
+@RequestMapping("/devices")
 public interface IDevicesService {
+
+    @RequestMapping(path="/", method = RequestMethod.GET)
+    @ResponseBody
+    public GetAllDevicesResponse getAllDevices();
 
     @RequestMapping(path="/personalizationConfig")
     public PersonalizationConfigResponse getPersonalizationConfig();
