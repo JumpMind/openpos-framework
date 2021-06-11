@@ -22,6 +22,7 @@ import { merge } from 'rxjs';
 import { Zeroconf, ZeroconfService, ZEROCONF_TOKEN } from './zeroconf/zeroconf';
 import { Inject } from '@angular/core';
 import { Optional } from '@angular/core';
+import {Configuration} from "../../configuration/configuration";
 
 @Injectable({
     providedIn: 'root',
@@ -129,21 +130,38 @@ export class PersonalizationStartupTask implements IStartupTask {
                 )),
                 take(1),
                 timeout(10000),
-                switchMap(p => this.attemptAutoPersonalize(data, p.service, p.deviceName)),
+                switchMap(p => this.attemptAutoPersonalize(data, this.getAutoPersonalizationUrl(p.service), p.deviceName)),
                 catchError(e => {
                     console.error('failed to auto personalize', e);
 
                     return concat(
-                        of('failed to auto personalize; fallback to standard personalization'),
-                        this.doStandardPersonalization(data)
+                        of('failed to auto personalize; attempting with auto-personalization hostname'),
+                        this.personalizeWithHostname(data, provider)
                     )
                 })
             )
         );
     }
 
-    private attemptAutoPersonalize(startupData: StartupTaskData, serviceConfig: ZeroconfService, deviceName: string): Observable<string> {
-        return this.personalization.getAutoPersonalizationParameters(deviceName, serviceConfig)
+    personalizeWithHostname(data: StartupTaskData, provider: Zeroconf): Observable<string> {
+        const servicePath = Configuration.autoPersonalizationServicePath;
+        if (!!servicePath) {
+            return concat(
+                of("Attempting to retrieve personalization params via hostname"),
+                provider.deviceName().pipe(
+                    flatMap(deviceName => this.attemptAutoPersonalize(data, Configuration.autoPersonalizationServicePath, deviceName)),
+                    catchError(e => {
+                        console.error('failed to auto personalize', e);
+                        return this.doStandardPersonalization(data);
+                    })),
+            );
+        } else {
+            return this.doStandardPersonalization(data);
+        }
+    }
+
+    private attemptAutoPersonalize(startupData: StartupTaskData, url: string, deviceName: string): Observable<string> {
+        return this.personalization.getAutoPersonalizationParameters(deviceName, url)
             .pipe(
                 flatMap(info => {
                     if (info) {
@@ -189,6 +207,10 @@ export class PersonalizationStartupTask implements IStartupTask {
                     return this.doStandardPersonalization(startupData);
                 }),
             );
+    }
+
+    getAutoPersonalizationUrl(config: ZeroconfService): string {
+        return `${config.ipv4Addresses[0]}:${config.port}/${config.txtRecord.path}`;
     }
 
     hasPersonalizationQueryParams(queryParams: Params): boolean {
