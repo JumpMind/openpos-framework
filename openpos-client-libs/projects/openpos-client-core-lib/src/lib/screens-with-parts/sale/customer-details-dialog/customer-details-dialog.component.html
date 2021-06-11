@@ -86,8 +86,8 @@
                         <div class="links-cont">
                             <a *ngFor="let a of i.actions" 
                                 [actionItem]="a"
-                                (actionClick)="doAction(a.action)"
-                                (click)="doAction(a.action)"
+                                (actionClick)="doAction(a.action, a.defaultPayload)"
+                                (click)="doAction(a.action, a.defaultPayload)"
                                 mat-button
                                 responsive-class>
                                     {{a.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
