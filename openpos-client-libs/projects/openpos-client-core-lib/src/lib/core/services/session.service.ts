@@ -6,7 +6,7 @@ import { IMessageHandler } from './../interfaces/message-handler.interface';
 import { PersonalizationService } from '../personalization/personalization.service';
 
 import { Observable, Subscription, BehaviorSubject, Subject, merge, timer, ConnectableObservable } from 'rxjs';
-import { map, filter, takeWhile, publishReplay } from 'rxjs/operators';
+import { map, filter, takeWhile, publishReplay, take } from 'rxjs/operators';
 import { Message } from '@stomp/stompjs';
 import { Injectable, NgZone, Inject, } from '@angular/core';
 import { StompState, StompRService } from '@stomp/ng2-stompjs';
@@ -306,8 +306,17 @@ export class SessionService implements IMessageHandler<any> {
             if (!this.onServerConnect.value) {
                 this.onServerConnect.next(true);
             }
+
             this.sendMessage(new ConnectedMessage());
-            this.cancelLoading();
+
+            // Screens will cancel the loading when they receive a message upon
+            // connection, but just for sanity we're going to ensure it gets
+            // cancelled after some due time. We need to let the screens handle
+            // closing the dialog to prevent a user from executing actions before
+            // the proper screen is displayed.
+            timer(10000).pipe(take(1)).subscribe(() => {
+                this.cancelLoading();
+            });
         } else if (stompState === 'DISCONNECTING') {
             console.info('STOMP disconnecting');
         } else if (stompState === 'CLOSED') {
