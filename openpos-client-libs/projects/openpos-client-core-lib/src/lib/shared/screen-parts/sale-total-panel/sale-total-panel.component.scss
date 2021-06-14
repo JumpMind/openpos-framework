@@ -28,7 +28,7 @@
             margin-top: -12px;
         }
         .sale-total-loyalty-button-icon {
-            width: 100%;
+            max-height: 65px;
             vertical-align: bottom;
         }
     }
@@ -43,7 +43,7 @@
                 display: grid;
                 grid-template-columns: 1fr 7fr 3fr;
                 grid-template-rows: auto 1fr;
-                gap: 10px 5px;
+                gap: 0px 5px;
                 grid-template-areas:
                     "Icon Name LoyaltyIcon"
                     "Memberships Memberships Memberships";
@@ -86,7 +86,6 @@
                     }
 
                     .customer-missing-info {
-                        margin-bottom: 4px;
                         app-warn-button {
                             font-size: $text-sm;
                             &.tablet-portrait {
