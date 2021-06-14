@@ -86,6 +86,8 @@
     .sale-total-employee-sale-button {
         button {
             @extend %text-sm;
+            padding-top: 10px;
+            padding-bottom: 10px;
             .mat-button-wrapper {
                 display: grid;
 
