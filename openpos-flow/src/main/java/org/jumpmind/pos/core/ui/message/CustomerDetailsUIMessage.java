@@ -50,9 +50,9 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String locationIcon;
     private String checkMarkIcon;
     private String expiredIcon;
-    private String applyIcon;
+//    private String applyIcon;
     private String appliedIcon;
-    private String statusIcon;
+//    private String statusIcon;
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);
