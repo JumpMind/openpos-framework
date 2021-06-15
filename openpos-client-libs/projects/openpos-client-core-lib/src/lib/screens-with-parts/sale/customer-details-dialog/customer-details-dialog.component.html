@@ -84,13 +84,13 @@
                             <app-currency-text class="muted-color" *ngIf="i.originalPrice !== i.salePrice" [amountText]="i.originalPrice"></app-currency-text>
                         </div>
                         <div class="links-cont">
-                            <a *ngFor="let a of i.actions" 
-                                [actionItem]="a"
-                                (actionClick)="doAction(a.action, a.defaultPayload)"
-                                (click)="doAction(a.action, a.defaultPayload)"
+                            <a *ngIf="i.transactionDetailsAction"
+                                [actionItem]="i.transactionDetailsAction"
+                                (actionClick)="doAction(i.transactionDetailsAction.action, i.transaction)"
+                                (click)="doAction(i.transactionDetailsAction.action, i.transaction)"
                                 mat-button
                                 responsive-class>
-                                    {{a.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                                {{i.transactionDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
                             </a>
                         </div>
                     </div>

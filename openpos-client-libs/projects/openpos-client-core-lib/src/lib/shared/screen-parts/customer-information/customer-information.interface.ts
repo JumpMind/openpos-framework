@@ -34,7 +34,17 @@ export interface PurchasedItem {
     originalPrice: string;
     imageUrl: string;
     labels: UILabel[];
-    actions: IActionItem[];
+    transaction: TransactionIdentifier;
+    transactionDetailsAction: IActionItem;
+    itemDetailsAction: IActionItem;
+}
+
+export interface TransactionIdentifier {
+    sequenceNumber: number;
+    deviceId: string;
+    businessDate: string;
+
+    voidedSequenceNumber?: number;
 }
 
 export interface UILabel {

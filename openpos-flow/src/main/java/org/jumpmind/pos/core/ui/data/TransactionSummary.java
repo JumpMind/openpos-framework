@@ -1,10 +1,9 @@
 package org.jumpmind.pos.core.ui.data;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.jumpmind.pos.core.ui.ActionItem;
 
-import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -12,26 +11,21 @@ import java.util.Map;
 
 @Getter
 @Setter
-@Builder
+@SuperBuilder
 @AllArgsConstructor
 @NoArgsConstructor
-public class TransactionSummary implements Serializable {
-
-    private Long sequenceNumber;
+public class TransactionSummary extends TransactionIdentifier {
     private String sequenceNumberFormatted;
-    private Long voidedSequenceNumber;
     private String voidedSequenceNumberFormatted;
     private String customerName;
     private Integer items;
     private String itemsFormatted;
     private Date endTime;
     private String transactionDate;
-    private String deviceId;
     private String storeId;
     private String tillId;
     private String barcode;
     private String total;
-    private String businessDate;
     private String status;
     private String statusText;
     private String statusIcon;

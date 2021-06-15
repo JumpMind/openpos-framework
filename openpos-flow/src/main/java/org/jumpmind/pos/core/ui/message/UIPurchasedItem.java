@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.jumpmind.pos.core.ui.ActionItem;
+import org.jumpmind.pos.core.ui.data.TransactionIdentifier;
 
 import java.io.Serializable;
 import java.util.List;
@@ -20,5 +21,8 @@ public class UIPurchasedItem implements Serializable {
     private String salePrice;
     private String originalPrice;
 
-    private List<ActionItem> actions;
+    private TransactionIdentifier transaction;
+
+    private ActionItem transactionDetailsAction;
+    private ActionItem itemDetailsAction;
 }
