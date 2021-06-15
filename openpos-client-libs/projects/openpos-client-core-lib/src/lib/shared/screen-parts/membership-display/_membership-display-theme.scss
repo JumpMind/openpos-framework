@@ -8,12 +8,12 @@
     .membership-chips {
         mat-chip {
             &.not-in {
-                background-color: $openpos-membership-not-in-background !important;
-                color: $openpos-membership-not-in-color !important;
+                background-color: $openpos-membership-not-in-background;
+                color: $openpos-membership-not-in-color;
             }
             &.in {
-                color: $openpos-membership-in-color !important;
-                background-color: $openpos-membership-in-background !important;
+                color: $openpos-membership-in-color;
+                background-color: $openpos-membership-in-background;
             }
         }
     }
