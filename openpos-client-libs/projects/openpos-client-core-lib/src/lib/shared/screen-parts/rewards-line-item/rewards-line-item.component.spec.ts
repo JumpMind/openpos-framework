@@ -224,14 +224,14 @@ describe('RewardsLineItemComponent', () => {
                     spyOn(component, 'doAction');
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     button.nativeElement.dispatchEvent(new Event('actionClick'));
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.barcode);
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton);
                 });
 
                 it('calls doAction with the configuration and promotionId when the button is clicked', () => {
                     spyOn(component, 'doAction');
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     button.nativeElement.click();
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.barcode);
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton);
                 });
 
                 it('is enabled when the button is enabled', () => {

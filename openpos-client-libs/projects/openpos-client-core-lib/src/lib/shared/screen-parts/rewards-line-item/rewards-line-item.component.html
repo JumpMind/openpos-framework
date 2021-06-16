@@ -13,8 +13,8 @@
     <div class="apply">
         <a *ngIf="reward.applyButton"
            [actionItem]="reward.applyButton"
-           (actionClick)="doAction(reward.applyButton, reward.barcode)"
-           (click)="doAction(reward.applyButton, reward.barcode)"
+           (actionClick)="doAction(reward.applyButton)"
+           (click)="doAction(reward.applyButton)"
            [disabled]="!reward.applyButton.enabled"
            mat-button
            responsive-class>
