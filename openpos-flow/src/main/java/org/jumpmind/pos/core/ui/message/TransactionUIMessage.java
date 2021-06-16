@@ -31,7 +31,8 @@ public class TransactionUIMessage extends UIMessage {
     private boolean customerMissingInfo;
     private String customerMissingInfoIcon;
     private String customerMissingInfoLabel;
-    private String checkMarkIcon;
+    private String memberIcon;
+    private String nonMemberIcon;
     private String noMembershipsFoundLabel;
     private ActionItem mobileLoyaltyButton;
 
