@@ -38,7 +38,7 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
       if (event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) { return; }
       if (event.type === 'keydown' && this.selectedReward) {
         if(this.selectedReward.applyButton && this.selectedReward.applyButton.enabled) {
-          this.actionService.doAction(this.selectedReward.applyButton, this.selectedReward.barcode);
+          this.actionService.doAction(this.selectedReward.applyButton);
         }
       }
     })
