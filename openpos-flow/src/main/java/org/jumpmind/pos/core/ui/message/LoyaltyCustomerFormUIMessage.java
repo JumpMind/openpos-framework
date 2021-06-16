@@ -36,7 +36,8 @@ public class LoyaltyCustomerFormUIMessage extends UIMessage implements IHasForm 
     private String membershipsIcon;
     private String addIcon;
     private String removeIcon;
-    private String checkMarkIcon;
+    private String memberIcon;
+    private String nonMemberIcon;
 
     private String instructions;
 
