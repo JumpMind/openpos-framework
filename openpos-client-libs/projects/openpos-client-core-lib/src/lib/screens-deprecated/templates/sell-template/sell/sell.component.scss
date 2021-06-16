@@ -26,3 +26,17 @@
 .drawer-content{
     padding: 8px;
 }
+@media (max-width: 600px) {
+
+    .sale-content{
+        flex-direction: column;
+        box-sizing: border-box;
+        display: flex;
+        max-width: 100%;
+        place-content: stretch flex-start;
+        align-items: stretch;
+        flex: 1 1 100%;
+        min-height: 50%;
+        margin: 0px 2px 2px 0px;
+    }
+  }

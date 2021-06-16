@@ -8,3 +8,9 @@
         left: 95%;
     }
 }
+
+@media (max-width: 600px) {
+    .mat-card-title {
+        font-size:20px;
+    }
+}
