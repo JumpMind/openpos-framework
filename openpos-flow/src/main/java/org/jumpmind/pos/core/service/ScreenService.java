@@ -221,11 +221,8 @@ public class ScreenService implements IScreenService, IActionListener {
                 } else {
 
                     deserializeForm(stateManager.getApplicationState(), action);
-
-                    if (logger.isInfoEnabled()) {
-                        logger.info("Received action from {}\n{}", deviceId, logFormatter.toJsonString(action));
-                    }
-
+                    action.setDeviceOriginationFlag(true);
+                    
                     try {
                         logger.debug("Posting action {}", action);
                         stateManager.doAction(action);
@@ -329,7 +326,6 @@ public class ScreenService implements IScreenService, IActionListener {
             try {
                 preInterceptedScreen = SerializationUtils.clone(screen);
                 interceptScreen(deviceId, screen);
-                logScreenTransition(deviceId, screen);
             } catch (Exception ex) {
                 if (ex.toString().contains("org.jumpmind.pos.core.screen.ChangeScreen")) {
                     logger.error(
@@ -451,109 +447,6 @@ public class ScreenService implements IScreenService, IActionListener {
         } catch (Exception ex) {
             throw new FlowException("Field to get value for field " + field + " from target " + target, ex);
         }
-    }
-
-    protected void logScreenTransition(String deviceId, UIMessage screen) throws JsonProcessingException {
-        if (loggerGraphical.isInfoEnabled()) {
-            logger.info("Show screen on device \"" + deviceId + "\" (" + screen.getClass().getName() + ")\n"
-                    + drawBox(screen.getId(), screen.getScreenType()));
-        } else {
-            logger.info("Show screen on device \"" + deviceId + "\"(\" + screen.getClass().getName() + \")\n");
-        }
-    }
-
-    protected String drawBox(String name, String typeName) {
-        String displayName = name != null ? name : null;
-        String displayTypeName = "";
-
-        if (!StringUtils.isEmpty(displayName)) {
-            displayTypeName = typeName != null ? typeName : "screen";
-            displayTypeName = "[" + displayTypeName + "]";
-        } else {
-            displayName = typeName != null ? typeName : "screen";
-            displayName = "[" + displayName + "]";
-        }
-
-        int boxWidth = Math.max(Math.max(displayName.length() + 2, 50), displayTypeName.length() + 4);
-        final int LINE_COUNT = 8;
-        StringBuilder buff = new StringBuilder(256);
-        for (int i = 0; i < LINE_COUNT; i++) {
-            switch (i) {
-                case 0:
-                    buff.append(drawTop1(boxWidth + 2));
-                    break;
-                case 1:
-                    buff.append(drawTop2(boxWidth));
-                    break;
-                case 3:
-                    buff.append(drawTitleLine(boxWidth, displayName));
-                    break;
-                case 4:
-                    buff.append(drawTypeLine(boxWidth, displayTypeName));
-                    break;
-                case 5:
-                    buff.append(drawBottom1(boxWidth));
-                    break;
-                case 6:
-                    buff.append(drawBottom2(boxWidth + 2));
-                    break;
-            }
-        }
-        return buff.toString();
-    }
-
-    protected String drawTop1(int boxWidth) {
-        StringBuilder buff = new StringBuilder();
-        buff.append(UPPER_LEFT_CORNER).append(StringUtils.repeat(HORIZONTAL_LINE, boxWidth - 2)).append(UPPER_RIGHT_CORNER);
-        buff.append("\r\n");
-        return buff.toString();
-    }
-
-    protected String drawTop2(int boxWidth) {
-        StringBuilder buff = new StringBuilder();
-        buff.append(VERITCAL_LINE + " " + UPPER_LEFT_CORNER).append(StringUtils.repeat(HORIZONTAL_LINE, boxWidth - 4))
-                .append(UPPER_RIGHT_CORNER + " " + VERITCAL_LINE);
-        buff.append("\r\n");
-        return buff.toString();
-    }
-
-    protected String drawFillerLine(int boxWidth) {
-        StringBuilder buff = new StringBuilder();
-        buff.append(VERITCAL_LINE + " " + VERITCAL_LINE).append(StringUtils.repeat(' ', boxWidth - 4))
-                .append(VERITCAL_LINE + " " + VERITCAL_LINE);
-        buff.append("\r\n");
-        return buff.toString();
-    }
-
-    protected String drawTitleLine(int boxWidth, String name) {
-        StringBuilder buff = new StringBuilder();
-        buff.append(VERITCAL_LINE + " " + VERITCAL_LINE).append(StringUtils.center(name, boxWidth - 4))
-                .append(VERITCAL_LINE + " " + VERITCAL_LINE);
-        buff.append("\r\n");
-        return buff.toString();
-    }
-
-    protected String drawTypeLine(int boxWidth, String typeName) {
-        StringBuilder buff = new StringBuilder();
-        buff.append(VERITCAL_LINE + " " + VERITCAL_LINE).append(StringUtils.center(typeName, boxWidth - 4))
-                .append(VERITCAL_LINE + " " + VERITCAL_LINE);
-        buff.append("\r\n");
-        return buff.toString();
-    }
-
-    protected String drawBottom1(int boxWidth) {
-        StringBuilder buff = new StringBuilder();
-        buff.append(VERITCAL_LINE + " " + LOWER_LEFT_CORNER).append(StringUtils.repeat(HORIZONTAL_LINE, boxWidth - 4))
-                .append(LOWER_RIGHT_CORNER + " " + VERITCAL_LINE);
-        buff.append("\r\n");
-        return buff.toString();
-    }
-
-    protected String drawBottom2(int boxWidth) {
-        StringBuilder buff = new StringBuilder();
-        buff.append(LOWER_LEFT_CORNER).append(StringUtils.repeat(HORIZONTAL_LINE, boxWidth - 2)).append(LOWER_RIGHT_CORNER);
-        buff.append("\r\n");
-        return buff.toString();
     }
 
 }

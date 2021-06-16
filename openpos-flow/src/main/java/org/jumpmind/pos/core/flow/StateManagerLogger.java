@@ -31,7 +31,7 @@ public class StateManagerLogger {
         this.log = log;
     }
 
-    protected void logStateTransition(Object oldState, Object newState, Action action, String returnAction, SubFlowConfig enterSubState, StateContext exitSubState, ApplicationState applicationState, StateContext resumeSuspendedState) {
+    protected void  logStateTransition(Object oldState, Object newState, Action action, String returnAction, SubFlowConfig enterSubState, StateContext exitSubState, ApplicationState applicationState, StateContext resumeSuspendedState) {
         if (oldState == newState) {
             return;
         }
@@ -95,7 +95,7 @@ public class StateManagerLogger {
                 }
             }
 
-            log.info("Transition from " + oldState + " to " + newState + "\n" + buff.toString());
+            log.info("Transition from " + oldState + " to " + newState + "\n" + buff.toString().trim());
         } else {
             log.info("Transition from " + oldState + " to " + newState);
         }
@@ -109,10 +109,22 @@ public class StateManagerLogger {
         String boxed = BoxLogging.box(stepTitle);
 
         String fromStateName = transition.getSourceStateContext().getState() != null ? transition.getSourceStateContext().getState().getClass().getSimpleName() : "<no state>"; 
-        String toStateName = transition.getTargetState() != null ? transition.getTargetState().getClass().getSimpleName() : "<no state>"; 
+        String toStateName = transition.getTargetState() != null ? transition.getTargetState().getClass().getSimpleName() : "<no state>";
 
-        log.info("Transition step [" + stepName + "] running between " + 
-                fromStateName + " and " + toStateName + boxed);
+        String[] boxLines = boxed.split("\n");
+
+        final String ARROW = " -> ";
+
+        String padding = StringUtils.repeat(' ', fromStateName.length() + ARROW.length());
+
+        boxLines[1] = padding + boxLines[1];
+        boxLines[2] = fromStateName + ARROW + boxLines[2] + ARROW + toStateName;
+        boxLines[3] = padding + boxLines[3];
+
+        boxed = StringUtils.join(boxLines, "\n");
+
+        log.info("Transition step [" + stepName + "] running between " +
+        fromStateName + " and " + toStateName + boxed);
     }
 
 

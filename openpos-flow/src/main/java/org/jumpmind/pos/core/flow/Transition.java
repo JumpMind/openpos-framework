@@ -98,7 +98,7 @@ public class Transition {
         boolean applicable = currentTransitionStep.get().isApplicable(this); 
         
         if (applicable) {
-            stateManagerLog.logTranistionStep(this, currentTransitionStep.get());
+            stateManager.getStateManagerObservers().onTransition(stateManager.getApplicationState(), this, currentTransitionStep.get());
             currentTransitionStep.get().arrive(this); // This could come right recurse right back in on same thread or return after showing a screen.
         } else {
             if (log.isDebugEnabled()) {                
@@ -169,5 +169,13 @@ public class Transition {
 
     public Action getQueuedAction() {
         return queuedAction;
+    }
+
+    public boolean isEnteringSubstate() {
+        return getEnterSubStateConfig() != null;
+    }
+
+    public boolean isExitingSubstate() {
+        return getResumeSuspendedState() != null;
     }
 }
