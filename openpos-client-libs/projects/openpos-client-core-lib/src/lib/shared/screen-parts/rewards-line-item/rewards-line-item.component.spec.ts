@@ -163,7 +163,7 @@ describe('RewardsLineItemComponent', () => {
             describe('reward loaded status', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.otherStatusIcon = 'check_decagram_outline';
+                    component.reward.statusIcon = 'check_decagram_outline';
                     component.reward.applyButton = {title: 'a title', enabled: true} as IActionItem;
                     fixture.detectChanges();
                 });
@@ -176,7 +176,7 @@ describe('RewardsLineItemComponent', () => {
             describe('apply button disabled when reward applied', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.otherStatusIcon = 'check_decagram_outline';
+                    component.reward.statusIcon = 'check_decagram_outline';
                     component.reward.enabled = false;
                     component.reward.applyButton = undefined;
                     fixture.detectChanges();
@@ -204,6 +204,7 @@ describe('RewardsLineItemComponent', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
                     component.reward.applyButton = {title: 'a title', enabled: true} as IActionItem;
+                    component.reward.applyIcon = 'chevron_right'
                     fixture.detectChanges();
                 });
 
@@ -223,14 +224,14 @@ describe('RewardsLineItemComponent', () => {
                     spyOn(component, 'doAction');
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     button.nativeElement.dispatchEvent(new Event('actionClick'));
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.barcode);
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton);
                 });
 
                 it('calls doAction with the configuration and promotionId when the button is clicked', () => {
                     spyOn(component, 'doAction');
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     button.nativeElement.click();
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.barcode);
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton);
                 });
 
                 it('is enabled when the button is enabled', () => {
@@ -279,7 +280,6 @@ describe('RewardsLineItemComponent', () => {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',
                 expiredIcon: 'access_time',
-                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -324,7 +324,6 @@ describe('RewardsLineItemComponent', () => {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',
                 expiredIcon: 'access_time',
-                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });

@@ -5,7 +5,7 @@
         <div *ngIf="reward.expirationDate" class="expiration" responsive-class><app-icon [iconName]="screenData.expiredIcon" [iconClass]="'material-icons' + (isMobile | async) ? ' mat-16' : ' mat-24'"></app-icon>{{screenData.expiresLabel}} {{reward.expirationDate}}</div>
     </div>
     <div class="status-icon" responsive-class>
-        <app-icon *ngIf="reward.otherStatusIcon" [iconName]="reward.otherStatusIcon" [iconClass]="'material-icons mat-24'"></app-icon>
+        <app-icon *ngIf="reward.statusIcon" [iconName]="reward.statusIcon" [iconClass]="'material-icons mat-24'"></app-icon>
     </div>
     <div class="reward" responsive-class>
         <app-currency-text *ngIf="reward.amount" [amountText]="reward.amount"></app-currency-text>
@@ -13,12 +13,12 @@
     <div class="apply">
         <a *ngIf="reward.applyButton"
            [actionItem]="reward.applyButton"
-           (actionClick)="doAction(reward.applyButton, reward.barcode)"
-           (click)="doAction(reward.applyButton, reward.barcode)"
+           (actionClick)="doAction(reward.applyButton)"
+           (click)="doAction(reward.applyButton)"
            [disabled]="!reward.applyButton.enabled"
            mat-button
            responsive-class>
-            {{reward.applyButton.title}} <app-icon [iconName]="screenData.applyIcon" [iconClass]="'material-icons mat-24'"></app-icon>
+            {{reward.applyButton.title}} <app-icon [iconName]="reward.applyIcon" [iconClass]="'material-icons mat-24'"></app-icon>
         </a>
         <a *ngIf="!reward.applyButton"
            [disabled]="true"

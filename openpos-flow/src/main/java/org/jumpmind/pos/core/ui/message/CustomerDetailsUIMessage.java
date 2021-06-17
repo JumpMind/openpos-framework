@@ -51,9 +51,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String memberIcon;
     private String nonMemberIcon;
     private String expiredIcon;
-    private String applyIcon;
     private String appliedIcon;
-    private String statusIcon;
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);
