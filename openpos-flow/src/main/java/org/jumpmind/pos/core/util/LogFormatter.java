@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 public class LogFormatter {
     
     public static String[] SENSITIVE_FIELDS = new String[] {
-            "password", "account", "cid", "creditcard", 
+            "password", "account", "cid", "creditcard", "unlock",
             "cardNumber", "driverLicense", "pinblock", "routingnumber", "walletidentifier", 
             "emvdata", "track1", "track2", "track3", "approvalcode", "ksnblock", "cardexpirydate", "referralnum",
             "ecomtoken", "issuernumber", "socialsec", "driverslicense", "lockoverride" };

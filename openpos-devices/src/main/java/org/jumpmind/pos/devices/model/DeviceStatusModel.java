@@ -19,9 +19,6 @@ public class DeviceStatusModel extends AbstractModel {
     private String deviceId;
 
     @ColumnDef
-    private String appId;
-
-    @ColumnDef
     private String deviceStatus;
 
 }

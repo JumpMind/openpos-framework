@@ -22,7 +22,7 @@ public class AuthenticateDeviceEndpoint {
         try{
             DeviceModel device = devicesRepository.getDeviceByAuth(request.getAuthToken());
 
-            devicesRepository.updateDeviceStatus(device.getDeviceId(), device.getAppId(), DeviceStatusConstants.CONNECTED);
+            devicesRepository.updateDeviceStatus(device.getDeviceId(), DeviceStatusConstants.CONNECTED);
 
             return AuthenticateDeviceResponse.builder()
                     .deviceModel(device)

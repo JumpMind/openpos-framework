@@ -6,6 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.jumpmind.pos.devices.DeviceNotFoundException;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.persist.ModelId;
+import org.jumpmind.pos.persist.Query;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -27,6 +28,8 @@ public class DevicesRepository {
 
     @Autowired
     VirtualDeviceRepository virtualDeviceRepository;
+
+    Query<DeviceStatusModel> connectedDevicesQuery = new Query<DeviceStatusModel>().named("connectedDevices").result(DeviceStatusModel.class);
 
     @Cacheable(value = CACHE_NAME, key = "#deviceId")
     public DeviceModel getDevice(String deviceId) {
@@ -137,16 +140,26 @@ public class DevicesRepository {
         return devSession.findByNaturalId(DeviceAuthModel.class, new ModelId("deviceId", deviceId));
     }
 
-    public List<DeviceAuthModel> getDisconnectedDevices(String businessUnitId) {
+    public List<DeviceAuthModel> getDisconnectedDevices(String businessUnitId, String installationId) {
         Map<String, Object> statusParams = new HashMap<>();
         statusParams.put("deviceStatus", DeviceStatusConstants.CONNECTED);
-        Set<String> connectedDevices = devSession.findByFields(DeviceStatusModel.class, statusParams, 10000).stream().map(DeviceStatusModel::getDeviceId).collect(Collectors.toSet());
+        Set<String> connectedDevices = getConnectedDeviceIds(businessUnitId, installationId);
 
         Map<String, Object> deviceParams = new HashMap<>();
         deviceParams.put("businessUnitId", businessUnitId);
         final Set<String> devices = devSession.findByFields(DeviceModel.class, deviceParams, 10000).stream().map(DeviceModel::getDeviceId).collect(Collectors.toSet());
         devices.removeAll(connectedDevices);
         return devSession.findAll(DeviceAuthModel.class, 10000).stream().filter(d -> devices.contains(d.getDeviceId())).sorted().collect(Collectors.toList());
+    }
+
+    public Set<String> getConnectedDeviceIds(String businessUnitId, String installationId) {
+        Map<String, Object> statusParams = new HashMap<>();
+        statusParams.put("businessUnitId", businessUnitId);
+        statusParams.put("installationId", installationId);
+        statusParams.put("deviceStatus", DeviceStatusConstants.CONNECTED);
+        List<DeviceStatusModel> deviceStatuses =
+                devSession.query(connectedDevicesQuery, statusParams, 10000);
+        return deviceStatuses.stream().map(s->s.getDeviceId()).collect(Collectors.toSet());
     }
 
     public DeviceModel getDeviceByAuth(String auth) {
@@ -216,11 +229,11 @@ public class DevicesRepository {
         return devSession.findByFields(DeviceParamModel.class, params, 10000);
     }
 
-    public void updateDeviceStatus(String deviceId, String appId, String status) {
+    public void updateDeviceStatus(String deviceId, String status) {
         DeviceStatusModel statusModel = devSession.findByNaturalId(DeviceStatusModel.class,
                 ModelId.builder().key("deviceId", deviceId).build());
         if (statusModel == null || !statusModel.getDeviceId().equals(deviceId)) {
-            statusModel = DeviceStatusModel.builder().deviceId(deviceId).appId(appId).build();
+            statusModel = DeviceStatusModel.builder().deviceId(deviceId).build();
         }
         statusModel.setDeviceStatus(status);
         statusModel.setLastUpdateTime(new Date());
