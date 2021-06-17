@@ -35,11 +35,18 @@ public class LoggingStateManagerObserver implements IStateManagerObserver {
 
     @Override
     public void onAction(ApplicationState applicationState, Action action) {
-        if (action.isDeviceOriginationFlag() && actionLogger.isInfoEnabled()) {
-            boolean debug = actionLogger.isDebugEnabled();
-            actionLogger.info("Received action from {}{}\n{}", applicationState.getDeviceId(),
-                    debug ? "" : " "+logFormatter.toCompactJsonString(action),
-                    formatAction(action, debug));
+        if (action.isOriginatesFromDeviceFlag() && actionLogger.isInfoEnabled()) {
+            if (actionLogger.isDebugEnabled()) {
+                actionLogger.info("Received action from {}\n{}\n{}",
+                        applicationState.getDeviceId(),
+                        String.format(LIGHTNING_AND_THE_THUNDER, action.getName()),
+                        logFormatter.toJsonString(action));
+            } else {
+                actionLogger.info("Received action from {} {}\n{}",
+                        applicationState.getDeviceId(),
+                        logFormatter.toCompactJsonString(action),
+                        String.format(LIGHTNING_AND_THE_THUNDER, action.getName()));
+            }
         }
     }
 
@@ -55,13 +62,7 @@ public class LoggingStateManagerObserver implements IStateManagerObserver {
         stateManagerLogger.logTranistionStep(transition, currentTransitionStep);
     }
 
-    public String formatAction(Action action, boolean debugFlag) {
-        return String.format(LIGHTNING_AND_THE_THUNDER + "%s", action.getName(),
-                debugFlag ? "\n"+logFormatter.toJsonString(action): "");
-    }
-
-    protected String drawBox(String name, String typeName) {
-        String displayName = name != null ? name : null;
+    protected String drawBox(String displayName, String typeName) {
         String displayTypeName = "";
 
         if (!StringUtils.isEmpty(displayName)) {

@@ -48,8 +48,8 @@ public class Action implements Serializable, Cloneable {
     @JsonIgnore
     private transient CountDownLatch latch = new CountDownLatch(1);
     @JsonIgnore
-    private transient boolean deviceOriginationFlag; // used to indicate the action came from an device versus
-                                                     // being generated from within the state machine.
+    private transient boolean originatesFromDeviceFlag; // used to indicate the action came from an device versus
+                                                        // being generated from within the state machine.
     
     static ObjectMapper mapper = DefaultObjectMapper.build();
 

@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.flow.config.SubFlowConfig;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.server.model.Action;
@@ -14,11 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Data
+@Slf4j
 public class Transition {
-    
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Logger logGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
-    private final StateManagerLogger stateManagerLog = new StateManagerLogger(logGraphical);
 
     private List<? extends ITransitionStep> transitionSteps;
     private List<TransitionStepConfig> transitionStepConfigs;

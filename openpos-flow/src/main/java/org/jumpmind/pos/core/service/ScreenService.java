@@ -219,9 +219,8 @@ public class ScreenService implements IScreenService, IActionListener {
                 } else if ( uiDataMessageProviderService.handleAction(action, stateManager.getApplicationState())){
                     logger.info("Action handled by UIMessageDataProvider from {}\n{}", deviceId, logFormatter.toJsonString(action));
                 } else {
-
                     deserializeForm(stateManager.getApplicationState(), action);
-                    action.setDeviceOriginationFlag(true);
+                    action.setOriginatesFromDeviceFlag(true);
                     
                     try {
                         logger.debug("Posting action {}", action);
