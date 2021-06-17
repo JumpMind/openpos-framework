@@ -241,7 +241,7 @@ public class StateManager implements IStateManager {
             try {
                 actionContext = actionQueue.poll(60, TimeUnit.SECONDS);
                 if (actionContext != null) {
-                    // an action may originally come from a device but then get forwwarded back through here from a state.
+                    // an action may originally come from a device but then get forwarded back through here from a state.
                     // we only want to know that it originated from the screen/device the first time it came through.
                     actionContext.getAction().setDeviceOriginationFlag(false);
                     busyFlag.set(true);
