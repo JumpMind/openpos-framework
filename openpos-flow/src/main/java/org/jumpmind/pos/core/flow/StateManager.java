@@ -1115,7 +1115,7 @@ public class StateManager implements IStateManager {
         }
 
         screenService.showScreen(applicationState.getDeviceId(), screen, dataMessageProviderMap);
-        stateManagerObservers.onScreen(applicationState, screen); // log after because interceptors in screenService may modidy the screen
+        stateManagerObservers.onScreen(applicationState, screen); // log after because interceptors in screenService may modify the screen
 
         lastShowTimeInMs.set(System.currentTimeMillis());
     }
