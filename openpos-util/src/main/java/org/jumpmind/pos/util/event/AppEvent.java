@@ -32,7 +32,7 @@ public class AppEvent extends Event implements Serializable {
     }
 
     public AppEvent(String deviceId, String appId, String pairedDeviceId, boolean remote) {
-        super(createSourceString(deviceId, appId, pairedDeviceId));
+        super(createSourceString(appId, deviceId, pairedDeviceId));
         this.deviceId = deviceId;
         this.appId = appId;
         this.pairedDeviceId = pairedDeviceId;
