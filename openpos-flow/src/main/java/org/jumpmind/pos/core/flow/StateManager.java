@@ -555,7 +555,9 @@ public class StateManager implements IStateManager {
             returnActionName = getReturnActionName(action);
         }
 
-        stateManagerObservers.onTransition(applicationState, transition, action, returnActionName);
+        if (stateManagerObservers != null) {
+            stateManagerObservers.onTransition(applicationState, transition, action, returnActionName);
+        }
 
         if (transition.isEnteringSubstate()) {
             applicationState.getStateStack().push(applicationState.getCurrentContext());
@@ -697,7 +699,9 @@ public class StateManager implements IStateManager {
             return;
         }
 
-        stateManagerObservers.onAction(applicationState, action);
+        if (stateManagerObservers != null) {
+            stateManagerObservers.onAction(applicationState, action);
+        }
 
         ActionContext actionContext = null;
         if (isOnStateManagerThread()) {
@@ -1115,7 +1119,9 @@ public class StateManager implements IStateManager {
         }
 
         screenService.showScreen(applicationState.getDeviceId(), screen, dataMessageProviderMap);
-        stateManagerObservers.onScreen(applicationState, screen); // log after because interceptors in screenService may modify the screen
+        if (stateManagerObservers != null) {
+            stateManagerObservers.onScreen(applicationState, screen); // log after because interceptors in screenService may modify the screen
+        }
 
         lastShowTimeInMs.set(System.currentTimeMillis());
     }

@@ -96,7 +96,9 @@ public class Transition {
         boolean applicable = currentTransitionStep.get().isApplicable(this); 
         
         if (applicable) {
-            stateManager.getStateManagerObservers().onTransition(stateManager.getApplicationState(), this, currentTransitionStep.get());
+            if (stateManager.getStateManagerObservers() != null) {
+                stateManager.getStateManagerObservers().onTransition(stateManager.getApplicationState(), this, currentTransitionStep.get());
+            }
             currentTransitionStep.get().arrive(this); // This could come right recurse right back in on same thread or return after showing a screen.
         } else {
             if (log.isDebugEnabled()) {                
