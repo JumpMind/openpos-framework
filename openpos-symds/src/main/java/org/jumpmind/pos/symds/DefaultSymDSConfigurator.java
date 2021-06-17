@@ -33,7 +33,7 @@ public class DefaultSymDSConfigurator implements ISymDSConfigurator {
         properties.put(ParameterConstants.JOB_PUSH_PERIOD_TIME_MS, "10000");
         properties.put(ParameterConstants.INITIAL_LOAD_EXTRACT_JOB_START, "false");
         properties.put(ServerConstants.HTTPS2_ENABLE, "false");
-        properties.setProperty(ParameterConstants.DATA_LOADER_MAX_ROWS_BEFORE_COMMIT, "100");
+        properties.setProperty(ParameterConstants.DATA_LOADER_MAX_ROWS_BEFORE_COMMIT, "3000");
         String nodeGroupId = env.getProperty("openpos.symmetric.nodeGroupId");
         if (isNotBlank(nodeGroupId)) {
             properties.put(ParameterConstants.NODE_GROUP_ID, nodeGroupId);

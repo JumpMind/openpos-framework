@@ -14,6 +14,6 @@ public class DisconnectDeviceEndpoint {
     DevicesRepository devicesRepository;
 
     public void disconnectDevice(@RequestBody DisconnectDeviceRequest request) {
-        devicesRepository.updateDeviceStatus(request.getDeviceId(), request.getAppId(), DeviceStatusConstants.DISCONNECTED);
+        devicesRepository.updateDeviceStatus(request.getDeviceId(), DeviceStatusConstants.DISCONNECTED);
     }
 }

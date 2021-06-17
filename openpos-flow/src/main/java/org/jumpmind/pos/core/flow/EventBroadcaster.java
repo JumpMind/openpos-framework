@@ -53,7 +53,9 @@ public class EventBroadcaster {
                                 processEvent = true;
                             }
                         }
-                        if (event instanceof AppEvent && onEvent.receiveEventsFromPairedDevice() && stateManager.getDeviceId().equals(((AppEvent) event).getPairedDeviceId())) {
+                        if (event instanceof AppEvent && onEvent.receiveEventsFromPairedDevice() &&
+                                (stateManager.getDeviceId().equals(((AppEvent) event).getPairedDeviceId()) ||
+                                        ((AppEvent) event).getDeviceId().equals(stateManager.getPairedDeviceId()))) {
                             processEvent = true;
                         }
                     }

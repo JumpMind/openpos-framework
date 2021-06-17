@@ -40,7 +40,6 @@ public class SessionConnectListener implements ApplicationListener<SessionConnec
 
     Map<String, String> sessionAppIdMap = Collections.synchronizedMap(new HashMap<>());
 
-
     Map<String, Map<String, String>> clientContext = Collections.synchronizedMap(new HashMap<>());
 
     Map<String, DeviceModel> deviceModelMap = Collections.synchronizedMap(new HashMap<>());

@@ -1,4 +1,7 @@
 import { Inject, Injectable, InjectionToken, Optional } from '@angular/core';
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { ActionMessage } from '../../messages/action-message';
 import { MessageTypes } from '../../messages/message-types';
 import { PrintMessage } from '../../messages/print-message';
 import { SessionService } from '../../services/session.service';
@@ -14,7 +17,7 @@ export class PrinterService {
     private readonly _selectedPrinter: IPrinter;
 
     constructor(
-        @Optional() @Inject(PRINTERS) private printers: Array<IPrinter>, 
+        @Optional() @Inject(PRINTERS) printers: Array<IPrinter>, 
         sessionService: SessionService,
 
         // browser printer will be used as fallback if no other printers are avaialable.
@@ -31,10 +34,14 @@ export class PrinterService {
 
         console.log(`using '${this._selectedPrinter.name()}' printer`);
 
-        sessionService.getMessages(MessageTypes.PRINT).subscribe(m => this.print((m as PrintMessage).html));
+        sessionService.getMessages(MessageTypes.PRINT).pipe(
+            switchMap(m => this.print((m as PrintMessage).html))
+        ).subscribe(() => {
+            sessionService.sendMessage(new ActionMessage('PrintNextDocument', true));
+        });
     }
 
-    print(html: string) {
-        this._selectedPrinter.print(html);
+    print(html: string): Observable<void> {
+        return this._selectedPrinter.print(html);
     }
 }

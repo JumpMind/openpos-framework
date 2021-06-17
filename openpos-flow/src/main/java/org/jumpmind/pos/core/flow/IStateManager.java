@@ -62,11 +62,11 @@ public interface IStateManager {
 	public void performInjections(Object object);
 	public void performInjectionsOnSpringBean(Object object);
 	public void setSessionAuthenticated(String sessionId, boolean authenticated);
-	public boolean isSessionAuthenticated(String sessionId);
 	public boolean areAllSessionsAuthenticated();
     public void setSessionCompatible(String sessionId, boolean compatible);
     public boolean isSessionCompatible(String sessionId);
     public boolean areAllSessionsCompatible();
+    public boolean areSessionsConnected();
     public void registerQueryParams(Map<String,Object> queryParams);
     public void registerPersonalizationProperties(Map<String, String> personalizationProperties);
     public Injector getInjector();
@@ -75,7 +75,6 @@ public interface IStateManager {
     public void sendConfigurationChangedMessage();
     public void setClientContext(Map<String,String> context);
     public Map<String, String> getClientContext();
-    public long getLastActionTimeInMs();
     public void sendStartupCompleteMessage();
     public void sendPrintMessage(PrintMessage message);
 }

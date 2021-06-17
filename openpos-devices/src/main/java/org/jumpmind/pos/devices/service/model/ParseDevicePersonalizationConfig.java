@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class DisconnectDeviceRequest {
+@Data
+public class ParseDevicePersonalizationConfig {
     private String deviceId;
+    private String appId;
+    private String personalizationParams;
 }
