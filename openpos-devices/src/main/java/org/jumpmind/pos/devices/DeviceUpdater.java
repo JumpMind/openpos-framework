@@ -35,6 +35,9 @@ public class DeviceUpdater implements ApplicationListener<DeviceConnectedEvent> 
     @Value("${openpos.businessunitId:undefined}")
     String businessUnitId;
 
+    @Value("${openpos.installationId:'not set'}")
+    String installationId;
+
     @Autowired(required = false)
     List<ITagProvider> tagProviders;
 
@@ -50,6 +53,7 @@ public class DeviceUpdater implements ApplicationListener<DeviceConnectedEvent> 
     synchronized public void updateDevice(DeviceModel deviceModel) {
         deviceModel.setTimezoneOffset(clientContext.get("timezoneOffset"));
         deviceModel.setBusinessUnitId(businessUnitId);
+        deviceModel.setInstallationId(installationId);
         // TODO check properties also before using default
         deviceModel.setLocale(Locale.getDefault().toString());
         deviceModel.setLastUpdateTime(new Date());

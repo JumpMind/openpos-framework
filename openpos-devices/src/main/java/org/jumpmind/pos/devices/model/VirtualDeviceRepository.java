@@ -21,10 +21,10 @@ public class VirtualDeviceRepository {
         return virtualDevices.values().stream().filter(d -> d.getDeviceId().equals(deviceId)).findFirst().orElse(null);
     }
 
-    public void removeByDeviceIdAppId(String deviceId, String appId) {
+    public void removeByDeviceId(String deviceId) {
         String matchingAuthId = null;
         for (Map.Entry<String,DeviceModel> e : virtualDevices.entrySet()) {
-            if (e.getValue().getAppId().equals(appId) && e.getValue().getDeviceId().equals(deviceId)) {
+            if (e.getValue().getDeviceId().equals(deviceId)) {
                 matchingAuthId = e.getKey();
             }
         }

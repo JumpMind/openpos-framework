@@ -161,11 +161,8 @@ public class StateManager implements IStateManager {
     AtomicBoolean busyFlag = new AtomicBoolean(false);
 
     AtomicReference<Date> lastInteractionTime = new AtomicReference<Date>(new Date());
-    AtomicInteger activeCalls = new AtomicInteger(0);
     AtomicBoolean transitionRestFlag = new AtomicBoolean(false);
-    AtomicLong lastActionTimeInMs = new AtomicLong(0);
     AtomicLong lastShowTimeInMs = new AtomicLong(0);
-    AtomicReference<Thread> activeThread = new AtomicReference<>();
 
     @Override
     public void reset() {
@@ -340,11 +337,6 @@ public class StateManager implements IStateManager {
     }
 
     @Override
-    public boolean isSessionAuthenticated(String sessionId) {
-        return this.sessionAuthenticated.get(sessionId) != null && this.sessionAuthenticated.get(sessionId);
-    }
-
-    @Override
     public boolean areAllSessionsAuthenticated() {
         return !sessionAuthenticated.values().contains(false);
     }
@@ -366,6 +358,11 @@ public class StateManager implements IStateManager {
 
     public void removeSessionCompatible(String sessionId) {
         this.sessionCompatible.remove(sessionId);
+    }
+
+    @Override
+    public boolean areSessionsConnected() {
+        return this.sessionCompatible.size() > 0;
     }
 
     protected void transitionTo(Action action, StateConfig stateConfig) {
@@ -1194,7 +1191,6 @@ public class StateManager implements IStateManager {
     }
 
     public void sendConfigurationChangedMessage() {
-        String appId = applicationState.getAppId();
         String deviceId = applicationState.getDeviceId();
 
         Map<String, String> properties = applicationState.getScopeValue("personalizationProperties");
@@ -1226,8 +1222,4 @@ public class StateManager implements IStateManager {
         this.actionQueue.offer(new ActionContext(new Action(STATE_MANAGER_PROCESS_EVENT_ACTION, event)));
     }
 
-    @Override
-    public long getLastActionTimeInMs() {
-        return lastActionTimeInMs.get();
-    }
 }
