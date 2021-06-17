@@ -14,6 +14,10 @@ export class ConsoleScannerPlugin implements IScanner {
         console['scan'] = (value, type) => {
             this.scanSubject.next({data: value, type: type});
         }
+
+        console['scanData'] = (scanData: IScanData) => {
+            this.scanSubject.next({rawData: scanData.rawData, data: scanData.data, rawType: scanData.rawType, type: scanData.type });
+        }
     }
 
     startScanning(): Observable<IScanData> {
