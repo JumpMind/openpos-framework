@@ -241,7 +241,7 @@ public class StateManager implements IStateManager {
             try {
                 actionContext = actionQueue.poll(60, TimeUnit.SECONDS);
                 if (actionContext != null) {
-                    // an action may originally come from a device but then get forwwarded back through here from a state.
+                    // an action may originally come from a device but then get forwarded back through here from a state.
                     // we only want to know that it originated from the screen/device the first time it came through.
                     actionContext.getAction().setOriginatesFromDeviceFlag(false);
                     busyFlag.set(true);
@@ -1115,7 +1115,7 @@ public class StateManager implements IStateManager {
         }
 
         screenService.showScreen(applicationState.getDeviceId(), screen, dataMessageProviderMap);
-        stateManagerObservers.onScreen(applicationState, screen); // log after because interceptors in screenService may modidy the screen
+        stateManagerObservers.onScreen(applicationState, screen); // log after because interceptors in screenService may modify the screen
 
         lastShowTimeInMs.set(System.currentTimeMillis());
     }
