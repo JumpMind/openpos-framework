@@ -7,6 +7,7 @@ export interface CustomerDetails {
     loyaltyNumber: string,
     phoneNumber: string,
     email: string,
+    birthDate: string,
     address: {
         line1: string,
         line2: string,
@@ -24,4 +25,5 @@ export interface CustomerInformationComponentInterface {
     phoneIcon: string;
     loyaltyNumberIcon: string;
     locationIcon: string;
+    birthDateIcon: string;
 }
