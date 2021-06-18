@@ -25,7 +25,7 @@ export class ConsoleScannerPlugin implements Scanner {
         };
 
         console.scanData = (scanData: ScanData) => {
-            this.scanSubject.next({rawData: scanData.rawData, data: scanData.data, rawType: scanData.rawType, type: scanData.type });
+            this.scanSubject.next({ rawData: scanData.rawData, data: scanData.data, rawType: scanData.rawType, type: scanData.type });
         }
     }
 
