@@ -1,0 +1,15 @@
+.dropdown{
+    background-color: #faf9f9;
+}
+
+::ng-deep{
+    .mat-option-text:hover:not(.mat-option-disabled) {
+        background: lightgray !important;
+        color: gray;
+    }
+
+    .mat-option:hover {
+        background: lightgray !important;
+        color: gray !important;
+    }
+}
