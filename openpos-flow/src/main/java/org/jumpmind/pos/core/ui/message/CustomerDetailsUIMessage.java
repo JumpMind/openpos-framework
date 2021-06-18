@@ -45,6 +45,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String expiredIcon;
     private String applyIcon;
 
+    private String itemHistoryLabel;
     private String itemsHistoryDataProviderKey;
 
     public CustomerDetailsUIMessage() {
