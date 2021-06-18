@@ -65,44 +65,49 @@
             </mat-tab>
             <mat-tab *ngIf="screen.itemHistoryEnabled"
                     [label]="screen.itemHistoryLabel || 'Purchace History'">
-                <mat-card>
-                    <div class="item" *ngFor="let i of screen.customer.itemHistory">
-                        <div class="image-container">
-                            <img [src]="i.imageUrl | imageUrl">
+                <app-infinite-scroll [dataKey]="screen.itemsHistoryDataProviderKey" [itemTemplate]="itemHistoryTemplate" [noItemsTemplate]="itemHistoryNoItems" virtualScrollMinBufferPx="200" virtualScrollMaxBufferPx="400" [itemHeightPx]="155">
+                    <ng-template #itemHistoryTemplate let-item>
+                        <div class="item">
+                            <div class="image-container">
+                                <img [src]="item.imageUrl | imageUrl">
+                            </div>
+                            <h3 class="title">{{ item.title }}</h3>
+                            <div class="labels-cont">
+                                <ul>
+                                    <li class="muted-color" *ngFor="let l of item.labels">
+                                        <app-icon [iconName]="l.icon"></app-icon>
+                                        <div class="inline-markdown" [innerHTML]="l.text | markdownFormatter"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="price-cont">
+                                <app-currency-text [amountText]="item.salePrice"></app-currency-text>
+                                <app-currency-text class="muted-color" *ngIf="item.originalPrice !== item.salePrice" [amountText]="item.originalPrice"></app-currency-text>
+                            </div>
+                            <div class="links-cont">
+                                <a *ngIf="item.transactionDetailsAction"
+                                    [actionItem]="item.transactionDetailsAction"
+                                    (actionClick)="doAction(item.transactionDetailsAction.action, item.transaction || item.transactionDetailsAction.defaultPayload)"
+                                    (click)="doAction(item.transactionDetailsAction.action, item.transaction || item.transactionDetailsAction.defaultPayload)"
+                                    mat-button
+                                    responsive-class>
+                                    {{item.transactionDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                                </a>
+                                <a *ngIf="item.itemDetailsAction"
+                                    [actionItem]="item.itemDetailsAction"
+                                    (actionClick)="doAction(item.itemDetailsAction.action, item.itemId || item.itemDetailsAction.defaultPayload)"
+                                    (click)="doAction(item.itemDetailsAction.action, item.itemId || item.itemDetailsAction.defaultPayload)"
+                                    mat-button
+                                    responsive-class>
+                                    {{item.itemDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                                </a>
+                            </div>
                         </div>
-                        <h3 class="title">{{ i.title }}</h3>
-                        <div class="labels-cont">
-                            <ul>
-                                <li class="muted-color" *ngFor="let l of i.labels">
-                                    <app-icon [iconName]="l.icon"></app-icon>
-                                    <div class="inline-markdown" [innerHTML]="l.text | markdownFormatter"></div>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="price-cont">
-                            <app-currency-text [amountText]="i.salePrice"></app-currency-text>
-                            <app-currency-text class="muted-color" *ngIf="i.originalPrice !== i.salePrice" [amountText]="i.originalPrice"></app-currency-text>
-                        </div>
-                        <div class="links-cont">
-                            <a *ngIf="i.transactionDetailsAction"
-                                [actionItem]="i.transactionDetailsAction"
-                                (actionClick)="doAction(i.transactionDetailsAction.action, i.transaction || i.transactionDetailsAction.defaultPayload)"
-                                (click)="doAction(i.transactionDetailsAction.action, i.transaction || i.transactionDetailsAction.defaultPayload)"
-                                mat-button
-                                responsive-class>
-                                {{i.transactionDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
-                            </a>
-                            <a *ngIf="i.itemDetailsAction"
-                                [actionItem]="i.itemDetailsAction"
-                                (actionClick)="doAction(i.itemDetailsAction.action, i.itemId || i.itemDetailsAction.defaultPayload)"
-                                (click)="doAction(i.itemDetailsAction.action, i.itemId || i.itemDetailsAction.defaultPayload)"
-                                mat-button
-                                responsive-class>
-                                {{i.itemDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
-                            </a>
-                        </div>
-                    </div>
-                </mat-card>
+                    </ng-template>
+                    <ng-template #itemHistoryNoItems>
+                        <p>No items</p>
+                    </ng-template>
+                </app-infinite-scroll>
             </mat-tab>
             <mat-tab *ngIf="screen.rewardHistoryTabEnabled"
                     class="rewardsHistoryTab" [label]="screen.rewardHistoryLabel">

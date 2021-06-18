@@ -24,4 +24,6 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
 
     profileIcon: string;
     membershipCardIcon: string;
+
+    itemsHistoryDataProviderKey: string;
 }
