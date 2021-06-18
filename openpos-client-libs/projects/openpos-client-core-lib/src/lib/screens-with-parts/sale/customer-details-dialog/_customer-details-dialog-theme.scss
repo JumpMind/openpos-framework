@@ -10,6 +10,14 @@
         }
     }
 
+    app-infinite-scroll {
+        background: white;
+    }
+
+    .item {
+        border-bottom: 1px solid map-get($foreground, border-bottom);
+    }
+
     .mat-tab-body-wrapper{
         border: 2px solid map-get($foreground, border);
     }
