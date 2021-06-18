@@ -22,6 +22,7 @@ public class UIPurchasedItem implements Serializable {
     private String originalPrice;
 
     private TransactionIdentifier transaction;
+    private String itemId;
 
     private ActionItem transactionDetailsAction;
     private ActionItem itemDetailsAction;

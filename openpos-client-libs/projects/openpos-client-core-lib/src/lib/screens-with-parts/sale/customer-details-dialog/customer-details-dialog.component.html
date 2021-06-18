@@ -86,11 +86,19 @@
                         <div class="links-cont">
                             <a *ngIf="i.transactionDetailsAction"
                                 [actionItem]="i.transactionDetailsAction"
-                                (actionClick)="doAction(i.transactionDetailsAction.action, i.transaction)"
-                                (click)="doAction(i.transactionDetailsAction.action, i.transaction)"
+                                (actionClick)="doAction(i.transactionDetailsAction.action, i.transaction || i.transactionDetailsAction.defaultPayload)"
+                                (click)="doAction(i.transactionDetailsAction.action, i.transaction || i.transactionDetailsAction.defaultPayload)"
                                 mat-button
                                 responsive-class>
                                 {{i.transactionDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                            </a>
+                            <a *ngIf="i.itemDetailsAction"
+                                [actionItem]="i.itemDetailsAction"
+                                (actionClick)="doAction(i.itemDetailsAction.action, i.itemId || i.itemDetailsAction.defaultPayload)"
+                                (click)="doAction(i.itemDetailsAction.action, i.itemId || i.itemDetailsAction.defaultPayload)"
+                                mat-button
+                                responsive-class>
+                                {{i.itemDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
                             </a>
                         </div>
                     </div>

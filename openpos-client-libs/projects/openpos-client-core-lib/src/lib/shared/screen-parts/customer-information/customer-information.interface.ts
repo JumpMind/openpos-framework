@@ -36,6 +36,7 @@ export interface PurchasedItem {
     labels: UILabel[];
     transaction: TransactionIdentifier;
     transactionDetailsAction: IActionItem;
+    itemId: String;
     itemDetailsAction: IActionItem;
 }
 
