@@ -22,9 +22,18 @@ public final class RestApiSupport {
 
     public static final String REST_API_TOKEN_HEADER_NAME = "X-API-Token";
 
+    /**
+     * @see org.jumpmind.pos.util.ApiTokenGenerator#generateApiToken()
+     */
+    public static final String REST_API_LOOPBACK_TOKEN = "LjVHdqj47ecbHVnkBB35";
+
     public static final Function<String, String> REQUEST_MAPPING_TO_WILDCARD_URI_PATTERN = (requestMapping) -> requestMapping + "/*";
 
     private static final Logger LOG = LoggerFactory.getLogger(RestApiSupport.class);
+
+    public static String generateApiToken() {
+        return new ApiTokenGenerator().generateApiToken();
+    }
 
     public static Set<Class<?>> findRestApiControllers(final String packageName) {
         return findRestApiControllers(packageName, newRestApiScanner());
