@@ -4,6 +4,9 @@
 # Log file
 *.log*
 
+# Vim swap files
+*.swp
+
 # BlueJ files
 *.ctxt
 
