@@ -64,7 +64,7 @@ describe('RewardsLineItemComponent', () => {
             component = fixture.componentInstance;
             component.reward = {
                 expirationDate: '01/01/2000',
-                applyButton: {title: 'a title', enabled: true}
+                actionButton: {title: 'a title', enabled: true}
             } as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
@@ -163,8 +163,8 @@ describe('RewardsLineItemComponent', () => {
             describe('reward loaded status', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.statusIcon = 'check_decagram_outline';
-                    component.reward.applyButton = {title: 'a title', enabled: true} as IActionItem;
+                    component.reward.statusText = 'check_decagram_outline';
+                    component.reward.actionButton = {title: 'a title', enabled: true} as IActionItem;
                     fixture.detectChanges();
                 });
 
@@ -176,9 +176,9 @@ describe('RewardsLineItemComponent', () => {
             describe('apply button disabled when reward applied', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.statusIcon = 'check_decagram_outline';
+                    component.reward.statusText = 'check_decagram_outline';
                     component.reward.enabled = false;
-                    component.reward.applyButton = undefined;
+                    component.reward.actionButton = undefined;
                     fixture.detectChanges();
                 });
 
@@ -203,8 +203,8 @@ describe('RewardsLineItemComponent', () => {
             describe('apply button', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.applyButton = {title: 'a title', enabled: true} as IActionItem;
-                    component.reward.applyIcon = 'chevron_right'
+                    component.reward.actionButton = {title: 'a title', enabled: true} as IActionItem;
+                    component.reward.actionIcon = 'chevron_right'
                     fixture.detectChanges();
                 });
 
@@ -213,7 +213,7 @@ describe('RewardsLineItemComponent', () => {
                 });
 
                 it('renders the button title', () => {
-                    validateText(fixture, '.apply a', component.reward.applyButton.title);
+                    validateText(fixture, '.apply a', component.reward.actionButton.title);
                 });
 
                 it('renders the chevron icon', () => {
@@ -224,25 +224,25 @@ describe('RewardsLineItemComponent', () => {
                     spyOn(component, 'doAction');
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     button.nativeElement.dispatchEvent(new Event('actionClick'));
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton);
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.actionButton);
                 });
 
                 it('calls doAction with the configuration and promotionId when the button is clicked', () => {
                     spyOn(component, 'doAction');
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     button.nativeElement.click();
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton);
+                    expect(component.doAction).toHaveBeenCalledWith(component.reward.actionButton);
                 });
 
                 it('is enabled when the button is enabled', () => {
-                    component.reward.applyButton.enabled = true;
+                    component.reward.actionButton.enabled = true;
                     fixture.detectChanges();
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     expect(button.properties.disabled).toBe(false);
                 });
 
                 it('is disabled when the button is disabled', () => {
-                    component.reward.applyButton.enabled = false;
+                    component.reward.actionButton.enabled = false;
                     fixture.detectChanges();
                     const button = fixture.debugElement.query(By.css('.apply a'));
                     expect(button.properties.disabled).toBe(true);
@@ -274,7 +274,7 @@ describe('RewardsLineItemComponent', () => {
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
             component.reward = {
-                applyButton: {title: 'a title', enabled: true}
+                actionButton: {title: 'a title', enabled: true}
             } as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
@@ -318,7 +318,7 @@ describe('RewardsLineItemComponent', () => {
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
             component.reward = {
-                applyButton: {title: 'a title', enabled: true}
+                actionButton: {title: 'a title', enabled: true}
             } as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
