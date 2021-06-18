@@ -134,7 +134,11 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
 
         HttpHeaders headers = new HttpHeaders();
 
-        headers.set(REST_API_TOKEN_HEADER_NAME, profileConfig.getApiToken());
+        if (profileConfig.getApiToken() != null) {
+            headers.set(REST_API_TOKEN_HEADER_NAME, profileConfig.getApiToken());
+        } else {
+            logger.warn("missing apiToken for service profile \"{}\"", profileId);
+        }
 
         if( clientContext != null ) {
             clientContext.put("correlationId", UUID.randomUUID().toString());
