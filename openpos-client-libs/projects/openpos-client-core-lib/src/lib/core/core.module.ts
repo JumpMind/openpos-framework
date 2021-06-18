@@ -37,7 +37,7 @@ import { PersonalizationComponent } from './personalization/personalization.comp
 import { ToastService } from './services/toast.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgxElectronModule } from 'ngx-electron';
+import { ElectronService, NgxElectronModule } from 'ngx-electron';
 import { PluginStartupTask, PLUGINS } from './startup/plugin-startup-task';
 import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-startup-task';
 import { CordovaPlatform } from './platforms/cordova.platform';
@@ -80,8 +80,10 @@ import { CapacitorStorageService } from './storage/capacitor/capacitor-storage.s
 import { Storage } from './storage/storage.service';
 import { STORAGE_CONTAINERS } from './storage/storage-container';
 import { CapacitorPrinterPlugin } from './platform-plugins/printers/capacitor-printer.plugin';
-import {AutoPersonalizationStartupTask} from "./startup/auto-personalization-startup-task";
-import {WrapperService} from "./services/wrapper.service";
+import { ZEROCONF_TOKEN } from './startup/zeroconf/zeroconf';
+import { MDnsZeroconf } from './startup/zeroconf/mdns-zeroconf';
+import { CapacitorZeroconf } from './startup/zeroconf/capacitor-zeroconf';
+import { CapacitorService } from './services/capacitor.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -127,8 +129,9 @@ registerLocaleData(locale_frCA, 'fr-CA');
         MediaMatcher,
         StompRService,
         BarcodeScanner,
-        { provide: STARTUP_TASKS, useClass: AutoPersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog, WrapperService]},
-        { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog]},
+        { provide: ZEROCONF_TOKEN, useClass: MDnsZeroconf, multi: true, deps: [ElectronService] },
+        { provide: ZEROCONF_TOKEN, useClass: CapacitorZeroconf, multi: true, deps: [CapacitorService] },
+        { provide: STARTUP_TASKS, useClass: PersonalizationStartupTask, multi: true, deps: [PersonalizationService, MatDialog, ZEROCONF_TOKEN]},
         { provide: STARTUP_TASKS, useClass: SubscribeToSessionTask, multi: true, deps: [SessionService, Router]},
         { provide: STARTUP_TASKS, useClass: DialogServiceStartupTask, multi: true, deps: [DialogService]},
         { provide: STARTUP_TASKS, useClass: AudioStartupTask, multi: true, deps: [AudioRepositoryService, AudioService, AudioInteractionService]},

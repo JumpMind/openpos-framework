@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { IPrinter } from './printer.interface';
+import { from, Observable, of } from 'rxjs';
 
+import { IPrinter } from './printer.interface';
 
 declare module '@capacitor/core' {
     interface PluginRegistry {
@@ -24,7 +25,7 @@ export class CapacitorPrinterPlugin implements IPrinter {
         return Capacitor.isNative && Capacitor.isPluginAvailable('Print');
     }
 
-    print(html: string) {
-        CapacitorPlugins.Print.print({ html });
+    print(html: string): Observable<void> {
+        return from(CapacitorPlugins.Print.print({ html }));
     }
 }

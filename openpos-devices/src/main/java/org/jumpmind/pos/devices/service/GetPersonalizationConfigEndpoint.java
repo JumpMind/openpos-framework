@@ -25,6 +25,9 @@ public class GetPersonalizationConfigEndpoint {
     @Value("${openpos.businessunitId:undefined}")
     String businessUnitId;
 
+    @Value("${openpos.installationId:'not set'}")
+    String installationId;
+
     @Autowired
     DevicesRepository repository;
 
@@ -38,7 +41,7 @@ public class GetPersonalizationConfigEndpoint {
             throw new ResponseStatusException(HttpStatus.NO_CONTENT, "No personalization configuration, use default", null);
         }
 
-        List<DeviceAuthModel> disconnectedDevices = repository.getDisconnectedDevices(businessUnitId);
+        List<DeviceAuthModel> disconnectedDevices = repository.getDisconnectedDevices(businessUnitId, installationId);
         Map<String, String> availableDevices = null;
         if( disconnectedDevices != null && disconnectedDevices.size() > 0){
             availableDevices = disconnectedDevices.stream()

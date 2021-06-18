@@ -1,13 +1,17 @@
 package org.jumpmind.pos.devices.model;
 
+import lombok.Builder;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.jumpmind.pos.persist.AbstractModel;
 import org.jumpmind.pos.persist.ColumnDef;
 import org.jumpmind.pos.persist.TableDef;
 
-import java.sql.Types;
+import java.util.List;
 
 @Data
+@Builder
+@EqualsAndHashCode(callSuper = true)
 @TableDef(name = "device_personalization", primaryKey = {"deviceName"})
 public class DevicePersonalizationModel extends AbstractModel {
     @ColumnDef
@@ -20,6 +24,6 @@ public class DevicePersonalizationModel extends AbstractModel {
     private String deviceId;
     @ColumnDef
     private String appId;
-    @ColumnDef(type= Types.LONGVARCHAR)
-    private String personalizationParams;
+
+    private List<DeviceParamModel> deviceParamModels;
 }

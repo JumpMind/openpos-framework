@@ -23,11 +23,12 @@
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
         min-width: 150px;
+        max-height: 93.59px;
         .material-icons {
             margin-top: -12px;
         }
         .sale-total-loyalty-button-icon {
-            width: 100%;
+            max-height: 65px;
             vertical-align: bottom;
         }
     }
@@ -37,15 +38,15 @@
             vertical-align: inherit;
             width: 100%;
             text-align: left;
-            padding: 10px;
+            padding: 0px 10px;
             .grid-container {
                 display: grid;
-                grid-template-columns: 1fr 10fr;
+                grid-template-columns: 1fr 7fr 3fr;
                 grid-template-rows: auto 1fr;
-                gap: 10px 5px;
+                gap: 0px 5px;
                 grid-template-areas:
-                    "Icon Name"
-                    "Memberships Memberships";
+                    "Icon Name LoyaltyIcon"
+                    "Memberships Memberships Memberships";
                 .name {
                     grid-area: Name;
                     .customer-name {
@@ -60,6 +61,14 @@
                 .icon {
                     grid-area: Icon;
                     display: inline-block;
+                }
+                .loyalty-icon {
+                    grid-area: LoyaltyIcon;
+                    display: inline-block;
+                    .sale-total-loyalty-button-icon {
+                        max-height: 24px;
+                        vertical-align: middle;
+                    }
                 }
                 .memberships {
                     overflow: hidden;
@@ -77,7 +86,6 @@
                     }
 
                     .customer-missing-info {
-                        margin-bottom: 4px;
                         app-warn-button {
                             font-size: $text-sm;
                             &.tablet-portrait {
@@ -159,8 +167,8 @@ app-scandit-native {
 
             .sale-total-subtotal-title {
                 @extend %text-sm;
-                padding-bottom: 8px;
-                padding-top: 8px;
+                padding-bottom: 4px;
+                padding-top: 4px;
             }
 
             .sale-total-subtotal-amount {
@@ -179,9 +187,9 @@ app-scandit-native {
 
             .sale-total-total-title {
                 @extend %text-lg;
-                padding-top: 8px;
-                padding-bottom: 8px;
-
+                padding-top: 4px;
+                padding-bottom: 4px;
+                margin-bottom: -7px;
                 &.small-desktop-landscape {
                     @extend %text-md;
                 }
@@ -202,7 +210,7 @@ app-scandit-native {
             .sale-total-itemcount-title {
                 @extend %text-lg;
                 padding-top: 16px;
-                padding-bottom: 8px;
+                padding-bottom: 4px;
             }
 
             .sale-total-itemcount-amount {

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, Optional } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { PersonalizationConfigResponse } from './personalization-config-response.interface';
 import { BehaviorSubject, Observable,throwError, Subject, zip } from 'rxjs';
@@ -8,9 +8,7 @@ import {PersonalizationResponse} from './personalization-response.interface';
 import {AutoPersonalizationParametersResponse} from "./device-personalization.interface";
 import {ZeroconfService} from "@ionic-native/zeroconf";
 import {Configuration} from "../../configuration/configuration";
-import {WrapperService} from "../services/wrapper.service";
 
-import { Capacitor, Plugins as CapacitorPlugins } from '@capacitor/core';
 import { Storage } from '../storage/storage.service';
 
 @Injectable({
@@ -33,8 +31,7 @@ export class PersonalizationService {
 
     constructor(
         private storage: Storage,
-        private http: HttpClient,
-        private wrapperService: WrapperService
+        private http: HttpClient
     ) {
         zip(
             storage.getValue('deviceToken'),
@@ -67,13 +64,9 @@ export class PersonalizationService {
         });
     }
 
-    public shouldAutoPersonalize(): boolean {
-        return this.wrapperService.shouldAutoPersonalize();
-    }
-
-    public getAutoPersonalizationParameters(deviceName: string, config: ZeroconfService): Observable<AutoPersonalizationParametersResponse> {
-        let url = this.sslEnabled$.getValue() ? 'https://' : 'http://';
-        url += `${config.hostname}:${config.port}/${config.txtRecord.path}`;
+    public getAutoPersonalizationParameters(deviceName: string, url): Observable<AutoPersonalizationParametersResponse> {
+        const protocol = this.sslEnabled$.getValue() ? 'https://' : 'http://';
+        url += protocol + url;
         return this.http.get<AutoPersonalizationParametersResponse>(url, { params: { deviceName: deviceName }})
             .pipe(
                 timeout(Configuration.autoPersonalizationRequestTimeoutMillis),
@@ -120,6 +113,7 @@ export class PersonalizationService {
         url += serverName + ':' + serverPort + '/devices/personalize';
 
         if (personalizationParameters) {
+            console.log("personalizationParams", personalizationParameters);
             personalizationParameters.forEach((value, key) => request.personalizationParameters[key] = value);
         }
 

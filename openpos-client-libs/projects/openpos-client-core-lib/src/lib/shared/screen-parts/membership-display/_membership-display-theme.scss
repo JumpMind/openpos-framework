@@ -2,17 +2,19 @@
     $foreground: map-get($theme, foreground );
     $openpos-membership-in-color: map-get($theme, openpos-membership-in-color );
     $openpos-membership-in-background: map-get($theme, openpos-membership-in-background );
+    $openpos-membership-not-in-color: map-get($theme, openpos-membership-not-in-color );
+    $openpos-membership-not-in-background: map-get($theme, openpos-membership-not-in-background );
 
     .membership-chips {
-        mat-chip.not-in {
-            background-color: white !important;
-            border: 1px solid mat-color($foreground, secondary-text);
-            color: mat-color($foreground, secondary-text) !important;
-        }
-
-        mat-chip.in {
-            color: $openpos-membership-in-color !important;
-            background-color: $openpos-membership-in-background !important;
+        mat-chip {
+            &.not-in {
+                background-color: $openpos-membership-not-in-background;
+                color: $openpos-membership-not-in-color;
+            }
+            &.in {
+                color: $openpos-membership-in-color;
+                background-color: $openpos-membership-in-background;
+            }
         }
     }
 }

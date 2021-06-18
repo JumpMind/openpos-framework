@@ -225,19 +225,6 @@ describe('SaleTotalPanelComponent', () => {
                             expect(component.doAction).toHaveBeenCalledWith(component.screenData.linkedCustomerButton);
                         });
 
-                        it('shows the keybinding when keybinds are enabled', () => {
-                            spyOn(component, 'keybindsEnabled').and.returnValue(true);
-                            fixture.detectChanges();
-                            const button = fixture.debugElement.query(By.css('.sale-total-header .linked-customer-summary .loyalty-keybind'));
-                            expect(button.nativeElement.textContent).toContain('F7');
-                        });
-
-                        it('hides the keybinding when keybinds are disabled', () => {
-                            spyOn(component, 'keybindsEnabled').and.returnValue(false);
-                            fixture.detectChanges();
-                            validateDoesNotExist(fixture, '.sale-total-header .linked-customer-summary .loyalty-keybind');
-                        });
-
                         describe('when customerMissingInfoEnabled is true', () => {
                             beforeEach(() => {
                                 component.screenData.customerMissingInfoEnabled = true;

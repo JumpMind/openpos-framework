@@ -13,6 +13,8 @@ public class FindDevicesEndpoint {
     DevicesRepository devicesRepository;
 
     public FindDevicesResponse findDevices(FindDevicesRequest request) {
-       return FindDevicesResponse.builder().devices(devicesRepository.findDevices(request.getBusinessUnitId())).build();
+       return FindDevicesResponse.builder().
+               devices(
+                       devicesRepository.findDevices(request.getBusinessUnitId())).build();
     }
 }

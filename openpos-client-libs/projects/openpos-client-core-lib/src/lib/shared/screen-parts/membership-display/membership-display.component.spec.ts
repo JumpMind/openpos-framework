@@ -48,7 +48,8 @@ describe('MembershipDisplayComponent', () => {
         fixture = TestBed.createComponent(MembershipDisplayComponent);
         component = fixture.componentInstance;
         component.screenData = {
-            checkMarkIcon: 'check'
+            memberIcon: 'check',
+            nonMemberIcon: 'close'
         };
         membership = {
             id: '1',
@@ -91,8 +92,12 @@ describe('MembershipDisplayComponent', () => {
                 expect(chip.nativeElement.classList).toContain('in');
             });
 
-            it('displays the check icon', () => {
+            it('displays the membership icon', () => {
                 validateIcon(fixture, 'mat-chip app-icon', 'check');
+            });
+
+            it('does not have the non membership icon', () => {
+                validateDoesNotExist(fixture, 'mat-chip app-icon .not-in');
             });
         });
 
@@ -107,8 +112,12 @@ describe('MembershipDisplayComponent', () => {
                 expect(chip.nativeElement.classList).toContain('not-in');
             });
 
-            it('does not have the check icon', () => {
-               validateDoesNotExist(fixture, 'mat-chip mat-icon');
+            it('does not have the membership icon', () => {
+                validateDoesNotExist(fixture, 'mat-chip app-icon .in');
+            });
+
+            it('has the non membership icon', () => {
+                validateIcon(fixture, 'mat-chip app-icon', 'close');
             });
         });
     });

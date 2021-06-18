@@ -1,0 +1,7 @@
+---
+queries:
+-
+  name: connectedDevices
+  select:
+    select * from DeviceStatusModel s join DeviceModel d on s.device_id=d.device_id
+  where: d.business_unit_id=${businessUnitId} and d.installation_id=${installationId} and s.device_status=${deviceStatus}

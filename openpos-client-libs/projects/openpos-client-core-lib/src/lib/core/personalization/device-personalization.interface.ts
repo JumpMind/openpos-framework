@@ -4,6 +4,6 @@ export interface AutoPersonalizationParametersResponse {
     serverPort: string;
     deviceId: string;
     appId: string;
-    personalizationParams?: Map<string, string>;
+    personalizationParams?: any;
     sslEnabled?: boolean;
 }
