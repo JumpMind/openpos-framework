@@ -36,6 +36,8 @@ public class FormField implements IFormElement, IField, Serializable {
 
     private boolean readOnly = false;
 
+    private boolean preValidate = false;
+
     public FormField() {
     }
     
@@ -354,5 +356,13 @@ public class FormField implements IFormElement, IField, Serializable {
 
     public void setReadOnly(boolean readOnly) {
         this.readOnly = readOnly;
+    }
+
+    public boolean isPreValidate() {
+        return preValidate;
+    }
+
+    public void setPreValidate(boolean preValidate) {
+        this.preValidate = preValidate;
     }
 }
