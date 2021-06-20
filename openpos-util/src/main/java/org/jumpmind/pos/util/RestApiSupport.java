@@ -19,7 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class RestApiSupport {
-    public static final String REST_API_CONTEXT_PATH = "/rest";
+    public static final String REST_API_CONTEXT_PATH = "";
 
     public static final String REST_API_TOKEN_HEADER_NAME = "X-API-Token";
 
