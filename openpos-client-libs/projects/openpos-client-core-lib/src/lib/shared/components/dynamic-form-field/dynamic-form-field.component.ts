@@ -124,6 +124,9 @@ export class DynamicFormFieldComponent implements OnInit, OnDestroy, AfterViewIn
         this.formGroup.get(this.formField.id).setValue(this.formField.value);
       }
     }
+    if(this.formField.preValidate) {
+      this.field.ngControl.control.markAsDirty();
+    }
   }
 
   ngOnDestroy(): void {
