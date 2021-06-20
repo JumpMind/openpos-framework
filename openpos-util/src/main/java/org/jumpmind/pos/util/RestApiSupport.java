@@ -8,6 +8,7 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.ClassPathScanningCandidateComponentProvider;
 import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.core.type.filter.AspectJTypeFilter;
+import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -94,10 +95,13 @@ public final class RestApiSupport {
 
         /*
          * we are interested in @Api- AND @RestController-annotated components,
-         * specifically
+         * specifically; when running tests, we don't want the scanner to pick
+         * up test fixtures that are only @RestController-annotated
          */
-        scanner.addIncludeFilter(new AnnotationTypeFilter(Api.class));
-        scanner.addIncludeFilter(new AnnotationTypeFilter(RestController.class));
+        TypeFilter apiAnnotated = new AnnotationTypeFilter(Api.class);
+        TypeFilter restControllerAnnotated = new AnnotationTypeFilter(RestController.class);
+        TypeFilter apiAndRestControllerAnnotated = (mr, mrf) -> apiAnnotated.match(mr, mrf) && restControllerAnnotated.match(mr, mrf);
+        scanner.addIncludeFilter(apiAndRestControllerAnnotated);
 
         return scanner;
     }
