@@ -68,7 +68,7 @@
                 </mat-form-field>
                 <mat-form-field>
                     <mat-select *ngIf="appIds" formControlName="appId" placeholder="App ID" required>
-                        <mat-option *ngFor="let appId of appIds" [value]="appId">{{appId}}</mat-option>
+                        <mat-option class="dropdown" *ngFor="let appId of appIds" [value]="appId">{{appId}}</mat-option>
                     </mat-select>
                     <input *ngIf="!appIds" matInput placeholder="App ID" formControlName="appId" required novalidate>
                 </mat-form-field>
@@ -77,7 +77,7 @@
                 <ng-template matStepLabel>Select Device</ng-template>
                 <mat-form-field>
                     <mat-select formControlName="device" required >
-                        <mat-option *ngFor="let value of availableDevices" [value]="value.key">{{value.value}}</mat-option>
+                        <mat-option class="dropdown" *ngFor="let value of availableDevices" [value]="value.key">{{value.value}}</mat-option>
                     </mat-select>
                 </mat-form-field>
 
