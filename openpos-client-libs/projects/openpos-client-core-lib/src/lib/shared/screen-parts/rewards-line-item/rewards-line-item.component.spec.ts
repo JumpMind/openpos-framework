@@ -169,6 +169,16 @@ describe('RewardsLineItemComponent', () => {
                 });
             });
 
+            describe('when status text does not have a value', () => {
+                beforeEach(() => {
+                    component.reward.statusText = undefined;
+                    fixture.detectChanges();
+                });
+                it('does not render the status text', () => {
+                    validateDoesNotExist(fixture, '.status-text .name');
+                });
+            });
+
             describe('apply button', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
