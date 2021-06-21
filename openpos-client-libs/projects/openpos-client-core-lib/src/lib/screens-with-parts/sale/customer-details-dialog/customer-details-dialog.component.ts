@@ -43,8 +43,8 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
     this.spacebarSubscription = this.keyPresses.subscribe(KeyboardClassKey.Space, 1, (event: KeyboardEvent) => {
       if (event.repeat || event.type !== 'keydown' || !Configuration.enableKeybinds) { return; }
       if (event.type === 'keydown' && this.selectedReward) {
-        if(this.selectedReward.applyButton && this.selectedReward.applyButton.enabled) {
-          this.actionService.doAction(this.selectedReward.applyButton, this.selectedReward.barcode);
+        if(this.selectedReward.actionButton && this.selectedReward.actionButton.enabled) {
+          this.actionService.doAction(this.selectedReward.actionButton);
         }
       }
     })
@@ -80,7 +80,7 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
   buildScreen() {
     for (let i = 0; i < this.screen.customer.rewards.length; i++) {
       const reward = this.screen.customer.rewards[i];
-      reward.enabled = (reward.applyButton && reward.applyButton.enabled == true);
+      reward.enabled = (reward.actionButton && reward.actionButton.enabled == true);
       this.allRewards.set(i, reward);
       if(!reward.enabled) {
         this.allDisabledRewards.set(i, reward);
