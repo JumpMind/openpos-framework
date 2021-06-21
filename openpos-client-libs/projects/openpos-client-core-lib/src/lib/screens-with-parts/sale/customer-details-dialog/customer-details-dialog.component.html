@@ -65,7 +65,7 @@
             </mat-tab>
             <mat-tab *ngIf="screen.itemHistoryEnabled"
                     [label]="screen.itemHistoryLabel">
-                <app-infinite-scroll [dataKey]="screen.itemsHistoryDataProviderKey" [itemTemplate]="itemHistoryTemplate" virtualScrollMinBufferPx="200" virtualScrollMaxBufferPx="400" [itemHeightPx]="155">
+                <app-infinite-scroll [dataKey]="screen.itemsHistoryDataProviderKey" [itemTemplate]="itemHistoryTemplate" virtualScrollMinBufferPx="400" virtualScrollMaxBufferPx="800" [itemHeightPx]="155">
                     <ng-template #itemHistoryTemplate let-item>
                         <div class="item">
                             <div class="image-container">
