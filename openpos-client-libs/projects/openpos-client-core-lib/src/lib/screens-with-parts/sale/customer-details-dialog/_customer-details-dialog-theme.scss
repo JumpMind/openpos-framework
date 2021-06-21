@@ -3,6 +3,21 @@
     $foreground: map-get($theme, foreground );
     $background: map-get($theme, background);
 
+    .inline-markdown {
+        > p {
+            margin: 0px;
+            padding: 0px;
+        }
+    }
+
+    app-infinite-scroll {
+        background: white;
+    }
+
+    .item {
+        border-bottom: 1px solid map-get($foreground, border-bottom);
+    }
+
     .mat-tab-body-wrapper{
         border: 2px solid map-get($foreground, border);
     }
