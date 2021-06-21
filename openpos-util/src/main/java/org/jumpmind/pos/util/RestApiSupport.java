@@ -19,7 +19,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class RestApiSupport {
-    public static final String REST_API_CONTEXT_PATH = "";
+    public static final String REST_API_CONTEXT_PATH = "/rest";
 
     public static final String REST_API_TOKEN_HEADER_NAME = "X-API-Token";
 
@@ -28,7 +28,7 @@ public final class RestApiSupport {
      */
     public static final String REST_API_LOOPBACK_TOKEN = "LjVHdqj47ecbHVnkBB35";
 
-    public static final Function<String, String> REQUEST_MAPPING_TO_WILDCARD_URI_PATTERN = (requestMapping) -> requestMapping + "/*";
+    private static final Function<String, String> REQUEST_MAPPING_TO_WILDCARD_URI_PATTERN = (requestMapping) -> requestMapping + "/*";
 
     private static final Logger LOG = LoggerFactory.getLogger(RestApiSupport.class);
 
