@@ -69,11 +69,7 @@ describe('RewardsLineItemComponent', () => {
             component.screenData = {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',
-                expiredIcon: 'access_time',
-                applyIcon: 'chevron_right',
-                appliedLabel: 'Applied',
-                appliedIcon: 'cart_check',
-                statusIcon: 'check_decagram_outline'
+                expiredIcon: 'access_time'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -160,43 +156,16 @@ describe('RewardsLineItemComponent', () => {
                 });
             });
 
-            describe('reward loaded status', () => {
+            describe('reward extra status text', () => {
                 beforeEach(() => {
                     component.reward.promotionId = '123';
-                    component.reward.statusText = 'check_decagram_outline';
+                    component.reward.statusText = 'Bonus Reward';
                     component.reward.actionButton = {title: 'a title', enabled: true} as IActionItem;
                     fixture.detectChanges();
                 });
 
-                it('shows the configured status icon when enabled', () => {
-                    validateIcon(fixture, '.status-icon app-icon', 'check_decagram_outline');
-                });
-            });
-
-            describe('apply button disabled when reward applied', () => {
-                beforeEach(() => {
-                    component.reward.promotionId = '123';
-                    component.reward.statusText = 'check_decagram_outline';
-                    component.reward.enabled = false;
-                    component.reward.actionButton = undefined;
-                    fixture.detectChanges();
-                });
-
-                it('renders the button', () => {
-                    validateExist(fixture, '.apply a');
-                });
-
-                it('renders the applied label', () => {
-                    validateText(fixture, '.apply a', component.screenData.appliedLabel);
-                });
-
-                it('renders the cart_check icon', () => {
-                    validateIcon(fixture, '.apply a app-icon', 'cart_check');
-                });
-
-                it('is disabled when the button is disabled', () => {
-                    const button = fixture.debugElement.query(By.css('.apply a'));
-                    expect(button.properties.disabled).toBe(true);
+                it('shows the configured status text when enabled', () => {
+                    validateText(fixture, '.status-text', component.reward.statusText);
                 });
             });
 
