@@ -3,12 +3,8 @@
 }
 
 ::ng-deep{
-    .mat-option-text:hover:not(.mat-option-disabled) {
-        background: lightgray !important;
-        color: gray;
-    }
 
     .mat-option:hover {
-        background: lightgray !important;
+        background: lightgray;
     }
 }
