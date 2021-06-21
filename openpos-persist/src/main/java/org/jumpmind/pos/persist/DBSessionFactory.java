@@ -120,8 +120,8 @@ public class DBSessionFactory {
         return new DBSession(null, null, databaseSchema, databasePlatform, sessionContext, queryTemplates, dmlTemplates, tagHelper, augmenterHelper);
     }
 
-    public org.jumpmind.db.model.Table getTableForEnhancement(Class<?> entityClazz) {
-        List<org.jumpmind.db.model.Table> tables = this.databaseSchema.getTables("default", entityClazz);
+    public org.jumpmind.db.model.Table getTableForEnhancement(String deviceMode, Class<?> entityClazz) {
+        List<org.jumpmind.db.model.Table> tables = this.databaseSchema.getTables(deviceMode, entityClazz);
         return tables != null && tables.size() > 0 ? tables.get(0) : null;
     }
 
@@ -198,10 +198,21 @@ public class DBSessionFactory {
     }
 
     protected void augmentTable(Class<?> entityClass, AugmenterConfig augmenterConfig) {
-        Table table = getTableForEnhancement(entityClass);
+        //  Normal table.
+
+        Table table = getTableForEnhancement("default", entityClass);
         warnOrphanedAugmentedColumns(augmenterConfig, table);
         modifyAugmentColumns(augmenterConfig, table);
         addAugmentColumns(augmenterConfig, table);
+
+        //  The corresponding shadow table, if any.
+
+        Table shadowTable = getTableForEnhancement("training", entityClass);
+        if ((shadowTable != null) && !shadowTable.getName().equalsIgnoreCase(table.getName())) {
+            warnOrphanedAugmentedColumns(augmenterConfig, shadowTable);
+            modifyAugmentColumns(augmenterConfig, shadowTable);
+            addAugmentColumns(augmenterConfig, shadowTable);
+        }
     }
 
     protected void addAugmentColumns(AugmenterConfig augmenterConfig, Table table) {
@@ -278,10 +289,21 @@ public class DBSessionFactory {
     }
 
     protected void enhanceTaggedTable(Class<?> entityClass, List<TagModel> tags, boolean includeInPk) {
-        Table table = getTableForEnhancement(entityClass);
+        //  Normal table.
+
+        Table table = getTableForEnhancement("default", entityClass);
         warnOrphanedTagColumns(tags, table);
         modifyTagColumns(tags, table, includeInPk);
         addTagColumns(tags, table, includeInPk);
+
+        //  The corresponding shadow table, if any.
+
+        Table shadowTable = getTableForEnhancement("training", entityClass);
+        if ((shadowTable != null) && !shadowTable.getName().equalsIgnoreCase(table.getName()))  {
+            warnOrphanedTagColumns(tags, shadowTable);
+            modifyTagColumns(tags, shadowTable, includeInPk);
+            addTagColumns(tags, shadowTable, includeInPk);
+        }
     }
 
     protected void modifyTagColumns(List<TagModel> tags, Table table, boolean includeInPk) {

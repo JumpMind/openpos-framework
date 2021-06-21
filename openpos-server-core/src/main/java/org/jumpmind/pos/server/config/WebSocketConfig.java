@@ -55,7 +55,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Value("${openpos.general.websocket.sendBufferSizeLimit:8192000}")
     int sendBufferSizeLimit;
 
-    @Value("${openpos.logging.messages.enabled:true}")
+    @Value("${openpos.logging.messages.enabled:false}")
     boolean loggingEnabled;
 
     Map<String, SessionContext> deviceToSessionMap = Collections.synchronizedMap(new HashMap<>());

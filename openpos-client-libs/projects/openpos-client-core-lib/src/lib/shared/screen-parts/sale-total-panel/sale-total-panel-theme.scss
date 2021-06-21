@@ -5,8 +5,13 @@
     $foreground: map-get($theme, foreground );
 
     .linked-customer-summary {
-        .icon {
-            color: map_get($foreground, icon);
+        color: mat-color($theme, openpos-linked-customer-color);
+        &.header {
+            background-color: mat-color($theme, openpos-linked-customer-background);
+            border-radius: 4px 4px 0px 0px;
+        }
+        &.content {
+            border-radius: 0px 0px 4px 4px;
         }
         .memberships {
             .customer-missing-info {
@@ -81,6 +86,8 @@
     .sale-total-employee-sale-button {
         button {
             @extend %text-sm;
+            padding-top: 5px;
+            padding-bottom: 5px;
             .mat-button-wrapper {
                 display: grid;
 

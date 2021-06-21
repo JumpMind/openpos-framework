@@ -31,6 +31,8 @@ import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 import static java.lang.String.*;
+
+import lombok.Getter;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.reflect.MethodUtils;
 import org.jumpmind.pos.core.clientconfiguration.ClientConfigChangedMessage;
@@ -40,7 +42,7 @@ import org.jumpmind.pos.core.clientconfiguration.LocaleMessageFactory;
 import org.jumpmind.pos.core.error.IErrorHandler;
 import org.jumpmind.pos.core.event.DeviceResetEvent;
 import org.jumpmind.pos.core.flow.config.*;
-import org.jumpmind.pos.core.model.MessageType;
+import org.jumpmind.pos.core.model.DataClearMessage;
 import org.jumpmind.pos.core.model.StartupMessage;
 import org.jumpmind.pos.core.service.UIDataMessageProviderService;
 import org.jumpmind.pos.core.ui.CloseToast;
@@ -74,8 +76,6 @@ import org.springframework.stereotype.Component;
 public class StateManager implements IStateManager {
 
     final Logger log = LoggerFactory.getLogger(getClass());
-    final Logger loggerGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
-    final StateManagerLogger stateManagerLogger = new StateManagerLogger(loggerGraphical);
 
     final static AtomicInteger threadCounter = new AtomicInteger(1);
 
@@ -93,6 +93,10 @@ public class StateManager implements IStateManager {
 
     @Autowired(required = false)
     List<? extends ISessionListener> sessionListeners;
+
+    @Autowired
+    @Getter
+    StateManagerObservers stateManagerObservers;
 
     @Autowired
     IMessageService messageService;
@@ -218,7 +222,7 @@ public class StateManager implements IStateManager {
                     runningFlag.set(true);
                     actionLoop();
                 } catch (Throwable ex) {
-                    log.error("Unhandled exception from StatManager thread. StateManager thread exiting.", ex);
+                    log.error("Unhandled exception from StateManager thread. StateManagerThread exiting.", ex);
                 }
 
             }
@@ -237,6 +241,9 @@ public class StateManager implements IStateManager {
             try {
                 actionContext = actionQueue.poll(60, TimeUnit.SECONDS);
                 if (actionContext != null) {
+                    // an action may originally come from a device but then get forwarded back through here from a state.
+                    // we only want to know that it originated from the screen/device the first time it came through.
+                    actionContext.getAction().setOriginatesFromDeviceFlag(false);
                     busyFlag.set(true);
                     if (actionContext.getAction().getName().equals(STATE_MANAGER_RESET_ACTION)) {
                         log.info("StateManager reset queued");
@@ -246,6 +253,7 @@ public class StateManager implements IStateManager {
                         init(this.getAppId(), this.getDeviceId());
                         log.info("StateManager reset");
                         this.eventPublisher.publish(new DeviceResetEvent(getDeviceId(), getAppId()));
+                        sendDataClearMessage();
                         break;
                     } else if (actionContext.getAction().getName().equals(STATE_MANAGER_STOP_ACTION)) {
                         actionContext.getAction().markProcessed();
@@ -278,6 +286,11 @@ public class StateManager implements IStateManager {
             }
         }
         log.info("State action actionLoop is exiting.");
+    }
+
+    public void sendDataClearMessage() {
+        String deviceId = applicationState.getDeviceId();
+        messageService.sendMessage(deviceId, new DataClearMessage());
     }
 
     public void sendStartupCompleteMessage() {
@@ -537,22 +550,19 @@ public class StateManager implements IStateManager {
 
     void completeTransition(TransitionResult transitionResult, Action action) {
         Transition transition = transitionResult.getTransition();
-        boolean exitSubState = transition.getResumeSuspendedState() != null;
         String returnActionName = null;
-        if (exitSubState) {
+        if (transition.isExitingSubstate()) {
             returnActionName = getReturnActionName(action);
         }
 
-        boolean enterSubState = transition.getEnterSubStateConfig() != null;
+        if (stateManagerObservers != null) {
+            stateManagerObservers.onTransition(applicationState, transition, action, returnActionName);
+        }
 
-        stateManagerLogger.logStateTransition(applicationState.getCurrentContext().getState(), transition.getTargetState(), action, returnActionName,
-                transition.getEnterSubStateConfig(), exitSubState ? applicationState.getCurrentContext() : null, getApplicationState(),
-                transition.getResumeSuspendedState());
-
-        if (enterSubState) {
+        if (transition.isEnteringSubstate()) {
             applicationState.getStateStack().push(applicationState.getCurrentContext());
             applicationState.setCurrentContext(buildSubStateContext(transition.getEnterSubStateConfig(), action));
-        } else if (exitSubState) {
+        } else if (transition.isExitingSubstate()) {
             applicationState.setCurrentContext(transition.getResumeSuspendedState());
         }
 
@@ -688,6 +698,11 @@ public class StateManager implements IStateManager {
             log.warn("Discarding invalid action: " + action);
             return;
         }
+
+        if (stateManagerObservers != null) {
+            stateManagerObservers.onAction(applicationState, action);
+        }
+
         ActionContext actionContext = null;
         if (isOnStateManagerThread()) {
             actionContext = new ActionContext(action, Thread.currentThread().getStackTrace());
@@ -1104,6 +1119,9 @@ public class StateManager implements IStateManager {
         }
 
         screenService.showScreen(applicationState.getDeviceId(), screen, dataMessageProviderMap);
+        if (stateManagerObservers != null) {
+            stateManagerObservers.onScreen(applicationState, screen); // log after because interceptors in screenService may modify the screen
+        }
 
         lastShowTimeInMs.set(System.currentTimeMillis());
     }

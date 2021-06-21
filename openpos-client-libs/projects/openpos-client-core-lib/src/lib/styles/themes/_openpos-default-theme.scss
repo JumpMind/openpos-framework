@@ -7,14 +7,24 @@
     $openpos-link-customer-color: #ffffff;
     $openpos-link-customer-background: #296db6;
 
+    $openpos-linked-customer-color: #ffffff;
+    $openpos-linked-customer-background: #296db6;
+
     $openpos-membership-in-color: #ffffff;
     $openpos-membership-in-background: #64834D;
+
+    $openpos-membership-not-in-color: #969696;
+    $openpos-membership-not-in-background: #DFDFDF;
 
     $addons: (
             openpos-link-customer-color: $openpos-link-customer-color,
             openpos-link-customer-background: $openpos-link-customer-background,
+            openpos-linked-customer-color: $openpos-linked-customer-color,
+            openpos-linked-customer-background: $openpos-linked-customer-background,
             openpos-membership-in-color: $openpos-membership-in-color,
-            openpos-membership-in-background: $openpos-membership-in-background
+            openpos-membership-in-background: $openpos-membership-in-background,
+            openpos-membership-not-in-color: $openpos-membership-not-in-color,
+            openpos-membership-not-in-background: $openpos-membership-not-in-background
     );
 
     $openpos-default-theme: openpos-theme-light($openpos-default-app-primary, $openpos-default-app-accent, $openpos-default-app-warn, $openpos-default-app-selected, $addons);

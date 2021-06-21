@@ -19,4 +19,6 @@ export const Configuration = {
     // These properties are static on the client and not overriden by configuration.service.ts
     compatibilityVersion: 'v1',
     incompatibleVersionMessage: 'Application is not compatible with the server.',
+    autoPersonalizationServicePath: null
+
 };

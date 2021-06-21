@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.ser.BeanSerializerModifier;
 public class LogFormatter {
     
     public static String[] SENSITIVE_FIELDS = new String[] {
-            "password", "account", "cid", "creditcard", 
+            "password", "account", "cid", "creditcard", "unlock",
             "cardNumber", "driverLicense", "pinblock", "routingnumber", "walletidentifier", 
             "emvdata", "track1", "track2", "track3", "approvalcode", "ksnblock", "cardexpirydate", "referralnum",
             "ecomtoken", "issuernumber", "socialsec", "driverslicense", "lockoverride" };
@@ -35,7 +35,7 @@ public class LogFormatter {
     @PostConstruct
     public void init() {        
         if (AppUtils.isDevMode()) {
-            log.info("Running in DEV mode, log output will NOT be redecated.");
+            log.info("Running in DEV mode, log output will NOT be redacted.");
             return;
         }
         
@@ -58,6 +58,20 @@ public class LogFormatter {
                 });
             }
         });
+    }
+
+    public String toCompactJsonString(Object o) {
+        ObjectWriter writer = mapper.writer();
+
+        if (o == null) {
+            return "null";
+        }
+        try {
+            return writer.writeValueAsString(o);
+        } catch (JsonProcessingException ex) {
+            log.warn("Could not serialize object for logging: " + o, ex);
+            return "";
+        }
     }
 
     public String toJsonString(Object o) {

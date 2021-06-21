@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.flow.config.SubFlowConfig;
 import org.jumpmind.pos.core.flow.config.TransitionStepConfig;
 import org.jumpmind.pos.server.model.Action;
@@ -14,11 +15,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @Data
+@Slf4j
 public class Transition {
-    
-    private final Logger log = LoggerFactory.getLogger(getClass());
-    private final Logger logGraphical = LoggerFactory.getLogger(getClass().getName() + ".graphical");
-    private final StateManagerLogger stateManagerLog = new StateManagerLogger(logGraphical);
 
     private List<? extends ITransitionStep> transitionSteps;
     private List<TransitionStepConfig> transitionStepConfigs;
@@ -98,7 +96,9 @@ public class Transition {
         boolean applicable = currentTransitionStep.get().isApplicable(this); 
         
         if (applicable) {
-            stateManagerLog.logTranistionStep(this, currentTransitionStep.get());
+            if (stateManager.getStateManagerObservers() != null) {
+                stateManager.getStateManagerObservers().onTransition(stateManager.getApplicationState(), this, currentTransitionStep.get());
+            }
             currentTransitionStep.get().arrive(this); // This could come right recurse right back in on same thread or return after showing a screen.
         } else {
             if (log.isDebugEnabled()) {                
@@ -169,5 +169,13 @@ public class Transition {
 
     public Action getQueuedAction() {
         return queuedAction;
+    }
+
+    public boolean isEnteringSubstate() {
+        return getEnterSubStateConfig() != null;
+    }
+
+    public boolean isExitingSubstate() {
+        return getResumeSuspendedState() != null;
     }
 }

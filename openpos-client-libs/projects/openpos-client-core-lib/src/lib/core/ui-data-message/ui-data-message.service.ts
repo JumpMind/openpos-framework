@@ -23,6 +23,12 @@ export class UIDataMessageService {
           this.dataMessages.clear();
       });
 
+      this.sessionService.getMessages(MessageTypes.DATA_CLEAR).subscribe( m => {
+          // Clear out out cache if the device is reset
+          this.accumulatedResultsMap.clear();
+          this.dataMessages.clear();
+      });
+
     this.sessionService.getMessages(MessageTypes.DATA).subscribe( (message: UIDataMessage<any>) => {
         if(message.seriesId === -1){
             // -1 signals stale data that no longer exists on the server so clean up.
