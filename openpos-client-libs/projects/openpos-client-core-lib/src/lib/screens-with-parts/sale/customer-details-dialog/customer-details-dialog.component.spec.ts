@@ -15,6 +15,8 @@ import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
 import {Observable, of} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
 import {Reward} from '../../../shared/screen-parts/rewards-line-item/rewards-line-item.interface';
+import { ImageUrlPipe } from '../../../shared/pipes/image-url.pipe';
+import { MarkdownFormatterPipe } from '../../../shared/pipes/markdown-formatter.pipe';
 
 class MockActionService {};
 class MockMatDialog {};
@@ -57,7 +59,7 @@ describe('CustomerDetailsDialog', () => {
       TestBed.configureTestingModule({
         imports: [ HttpClientTestingModule],
         declarations: [
-          CustomerDetailsDialogComponent, PhonePipe
+          CustomerDetailsDialogComponent, PhonePipe, ImageUrlPipe, MarkdownFormatterPipe
         ],
         providers: [
           { provide: ActionService, useClass: MockActionService },
@@ -337,7 +339,7 @@ describe('CustomerDetailsDialog', () => {
       TestBed.configureTestingModule({
         imports: [ HttpClientTestingModule],
         declarations: [
-          CustomerDetailsDialogComponent, PhonePipe
+          CustomerDetailsDialogComponent, PhonePipe, ImageUrlPipe, MarkdownFormatterPipe
         ],
         providers: [
           { provide: ActionService, useClass: MockActionService },
@@ -404,7 +406,7 @@ describe('CustomerDetailsDialog', () => {
       TestBed.configureTestingModule({
         imports: [ HttpClientTestingModule],
         declarations: [
-          CustomerDetailsDialogComponent, PhonePipe
+          CustomerDetailsDialogComponent, PhonePipe, ImageUrlPipe, MarkdownFormatterPipe
         ],
         providers: [
           { provide: ActionService, useClass: MockActionService },
