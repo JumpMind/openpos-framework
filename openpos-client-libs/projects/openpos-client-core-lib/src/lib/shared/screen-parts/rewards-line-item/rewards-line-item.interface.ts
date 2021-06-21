@@ -15,7 +15,6 @@ export interface Reward {
 };
 
 export interface RewardsLineItemComponentInterface {
-    appliedLabel: string;
     expiresLabel: string;
     loyaltyIcon: string;
     expiredIcon: string;

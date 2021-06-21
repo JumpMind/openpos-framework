@@ -80,7 +80,7 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
   buildScreen() {
     for (let i = 0; i < this.screen.customer.rewards.length; i++) {
       const reward = this.screen.customer.rewards[i];
-      reward.enabled = (reward.applyButton && reward.applyButton.enabled == true);
+      reward.enabled = (reward.actionButton && reward.actionButton.enabled == true);
       this.allRewards.set(i, reward);
       if(!reward.enabled) {
         this.allDisabledRewards.set(i, reward);
