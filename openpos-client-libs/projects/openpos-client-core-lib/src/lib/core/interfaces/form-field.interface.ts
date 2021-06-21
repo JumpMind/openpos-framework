@@ -46,6 +46,7 @@ export interface IFormElement {
     hintText: string;
     hideButtons: boolean;
     readOnly: boolean;
+    preValidate: boolean;
 }
 
 export interface IDynamicListField {
