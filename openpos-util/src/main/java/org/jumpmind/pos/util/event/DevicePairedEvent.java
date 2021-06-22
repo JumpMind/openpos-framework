@@ -10,6 +10,10 @@ public class DevicePairedEvent extends AppEvent {
 
     private String currentUsername;
 
+    public DevicePairedEvent() {
+        super();
+    }
+
     public DevicePairedEvent(String deviceId, String appId, String pairedDeviceId, String currentUsername) {
         super(deviceId, appId, pairedDeviceId);
         this.currentUsername = currentUsername;
