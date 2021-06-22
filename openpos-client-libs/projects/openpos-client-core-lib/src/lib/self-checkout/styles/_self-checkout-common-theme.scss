@@ -13,6 +13,8 @@
     }
 
     .self-checkout-form-body {
+        padding-top: 0px;
+        place-content: unset !important;
         .mat-form-field {
             @extend %text-lg;
 

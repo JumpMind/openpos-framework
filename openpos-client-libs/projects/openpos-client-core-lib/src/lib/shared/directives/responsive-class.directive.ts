@@ -31,8 +31,10 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
      * Updates the active classes on the host element when the active breakpoint changes.
      */
     watchBreakpointChanges(): void {
+        this.log('Watching for breakpoint changes', this.breakpointNameToClasses);
         this.mediaService.observe(this.breakpointNameToClasses)
             .pipe(
+                tap(classNames => this.log('Breakpoint changed - new classes to apply', classNames)),
                 tap(classNames => this.updateClasses(classNames)),
                 takeUntil(this.destroyed$)
             ).subscribe();
@@ -44,6 +46,7 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
     watchBreakpointConfigChanges(): void {
         this.mediaService.configChanged$
             .pipe(
+                tap(() => this.log('Configuration changed')),
                 tap(() => this.updateBreakpointNameToClassNames()),
                 takeUntil(this.destroyed$)
             ).subscribe();
@@ -59,6 +62,8 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
             const classNames = this.parseClassNames(breakpointName);
             this.breakpointNameToClasses.set(breakpointName, classNames);
         });
+
+        this.log('Updated breakpoint classes', this.breakpointNameToClasses);
     }
 
     /**
@@ -91,6 +96,7 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
         // Flatten the arrays
         const classNames = [].concat(...classNameLists);
 
+        this.log('Removing classes', classNames);
         classNames.forEach(className => this.renderer.removeClass(this.elementRef.nativeElement, className));
     }
 
@@ -100,9 +106,11 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
      */
     addClasses(classNames: string[]): void {
         if (!classNames) {
+            this.log('Not updating classes because they are null or undefined');
             return;
         }
 
+        this.log('Adding classes', classNames);
         classNames.forEach(className => this.renderer.addClass(this.elementRef.nativeElement, className));
     }
 
@@ -111,7 +119,16 @@ export class ResponsiveClassDirective implements OnInit, OnDestroy {
      * @param classNames The class name to update
      */
     updateClasses(classNames: string[]): void {
+        this.log('Updating classes', classNames);
         this.removeClasses();
         this.addClasses(classNames);
+    }
+
+    /**
+     * Logs messages and includes the service name in the messages.
+     * @param args The arguments to log
+     */
+    log(...args): void {
+        console.log.apply(console, ['[ResponsiveClassDirective]'].concat(args));
     }
 }
