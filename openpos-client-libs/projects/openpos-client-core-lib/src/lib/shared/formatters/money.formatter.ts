@@ -8,6 +8,7 @@ export class MoneyFormatter implements IFormatter {
 
     private keyFilter = /[0-9\ | \.]/;
     private euRegex = /,\d\d$/;
+    private maxLength = 14;
 
     constructor(public localeService: LocaleService) { }
 
@@ -18,13 +19,18 @@ export class MoneyFormatter implements IFormatter {
         }
 
         let amount = '0';
-        const decimalChar = '.';
+        const decimalCharSeparator = '.';
+        const decimalCharLength = 2;
 
         if (this.euRegex.test(value.toString())) {
-            value = value.replace(',', decimalChar);
+            value = value.replace(',', decimalCharSeparator);
+        }
+        if (value.length > this.maxLength) {
+            value = value.replace(decimalCharSeparator, "");
+            value = value.slice(0, this.maxLength - decimalCharLength) + decimalCharSeparator + value.slice(this.maxLength - decimalCharLength);
         }
 
-        const i = value.toString().indexOf(decimalChar);
+        const i = value.toString().indexOf(decimalCharSeparator);
         if (i > 0) {
             const d = value.toString().slice(i + 1);
             switch (d.length) {
@@ -41,7 +47,7 @@ export class MoneyFormatter implements IFormatter {
                     amount = `${value.toString().slice(0, i + 3)}`;
             }
         } else {
-            amount = `${value}${decimalChar}00`;
+            amount = `${value}${decimalCharSeparator}00`;
         }
 
         const locale = this.localeService.getLocale();
