@@ -1,10 +1,12 @@
 <mat-card-title gdAreas="header backbutton" gdColumns="1fr auto" gdAlignColumns="center center" [ngClass]="screenData.headerContextStyle">
-    <div class="header" gdArea="header" gdColumns="auto auto 1fr" responsive-class>
-        <app-icon   *ngIf="screenData.headerIcon" 
-                    class="screen-icon" 
-                    [iconName]="screenData.headerIcon"></app-icon>
-        <span class="context-text">{{screenData.headerContextText}}</span>
-        <span>{{screenData.headerText}}</span>
+    <div class="header" gdArea="header" gdColumns="auto 1fr" responsive-class>
+        <div *ngIf="screenData.headerContextText" class="context-box">
+            <app-icon   *ngIf="screenData.headerIcon"
+                        class="screen-icon"
+                        [iconName]="screenData.headerIcon"></app-icon>
+            <span class="context-text">{{screenData.headerContextText}}</span>
+        </div>
+        <span class="header-text">{{screenData.headerText}}</span>
     </div>
     <app-icon-button 
         class="back-button" 

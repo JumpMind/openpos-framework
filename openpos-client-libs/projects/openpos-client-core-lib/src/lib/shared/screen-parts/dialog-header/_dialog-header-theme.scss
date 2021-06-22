@@ -3,11 +3,7 @@
 
   app-dialog-header{
     .orders{
-      .screen-icon{
-        background-color: $app-orders;
-        color: mat-color(map-get($theme, orders), default-contrast);
-      }
-      .context-text{
+      .context-box{
         background-color: $app-orders;
         color: mat-color(map-get($theme, orders), default-contrast);
       }
