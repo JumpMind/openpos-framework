@@ -1,10 +1,10 @@
 <div class="form-outer">
     <app-bacon-strip></app-bacon-strip>
     <app-progress-bar-part></app-progress-bar-part>
-    <div class="form-body">
+    <div class="form-body" responsive-class>
         <img *ngIf="screen.imageUrl" [src]="screen.imageUrl | imageUrl" class="form-image">
         <app-instructions *ngIf="screen.instructions" class="text-center" [instructions]="screen.instructions" [instructionsSize]="'text-md'"></app-instructions>
-        <app-dynamic-form-part [formName]="'form'"
+        <app-dynamic-form-part [formName]="'form'" class="form-part"
             [submitButton]="screen.submitButton" [alternateSubmitActions]="screen.alternateSubmitActions">
         </app-dynamic-form-part>
     </div>

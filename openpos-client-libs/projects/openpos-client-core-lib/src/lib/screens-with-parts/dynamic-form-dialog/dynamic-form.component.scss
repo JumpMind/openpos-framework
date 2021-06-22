@@ -10,12 +10,21 @@
         grid-area: 3/1/3/1;
         width: 75%;
         justify-self: center;
-        align-content: center;
-        @extend %page-spaced-content; 
+        overflow: auto;
+        padding-bottom: $large-space;
+        @extend %page-spaced-content;
+
+        &.mobile {
+            padding-bottom: $large-space/$mobile-factor;
+        }
 
         .form-image {
             padding: 24px 0px;
             justify-self: center;
+        }
+
+        .form-part {
+            overflow: hidden;
         }
     }
 }
