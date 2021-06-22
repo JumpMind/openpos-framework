@@ -28,6 +28,7 @@ export class DialogService {
     private dialogOpening: boolean;
     private lastDialogType: string;
     private lastDialogId: string;
+    private lastScreenSeq: number;
 
     constructor(
         private messageProvider: MessageProvider,
@@ -44,6 +45,7 @@ export class DialogService {
         // Pipe all the messages for dialog updates
         this.messageProvider.setMessageType(MessageTypes.DIALOG);
         this.session.getMessages(MessageTypes.DIALOG).subscribe(m => this.updateDialog(m));
+        this.session.getMessages(MessageTypes.SCREEN).subscribe( m => this.lastScreenSeq = m.sequenceNumber)
     }
 
     public addDialog(name: string, type: Type<IScreen>): void {
@@ -114,7 +116,7 @@ export class DialogService {
     }
 
     private updateDialog(dialog?: any): void {
-        if (dialog) {
+        if (dialog && dialog.sequenceNumber > this.lastScreenSeq) {
             const dialogType = this.hasDialog(dialog.subType) ? dialog.subType : 'Dialog';
             if (!this.dialogOpening) {
                 console.info('opening dialog \'' + dialogType + '\'');
