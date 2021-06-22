@@ -4,6 +4,8 @@ import {DialogComponent} from '../../../shared/decorators/dialog-component.decor
 import {PosScreen} from '../../pos-screen/pos-screen.component';
 import {Observable} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
+import { PurchasedItem } from '../../../shared/screen-parts/customer-information/customer-information.interface';
+import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-message.service';
 
 @DialogComponent({
   name: 'CustomerDetailsDialog'
@@ -14,9 +16,13 @@ import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos
   styleUrls: ['./customer-details-dialog.component.scss']
 })
 export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDialogInterface> {
-
   isMobile: Observable<boolean>;
-  constructor(injector: Injector, private media: OpenposMediaService) {
+
+  constructor(
+    injector: Injector, 
+    private media: OpenposMediaService,
+    private resultsService: UIDataMessageService
+  ) {
     super(injector);
     this.initIsMobile();
   }
