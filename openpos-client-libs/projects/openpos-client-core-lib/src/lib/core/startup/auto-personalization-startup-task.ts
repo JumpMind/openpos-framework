@@ -117,7 +117,7 @@ export class AutoPersonalizationStartupTask implements IStartupTask {
                 }),
                 catchError(e => {
                     this.logPersonalizationError(e);
-                    return this.personalizeWithHostname();
+                    return this.manualPersonalization();
                 }));
     }
 
