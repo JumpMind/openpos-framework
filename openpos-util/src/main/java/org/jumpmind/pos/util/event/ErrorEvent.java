@@ -30,6 +30,10 @@ public class ErrorEvent extends AppEvent {
         this.errorMessage = errorMessage;
     }
 
+    public ErrorEvent() {
+        super();
+    }
+
     public ErrorEvent(String deviceId, String appId, String pairedDeviceId, Throwable throwable) {
         super(deviceId, appId, pairedDeviceId);
         this.throwable = throwable;
