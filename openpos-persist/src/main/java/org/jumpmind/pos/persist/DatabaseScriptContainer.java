@@ -85,37 +85,45 @@ public class DatabaseScriptContainer {
         if (scripts != null) {
             Collections.sort(scripts);
             for (DatabaseScript s : scripts) {
-                boolean executeScript = false;
-                ScriptVersionModel version = dbSession.findByNaturalId(ScriptVersionModel.class, new ModelId("installationId", installationId, "fileName", s.getResource().getFilename()));
-                String md5Hash = null;
-                try (InputStream is = s.getResource().getInputStream()) {
-                    md5Hash = DigestUtils.md5DigestAsHex(is);
-                } catch (IOException ex) {
-                    throw new IoException(ex);
-                }
-                if (version == null) {
-                    log.info("Running {} for the first time", s.getResource().getFilename());
-                    executeScript = true;
-                } else if (!md5Hash.equals(version.getCheckSum())) {
-                    log.info("Running {} again because the content changed", s.getResource().getFilename());
-                    executeScript = true;
+                try {
+                    boolean executeScript = false;
+                    ScriptVersionModel version = dbSession.findByNaturalId(ScriptVersionModel.class, new ModelId("installationId", installationId, "fileName", s.getResource().getFilename()));
+                    String md5Hash = null;
+                    try (InputStream is = s.getResource().getInputStream()) {
+                        md5Hash = DigestUtils.md5DigestAsHex(is);
+                    } catch (IOException ex) {
+                        throw new IoException(ex);
+                    }
+                    if (version == null) {
+                        log.info("Running {} for the first time", s.getResource().getFilename());
+                        executeScript = true;
+                    } else if (!md5Hash.equals(version.getCheckSum())) {
+                        log.info("Running {} again because the content changed", s.getResource().getFilename());
+                        executeScript = true;
 
-                }
-                if (isDatabaseMatch(s) && executeScript) {
-                    try {
-                        executeImports(s, s.getResource(), failOnError);
-                        execute(s, s.getResource(), failOnError);
-                        if (version == null) {
-                            version = ScriptVersionModel.builder().
-                                    installationId(installationId).
-                                    fileName(s.getResource().getFilename()).
-                                    checkSum(md5Hash).build();
-                        } else {
-                            version.setCheckSum(md5Hash);
+                    }
+                    if (isDatabaseMatch(s) && executeScript) {
+                        try {
+                            executeImports(s, s.getResource(), failOnError);
+                            execute(s, s.getResource(), failOnError);
+                            if (version == null) {
+                                version = ScriptVersionModel.builder().
+                                        installationId(installationId).
+                                        fileName(s.getResource().getFilename()).
+                                        checkSum(md5Hash).build();
+                            } else {
+                                version.setCheckSum(md5Hash);
+                            }
+                            dbSession.save(version);
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
                         }
-                        dbSession.save(version);
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
+                    }
+                } catch (RuntimeException ex) {
+                    if (!failOnError) {
+                        log.warn("Failed to run script {}.  Ignoring because failOnError is false. {}", s.getResource().getFilename(), ex.getMessage());
+                    } else {
+                        throw ex;
                     }
                 }
             }
@@ -199,8 +207,9 @@ public class DatabaseScriptContainer {
                     String message = "Failed to execute script: " + script;
                     if (failOnError) {
                         throw new SQLException(message, ex);
+                    } else {
+                        log.warn(message + ".  Ignoring because failOnError is false.  " + ex.getMessage());
                     }
-                    log.warn(message, ex);
                 }
                 return null;
             }
