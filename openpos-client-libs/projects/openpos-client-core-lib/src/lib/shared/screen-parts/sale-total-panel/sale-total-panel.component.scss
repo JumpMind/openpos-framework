@@ -41,55 +41,51 @@
     }
     .loyalty-signup-customer-display {
         &.tablet {
-            .loyalty-signup-customer-display-header {
-                margin-left: -16px;
-            }
             .loyalty-signup-customer-display-icon-size {
-                width: 48px;
-                height: 48px;
+                width: 64px;
+                height: 64px;
             }
             .loyalty-signup-customer-display-message {
                 font-size: $text-xs;
-                line-height: $text-xs*1.5;
             }
         }
 
         &-wrapper {
-            display: block;
-        }
-
-        &-header {
             display: grid;
-            grid-template-columns: auto 1fr;
-            align-items: center;
-            text-align: left;
-            column-gap: 16px;
-            padding-bottom: $text-sm/2;
+            grid-template-areas:
+                    'icon message'
+                    '.    action';
+            grid-template-columns: auto minmax(0, 1fr);
+            column-gap: .5rem;
+            margin-right: 1rem;
         }
 
         &-icon {
-            display: inline-block;
             animation: glow 1.25s ease-out infinite alternate;
+            grid-area: icon;
+            align-self: center;
         }
 
         &-icon-size {
-            width: 72px;
-            height: 72px;
+            width: 80px;
+            height: 80px;
         }
 
         &-message {
-            display: block;
+            grid-area: message;
             font-size: $text-sm;
             font-weight: normal;
-            line-height: $text-sm*1.5;
+            line-height: 1.5rem;
+            align-self: center;
             overflow: hidden;
             text-overflow: ellipsis;
         }
 
         &-action {
-            display: block;
+            grid-area: action;
             border-width: 1px 0 0 0;
-            padding-top: $text-sm/2;
+            padding-top: .5rem;
+            margin-top: .5rem;
             border-style: solid;
         }
     }
