@@ -26,4 +26,16 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     membershipCardIcon: string;
 
     itemsHistoryDataProviderKey: string;
+    
+    itemHistoryFilter: CustomerItemHistoryFilter;
+}
+
+export interface CustomerItemHistoryFilter {
+    fromDatePlaceholder: string;
+    toDatePlaceholder: string;
+    textPlaceholder: string;
+
+    fromDate: string;
+    toDate: string;
+    text: string;
 }

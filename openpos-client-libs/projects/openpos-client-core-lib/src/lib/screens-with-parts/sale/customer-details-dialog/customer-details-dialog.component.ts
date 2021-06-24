@@ -1,11 +1,10 @@
 import {Component, Injector} from '@angular/core';
-import {CustomerDetailsDialogInterface} from './customer-details-dialog.interface';
+import {FormControl} from '@angular/forms';
+import {CustomerDetailsDialogInterface, CustomerItemHistoryFilter} from './customer-details-dialog.interface';
 import {DialogComponent} from '../../../shared/decorators/dialog-component.decorator';
 import {PosScreen} from '../../pos-screen/pos-screen.component';
 import {Observable} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
-import { PurchasedItem } from '../../../shared/screen-parts/customer-information/customer-information.interface';
-import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-message.service';
 
 @DialogComponent({
   name: 'CustomerDetailsDialog'
@@ -18,10 +17,11 @@ import { UIDataMessageService } from '../../../core/ui-data-message/ui-data-mess
 export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDialogInterface> {
   isMobile: Observable<boolean>;
 
+  readonly itemsHistoryFilterController = new ItemsHistoryFilterController(this);
+
   constructor(
     injector: Injector, 
-    private media: OpenposMediaService,
-    private resultsService: UIDataMessageService
+    private media: OpenposMediaService
   ) {
     super(injector);
     this.initIsMobile();
@@ -38,9 +38,50 @@ export class CustomerDetailsDialogComponent extends PosScreen<CustomerDetailsDia
     ]));
   }
 
-  buildScreen() {}
+  buildScreen() {
+    this.itemsHistoryFilterController.build();
+  }
 
   getRewardsLabel() : string {
     return this.screen.rewardsLabel + ((this.screen.customer.rewards) ? ' (' + this.screen.customer.rewards.length + ')': '');
+  }
+}
+
+class ItemsHistoryFilterController {
+  fromDate = new FormControl();
+  toDate = new FormControl();
+  textFilter = new FormControl();
+
+  private get serverState() {
+    return this._parent.screen.itemHistoryFilter;
+  }
+
+  constructor(private readonly _parent: CustomerDetailsDialogComponent) {}
+
+  fromDateFilterChanged(value: Date) {
+    this.doItemHistoryFilterAction({ ...this.serverState, fromDate: value.toISOString() });
+  }
+
+  toDateFilterChanged(value: Date) {
+    this.doItemHistoryFilterAction({ ...this.serverState, toDate: value.toISOString() });
+  }
+  
+  onFilterKeyPress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      if (event.target instanceof HTMLInputElement) {
+        event.target.blur();
+        this.doItemHistoryFilterAction({...this.serverState, text: event.target.value});
+      }
+    }
+  }
+
+  build() {
+    this.fromDate.setValue(this.serverState.fromDate);
+    this.toDate.setValue(this.serverState.toDate);
+    this.textFilter.setValue(this.serverState.text);
+  }
+
+  private doItemHistoryFilterAction(filter: CustomerItemHistoryFilter) {
+    this._parent.doAction('ItemHistoryFilterChanged', filter);
   }
 }
