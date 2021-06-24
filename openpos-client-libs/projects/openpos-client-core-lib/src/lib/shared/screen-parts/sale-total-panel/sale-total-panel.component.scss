@@ -18,17 +18,75 @@
     .material-icons {
         font-size: 36px;
     }
-    .link-customer {
+    .loyalty-arrow {
+        vertical-align: top;
+    }
+    .link-customer,
+    .loyalty-signup-customer-display {
         @extend %text-md;
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
         min-width: 150px;
+        white-space: break-spaces;
+        width: 100%;
+        max-width: 100%;
+
         .material-icons {
             margin-top: -12px;
         }
         .sale-total-loyalty-button-icon {
             width: 100%;
             vertical-align: bottom;
+        }
+    }
+    .loyalty-signup-customer-display {
+        &.tablet {
+            .loyalty-signup-customer-display-icon-size {
+                width: 64px;
+                height: 64px;
+            }
+            .loyalty-signup-customer-display-message {
+                font-size: $text-xs;
+            }
+        }
+
+        &-wrapper {
+            display: grid;
+            grid-template-areas:
+                    'icon message'
+                    '.    action';
+            grid-template-columns: auto minmax(0, 1fr);
+            column-gap: .5rem;
+            margin-right: 1rem;
+        }
+
+        &-icon {
+            animation: glow 1.25s ease-out infinite alternate;
+            grid-area: icon;
+            align-self: center;
+        }
+
+        &-icon-size {
+            width: 80px;
+            height: 80px;
+        }
+
+        &-message {
+            grid-area: message;
+            font-size: $text-sm;
+            font-weight: normal;
+            line-height: 1.5rem;
+            align-self: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &-action {
+            grid-area: action;
+            border-width: 1px 0 0 0;
+            padding-top: .5rem;
+            margin-top: .5rem;
+            border-style: solid;
         }
     }
     .linked-customer-summary {

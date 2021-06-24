@@ -1,9 +1,11 @@
 <div class="sale-total-wrapper">
-    <div *ngIf="!(isMobile | async)" class="sale-total-header">
+    <div *ngIf="!(isMobile$ | async)" class="sale-total-header">
         <button responsive-class
                 mat-flat-button
-                style="width: 100%;"
-                *ngIf="!screenData.readOnly && !screenData.linkedCustomerButton && screenData.loyaltyButton"
+                *ngIf="!screenData.readOnly
+                    && !screenData.linkedCustomerButton
+                    && screenData.loyaltyButton
+                    && !loyaltySignupInProgressOnCustomerDisplay"
                 [actionItem]="screenData.loyaltyButton"
                 (actionClick)="doAction(screenData.loyaltyButton)"
                 (click)="doAction(screenData.loyaltyButton)"
@@ -16,7 +18,28 @@
                     {{screenData.loyaltyButton.keybindDisplayName}}
                 </span>
             </span>
-            <mat-icon class="material-icons" style="vertical-align: top">keyboard_arrow_right</mat-icon>
+            <mat-icon class="material-icons loyalty-arrow">keyboard_arrow_right</mat-icon>
+        </button>
+        <button responsive-class
+                mat-flat-button
+                *ngIf="!screenData.readOnly
+                    && !screenData.linkedCustomerButton
+                    && screenData.loyaltyCancelButton
+                    && loyaltySignupInProgressOnCustomerDisplay"
+                [actionItem]="screenData.loyaltyCancelButton"
+                (actionClick)="doAction(screenData.loyaltyCancelButton)"
+                (click)="doAction(screenData.loyaltyCancelButton)"
+                class="loyalty-signup-customer-display">
+            <span class="wrapper loyalty-signup-customer-display-wrapper">
+                <app-icon *ngIf="screenData.loyaltyCancelButton.icon" [iconName]="screenData.loyaltyCancelButton.icon"
+                     iconClass="loyalty-signup-customer-display-icon-size" class="loyalty-signup-customer-display-icon"></app-icon>
+                <span class="loyalty-signup-customer-display-message">{{screenData.loyaltySignupInProgressMessage}}</span>
+                <span class="loyalty-signup-customer-display-action">{{screenData.loyaltyCancelButton.title}}</span>
+                <span *ngIf="keybindsEnabled(screenData.loyaltyCancelButton)" class="muted-color loyalty-keybind">
+                    {{screenData.loyaltyCancelButton.keybindDisplayName}}
+                </span>
+            </span>
+            <mat-icon class="material-icons loyalty-arrow">keyboard_arrow_right</mat-icon>
         </button>
         <button *ngIf="!screenData.readOnly && screenData.linkedCustomerButton && screenData.customer"
                 class="linked-customer-summary"
@@ -35,7 +58,7 @@
                                   class="muted-color loyalty-keybind">{{screenData.linkedCustomerButton.keybindDisplayName}}</span>
                         </div>
                     </div>
-                    <div class="icon"><app-icon [iconName]="screenData.profileIcon" [iconClass]="(isMobile | async) ? null: 'material-icons mat-36'"></app-icon></div>
+                    <div class="icon"><app-icon [iconName]="screenData.profileIcon" [iconClass]="(isMobile$ | async) ? null: 'material-icons mat-36'"></app-icon></div>
                     <div class="memberships">
                         <div *ngIf="isMissingCustomerInfo()" class="customer-missing-info">
                             <app-warn-button responsive-class>

@@ -41,4 +41,5 @@ public final class UIMessageType {
     public static String AUDIO_CONFIG = "AudioConfig";
     public static String AUDIO_PRELOAD = "AudioPreload";
     public static String LOYALTY_CUSTOMER_DIALOG = "LoyaltyCustomerDialog";
+    public static String LOYALTY_SIGNUP = "LoyaltySignup";
 }
