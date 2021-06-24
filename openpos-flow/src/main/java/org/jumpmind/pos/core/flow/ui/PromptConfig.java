@@ -29,6 +29,25 @@ public class PromptConfig {
     private String id;
     private boolean allowScan;
     private boolean editable = true;
+    private Integer maxLength;
+    private Integer minLength;
+
+
+    public Integer getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public Integer getMinLength() {
+        return minLength;
+    }
+
+    public void setMinLength(Integer minLength) {
+        this.minLength = minLength;
+    }
 
     public PromptConfig named(String name) {
         this.name = name;
