@@ -26,6 +26,7 @@ export interface CustomerInformationComponentInterface {
     phoneIcon: string;
     loyaltyNumberIcon: string;
     locationIcon: string;
+    birthDateIcon: string;
 }
 
 export interface PurchasedItem {
