@@ -16,7 +16,8 @@ export interface CustomerDetails {
     },
     memberships: Membership[],
     rewards: Reward[],
-    rewardHistory: RewardHistory[]
+    rewardHistory: RewardHistory[],
+    birthDate: string
 };
 
 export interface CustomerInformationComponentInterface {
@@ -24,4 +25,5 @@ export interface CustomerInformationComponentInterface {
     phoneIcon: string;
     loyaltyNumberIcon: string;
     locationIcon: string;
+    birthDateIcon: string;
 }
