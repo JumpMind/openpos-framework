@@ -71,6 +71,7 @@ export class ItemDetailComponent extends PosScreen<ItemDetailInterface> {
             .pipe(map( stores => stores != null && stores != undefined));
         this.inventoryMessage$ = this.dataMessageService.getData$(this.screen.inventoryMessageProviderKey)
             .pipe(map(value => value != null ? value[0] : null));
+        this.screen.imageUrls = [].concat(this.screen.imageUrls);
     }
     
     getComponentFromOptionType(productOption: ProductOptionInterface) {
