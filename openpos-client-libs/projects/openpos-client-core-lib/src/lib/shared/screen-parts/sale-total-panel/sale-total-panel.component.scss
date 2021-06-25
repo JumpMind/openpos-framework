@@ -47,45 +47,38 @@
             }
             .loyalty-signup-customer-display-message {
                 font-size: $text-xs;
+                line-height: $text-xs*1.5;
             }
         }
 
         &-wrapper {
-            display: grid;
-            grid-template-areas:
-                    'icon message'
-                    '.    action';
-            grid-template-columns: auto minmax(0, 1fr);
-            column-gap: .5rem;
-            margin-right: 1rem;
+            display: block;
         }
 
         &-icon {
+            display: inline-block;
             animation: glow 1.25s ease-out infinite alternate;
-            grid-area: icon;
-            align-self: center;
         }
 
         &-icon-size {
-            width: 80px;
-            height: 80px;
+            width: 96px;
+            height: 96px;
         }
 
         &-message {
-            grid-area: message;
+            display: block;
             font-size: $text-sm;
             font-weight: normal;
-            line-height: 1.5rem;
-            align-self: center;
+            line-height: $text-sm*1.5;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding: $text-sm/2 0;
         }
 
         &-action {
-            grid-area: action;
+            display: block;
             border-width: 1px 0 0 0;
-            padding-top: .5rem;
-            margin-top: .5rem;
+            padding-top: $text-sm/2;
             border-style: solid;
         }
     }
