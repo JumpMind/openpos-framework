@@ -41,9 +41,12 @@
     }
     .loyalty-signup-customer-display {
         &.tablet {
+            .loyalty-signup-customer-display-header {
+                margin-left: -16px;
+            }
             .loyalty-signup-customer-display-icon-size {
-                width: 64px;
-                height: 64px;
+                width: 48px;
+                height: 48px;
             }
             .loyalty-signup-customer-display-message {
                 font-size: $text-xs;
@@ -55,14 +58,23 @@
             display: block;
         }
 
+        &-header {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            text-align: left;
+            column-gap: 16px;
+            padding-bottom: $text-sm/2;
+        }
+
         &-icon {
             display: inline-block;
             animation: glow 1.25s ease-out infinite alternate;
         }
 
         &-icon-size {
-            width: 96px;
-            height: 96px;
+            width: 72px;
+            height: 72px;
         }
 
         &-message {
@@ -72,7 +84,6 @@
             line-height: $text-sm*1.5;
             overflow: hidden;
             text-overflow: ellipsis;
-            padding: $text-sm/2 0;
         }
 
         &-action {

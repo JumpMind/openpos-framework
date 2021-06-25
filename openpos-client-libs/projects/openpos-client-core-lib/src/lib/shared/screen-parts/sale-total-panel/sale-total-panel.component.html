@@ -31,9 +31,11 @@
                 (click)="doAction(screenData.loyaltyCancelButton)"
                 class="loyalty-signup-customer-display">
             <span class="wrapper loyalty-signup-customer-display-wrapper">
-                <app-icon *ngIf="screenData.loyaltyCancelButton.icon" [iconName]="screenData.loyaltyCancelButton.icon"
-                     iconClass="loyalty-signup-customer-display-icon-size" class="loyalty-signup-customer-display-icon"></app-icon>
-                <span class="loyalty-signup-customer-display-message">{{screenData.loyaltySignupInProgressMessage}}</span>
+                <span class="loyalty-signup-customer-display-header">
+                    <app-icon *ngIf="screenData.loyaltyCancelButton.icon" [iconName]="screenData.loyaltyCancelButton.icon"
+                         iconClass="loyalty-signup-customer-display-icon-size" class="loyalty-signup-customer-display-icon"></app-icon>
+                    <span class="loyalty-signup-customer-display-message">{{screenData.loyaltySignupInProgressMessage}}</span>
+                </span>
                 <span class="loyalty-signup-customer-display-action">{{screenData.loyaltyCancelButton.title}}</span>
                 <span *ngIf="keybindsEnabled(screenData.loyaltyCancelButton)" class="muted-color loyalty-keybind">
                     {{screenData.loyaltyCancelButton.keybindDisplayName}}
