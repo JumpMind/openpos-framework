@@ -43,6 +43,7 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String checkMarkIcon;
     private String expiredIcon;
     private String applyIcon;
+    private String birthDateIcon;
 
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);
