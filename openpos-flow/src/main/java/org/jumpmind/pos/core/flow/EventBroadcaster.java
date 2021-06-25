@@ -45,7 +45,7 @@ public class EventBroadcaster {
                     if (onEvent.receiveAllEvents() || ArrayUtils.contains(onEvent.ofTypes(), event.getClass())) {
                         processEvent = true;
                     } else {
-                        // if an appevent onEvent = {$Proxy63@20570} "@org.jumpmind.pos.util.event.OnEvent(ofTypes=[], receiveEventsFromSelf=false, receiveEventsFromPairedDevice=true, receiveAllEvents=false)"then only receive events from the same device id
+                        // if an appevent then only receive events from the same device id
                         if (!(event instanceof AppEvent) || stateManager.getDeviceId().equals(((AppEvent) event).getDeviceId())) {
                             String mySource = AppEvent.createSourceString(stateManager.getAppId(), stateManager.getDeviceId(), stateManager.getPairedDeviceId());
 
