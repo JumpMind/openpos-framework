@@ -41,6 +41,11 @@ import static org.jumpmind.pos.service.strategy.AbstractInvocationStrategy.build
 @Component
 public class EndpointInvoker implements InvocationHandler {
 
+
+    final static int MAX_SUMMARY_WIDTH = 127;
+
+    ThreadLocal<String> lastEndpointCalled = new ThreadLocal<>();
+
     @Autowired
     Map<String, IInvocationStrategy> strategies;
 
@@ -52,8 +57,6 @@ public class EndpointInvoker implements InvocationHandler {
 
     @Autowired
     private ClientContext clientContext;
-
-    final static int MAX_SUMMARY_WIDTH = 127;
 
     @Autowired
     @Qualifier("ctxSession")
@@ -351,29 +354,15 @@ public class EndpointInvoker implements InvocationHandler {
 
     private void log(Method method, Object[] args, String implementation) {
         if (!method.isAnnotationPresent(SuppressMethodLogging.class)) {
-            StringBuilder logArgs = new StringBuilder();
-            if (args != null && args.length > 0) {
-                for (int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof CharSequence) {
-                        logArgs.append("'");
-                        logArgs.append(arg);
-                        logArgs.append("'");
-                    } else if (arg != null) {
-                        logArgs.append(arg);
-                    } else {
-                        logArgs.append("null");
-                    }
-                    if (args.length - 1 > i) {
-                        logArgs.append(",");
-                    }
-                }
-            }
             if (log.isInfoEnabled()) {
-                log.info("{}.{}() {}",
+                String endPointCalled = String.format("%s.%s() %s",
                         method.getDeclaringClass().getSimpleName(),
                         method.getName(),
                         implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
+                if (!endPointCalled.equals(lastEndpointCalled.get())) {
+                    log.info(endPointCalled);
+                    this.lastEndpointCalled.set(endPointCalled);
+                }
             }
         }
     }
