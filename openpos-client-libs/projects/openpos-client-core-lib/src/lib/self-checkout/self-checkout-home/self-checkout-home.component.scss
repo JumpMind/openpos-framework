@@ -11,7 +11,7 @@
 
 .self-checkout-home-text-container {
     margin-top: auto;
-    margin-bottom: 10%;
+    margin-bottom: 2%;
 }
 
 .self-checkout-home-text {
@@ -20,4 +20,13 @@
     max-width: 60%;
     color: white;
     background: rgba(0, 0, 0, 0.2);
+}
+
+.language-icons {
+    margin-bottom: 64px;
+}
+
+.language-icon-entry {
+    margin-left: 64px;
+    margin-right: 64px;
 }

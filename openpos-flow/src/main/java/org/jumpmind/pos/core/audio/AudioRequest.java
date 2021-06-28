@@ -22,6 +22,7 @@ public class AudioRequest implements Serializable {
     private Boolean autoplay;
     private Double delayTime;
     private String group;
+    private Boolean localized;
 
     public Object clone() {
         return AudioRequest.builder()
