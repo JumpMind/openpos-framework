@@ -14,4 +14,8 @@ public class CustomerMembershipsUIMessage extends UIMessage {
     private String title;
     private UICustomerSubscriptionsItem customer;
     List<UISubscriptionAccount> subscriptionAccounts;
+
+    public CustomerMembershipsUIMessage() {
+        setScreenType(UIMessageType.MEMBERSHIP_DETAILS_DIALOG);
+    }
 }

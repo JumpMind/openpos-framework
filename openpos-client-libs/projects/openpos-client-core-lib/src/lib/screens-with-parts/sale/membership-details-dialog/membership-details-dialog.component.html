@@ -1,0 +1,40 @@
+<app-dialog-header></app-dialog-header>
+<div>
+    <app-content-card class="details-wrapper" >
+        <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
+            <div class="icon">
+                <app-icon [iconName]="screen.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+            </div>
+            <div class="details">
+                <div class="details-label">
+                    {{screen.customer.name}}
+                </div>
+            </div>
+
+            <div class="memberships">
+                <div class="wrapper">
+                    <div class="list">
+                        <div *ngIf="screen.customer.memberships && screen.customer.memberships.length">
+                            <span *ngFor="let membership of screen.customer.memberships" class="item">
+                                <app-membership-display [membership]="membership"></app-membership-display>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </app-content-card>
+    <div class="tabs" [ngClass]="{'tabs': true, 'mobile': (isMobile | async)}" responsive-class>
+        <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
+            <mat-tab class="contactTab">
+                <ng-template mat-tab-label>
+                    <mat-icon class="example-tab-icon">thumb_up</mat-icon>
+                    First
+                </ng-template>
+                <mat-card class="customer-details muted-color">
+                    some content
+                </mat-card>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

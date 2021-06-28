@@ -37,6 +37,7 @@ import { TransactionDetailsComponent } from './transaction-details/transaction-d
 import {CustomerDetailsDialogComponent} from "./sale/customer-details-dialog/customer-details-dialog.component";
 import {CustomerSearchResultDialogComponent} from './customer-search-result-dialog/customer-search-result-dialog.component';
 import { LoyaltyCustomerFormDialogComponent } from "./loyalty-customer-form-dialog/loyalty-customer-form-dialog.component";
+import {MembershipDetailsDialogComponent} from "./sale/membership-details-dialog/membership-details-dialog.component";
 
 
 const screens = [
@@ -74,6 +75,7 @@ const dialogs = [
     DynamicFormDialogComponent,
     ScanInputDialogComponent,
     CustomerDetailsDialogComponent,
+    MembershipDetailsDialogComponent,
     AutoCompleteAddressDialogComponent,
     ErrorDialogComponent,
     DataTableDialogComponent,

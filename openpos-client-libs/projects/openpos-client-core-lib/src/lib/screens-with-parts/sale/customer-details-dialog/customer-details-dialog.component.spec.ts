@@ -197,7 +197,7 @@ describe('CustomerDetailsDialog', () => {
           let configuration;
           const selector = '.membership-sign-up';
           const setButtonConfiguration = (conf) => {
-            component.screen.membershipSignUpAction = conf;
+            component.screen.customer.membershipSignUpAction = conf;
           };
 
           beforeEach(() => {
