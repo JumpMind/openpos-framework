@@ -205,6 +205,23 @@ public class DBSession {
         }
     }
 
+    public int executeDml(String namedDml, Map<String, Object> params) {
+        DmlTemplate template = this.getDmlTemplate(namedDml);
+        if (template != null && isNotBlank(template.getDml())) {
+            SqlStatement statement = template.generateSQL(template.getDml(), params);
+            ParsedSql parsedSql = NamedParameterUtils.parseSqlStatement(statement.getSql());
+            String sqlToUse = NamedParameterUtils.substituteNamedParameters(parsedSql, statement.getParameters());
+            List<SqlParameter> declaredParameters = NamedParameterUtils.buildSqlParameterList(parsedSql, statement.getParameters());
+            Object[] args = NamedParameterUtils.buildValueArray(parsedSql, statement.getParameters(), declaredParameters);
+
+            PreparedStatementCreator psc = new PreparedStatementCreatorFactory(sqlToUse, declaredParameters).newPreparedStatementCreator(args);
+            return jdbcTemplate.getJdbcOperations().update(psc);
+        } else {
+            throw new PersistException("Could not find dml named: " + namedDml);
+        }
+    }
+
+    @Deprecated
     public int executeDml(String namedDml, Object... params) {
         DmlTemplate template = this.getDmlTemplate(namedDml);
         if (template != null && isNotBlank(template.getDml())) {

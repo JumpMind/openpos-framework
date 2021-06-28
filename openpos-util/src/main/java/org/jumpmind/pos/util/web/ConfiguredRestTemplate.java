@@ -61,7 +61,7 @@ public class ConfiguredRestTemplate extends RestTemplate {
                 } else if (response.getStatusCode().series() == HttpStatus.Series.CLIENT_ERROR) {
 
                     if (response.getStatusCode() == HttpStatus.NOT_FOUND) {
-                        throw new NotFoundException();
+                        throw new NotFoundException(response.getStatusCode().toString());
                     } else {
                         super.handleError(response);
                     }
