@@ -192,6 +192,51 @@ describe('CustomerDetailsDialog', () => {
           });
 
         });
+        describe('membership sign up button', () => {
+          let button;
+          let configuration;
+          const selector = '.membership-sign-up';
+          const setButtonConfiguration = (conf) => {
+            component.screen.membershipSignUpAction = conf;
+          };
+
+          beforeEach(() => {
+            configuration = {
+              title: 'Some Title'
+            } as IActionItem;
+            setButtonConfiguration(configuration);
+            fixture.detectChanges();
+            button = fixture.debugElement.query(By.css(selector));
+          });
+
+          it('renders when the button configuration is set', () => {
+            expect(button.nativeElement).toBeDefined();
+          });
+
+          it('does not render when the configuration is undefined', () => {
+            setButtonConfiguration(undefined);
+            fixture.detectChanges();
+            validateDoesNotExist(fixture, selector);
+          });
+
+          it('displays the configured text', () => {
+            expect(button.nativeElement.innerText).toContain(configuration.title);
+          });
+
+          it('calls doAction with the configuration when an actionClick event is triggered', () => {
+            spyOn(component, 'doAction');
+            const button = fixture.debugElement.query(By.css(selector));
+            button.nativeElement.dispatchEvent(new Event('actionClick'));
+            expect(component.doAction).toHaveBeenCalledWith(configuration);
+          });
+
+          it('calls doAction with the configuration when the button is clicked', () => {
+            spyOn(component, 'doAction');
+            const button = fixture.debugElement.query(By.css(selector));
+            button.nativeElement.click();
+            expect(component.doAction).toHaveBeenCalledWith(configuration);
+          });
+        });
       })
       describe('tabs', () => {
         it('displays the tabs section', () => {
