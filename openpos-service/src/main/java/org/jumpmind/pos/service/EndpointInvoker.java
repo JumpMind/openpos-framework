@@ -300,11 +300,25 @@ public class EndpointInvoker implements InvocationHandler {
         if (profileIds.size() == 0) {
             profileIds.add("local");
         }
-        ServiceSampleModel sample = startSample(strategy, config, proxy, method, args);
+
+        EndpointInvocationContext endpointInvocationContext = EndpointInvocationContext.builder().
+                clientVersion(clientContext.get("version.nu-commerce")).endpoint(endpointObj).endpointPath(path).arguments(args).build();
+
+        // TODO roll all these arts into the context.
+        return invokeStrategy(endpointInvocationContext, path, strategy, profileIds, config, proxy, method, args, endpointImplementation, endpointsByPathMap);
+    }
+
+    protected Object invokeStrategy(EndpointInvocationContext endpointInvocationContext,
+                                    String path, IInvocationStrategy strategy, List<String> profileIds, ServiceSpecificConfig config, Object proxy, Method method, Object[] args, String endpointImplementation, Map<String, Object> endpointsByPathMap) throws Throwable {
+        ServiceSampleModel sample = startSample(path, strategy, config, proxy, method, args);
         Object result = null;
         try {
-            log(method, args, endpointImplementation);
-            result = strategy.invoke(profileIds, proxy, method, endpointsByPathMap, args);
+            log(path, method, args, endpointImplementation, config);
+                result = strategy.invoke(profileIds, proxy, method, endpointsByPathMap, args);
+
+            result = filerResult(endpointInvocationContext, result);
+            endpointInvocationContext.setResult(result);
+                        
             endSampleSuccess(sample, config, proxy, method, args, result);
         } catch (Throwable ex) {
             endSampleError(sample, config, proxy, method, args, result, ex);
@@ -314,45 +328,15 @@ public class EndpointInvoker implements InvocationHandler {
         return result;
     }
 
-    private void log(Method method, Object[] args, String implementation) {
+    private void log(String path, Method method, Object[] args, String implementation, ServiceSpecificConfig config) {
         if (!method.isAnnotationPresent(SuppressMethodLogging.class)) {
-            /*
-            **  The code below came over from master. It logs each argument to the
-            **  endpoint call. Some might have sensitive information, but some want
-            **  to try to serialize autowired services and such. The @ToString
-            **  annotation can be used to control what iss logged.  For now, disable
-            **  this until a time when arguments can be looked at more globally.
-            **  Enabling this will cause Cucumber test to fail.
-            **
-            StringBuilder logArgs = new StringBuilder();
-            if (args != null && args.length > 0) {
-                for(int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof CharSequence) {
-                        logArgs.append("'");
-                        logArgs.append(arg.toString());
-                        logArgs.append("'");
-                    } else if (arg != null) {
-                        logArgs.append(arg.toString());
-                    } else {
-                        logArgs.append("null");
-                    }
-                    if (args.length-1 > i) {
-                        logArgs.append(",");
-                    }
-                }
+            if (log.isInfoEnabled()) {
+                log.info("Call endpoint: {}.{}() {} {}",
+                        method.getDeclaringClass().getSimpleName(),
+                        method.getName(),
+                        config != null ? config.getStrategy() : "",
+                        implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
             }
-            log.info("{}.{}({}) {}",
-                    method.getDeclaringClass().getSimpleName(),
-                    method.getName(),
-                    logArgs,
-                    annotation == null || annotation.implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT) ?
-                            "" : annotation.implementation() + " implementation");
-            */
-            log.debug("{}.{}() {}",
-                    method.getDeclaringClass().getSimpleName(),
-                    method.getName(),
-                    implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
         }
     }
 
@@ -423,6 +407,17 @@ public class EndpointInvoker implements InvocationHandler {
             sample.setEndTime(new Date());
             sample.setDurationMs(sample.getEndTime().getTime() - sample.getStartTime().getTime());
             instrumentationExecutor.execute(() -> dbSession.save(sample));
+        }
+    }
+
+    protected Object filerResult(EndpointInvocationContext endpointInvocationContext, Object result) {
+        if (endpointInvocationContext.getClientVersion() != null
+                && endpointInvocationContext.getClientVersion().startsWith("@version@")
+                && endpointInvocationContext.getEndpointPath().equals("/customer/search")) {
+            System.out.println("Here");
+            return result;
+        } else {
+            return result;
         }
     }
 
