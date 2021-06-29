@@ -54,7 +54,7 @@ public class ClientContext {
             } else if ("timezoneOffset".equalsIgnoreCase(name)) {
                 return AppUtils.getTimezoneOffset();
             }
-            log.info("ClientContext property '" + name + "' not found in ClientContext map.");
+            log.debug("ClientContext property '{}' not found in ClientContext map.", name);
             return null;
         }
 
