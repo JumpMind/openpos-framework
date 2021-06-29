@@ -1,0 +1,22 @@
+<div [ngClass]="{'enrollment-line-item-wrapper': !(isMobile | async)}">
+    <div class="title">
+        {{enrollment.title?.value}}
+    </div>
+    <div class="details">
+        <div *ngFor="let item of enrollment.details">
+            {{item?.value}}
+        </div>
+    </div>
+    <div class="actions">
+        <span *ngFor="let action of enrollment.actionItemList">
+        <a [actionItem]="action"
+           (actionClick)="doAction(action)"
+           (click)="doAction(action)"
+           [disabled]="!action.enabled"
+           mat-button
+           responsive-class>
+            {{action.title}}
+        </a>
+        </span>
+    </div>
+</div>

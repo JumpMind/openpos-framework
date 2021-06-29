@@ -26,13 +26,20 @@
     </app-content-card>
     <div class="tabs" [ngClass]="{'tabs': true, 'mobile': (isMobile | async)}" responsive-class>
         <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
-            <mat-tab class="contactTab">
+            <mat-tab *ngFor="let tab of screen.subscriptionAccounts">
                 <ng-template mat-tab-label>
-                    <mat-icon class="example-tab-icon">thumb_up</mat-icon>
-                    First
+<!--                    <app-icon [iconName]="tab.iconImageUrl" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>-->
+                    {{tab.iconText}}
                 </ng-template>
-                <mat-card class="customer-details muted-color">
-                    some content
+                <mat-card class="muted-color">
+                    <div *ngIf="tab.subscriptionAccountListItems && tab.subscriptionAccountListItems.length > 0">
+                        <div *ngFor="let row of tab.subscriptionAccountListItems">
+                            <app-enrollment-line-item [enrollment]="row"></app-enrollment-line-item>
+                        </div>
+                    </div>
+                    <div *ngIf="!tab.subscriptionAccountListItems || tab.subscriptionAccountListItems.length == 0">
+                        <div [innerHtml]="tab.subscriptionAccountCopy"></div>
+                    </div>
                 </mat-card>
             </mat-tab>
         </mat-tab-group>
