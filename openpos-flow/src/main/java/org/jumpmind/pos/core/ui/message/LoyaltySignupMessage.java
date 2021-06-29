@@ -18,6 +18,8 @@ public class LoyaltySignupMessage extends Message {
     @JsonProperty("isActiveOnCustomerDisplay")
     private boolean isActiveOnCustomerDisplay;
 
+    private String message;
+
     @Override
     public String getType() {
         return MessageType.LoyaltySignup;
