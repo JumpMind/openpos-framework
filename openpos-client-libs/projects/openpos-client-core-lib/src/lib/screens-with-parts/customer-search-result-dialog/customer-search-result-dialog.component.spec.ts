@@ -184,10 +184,17 @@ describe('CustomerSearchResultDialogComponent', () => {
         describe('template', () => {
             it('secondary-buttons do exist and have actions', () => {
                 const secondaryButton = fixture.debugElement.queryAll(By.css('app-secondary-button'));
-                expect(secondaryButton[0].nativeElement.textContent).toBeDefined();
+                expect(secondaryButton.length).toBe(2);
+                const nonSelectionButton = 0;
+                const selectionButton = 1;
+                expect(secondaryButton[selectionButton].nativeElement.textContent).toBeDefined();
+                expect(secondaryButton[nonSelectionButton].nativeElement.textContent).toBeDefined();
                 spyOn(component, 'doSelectionButtonAction');
-                secondaryButton[0].nativeElement.click();
+                spyOn(component, 'doNonSelectionButtonAction');
+                secondaryButton[selectionButton].nativeElement.click();
+                secondaryButton[nonSelectionButton].nativeElement.click();
                 expect(component.doSelectionButtonAction).toHaveBeenCalled();
+                expect(component.doNonSelectionButtonAction).toHaveBeenCalled();
             });
 
             it('primary-button do exist and have actions', () => {
