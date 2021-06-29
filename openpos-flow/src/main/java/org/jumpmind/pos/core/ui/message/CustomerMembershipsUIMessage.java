@@ -1,6 +1,7 @@
 package org.jumpmind.pos.core.ui.message;
 
 import lombok.Data;
+import org.jumpmind.pos.core.ui.ActionItem;
 import org.jumpmind.pos.core.ui.AssignKeyBindings;
 import org.jumpmind.pos.core.ui.UIMessage;
 
@@ -14,6 +15,7 @@ public class CustomerMembershipsUIMessage extends UIMessage {
     private String title;
     private UICustomerSubscriptionsItem customer;
     List<UISubscriptionAccount> subscriptionAccounts;
+    private ActionItem backButton;
 
     public CustomerMembershipsUIMessage() {
         setScreenType(UIMessageType.MEMBERSHIP_DETAILS_DIALOG);
