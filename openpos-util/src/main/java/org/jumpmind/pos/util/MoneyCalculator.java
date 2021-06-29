@@ -33,7 +33,11 @@ public class MoneyCalculator {
     
     public static Money zero(String currencyId) {
         return money(currencyId, BigDecimal.ZERO);
-    }    
+    }
+
+    public static Money moneyUsd(double d) {
+        return money("USD", new BigDecimal(d), RoundingMode.HALF_UP);
+    }
 
     public static Money money(String currencyId, double d) {
         return money(currencyId, new BigDecimal(d), RoundingMode.HALF_UP);

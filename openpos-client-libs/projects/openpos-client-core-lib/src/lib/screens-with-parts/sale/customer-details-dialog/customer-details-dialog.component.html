@@ -41,7 +41,7 @@
         </div>
         <app-membership-points-display *ngIf="(isMobile | async) && screen.membershipPointsEnabled" class="points"></app-membership-points-display>
     </app-content-card>
-    <div *ngIf="(isMobile | async) || (!(isMobile | async) && (screen.rewardTabEnabled || screen.rewardHistoryTabEnabled))"
+    <div *ngIf="(isMobile | async) || (!(isMobile | async) && (screen.rewardTabEnabled || screen.rewardHistoryTabEnabled || screen.itemHistoryEnabled))"
          class="tabs" [ngClass]="{'tabs': true, 'mobile': (isMobile | async)}" responsive-class>
         <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
             <mat-tab class="contactTab" [label]="screen.contactLabel" *ngIf="isMobile | async">
@@ -62,6 +62,49 @@
                         {{screen.noPromotionsText}}
                     </div>
                 </mat-card>
+            </mat-tab>
+            <mat-tab *ngIf="screen.itemHistoryEnabled"
+                    [label]="screen.itemHistoryLabel">
+                <app-infinite-scroll [dataKey]="screen.itemsHistoryDataProviderKey" [itemTemplate]="itemHistoryTemplate" virtualScrollMinBufferPx="400" virtualScrollMaxBufferPx="800" [itemHeightPx]="155">
+                    <ng-template #itemHistoryTemplate let-item>
+                        <div class="item">
+                            <div class="image-container">
+                                <img [src]="item.imageUrl | imageUrl">
+                            </div>
+                            <h3 class="title">{{ item.title }}</h3>
+                            <div class="labels-cont">
+                                <ul>
+                                    <li class="muted-color" *ngFor="let l of item.labels">
+                                        <app-icon [iconName]="l.icon"></app-icon>
+                                        <div class="inline-markdown" [innerHTML]="l.text | markdownFormatter"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="price-cont">
+                                <app-currency-text [amountText]="item.salePrice"></app-currency-text>
+                                <app-currency-text class="muted-color" *ngIf="item.originalPrice !== item.salePrice" [amountText]="item.originalPrice"></app-currency-text>
+                            </div>
+                            <div class="links-cont">
+                                <a *ngIf="item.transactionDetailsAction"
+                                    [actionItem]="item.transactionDetailsAction"
+                                    (actionClick)="doAction(item.transactionDetailsAction.action, item.transaction || item.transactionDetailsAction.defaultPayload)"
+                                    (click)="doAction(item.transactionDetailsAction.action, item.transaction || item.transactionDetailsAction.defaultPayload)"
+                                    mat-button
+                                    responsive-class>
+                                    {{item.transactionDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                                </a>
+                                <a *ngIf="item.itemDetailsAction"
+                                    [actionItem]="item.itemDetailsAction"
+                                    (actionClick)="doAction(item.itemDetailsAction.action, item.itemId || item.itemDetailsAction.defaultPayload)"
+                                    (click)="doAction(item.itemDetailsAction.action, item.itemId || item.itemDetailsAction.defaultPayload)"
+                                    mat-button
+                                    responsive-class>
+                                    {{item.itemDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </ng-template>
+                </app-infinite-scroll>
             </mat-tab>
             <mat-tab *ngIf="screen.rewardHistoryTabEnabled"
                     class="rewardsHistoryTab" [label]="screen.rewardHistoryLabel">

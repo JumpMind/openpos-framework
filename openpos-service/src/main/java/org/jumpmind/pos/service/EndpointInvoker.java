@@ -3,6 +3,7 @@ package org.jumpmind.pos.service;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.concurrent.BasicThreadFactory;
+import org.h2.value.CaseInsensitiveMap;
 import org.jumpmind.pos.persist.DBSession;
 import org.jumpmind.pos.service.instrumentation.ServiceSampleModel;
 import org.jumpmind.pos.service.strategy.AbstractInvocationStrategy;
@@ -22,6 +23,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.util.AbstractMap.SimpleEntry;
@@ -31,12 +33,18 @@ import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static org.jumpmind.pos.service.strategy.AbstractInvocationStrategy.buildPath;
 
 @Slf4j
 @Component
 public class EndpointInvoker implements InvocationHandler {
+
+
+    final static int MAX_SUMMARY_WIDTH = 127;
+
+    ThreadLocal<String> lastEndpointCalled = new ThreadLocal<>();
 
     @Autowired
     Map<String, IInvocationStrategy> strategies;
@@ -49,8 +57,6 @@ public class EndpointInvoker implements InvocationHandler {
 
     @Autowired
     private ClientContext clientContext;
-
-    final static int MAX_SUMMARY_WIDTH = 127;
 
     @Autowired
     @Qualifier("ctxSession")
@@ -76,7 +82,7 @@ public class EndpointInvoker implements InvocationHandler {
             build();
 
     private static final ExecutorService instrumentationExecutor = Executors.newSingleThreadExecutor(factory);
-    protected HashMap<String, Boolean> endpointEnabledCache = new HashMap<String, Boolean>();
+    protected HashMap<String, Boolean> endpointEnabledCache = new HashMap<>();
 
     @EventListener
     public void onApplicationEvent(ContextRefreshedEvent event) {
@@ -85,10 +91,9 @@ public class EndpointInvoker implements InvocationHandler {
             trainingEndPointsByPath = new HashMap<>();
             annotationsByPath = new HashMap<>();
             Collection<Object> beans = applicationContext.getBeansWithAnnotation(RestController.class).values();
-            if (beans != null) {
-                for (Object object : beans) {
-                    buildEndpointMappingsForService(object);
-                }
+
+            for (Object object : beans) {
+                buildEndpointMappingsForService(object);
             }
         }
     }
@@ -96,10 +101,14 @@ public class EndpointInvoker implements InvocationHandler {
     public void buildEndpointMappingsForService(Object service) {
         Class<?>[] interfaces = service.getClass().getInterfaces();
         Collection<Object> endpointOverrides = applicationContext.getBeansWithAnnotation(EndpointOverride.class).values();
-        Collection<Object> endpoints = applicationContext.getBeansWithAnnotation(Endpoint.class).values();
+        Collection<Object> endpointObjects = applicationContext.getBeansWithAnnotation(Endpoint.class).values();
+        Collection<Object> endpointsObjects = applicationContext.getBeansWithAnnotation(Endpoints.class).values();
+
         //if we have any endpoints that are an @EndpointOverride and extend an Endpoint with @Endpoint they were included
         //in the collection of endpoints and should therefore be filtered out.
-        endpoints = endpoints.stream().filter(e -> !endpointOverrides.contains(e)).collect(Collectors.toList());
+        endpointObjects = Stream.concat(endpointObjects.stream(), endpointsObjects.stream())
+                .filter(e -> !endpointOverrides.contains(e))
+                .collect(Collectors.toList());
 
         for (Class<?> i : interfaces) {
             RestController controller = i.getAnnotation(RestController.class);
@@ -130,18 +139,18 @@ public class EndpointInvoker implements InvocationHandler {
                     //  Now see if there is a standard endpoint bean for this service and path. Again, both normal and
                     //  Training Mode.
 
-                    Object regularEndpointBean  = findMatch(path, endpoints, implementation);
-                    String regularEndpointImplementaton = implementation;
+                    Object regularEndpointBean  = findMatch(path, endpointObjects, implementation);
+                    String regularEndpointImplementation = implementation;
                     if (regularEndpointBean == null) {
                         //  Nothing for the current implementation, so try the default.
-                        regularEndpointBean = findMatch(path, endpoints, Endpoint.IMPLEMENTATION_DEFAULT);
-                        regularEndpointImplementaton = Endpoint.IMPLEMENTATION_DEFAULT;
+                        regularEndpointBean = findMatch(path, endpointObjects, Endpoint.IMPLEMENTATION_DEFAULT);
+                        regularEndpointImplementation = Endpoint.IMPLEMENTATION_DEFAULT;
                     }
                     if (regularEndpointBean == null) {
                         log.warn("No endpoint match found for service {}, path '{}', implementation '{}'", i.getSimpleName(), path, implementation);
                     }
 
-                    Object trainingEndpointBean = findMatch(path, endpoints, "training");
+                    Object trainingEndpointBean = findMatch(path, endpointObjects, "training");
                     if ((trainingEndpointBean != null) && (regularEndpointBean == null))  {
                         log.warn("Endpoint match found for service {}, path '{}', implementation 'training', but not implementation '{}' or default", i.getSimpleName(), path, implementation);
                     }
@@ -166,12 +175,12 @@ public class EndpointInvoker implements InvocationHandler {
                         log.info("Training endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, "training");
                         trainingEndPointsByPath.put(path, trainingEndpointBean);
                         if (regularEndpointBean != null)  {
-                            log.info("Regular endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, regularEndpointImplementaton);
+                            log.info("Regular endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, regularEndpointImplementation);
                             endPointsByPath.put(path, regularEndpointBean);
                         }
 
                     }  else if (regularEndpointBean != null)  {
-                        log.debug("Regular endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, regularEndpointImplementaton);
+                        log.debug("Regular endpoint bean for service {}, path {}, implementation {}", i.getSimpleName(), path, regularEndpointImplementation);
                         endPointsByPath.put(path, regularEndpointBean);
                         trainingEndPointsByPath.put(path, regularEndpointBean);
 
@@ -190,18 +199,18 @@ public class EndpointInvoker implements InvocationHandler {
 
     protected Object findBestEndpointOverrideMatch(String path, String implementation, Collection<Object> endpointOverrides) {
         Object bestMatch = null;
-        List<SimpleEntry<Object,EndpointOverride>> pathMatchedOverrides = endpointOverrides.stream()
+        List<SimpleEntry<Object, EndpointOverride>> pathMatchedOverrides = endpointOverrides.stream()
                 .map(o -> new SimpleEntry<>(o, ClassUtils.resolveAnnotation(EndpointOverride.class, o)))
-                .filter(entry -> entry.getValue().path().equals(path)
-                ).collect(Collectors.toList());
+                .filter(entry -> entry.getValue().path().equals(path))
+                .collect(Collectors.toList());
 
         if (pathMatchedOverrides.size() > 0) {
             List<SimpleEntry<Object, EndpointOverride>> implMatchedOverrides;
-            if(pathMatchedOverrides.stream().anyMatch(entry -> entry.getValue().implementation().equals(implementation))) {
+            if (pathMatchedOverrides.stream().anyMatch(entry -> entry.getValue().implementation().equals(implementation))) {
                 implMatchedOverrides = pathMatchedOverrides.stream()
                         .filter(entry -> entry.getValue().implementation().equals(implementation))
                         .collect(Collectors.toList());
-            }  else {
+            } else {
                 implMatchedOverrides = pathMatchedOverrides.stream()
                         .filter(entry -> entry.getValue().implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT))
                         .collect(Collectors.toList());
@@ -226,10 +235,12 @@ public class EndpointInvoker implements InvocationHandler {
 
         if (StringUtils.isBlank(implementation)) {
             Matcher serviceNameMatcher = serviceNamePattern.matcher(serviceName);
-            serviceNameMatcher.matches();
-            String versionLessServiceName = serviceNameMatcher.group("service");
-            implementation = env
-                    .getProperty(String.format(implementationConfigPath, versionLessServiceName), Endpoint.IMPLEMENTATION_DEFAULT);
+
+            if (serviceNameMatcher.matches()) {
+                String versionLessServiceName = serviceNameMatcher.group("service");
+                implementation = env
+                        .getProperty(String.format(implementationConfigPath, versionLessServiceName), Endpoint.IMPLEMENTATION_DEFAULT);
+            }
         }
 
         return implementation;
@@ -237,13 +248,36 @@ public class EndpointInvoker implements InvocationHandler {
 
     protected Object findMatch(String path, Collection<Object> endpoints, String implementation) {
         for (Object endpointBean : endpoints) {
-            Endpoint endPoint = ClassUtils.resolveAnnotation(Endpoint.class, endpointBean);
-            if (endPoint == null)  {
+            final HashMap<String, Endpoint> allEndpoints = new CaseInsensitiveMap<>();
+
+            Endpoint endpointAnnotation = ClassUtils.resolveAnnotation(Endpoint.class, endpointBean);
+            Endpoints endpointsAnnotation = ClassUtils.resolveAnnotation(Endpoints.class, endpointBean);
+
+            if (endpointAnnotation != null && endpointsAnnotation != null) {
+                log.warn("Class `{}` has both the @Endpoint and @Endpoints annotation; a single annotation choice should be made but will resolve both", endpointBean.getClass().getSimpleName());
+            }
+
+            if (endpointAnnotation != null) {
+                final String key = endpointAnnotation.implementation() + ":" + endpointAnnotation.path();
+                allEndpoints.put(key, endpointAnnotation);
+            }
+
+            if (endpointsAnnotation != null) {
+                for (Endpoint epa: endpointsAnnotation.value()) {
+                    final String key = epa.implementation() + ":" + epa.path();
+                    allEndpoints.put(key, epa);
+                }
+            }
+
+            final String expectedKey = implementation + ":" + path;
+
+            if (allEndpoints.size() == 0) {
                 log.warn("No @Endpoint annotation found for endpoint class {}, path {}, implementation {}", endpointBean.getClass().getSimpleName(), path, implementation);
-            } else if (endPoint.path().equals(path) && endPoint.implementation().equals(implementation)) {
+            } else if (allEndpoints.containsKey(expectedKey)) {
                 return endpointBean;
             }
         }
+
         return null;
     }
 
@@ -320,29 +354,15 @@ public class EndpointInvoker implements InvocationHandler {
 
     private void log(Method method, Object[] args, String implementation) {
         if (!method.isAnnotationPresent(SuppressMethodLogging.class)) {
-            StringBuilder logArgs = new StringBuilder();
-            if (args != null && args.length > 0) {
-                for (int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof CharSequence) {
-                        logArgs.append("'");
-                        logArgs.append(arg.toString());
-                        logArgs.append("'");
-                    } else if (arg != null) {
-                        logArgs.append(arg.toString());
-                    } else {
-                        logArgs.append("null");
-                    }
-                    if (args.length - 1 > i) {
-                        logArgs.append(",");
-                    }
-                }
-            }
             if (log.isInfoEnabled()) {
-                log.info("{}.{}() {}",
+                String endPointCalled = String.format("%s.%s() %s",
                         method.getDeclaringClass().getSimpleName(),
                         method.getName(),
                         implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
+                if (!endPointCalled.equals(lastEndpointCalled.get())) {
+                    log.info(endPointCalled);
+                    this.lastEndpointCalled.set(endPointCalled);
+                }
             }
         }
     }
