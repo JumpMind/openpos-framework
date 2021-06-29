@@ -1,5 +1,6 @@
 <app-dialog-header></app-dialog-header>
-<app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
+<app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions"
+                  [instructionsSize]="'text-sm'"></app-instructions>
 <app-content-card>
     <mat-dialog-content>
         <div class="customer-search-results-dialog-content">
@@ -18,17 +19,28 @@
     </mat-dialog-content>
 </app-content-card>
 <mat-dialog-actions class="buttons">
+    <div *ngFor="let m of screen.nonSelectionButtons">
+        <app-secondary-button [actionItem]="m"
+                              (actionClick)="doNonSelectionButtonAction(m)"
+                              (click)="doNonSelectionButtonAction(m)"
+                              [disabled]="!isSelectionDisabled() && !screen.allowNonSelectButtonWhenSelected">
+            <span>{{m.title}}</span>&nbsp;
+            <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
+        </app-secondary-button>
+    </div>
     <div *ngFor="let m of screen.selectionButtons;  let i = index">
         <app-secondary-button *ngIf="screen.selectionButtons.length-1 !== i"
                               [disabled]="isSelectionDisabled()"
-                              [actionItem]="m" (actionClick)="doSelectionButtonAction(m)" (click)="doSelectionButtonAction(m)">
+                              [actionItem]="m" (actionClick)="doSelectionButtonAction(m)"
+                              (click)="doSelectionButtonAction(m)">
             <span>{{m.title}}</span>
             <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
         </app-secondary-button>
         <app-primary-button *ngIf="screen.selectionButtons.length-1 == i"
                             [attr.cdkFocusInitial]="screen.selectionButtons.length-1 == i ? '' : null"
                             [disabled]="isSelectionDisabled()"
-                            [actionItem]="m" (actionClick)="doSelectionButtonAction(m)" (click)="doSelectionButtonAction(m)">
+                            [actionItem]="m" (actionClick)="doSelectionButtonAction(m)"
+                            (click)="doSelectionButtonAction(m)">
             <span>{{m.title}}</span>
             <span *ngIf="keybindsEnabled(m)" class="muted-color">{{m.keybindDisplayName}}</span>
         </app-primary-button>
