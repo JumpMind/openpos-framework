@@ -40,6 +40,18 @@
                     <div *ngIf="!tab.subscriptionAccountListItems || tab.subscriptionAccountListItems.length == 0">
                         <div [innerHtml]="tab.subscriptionAccountCopy"></div>
                     </div>
+                    <app-primary-button responsive-class
+                                        class="done"
+                                        *ngIf="tab.signupActionItem"
+                                        [disabled]="!tab.signupActionItem?.enabled"
+                                        [actionItem]="tab.signupActionItem"
+                                        (actionClick)="doAction(tab.signupActionItem)"
+                                        (click)="doAction(tab.signupActionItem)">
+                        <span>{{tab.signupActionItem.title}}</span>
+                        <span *ngIf="keybindsEnabled(tab.signupActionItem)" class="muted-color keybinding" >
+                            {{tab.signupActionItem.keybindDisplayName}}
+                        </span>
+                    </app-primary-button>
                 </mat-card>
             </mat-tab>
         </mat-tab-group>
