@@ -53,6 +53,7 @@ import { LockScreenComponent } from './lock-screen/lock-screen.component';
 import { registerLocaleData } from '@angular/common';
 import locale_enCA from '@angular/common/locales/en-CA';
 import locale_frCA from '@angular/common/locales/fr-CA';
+import locale_esUS from '@angular/common/locales/es-US';
 import { LocationService, PROVIDERS } from './services/location.service';
 import { LocationProviderDefault } from './location-providers/location-provider-default';
 import { ConsoleIntercepter, LOGGERS } from './logging/console-interceptor.service';
@@ -70,6 +71,7 @@ import { AudioConsolePlugin } from './audio/audio-console.plugin';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
+registerLocaleData(locale_esUS, 'es-US');
 
 @NgModule({
     entryComponents: [

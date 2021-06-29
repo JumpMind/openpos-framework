@@ -4,7 +4,7 @@ import { IActionItem } from '../../core/actions/action-item.interface';
 import { PosScreen } from '../../screens-with-parts/pos-screen/pos-screen.component';
 import { ScreenComponent } from '../../shared/decorators/screen-component.decorator';
 import { MatDialog } from '@angular/material';
-import { LocaleService } from '../../core/services/locale.service';
+import { DEFAULT_LOCALE, LocaleService } from '../../core/services/locale.service';
 
 @ScreenComponent({
     name: 'SelfCheckoutHome'
@@ -21,7 +21,7 @@ export class SelfCheckoutHomeComponent extends PosScreen<any> {
     
     private actionSent = false;
 
-    private currentLocale = 'en_US';
+    private currentLocale = DEFAULT_LOCALE;
 
     private locales: string[];
     public languages: any[] = [];
@@ -31,7 +31,9 @@ export class SelfCheckoutHomeComponent extends PosScreen<any> {
         this.locales = localeService.getSupportedLocales();
         this.currentLocale = localeService.getLocale();
         this.locales.forEach(loc => {
-            this.languages.push({ locale: loc, icon: this.getIcon(loc), displayName: this.getDisplayName(loc) });
+            if (loc !== DEFAULT_LOCALE) {
+                this.languages.push({ locale: loc, icon: this.getIcon(loc), displayName: this.getDisplayName(loc) });
+            }
         });
     }
 
@@ -42,7 +44,7 @@ export class SelfCheckoutHomeComponent extends PosScreen<any> {
 
     buildScreen() {
         this.actionSent = false;
-        this.currentLocale = 'en_US';
+        this.currentLocale = DEFAULT_LOCALE;
         this.menuItems = this.screen.menuItems;
     }
 

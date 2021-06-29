@@ -18,10 +18,10 @@ export const LocaleConstants = {
     },
     'displayName' : {
         'en-us': 'English',
-        'fr-us': 'French',
+        'fr-us': 'Français',
         'en-ca': 'English',
-        'fr-ca': 'French',
-        'es-us': 'Spanish',
+        'fr-ca': 'Français',
+        'es-us': 'Español',
         'default': 'English'
     },
     'localeIcon' : {

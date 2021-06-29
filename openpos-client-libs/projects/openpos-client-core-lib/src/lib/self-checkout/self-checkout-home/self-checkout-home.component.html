@@ -9,7 +9,7 @@
     </div>
     <div fxLayout="row" class="language-icons">
         <div class="language-icon-entry" fxFlex="50" *ngFor="let language of this.languages">
-            <app-icon-button [iconName]="language.icon" [iconClass]="'xl'" (touch)="onLocaleSelected(language.locale)" (click)="onLocaleSelected(language.locale)"></app-icon-button>
+            <app-secondary-button (click)="onLocaleSelected(language.locale)">{{getDisplayName(language.locale)}}</app-secondary-button>
         </div>
       </div>
     <div></div>
