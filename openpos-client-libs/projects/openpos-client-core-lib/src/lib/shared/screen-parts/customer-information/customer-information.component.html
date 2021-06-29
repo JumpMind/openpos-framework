@@ -19,3 +19,6 @@
         </div>
     </div>
 </div>
+<div *ngIf="customer.birthDate" class="details-row birth-date" responsive-class>
+    <app-icon [iconName]="screenData.birthDateIcon" [iconClass]="'material-icons mat-18'"></app-icon>{{customer.birthDate}}
+</div>
