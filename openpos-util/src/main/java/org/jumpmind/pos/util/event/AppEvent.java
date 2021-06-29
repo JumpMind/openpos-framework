@@ -52,4 +52,9 @@ public class AppEvent extends Event implements Serializable {
 
         return appId + "/" + deviceId + "/" + pairedDeviceId;
     }
+
+    @Override
+    public String getSource() {
+        return createSourceString(appId, deviceId, pairedDeviceId);
+    }
 }
