@@ -28,6 +28,8 @@ export class DialogService {
     private dialogOpening: boolean;
     private lastDialogType: string;
     private lastDialogId: string;
+    private lastScreenSeq: number;
+
 
     constructor(
         private messageProvider: MessageProvider,
@@ -44,6 +46,8 @@ export class DialogService {
         // Pipe all the messages for dialog updates
         this.messageProvider.setMessageType(MessageTypes.DIALOG);
         this.session.getMessages(MessageTypes.DIALOG).subscribe(m => this.updateDialog(m));
+        this.session.getMessages(MessageTypes.SCREEN).pipe(tap(x => console.log("Last screen sequence = ", x.sequenceNumber))).subscribe( m => this.lastScreenSeq = m.sequenceNumber)
+
     }
 
     public addDialog(name: string, type: Type<IScreen>): void {
@@ -128,6 +132,10 @@ export class DialogService {
     }
 
     private async openDialog(dialog: any) {
+        if (!dialog || dialog.sequenceNumber < this.lastScreenSeq) {
+            console.log(`Not opening dialog because the sequence is older than the last screen`);
+            return;
+        }
         try {
             const dialogComponentFactory: ComponentFactory<IScreen> = this.resolveDialog(dialog.screenType);
             console.info(`[DialogService] Opening a dialog with a ` +
