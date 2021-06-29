@@ -6,7 +6,7 @@
         </app-icon-button>
         <app-icon-button *ngIf="helpTextService.isAvailable() | async" iconName="help"
                          (click)="helpTextService.toggle()"></app-icon-button>
-        <app-search-expand-input *ngIf="(isMobile | async)" (expanded)="onSearchExpand($event)"
+        <app-search-expand-input *ngIf="searchEnabled && (isMobile | async)" (expanded)="onSearchExpand($event)"
                                  class="bacon-strip-search"></app-search-expand-input>
     </div>
     <div *ngIf="!(isMobile | async) && !searchExpanded">

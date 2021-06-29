@@ -1,7 +1,7 @@
 import {MatSidenav} from '@angular/material/sidenav';
 import {BaconStripInterface} from './bacon-strip.interface';
 import {ScreenPartComponent} from '../screen-part';
-import {Component, Injector, ViewChild} from '@angular/core';
+import {Component, Injector, Input, ViewChild} from '@angular/core';
 import {ScreenPart} from '../../decorators/screen-part.decorator';
 import {HelpTextService} from '../../../core/help-text/help-text.service';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
@@ -27,6 +27,9 @@ export class BaconStripComponent extends ScreenPartComponent<BaconStripInterface
     isMobile: Observable<boolean>;
 
     searchExpanded = false;
+
+    @Input()
+    searchEnabled = false;
 
     constructor(injector: Injector, public helpTextService: HelpTextService, private media: OpenposMediaService,
                 protected keyPresses: KeyPressProvider) {
