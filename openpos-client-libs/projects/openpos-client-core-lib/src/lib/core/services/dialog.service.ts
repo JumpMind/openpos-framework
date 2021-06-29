@@ -116,6 +116,7 @@ export class DialogService {
     }
 
     private updateDialog(dialog?: any): void {
+        if(dialog){
             const dialogType = this.hasDialog(dialog.subType) ? dialog.subType : 'Dialog';
             if (!this.dialogOpening) {
                 console.info('opening dialog \'' + dialogType + '\'');
@@ -125,7 +126,7 @@ export class DialogService {
                 console.info(`[DialogService] putting off the opening of the dialog to the future because another dialog is currently opening`);
                 setTimeout(() => this.updateDialog(dialog), 100);
             }
-        
+        }
     }
 
     private async openDialog(dialog: any) {
