@@ -12,4 +12,5 @@ public class UIEnrollmentItemProperty implements Serializable {
     private String value;
     private String type;
     private String icon;
+    private int displayOrder;
 }
