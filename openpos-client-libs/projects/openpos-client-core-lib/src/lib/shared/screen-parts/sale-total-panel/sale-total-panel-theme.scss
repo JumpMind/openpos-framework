@@ -29,16 +29,19 @@
         background-color: $item-count-background;
     }
 
-    .link-customer {
+    .link-customer,
+    .loyalty-signup-customer-display {
         color: mat-color($theme, openpos-link-customer-color);
         background-color: mat-color($theme, openpos-link-customer-background);
         border-color: mat-color($theme, openpos-link-customer-background);
         border-style: solid;
-        white-space: break-spaces;
-        max-width: 100%;
         &[disabled] {
             border-color: $disabled-border;
         }
+    }
+
+    .loyalty-signup-customer-display-action {
+        border-color: mat-color($theme, openpos-link-customer-color, .25);
     }
 
     .sale-total-total {
@@ -96,5 +99,4 @@
             grid-gap: 0px 5px;
         }
     }
-
 }

@@ -18,17 +18,79 @@
     .material-icons {
         font-size: 36px;
     }
-    .link-customer {
+    .loyalty-arrow {
+        vertical-align: top;
+    }
+    .link-customer,
+    .loyalty-signup-customer-display {
         @extend %text-md;
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
         min-width: 150px;
+        white-space: break-spaces;
+        width: 100%;
+        max-width: 100%;
+
         .material-icons {
             margin-top: -12px;
         }
         .sale-total-loyalty-button-icon {
             width: 100%;
             vertical-align: bottom;
+        }
+    }
+    .loyalty-signup-customer-display {
+        &.tablet {
+            .loyalty-signup-customer-display-header {
+                margin-left: -16px;
+            }
+            .loyalty-signup-customer-display-icon-size {
+                width: 48px;
+                height: 48px;
+            }
+            .loyalty-signup-customer-display-message {
+                font-size: $text-xs;
+                line-height: $text-xs*1.5;
+            }
+        }
+
+        &-wrapper {
+            display: block;
+        }
+
+        &-header {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            text-align: left;
+            column-gap: 16px;
+            padding-bottom: $text-sm/2;
+        }
+
+        &-icon {
+            display: inline-block;
+            animation: glow 1.25s ease-out infinite alternate;
+        }
+
+        &-icon-size {
+            width: 72px;
+            height: 72px;
+        }
+
+        &-message {
+            display: block;
+            font-size: $text-sm;
+            font-weight: normal;
+            line-height: $text-sm*1.5;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        &-action {
+            display: block;
+            border-width: 1px 0 0 0;
+            padding-top: $text-sm/2;
+            border-style: solid;
         }
     }
     .linked-customer-summary {

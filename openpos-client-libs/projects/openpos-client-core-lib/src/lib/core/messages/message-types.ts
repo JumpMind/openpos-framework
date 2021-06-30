@@ -29,4 +29,5 @@ export class MessageTypes {
     static HIDE_STATUS_BAR = 'HideStatusBar';
     static CLIENT_EXECUTABLE = 'ClientExecutable';
     static CLOSE_STATUS_DETAILS = 'CloseStatusDetails';
+    static LOYALTY_SIGNUP = 'LoyaltySignup';
 }

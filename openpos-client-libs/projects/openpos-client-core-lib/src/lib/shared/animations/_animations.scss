@@ -1,0 +1,41 @@
+@mixin animations($theme) {
+    @keyframes glow {
+        0%, 15% {
+            filter: drop-shadow(0 0 0 currentColor);
+        }
+        100% {
+            filter: drop-shadow(0 0 5px currentColor)
+                    drop-shadow(0 0 20px currentColor);
+        }
+    }
+
+    @keyframes rotate {
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+
+    @keyframes dash {
+        0% {
+            stroke-dasharray: 1, 200;
+            stroke-dashoffset: 0;
+        }
+        50% {
+            stroke-dasharray: 89, 200;
+            stroke-dashoffset: -35px;
+        }
+        100% {
+            stroke-dasharray: 89, 200;
+            stroke-dashoffset: -124px;
+        }
+    }
+
+    @keyframes fadeIn {
+        0% {
+            opacity: 0;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+}

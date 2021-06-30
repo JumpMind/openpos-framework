@@ -240,6 +240,11 @@ export class KeyPressProvider implements OnDestroy {
             return normalizedKey;
         }
 
+        // When the user autocompletes the form with the browser there's no "key" property on the KeyboardEvent
+        if (!keyBinding.key) {
+            return 'browser-autocomplete';
+        }
+
         if (keyBinding.key !== 'Control') {
             normalizedKey += (keyBinding.ctrlKey ? 'ctrl+' : '');
         }
@@ -357,7 +362,7 @@ export class KeyPressProvider implements OnDestroy {
     }
 
     escapeKey(key: string): string {
-        if (!key.startsWith(this.keyEscape) && (key === this.keyCombinationChar || key === this.keyDelimiter)) {
+        if (key && !key.startsWith(this.keyEscape) && (key === this.keyCombinationChar || key === this.keyDelimiter)) {
             return this.keyEscape + key;
         }
 
