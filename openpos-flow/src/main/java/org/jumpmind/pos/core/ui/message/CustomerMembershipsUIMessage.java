@@ -17,6 +17,12 @@ public class CustomerMembershipsUIMessage extends UIMessage {
     List<UISubscriptionAccount> subscriptionAccounts;
     private ActionItem backButton;
 
+
+    // Icons
+    private String profileIcon;
+    private String memberIcon;
+    private String nonMemberIcon;
+
     public CustomerMembershipsUIMessage() {
         setScreenType(UIMessageType.MEMBERSHIP_DETAILS_DIALOG);
     }

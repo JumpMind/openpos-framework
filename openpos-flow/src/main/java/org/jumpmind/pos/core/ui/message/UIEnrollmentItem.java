@@ -9,6 +9,7 @@ import java.util.List;
 @Data
 public class UIEnrollmentItem implements Serializable {
     UIEnrollmentItemProperty title;
+    String icon;
     List<UIEnrollmentItemProperty> details;
     List<ActionItem> actionItemList;
 }

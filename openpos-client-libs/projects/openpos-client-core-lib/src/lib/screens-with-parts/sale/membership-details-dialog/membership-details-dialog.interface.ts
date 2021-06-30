@@ -11,6 +11,7 @@ export class EnrollmentItemProperty {
 
 export class EnrollmentItem {
     title: EnrollmentItemProperty;
+    icon: string;
     details: EnrollmentItemProperty[];
     actionItemList: ActionItem[];
 }

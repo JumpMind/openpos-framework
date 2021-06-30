@@ -9,6 +9,7 @@
 @import './transaction-search/transaction-search-theme';
 @import './customer-search-result-dialog/customer-search-result-dialog-theme';
 @import './loyalty-customer-form-dialog/loyalty-customer-form-dialog-theme';
+@import './sale/membership-details-dialog/membership-details-dialog-theme';
 
 @mixin screen-with-parts-themes($theme){
     @include sale-theme($theme);
@@ -21,4 +22,5 @@
     @include customer-details-dialog-theme($theme);
     @include customer-search-result-dialog-theme($theme);
     @include loyalty-customer-form-dialog-theme($theme);
+    @include membership-details-dialog-theme($theme);
 }

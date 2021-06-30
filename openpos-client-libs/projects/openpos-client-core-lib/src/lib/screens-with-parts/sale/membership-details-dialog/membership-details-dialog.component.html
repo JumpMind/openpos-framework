@@ -28,10 +28,13 @@
         <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
             <mat-tab *ngFor="let tab of screen.subscriptionAccounts">
                 <ng-template mat-tab-label>
-<!--                    <app-icon [iconName]="tab.iconImageUrl" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>-->
+                    <app-icon [iconName]="tab.iconImageUrl" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
                     {{tab.iconText}}
                 </ng-template>
                 <mat-card>
+                    <div *ngIf="tab.subscriptionAccountListTitle" class="tab-title text-md">
+                        {{tab.subscriptionAccountListTitle}}
+                    </div>
                     <div *ngIf="tab.subscriptionAccountListItems && tab.subscriptionAccountListItems.length > 0">
                         <div *ngFor="let row of tab.subscriptionAccountListItems">
                             <app-enrollment-line-item [enrollment]="row"></app-enrollment-line-item>
@@ -41,7 +44,7 @@
                         <div [innerHtml]="tab.subscriptionAccountCopy"></div>
                     </div>
                     <app-primary-button responsive-class
-                                        class="done"
+                                        class="sign-up"
                                         *ngIf="tab.signupActionItem"
                                         [disabled]="!tab.signupActionItem?.enabled"
                                         [actionItem]="tab.signupActionItem"

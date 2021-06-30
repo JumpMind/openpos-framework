@@ -1,6 +1,6 @@
 <div [ngClass]="{'enrollment-line-item-wrapper': !(isMobile | async)}" class="enrollment-line-item">
     <div class="title">
-<!--        <app-icon [iconName]="enrollment.icon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>-->
+        <app-icon [iconName]="enrollment.icon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
         {{enrollment.title?.value}}
     </div>
     <div class="details">

@@ -1,7 +1,13 @@
 @mixin membership-details-dialog-theme($theme) {
-    $app-primary: mat-color(map-get($theme, primary));
-    $foreground: map-get($theme, foreground );
-    $background: map-get($theme, background);
+    $divider: map-get(map-get($theme, foreground), divider);
+
+    .tab-title {
+        border-bottom: 1px solid $divider;
+    }
+
+    //$app-primary: mat-color(map-get($theme, primary));
+    //$foreground: map-get($theme, foreground );
+    //$background: map-get($theme, background);
     //
     //.mat-tab-body-wrapper{
     //    border: 2px solid map-get($foreground, border);

@@ -1,10 +1,13 @@
 .enrollment-line-item {
   display: grid;
-  grid-template-columns: 1fr 4fr 4fr;
+  grid-template-columns: 1fr 5fr 5fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
     "title details actions";
+
+  padding-top: 1em;
+  padding-bottom: 1em;
 
   .title {
     grid-area: title;

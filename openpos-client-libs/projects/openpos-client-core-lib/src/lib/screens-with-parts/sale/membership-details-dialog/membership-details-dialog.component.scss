@@ -25,6 +25,17 @@
   &.mobile {
     height: 55vmin;
   }
+
+  .tab-title {
+    font-weight: bold;
+    padding-bottom: .5em;
+  }
+
+  .sign-up {
+    width: min-content;
+    float: right;
+    display: inline;
+  }
 }
 
 .buttons {
