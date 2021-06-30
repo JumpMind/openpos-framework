@@ -1,9 +1,13 @@
 @import "../../../../styles/mixins/typography";
 
 
-
-h3{
+h3 {
   font-weight: normal;
   @extend %text-sm;
   margin-bottom: 4px;
+}
+
+.secondary-label-option {
+  float: right;
+  opacity: 0.5;
 }
