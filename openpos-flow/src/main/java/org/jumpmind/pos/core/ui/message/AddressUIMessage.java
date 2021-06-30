@@ -59,6 +59,10 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", "", true);
     }
 
+    public void addAddressFieldsWithComboState(List<String> states, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
+        addAddressFieldsWithComboState(states, "", streetAddress, addressLine2,locality, state, postalCode, country);
+    }
+
     public void addAddressFieldsWithComboState(List<String> states, String attention, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
         this.getForm().addTextField("attention", "key:customerdisplay:customer.form.field.attention", attention, true);
         this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", streetAddress, true);
