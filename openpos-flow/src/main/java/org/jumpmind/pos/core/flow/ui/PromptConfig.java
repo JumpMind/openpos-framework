@@ -19,6 +19,8 @@ public class PromptConfig {
     private String icon;
     private String placeholder;
     private String responseText;
+    private Integer minLength;
+    private Integer maxLength;
     private List<String> validationPatterns;
     private Map<String, String> validationMessages;
     private BigDecimal min;
@@ -126,6 +128,32 @@ public class PromptConfig {
 
     public String getResponseText() {
         return responseText;
+    }
+
+    public Integer getMinLength() {
+        return minLength;
+    }
+
+    public void setMinLength(Integer minLength) {
+        this.minLength = minLength;
+    }
+
+    public Integer getMaxLength() {
+        return maxLength;
+    }
+
+    public void setMaxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+    }
+
+    public PromptConfig minLength(Integer minLength) {
+        this.minLength = minLength;
+        return this;
+    }
+
+    public PromptConfig maxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+        return this;
     }
 
     public PromptConfig responseText(String responseText) {
