@@ -31,7 +31,7 @@
 <!--                    <app-icon [iconName]="tab.iconImageUrl" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>-->
                     {{tab.iconText}}
                 </ng-template>
-                <mat-card class="muted-color">
+                <mat-card>
                     <div *ngIf="tab.subscriptionAccountListItems && tab.subscriptionAccountListItems.length > 0">
                         <div *ngFor="let row of tab.subscriptionAccountListItems">
                             <app-enrollment-line-item [enrollment]="row"></app-enrollment-line-item>

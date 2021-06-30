@@ -1,3 +1,32 @@
+.enrollment-line-item {
+  display: grid;
+  grid-template-columns: 1fr 4fr 4fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "title details actions";
+
+  .title {
+    grid-area: title;
+    font-weight: bold;
+  }
+  .details {
+    grid-area: details;
+  }
+  .actions {
+    grid-area: actions;
+    .action {
+      float:right;
+    }
+    app-icon {
+      width: 1em;
+      height: 1em;
+      display: inline-block;
+    }
+  }
+}
+
+
 //@import "../../../styles/mixins/typography";
 //
 //.reward-line-item-wrapper {
