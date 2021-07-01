@@ -27,7 +27,7 @@ export class Storage {
         this.container$ = of(container);
     }
 
-    getValue(key: string): Observable<string> {
+    getValue(key: string): Observable<string | undefined> {
         return this.container$.pipe(
             take(1),
             switchMap(container => container.getValue(key))

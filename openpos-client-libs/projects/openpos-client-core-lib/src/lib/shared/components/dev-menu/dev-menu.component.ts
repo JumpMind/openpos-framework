@@ -2,7 +2,7 @@ import { ConfigurationService } from '../../../core/services/configuration.servi
 import { HttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Renderer2, ElementRef } from '@angular/core';
 import { Component, ViewChild, HostListener, ComponentRef, OnInit } from '@angular/core';
-import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatExpansionPanel } from '@angular/material';
+import { MatDialog, MatDialogRef, MatSnackBar, MatSnackBarRef, SimpleSnackBar, MatExpansionPanel, MatSlideToggleChange } from '@angular/material';
 import { OverlayContainer } from '@angular/cdk/overlay';
 import { Configuration } from '../../../configuration/configuration';
 import { IScreen } from '../dynamic-screen/screen.interface';
@@ -25,6 +25,7 @@ import { IVersion } from '../../../core/interfaces/version.interface';
 import { Observable } from 'rxjs';
 import { DiscoveryService } from '../../../core/discovery/discovery.service';
 import { AudioLicense, AudioLicenseLabels } from '../audio-license/audio-license.interface';
+import { map } from 'rxjs/operators';
 
 @Component({
     selector: 'app-dev-menu',
@@ -82,6 +83,12 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     keyCount = 0;
 
     savePointFileName: string;
+
+    isAutoPersonalizationEnabled = this.personalization.getSkipAutoPersonalization$().pipe(
+        map(p => !p)
+    );
+
+    autoPersonalizationSettingTouched = false;
 
     public audioLicenses: AudioLicense[];
 
@@ -500,7 +507,7 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
     }
 
     public onDevClearLocalStorage() {
-        localStorage.clear();
+        this.personalization.dePersonalize();
         this.personalization.refreshApp();
     }
 
@@ -698,6 +705,12 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
             console.info('Session Scope updated: ');
             console.info(this.DeviceElements);
         }
+    }
+
+    onEnableAutoPersonalizationChanged(event: MatSlideToggleChange) {
+        console.log('personalization touched', event);  
+        this.personalization.setSkipAutoPersonalization(!event.checked);
+        this.autoPersonalizationSettingTouched = true;
     }
 
     protected removeConversationElement(element: Element) {

@@ -23,6 +23,12 @@
                     <h1>Options</h1>
                     <ul [style.height.px]="'250'">
                         <li>
+                            <div fxFlexFill fxLayout="row" fxLayoutGap="20px" fxLayoutAlign="left center">
+                                <mat-slide-toggle [checked]="isAutoPersonalizationEnabled | async" (change)="onEnableAutoPersonalizationChanged($event)">Enable Auto Personalization</mat-slide-toggle>
+                                <p *ngIf="autoPersonalizationSettingTouched" style="color: red">Changes to auto personalization settings require reload.</p>
+                            </div>
+                        </li>
+                        <li>
                             <button mat-button (click)="onPersonalize()">Personalize</button>
                         </li>
                         <li>
