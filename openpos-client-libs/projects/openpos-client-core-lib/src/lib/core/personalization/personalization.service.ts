@@ -74,7 +74,7 @@ export class PersonalizationService {
         });
     }
 
-    public getAutoPersonalizationProvider(): Observable<Zeroconf> {
+    public getAutoPersonalizationProvider$(): Observable<Zeroconf> {
         return merge(...this.mdns.map(m => m.isAvailable().pipe(
             take(1),
             map(avail => ({ provider: m, avail })),

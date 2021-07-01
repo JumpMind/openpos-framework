@@ -84,6 +84,10 @@ export class DevMenuComponent implements OnInit, IMessageHandler<any> {
 
     savePointFileName: string;
 
+    isAutoPersonalizationSupported = this.personalization.getAutoPersonalizationProvider$().pipe(
+        map(p => !!p)
+    );
+
     isAutoPersonalizationEnabled = this.personalization.getSkipAutoPersonalization$().pipe(
         map(p => !p)
     );

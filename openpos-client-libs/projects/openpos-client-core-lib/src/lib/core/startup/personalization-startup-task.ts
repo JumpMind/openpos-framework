@@ -50,7 +50,7 @@ export class PersonalizationStartupTask implements IStartupTask {
                 timeout(5000),
                 catchError(() => of('timed out waiting for personalization to initialize'))
             ),
-            this.personalization.getAutoPersonalizationProvider().pipe(
+            this.personalization.getAutoPersonalizationProvider$().pipe(
                 lastOrElse(
                     provider => this.doAutoPersonalization(data, provider),
                     defer(() => this.doStandardPersonalization(data))
