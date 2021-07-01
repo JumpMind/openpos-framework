@@ -56,8 +56,6 @@ public class EndpointInvokerTest {
         List<String> profileIds = new ArrayList<>();
         Method method = EndpointInvokerTest.class.getMethod("TestMethodNotAnnotated");
 
-        doReturn(new Object()).when(invocationStrategy).invoke(eq(profileIds), eq(null), eq(method), anyObject(), eq(null));
-
         ServiceSpecificConfig config = getServiceSpecificConfig();
         String path = "/test/one";
 
@@ -65,14 +63,17 @@ public class EndpointInvokerTest {
         EndpointInvoker endpointInvoker = spy(new EndpointInvoker());
         endpointInvoker.dbSession = session;
 
-        EndpointInvocationContext endpointInvocationContext = EndpointInvocationContext.builder().
-                clientVersion("version?").endpoint(null).endpointPath(path).arguments(null).build();
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").strategy(invocationStrategy).endpoint(null).endpointPath(path).arguments(null).
+                method(method).build();
 
-        Object result = endpointInvoker.invokeStrategy(endpointInvocationContext, path, invocationStrategy, profileIds, config, null, method, null, null, null);
+        doReturn(new Object()).when(invocationStrategy).invoke(eq(context));
 
-        verify(endpointInvoker, atLeastOnce()).startSample(path, invocationStrategy, config, null, method, null);
-        verify(invocationStrategy, atLeastOnce()).invoke(eq(profileIds), eq(null), eq(method), anyObject(), eq(null));
-        verify(endpointInvoker, atLeastOnce()).endSampleSuccess(anyObject(), eq(config), eq(null), eq(method), eq(null), anyObject());
+        Object result = endpointInvoker.invokeStrategy(context);
+
+        verify(endpointInvoker, atLeastOnce()).startSample(context);
+        verify(invocationStrategy, atLeastOnce()).invoke(context);
+        verify(endpointInvoker, atLeastOnce()).endSampleSuccess(anyObject(), eq(context));
         assertNotNull(result, "invokeStrategy should not return null in this case.");
     }
 
@@ -94,15 +95,17 @@ public class EndpointInvokerTest {
         EndpointInvoker endpointInvoker = spy(new EndpointInvoker());
         endpointInvoker.dbSession = session;
 
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").strategy(invocationStrategy).endpoint(null).endpointPath(path).arguments(null).
+                method(method).build();
+
         try{
-            EndpointInvocationContext endpointInvocationContext = EndpointInvocationContext.builder().
-                    clientVersion("version?").endpoint(null).endpointPath(path).arguments(null).build();
-            Object result = endpointInvoker.invokeStrategy(endpointInvocationContext, path, invocationStrategy, profileIds, config, null, method, null, null, null);
+            Object result = endpointInvoker.invokeStrategy(context);
         } catch (Throwable ex) {
-            verify(endpointInvoker, atLeastOnce()).startSample(path, invocationStrategy, config, null, method, null);
-            verify(invocationStrategy, atLeastOnce()).invoke(eq(profileIds), eq(null), eq(method), anyObject(), eq(null));
-            verify(endpointInvoker, never()).endSampleSuccess(anyObject(), eq(null), eq(null), eq(method), eq(null), anyObject());
-            verify(endpointInvoker, atLeastOnce()).endSampleError(anyObject(), eq(config), eq(null), eq(method), eq(null), anyObject(), anyObject());
+            verify(endpointInvoker, atLeastOnce()).startSample(context);
+            verify(invocationStrategy, atLeastOnce()).invoke(eq(context));
+            verify(endpointInvoker, never()).endSampleSuccess(anyObject(), eq(context));
+            verify(endpointInvoker, atLeastOnce()).endSampleError(anyObject(), eq(context), eq(ex));
             if (!ex.equals(exception)) {
                 throw ex;
             }
@@ -128,7 +131,10 @@ public class EndpointInvokerTest {
         String path = "/test/one";
 
         EndpointInvoker endpointInvoker = new EndpointInvoker();
-        ServiceSampleModel result = endpointInvoker.startSample(path, invocationStrategy, config, null, method, null);
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").strategy(invocationStrategy).endpoint(null).endpointPath(path).arguments(null).
+                method(method).build();
+        ServiceSampleModel result = endpointInvoker.startSample(context);
         assertNull(result, "EndpointInvoker.startSample should return null when the method passed is not configured to be sampled");
     }
 
@@ -144,7 +150,10 @@ public class EndpointInvokerTest {
         String path = "/test/one";
 
         EndpointInvoker endpointInvoker = new EndpointInvoker();
-        ServiceSampleModel result = endpointInvoker.startSample(path, invocationStrategy, config, null, method, null);
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").strategy(invocationStrategy).endpoint(null).endpointPath(path).arguments(null).
+                method(method).build();
+        ServiceSampleModel result = endpointInvoker.startSample(context);
         assertNull(result, "EndpointInvoker.startSample should return null when the method passed is not configured to be sampled");
     }
 
@@ -160,8 +169,12 @@ public class EndpointInvokerTest {
         ServiceSpecificConfig config = getServiceSpecificConfig();
 
         String path = "/test/one";
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").strategy(invocationStrategy).endpoint(null).endpointPath(path).arguments(null).
+                config(config).
+                method(method).build();
 
-        ServiceSampleModel result = endpointInvoker.startSample(path, invocationStrategy, config, null, method, null);
+        ServiceSampleModel result = endpointInvoker.startSample(context);
 
         assertNotNull(result, "EndpointInvoker.startSample should return not null when the method passed is configured to be sampled.");
     }
@@ -289,7 +302,12 @@ public class EndpointInvokerTest {
 
         String path = "/test/one";
 
-        ServiceSampleModel result = endpointInvoker.startSample(path, invocationStrategy, config, null, method, null);
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").strategy(invocationStrategy).endpoint(null).endpointPath(path).arguments(null).
+                config(config).
+                method(method).build();
+
+        ServiceSampleModel result = endpointInvoker.startSample(context);
 
         assertTrue(Pattern.matches(installationId + "\\d*", result.getSampleId()), "sampleId should have installationId followed by the system time in milliseconds.");
         assertEquals(installationId, result.getInstallationId(), "installationId should be populated with the installationId.");
@@ -315,10 +333,12 @@ public class EndpointInvokerTest {
         EndpointInvoker endpointInvoker = spy(new EndpointInvoker());
         endpointInvoker.dbSession = session;
 
-        endpointInvoker.endSampleSuccess(sampleModel, null, null, null, null, testResult);
+        EndpointInvocationContext context = EndpointInvocationContext.builder().result(testResult).build();
+
+        endpointInvoker.endSampleSuccess(sampleModel, context);
 
         verify(sampleModel, atLeastOnce()).setServiceResult(anyString());
-        verify(endpointInvoker, atLeastOnce()).endSample(sampleModel, null, null, null, null);
+        verify(endpointInvoker, atLeastOnce()).endSample(sampleModel, context); // this was all nulls
     }
 
     @Test
@@ -331,12 +351,15 @@ public class EndpointInvokerTest {
         EndpointInvoker endpointInvoker = spy(new EndpointInvoker());
         endpointInvoker.dbSession = session;
 
-        endpointInvoker.endSampleError(sampleModel, null, null, null, null, testResult, new Exception("Test"));
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").result(testResult).build();
+
+        endpointInvoker.endSampleError(sampleModel, context, new Exception("Test"));
 
         verify(sampleModel, atLeastOnce()).setServiceResult(null);
         verify(sampleModel, atLeastOnce()).setErrorFlag(true);
         verify(sampleModel, atLeastOnce()).setErrorSummary(anyString());
-        verify(endpointInvoker, atLeastOnce()).endSample(sampleModel, null, null, null, null);
+        verify(endpointInvoker, atLeastOnce()).endSample(sampleModel, context);
     }
 
     @Test
@@ -355,7 +378,10 @@ public class EndpointInvokerTest {
         ExecutorService executorService = mock(ExecutorService.class);
         executor.set(endpointInvoker, executorService);
 
-        endpointInvoker.endSample(sampleModel, null, null, null, null);
+        EndpointInvocationContext context = EndpointInvocationContext.builder().
+                clientVersion("version?").build();
+
+        endpointInvoker.endSample(sampleModel, context);
 
         verify(sampleModel, atLeastOnce()).setEndTime(anyObject());
         verify(sampleModel, atLeastOnce()).setDurationMs(anyLong());

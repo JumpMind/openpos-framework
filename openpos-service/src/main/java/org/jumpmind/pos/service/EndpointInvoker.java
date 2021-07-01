@@ -302,39 +302,54 @@ public class EndpointInvoker implements InvocationHandler {
             profileIds.add("local");
         }
 
-        EndpointInvocationContext endpointInvocationContext = EndpointInvocationContext.builder().
-                clientVersion(clientContext.get("version.nu-commerce")).endpoint(endpointObj).endpointPath(path).arguments(args).build();
+
+        EndpointInvocationContext endpointInvocationContext = EndpointInvocationContext.builder()
+                .profileIds(profileIds)
+                .strategy(strategy)
+                .config(config)
+                .proxy(proxy)
+                .method(method)
+                .endpointImplementation(endpointImplementation)
+                .endpointsByPathMap(endpointsByPathMap)
+                .clientVersion(clientContext.get("version.nu-commerce"))
+                .endpointPath(path)
+                .endpoint(endpointObj)
+                .arguments(args).build();
 
         // TODO roll all these arts into the context.
-        return invokeStrategy(endpointInvocationContext, path, strategy, profileIds, config, proxy, method, args, endpointImplementation, endpointsByPathMap);
+        return invokeStrategy(endpointInvocationContext);
     }
 
-    protected Object invokeStrategy(EndpointInvocationContext endpointInvocationContext,
-                                    String path, IInvocationStrategy strategy, List<String> profileIds, ServiceSpecificConfig config, Object proxy, Method method, Object[] args, String endpointImplementation, Map<String, Object> endpointsByPathMap) throws Throwable {
-        ServiceSampleModel sample = startSample(path, strategy, config, proxy, method, args);
+    protected Object invokeStrategy(EndpointInvocationContext endpointInvocationContext) throws Throwable {
+        ServiceSampleModel sample = startSample(endpointInvocationContext);
         Object result = null;
         try {
-            log(path, method, args, endpointImplementation, config);
-                result = strategy.invoke(profileIds, proxy, method, endpointsByPathMap, args);
+            log(endpointInvocationContext);
+
+            filterRequest(endpointInvocationContext);
+
+            result = endpointInvocationContext.getStrategy().invoke(endpointInvocationContext);
 
             result = filerResult(endpointInvocationContext, result);
             endpointInvocationContext.setResult(result);
                         
-            endSampleSuccess(sample, config, proxy, method, args, result);
+            endSampleSuccess(sample, endpointInvocationContext);
         } catch (Throwable ex) {
-            endSampleError(sample, config, proxy, method, args, result, ex);
+            endSampleError(sample, endpointInvocationContext, ex);
             throw ex;
         }
         return result;
     }
 
-    private void log(String path, Method method, Object[] args, String implementation, ServiceSpecificConfig config) {
+    private void log(EndpointInvocationContext endpointInvocationContext) {
+        Method method = endpointInvocationContext.getMethod();
         if (!method.isAnnotationPresent(SuppressMethodLogging.class)) {
             if (log.isInfoEnabled()) {
+                String implementation = endpointInvocationContext.getEndpointImplementation();
                 log.info("Call endpoint: {}.{}() {} {}",
                         method.getDeclaringClass().getSimpleName(),
                         method.getName(),
-                        config != null ? config.getStrategy() : "",
+                        endpointInvocationContext.getConfig() != null ? endpointInvocationContext.getConfig().getStrategy() : "",
                         implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
             }
         }
@@ -355,19 +370,14 @@ public class EndpointInvoker implements InvocationHandler {
     }
 
     protected ServiceSampleModel startSample(
-            String path,
-            IInvocationStrategy strategy,
-            ServiceSpecificConfig config,
-            Object proxy,
-            Method method,
-            Object[] args) {
-        if(isSamplingEnabled(path, config)){
+            EndpointInvocationContext endpointInvocationContext) {
+        if(isSamplingEnabled(endpointInvocationContext.getEndpointPath(), endpointInvocationContext.getConfig())){
                 ServiceSampleModel serviceSampleModel = new ServiceSampleModel();
                 serviceSampleModel.setSampleId(installationId + System.currentTimeMillis());
                 serviceSampleModel.setInstallationId(installationId);
                 serviceSampleModel.setHostname(AppUtils.getHostName());
-                serviceSampleModel.setServiceName(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-                serviceSampleModel.setServiceType(strategy.getStrategyName());
+                serviceSampleModel.setServiceName(endpointInvocationContext.getMethod().getDeclaringClass().getSimpleName() + "." + endpointInvocationContext.getMethod().getName());
+                serviceSampleModel.setServiceType(endpointInvocationContext.getStrategy().getStrategyName());
                 serviceSampleModel.setStartTime(new Date());
                 return serviceSampleModel;
         }
@@ -391,34 +401,26 @@ public class EndpointInvoker implements InvocationHandler {
 
     protected void endSampleSuccess(
             ServiceSampleModel sample,
-            ServiceSpecificConfig config,
-            Object proxy,
-            Method method,
-            Object[] args,
-            Object result) {
-        if (result != null && sample != null) {
-            sample.setServiceResult(StringUtils.abbreviate(result.toString(), MAX_SUMMARY_WIDTH));
+            EndpointInvocationContext endpointInvocationContext) {
+        if (endpointInvocationContext.getResult() != null && sample != null) {
+            sample.setServiceResult(StringUtils.abbreviate(endpointInvocationContext.getResult().toString(), MAX_SUMMARY_WIDTH));
         }
-        endSample(sample, config, proxy, method, args);
+        endSample(sample, endpointInvocationContext);
     }
 
     protected void endSampleError(
             ServiceSampleModel sample,
-            ServiceSpecificConfig config,
-            Object proxy,
-            Method method,
-            Object[] args,
-            Object result,
+            EndpointInvocationContext endpointInvocationContext,
             Throwable ex) {
         if (sample != null) {
             sample.setServiceResult(null);
             sample.setErrorFlag(true);
             sample.setErrorSummary(StringUtils.abbreviate(ex.getMessage(), MAX_SUMMARY_WIDTH));
-            endSample(sample, config, proxy, method, args);
+            endSample(sample, endpointInvocationContext);
         }
     }
 
-    protected void endSample(ServiceSampleModel sample, ServiceSpecificConfig config, Object proxy, Method method, Object[] args) {
+    protected void endSample(ServiceSampleModel sample, EndpointInvocationContext endpointInvocationContext) {
         if (sample != null) {
             sample.setEndTime(new Date());
             sample.setDurationMs(sample.getEndTime().getTime() - sample.getStartTime().getTime());
@@ -426,11 +428,17 @@ public class EndpointInvoker implements InvocationHandler {
         }
     }
 
+    protected void filterRequest(EndpointInvocationContext endpointInvocationContext) {
+        if (endpointInvocationContext.getEndpointPath().startsWith("/customer/")) {
+            System.out.println("BEFORE. " + endpointInvocationContext.getEndpointPath());
+        }
+    }
+
     protected Object filerResult(EndpointInvocationContext endpointInvocationContext, Object result) {
         if (endpointInvocationContext.getClientVersion() != null
                 && endpointInvocationContext.getClientVersion().startsWith("@version@")
                 && endpointInvocationContext.getEndpointPath().equals("/customer/search")) {
-            System.out.println("Here");
+            System.out.println("AFTER");
             return result;
         } else {
             return result;

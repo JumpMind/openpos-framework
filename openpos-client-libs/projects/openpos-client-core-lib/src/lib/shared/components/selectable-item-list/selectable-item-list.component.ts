@@ -1,5 +1,7 @@
-import { OnDestroy, Component, Input, Output, EventEmitter, ContentChild, TemplateRef, ElementRef, OnInit,
-    ViewChildren, QueryList, AfterViewInit, AfterContentInit, AfterViewChecked } from '@angular/core';
+import {
+    OnDestroy, Component, Input, Output, EventEmitter, ContentChild, TemplateRef, ElementRef, OnInit,
+    ViewChildren, QueryList, AfterViewInit
+} from '@angular/core';
 import { Subscription } from 'rxjs/internal/Subscription';
 import { Observable } from 'rxjs';
 import { ISelectableListData } from './selectable-list-data.interface';

@@ -53,9 +53,12 @@
                     class="rewardsTab" [label]="getRewardsLabel()">
                 <mat-card [ngClass]="{'rewardsContent': true, 'with-points': !(isMobile | async) && screen.membershipPointsEnabled, 'no-promotions': !(screen.customer.rewards && screen.customer.rewards.length)}">
                     <div class="reward-list" *ngIf="(screen.customer.rewards && screen.customer.rewards.length)" >
-                        <div *ngFor="let reward of screen.customer.rewards" class="line">
-                            <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
-                        </div>
+                        <app-selectable-item-list [listData]="listData" [configuration]="listConfig" [defaultSelect]="true" [selectedItem]="selectedReward"
+                                                  (selectedItemChange)="onItemChange($event)">
+                            <ng-template let-reward>
+                                <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
+                            </ng-template>
+                        </app-selectable-item-list>
                     </div>
                     <app-membership-points-display *ngIf="!(isMobile | async) && screen.membershipPointsEnabled" class="points"></app-membership-points-display>
                     <div *ngIf="!(screen.customer.rewards && screen.customer.rewards.length)" class="no-items" responsive-class>
@@ -132,6 +135,9 @@
                           (click)="doAction(menuItem)">
         <span responsive-class>{{menuItem.title}}</span>
         <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
+        <span *ngIf="keybindsEnabled(menuItem)" class="muted-color keybinding" >
+            {{menuItem.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-secondary-button responsive-class
                           class="unlink"
@@ -141,6 +147,9 @@
                           (actionClick)="doAction(screen.unlinkButton)"
                           (click)="doAction(screen.unlinkButton)">
         <span>{{screen.unlinkButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.unlinkButton)" class="muted-color keybinding" >
+            {{screen.unlinkButton.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-secondary-button responsive-class
                           class="edit"
@@ -150,6 +159,9 @@
                           (actionClick)="doAction(screen.editButton)"
                           (click)="doAction(screen.editButton)">
         <span>{{screen.editButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.editButton)" class="muted-color keybinding" >
+            {{screen.editButton.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-primary-button responsive-class
                         class="done"
@@ -159,5 +171,8 @@
                         (actionClick)="doAction(screen.doneButton)"
                         (click)="doAction(screen.doneButton)">
         <span>{{screen.doneButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.doneButton)" class="muted-color keybinding" >
+            {{screen.doneButton.keybindDisplayName}}
+        </span>
     </app-primary-button>
 </mat-dialog-actions>
