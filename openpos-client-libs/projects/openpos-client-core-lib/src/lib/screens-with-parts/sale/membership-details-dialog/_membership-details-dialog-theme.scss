@@ -1,8 +1,15 @@
 @mixin membership-details-dialog-theme($theme) {
+    $foreground: map-get($theme, foreground );
     $divider: map-get(map-get($theme, foreground), divider);
 
     .tab-title {
         border-bottom: 1px solid $divider;
+    }
+
+    .icon {
+        app-icon {
+            color: mat-color($foreground, secondary-text);
+        }
     }
 
     //$app-primary: mat-color(map-get($theme, primary));

@@ -32,9 +32,11 @@
   }
 
   .sign-up {
-    width: min-content;
+    width: 25%;
     float: right;
-    display: inline;
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
   }
 }
 
@@ -91,6 +93,7 @@ app-content-card {
       .list {
         .item {
           margin-right: 10px;
+          margin-bottom: 10px;
           display: inline-block;
         }
       }

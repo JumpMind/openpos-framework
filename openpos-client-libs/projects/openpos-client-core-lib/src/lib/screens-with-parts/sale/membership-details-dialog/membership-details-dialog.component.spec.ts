@@ -1,7 +1,6 @@
 import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core'
-// import {CustomerDetailsDialogComponent} from './customer-details-dialog.component';
-// import {CustomerDetailsDialogInterface} from './customer-details-dialog.interface';
+
 import {ActionService} from '../../../core/actions/action.service';
 import {validateDoesNotExist, validateExist, validateText} from '../../../utilites/test-utils';
 import {By} from '@angular/platform-browser';
@@ -16,6 +15,15 @@ import {Observable, of, Subscription} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
 import {Reward} from '../../../shared/screen-parts/rewards-line-item/rewards-line-item.interface';
 import {KeyPressProvider} from "../../../shared/providers/keypress.provider";
+import {MembershipDetailsDialogComponent} from "./membership-details-dialog.component";
+import {
+  EnrollmentItem,
+  MembershipDetailsDialogInterface,
+  SubscriptionAccounts
+} from "./membership-details-dialog.interface";
+import {promisify} from "util";
+import {ActionItem} from "../../../core/actions/action-item";
+// import custom = module
 
 class MockKeyPressProvider {
   subscribe(): Subscription {
@@ -27,15 +35,15 @@ class MockMatDialog {};
 class MockElectronService {};
 class ClientContext {};
 
-describe('CustomerDetailsDialog', () => {
-  // let component: CustomerDetailsDialogComponent;
-  // let fixture: ComponentFixture<CustomerDetailsDialogComponent>;
-  // let customer;
-  // class MockOpenposMediaServiceMobileFalse {
-  //   observe(): Observable<boolean> {
-  //     return of(false);
-  //   }
-  // };
+describe('LinkedCustomerMembershipState', () => {
+  let component: MembershipDetailsDialogComponent;
+  let fixture: ComponentFixture<MembershipDetailsDialogComponent>;
+  let customer;
+  class MockOpenposMediaServiceMobileFalse {
+    observe(): Observable<boolean> {
+      return of(false);
+    }
+  };
   //
   // class MockOpenposMediaServiceMobileTrue {
   //   observe(): Observable<boolean> {
@@ -43,54 +51,80 @@ describe('CustomerDetailsDialog', () => {
   //   }
   // };
   //
-  // beforeEach(() => {
-  //   customer = {
-  //     name: 'Bob bobert',
-  //     email: 'b.bobert@gmail.com',
-  //     phoneNumber: '1118798322',
-  //     loyaltyNumber: 's321111111',
-  //     address: {
-  //       line1: '123 Mockingbird Lane',
-  //       city: 'Columbus',
-  //       state: 'OH',
-  //       postalCode: '11111'
-  //     }
-  //   };
-  // });
-  //
-  // describe('shared', () => {
-  //   beforeEach( () => {
-  //     TestBed.configureTestingModule({
-  //       imports: [ HttpClientTestingModule],
-  //       declarations: [
-  //         CustomerDetailsDialogComponent, PhonePipe
-  //       ],
-  //       providers: [
-  //         { provide: KeyPressProvider, useClass: MockKeyPressProvider },
-  //         { provide: ActionService, useClass: MockActionService },
-  //         { provide: MatDialog, useClass: MockMatDialog },
-  //         { provide: OpenposMediaService, useClass: MockOpenposMediaServiceMobileFalse },
-  //         { provide: ElectronService, useClass: MockElectronService },
-  //         { provide: ClientContext, useValue: {}},
-  //         { provide: CLIENTCONTEXT, useClass: TimeZoneContext}
-  //       ],
-  //       schemas: [
-  //         NO_ERRORS_SCHEMA,
-  //       ]
-  //     }).compileComponents();
-  //     fixture = TestBed.createComponent(CustomerDetailsDialogComponent);
-  //     component = fixture.componentInstance;
-  //     component.screen = { customer,
-  //       rewardTabEnabled: true,
-  //       rewardHistoryTabEnabled: true
-  //     } as CustomerDetailsDialogInterface;
-  //     fixture.detectChanges();
-  //   });
-  //
-  //   it('renders', () => {
-  //     expect(component).toBeDefined();
-  //   });
-  //
+  beforeEach(() => {
+    customer = {
+      name: 'Ige Wana',
+      email: 'IgeWana@gmail.com',
+      phoneNumber: '1118798322',
+      loyaltyNumber: 's321111111',
+      address: {
+        line1: '123 Lizard Lane',
+        city: 'Columbus',
+        state: 'OH',
+        postalCode: '11111'
+      }
+    };
+  });
+
+  describe('shared', () => {
+    beforeEach(() => {
+      TestBed.configureTestingModule({
+        imports: [HttpClientTestingModule],
+        declarations: [
+          MembershipDetailsDialogComponent, PhonePipe
+        ],
+        providers: [
+          {provide: KeyPressProvider, useClass: MockKeyPressProvider},
+          {provide: ActionService, useClass: MockActionService},
+          {provide: MatDialog, useClass: MockMatDialog},
+          {provide: OpenposMediaService, useClass: MockOpenposMediaServiceMobileFalse},
+          {provide: ElectronService, useClass: MockElectronService},
+          {provide: ClientContext, useValue: {}},
+          {provide: CLIENTCONTEXT, useClass: TimeZoneContext}
+        ],
+        schemas: [
+          NO_ERRORS_SCHEMA,
+        ]
+      }).compileComponents();
+      fixture = TestBed.createComponent(MembershipDetailsDialogComponent);
+      component = fixture.componentInstance;
+      component.screen = {
+        customer: customer,
+        membershipLabel: "membershipLabel",
+        membershipCardIcon: "membershipCardIcon",
+        profileIcon: "profileIcon"
+      } as MembershipDetailsDialogInterface;
+      fixture.detectChanges();
+    });
+
+    it('renders', () => {
+      expect(component).toBeDefined();
+    });
+
+    describe('template', () => {
+      it('renders the profile icon in the customer details', () => {
+        validateExist(fixture, '.details-wrapper .icon app-icon');
+      });
+      it('renders the customer name in the customer details', () => {
+        validateText(fixture, '.details-wrapper .details .details-label', customer.name);
+      });
+      it('renders the customer name in the customer details', () => {
+        validateExist(fixture, '.details-wrapper .memberships .list');
+      });
+      describe('tab functionality', () => {
+        beforeEach(() => {
+          let subscriptionAccounts:SubscriptionAccounts[] = [];
+          subscriptionAccounts.push({ } as SubscriptionAccounts);
+          component.screen.subscriptionAccounts = subscriptionAccounts
+          fixture.detectChanges();
+        });
+        it('tab-titles', () => {
+          validateExist(fixture, '.tabs .sign-up');
+        });
+      });
+    });
+  });
+
   //   describe('component', () => {
   //     describe('initIsMobile', () => {
   //       it('sets the values for isMobile', () => {

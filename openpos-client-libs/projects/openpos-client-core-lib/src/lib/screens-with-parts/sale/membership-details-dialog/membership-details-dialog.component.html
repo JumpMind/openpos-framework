@@ -3,7 +3,8 @@
     <app-content-card class="details-wrapper" >
         <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
             <div class="icon">
-                <app-icon [iconName]="screen.profileIcon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+                <app-icon [iconName]="screen.profileIcon"
+                          [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
             </div>
             <div class="details">
                 <div class="details-label">
@@ -28,7 +29,9 @@
         <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
             <mat-tab *ngFor="let tab of screen.subscriptionAccounts">
                 <ng-template mat-tab-label>
-                    <app-icon [iconName]="tab.iconImageUrl" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+                    <app-icon *ngIf="tab.iconImageUrl"
+                            [iconName]="tab.iconImageUrl"
+                            [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
                     {{tab.iconText}}
                 </ng-template>
                 <mat-card>
@@ -50,6 +53,9 @@
                                         [actionItem]="tab.signupActionItem"
                                         (actionClick)="doAction(tab.signupActionItem)"
                                         (click)="doAction(tab.signupActionItem)">
+                        <app-icon *ngIf="tab.signupActionItem.icon"
+                                  [iconName]="tab.signupActionItem.icon"
+                                  [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
                         <span>{{tab.signupActionItem.title}}</span>
                         <span *ngIf="keybindsEnabled(tab.signupActionItem)" class="muted-color keybinding" >
                             {{tab.signupActionItem.keybindDisplayName}}

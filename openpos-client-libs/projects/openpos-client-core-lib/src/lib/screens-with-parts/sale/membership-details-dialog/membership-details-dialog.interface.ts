@@ -27,7 +27,7 @@ export class SubscriptionAccounts {
 
 export interface MembershipDetailsDialogInterface extends IAbstractScreen {
     customer: CustomerDetails;
-    membershipLabel: String;
+    membershipLabel: string;
     membershipCardIcon: string;
     profileIcon: string;
     subscriptionAccounts: SubscriptionAccounts[];
