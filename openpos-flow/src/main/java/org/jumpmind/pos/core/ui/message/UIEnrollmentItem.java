@@ -11,7 +11,6 @@ import java.util.List;
 @Builder
 public class UIEnrollmentItem implements Serializable {
     UIEnrollmentItemProperty title;
-    String icon;
     List<UIEnrollmentItemProperty> details;
     List<ActionItem> actionItemList;
 }

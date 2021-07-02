@@ -12,6 +12,7 @@
   .title {
     grid-area: title;
     font-weight: bold;
+
   }
   .details {
     grid-area: details;
@@ -21,11 +22,12 @@
     .action {
       float:right;
     }
-    app-icon {
-      width: 1em;
-      height: 1em;
-      display: inline-block;
-    }
+  }
+  app-icon {
+    width: 1.5em;
+    height: 1.5em;
+    margin-top: -.25em;
+    display: inline-block;
   }
 }
 
