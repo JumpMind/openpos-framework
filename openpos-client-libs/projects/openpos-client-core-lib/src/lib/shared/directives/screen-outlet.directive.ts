@@ -107,7 +107,9 @@ export class OpenposScreenOutletDirective implements OnInit, OnDestroy {
     }
 
     protected async updateScreen(screen: any) {
+        console.log('Handling screen: ', screen);
         if ( this.dialogService.isDialogOpen() ) {
+            console.log('Try closing open dialog')
             // Close any open dialogs
             await this.dialogService.closeDialog();
             this.focusService.restoreInitialFocus();

@@ -1,6 +1,22 @@
 @import '../../../styles/mixins/typography';
 
+
+
 .header {
+  .context-box{
+    display: grid;
+    grid-template-columns: auto auto;
+    padding:8px;
+    border-radius: 4px;
+    .screen-icon{
+      margin-right: 8px;
+    }
+  }
+  .header-text{
+    align-self: center;
+    margin-left: 8px;
+  }
+
   &.mobile {
     font-size: $text-md-mobile*.8;
   }

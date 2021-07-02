@@ -28,4 +28,5 @@ export interface PromptFormPartInterface {
     promptPosition: PromptPosition;
     info: DisplayProperty[];
     scan?: ScanInterface;
+    autoFocus: boolean;
 }

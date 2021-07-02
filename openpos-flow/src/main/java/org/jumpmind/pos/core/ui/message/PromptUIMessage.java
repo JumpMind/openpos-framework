@@ -42,6 +42,7 @@ public class PromptUIMessage extends UIMessage {
     private BigDecimal min;
     private BigDecimal max;
     private String imageUrl;
+    private boolean autoFocus = true;
 
     public PromptUIMessage() {
         this.setScreenType(UIMessageType.PROMPT);
@@ -133,6 +134,14 @@ public class PromptUIMessage extends UIMessage {
 
     public void setOtherActions(List<ActionItem> otherActions) {
         this.otherActions = otherActions;
+    }
+
+    public boolean getAutoFocus() {
+        return autoFocus;
+    }
+
+    public void setAutoFocus(boolean autoFocus) {
+        this.autoFocus = autoFocus;
     }
 
     public void addOtherAction(ActionItem action) {

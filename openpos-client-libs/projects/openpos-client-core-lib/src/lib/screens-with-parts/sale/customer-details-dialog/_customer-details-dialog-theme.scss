@@ -18,6 +18,10 @@
         border-bottom: 1px solid map-get($foreground, border-bottom);
     }
 
+    .filter-bar {
+        background: white;
+    }
+
     .mat-tab-body-wrapper{
         border: 2px solid map-get($foreground, border);
     }

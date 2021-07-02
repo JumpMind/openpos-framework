@@ -251,3 +251,20 @@ app-content-card {
 app-infinite-scroll {
   height: 100%;
 }
+
+.filter-bar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  padding: 4px 8px;
+
+  > .date-range {
+    display: flex;
+    flex-direction: row;
+    
+    span {
+      margin: 20px 12px 0px 12px;
+    }
+  }
+}

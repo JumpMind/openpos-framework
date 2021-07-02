@@ -18,6 +18,7 @@
 @import './rewards-line-item/rewards-line-item-theme';
 @import './rewards-history-line-item/rewards-history-line-item-theme';
 @import './customer-information/customer-information-theme';
+@import './dialog-header/dialog-header-theme';
 
 @mixin screen-part-themes($theme) {
     @include bacon-strip-theme($theme);
@@ -39,4 +40,5 @@
     @include customer-information-theme($theme);
     @include reward-line-items-theme($theme);
     @include reward-history-line-items-theme($theme);
+    @include dialog-header-theme($theme);
 }

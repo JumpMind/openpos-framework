@@ -1,0 +1,12 @@
+@mixin dialog-header-theme($theme) {
+  $app-orders: mat-color(map-get($theme, orders));
+
+  app-dialog-header{
+    .orders{
+      .context-box{
+        background-color: $app-orders;
+        color: mat-color(map-get($theme, orders), default-contrast);
+      }
+    }
+  }
+}

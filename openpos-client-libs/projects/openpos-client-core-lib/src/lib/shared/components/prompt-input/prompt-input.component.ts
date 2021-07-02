@@ -11,9 +11,7 @@ import { ActionService } from '../../../core/actions/action.service';
     styleUrls: ['./prompt-input.component.scss'],
     templateUrl: './prompt-input.component.html'
 })
-
 export class PromptInputComponent implements OnInit, OnDestroy {
-
     @Input() placeholderText: string;
     @Input() responseType: string;
     @Input() responseText: string;
@@ -26,6 +24,7 @@ export class PromptInputComponent implements OnInit, OnDestroy {
     @Input() keyboardPreference: string;
     @Input() scanEnabled = false;
     @Input() validationMessages: Map<string, string>;
+    @Input() autoFocus = true;
 
     @Input() scanActionName?: string;
 
