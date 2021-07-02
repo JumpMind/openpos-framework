@@ -1,4 +1,5 @@
 <app-dialog-header></app-dialog-header>
+<app-scan-part></app-scan-part>
 <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
 <mat-dialog-content>
     <app-form (submitFormEvent)="submitForm()" [form]="screen.formGroup">
