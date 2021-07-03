@@ -63,13 +63,13 @@ describe('RewardsLineItemComponent', () => {
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
             component.reward = {
-                expirationDate: '01/01/2000',
-                actionButton: {title: 'a title', enabled: true}
+                expirationDate: '01/01/2000'
             } as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',
-                expiredIcon: 'access_time'
+                expiredIcon: 'access_time',
+                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -156,75 +156,50 @@ describe('RewardsLineItemComponent', () => {
                 });
             });
 
-            describe('reward extra status text', () => {
-                beforeEach(() => {
-                    component.reward.promotionId = '123';
-                    component.reward.statusText = 'Bonus Reward';
-                    component.reward.actionButton = {title: 'a title', enabled: true} as IActionItem;
-                    fixture.detectChanges();
-                });
-
-                it('shows the configured status text when enabled', () => {
-                    validateText(fixture, '.status-text', component.reward.statusText);
-                });
-            });
-
-            describe('when status text does not have a value', () => {
-                beforeEach(() => {
-                    component.reward.statusText = undefined;
-                    fixture.detectChanges();
-                });
-                it('does not render the status text', () => {
-                    validateDoesNotExist(fixture, '.status-text .name');
-                });
-            });
-
             describe('apply button', () => {
-                beforeEach(() => {
-                    component.reward.promotionId = '123';
-                    component.reward.actionButton = {title: 'a title', enabled: true} as IActionItem;
-                    component.reward.actionIcon = 'chevron_right'
-                    fixture.detectChanges();
+                describe('when applicable', () => {
+                    beforeEach(() => {
+                        component.reward.promotionId = '123';
+                        component.reward.applyButton = {title: 'a title'} as IActionItem;
+                        fixture.detectChanges();
+                    });
+
+                    it('renders the button', () => {
+                        validateExist(fixture, '.apply a');
+                    });
+
+                    it('renders the button title', () => {
+                        validateText(fixture, '.apply a', component.reward.applyButton.title);
+                    });
+
+                    it('renders the chevron icon', () => {
+                        validateIcon(fixture, '.apply a app-icon', 'chevron_right');
+                    });
+
+                    it('calls doAction with the configuration when an actionClick event is triggered', () => {
+                        spyOn(component, 'doAction');
+                        const button = fixture.debugElement.query(By.css('.apply a'));
+                        button.nativeElement.dispatchEvent(new Event('actionClick'));
+                        expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
+                    });
+
+                    it('calls doAction with the configuration and promotionId when the button is clicked', () => {
+                        spyOn(component, 'doAction');
+                        const button = fixture.debugElement.query(By.css('.apply a'));
+                        button.nativeElement.click();
+                        expect(component.doAction).toHaveBeenCalledWith(component.reward.applyButton, component.reward.promotionId);
+                    });
                 });
 
-                it('renders the button', () => {
-                    validateExist(fixture, '.apply a');
-                });
+                describe('when not applicable', () => {
+                   beforeEach(() => {
+                      component.reward.applyButton = undefined;
+                      fixture.detectChanges();
+                   });
 
-                it('renders the button title', () => {
-                    validateText(fixture, '.apply a', component.reward.actionButton.title);
-                });
-
-                it('renders the chevron icon', () => {
-                    validateIcon(fixture, '.apply a app-icon', 'chevron_right');
-                });
-
-                it('calls doAction with the configuration when an actionClick event is triggered', () => {
-                    spyOn(component, 'doAction');
-                    const button = fixture.debugElement.query(By.css('.apply a'));
-                    button.nativeElement.dispatchEvent(new Event('actionClick'));
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.actionButton);
-                });
-
-                it('calls doAction with the configuration and promotionId when the button is clicked', () => {
-                    spyOn(component, 'doAction');
-                    const button = fixture.debugElement.query(By.css('.apply a'));
-                    button.nativeElement.click();
-                    expect(component.doAction).toHaveBeenCalledWith(component.reward.actionButton);
-                });
-
-                it('is enabled when the button is enabled', () => {
-                    component.reward.actionButton.enabled = true;
-                    fixture.detectChanges();
-                    const button = fixture.debugElement.query(By.css('.apply a'));
-                    expect(button.properties.disabled).toBe(false);
-                });
-
-                it('is disabled when the button is disabled', () => {
-                    component.reward.actionButton.enabled = false;
-                    fixture.detectChanges();
-                    const button = fixture.debugElement.query(By.css('.apply a'));
-                    expect(button.properties.disabled).toBe(true);
+                   it('does not render the apply button', () => {
+                      validateDoesNotExist(fixture, '.apply a');
+                   });
                 });
             });
         });
@@ -252,13 +227,12 @@ describe('RewardsLineItemComponent', () => {
             }).compileComponents();
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
-            component.reward = {
-                actionButton: {title: 'a title', enabled: true}
-            } as Reward;
+            component.reward = {} as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',
                 expiredIcon: 'access_time',
+                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });
@@ -296,13 +270,12 @@ describe('RewardsLineItemComponent', () => {
             }).compileComponents();
             fixture = TestBed.createComponent(RewardsLineItemComponent);
             component = fixture.componentInstance;
-            component.reward = {
-                actionButton: {title: 'a title', enabled: true}
-            } as Reward;
+            component.reward = {} as Reward;
             component.screenData = {
                 expiresLabel: 'Expires',
                 loyaltyIcon: 'loyalty',
                 expiredIcon: 'access_time',
+                applyIcon: 'chevron_right'
             } as RewardsLineItemComponentInterface;
             fixture.detectChanges();
         });

@@ -2,11 +2,11 @@
 
 .reward-line-item-wrapper {
   display: grid;
-  grid-template-columns: 1fr 8fr 2fr 1fr 4fr;
+  grid-template-columns: 1fr 10fr 1fr 3fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "loyalty-icon details status-text reward apply";
+    "loyalty-icon details reward apply";
   .loyalty-icon {
     grid-area: loyalty-icon;
     text-align: center;
@@ -30,13 +30,6 @@
       display: inline-block;
     }
   }
-  .status-text {
-    @extend %text-xs;
-    font-style: italic;
-    grid-area: status-text;
-    align-self: center;
-    text-align: center;
-  }
   .reward {
     @extend %text-md;
     grid-area: reward;
@@ -57,24 +50,17 @@
 
 .mobile-reward-line-item-wrapper {
   display: grid;
-  grid-template-columns: 6fr 1fr 2fr 1fr;
+  grid-template-columns: 3fr 1fr 1fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
-    "details status-text reward apply";
+    "details reward apply";
   .loyalty-icon {
     grid-area: loyalty-icon;
     text-align: center;
     app-icon {
       display: inline-block;
     }
-  }
-  .status-text {
-    @extend %text-xs;
-    font-style: italic;
-    grid-area: status-text;
-    align-self: center;
-    text-align: center;
   }
   .details {
     grid-area: details;

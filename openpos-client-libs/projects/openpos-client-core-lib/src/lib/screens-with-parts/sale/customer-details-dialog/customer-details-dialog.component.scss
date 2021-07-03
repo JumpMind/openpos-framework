@@ -33,9 +33,6 @@
   justify-content: end;
   grid-column-gap: 8px;
   padding-bottom: 16px;
-  .keybinding {
-    margin-left: 10px;
-  }
 }
 
 app-content-card {
@@ -76,7 +73,6 @@ app-content-card {
   .membership-icon {
     .material-icons{
       margin-top: -10px;
-      width: 80px;
     }
   }
   .memberships {
