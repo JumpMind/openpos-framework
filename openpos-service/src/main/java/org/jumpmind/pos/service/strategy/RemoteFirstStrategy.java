@@ -1,5 +1,6 @@
 package org.jumpmind.pos.service.strategy;
 
+import org.jumpmind.pos.service.EndpointInvocationContext;
 import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.model.ServiceException;
 import org.jumpmind.pos.util.model.ServiceResult;
@@ -30,14 +31,14 @@ public class RemoteFirstStrategy implements IInvocationStrategy {
     RemoteOnlyStrategy remoteStrategy;
 
     @Override
-    public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
+    public Object invoke(EndpointInvocationContext endpointInvocationContext) throws Throwable {
         try {
-            return remoteStrategy.invoke(profileIds, proxy, method, endpoints, args);
+            return remoteStrategy.invoke(endpointInvocationContext);
         } catch (Throwable ex) {
             try {
                 logger.info("Remote service(s) unavailable. Trying local");
                 long start = System.currentTimeMillis();
-                Object result = localStrategy.invoke(profileIds, proxy, method, endpoints, args);
+                Object result = localStrategy.invoke(endpointInvocationContext);
                 long end = System.currentTimeMillis();
                 if (result instanceof ServiceResult && ex instanceof ServiceException) {
                     ((ServiceResult) result).setServiceVisits(((ServiceException) ex).getServiceVisits());
