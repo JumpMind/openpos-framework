@@ -355,20 +355,21 @@ public class EndpointInvoker implements InvocationHandler {
     }
 
     protected ServiceSampleModel startSample(
+            String path,
             IInvocationStrategy strategy,
             ServiceSpecificConfig config,
             Object proxy,
             Method method,
             Object[] args) {
-        ServiceSampleModel sample = null;
-        if (method.isAnnotationPresent(Sample.class)) {
-            sample = new ServiceSampleModel();
-            sample.setSampleId(installationId + System.currentTimeMillis());
-            sample.setInstallationId(installationId);
-            sample.setHostname(AppUtils.getHostName());
-            sample.setServiceName(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            sample.setServiceType(strategy.getStrategyName());
-            sample.setStartTime(new Date());
+        if(isSamplingEnabled(path, config)){
+                ServiceSampleModel serviceSampleModel = new ServiceSampleModel();
+                serviceSampleModel.setSampleId(installationId + System.currentTimeMillis());
+                serviceSampleModel.setInstallationId(installationId);
+                serviceSampleModel.setHostname(AppUtils.getHostName());
+                serviceSampleModel.setServiceName(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+                serviceSampleModel.setServiceType(strategy.getStrategyName());
+                serviceSampleModel.setStartTime(new Date());
+                return serviceSampleModel;
         }
         return sample;
     }
