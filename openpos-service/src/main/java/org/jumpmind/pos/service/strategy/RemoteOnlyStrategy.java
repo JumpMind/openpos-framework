@@ -1,7 +1,10 @@
 package org.jumpmind.pos.service.strategy;
 
 import net.bytebuddy.implementation.bytecode.Throw;
-import org.jumpmind.pos.service.*;
+import org.jumpmind.pos.service.PosServerException;
+import org.jumpmind.pos.service.ProfileConfig;
+import org.jumpmind.pos.service.ServiceConfig;
+import org.jumpmind.pos.service.ServiceSpecificConfig;
 import org.jumpmind.pos.util.clientcontext.ClientContext;
 import org.jumpmind.pos.util.model.ServiceException;
 import org.jumpmind.pos.util.model.ServiceResult;
@@ -66,18 +69,18 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
     }
 
     @Override
-    public Object invoke(EndpointInvocationContext endpointInvocationContext) throws Throwable {
+    public Object invoke(List<String> profileIds, Object proxy, Method method, Map<String, Object> endpoints, Object[] args) throws Throwable {
 
         Throwable lastException = null;
         Object result = null;
         List<ServiceVisit> serviceVisits = new ArrayList<>();
 
-        for (String profileId : endpointInvocationContext.getProfileIds()) {
+        for (String profileId : profileIds) {
             ServiceVisit serviceVisit = new ServiceVisit();
             serviceVisit.setProfileId(profileId);
             long startTime = System.currentTimeMillis();
             try {
-                result = invokeProfile(profileId, endpointInvocationContext);
+                result = invokeProfile(profileId, serviceConfig.getProfileConfig(profileId), proxy, method, endpoints, args);
                 break;
             } catch (Throwable ex) {
                 serviceVisit.setException(ex);
@@ -110,15 +113,14 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         }
     }
 
-    private Object invokeProfile(String profileId, EndpointInvocationContext endpointInvocationContext) throws ResourceAccessException {
-
-        ProfileConfig profileConfig = serviceConfig.getProfileConfig(profileId);
+    private Object invokeProfile(String profileId, ProfileConfig profileConfig, Object proxy, Method method,
+                                 Map<String, Object> endpoints, Object[] args) throws ResourceAccessException {
 
         int httpTimeoutInSecond = profileConfig.getHttpTimeout();
         int connectTimeoutInSecond = profileConfig.getConnectTimeout() > 0 ? profileConfig.getConnectTimeout() : httpTimeoutInSecond;
         ConfiguredRestTemplate template = new ConfiguredRestTemplate(httpTimeoutInSecond, connectTimeoutInSecond);
 
-        RequestMapping mapping = endpointInvocationContext.getMethod().getAnnotation(RequestMapping.class);
+        RequestMapping mapping = method.getAnnotation(RequestMapping.class);
         RequestMethod[] requestMethods = mapping.method();
 
         HttpHeaders headers = new HttpHeaders();
@@ -132,10 +134,8 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
 
         if (requestMethods != null && requestMethods.length > 0) {
             try {
-                Method method = endpointInvocationContext.getMethod();
-                Object[] args = endpointInvocationContext.getArguments();
                 HttpMethod requestMethod = translate(requestMethods[0]);
-                String serverUrl = buildUrl(profileConfig, endpointInvocationContext);
+                String serverUrl = buildUrl(profileConfig, proxy, method, args);
                 Object[] newArgs = findArgs(method, args);
                 if (isMultiPartUpload(method, args)) {
                     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
@@ -191,9 +191,9 @@ public class RemoteOnlyStrategy extends AbstractInvocationStrategy implements II
         }
     }
 
-    protected String buildUrl(ProfileConfig profileConfig, EndpointInvocationContext endpointInvocationContext) {
+    protected String buildUrl(ProfileConfig profileConfig, Object proxy, Method method, Object[] args) {
         String url = profileConfig.getUrl();
-        String path = buildPath(endpointInvocationContext.getMethod());
+        String path = buildPath(method);
         url = String.format("%s%s", url, path);
         return url;
     }
