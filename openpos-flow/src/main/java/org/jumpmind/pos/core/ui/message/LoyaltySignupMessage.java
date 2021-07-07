@@ -17,8 +17,11 @@ public class LoyaltySignupMessage extends Message {
 
     @JsonProperty("isActiveOnCustomerDisplay")
     private boolean isActiveOnCustomerDisplay;
+    private String detailsMessage;
 
-    private String message;
+    public LoyaltySignupMessage(boolean isActiveOnCustomerDisplay) {
+        this.isActiveOnCustomerDisplay = isActiveOnCustomerDisplay;
+    }
 
     @Override
     public String getType() {
