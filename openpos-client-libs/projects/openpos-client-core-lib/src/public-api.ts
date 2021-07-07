@@ -131,6 +131,7 @@ export * from './lib/core/messages/message';
 export * from './lib/core/help-text/help-text.service';
 export * from './lib/core/lock-screen/lock-screen.service';
 export * from './lib/core/services/simulated-peripheral-service';
+export * from './lib/core/services/animation.service';
 
 export * from './lib/core/audio/audio-request.interface';
 export * from './lib/core/audio/audio.service';
@@ -283,6 +284,7 @@ export * from './lib/shared/directives/mimic-scroll.directive';
 export * from './lib/shared/directives/phone.directive';
 export * from './lib/shared/directives/require-at-least-one.directive';
 export * from './lib/shared/directives/screen-orientation.directive';
+export * from './lib/shared/directives/animation.directive';
 
 export * from './lib/shared/layout-components/side-nav/side-nav.component';
 export * from './lib/shared/layout-components/waffle/waffle.component';

@@ -20,6 +20,7 @@
  */
 package org.jumpmind.pos.core.flow.config;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.jumpmind.pos.core.flow.FlowException;
 
@@ -29,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
+@Data
 public class YamlStateConfig {
     
     private String stateName;
@@ -45,38 +47,6 @@ public class YamlStateConfig {
     
     public boolean isConcreteStateDefinition() {
         return !actionToStateConfigs.isEmpty();
-    }
-    
-    public String getStateName() {
-        return stateName;
-    }
-    public void setStateName(String stateName) {
-        this.stateName = stateName;
-    }
-    public Map<String, YamlStateConfig> getActionToStateConfigs() {
-        return actionToStateConfigs;
-    }
-    public void setActionToStateConfigs(Map<String, YamlStateConfig> actionToStateConfigs) {
-        this.actionToStateConfigs = actionToStateConfigs;
-    }
-    public boolean isSubTransition() {
-        return isSubTransition;
-    }
-    public void setSubTransition(boolean isSubTransition) {
-        this.isSubTransition = isSubTransition;
-    }
-    public List<String> getReturnActions() {
-        return returnActions;
-    }
-    public void setReturnActions(List<String> returnActions) {
-        this.returnActions = returnActions;
-    }
-    public Map<String, String> getConfigScope() {
-        return configScope;
-    }
-
-    public void setConfigScope(Map<String, String> configScope) {
-        this.configScope = configScope;
     }
 
     @Override

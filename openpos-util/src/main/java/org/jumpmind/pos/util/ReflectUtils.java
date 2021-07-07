@@ -10,6 +10,7 @@ import java.beans.BeanInfo;
 import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -121,6 +122,23 @@ public class ReflectUtils {
             if (field != null) {
                 field.setAccessible(true);
                 return field;
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return null;
+    }
+
+    public static Method getAccessibleMethod(Object target, String methodName) {
+        Class<? extends Object> clazz = target.getClass();
+        while (clazz != Object.class) {
+            Method method = null;
+            try {
+                method = clazz.getDeclaredMethod(methodName);
+            } catch (NoSuchMethodException e) {
+            }
+            if (method != null) {
+                method.setAccessible(true);
+                return method;
             }
             clazz = clazz.getSuperclass();
         }

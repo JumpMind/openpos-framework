@@ -58,14 +58,16 @@ describe('CustomerInformationComponent', () => {
                 city: 'Columbus',
                 state: 'OH',
                 postalCode: '11111'
-            }
+            },
+            birthDate: '06/09/1991'
         } as CustomerDetails;
         component.customer = customer;
         component.screenData = {
             emailIcon: 'mail_outline',
             phoneIcon: 'phone',
             loyaltyNumberIcon: 'account_heart',
-            locationIcon: 'place'
+            locationIcon: 'place',
+            birthDateIcon: 'customer',
         }
         fixture.detectChanges();
     });

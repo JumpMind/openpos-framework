@@ -50,7 +50,7 @@ public class DevToolsActionListener implements IActionListener {
     @Value("${openpos.customerDisplayViewer.customerDisplayPort:#{null}}")
     String customerDisplayPort;
 
-    @Value("${openpos.customerDisplayViewer.appId:'customerdisplay'}")
+    @Value("${openpos.customerDisplayViewer.appId:customerdisplay}")
     String customerDisplayAppId;
 
     @Value("${openpos.customerDisplayViewer.customerDisplayUrl:#{null}}")
@@ -184,11 +184,29 @@ public class DevToolsActionListener implements IActionListener {
 
     private void setCustomerDisplayAuthData(String deviceId, Message message) {
         Map<String, String> customDeviceMap = new HashMap<>();
-        String authToken = "";
-        try{
-            authToken = devicesRepository.getDeviceAuth(deviceId);
-        } catch (DeviceNotFoundException ex){
-            authToken = "";
+        DeviceModel deviceModel = null;
+        String authToken = null;
+        String customerDisplayDeviceId = deviceId + "-customerdisplay";
+        try {
+            deviceModel = devicesRepository.getDevice(customerDisplayDeviceId);
+        } catch (DeviceNotFoundException ex) {
+        }
+        if (deviceModel == null) {
+            deviceModel = DeviceModel.builder().
+                    deviceId(customerDisplayDeviceId).
+                    appId(customerDisplayAppId).
+                    pairedDeviceId(deviceId).
+                    build();
+            devicesRepository.saveDevice(deviceModel);
+            authToken = UUID.randomUUID().toString();
+            devicesRepository.saveDeviceAuth(customerDisplayDeviceId, authToken);
+        } else {
+            try {
+                authToken = devicesRepository.getDeviceAuth(customerDisplayDeviceId);
+            } catch (DeviceNotFoundException ex) {
+                authToken = UUID.randomUUID().toString();
+                devicesRepository.saveDeviceAuth(customerDisplayDeviceId, authToken);
+            }
         }
         customDeviceMap.put("customerDisplayAuthToken", authToken);
         customDeviceMap.put("customerDisplayPort", customerDisplayPort);

@@ -98,12 +98,12 @@ public class YamlFlowConfigFileLoader {
                 } else {
                     String nestedStateName = (String) nestedStateConfig.keySet().toArray()[0];
                     YamlStateConfig inlineState = new YamlStateConfig(nestedStateName);
-                    // OK here, a concrete action would get added as an action refernce as well as top level.
+                    // OK here, a concrete action would get added as an action reference as well as top level.
                     if (nestedStateConfig.get(nestedStateName) instanceof Map) {
                         parseStateConfig(flowConfig, inlineState, (Map<String, Object>) nestedStateConfig.get(nestedStateName));  //recurse
                     } else {
                         throw new FlowException("Malformed yml state flow config. "
-                                + "We expected actions on nested state but didn't find any. Nested state name: " + nestedStateName + " related to actoin name: " + actionName);
+                                + "We expected actions on nested state but didn't find any. Nested state name: " + nestedStateName + " related to action name: " + actionName);
                     }
                     currentStateConfig.getActionToStateConfigs().put(actionName, inlineState);
                     // TODO here we are dropping the action name / mapping to the inlined 
