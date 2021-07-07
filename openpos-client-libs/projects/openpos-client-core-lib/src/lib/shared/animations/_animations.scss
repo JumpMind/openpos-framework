@@ -1,17 +1,17 @@
-$gradient-glow-opacity: .125;
+$gradient-inner-glow-opacity: .125;
 
 @mixin animations($theme) {
     .swing {
         transform-origin: center top;
-        animation: swing 3s linear;
+        animation: swing 3.5s ease;
     }
 
     .throb {
-        animation: throb 1s ease;
+        animation: throb 1.25s ease;
     }
 
     .glow-fade-out {
-        animation: glow 2s ease-out reverse;
+        animation: glow 1.5s ease-out reverse;
     }
 
     .glow-pulse {
@@ -22,10 +22,17 @@ $gradient-glow-opacity: .125;
         @include gradient-inner-glow;
 
         &.dark {
-            @include gradient-inner-glow(rgba(0, 0, 0, $gradient-glow-opacity));
+            @include gradient-inner-glow(
+                            rgba(0, 0, 0, $gradient-inner-glow-opacity)
+            );
         }
 
         animation: gradientInnerGlow 7s ease infinite alternate;
+    }
+
+    .shake {
+        display: block;
+        animation: shake .75s ease-out;
     }
 
     @keyframes glow {
@@ -150,10 +157,49 @@ $gradient-glow-opacity: .125;
             transform: rotate(0deg);
         }
     }
+
+    @keyframes shake {
+        0% {
+            transform: translate(1px, 1px) rotate(0deg);
+        }
+        10% {
+            transform: translate(-1px, -2px) rotate(-1deg);
+        }
+        20% {
+            transform: translate(-3px, 0px) rotate(1deg);
+        }
+        30% {
+            transform: translate(3px, 2px) rotate(0deg);
+        }
+        40% {
+            transform: translate(1px, -1px) rotate(1deg);
+        }
+        50% {
+            transform: translate(-1px, 2px) rotate(-1deg);
+        }
+        60% {
+            transform: translate(-3px, 1px) rotate(0deg);
+        }
+        70% {
+            transform: translate(3px, 1px) rotate(-1deg);
+        }
+        80% {
+            transform: translate(-1px, -1px) rotate(1deg);
+        }
+        90% {
+            transform: translate(1px, 2px) rotate(0deg);
+        }
+        95% {
+            transform: translate(1px, 1px) rotate(0deg);
+        }
+        100% {
+            transform: translate(0, 0) rotate(0deg);
+        }
+    }
 }
 
 @mixin gradient-inner-glow(
-    $color: rgba(255, 255, 255, $gradient-glow-opacity),
+    $color: rgba(255, 255, 255, $gradient-inner-glow-opacity),
     $angle:90deg
 ) {
     background-image: linear-gradient(
