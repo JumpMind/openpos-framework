@@ -57,6 +57,7 @@ export class IconService {
         this.icons.set('Decrement', ['remove.svg', this.defaultIconProvider]);
         this.icons.set('DefaultPrompt', ['question_answer.svg', this.defaultIconProvider]);
         this.icons.set('Delivery', ['local_shipping.svg', this.defaultIconProvider]);
+        this.icons.set('Details', ['format_list_bulleted.svg', this.defaultIconProvider])
         this.icons.set('DeviceUnknown', ['device_unknown.svg', this.defaultIconProvider]);
         this.icons.set('Device', ['device.svg', this.defaultIconProvider]);
         this.icons.set('Discount', ['local_offer.svg', this.defaultIconProvider]);
