@@ -30,7 +30,8 @@ export class PeripheralSelectionService {
                     icon: m.category.icon,
                     localizationNoCategorySelectedKey: m.category.localizationNoCategorySelectedKey,
                     knownDevices: devices,
-                    selectedDevice: m.selectedDevice
+                    selectedDevice: m.selectedDevice,
+                    enabled: m.enabled
                 };
             }),
             tap(n => this._categoryNameToData.set(n.id, n)),

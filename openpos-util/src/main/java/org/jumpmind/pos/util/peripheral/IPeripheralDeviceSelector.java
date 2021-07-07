@@ -10,6 +10,11 @@ public interface IPeripheralDeviceSelector {
     void initialize(IInvalidationHandle invalidationHandle);
 
     /**
+     * Called to determine if the status bar detail item should be enabled
+     */
+    boolean isEnabled();
+
+    /**
      * Gets the the category.
      */
     CategoryDescriptor getCategory();

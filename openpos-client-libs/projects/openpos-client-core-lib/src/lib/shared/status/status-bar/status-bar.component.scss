@@ -36,7 +36,9 @@
     grid-auto-flow: column;
     justify-content: right;
     align-content: center;
-    &.mobile{
+    &.mobile,
+    &.tablet,
+    &.desktop-portrait {
       display: none;
     }
   }
