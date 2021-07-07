@@ -18,6 +18,7 @@ public class UISubscriptionAccount implements Serializable {
     String iconText;
     String subscriptionAccountCopy;
     String subscriptionAccountListTitle;
+    List<UISubscriptionPlan> subscriptionPlans;
     List<UIEnrollmentItem> subscriptionAccountListItems;
     ActionItem signupActionItem;
 }
