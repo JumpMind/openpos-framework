@@ -177,7 +177,7 @@
             <app-primary-button responsive-class *ngIf="!screenData.readOnly && screenData.checkoutButton"
                                 [actionItem]="screenData.checkoutButton"
                                 (actionClick)="doMenuItemAction(screenData.checkoutButton)"
-                                [disabled]="!screenData.checkoutButton.enabled"
+                                [disabled]="!screenData.checkoutButton.enabled || (isLoyaltySignupInProgressOnCustomerDisplay$ | async)"
                                 (click)="doMenuItemAction(screenData.checkoutButton)" class="sale-total-button">
                 {{screenData.checkoutButton.title}}
                 <span *ngIf="keybindsEnabled(screenData.checkoutButton)"
