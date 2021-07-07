@@ -69,65 +69,80 @@
     grid-template-columns: 1fr 1fr;
     gap: 0px 2.5em;
     grid-template-areas:
-    "basic-info loyalty"
-    "contact location"
-    "extraFormFields extraFormFields";
-
-    .basic-info {
-        grid-area: basic-info;
+    "left right";
+    
+    .left {
+        grid-area: left;
         display: grid;
-        grid-template-columns: 1fr 4fr;
-        grid-template-rows: 1fr;
-        gap: 0px 1em;
         grid-template-areas:
-        "portrait names";
-
-        .portrait {
-            grid-area: portrait;
-            margin-top: 1em;
-            margin-left: auto;
-            margin-right: auto;
+        "basic-info"
+        "contact"
+        "extraFormFields";
+        .basic-info {
+            grid-area: basic-info;
+            display: grid;
+            grid-template-columns: 1fr 4fr;
+            grid-template-rows: 1fr;
+            gap: 0px 1em;
+            grid-template-areas:
+            "portrait names";
+    
+            .portrait {
+                grid-area: portrait;
+                margin-top: 1em;
+                margin-left: auto;
+                margin-right: auto;
+            }
+    
+            .names { grid-area: names; }
         }
-
-        .names { grid-area: names; }
     }
 
-    .location {
+    .right {
+        grid-area: right;
         display: grid;
-        grid-template-columns: 30px 1fr 1fr 1fr;
-        grid-template-rows: 0fr 0fr 0fr 0fr;
-        gap: 0px 1em;
-        grid-template-areas:
+        grid-template-areas: 
+        "loyalty"
+        "location"
+        "extraFormFields";
+        
+        .location {
+            display: grid;
+            grid-template-columns: 30px 1fr 1fr 1fr;
+            grid-template-rows: 0fr 0fr 0fr 0fr;
+            gap: 0px 1em;
+            grid-template-areas:
             "icon1 line1 line1 line1"
             "icon2 line2 line2 line2"
             "icon3 cityStateZip cityStateZip cityStateZip"
             "icon4 country country country";
-
-        .icon1 {
-            grid-area: icon1;
-            align-self: center;
+            
+            .icon1 {
+                grid-area: icon1;
+                align-self: center;
+            }
+            .icon2 {
+                grid-area: icon2;
+                align-self: center;
+            }
+            .icon3 {
+                grid-area: icon3;
+                align-self: center;
+            }
+            .icon4 {
+                grid-area: icon4;
+                align-self: center;
+            }
+            .cityStateZip {
+                grid-area: cityStateZip;
+                display: flex;
+                gap: 1em;
+                app-dynamic-form-field { flex-grow: 1; width: 10em; }
+            }
+            .line1 { grid-area: line1; }
+            .line2 { grid-area: line2; }
+            .country { grid-area: country; }
         }
-        .icon2 {
-            grid-area: icon2;
-            align-self: center;
-        }
-        .icon3 {
-            grid-area: icon3;
-            align-self: center;
-        }
-        .icon4 {
-            grid-area: icon4;
-            align-self: center;
-        }
-        .cityStateZip {
-            grid-area: cityStateZip;
-            display: flex;
-            gap: 1em;
-            app-dynamic-form-field { flex-grow: 1; width: 10em; }
-        }
-        .line1 { grid-area: line1; }
-        .line2 { grid-area: line2; }
-        .country { grid-area: country; }
     }
 
     .loyalty-and-membership {
