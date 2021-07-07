@@ -20,7 +20,7 @@ export class AnimationService {
 
         if (element) {
             this.renderer.removeClass(element, animationClass);
-            // A trick to trigger a browser browser reflow layout calculations, which will also cause animations to run
+            // A trick to trigger a browser browser reflow layout calculations, which will cause animations to run
             // again like it's the first time
             element.getBoundingClientRect();
             this.renderer.addClass(element, animationClass);
