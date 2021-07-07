@@ -1,14 +1,13 @@
-@mixin animations($theme) {
-    $app-primary: mat-color(map-get($theme, primary));
-    $app-primary-lighter: lighten($app-primary, 10%);
+$gradient-glow-opacity: .125;
 
+@mixin animations($theme) {
     .swing {
         transform-origin: center top;
-        animation: swing 5s linear;
+        animation: swing 3s linear;
     }
 
     .throb {
-        animation: throb 1s ease-in-out;
+        animation: throb 1s ease;
     }
 
     .glow-fade-out {
@@ -19,13 +18,14 @@
         animation: glow 1.25s ease-out infinite alternate;
     }
 
-    .gradient-glow {
-        background: linear-gradient(90deg,
-                $app-primary 0 30%,
-                $app-primary-lighter 50% 51%,
-                $app-primary 70% 100%
-        );
-        animation: gradientGlow 10s linear infinite alternate;
+    .gradient-inner-glow {
+        @include gradient-inner-glow;
+
+        &.dark {
+            @include gradient-inner-glow(rgba(0, 0, 0, $gradient-glow-opacity));
+        }
+
+        animation: gradientInnerGlow 7s ease infinite alternate;
     }
 
     @keyframes glow {
@@ -37,17 +37,14 @@
         }
     }
 
-    @keyframes gradientGlow {
+    @keyframes gradientInnerGlow {
         0% {
-            background-size: 400%;
             background-position: 0 50%;
         }
         50% {
-            background-size: 400%;
             background-position: 100% 50%;
         }
         100% {
-            background-size: 400%;
             background-position: 0 50%;
         }
     }
@@ -87,7 +84,7 @@
             transform: scale(1);
         }
         50% {
-            transform: scale(1.5);
+            transform: scale(1.3);
         }
         100% {
             transform: scale(1);
@@ -153,4 +150,17 @@
             transform: rotate(0deg);
         }
     }
+}
+
+@mixin gradient-inner-glow(
+    $color: rgba(255, 255, 255, $gradient-glow-opacity),
+    $angle:90deg
+) {
+    background-image: linear-gradient(
+                    $angle,
+                    transparent 0 45%,
+                    $color 50% 51%,
+                    transparent 65% 100%
+    );
+    background-size: 400%;
 }

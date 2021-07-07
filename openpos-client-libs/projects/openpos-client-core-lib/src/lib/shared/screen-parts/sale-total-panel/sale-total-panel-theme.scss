@@ -2,7 +2,8 @@
     $border: map-get($mat-grey, 800);
     $item-count-background: map-get($mat-grey, 200);
     $disabled-border: map-get(map-get($theme, foreground), disabled-text);
-    $foreground: map-get($theme, foreground );
+    $foreground: map-get($theme, foreground);
+    $primary: map-get($theme, primary);
 
     .linked-customer-summary {
         .icon {
@@ -42,6 +43,10 @@
 
     .loyalty-signup-customer-display-action {
         border-color: mat-color($theme, openpos-link-customer-color, .25);
+    }
+
+    .notification {
+        background-color: mat-color($primary);
     }
 
     .sale-total-total {

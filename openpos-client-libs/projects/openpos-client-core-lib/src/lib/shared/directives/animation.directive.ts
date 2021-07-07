@@ -22,7 +22,6 @@ export class AnimationDirective implements OnInit, OnChanges, OnDestroy {
     }
 
     ngOnInit() {
-        this.renderer.addClass(this.hostElement, this.animationClass);
         this.listenForRestart();
     }
 
