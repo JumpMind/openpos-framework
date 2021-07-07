@@ -5,7 +5,7 @@
                 *ngIf="!screenData.readOnly
                     && !screenData.linkedCustomerButton
                     && screenData.loyaltyButton
-                    && !loyaltySignupInProgressOnCustomerDisplay"
+                    && !(isLoyaltySignupInProgressOnCustomerDisplay$ | async)"
                 [actionItem]="screenData.loyaltyButton"
                 (actionClick)="doAction(screenData.loyaltyButton)"
                 (click)="doAction(screenData.loyaltyButton)"
@@ -25,16 +25,36 @@
                 *ngIf="!screenData.readOnly
                     && !screenData.linkedCustomerButton
                     && screenData.loyaltyCancelButton
-                    && loyaltySignupInProgressOnCustomerDisplay"
+                    && (isLoyaltySignupInProgressOnCustomerDisplay$ | async)"
                 [actionItem]="screenData.loyaltyCancelButton"
                 (actionClick)="doAction(screenData.loyaltyCancelButton)"
                 (click)="doAction(screenData.loyaltyCancelButton)"
                 class="loyalty-signup-customer-display">
-            <span class="wrapper loyalty-signup-customer-display-wrapper">
-                <span class="loyalty-signup-customer-display-header">
-                    <app-icon *ngIf="screenData.loyaltyCancelButton.icon" [iconName]="screenData.loyaltyCancelButton.icon"
-                         iconClass="loyalty-signup-customer-display-icon-size" class="loyalty-signup-customer-display-icon"></app-icon>
-                    <span class="loyalty-signup-customer-display-message">{{screenData.loyaltySignupInProgressMessage}}</span>
+            <span class="wrapper loyalty-signup-customer-display">
+                <span class="loyalty-signup-customer-display-content">
+                    <span class="loyalty-signup-customer-display-section">
+                        <app-icon [iconName]="screenData.loyaltyCancelButton.icon"
+                                  class="glow-pulse"
+                                  iconClass="loyalty-signup-customer-display-icon"></app-icon>
+                        <span class="loyalty-signup-customer-display-message">
+                            {{screenData.loyaltySignupInProgressMessage}}
+                        </span>
+                    </span>
+                    <span class="notification gradient-glow" responsive-class>
+                        <span class="notification-icon-container"
+                              appAnimation="throb"
+                              [restartWhen]="loyaltySignupInProgressDetailsMessage$">
+                            <app-icon [iconName]="screenData.loyaltySignupInProgressDetailsIcon"
+                                      iconClass="notification-icon"
+                                      appAnimation="swing"
+                                      [restartWhen]="loyaltySignupInProgressDetailsMessage$"></app-icon>
+                        </span>
+                        <span class="notification-message"
+                              appAnimation="glow-fade-out"
+                              [restartWhen]="loyaltySignupInProgressDetailsMessage$">
+                            {{loyaltySignupInProgressDetailsMessage$ | async}}
+                        </span>
+                    </span>
                 </span>
                 <span class="loyalty-signup-customer-display-action">{{screenData.loyaltyCancelButton.title}}</span>
                 <span *ngIf="keybindsEnabled(screenData.loyaltyCancelButton)" class="muted-color loyalty-keybind">
@@ -157,7 +177,7 @@
             <app-primary-button responsive-class *ngIf="!screenData.readOnly && screenData.checkoutButton"
                                 [actionItem]="screenData.checkoutButton"
                                 (actionClick)="doMenuItemAction(screenData.checkoutButton)"
-                                [disabled]="!screenData.checkoutButton.enabled || loyaltySignupInProgressOnCustomerDisplay"
+                                [disabled]="!screenData.checkoutButton.enabled"
                                 (click)="doMenuItemAction(screenData.checkoutButton)" class="sale-total-button">
                 {{screenData.checkoutButton.title}}
                 <span *ngIf="keybindsEnabled(screenData.checkoutButton)"

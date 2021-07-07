@@ -59,6 +59,8 @@ public class SaleUIMessage extends UIMessage {
 
     private boolean loyaltySignupInProgressOnCustomerDisplay;
     private String loyaltySignupInProgressMessage;
+    private String loyaltySignupInProgressDetails;
+    private String loyaltySignupInProgressDetailsIcon;
     private ActionItem loyaltyCancelButton;
 
     public SaleUIMessage() {
