@@ -37,13 +37,15 @@
                                   class="glow-pulse"
                                   iconClass="loyalty-signup-customer-display-icon"></app-icon>
                         <span class="loyalty-signup-customer-display-message">
-                            {{screenData.loyaltySignupInProgressMessage}}
+                            {{screenData.loyaltySignupInProgressTitle}}
                         </span>
                     </span>
-                    <span class="notification gradient-inner-glow" responsive-class>
-                        <span class="notification-icon-container"
-                              appAnimation="throb"
-                              [restartWhen]="loyaltySignupInProgressDetailsMessage$">
+                    <span appAnimation="shake"
+                          [restartWhen]="loyaltySignupInProgressDetailsMessage$">
+                        <span class="notification gradient-inner-glow" responsive-class>
+                            <span class="notification-icon-container"
+                                  appAnimation="throb"
+                                  [restartWhen]="loyaltySignupInProgressDetailsMessage$">
                             <app-icon [iconName]="screenData.loyaltySignupInProgressDetailsIcon"
                                       iconClass="notification-icon"
                                       appAnimation="swing"
@@ -54,6 +56,7 @@
                               [restartWhen]="loyaltySignupInProgressDetailsMessage$">
                             {{loyaltySignupInProgressDetailsMessage$ | async}}
                         </span>
+                    </span>
                     </span>
                 </span>
                 <span class="loyalty-signup-customer-display-action">{{screenData.loyaltyCancelButton.title}}</span>
