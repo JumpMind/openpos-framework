@@ -10,13 +10,13 @@
     </div>
     <div class="actions">
         <span *ngFor="let action of enrollment.actionItemList" class="action">
-            <app-icon [iconName]="action.icon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
             <a [actionItem]="action"
                (actionClick)="doAction(action)"
                (click)="doAction(action)"
                [disabled]="!action.enabled"
                mat-button
                responsive-class>
+                <app-icon [iconName]="action.icon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
                 {{action.title}}
             </a>
         </span>

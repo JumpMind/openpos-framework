@@ -4,6 +4,10 @@
 
     .action {
         color: $primary;
+
+        a app-icon {
+            margin-right: .25em;
+        }
     }
 
     .enrollment-line-item{
