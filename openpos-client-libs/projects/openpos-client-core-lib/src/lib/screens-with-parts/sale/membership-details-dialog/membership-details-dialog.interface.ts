@@ -20,7 +20,7 @@ export class Plan {
     iconImageUrl: string;
     iconText: string;
     title: string;
-    planCopy: string;
+    subscriptionAccountCopy: string;
     signupActionItem: ActionItem;
 }
 
@@ -30,7 +30,7 @@ export class SubscriptionAccounts {
     subscriptionAccountCopy: string;
     subscriptionAccountListItems: EnrollmentItem[];
     subscriptionAccountListTitle: string;
-    plans: Plan[];
+    subscriptionPlans: Plan[];
     signupActionItem: ActionItem;
 }
 

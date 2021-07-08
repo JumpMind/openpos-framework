@@ -1,4 +1,4 @@
-import {Component, Injector, OnInit} from '@angular/core';
+import {Component, Injector} from '@angular/core';
 import {MembershipDetailsDialogInterface} from './membership-details-dialog.interface';
 import {DialogComponent} from '../../../shared/decorators/dialog-component.decorator';
 import {PosScreen} from '../../pos-screen/pos-screen.component';
@@ -17,7 +17,7 @@ import {ActionService} from "../../../core/actions/action.service";
   templateUrl: './membership-details-dialog.component.html',
   styleUrls: ['./membership-details-dialog.component.scss']
 })
-export class MembershipDetailsDialogComponent extends PosScreen<MembershipDetailsDialogInterface> implements OnInit {
+export class MembershipDetailsDialogComponent extends PosScreen<MembershipDetailsDialogInterface>{
 
   isMobile: Observable<boolean>;
   constructor(public actionService: ActionService, injector: Injector, private media: OpenposMediaService, protected keyPresses: KeyPressProvider) {
@@ -25,33 +25,6 @@ export class MembershipDetailsDialogComponent extends PosScreen<MembershipDetail
     this.initIsMobile();
   }
 
-  ngOnInit() {
-    this.screen.subscriptionAccounts.forEach((subscription) => {
-      subscription.plans = [
-        {
-          iconImageUrl: "heart_plus_outline",
-          iconText: "",
-          title: "Vital Care 1.0 Dog",
-          planCopy: "this is where the copy happens",
-          signupActionItem: undefined
-        },
-        {
-          iconImageUrl: "heart_plus_outline",
-          iconText: "",
-          title: "Vital Care 1.0 Cat",
-          planCopy: "this is where the copy happens",
-          signupActionItem: undefined
-        },
-        {
-          iconImageUrl: "heart_plus_outline",
-          iconText: "",
-          title: "Vital Care 1.0 Snek",
-          planCopy: "this is where the copy happens",
-          signupActionItem: undefined
-        }
-      ];
-    })
-  }
 
   initIsMobile(): void {
     this.isMobile = this.media.observe(new Map([

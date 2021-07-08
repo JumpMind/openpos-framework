@@ -45,7 +45,7 @@
                     </div>
 
                     <div *ngIf="!tab.subscriptionAccountListItems || tab.subscriptionAccountListItems.length == 0">
-                        <div *ngFor="let plan of tab.plans" class="plans">
+                        <div *ngFor="let plan of tab.subscriptionPlans" class="plans">
                             <app-plan-details-display [plan]="plan"></app-plan-details-display>
                         </div>
                     </div>
