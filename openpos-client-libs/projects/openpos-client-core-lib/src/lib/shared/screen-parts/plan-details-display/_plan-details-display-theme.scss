@@ -1,4 +1,13 @@
 @mixin plan-details-display-theme($theme) {
+    $primary: mat-color(map-get($theme, primary));
     $foreground: map-get($theme, foreground );
-
+    .actions {
+        color: $primary;
+        .mat-button-wrapper {
+            font-size: 2em;
+        }
+        a app-icon {
+            margin-right: .25em;
+        }
+    }
 }
