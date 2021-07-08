@@ -120,7 +120,6 @@ export class DialogService {
             const dialogType = this.hasDialog(dialog.subType) ? dialog.subType : 'Dialog';
             if (!this.dialogOpening) {
                 console.info('opening dialog \'' + dialogType + '\'');
-                this.dialogOpening = true;
                 setTimeout(() => this.openDialog(dialog), 0);
             } else {
                 console.info(`[DialogService] putting off the opening of the dialog to the future because another dialog is currently opening`);
@@ -135,6 +134,7 @@ export class DialogService {
             return;
         }
         try {
+            this.dialogOpening = true;
             const dialogComponentFactory: ComponentFactory<IScreen> = this.resolveDialog(dialog.screenType);
             console.info(`[DialogService] Opening a dialog with a ` +
                 `${dialogComponentFactory && dialogComponentFactory.componentType ? dialogComponentFactory.componentType.name : '?'} ` +
