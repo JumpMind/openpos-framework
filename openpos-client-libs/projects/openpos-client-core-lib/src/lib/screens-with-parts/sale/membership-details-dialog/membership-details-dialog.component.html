@@ -1,7 +1,7 @@
 <app-dialog-header></app-dialog-header>
 <div>
     <app-content-card class="details-wrapper" >
-        <div class="grid-container" [ngClass]="{'grid-container': !(isMobile | async), 'mobile-grid-container': (isMobile | async)}">
+        <div class="grid-container">
             <div class="icon">
                 <app-icon [iconName]="screen.profileIcon"
                           [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
@@ -43,12 +43,15 @@
                             <app-enrollment-line-item [enrollment]="row"></app-enrollment-line-item>
                         </div>
                     </div>
+
                     <div *ngIf="!tab.subscriptionAccountListItems || tab.subscriptionAccountListItems.length == 0">
-                        <div [innerHtml]="tab.subscriptionAccountCopy"></div>
+                        <div *ngFor="let plan of tab.plans" class="plans">
+                            <app-plan-details-display [plan]="plan"></app-plan-details-display>
+                        </div>
                     </div>
                     <app-primary-button responsive-class
                                         class="sign-up"
-                                        *ngIf="tab.signupActionItem"
+                                        *ngIf="tab.signupActionItem && tab.subscriptionAccountListItems && tab.subscriptionAccountListItems.length > 0"
                                         [disabled]="!tab.signupActionItem?.enabled"
                                         [actionItem]="tab.signupActionItem"
                                         (actionClick)="doAction(tab.signupActionItem)"

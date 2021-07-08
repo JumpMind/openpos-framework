@@ -16,12 +16,21 @@ export class EnrollmentItem {
     actionItemList: ActionItem[];
 }
 
+export class Plan {
+    iconImageUrl: string;
+    iconText: string;
+    title: string;
+    planCopy: string;
+    signupActionItem: ActionItem;
+}
+
 export class SubscriptionAccounts {
     iconImageUrl: string;
     iconText: string;
     subscriptionAccountCopy: string;
-    subscriptionAccountListTitle: string;
     subscriptionAccountListItems: EnrollmentItem[];
+    subscriptionAccountListTitle: string;
+    plans: Plan[];
     signupActionItem: ActionItem;
 }
 

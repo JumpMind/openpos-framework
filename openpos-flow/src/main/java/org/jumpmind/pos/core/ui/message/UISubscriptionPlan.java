@@ -4,9 +4,11 @@ import lombok.Builder;
 import lombok.Data;
 import org.jumpmind.pos.core.ui.ActionItem;
 
+import java.io.Serializable;
+
 @Data
 @Builder
-public class UISubscriptionPlan {
+public class UISubscriptionPlan implements Serializable {
     String subscriptionAccountCopy;
     ActionItem signupActionItem;
 }

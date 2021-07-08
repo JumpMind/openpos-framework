@@ -11,7 +11,7 @@
     height: 100%;
   }
   mat-card {
-    overflow: scroll;
+    overflow: auto;
     margin: 0;
     .no-items {
       @extend %text-lg;
@@ -64,7 +64,7 @@ app-content-card {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 1fr 1fr 8fr;
+  grid-template-columns: 1fr 4fr 8fr;
   grid-template-rows: 1fr;
   gap: 0px 0px;
   grid-template-areas:
@@ -105,30 +105,30 @@ app-content-card {
   }
 }
 
-.mobile-grid-container {
-  display: grid;
-  grid-template-columns: 1fr 10fr;
-  grid-template-rows: 1fr;
-  gap: 0px 0px;
-//  grid-template-areas:
-//    "icon details"
-//    "memberships memberships";
+//.mobile-grid-container {
+//  display: grid;
+//  grid-template-columns: 1fr 10fr;
+//  grid-template-rows: 1fr;
+//  gap: 0px 0px;
+////  grid-template-areas:
+////    "icon details"
+////    "memberships memberships";
+////
+//  .details {
+//    .details-label {
+//      @extend %text-md;
+//      height: 100%;
+//      padding-top: 16px;
+//      padding-left: 5px;
+//    }
+//  }
 //
-  .details {
-    .details-label {
-      @extend %text-md;
-      height: 100%;
-      padding-top: 16px;
-      padding-left: 5px;
-    }
-  }
-
-  .memberships {
-    padding-top: 10px;
-    padding-bottom: 5px;
-    display: inline-block;
-  }
-}
+//  .memberships {
+//    padding-top: 10px;
+//    padding-bottom: 5px;
+//    display: inline-block;
+//  }
+//}
 
 .icon {
   grid-area: icon;

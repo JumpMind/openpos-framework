@@ -1,0 +1,4 @@
+@mixin plan-details-display-theme($theme) {
+    $foreground: map-get($theme, foreground );
+
+}

@@ -1,0 +1,21 @@
+<div class="title">
+    <div class="title">
+        <app-icon [iconName]="plan.iconImageUrl" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+        {{plan.title}}
+    </div>
+</div>
+<div class="plan-copy">
+    <div [innerHtml]="plan.planCopy"></div>
+</div>
+<div class="actions">
+    <a *ngIf="plan.signupActionItem"
+       [actionItem]="plan.signupActionItem"
+       (actionClick)="doAction(plan.signupActionItem)"
+       (click)="doAction(plan.signupActionItem)"
+       [disabled]="!plan.signupActionItem.enabled"
+       mat-button
+       responsive-class>
+        <app-icon [iconName]="plan.signupActionItem.icon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+        {{plan.signupActionItem.title}}
+    </a>
+</div>
