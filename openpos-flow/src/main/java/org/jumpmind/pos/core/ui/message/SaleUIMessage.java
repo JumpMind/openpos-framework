@@ -58,6 +58,7 @@ public class SaleUIMessage extends UIMessage {
     private String iconName;
 
     private String loyaltySignupInProgressTitle;
+    private String loyaltySignupInProgressIcon;
     private String loyaltySignupInProgressDetailsIcon;
     private ActionItem loyaltyCancelButton;
 

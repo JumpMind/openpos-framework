@@ -41,6 +41,7 @@ public class ReturnUIMessage extends UIMessage {
     private boolean enableCollapsibleItems = true;
 
     private String loyaltySignupInProgressTitle;
+    private String loyaltySignupInProgressIcon;
     private String loyaltySignupInProgressDetailsIcon;
     private ActionItem loyaltyCancelButton;
 

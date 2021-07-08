@@ -44,10 +44,16 @@ $loyalty-signup-column-gap: 8px;
     }
 
     .loyalty-signup-customer-display {
-        @extend .link-customer;
+        position: relative;
+        font-size: $text-sm;
+        line-height: $text-sm*1.5;
         padding: 16px;
+        border-radius: 4px;
 
         &.tablet {
+            font-size: $text-xs;
+            line-height: $text-xs*1.5;
+
             .loyalty-signup-customer-display-content {
                 font-size: $text-xs;
                 line-height: $text-xs*1.5;
@@ -64,27 +70,20 @@ $loyalty-signup-column-gap: 8px;
             padding: 0;
         }
 
-        &-content {
-            display: block;
-            text-align: left;
-            font-size: $text-sm;
-            font-weight: normal;
-            line-height: $text-sm*1.5;
-            white-space: normal;
-        }
-
-        &-section {
+        &-in-progress {
             display: grid;
             grid-template-columns: auto minmax(0, 1fr);
             grid-auto-flow: column;
             column-gap: $loyalty-signup-column-gap;
             align-items: center;
+            margin-bottom: 16px;
         }
 
         &-message {
             display: block;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding-right: 32px;
         }
 
         &-icon {
@@ -92,11 +91,10 @@ $loyalty-signup-column-gap: 8px;
             width: $loyalty-signup-icon;
         }
 
-        &-action {
-            display: block;
-            border-width: 1px 0 0 0;
-            padding-top: 16px;
-            border-style: solid;
+        &-cancel-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
         }
     }
     .linked-customer-summary {
@@ -181,7 +179,6 @@ app-scandit-native {
     align-items: center;
     border-radius: 4px;
     padding: 0 8px;
-    margin: 16px 0;
 
     &.tablet {
         .notification-icon-container {
@@ -214,6 +211,7 @@ app-scandit-native {
         display: block;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding: 8px 0;
     }
 }
 

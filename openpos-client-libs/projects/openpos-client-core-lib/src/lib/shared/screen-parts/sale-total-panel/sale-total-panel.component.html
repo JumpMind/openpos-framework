@@ -20,51 +20,44 @@
             </span>
             <mat-icon class="material-icons loyalty-arrow">keyboard_arrow_right</mat-icon>
         </button>
-        <button responsive-class
-                mat-flat-button
-                *ngIf="!screenData.readOnly
-                    && !screenData.linkedCustomerButton
-                    && screenData.loyaltyCancelButton
-                    && (isLoyaltySignupInProgressOnCustomerDisplay$ | async)"
-                [actionItem]="screenData.loyaltyCancelButton"
-                (actionClick)="doAction(screenData.loyaltyCancelButton)"
-                (click)="doAction(screenData.loyaltyCancelButton)"
-                class="loyalty-signup-customer-display">
-            <span class="wrapper loyalty-signup-customer-display">
-                <span class="loyalty-signup-customer-display-content">
-                    <span class="loyalty-signup-customer-display-section">
-                        <app-icon [iconName]="screenData.loyaltyCancelButton.icon"
-                                  class="glow-pulse"
-                                  iconClass="loyalty-signup-customer-display-icon"></app-icon>
-                        <span class="loyalty-signup-customer-display-message">
-                            {{screenData.loyaltySignupInProgressTitle}}
-                        </span>
-                    </span>
-                    <span appAnimation="shake"
-                          [restartWhen]="loyaltySignupInProgressDetailsMessage$">
-                        <span class="notification gradient-inner-glow" responsive-class>
-                            <span class="notification-icon-container"
-                                  appAnimation="throb"
-                                  [restartWhen]="loyaltySignupInProgressDetailsMessage$">
-                            <app-icon [iconName]="screenData.loyaltySignupInProgressDetailsIcon"
-                                      iconClass="notification-icon"
-                                      appAnimation="swing"
-                                      [restartWhen]="loyaltySignupInProgressDetailsMessage$"></app-icon>
-                        </span>
-                        <span class="notification-message"
-                              appAnimation="glow-fade-out"
-                              [restartWhen]="loyaltySignupInProgressDetailsMessage$">
-                            {{loyaltySignupInProgressDetailsMessage$ | async}}
-                        </span>
-                    </span>
-                    </span>
+        <div responsive-class
+             class="loyalty-signup-customer-display"
+             *ngIf="!screenData.readOnly
+                && !screenData.linkedCustomerButton
+                && screenData.loyaltyCancelButton
+                && (isLoyaltySignupInProgressOnCustomerDisplay$ | async)">
+            <span class="loyalty-signup-customer-display-in-progress">
+                <app-icon [iconName]="screenData.loyaltySignupInProgressIcon"
+                          class="glow-pulse"
+                          iconClass="loyalty-signup-customer-display-icon"></app-icon>
+                <span class="loyalty-signup-customer-display-message">
+                    {{screenData.loyaltySignupInProgressTitle}}
                 </span>
-                <span class="loyalty-signup-customer-display-action">{{screenData.loyaltyCancelButton.title}}</span>
-                <span *ngIf="keybindsEnabled(screenData.loyaltyCancelButton)" class="muted-color loyalty-keybind">
-                    {{screenData.loyaltyCancelButton.keybindDisplayName}}
+                <app-icon-button class="loyalty-signup-customer-display-cancel-button"
+                                 (buttonClick)="doAction(screenData.loyaltyCancelButton)"
+                                 [actionItem]="screenData.loyaltyCancelButton"
+                                 iconName="close"
+                                 [title]="screenData.loyaltyCancelButton.title"></app-icon-button>
+            </span>
+            <span appAnimation="shake"
+                  [restartWhen]="loyaltySignupInProgressDetailsMessage$">
+                <span class="notification gradient-inner-glow" responsive-class>
+                    <span class="notification-icon-container"
+                          appAnimation="throb"
+                          [restartWhen]="loyaltySignupInProgressDetailsMessage$">
+                    <app-icon [iconName]="screenData.loyaltySignupInProgressDetailsIcon"
+                              iconClass="notification-icon"
+                              appAnimation="swing"
+                              [restartWhen]="loyaltySignupInProgressDetailsMessage$"></app-icon>
+                    </span>
+                    <span class="notification-message"
+                          appAnimation="glow-fade-out"
+                          [restartWhen]="loyaltySignupInProgressDetailsMessage$">
+                        {{loyaltySignupInProgressDetailsMessage$ | async}}
+                    </span>
                 </span>
             </span>
-        </button>
+        </div>
         <button *ngIf="!screenData.readOnly && screenData.linkedCustomerButton && screenData.customer"
                 class="linked-customer-summary"
                 style="width: 100%;"
