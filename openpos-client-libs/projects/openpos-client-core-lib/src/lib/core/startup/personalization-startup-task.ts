@@ -105,6 +105,7 @@ export class PersonalizationStartupTask implements IStartupTask {
 
     private doAutoPersonalization(data: StartupTaskData, provider: Zeroconf): Observable<string> {
         return this.personalization.getSkipAutoPersonalization$().pipe(
+            take(1),
             switchMap(skip => {
                 if (skip) {
                     return concat(
