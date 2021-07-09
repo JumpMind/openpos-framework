@@ -9,6 +9,6 @@ import java.io.Serializable;
 @Data
 @Builder
 public class UISubscriptionPlan implements Serializable {
-    String subscriptionAccountCopy;
+    String copy;
     ActionItem signupActionItem;
 }

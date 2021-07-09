@@ -18,16 +18,16 @@ export class Plan {
     iconImageUrl: string;
     iconText: string;
     title: string;
-    subscriptionAccountCopy: string;
+    copy: string;
     signupActionItem: ActionItem;
 }
 
 export class SubscriptionAccounts {
     iconImageUrl: string;
     iconText: string;
-    subscriptionAccountCopy: string;
-    subscriptionAccountListItems: EnrollmentItem[];
-    subscriptionAccountListTitle: string;
-    subscriptionPlans: Plan[];
+    copy: string;
+    enrollmentItems: EnrollmentItem[];
+    listTitle: string;
+    plans: Plan[];
     signupActionItem: ActionItem;
 }

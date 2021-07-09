@@ -35,20 +35,20 @@
                     {{tab.iconText}}
                 </ng-template>
                 <mat-card>
-                    <div *ngIf="tab.subscriptionAccountListTitle" class="tab-title text-md">
-                        {{tab.subscriptionAccountListTitle}}
+                    <div *ngIf="tab.listTitle" class="tab-title text-md">
+                        {{tab.listTitle}}
                     </div>
-                    <div *ngIf="tab.subscriptionAccountListItems && tab.subscriptionAccountListItems.length > 0">
-                        <div *ngFor="let row of tab.subscriptionAccountListItems">
+                    <div *ngIf="tab.enrollmentItems && tab.enrollmentItems.length > 0">
+                        <div *ngFor="let row of tab.enrollmentItems">
                             <app-enrollment-line-item [enrollment]="row"></app-enrollment-line-item>
                         </div>
                     </div>
                     <app-program-plan-details
-                            *ngIf="!tab.subscriptionAccountListItems || tab.subscriptionAccountListItems.length == 0"
-                            [plans]="tab.subscriptionPlans"></app-program-plan-details>
+                            *ngIf="!tab.enrollmentItems || tab.enrollmentItems.length == 0"
+                            [plans]="tab.plans"></app-program-plan-details>
                     <app-primary-button responsive-class
                                         class="sign-up"
-                                        *ngIf="tab.signupActionItem && tab.subscriptionAccountListItems && tab.subscriptionAccountListItems.length > 0"
+                                        *ngIf="tab.signupActionItem && tab.enrollmentItems && tab.enrollmentItems.length > 0"
                                         [disabled]="!tab.signupActionItem?.enabled"
                                         [actionItem]="tab.signupActionItem"
                                         (actionClick)="doAction(tab.signupActionItem)"

@@ -16,9 +16,9 @@ import java.util.List;
 public class UISubscriptionAccount implements Serializable {
     String iconImageUrl;
     String iconText;
-    String subscriptionAccountCopy;
-    String subscriptionAccountListTitle;
-    List<UISubscriptionPlan> subscriptionPlans;
-    List<UIEnrollmentItem> subscriptionAccountListItems;
+    String copy;
+    String listTitle;
+    List<UISubscriptionPlan> plans;
+    List<UIEnrollmentItem> enrollmentItems;
     ActionItem signupActionItem;
 }
