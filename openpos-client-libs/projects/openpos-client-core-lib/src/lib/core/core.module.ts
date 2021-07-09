@@ -82,7 +82,6 @@ import { MDnsZeroconf } from './startup/zeroconf/mdns-zeroconf';
 import { CapacitorZeroconf } from './startup/zeroconf/capacitor-zeroconf';
 import { CapacitorService } from './services/capacitor.service';
 import { LoyaltySignupService } from './services/loyalty-signup.service';
-import { AnimationService } from './services/animation.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -175,8 +174,7 @@ registerLocaleData(locale_frCA, 'fr-CA');
         AudioRepositoryService,
         { provide: PLUGINS, useExisting: AudioConsolePlugin, multi: true, deps: [AudioService]},
         Storage,
-        LoyaltySignupService,
-        AnimationService
+        LoyaltySignupService
     ]
 })
 export class CoreModule {

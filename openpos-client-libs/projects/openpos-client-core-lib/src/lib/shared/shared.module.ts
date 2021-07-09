@@ -176,7 +176,6 @@ import { CustomerInformationComponent } from './screen-parts/customer-informatio
 import { MutableListItemWithLabelComponent } from "./screen-parts/mutable-list-item-with-label-component/mutable-list-item-with-label.component";
 import { RewardsHistoryLineItemComponent } from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
 import { MembershipPointsDisplayComponent } from "./screen-parts/membership-points-display/membership-points-display.component";
-import { AnimationDirective } from './directives/animation.directive';
 
 const screenParts = [
     TenderPartComponent,
@@ -328,8 +327,7 @@ const directives = [
     ResponsiveClassDirective,
     ResponsiveGridDirective,
     FitTextDirective,
-    StayFocusedDirective,
-    AnimationDirective
+    StayFocusedDirective
 ];
 
 const pipes = [

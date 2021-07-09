@@ -80,7 +80,6 @@ $loyalty-signup-column-gap: 8px;
         }
 
         &-message {
-            display: block;
             overflow: hidden;
             text-overflow: ellipsis;
             padding-right: 32px;
@@ -203,12 +202,12 @@ app-scandit-native {
     }
 
     &-icon {
+        display: block;
         height: 40px;
         width: 40px;
     }
 
     &-message {
-        display: block;
         overflow: hidden;
         text-overflow: ellipsis;
         padding: 8px 0;

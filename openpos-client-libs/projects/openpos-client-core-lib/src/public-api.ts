@@ -131,7 +131,6 @@ export * from './lib/core/messages/message';
 export * from './lib/core/help-text/help-text.service';
 export * from './lib/core/lock-screen/lock-screen.service';
 export * from './lib/core/services/simulated-peripheral-service';
-export * from './lib/core/services/animation.service';
 
 export * from './lib/core/audio/audio-request.interface';
 export * from './lib/core/audio/audio.service';
@@ -284,7 +283,6 @@ export * from './lib/shared/directives/mimic-scroll.directive';
 export * from './lib/shared/directives/phone.directive';
 export * from './lib/shared/directives/require-at-least-one.directive';
 export * from './lib/shared/directives/screen-orientation.directive';
-export * from './lib/shared/directives/animation.directive';
 
 export * from './lib/shared/layout-components/side-nav/side-nav.component';
 export * from './lib/shared/layout-components/waffle/waffle.component';
@@ -335,6 +333,13 @@ export * from './lib/shared/screen-parts/status-strip/status-strip.component';
 export * from './lib/shared/screen-parts/status-strip/status-strip.interface';
 export * from './lib/shared/screen-parts/system-status/system-status.component';
 export * from './lib/shared/screen-parts/image-text-panel/image-text-panel.interface';
+
+export * from './lib/shared/animations/glow.animation';
+export * from './lib/shared/animations/throb.animation';
+export * from './lib/shared/animations/gradient-inner-glow.animation';
+export * from './lib/shared/animations/shake.animation';
+export * from './lib/shared/animations/bounce.animation';
+export * from './lib/shared/animations/swing.animation';
 
 export * from './lib/shared/utils/date.utils';
 export * from './lib/shared/validators/openpos-validators';
