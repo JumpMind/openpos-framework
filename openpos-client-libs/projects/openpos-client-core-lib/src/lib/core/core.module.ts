@@ -80,6 +80,7 @@ import { CapacitorStorageService } from './storage/capacitor/capacitor-storage.s
 import { Storage } from './storage/storage.service';
 import { STORAGE_CONTAINERS } from './storage/storage-container';
 import { CapacitorPrinterPlugin } from './platform-plugins/printers/capacitor-printer.plugin';
+import { DebugImageScanner } from './platform-plugins/barcode-scanners/debug-image-scanner/debug-image-scanner.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -142,6 +143,11 @@ registerLocaleData(locale_frCA, 'fr-CA');
         { provide: SCANNERS, useExisting: ServerScannerPlugin, multi: true, deps: [SessionService]},
         { provide: IMAGE_SCANNERS, useExisting: ScanditScannerCordovaPlugin, multi: true},
         { provide: IMAGE_SCANNERS, useExisting: ScanditCapacitorImageScanner, multi: true },
+
+        // NOTE:    The following image scanner is just a placeholder making it easier to debug the feature
+        //          without having to load the app up on device with the supporting feature. To enable it
+        //          you must change your client configuration for a image scanner type to 'Debug'.
+        { provide: IMAGE_SCANNERS, useClass: DebugImageScanner, multi: true },
         { provide: PLUGINS, useExisting: AilaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: InfineaScannerCordovaPlugin, multi: true},
         { provide: PLUGINS, useExisting: NCRPaymentPlugin, multi: true, deps: [SessionService]},

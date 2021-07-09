@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, OnDestroy, OnInit, ElementRef } from '@angular/core';
-import { merge, Observable, Subscription, throwError } from 'rxjs';
-import { delay, map, publishLast, refCount, takeWhile } from 'rxjs/operators';
+import { interval, merge, Observable, Subject, Subscription, throwError } from 'rxjs';
+import { delay, distinctUntilChanged, map, takeWhile, tap } from 'rxjs/operators';
 
 import { ScanData, ScannerViewRef } from './scanner';
 
@@ -47,6 +47,24 @@ export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef 
             ).pipe(
                 // orientation changes get funky; delay them a little.
                 delay(1000)
+            ),
+            interval(500).pipe(
+                map(() => {
+                    const box = this._elementRef.nativeElement.getBoundingClientRect();
+
+                    return {
+                        left: box.left,
+                        top: box.top,
+                        width: box.width,
+                        height: box.height
+                    };
+                }),
+                distinctUntilChanged((x, y) => 
+                    x.left === y.left
+                    && x.top === y.top
+                    && x.width === y.width
+                    && x.height === y.height
+                )
             )
         ];
 
@@ -59,10 +77,9 @@ export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef 
             ));
         }
 
-        this._viewChanges = merge(viewChanges).pipe(
+        this._viewChanges = merge(...viewChanges).pipe(
             takeWhile(() => !this._destroyed),
             map(() => {
-                console.log('view update');
                 const box = this._elementRef.nativeElement.getBoundingClientRect();
 
                 return {
@@ -71,9 +88,7 @@ export class ImageScannerComponent implements OnInit, OnDestroy, ScannerViewRef 
                     width: box.width,
                     height: box.height
                 };
-            }),
-            publishLast(),
-            refCount()
+            })
         );
 
         this._scanSubscription = this._scanners.beginImageScanning(this)
