@@ -21,20 +21,6 @@
         padding-top: 10px;
       }
     }
-    .plans {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1em;
-      .plan {
-        padding-right: 2.5em;
-        padding-left: 3em;
-
-      }
-      .plan:not(:first-child) {
-        border-left-style: solid;
-        border-left-width: 1px;
-      }
-    }
   }
   &.mobile {
     height: 55vmin;

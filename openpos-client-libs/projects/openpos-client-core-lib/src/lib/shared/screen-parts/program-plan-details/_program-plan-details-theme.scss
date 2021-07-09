@@ -1,0 +1,8 @@
+@mixin program-plan-details-theme($theme) {
+    $primary: mat-color(map-get($theme, primary));
+    $foreground: map-get($theme, foreground );
+
+    .plans {
+        border-color: map-get($foreground, border);
+    }
+}

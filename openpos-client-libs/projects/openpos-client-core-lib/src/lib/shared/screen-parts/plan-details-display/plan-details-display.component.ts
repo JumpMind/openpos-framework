@@ -1,9 +1,9 @@
 import {Component, Injector, Input} from '@angular/core';
 import {PlanDetailsDisplayComponentInterface} from './plan-details-display.interface';
 import {ScreenPartComponent} from '../screen-part';
-import {Plan} from "../../../screens-with-parts/sale/membership-details-dialog/membership-details-dialog.interface";
 import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
 import {Observable} from "rxjs";
+import {Plan} from "../../../screens-with-parts/sale/program-interface";
 
 @Component({
     selector: 'app-plan-details-display',

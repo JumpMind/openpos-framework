@@ -3,7 +3,7 @@ import {ScreenPartComponent} from '../screen-part';
 import {EnrollmentLineItemComponentInterface} from './enrollment-line-item.interface';
 import {Observable} from "rxjs";
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
-import {EnrollmentItem} from "../../../screens-with-parts/sale/membership-details-dialog/membership-details-dialog.interface";
+import {EnrollmentItem} from "../../../screens-with-parts/sale/program-interface";
 
 @Component({
     selector: 'app-enrollment-line-item',

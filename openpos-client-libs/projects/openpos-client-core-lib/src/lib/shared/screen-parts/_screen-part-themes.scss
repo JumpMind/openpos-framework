@@ -20,6 +20,7 @@
 @import './customer-information/customer-information-theme';
 @import './plan-details-display/plan-details-display-theme';
 @import './enrollment-line-item/enrollment-line-item-theme';
+@import './program-plan-details/program-plan-details-theme';
 
 @mixin screen-part-themes($theme) {
     @include bacon-strip-theme($theme);
@@ -42,5 +43,6 @@
     @include reward-line-items-theme($theme);
     @include reward-history-line-items-theme($theme);
     @include plan-details-display-theme($theme);
+    @include program-plan-details-theme($theme);
     @include enrollment-line-items-theme($theme);
 }

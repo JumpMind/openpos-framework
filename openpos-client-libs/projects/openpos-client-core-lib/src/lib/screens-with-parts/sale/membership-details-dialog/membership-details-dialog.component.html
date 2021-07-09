@@ -43,12 +43,9 @@
                             <app-enrollment-line-item [enrollment]="row"></app-enrollment-line-item>
                         </div>
                     </div>
-
-                    <div *ngIf="!tab.subscriptionAccountListItems || tab.subscriptionAccountListItems.length == 0" class="plans">
-                        <div *ngFor="let plan of tab.subscriptionPlans" class="plan">
-                            <app-plan-details-display [plan]="plan"></app-plan-details-display>
-                        </div>
-                    </div>
+                    <app-program-plan-details
+                            *ngIf="!tab.subscriptionAccountListItems || tab.subscriptionAccountListItems.length == 0"
+                            [plans]="tab.subscriptionPlans"></app-program-plan-details>
                     <app-primary-button responsive-class
                                         class="sign-up"
                                         *ngIf="tab.signupActionItem && tab.subscriptionAccountListItems && tab.subscriptionAccountListItems.length > 0"

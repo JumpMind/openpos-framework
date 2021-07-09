@@ -11,8 +11,4 @@
             color: mat-color($foreground, secondary-text);
         }
     }
-
-    .plans {
-        border-color: map-get($foreground, border);
-    }
 }
