@@ -120,6 +120,7 @@ app-bacon-strip{
         display: grid;
         grid-auto-flow: column;
         margin-bottom: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     }
 
     ul{

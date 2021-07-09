@@ -6,8 +6,9 @@
 }
 
 .swatch-container {
-  display: grid;
-  grid-auto-flow: column;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
 
   .swatch {
     border-radius: 50%;
