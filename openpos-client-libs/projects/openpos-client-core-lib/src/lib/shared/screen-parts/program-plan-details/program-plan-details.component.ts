@@ -7,5 +7,7 @@ import {Plan} from "../../../screens-with-parts/sale/program-interface";
     styleUrls: ['./program-plan-details.component.scss']})
 export class ProgramPlanDetailsComponent {
     @Input()
+    programCopy: String;
+    @Input()
     plans: Plan[];
 }

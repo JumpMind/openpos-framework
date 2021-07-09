@@ -9,6 +9,7 @@ import java.util.List;
 public class ProgramPlanSelectionUIMessage extends UIMessage {
     private static final long serialVersionUID = 1L;
 
+    String programCopy;
     List<UISubscriptionPlan> subscriptionPlans;
 
     public ProgramPlanSelectionUIMessage() {

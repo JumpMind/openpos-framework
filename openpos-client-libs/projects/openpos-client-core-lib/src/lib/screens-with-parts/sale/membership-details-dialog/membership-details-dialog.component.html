@@ -45,6 +45,7 @@
                     </div>
                     <app-program-plan-details
                             *ngIf="!tab.enrollmentItems || tab.enrollmentItems.length == 0"
+                            [programCopy]="tab.copy"
                             [plans]="tab.plans"></app-program-plan-details>
                     <app-primary-button responsive-class
                                         class="sign-up"
