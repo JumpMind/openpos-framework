@@ -7,16 +7,18 @@
 .thumbnails {
     display: flex;
     flex-direction: column;
-    max-width: 75px;
 
     overflow-y: auto;
 
     img {
         cursor: pointer;
+
+        height: auto;
+        width: 64px;
     }
 }
 
-img {
+img.main {
     object-fit: contain;
     object-position: top;
 

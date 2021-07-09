@@ -5,4 +5,4 @@
         [src]="thumbnailUrl | imageUrl">
 </div>
 
-<img [src]="(selectedImageUrl || altImageUrl) | imageUrl" [alt]="altImageText" (error)="onSelectedImageError()">
+<img class="main" [src]="(selectedImageUrl || altImageUrl) | imageUrl" [alt]="altImageText" (error)="onSelectedImageError()">
