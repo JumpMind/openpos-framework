@@ -4,43 +4,41 @@
         <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
         <app-scan-or-search *ngIf="screen.showScan" class="scan-or-search mat-elevation-z1"></app-scan-or-search>
         <app-content-card>
-            <mat-dialog-content>
-                <div class="dialog-content">
-                    <app-selectable-item-list  *ngIf="screen.selectionList && screen.selectionList.length > 0" fxFlex="0 1 100%" [listData]="listData"
-                        [configuration]="listConfig" [defaultSelect]="screen.defaultSelect"
-                        [selectedItemList]="selectedItems"
-                        [selectedItem]="selectedItem"
-                        (selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)"
-                        class="item-list">
-                        <ng-template let-item>
-                            <div #items gdAreas="img info" gdColumns="auto 2fr" [ngClass]="{'muted-color' : !item.enabled}">
-                                <div gdArea="img">
-                                    <img *ngIf="item.itemImageUrl" src="{{item.itemImageUrl | imageUrl}}" alt="{{item.title}}"
-                                        class="item-card-image">
-                                </div>
-                                <div gdArea="info">
-                                    <div fxShow fxHide.xs="true" fxHide.lg="false" *ngIf="item.title" class="text-sm" [innerHtml]="item.title | markdownFormatter"></div>
-                                    <div fxHide fxHide.xs="false" fxHide.lg="true" *ngIf="item.title" class="text-md" [innerHtml]="item.title | markdownFormatter"></div>
-                                    <div *ngIf="item.properties" fxLayoutAlign="space-between">
-                                        <div *ngFor="let property of item.properties">
-                                            <div *ngIf="property.label" class="item-property-label" [ngStyle]="{'text-align': property.textAlignment}">
-                                                {{property.label}}
-                                            </div>
-                                            <p class="item-property-line" *ngFor="let line of property.lines" [ngStyle]="{'text-align': property.textAlignment}">
-                                                {{line}}
-                                            </p>
+            <mat-dialog-content class="dialog-content">
+                <app-selectable-item-list  *ngIf="screen.selectionList && screen.selectionList.length > 0" fxFlex="0 1 100%" [listData]="listData"
+                    [configuration]="listConfig" [defaultSelect]="screen.defaultSelect"
+                    [selectedItemList]="selectedItems"
+                    [selectedItem]="selectedItem"
+                    (selectedItemChange)="onItemChange($event)" (selectedItemListChange)="onItemListChange($event)"
+                    class="item-list">
+                    <ng-template let-item>
+                        <div #items gdAreas="img info" gdColumns="auto 2fr" [ngClass]="{'muted-color' : !item.enabled}">
+                            <div gdArea="img">
+                                <img *ngIf="item.itemImageUrl" src="{{item.itemImageUrl | imageUrl}}" alt="{{item.title}}"
+                                    class="item-card-image">
+                            </div>
+                            <div gdArea="info">
+                                <div fxShow fxHide.xs="true" fxHide.lg="false" *ngIf="item.title" class="text-sm" [innerHtml]="item.title | markdownFormatter"></div>
+                                <div fxHide fxHide.xs="false" fxHide.lg="true" *ngIf="item.title" class="text-md" [innerHtml]="item.title | markdownFormatter"></div>
+                                <div *ngIf="item.properties" fxLayoutAlign="space-between">
+                                    <div *ngFor="let property of item.properties">
+                                        <div *ngIf="property.label" class="item-property-label" [ngStyle]="{'text-align': property.textAlignment}">
+                                            {{property.label}}
                                         </div>
+                                        <p class="item-property-line" *ngFor="let line of property.lines" [ngStyle]="{'text-align': property.textAlignment}">
+                                            {{line}}
+                                        </p>
                                     </div>
                                 </div>
                             </div>
-                        </ng-template>
-                    </app-selectable-item-list>
-                    <div *ngIf="!screen.selectionList || screen.selectionList.length == 0" fxLayout="column" fxLayoutAlign="center center"
-                         class="muted-color">
-                        <app-icon *ngIf="screen.noListItemsPlaceholderIcon" iconClass="material-icons mat-180 muted-color"
-                                  [iconName]="screen.noListItemsPlaceholderIcon"></app-icon>
-                        <span *ngIf="screen.noListItemsPlaceholderText" class="text-md">{{screen.noListItemsPlaceholderText}}</span>
-                    </div>
+                        </div>
+                    </ng-template>
+                </app-selectable-item-list>
+                <div *ngIf="!screen.selectionList || screen.selectionList.length == 0" fxLayout="column" fxLayoutAlign="center center"
+                     class="muted-color">
+                    <app-icon *ngIf="screen.noListItemsPlaceholderIcon" iconClass="material-icons mat-180 muted-color"
+                              [iconName]="screen.noListItemsPlaceholderIcon"></app-icon>
+                    <span *ngIf="screen.noListItemsPlaceholderText" class="text-md">{{screen.noListItemsPlaceholderText}}</span>
                 </div>
             </mat-dialog-content>
         </app-content-card>
