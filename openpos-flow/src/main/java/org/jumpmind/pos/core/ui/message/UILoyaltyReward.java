@@ -11,10 +11,14 @@ import java.util.Date;
 public class UILoyaltyReward implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    private String statusText;
     private String promotionId;
     private String name;
     private String expirationDate;
     private String expirationLabel;
+    private String barcode;
     private BigDecimal amount;
-    private ActionItem applyButton;
+    private ActionItem actionButton;
+    private String actionIcon;
+    private Boolean isAppliedToTransaction;
 }

@@ -8,7 +8,9 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     membershipEnabled: boolean;
     membershipPointsEnabled: boolean;
     membershipLabel: String;
+    appliedLabel: string;
     loyaltyPromotions: IActionItem;
+    backButton: IActionItem;
     editButton: IActionItem;
     unlinkButton: IActionItem;
     doneButton: IActionItem;
@@ -20,7 +22,13 @@ export interface CustomerDetailsDialogInterface extends IAbstractScreen {
     rewardHistoryTabEnabled: boolean;
     noPromotionsText: string;
     noMembershipsFoundLabel: string;
+    itemHistoryEnabled: boolean;
+    itemHistoryLabel: string;
 
-    profileIcon: string;
+    appliedIcon: string;
     membershipCardIcon: string;
+
+    itemsHistoryDataProviderKey: string;
+    profileIcon: string;
+    statusIcon: string;
 }

@@ -52,7 +52,7 @@ public class EscpPOSPrinter implements IOpenposPrinter {
     static final int THERMAL_HEAD_OR_VOLTAGE_OUT_OF_RANGE = 0b10000000;
 
     int currentPrintStation = POSPrinterConst.PTR_S_RECEIPT;
-    private IPrinterStatusReporter printerStatusReporter;
+    protected IPrinterStatusReporter printerStatusReporter;
 
     public EscpPOSPrinter() {
         this.settings = new HashMap<>();

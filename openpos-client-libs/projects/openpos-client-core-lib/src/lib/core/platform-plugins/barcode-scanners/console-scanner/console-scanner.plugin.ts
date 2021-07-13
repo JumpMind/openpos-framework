@@ -6,6 +6,7 @@ import { Scanner, ScanData, ScanDataType } from '../scanner';
 declare global {
     interface Console {
         scan?: (type: ScanDataType, data: string) => void;
+        scanData?: (type: ScanData) => void;
     }
 }
 
@@ -22,6 +23,10 @@ export class ConsoleScannerPlugin implements Scanner {
                 data: value
             });
         };
+
+        console.scanData = (scanData: ScanData) => {
+            this.scanSubject.next({ rawData: scanData.rawData, data: scanData.data, rawType: scanData.rawType, type: scanData.type });
+        }
     }
 
     beginScanning(): Observable<ScanData> {

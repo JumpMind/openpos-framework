@@ -14,7 +14,8 @@ import { DiscoveryResponse } from '../discovery/discovery-response.interface';
 
 @Component({
     selector: 'app-personalization',
-    templateUrl: './personalization.component.html'
+    templateUrl: './personalization.component.html',
+    styleUrls: ['./personalization.component.scss']
 })
 export class PersonalizationComponent implements IScreen, OnInit {
 

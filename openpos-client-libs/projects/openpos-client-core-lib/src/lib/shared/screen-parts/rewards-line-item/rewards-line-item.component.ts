@@ -3,7 +3,7 @@ import {ScreenPartComponent} from '../screen-part';
 import {Reward, RewardsLineItemComponentInterface} from './rewards-line-item.interface';
 import {Observable} from "rxjs";
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
-
+import {KeyPressProvider} from "../../providers/keypress.provider";
 
 @Component({
     selector: 'app-rewards-line-item',
@@ -17,6 +17,7 @@ export class RewardsLineItemComponent extends ScreenPartComponent<RewardsLineIte
         super(injector);
         this.initIsMobile();
     }
+
     initIsMobile(): void {
         this.isMobile = this.media.observe(new Map([
             [MediaBreakpoints.MOBILE_PORTRAIT, true],

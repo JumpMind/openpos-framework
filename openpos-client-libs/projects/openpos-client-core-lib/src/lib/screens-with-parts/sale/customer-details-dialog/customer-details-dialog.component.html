@@ -41,7 +41,7 @@
         </div>
         <app-membership-points-display *ngIf="(isMobile | async) && screen.membershipPointsEnabled" class="points"></app-membership-points-display>
     </app-content-card>
-    <div *ngIf="(isMobile | async) || (!(isMobile | async) && (screen.rewardTabEnabled || screen.rewardHistoryTabEnabled))"
+    <div *ngIf="(isMobile | async) || (!(isMobile | async) && (screen.rewardTabEnabled || screen.rewardHistoryTabEnabled || screen.itemHistoryEnabled))"
          class="tabs" [ngClass]="{'tabs': true, 'mobile': (isMobile | async)}" responsive-class>
         <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
             <mat-tab class="contactTab" [label]="screen.contactLabel" *ngIf="isMobile | async">
@@ -53,15 +53,61 @@
                     class="rewardsTab" [label]="getRewardsLabel()">
                 <mat-card [ngClass]="{'rewardsContent': true, 'with-points': !(isMobile | async) && screen.membershipPointsEnabled, 'no-promotions': !(screen.customer.rewards && screen.customer.rewards.length)}">
                     <div class="reward-list" *ngIf="(screen.customer.rewards && screen.customer.rewards.length)" >
-                        <div *ngFor="let reward of screen.customer.rewards" class="line">
-                            <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
-                        </div>
+                        <app-selectable-item-list [listData]="listData" [configuration]="listConfig" [defaultSelect]="true" [selectedItem]="selectedReward"
+                                                  (selectedItemChange)="onItemChange($event)">
+                            <ng-template let-reward>
+                                <app-rewards-line-item [reward]="reward"></app-rewards-line-item>
+                            </ng-template>
+                        </app-selectable-item-list>
                     </div>
                     <app-membership-points-display *ngIf="!(isMobile | async) && screen.membershipPointsEnabled" class="points"></app-membership-points-display>
                     <div *ngIf="!(screen.customer.rewards && screen.customer.rewards.length)" class="no-items" responsive-class>
                         {{screen.noPromotionsText}}
                     </div>
                 </mat-card>
+            </mat-tab>
+            <mat-tab *ngIf="screen.itemHistoryEnabled"
+                    [label]="screen.itemHistoryLabel">
+                <app-infinite-scroll [dataKey]="screen.itemsHistoryDataProviderKey" [itemTemplate]="itemHistoryTemplate" virtualScrollMinBufferPx="400" virtualScrollMaxBufferPx="800" [itemHeightPx]="155">
+                    <ng-template #itemHistoryTemplate let-item>
+                        <div class="item">
+                            <div class="image-container">
+                                <img [src]="item.imageUrl | imageUrl">
+                            </div>
+                            <h3 class="title">{{ item.title }}</h3>
+                            <div class="labels-cont">
+                                <ul>
+                                    <li class="muted-color" *ngFor="let l of item.labels">
+                                        <app-icon [iconName]="l.icon"></app-icon>
+                                        <div class="inline-markdown" [innerHTML]="l.text | markdownFormatter"></div>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="price-cont">
+                                <app-currency-text [amountText]="item.salePrice"></app-currency-text>
+                                <app-currency-text class="muted-color" *ngIf="item.originalPrice !== item.salePrice" [amountText]="item.originalPrice"></app-currency-text>
+                            </div>
+                            <div class="links-cont">
+                                <a *ngIf="item.transactionDetailsAction"
+                                    [actionItem]="item.transactionDetailsAction"
+                                    (actionClick)="doAction(item.transactionDetailsAction.action, item.transaction || item.transactionDetailsAction.defaultPayload)"
+                                    (click)="doAction(item.transactionDetailsAction.action, item.transaction || item.transactionDetailsAction.defaultPayload)"
+                                    mat-button
+                                    responsive-class>
+                                    {{item.transactionDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                                </a>
+                                <a *ngIf="item.itemDetailsAction"
+                                    [actionItem]="item.itemDetailsAction"
+                                    (actionClick)="doAction(item.itemDetailsAction.action, item.itemId || item.itemDetailsAction.defaultPayload)"
+                                    (click)="doAction(item.itemDetailsAction.action, item.itemId || item.itemDetailsAction.defaultPayload)"
+                                    mat-button
+                                    responsive-class>
+                                    {{item.itemDetailsAction.title}} <app-icon iconName="navigate_next" [iconClass]="'material-icons mat-24'"></app-icon>
+                                </a>
+                            </div>
+                        </div>
+                    </ng-template>
+                </app-infinite-scroll>
             </mat-tab>
             <mat-tab *ngIf="screen.rewardHistoryTabEnabled"
                     class="rewardsHistoryTab" [label]="screen.rewardHistoryLabel">
@@ -89,6 +135,9 @@
                           (click)="doAction(menuItem)">
         <span responsive-class>{{menuItem.title}}</span>
         <app-icon *ngIf="menuItem.icon" [iconClass]="'md'" [iconName]="menuItem.icon"></app-icon>
+        <span *ngIf="keybindsEnabled(menuItem)" class="muted-color keybinding" >
+            {{menuItem.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-secondary-button responsive-class
                           class="unlink"
@@ -98,6 +147,9 @@
                           (actionClick)="doAction(screen.unlinkButton)"
                           (click)="doAction(screen.unlinkButton)">
         <span>{{screen.unlinkButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.unlinkButton)" class="muted-color keybinding" >
+            {{screen.unlinkButton.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-secondary-button responsive-class
                           class="edit"
@@ -107,6 +159,9 @@
                           (actionClick)="doAction(screen.editButton)"
                           (click)="doAction(screen.editButton)">
         <span>{{screen.editButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.editButton)" class="muted-color keybinding" >
+            {{screen.editButton.keybindDisplayName}}
+        </span>
     </app-secondary-button>
     <app-primary-button responsive-class
                         class="done"
@@ -116,5 +171,8 @@
                         (actionClick)="doAction(screen.doneButton)"
                         (click)="doAction(screen.doneButton)">
         <span>{{screen.doneButton.title}}</span>
+        <span *ngIf="keybindsEnabled(screen.doneButton)" class="muted-color keybinding" >
+            {{screen.doneButton.keybindDisplayName}}
+        </span>
     </app-primary-button>
 </mat-dialog-actions>

@@ -33,6 +33,9 @@
   justify-content: end;
   grid-column-gap: 8px;
   padding-bottom: 16px;
+  .keybinding {
+    margin-left: 10px;
+  }
 }
 
 app-content-card {
@@ -73,6 +76,7 @@ app-content-card {
   .membership-icon {
     .material-icons{
       margin-top: -10px;
+      width: 80px;
     }
   }
   .memberships {
@@ -159,4 +163,95 @@ app-content-card {
   .points {
     grid-area: points;
   }
+}
+
+.item {
+  width: 100%;
+  padding: 12px 4px;
+
+  display: grid;
+  grid-template-areas:
+    'img title price links'
+    'img labels price links';
+
+  grid-template-columns: 10% 50% 20% 20%;
+  grid-template-rows: auto 1fr;
+
+  > .image-container {
+    grid-area: img;
+    max-width: 100%;
+    height: 130px;
+    padding-right: 8px;
+
+    > img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  > .title {
+    grid-area: title;
+    margin: 0px 0px 8px 0px;
+  }
+
+  > .labels-cont {
+    grid-area: labels;
+
+    ul {
+      margin: 0px;
+      padding: 0px;
+      list-style-type: none;
+
+      li {
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+
+        > app-icon {
+          padding: 0px 4px 0px 4px;
+        }
+      }
+    }
+  }
+
+  > .price-cont {
+    grid-area: price;
+
+    align-self: center;
+    justify-self: center;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    > :nth-child(1) {
+      font-size: 1.8em;
+      font-weight: bold;
+    }
+
+    > :nth-child(n + 2) {
+      text-decoration: line-through;
+    }
+  }
+
+  > .links-cont {
+    grid-area: links;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+
+    a {
+      font-size: 1.2em;
+    }
+  }
+}
+ 
+.item:last-child {
+  border-bottom: none;
+}
+
+app-infinite-scroll {
+  height: 100%;
 }

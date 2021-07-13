@@ -47,6 +47,9 @@ public class Action implements Serializable, Cloneable {
     private transient Action causedBy; // Used when renaming an action during a substate return.
     @JsonIgnore
     private transient CountDownLatch latch = new CountDownLatch(1);
+    @JsonIgnore
+    private transient boolean originatesFromDeviceFlag; // used to indicate the action came from an device versus
+                                                        // being generated from within the state machine.
     
     static ObjectMapper mapper = DefaultObjectMapper.build();
 
