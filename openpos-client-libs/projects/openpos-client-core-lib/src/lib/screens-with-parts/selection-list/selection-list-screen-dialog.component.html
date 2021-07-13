@@ -4,7 +4,7 @@
         <app-instructions *ngIf="screen.instructions" [instructions]="screen.instructions" [instructionsSize]="'text-sm'"></app-instructions>
         <app-scan-or-search *ngIf="screen.showScan" class="scan-or-search mat-elevation-z1"></app-scan-or-search>
         <app-content-card>
-            <mat-dialog-content class="dialog-content">
+            <mat-dialog-content class="dialog-content" ngStyle.xl="max-height:500px" ngStyle.lg="max-height:500px" ngStyle.md="max-height:400px" ngStyle.sm="max-height:400px" ngStyle.xs="max-height:300px">
                 <app-selectable-item-list  *ngIf="screen.selectionList && screen.selectionList.length > 0" fxFlex="0 1 100%" [listData]="listData"
                     [configuration]="listConfig" [defaultSelect]="screen.defaultSelect"
                     [selectedItemList]="selectedItems"
