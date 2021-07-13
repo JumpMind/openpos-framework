@@ -1,6 +1,7 @@
 @import "../../../styles/mixins/typography";
 .plans {
   display: flex;
+  justify-content: center;
   .plan {
     padding-right: 2.5em;
     padding-left: 3em;

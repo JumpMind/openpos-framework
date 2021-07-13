@@ -1,5 +1,5 @@
 <div class="program">
-    <div *ngIf="programCopy" [innerHtml]="programCopy"></div>
+    <div *ngIf="programCopy" [innerHtml]="safeProgramCopy"></div>
 </div>
 <div class="plans">
     <div *ngFor="let plan of plans" class="plan">
