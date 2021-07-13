@@ -143,9 +143,7 @@ public class Injector {
                 Object configScopeValue = currentContext.getFlowConfig().getConfigScope() != null
                 ? currentContext.getFlowConfig().getConfigScope().get(name)
                         : null;
-                if (configScopeValue != null) {
-                    value = new ScopeValue(configScopeValue);
-                } 
+                value = new ScopeValue(configScopeValue);
                 break;
             case Device:
                 value = scope.getDeviceScope().get(name);
@@ -174,19 +172,20 @@ public class Injector {
             }            
         }
 
-        if (value != null && value.getValue() != null) {
+        
+        if( (value == null || value.getValue() == null) && required ){
+            throw failedToResolveInjection(field, name, targetClass, target, scope, currentContext, scopeType);
+        } else if ((value != null && value.getValue() != null) || (ScopeType.Config.equals(scopeType) && !field.getType().isPrimitive())) {
             try {
                 field.set(target, value.getValue());
                 logger.trace("Injected field '{}' with value {}", name, value.getValue());
             } catch (Exception ex) {
                 throw new FlowException("Failed to set target field " + field + " to value " + value.getValue(), ex);
             }
-        } else if (required) {            
-            throw failedToResolveInjection(field, name, targetClass, target, scope, currentContext, scopeType);
         }
         logger.trace("Injection of field '{}' on bean {} completed", name, target);
     }
-
+    
     protected ScopeValue autoCreate(String name, ScopeType scopeType, Scope scope, StateContext currentContext) {
         Object bean = applicationContext.getBean(name);
         performInjections(bean, scope, currentContext);

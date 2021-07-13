@@ -1,6 +1,15 @@
 <h3>{{screenData.optionName}}</h3>
-<mat-select (selectionChange)="optionSelected($event)" [placeholder]="screenData.optionPlaceholder" [value]="screenData.selectedOption">
+<mat-select (selectionChange)="optionSelected($event)" [style.font-weight]="'bold'" [placeholder]="screenData.optionPlaceholder" [value]="screenData.selectedOption" #select>
     <mat-option *ngFor="let option of screenData.options" 
-                [value]="option.id" 
-                >{{option.name}}</mat-option>
+                [value]="option.id">
+        <ng-container *ngIf="option.id === screenData.selectedOption">
+            <b>{{option.name}}</b>
+        </ng-container>
+        <ng-container *ngIf="option.id !== screenData.selectedOption">
+            {{option.name}}
+        </ng-container>
+        <ng-container *ngIf="select.panelOpen && option.secondaryLabel">
+            <span class="secondary-label-option">{{option.secondaryLabel}}</span>
+        </ng-container>
+    </mat-option>
 </mat-select>

@@ -29,6 +29,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
     }
 
     public void addDefaultAddressFields() {
+        this.getForm().addTextField("attention", "key:customerdisplay:customer.form.field.attention", "", true);
         this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", "", true);
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", "", false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", "", true);
@@ -37,7 +38,8 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", "", true);
     }
 
-    public void addDefaultAddressFields(String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
+    public void addDefaultAddressFields(String attention, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
+        this.getForm().addTextField("attention", "key:customerdisplay:customer.form.field.attention", attention, true);
         this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", streetAddress, true);
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", addressLine2, false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", locality, true);
@@ -48,6 +50,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
 
 
     public void addAddressFieldsWithComboState(List<String> states) {
+        this.getForm().addTextField("attention", "key:customerdisplay:customer.form.field.attention", "", true);
         this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", "", true);
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", "", false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", "", true);
@@ -56,7 +59,8 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", "", true);
     }
 
-    public void addAddressFieldsWithComboState(List<String> states, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
+    public void addAddressFieldsWithComboState(List<String> states, String attention, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country) {
+        this.getForm().addTextField("attention", "key:customerdisplay:customer.form.field.attention", attention, true);
         this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", streetAddress, true);
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", addressLine2, false);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", locality, true);
@@ -67,6 +71,7 @@ public class AddressUIMessage extends DynamicFormUIMessage {
 
 
     public void addAddressFieldsWithComboState(List<String> states, int streetAddressCharacterLimit, int addressLine2CharacterLimit, int cityCharacterLimit) {
+        this.getForm().addTextField("attention", "key:customerdisplay:customer.form.field.attention", "", true);
         this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", "", true).setMaxLength(streetAddressCharacterLimit);
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", "", false).setMaxLength(addressLine2CharacterLimit);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", "", true).setMaxLength(cityCharacterLimit);
@@ -75,7 +80,8 @@ public class AddressUIMessage extends DynamicFormUIMessage {
         this.getForm().addTextField("country", "key:customerdisplay:customer.form.field.country", "", true);
     }
 
-    public void addAddressFieldsWithComboState(List<String> states, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country, int streetAddressCharacterLimit, int addressLine2CharacterLimit, int cityCharacterLimit) {
+    public void addAddressFieldsWithComboState(List<String> states, String attention, String streetAddress, String addressLine2, String locality, String state, String postalCode, String country, int streetAddressCharacterLimit, int addressLine2CharacterLimit, int cityCharacterLimit) {
+        this.getForm().addTextField("attention", "key:customerdisplay:customer.form.field.attention", attention, true);
         this.getForm().addTextField("streetAddress", "key:customerdisplay:customer.form.field.addressLine1", streetAddress, true).setMaxLength(streetAddressCharacterLimit);
         this.getForm().addTextField("addressLine2", "key:customerdisplay:customer.form.field.addressLine2", addressLine2, false).setMaxLength(addressLine2CharacterLimit);
         this.getForm().addTextField("locality", "key:customerdisplay:customer.form.field.city", locality, true).setMaxLength(cityCharacterLimit);

@@ -128,6 +128,16 @@ public class PromptConfig {
         return responseText;
     }
 
+    public PromptConfig minLength(Integer minLength) {
+        this.minLength = minLength;
+        return this;
+    }
+
+    public PromptConfig maxLength(Integer maxLength) {
+        this.maxLength = maxLength;
+        return this;
+    }
+
     public PromptConfig responseText(String responseText) {
         this.responseText = responseText;
         return this;

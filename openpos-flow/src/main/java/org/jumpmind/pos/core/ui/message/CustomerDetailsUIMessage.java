@@ -49,6 +49,8 @@ public class CustomerDetailsUIMessage extends UIMessage {
     private String itemHistoryLabel;
     private String itemsHistoryDataProviderKey;
 
+    private UICustomerItemHistoryFilter itemHistoryFilter;
+
     public CustomerDetailsUIMessage() {
         setScreenType(UIMessageType.CUSTOMER_DETAILS_DIALOG);
     }

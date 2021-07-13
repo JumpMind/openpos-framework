@@ -65,6 +65,25 @@
             </mat-tab>
             <mat-tab *ngIf="screen.itemHistoryEnabled"
                     [label]="screen.itemHistoryLabel">
+                <div class="filter-bar">
+                    <div class="date-range">
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="dateFrom" [placeholder]="screen.itemHistoryFilter.fromDatePlaceholder" [formControl]="itemsHistoryFilterController.fromDate" (dateChange)="itemsHistoryFilterController.fromDateFilterChanged($event.value)">
+                            <mat-datepicker-toggle matSuffix [for]="dateFrom"></mat-datepicker-toggle>
+                            <mat-datepicker #dateFrom></mat-datepicker>
+                        </mat-form-field>
+                        <span>-</span>
+                        <mat-form-field>
+                            <input matInput [matDatepicker]="dateTo" [placeholder]="screen.itemHistoryFilter.toDatePlaceholder" [formControl]="itemsHistoryFilterController.toDate" (dateChange)="itemsHistoryFilterController.toDateFilterChanged($event.value)">
+                            <mat-datepicker-toggle matSuffix [for]="dateTo"></mat-datepicker-toggle>
+                            <mat-datepicker #dateTo></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+
+                    <mat-form-field>
+                        <input matInput [formControl]="itemsHistoryFilterController.textFilter" (keypress)="itemsHistoryFilterController.onFilterKeyPress($event)" (focus)="$event.target.select()" [placeholder]="screen.itemHistoryFilter.textPlaceholder">
+                    </mat-form-field>
+                </div>
                 <app-infinite-scroll [dataKey]="screen.itemsHistoryDataProviderKey" [itemTemplate]="itemHistoryTemplate" virtualScrollMinBufferPx="400" virtualScrollMaxBufferPx="800" [itemHeightPx]="155">
                     <ng-template #itemHistoryTemplate let-item>
                         <div class="item">

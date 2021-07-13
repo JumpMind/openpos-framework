@@ -28,6 +28,7 @@ export class DialogService {
     private dialogOpening: boolean;
     private lastDialogType: string;
     private lastDialogId: string;
+    private lastScreenSeq: number;
 
     constructor(
         private messageProvider: MessageProvider,
@@ -44,6 +45,7 @@ export class DialogService {
         // Pipe all the messages for dialog updates
         this.messageProvider.setMessageType(MessageTypes.DIALOG);
         this.session.getMessages(MessageTypes.DIALOG).subscribe(m => this.updateDialog(m));
+        this.session.getMessages(MessageTypes.SCREEN).pipe(tap(x => console.log("Last screen sequence = ", x.sequenceNumber))).subscribe( m => this.lastScreenSeq = m.sequenceNumber)
     }
 
     public addDialog(name: string, type: Type<IScreen>): void {
@@ -114,11 +116,10 @@ export class DialogService {
     }
 
     private updateDialog(dialog?: any): void {
-        if (dialog) {
+        if(dialog){
             const dialogType = this.hasDialog(dialog.subType) ? dialog.subType : 'Dialog';
             if (!this.dialogOpening) {
                 console.info('opening dialog \'' + dialogType + '\'');
-                this.dialogOpening = true;
                 setTimeout(() => this.openDialog(dialog), 0);
             } else {
                 console.info(`[DialogService] putting off the opening of the dialog to the future because another dialog is currently opening`);
@@ -128,7 +129,12 @@ export class DialogService {
     }
 
     private async openDialog(dialog: any) {
+        if (!dialog || dialog.sequenceNumber < this.lastScreenSeq) {
+            console.log(`Not opening dialog because the sequence is older than the last screen`);
+            return;
+        }
         try {
+            this.dialogOpening = true;
             const dialogComponentFactory: ComponentFactory<IScreen> = this.resolveDialog(dialog.screenType);
             console.info(`[DialogService] Opening a dialog with a ` +
                 `${dialogComponentFactory && dialogComponentFactory.componentType ? dialogComponentFactory.componentType.name : '?'} ` +
@@ -143,7 +149,7 @@ export class DialogService {
             // By default we want to not allow the user to close by clicking off
             // By default we need the dialog to grab focus so you cannont execute actions on the screen
             // behind by hitting enter
-            const dialogProperties: OpenPOSDialogConfig = { disableClose: !closeable, autoFocus: true };
+            const dialogProperties: OpenPOSDialogConfig = {disableClose: !closeable, autoFocus: true};
             // const dialogComponent = dialogComponentFactory.componentType;
             if (dialog.dialogProperties) {
                 // Merge in any dialog properties provided on the screen
@@ -165,7 +171,7 @@ export class DialogService {
 
                 if (!this.dialogRef || !this.dialogRef.componentInstance) {
                     console.info('[DialogService] Dialog \'' + dialog.screenType + '\' opening...');
-                    this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.DialogOpening, dialog));
+                    this.session.sendMessage(new LifeCycleMessage(LifeCycleEvents.DialogOpening, dialog));
                     this.beforeOpened$.next(dialogProperties);
                     this.dialogRef = this.dialog.open(DialogContentComponent, dialogProperties);
 
@@ -197,7 +203,7 @@ export class DialogService {
             this.dialogOpening = false;
         }
         console.log("screen updated");
-        this.session.sendMessage( new LifeCycleMessage(LifeCycleEvents.ScreenUpdated, dialog));
+        this.session.sendMessage(new LifeCycleMessage(LifeCycleEvents.ScreenUpdated, dialog));
     }
 
 }

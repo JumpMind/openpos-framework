@@ -23,6 +23,15 @@ export class PromptFormPartComponent extends ScreenPartComponent<PromptFormPartI
     inputControlName = 'promptInputControl';
     hiddenInputControlName = 'promptInputHiddenDateControl';
 
+    get autoFocusPrompt(): boolean {
+        // default to true if not properly defined... it is the way
+        if (this.screenData.autoFocus === null || this.screenData.autoFocus === undefined) {
+            return true;
+        }
+
+        return this.screenData.autoFocus;
+    }
+
     constructor(private validatorsService: ValidatorsService, injector: Injector) {
         super(injector);
     }

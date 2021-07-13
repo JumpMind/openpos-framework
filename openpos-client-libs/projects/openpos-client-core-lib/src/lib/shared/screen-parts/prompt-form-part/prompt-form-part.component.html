@@ -15,7 +15,8 @@
                                       [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled"
                                       [validationMessages]="screenData.validationMessages"
                                       [readOnly]="!screenData.editable"
-                                      [scanActionName]="screenData.scan?.scanActionName">
+                                      [scanActionName]="screenData.scan?.scanActionName"
+                                      [autoFocus]="autoFocusPrompt">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
                     <div #optionsRef>
@@ -59,7 +60,8 @@
                                       [minLength]="screenData.minLength" [maxLength]="screenData.maxLength" [promptFormGroup]="promptFormGroup"
                                       [validationMessages]="screenData.validationMessages"
                                       [keyboardPreference]="screenData.keyboardPreference" [scanEnabled]="screenData.scanEnabled" [readOnly]="!screenData.editable"
-                                      [scanActionName]="screenData.scan?.scanActionName">
+                                      [scanActionName]="screenData.scan?.scanActionName"
+                                      [autoFocus]="autoFocusPrompt">
                     </app-prompt-input>
                     <app-instructions *ngIf="instructions" [instructions]="instructions" [instructionsSize]="'text-sm'"></app-instructions>
                     <div #optionsRef>
