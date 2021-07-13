@@ -8,6 +8,7 @@ export interface SelfCheckoutMenuInterface {
     headerIcon: string;
     backButton: IActionItem;
     skipButton: IActionItem;
+    lightButton: IActionItem;
     showScan: boolean;
     showAdmin: boolean;
     showLanguageSelector: boolean;

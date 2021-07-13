@@ -14,6 +14,7 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
     private String headerText;
     private String headerIcon;
     private ActionItem backButton;
+    private ActionItem lightButton;
     private ActionItem skipButton = new ActionItem("key:selfcheckout:button.skip", "Skip", false);
     private boolean showScan;
     private boolean showAdmin;
@@ -106,5 +107,13 @@ public class SelfCheckoutMenuPart implements IHasBackButton, Serializable {
 
     public void setLogo(String logo) {
         this.logo = logo;
+    }
+    
+    public ActionItem getLightButton() {
+        return this.lightButton;
+    }
+    
+    public void setLightButton(ActionItem lightButton) {
+        this.lightButton = lightButton;
     }
 }

@@ -11,6 +11,10 @@
                     <app-icon [iconName]="screenData.backButton.icon ? screenData.backButton.icon : 'clear'" [iconClass]="'material-icons mat-48'"></app-icon>
                 </button>
             </ng-container>
+
+            <button *ngIf="screenData.lightButton && screenData.lightButton.enabled" mat-button (click)="doAction(screenData.lightButton)">
+                <app-icon [iconName]="screenData.lightButton.icon" [iconClass]="'material-icons mat-48'"></app-icon>
+            </button>
         </div>
 
         <div fxLayoutAlign="center center" style="width: 34%;">
