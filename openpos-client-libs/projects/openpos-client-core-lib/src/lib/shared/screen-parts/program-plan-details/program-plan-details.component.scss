@@ -1,8 +1,6 @@
 @import "../../../styles/mixins/typography";
 .plans {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1em;
+  display: flex;
   .plan {
     padding-right: 2.5em;
     padding-left: 3em;
