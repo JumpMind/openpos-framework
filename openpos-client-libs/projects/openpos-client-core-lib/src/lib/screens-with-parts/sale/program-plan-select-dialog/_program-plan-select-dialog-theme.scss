@@ -1,0 +1,9 @@
+@mixin program-plan-select-dialog-theme($theme) {
+    $foreground: map-get($theme, foreground );
+
+    .icon {
+        app-icon {
+            color: mat-color($foreground, secondary-text);
+        }
+    }
+}

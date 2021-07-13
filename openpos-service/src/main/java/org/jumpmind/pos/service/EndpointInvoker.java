@@ -72,6 +72,7 @@ public class EndpointInvoker implements InvocationHandler {
     static BasicThreadFactory factory = new BasicThreadFactory.Builder().namingPattern("service-instrumentation-thread-%d").daemon(true)
             .build();
     private static final ExecutorService instrumentationExecutor = Executors.newSingleThreadExecutor(factory);
+    protected HashMap<String, Boolean> endpointEnabledCache = new HashMap<String, Boolean>();
 
     public EndpointInvoker() {
     }
@@ -300,59 +301,56 @@ public class EndpointInvoker implements InvocationHandler {
         if (profileIds.size() == 0) {
             profileIds.add("local");
         }
-        ServiceSampleModel sample = startSample(strategy, config, proxy, method, args);
+
+        EndpointInvocationContext endpointInvocationContext = EndpointInvocationContext.builder()
+                .profileIds(profileIds)
+                .strategy(strategy)
+                .config(config)
+                .proxy(proxy)
+                .method(method)
+                .endpointImplementation(endpointImplementation)
+                .endpointsByPathMap(endpointsByPathMap)
+                .clientVersion(clientContext.get("version.nu-commerce"))
+                .endpointPath(path)
+                .endpoint(endpointObj)
+                .arguments(args).build();
+
+        return invokeStrategy(endpointInvocationContext);
+    }
+
+    protected Object invokeStrategy(EndpointInvocationContext endpointInvocationContext) throws Throwable {
+        ServiceSampleModel sample = startSample(endpointInvocationContext);
         Object result = null;
         try {
-            log(method, args, endpointImplementation);
-            result = strategy.invoke(profileIds, proxy, method, endpointsByPathMap, args);
-            endSampleSuccess(sample, config, proxy, method, args, result);
+            log(endpointInvocationContext);
+
+            filterRequest(endpointInvocationContext);
+
+            result = endpointInvocationContext.getStrategy().invoke(endpointInvocationContext);
+
+            result = filerResult(endpointInvocationContext, result);
+            endpointInvocationContext.setResult(result);
+
+            endSampleSuccess(sample, endpointInvocationContext);
         } catch (Throwable ex) {
-            endSampleError(sample, config, proxy, method, args, result, ex);
+            endSampleError(sample, endpointInvocationContext, ex);
             throw ex;
         }
 
         return result;
     }
 
-    private void log(Method method, Object[] args, String implementation) {
+    private void log(EndpointInvocationContext endpointInvocationContext) {
+        Method method = endpointInvocationContext.getMethod();
         if (!method.isAnnotationPresent(SuppressMethodLogging.class)) {
-            /*
-            **  The code below came over from master. It logs each argument to the
-            **  endpoint call. Some might have sensitive information, but some want
-            **  to try to serialize autowired services and such. The @ToString
-            **  annotation can be used to control what iss logged.  For now, disable
-            **  this until a time when arguments can be looked at more globally.
-            **  Enabling this will cause Cucumber test to fail.
-            **
-            StringBuilder logArgs = new StringBuilder();
-            if (args != null && args.length > 0) {
-                for(int i = 0; i < args.length; i++) {
-                    Object arg = args[i];
-                    if (arg instanceof CharSequence) {
-                        logArgs.append("'");
-                        logArgs.append(arg.toString());
-                        logArgs.append("'");
-                    } else if (arg != null) {
-                        logArgs.append(arg.toString());
-                    } else {
-                        logArgs.append("null");
-                    }
-                    if (args.length-1 > i) {
-                        logArgs.append(",");
-                    }
-                }
+            if (log.isInfoEnabled()) {
+                String implementation = endpointInvocationContext.getEndpointImplementation();
+                log.info("Call endpoint: {}.{}() {} {}",
+                        method.getDeclaringClass().getSimpleName(),
+                        method.getName(),
+                        endpointInvocationContext.getConfig() != null ? endpointInvocationContext.getConfig().getStrategy() : "",
+                        implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
             }
-            log.info("{}.{}({}) {}",
-                    method.getDeclaringClass().getSimpleName(),
-                    method.getName(),
-                    logArgs,
-                    annotation == null || annotation.implementation().equals(Endpoint.IMPLEMENTATION_DEFAULT) ?
-                            "" : annotation.implementation() + " implementation");
-            */
-            log.debug("{}.{}() {}",
-                    method.getDeclaringClass().getSimpleName(),
-                    method.getName(),
-                    implementation == null || Endpoint.IMPLEMENTATION_DEFAULT.equals(implementation) ? "" : implementation + " implementation");
         }
     }
 
@@ -371,58 +369,66 @@ public class EndpointInvoker implements InvocationHandler {
     }
 
     protected ServiceSampleModel startSample(
-            IInvocationStrategy strategy,
-            ServiceSpecificConfig config,
-            Object proxy,
-            Method method,
-            Object[] args) {
-        ServiceSampleModel sample = null;
+            EndpointInvocationContext endpointInvocationContext) {
+        Method method = endpointInvocationContext.getMethod();
+
         if (method.isAnnotationPresent(Sample.class)) {
-            sample = new ServiceSampleModel();
-            sample.setSampleId(installationId + System.currentTimeMillis());
-            sample.setInstallationId(installationId);
-            sample.setHostname(AppUtils.getHostName());
-            sample.setServiceName(method.getDeclaringClass().getSimpleName() + "." + method.getName());
-            sample.setServiceType(strategy.getStrategyName());
-            sample.setStartTime(new Date());
+                ServiceSampleModel serviceSampleModel = new ServiceSampleModel();
+                serviceSampleModel.setSampleId(installationId + System.currentTimeMillis());
+                serviceSampleModel.setInstallationId(installationId);
+                serviceSampleModel.setHostname(AppUtils.getHostName());
+                serviceSampleModel.setServiceName(method.getDeclaringClass().getSimpleName() + "." + method.getName());
+                serviceSampleModel.setServiceType(endpointInvocationContext.getStrategy().getStrategyName());
+                serviceSampleModel.setStartTime(new Date());
+                return serviceSampleModel;
         }
-        return sample;
+        return null;
     }
 
     protected void endSampleSuccess(
             ServiceSampleModel sample,
-            ServiceSpecificConfig config,
-            Object proxy,
-            Method method,
-            Object[] args,
-            Object result) {
-        if (result != null && sample != null) {
-            sample.setServiceResult(StringUtils.abbreviate(result.toString(), MAX_SUMMARY_WIDTH));
+            EndpointInvocationContext endpointInvocationContext) {
+        if (endpointInvocationContext.getResult() != null && sample != null) {
+            sample.setServiceResult(StringUtils.abbreviate(endpointInvocationContext.getResult().toString(), MAX_SUMMARY_WIDTH));
         }
-        endSample(sample, config, proxy, method, args);
+        endSample(sample, endpointInvocationContext);
     }
 
     protected void endSampleError(
             ServiceSampleModel sample,
-            ServiceSpecificConfig config,
-            Object proxy,
-            Method method,
-            Object[] args,
-            Object result,
+            EndpointInvocationContext endpointInvocationContext,
             Throwable ex) {
         if (sample != null) {
             sample.setServiceResult(null);
             sample.setErrorFlag(true);
             sample.setErrorSummary(StringUtils.abbreviate(ex.getMessage(), MAX_SUMMARY_WIDTH));
-            endSample(sample, config, proxy, method, args);
+            endSample(sample, endpointInvocationContext);
+            endSample(sample, endpointInvocationContext);
         }
     }
 
-    protected void endSample(ServiceSampleModel sample, ServiceSpecificConfig config, Object proxy, Method method, Object[] args) {
+    protected void endSample(ServiceSampleModel sample, EndpointInvocationContext endpointInvocationContext) {
         if (sample != null) {
             sample.setEndTime(new Date());
             sample.setDurationMs(sample.getEndTime().getTime() - sample.getStartTime().getTime());
             instrumentationExecutor.execute(() -> dbSession.save(sample));
+        }
+    }
+
+    protected void filterRequest(EndpointInvocationContext endpointInvocationContext) {
+        if (endpointInvocationContext.getEndpointPath().startsWith("/customer/")) {
+            System.out.println("BEFORE. " + endpointInvocationContext.getEndpointPath());
+        }
+    }
+
+    protected Object filerResult(EndpointInvocationContext endpointInvocationContext, Object result) {
+        if (endpointInvocationContext.getClientVersion() != null
+                && endpointInvocationContext.getClientVersion().startsWith("@version@")
+                && endpointInvocationContext.getEndpointPath().equals("/customer/search")) {
+            System.out.println("AFTER");
+            return result;
+        } else {
+            return result;
         }
     }
 

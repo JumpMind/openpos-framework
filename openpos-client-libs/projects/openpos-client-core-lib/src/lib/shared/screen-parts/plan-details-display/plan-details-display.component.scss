@@ -1,0 +1,28 @@
+@import "../../../styles/mixins/typography";
+
+.plan-details-display {
+  .title {
+    @extend %text-md;
+    padding: 10px;
+    app-icon {
+      width: 1.5em;
+      height: 1.5em;
+      margin-right: .5em;
+      display: inline-block;
+      vertical-align: middle;
+    }
+  }
+  .plan-copy {
+    padding: 10px;
+  }
+  .actions {
+    padding: 10px;
+    text-align: center;
+    app-icon {
+      width: 1.5em;
+      height: 1.5em;
+      margin-right: .5em;
+      display: inline-block;
+    }
+  }
+}

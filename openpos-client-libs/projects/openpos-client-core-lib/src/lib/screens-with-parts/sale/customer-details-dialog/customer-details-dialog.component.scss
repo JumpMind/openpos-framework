@@ -89,6 +89,14 @@ app-content-card {
         }
       }
     }
+    .membership-sign-up {
+      float: right;
+      display: inherit;
+      app-icon{
+        width: 1em;
+        margin-right: .25em;
+      }
+    }
   }
 }
 

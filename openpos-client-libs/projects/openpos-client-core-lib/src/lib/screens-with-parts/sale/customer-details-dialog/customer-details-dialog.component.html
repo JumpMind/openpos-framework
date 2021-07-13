@@ -35,6 +35,23 @@
                                 {{screen.noMembershipsFoundLabel}}
                             </span>
                         </div>
+                        <div *ngIf="screen.customer.membershipSignUpAction">
+                            <app-secondary-button responsive-class
+                                                  class="membership-sign-up"
+                                                  *ngIf="screen.customer.membershipSignUpAction"
+                                                  [disabled]="!screen.customer.membershipSignUpAction?.enabled"
+                                                  [actionItem]="screen.customer.membershipSignUpAction"
+                                                  (actionClick)="doAction(screen.customer.membershipSignUpAction)"
+                                                  (click)="doAction(screen.customer.membershipSignUpAction)">
+                                <app-icon *ngIf="screen.customer.membershipSignUpAction?.icon"
+                                          [iconName]="screen.customer.membershipSignUpAction.icon"
+                                          [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+                                <span>{{screen.customer.membershipSignUpAction.title}}</span>
+                                <span *ngIf="keybindsEnabled(screen.customer.membershipSignUpAction)" class="muted-color keybinding" >
+                                    {{screen.customer.membershipSignUpAction.keybindDisplayName}}
+                                </span>
+                            </app-secondary-button>
+                        </div>
                     </div>
                 </div>
             </div>

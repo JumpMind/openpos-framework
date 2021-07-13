@@ -1,0 +1,118 @@
+@import "../../../styles/mixins/typography";
+
+.details-wrapper, .tabs {
+  margin-bottom: 8px;
+}
+
+.tabs {
+  margin-top: 8px;
+  height: 40vmin;
+  mat-tab-group, mat-card {
+    height: 100%;
+  }
+  mat-card {
+    overflow: auto;
+    margin: 0;
+    .no-items {
+      @extend %text-lg;
+      text-align: center;
+      &.mobile {
+        @extend %text-md;
+        padding-top: 10px;
+      }
+    }
+  }
+  &.mobile {
+    height: 55vmin;
+  }
+
+  .tab-title {
+    font-weight: bold;
+    padding-bottom: .5em;
+  }
+
+  .sign-up {
+    width: 25%;
+    float: right;
+    position: fixed;
+    bottom: 1em;
+    right: 1em;
+    app-icon {
+      width: 1em;
+      margin-right: .25em;
+    }
+  }
+}
+
+.buttons {
+  display: grid;
+  grid-auto-flow: column;
+  justify-content: end;
+  grid-column-gap: 8px;
+  padding-bottom: 16px;
+  .keybinding {
+    margin-left: 10px;
+  }
+}
+
+app-content-card {
+  section {
+    padding-left: 0px;
+    padding-right: 0px;
+  }
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 1fr 4fr 8fr;
+  grid-template-rows: 1fr;
+  gap: 0px 0px;
+  grid-template-areas:
+    "icon details memberships";
+  .icon {
+    justify-content: center;
+    display: flex;
+    .material-icons {
+      font-size: 90px;
+      height: 90px;
+      width: 90px;
+    }
+  }
+
+  .details-label{
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: .5em;
+  }
+  .details {
+    .customer-name {
+      font-size: 24px;
+      font-weight: bold;
+    }
+  }
+  .memberships {
+    padding-bottom: 10px;
+    .wrapper {
+      height: 100%;
+      .list {
+        .item {
+          margin-right: 10px;
+          margin-bottom: 10px;
+          display: inline-block;
+        }
+      }
+    }
+  }
+}
+
+.icon {
+  grid-area: icon;
+}
+
+.details {
+  grid-area: details;
+}
+
+.memberships {
+  grid-area: memberships;
+}

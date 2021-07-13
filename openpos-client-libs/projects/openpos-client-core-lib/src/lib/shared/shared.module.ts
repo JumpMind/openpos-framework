@@ -168,6 +168,9 @@ import {MutableListItemWithLabelComponent} from "./screen-parts/mutable-list-ite
 import {RewardsHistoryLineItemComponent} from './screen-parts/rewards-history-line-item/rewards-history-line-item.component';
 import { DisplayCustomerLookupComponent } from './screen-parts/display-customer-lookup/display-customer-lookup.component';
 import {MembershipPointsDisplayComponent} from "./screen-parts/membership-points-display/membership-points-display.component";
+import {EnrollmentLineItemComponent} from "./screen-parts/enrollment-line-item/enrollment-line-item.component";
+import {PlanDetailsDisplayComponent} from "./screen-parts/plan-details-display/plan-details-display.component";
+import {ProgramPlanDetailsComponent} from "./screen-parts/program-plan-details/program-plan-details.component";
 
 const screenParts = [
     TenderPartComponent,
@@ -182,11 +185,14 @@ const screenParts = [
     PromptFormPartComponent,
     DynamicFormPartComponent,
     AutoCompleteAddressPartComponent,
+    PlanDetailsDisplayComponent,
+    ProgramPlanDetailsComponent,
     MembershipDisplayComponent,
     MembershipPointsDisplayComponent,
     CustomerInformationComponent,
     MutableListItemWithLabelComponent,
     RewardsLineItemComponent,
+    EnrollmentLineItemComponent,
     RewardsHistoryLineItemComponent,
     ProgressBarPartComponent,
     WebcamViewerComponent,

@@ -1,0 +1,69 @@
+<app-dialog-header></app-dialog-header>
+<div>
+    <app-content-card class="details-wrapper" >
+        <div class="grid-container">
+            <div class="icon">
+                <app-icon [iconName]="screen.profileIcon"
+                          [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+            </div>
+            <div class="details">
+                <div class="details-label">
+                    {{screen.customer.name}}
+                </div>
+            </div>
+
+            <div class="memberships">
+                <div class="wrapper">
+                    <div class="list">
+                        <div *ngIf="screen.customer.memberships && screen.customer.memberships.length">
+                            <span *ngFor="let membership of screen.customer.memberships" class="item">
+                                <app-membership-display [membership]="membership"></app-membership-display>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </app-content-card>
+    <div class="tabs" [ngClass]="{'tabs': true, 'mobile': (isMobile | async)}" responsive-class>
+        <mat-tab-group mat-align-tabs="start" animationDuration="0ms">
+            <mat-tab *ngFor="let tab of screen.subscriptionAccounts">
+                <ng-template mat-tab-label>
+                    <app-icon *ngIf="tab.iconImageUrl"
+                            [iconName]="tab.iconImageUrl"
+                            [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+                    {{tab.iconText}}
+                </ng-template>
+                <mat-card>
+                    <div *ngIf="tab.listTitle" class="tab-title text-md">
+                        {{tab.listTitle}}
+                    </div>
+                    <div *ngIf="tab.enrollmentItems && tab.enrollmentItems.length > 0">
+                        <div *ngFor="let row of tab.enrollmentItems">
+                            <app-enrollment-line-item [enrollment]="row"></app-enrollment-line-item>
+                        </div>
+                    </div>
+                    <app-program-plan-details
+                            *ngIf="!tab.enrollmentItems || tab.enrollmentItems.length == 0"
+                            [programCopy]="tab.copy"
+                            [plans]="tab.plans"></app-program-plan-details>
+                    <app-primary-button responsive-class
+                                        class="sign-up"
+                                        *ngIf="tab.signupActionItem && tab.enrollmentItems && tab.enrollmentItems.length > 0"
+                                        [disabled]="!tab.signupActionItem?.enabled"
+                                        [actionItem]="tab.signupActionItem"
+                                        (actionClick)="doAction(tab.signupActionItem)"
+                                        (click)="doAction(tab.signupActionItem)">
+                        <app-icon *ngIf="tab.signupActionItem.icon"
+                                  [iconName]="tab.signupActionItem.icon"
+                                  [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+                        <span>{{tab.signupActionItem.title}}</span>
+                        <span *ngIf="keybindsEnabled(tab.signupActionItem)" class="muted-color keybinding" >
+                            {{tab.signupActionItem.keybindDisplayName}}
+                        </span>
+                    </app-primary-button>
+                </mat-card>
+            </mat-tab>
+        </mat-tab-group>
+    </div>
+</div>

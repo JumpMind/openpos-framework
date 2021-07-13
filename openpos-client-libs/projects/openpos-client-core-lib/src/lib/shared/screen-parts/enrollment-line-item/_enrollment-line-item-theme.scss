@@ -1,0 +1,16 @@
+@mixin enrollment-line-items-theme($theme) {
+    $primary: mat-color(map-get($theme, primary));
+    $divider: map-get(map-get($theme, foreground), divider);
+
+    .action {
+        color: $primary;
+
+        a app-icon {
+            margin-right: .25em;
+        }
+    }
+
+    .enrollment-line-item{
+        border-bottom: 1px solid $divider;
+    }
+}

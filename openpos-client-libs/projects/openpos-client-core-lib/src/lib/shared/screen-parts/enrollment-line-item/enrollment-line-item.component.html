@@ -1,0 +1,24 @@
+<div [ngClass]="{'enrollment-line-item-wrapper': !(isMobile | async)}" class="enrollment-line-item">
+    <div class="title">
+        <app-icon [iconName]="enrollment.title?.icon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+        {{enrollment.title?.value}}
+    </div>
+    <div class="details">
+        <div *ngFor="let item of enrollment.details">
+            {{item?.value}}
+        </div>
+    </div>
+    <div class="actions">
+        <span *ngFor="let action of enrollment.actionItemList" class="action">
+            <a [actionItem]="action"
+               (actionClick)="doAction(action)"
+               (click)="doAction(action)"
+               [disabled]="!action.enabled"
+               mat-button
+               responsive-class>
+                <app-icon [iconName]="action.icon" [iconClass]="'material-icons' + ((isMobile | async) ? ' mat-64' : '')"></app-icon>
+                {{action.title}}
+            </a>
+        </span>
+    </div>
+</div>
