@@ -36,12 +36,6 @@ describe('ProgramPlansSelectDialog', () => {
     }
   };
 
-  class MockOpenposMediaServiceMobileTrue {
-    observe(): Observable<boolean> {
-      return of(true);
-    }
-  };
-
   beforeEach(() => {
 
   });

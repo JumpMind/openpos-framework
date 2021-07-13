@@ -49,7 +49,7 @@ describe('ProgramPlanDetailsComponent', () => {
         }).compileComponents();
         fixture = TestBed.createComponent(ProgramPlanDetailsComponent);
         component = fixture.componentInstance;
-        component.programCopy = "programCopy" as String;
+        component.programCopy = "programCopy" as string;
         component.plans = [{
                 iconImageUrl: "iconImageUrl",
                 iconText: "iconText",

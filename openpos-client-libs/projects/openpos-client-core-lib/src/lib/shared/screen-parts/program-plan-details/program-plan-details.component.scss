@@ -1,14 +1,17 @@
 @import "../../../styles/mixins/typography";
-.plans {
-  display: flex;
-  justify-content: center;
-  .plan {
-    padding-right: 2.5em;
-    padding-left: 3em;
 
-  }
-  .plan:not(:first-child) {
-    border-left-style: solid;
-    border-left-width: 1px;
+.program-plan-details{
+  .plans {
+    display: flex;
+    justify-content: center;
+    .plan {
+      padding-right: 2.5em;
+      padding-left: 3em;
+
+    }
+    .plan:not(:first-child) {
+      border-left-style: solid;
+      border-left-width: 1px;
+    }
   }
 }

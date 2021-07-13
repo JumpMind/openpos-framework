@@ -2,8 +2,7 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core'
 
 import {ActionService} from '../../../core/actions/action.service';
-import {validateDoesNotExist, validateExist, validateText} from '../../../utilites/test-utils';
-import {By} from '@angular/platform-browser';
+import {validateExist, validateText} from '../../../utilites/test-utils';
 import {IActionItem} from '../../../core/actions/action-item.interface';
 import {PhonePipe} from '../../../shared/pipes/phone.pipe';
 import {MatDialog} from '@angular/material';
@@ -13,16 +12,13 @@ import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provide
 import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
 import {Observable, of, Subscription} from 'rxjs';
 import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
-import {Reward} from '../../../shared/screen-parts/rewards-line-item/rewards-line-item.interface';
 import {KeyPressProvider} from "../../../shared/providers/keypress.provider";
 import {MembershipDetailsDialogComponent} from "./membership-details-dialog.component";
 
-import {promisify} from "util";
 import {ActionItem} from "../../../core/actions/action-item";
 import {Configuration} from "../../../configuration/configuration";
 import {EnrollmentItem, Plan, SubscriptionAccounts} from "../program-interface";
 import {MembershipDetailsDialogInterface} from "./membership-details-dialog.interface";
-// import custom = module
 
 class MockKeyPressProvider {
   subscribe(): Subscription {
@@ -42,12 +38,6 @@ describe('LinkedCustomerMembershipState', () => {
   class MockOpenposMediaServiceMobileFalse {
     observe(): Observable<boolean> {
       return of(false);
-    }
-  };
-
-  class MockOpenposMediaServiceMobileTrue {
-    observe(): Observable<boolean> {
-      return of(true);
     }
   };
 
