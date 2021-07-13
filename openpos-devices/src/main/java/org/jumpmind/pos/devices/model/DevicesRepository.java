@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static org.jumpmind.pos.util.RestApiSupport.REST_API_CONTEXT_PATH;
+
 @Repository
 @Slf4j
 public class DevicesRepository {
@@ -29,7 +31,7 @@ public class DevicesRepository {
         return devSession.findAll(DeviceModel.class, 1000000);
     }
 
-    @Cacheable("/devices/device")
+    @Cacheable(REST_API_CONTEXT_PATH + "/devices/device")
     public DeviceModel getDevice(String deviceId, String appId) {
         DeviceModel device = devSession.findByNaturalId(DeviceModel.class, new ModelId("deviceId", deviceId, "appId", appId));
         if (device != null) {
@@ -75,7 +77,7 @@ public class DevicesRepository {
         return deviceModel;
     }
 
-    @CacheEvict(value = "/devices/device")
+    @CacheEvict(value = REST_API_CONTEXT_PATH + "/devices/device")
     public void saveDevice(DeviceModel device) {
 
         devSession.save(device);
