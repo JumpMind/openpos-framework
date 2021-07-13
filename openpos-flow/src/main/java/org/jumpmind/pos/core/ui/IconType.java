@@ -31,6 +31,8 @@ public interface IconType {
     public static final String CustomerLink = "CustomerLink"; //link
     public static final String DayEnd = "DayEnd"; //brightness_3
     public static final String DayStart = "DayStart"; //brightness_5
+    public static final String LightOn = "LightOn"; //lightbulb_on_outline
+    public static final String LightOff = "LightOff"; //lightbulb_outline
     public static final String Decrement = "Decrement"; //remove
     public static final String DefaultPrompt = "DefaultPrompt"; //question_answer
     public static final String Delivery = "Delivery"; //local_shipping

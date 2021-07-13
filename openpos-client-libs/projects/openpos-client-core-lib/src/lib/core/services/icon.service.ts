@@ -51,6 +51,8 @@ export class IconService {
         this.icons.set('CustomerLink', ['link.svg', this.defaultIconProvider]);
         this.icons.set('DayEnd', ['brightness_3.svg', this.defaultIconProvider]);
         this.icons.set('DayStart', ['brightness_5.svg', this.defaultIconProvider]);
+        this.icons.set('LightOn', ['lightbulb_on_outline.svg', this.defaultIconProvider]);
+        this.icons.set('LightOff', ['lightbulb_outline.svg', this.defaultIconProvider]);
         this.icons.set('Decrement', ['remove.svg', this.defaultIconProvider]);
         this.icons.set('DefaultPrompt', ['question_answer.svg', this.defaultIconProvider]);
         this.icons.set('Delivery', ['local_shipping.svg', this.defaultIconProvider]);
