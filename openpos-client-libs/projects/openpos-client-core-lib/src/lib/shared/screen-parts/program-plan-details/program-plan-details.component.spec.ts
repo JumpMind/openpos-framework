@@ -2,18 +2,15 @@ import { TestBed, ComponentFixture } from '@angular/core/testing';
 import { NO_ERRORS_SCHEMA } from '@angular/core'
 
 import {ActionService} from '../../../core/actions/action.service';
-import {validateExist, validateText} from '../../../utilites/test-utils';
-import {IActionItem} from '../../../core/actions/action-item.interface';
+import {validateText} from '../../../utilites/test-utils';
 import {MatDialog} from '@angular/material';
 import {HttpClientTestingModule} from '@angular/common/http/testing';
 import {ElectronService} from 'ngx-electron';
 import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provider.interface';
 import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
-import {Observable, of, Subscription} from 'rxjs';
-import {MediaBreakpoints, OpenposMediaService} from '../../../core/media/openpos-media.service';
+import {Subscription} from 'rxjs';
 import {KeyPressProvider} from "../../../shared/providers/keypress.provider";
 import {ProgramPlanDetailsComponent} from "./program-plan-details.component";
-import {promisify} from "util";
 import {Plan} from "../../../screens-with-parts/sale/program-interface";
 import {ActionItem} from "../../../core/actions/action-item";
 import {By} from "@angular/platform-browser";
@@ -91,59 +88,4 @@ describe('ProgramPlanDetailsComponent', () => {
             expect(element[1].nativeElement.plan).toBe(component.plans[1]);
         });
     });
-    //
-    // describe('template', () => {
-    //     it('shows the name of the membership', () => {
-    //         validateText(fixture, 'mat-chip', component.membership.name);
-    //     });
-    //
-    //     it('calls clickEvent.emit when the chip is clicked', () => {
-    //         spyOn(component.clickEvent, 'emit');
-    //
-    //         const chip = fixture.debugElement.query(By.css('mat-chip'));
-    //         chip.nativeElement.click();
-    //
-    //         expect(component.clickEvent.emit).toHaveBeenCalledWith(component.membership);
-    //     })
-    //
-    //     describe('when the user is a member', () => {
-    //         beforeEach(() => {
-    //             component.membership.member = true;
-    //             fixture.detectChanges();
-    //         });
-    //
-    //         it('has the "in" class', () => {
-    //             const chip = fixture.debugElement.query(By.css('mat-chip'));
-    //             expect(chip.nativeElement.classList).toContain('in');
-    //         });
-    //
-    //         it('displays the membership icon', () => {
-    //             validateIcon(fixture, 'mat-chip app-icon', 'check');
-    //         });
-    //
-    //         it('does not have the non membership icon', () => {
-    //             validateDoesNotExist(fixture, 'mat-chip app-icon .not-in');
-    //         });
-    //     });
-    //
-    //     describe('when the user is not a member', () => {
-    //         beforeEach(() => {
-    //             component.membership.member = false
-    //             fixture.detectChanges();
-    //         });
-    //
-    //         it('has the "not-in" class', () => {
-    //             const chip = fixture.debugElement.query(By.css('mat-chip'));
-    //             expect(chip.nativeElement.classList).toContain('not-in');
-    //         });
-    //
-    //         it('does not have the membership icon', () => {
-    //             validateDoesNotExist(fixture, 'mat-chip app-icon .in');
-    //         });
-    //
-    //         it('has the non membership icon', () => {
-    //             validateIcon(fixture, 'mat-chip app-icon', 'close');
-    //         });
-    //     });
-    // });
 });
