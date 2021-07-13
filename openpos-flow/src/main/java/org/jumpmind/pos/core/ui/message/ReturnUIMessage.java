@@ -40,8 +40,10 @@ public class ReturnUIMessage extends UIMessage {
 
     private boolean enableCollapsibleItems = true;
 
-    private boolean loyaltySignupInProgressOnCustomerDisplay;
-    private String loyaltySignupInProgressMessage;
+    private String loyaltySignupInProgressTitle;
+    private String loyaltySignupInProgressIcon;
+    private String loyaltySignupInProgressDetailsIcon;
+    private ActionItem loyaltyCancelButton;
 
     public ReturnUIMessage() {
         this.setScreenType(UIMessageType.RETURN);

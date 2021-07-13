@@ -1,5 +1,9 @@
 @import "../../../styles/mixins/typography";
 
+$loyalty-signup-icon: 72px;
+$loyalty-signup-icon-tablet: 56px;
+$loyalty-signup-column-gap: 8px;
+
 .sale-total-wrapper {
     height: 100%;
     display: grid;
@@ -21,8 +25,7 @@
     .loyalty-arrow {
         vertical-align: top;
     }
-    .link-customer,
-    .loyalty-signup-customer-display {
+    .link-customer {
         @extend %text-md;
         border-width: 2px;
         padding: $text-md/2 $text-md*1.25;
@@ -39,58 +42,58 @@
             vertical-align: bottom;
         }
     }
+
     .loyalty-signup-customer-display {
+        position: relative;
+        font-size: $text-sm;
+        line-height: $text-sm*1.5;
+        padding: 16px;
+        border-radius: 4px;
+
         &.tablet {
-            .loyalty-signup-customer-display-header {
-                margin-left: -16px;
-            }
-            .loyalty-signup-customer-display-icon-size {
-                width: 48px;
-                height: 48px;
-            }
-            .loyalty-signup-customer-display-message {
+            font-size: $text-xs;
+            line-height: $text-xs*1.5;
+
+            .loyalty-signup-customer-display-content {
                 font-size: $text-xs;
                 line-height: $text-xs*1.5;
             }
+
+            .loyalty-signup-customer-display-icon {
+                width: $loyalty-signup-icon-tablet;
+                height: $loyalty-signup-icon-tablet;
+            }
         }
 
-        &-wrapper {
+        &.wrapper {
             display: block;
+            padding: 0;
         }
 
-        &-header {
+        &-in-progress {
             display: grid;
-            grid-template-columns: auto 1fr;
+            grid-template-columns: auto minmax(0, 1fr);
+            grid-auto-flow: column;
+            column-gap: $loyalty-signup-column-gap;
             align-items: center;
-            text-align: left;
-            column-gap: 16px;
-            padding-bottom: $text-sm/2;
-        }
-
-        &-icon {
-            display: inline-block;
-            animation: glow 1.25s ease-out infinite alternate;
-        }
-
-        &-icon-size {
-            width: 72px;
-            height: 72px;
+            margin-bottom: 16px;
         }
 
         &-message {
-            display: block;
-            font-size: $text-sm;
-            font-weight: normal;
-            line-height: $text-sm*1.5;
             overflow: hidden;
             text-overflow: ellipsis;
+            padding-right: 32px;
         }
 
-        &-action {
-            display: block;
-            border-width: 1px 0 0 0;
-            padding-top: $text-sm/2;
-            border-style: solid;
+        &-icon {
+            height: $loyalty-signup-icon;
+            width: $loyalty-signup-icon;
+        }
+
+        &-cancel-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
         }
     }
     .linked-customer-summary {
@@ -165,6 +168,50 @@ app-scandit-native {
     width: 100%;
     min-height: 300px;
     background: red;
+}
+
+.notification {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-auto-flow: column;
+    column-gap: $loyalty-signup-column-gap;
+    align-items: center;
+    border-radius: 4px;
+    padding: 0 8px;
+
+    &.tablet {
+        .notification-icon-container {
+            // Keep the text and icon aligned with the ones in the container
+            width: $loyalty-signup-icon-tablet - 8px;
+            height: $loyalty-signup-icon-tablet;
+        }
+
+        .notification-icon {
+            height: 36px;
+            width: 36px;
+        }
+    }
+
+    &-icon-container {
+        height: $loyalty-signup-icon;
+        // Keep the text and icon aligned with the ones in the container
+        width: $loyalty-signup-icon - 8px;
+        display: grid;
+        align-items: center;
+        justify-items: center;
+    }
+
+    &-icon {
+        display: block;
+        height: 40px;
+        width: 40px;
+    }
+
+    &-message {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding: 8px 0;
+    }
 }
 
 .item-counts {

@@ -1,14 +1,14 @@
-import {AndroidContentProviderPlugin} from './platform-plugins/cordova-plugins/android-content-provider-plugin';
-import {BrowserPrinterPlugin} from './platform-plugins/printers/browser-printer.plugin';
-import {PRINTERS} from './platform-plugins/printers/printer.service';
-import {ConsoleScannerPlugin} from './platform-plugins/barcode-scanners/console-scanner/console-scanner.plugin';
+import { AndroidContentProviderPlugin } from './platform-plugins/cordova-plugins/android-content-provider-plugin';
+import { PRINTERS } from './platform-plugins/printers/printer.service';
+import { ConsoleScannerPlugin } from './platform-plugins/barcode-scanners/console-scanner/console-scanner.plugin';
 import { SessionService } from './services/session.service';
 import { PersonalizationStartupTask } from './startup/personalization-startup-task';
-import { STARTUP_TASKS, STARTUP_FAILED_COMPONENT } from './services/startup.service';
+import { STARTUP_FAILED_COMPONENT, STARTUP_TASKS } from './services/startup.service';
 import { ToastrModule } from 'ngx-toastr';
 // Angular Includes
-import { NgModule, Injector, Optional, SkipSelf, ErrorHandler } from '@angular/core';
-import { Location, LocationStrategy, PathLocationStrategy, DatePipe } from '@angular/common';
+import { ErrorHandler, Injector, NgModule, Optional, SkipSelf } from '@angular/core';
+// Add supported locales
+import { DatePipe, Location, LocationStrategy, PathLocationStrategy, registerLocaleData } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { BreakpointObserver, MediaMatcher } from '@angular/cdk/layout';
 
@@ -38,15 +38,12 @@ import { ToastService } from './services/toast.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ElectronService, NgxElectronModule } from 'ngx-electron';
-import { PluginStartupTask, PLUGINS } from './startup/plugin-startup-task';
+import { PLUGINS, PluginStartupTask } from './startup/plugin-startup-task';
 import { PlatformReadyStartupTask, PLATFORMS } from './startup/platform-ready-startup-task';
 import { CordovaPlatform } from './platforms/cordova.platform';
 import { NCRPaymentPlugin } from './platform-plugins/cordova-plugins/ncr-payment-plugin';
 import { SplashScreenComponent } from './components/splash-screen/splash-screen.component';
 import { LockScreenComponent } from './lock-screen/lock-screen.component';
-
-// Add supported locales
-import { registerLocaleData } from '@angular/common';
 import locale_enCA from '@angular/common/locales/en-CA';
 import locale_frCA from '@angular/common/locales/fr-CA';
 import { LocationService, PROVIDERS } from './services/location.service';
@@ -55,10 +52,10 @@ import { ConsoleIntercepter, LOGGERS } from './logging/console-interceptor.servi
 import { ServerLogger } from './logging/server-logger.service';
 import { CLIENTCONTEXT } from './client-context/client-context-provider.interface';
 import { TimeZoneContext } from './client-context/time-zone-context';
-import {UIDataMessageService} from './ui-data-message/ui-data-message.service';
+import { UIDataMessageService } from './ui-data-message/ui-data-message.service';
 import { HelpTextService } from './help-text/help-text.service';
-import {ErrorStateMatcher, ShowOnDirtyErrorStateMatcher} from "@angular/material/core";
-import {TransactionService} from './services/transaction.service';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from "@angular/material/core";
+import { TransactionService } from './services/transaction.service';
 import { AudioStartupTask } from './audio/audio-startup-task';
 import { AudioService } from './audio/audio.service';
 import { AudioRepositoryService } from './audio/audio-repository.service';
@@ -68,7 +65,7 @@ import { CapacitorStatusBarPlatformPlugin } from './startup/capacitor-status-bar
 import { ScanditCapacitorImageScanner } from './platform-plugins/barcode-scanners/scandit-capacitor/scandit-capacitor.service';
 import { IMAGE_SCANNERS, SCANNERS } from './platform-plugins/barcode-scanners/scanner';
 import { BarcodeScanner } from './platform-plugins/barcode-scanners/barcode-scanner.service';
-import {ClientExecutableService} from "./services/client-executable.service";
+import { ClientExecutableService } from "./services/client-executable.service";
 import { CapacitorIosPlatform } from './platforms/capacitor-ios.platform';
 import { CapacitorAndroidPlatform } from './platforms/capacitor-android.platform';
 import { AilaScannerCordovaPlugin } from './platform-plugins/barcode-scanners/aila-scanner-cordova/aila-scanner-cordova.plugin';
@@ -84,6 +81,7 @@ import { ZEROCONF_TOKEN } from './startup/zeroconf/zeroconf';
 import { MDnsZeroconf } from './startup/zeroconf/mdns-zeroconf';
 import { CapacitorZeroconf } from './startup/zeroconf/capacitor-zeroconf';
 import { CapacitorService } from './services/capacitor.service';
+import { LoyaltySignupService } from './services/loyalty-signup.service';
 
 registerLocaleData(locale_enCA, 'en-CA');
 registerLocaleData(locale_frCA, 'fr-CA');
@@ -175,7 +173,8 @@ registerLocaleData(locale_frCA, 'fr-CA');
         AudioInteractionService,
         AudioRepositoryService,
         { provide: PLUGINS, useExisting: AudioConsolePlugin, multi: true, deps: [AudioService]},
-        Storage
+        Storage,
+        LoyaltySignupService
     ]
 })
 export class CoreModule {

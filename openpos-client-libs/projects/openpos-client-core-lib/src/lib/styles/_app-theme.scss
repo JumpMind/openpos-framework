@@ -1,5 +1,4 @@
 @import '~@angular/material/theming';
-@import '../shared/animations/animations';
 @import './theme-mixins/component-theme-mixins';
 @import '../shared/layout-components/layout-component-themes';
 @import '../shared/components/component-theme-mixins';
@@ -65,7 +64,6 @@
 }
 
 @mixin app-theme($theme) {
-    @include animations($theme);
     @include component-theme-mixins($theme);
     @include layout-component-themes($theme);
     @include openpos-component-theme-mixins($theme);

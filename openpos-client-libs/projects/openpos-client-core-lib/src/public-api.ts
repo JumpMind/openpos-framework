@@ -334,6 +334,13 @@ export * from './lib/shared/screen-parts/status-strip/status-strip.interface';
 export * from './lib/shared/screen-parts/system-status/system-status.component';
 export * from './lib/shared/screen-parts/image-text-panel/image-text-panel.interface';
 
+export * from './lib/shared/animations/glow.animation';
+export * from './lib/shared/animations/throb.animation';
+export * from './lib/shared/animations/gradient-inner-glow.animation';
+export * from './lib/shared/animations/shake.animation';
+export * from './lib/shared/animations/bounce.animation';
+export * from './lib/shared/animations/swing.animation';
+
 export * from './lib/shared/utils/date.utils';
 export * from './lib/shared/validators/openpos-validators';
 export * from './lib/shared/validators/regex-validator';
