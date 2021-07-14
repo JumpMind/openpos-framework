@@ -6,6 +6,7 @@ public enum SelfCheckoutStatus {
     SCANNING("scanning"),
     TENDERING("tendering"),
     HELP_REQUESTED("helpRequested"),
+    END_OF_TRANSACTION("endOfTransaction"),
     ADMIN("admin");
 
     public final String label;
