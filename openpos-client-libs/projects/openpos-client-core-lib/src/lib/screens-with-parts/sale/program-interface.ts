@@ -22,7 +22,7 @@ export class Plan {
     signupActionItem: ActionItem;
 }
 
-export class SubscriptionAccounts {
+export class SubscriptionAccount {
     iconImageUrl: string;
     iconText: string;
     copy: string;

@@ -38,6 +38,7 @@ import {CustomerDetailsDialogComponent} from "./sale/customer-details-dialog/cus
 import {CustomerSearchResultDialogComponent} from './customer-search-result-dialog/customer-search-result-dialog.component';
 import { LoyaltyCustomerFormDialogComponent } from "./loyalty-customer-form-dialog/loyalty-customer-form-dialog.component";
 import {MembershipDetailsDialogComponent} from "./sale/membership-details-dialog/membership-details-dialog.component";
+import {MembershipPlanDetailsDialogComponent} from "./sale/membership-plan-details-dialog/membership-plan-details-dialog.component";
 import {ProgramPlanSelectDialogComponent} from "./sale/program-plan-select-dialog/program-plan-select-dialog.component";
 
 
@@ -77,6 +78,7 @@ const dialogs = [
     ScanInputDialogComponent,
     CustomerDetailsDialogComponent,
     MembershipDetailsDialogComponent,
+    MembershipPlanDetailsDialogComponent,
     ProgramPlanSelectDialogComponent,
     AutoCompleteAddressDialogComponent,
     ErrorDialogComponent,
