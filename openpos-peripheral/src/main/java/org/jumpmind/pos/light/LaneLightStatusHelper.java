@@ -3,22 +3,21 @@ package org.jumpmind.pos.light;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.jumpmind.pos.util.clientcontext.ClientContext;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
 
 @Component
 @Slf4j
+@ConfigurationProperties(prefix = "self-checkout.lane-light")
 public class LaneLightStatusHelper {
-    
-    private static final String CONFIG_PREFIX = "selfCheckout.laneLight.statuses.";
-        
-    @Autowired 
-    ClientContext clientContext;
+            
+    private final Map<String, String> statuses = new HashMap<>();
+
+    public Map<String, String> getStatuses() {
+        return statuses;
+    }
     
     public LaneLightStatus getStatus(String status) {
         try {
@@ -31,7 +30,7 @@ public class LaneLightStatusHelper {
     }
     
     public LaneLightStatus getStatusFromSelfCheckoutStatus(SelfCheckoutStatus status) {
-        String mappedStatus = clientContext.get(CONFIG_PREFIX + status.label); 
+        String mappedStatus = statuses.get(status.label); 
         if (mappedStatus != null) {
             return getStatus(mappedStatus);
         } else {
