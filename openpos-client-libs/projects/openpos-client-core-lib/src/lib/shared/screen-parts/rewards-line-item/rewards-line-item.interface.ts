@@ -4,6 +4,7 @@ export interface Reward {
     promotionId: string;
     name: string;
     expirationDate: string;
+    amountType: string
     amount: number;
     actionButton: IActionItem;
     actionIcon: string;

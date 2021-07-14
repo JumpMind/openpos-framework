@@ -143,6 +143,10 @@ describe('RewardsLineItemComponent', () => {
                     it('renders the app-currency-text', () => {
                         validateExist(fixture, '.reward app-currency-text');
                     });
+
+                    it('does not renders the .pctReward', () => {
+                        validateDoesNotExist(fixture, '.reward .pctReward');
+                    });
                 });
 
                 describe('when reward does not have an amount', () => {
@@ -153,6 +157,25 @@ describe('RewardsLineItemComponent', () => {
                     it('does not render the app-currency-text', () => {
                         validateDoesNotExist(fixture, '.reward app-currency-text');
                     });
+                });
+
+                describe('when reward has a percent amount', () => {
+                    beforeEach(() => {
+                      component.reward.amountType = 'PCT';
+                      component.reward.amount = .5;
+                      fixture.detectChanges();
+                    });
+
+                    it('does not render the app-currency-text', function () {
+                        validateDoesNotExist(fixture, '.reward app-currency-text');
+                    });
+
+                    it('does render a XX%', function () {
+                        validateExist(fixture, '.reward .pctReward');
+                        validateText(fixture, '.reward .pctReward', '50%');
+                    });
+
+
                 });
             });
 

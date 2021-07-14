@@ -41,6 +41,9 @@
     @extend %text-md;
     grid-area: reward;
     align-self: center;
+    .pctReward {
+      font-weight: bold;
+    }
   }
   .apply {
     grid-area: apply;
