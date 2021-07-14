@@ -10,6 +10,7 @@
 @import './customer-search-result-dialog/customer-search-result-dialog-theme';
 @import './loyalty-customer-form-dialog/loyalty-customer-form-dialog-theme';
 @import './sale/membership-details-dialog/membership-details-dialog-theme';
+@import './sale/membership-plan-details-dialog/membership-plan-details-dialog-theme';
 @import './sale/program-plan-select-dialog/program-plan-select-dialog-theme';
 
 @mixin screen-with-parts-themes($theme){
@@ -24,5 +25,6 @@
     @include customer-search-result-dialog-theme($theme);
     @include loyalty-customer-form-dialog-theme($theme);
     @include membership-details-dialog-theme($theme);
+    @include membership-plan-details-dialog-theme($theme);
     @include program-plan-select-dialog-theme($theme);
 }

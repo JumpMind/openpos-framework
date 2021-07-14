@@ -1,0 +1,15 @@
+<app-dialog-header></app-dialog-header>
+<div>
+    <app-content-card>
+        <app-enrollment-line-item class="plan-details-dialog-enrollment" [enrollment]="screen.enrollmentItem"></app-enrollment-line-item>
+        <app-plan-details-display class="plan-details-dialog-plan" [plan]="screen.plan"></app-plan-details-display>
+    </app-content-card>
+    <app-primary-button class="plan-details-dialog-done-button" responsive-class
+                        *ngIf="screen.doneButton"
+                        [disabled]="!screen.doneButton?.enabled"
+                        [actionItem]="screen.doneButton"
+                        (actionClick)="doAction(screen.doneButton)"
+                        (click)="doAction(screen.doneButton)">
+        <span>{{screen.doneButton.title}}</span>
+    </app-primary-button>
+</div>

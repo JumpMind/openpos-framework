@@ -17,7 +17,7 @@ import {MembershipDetailsDialogComponent} from "./membership-details-dialog.comp
 
 import {ActionItem} from "../../../core/actions/action-item";
 import {Configuration} from "../../../configuration/configuration";
-import {EnrollmentItem, Plan, SubscriptionAccounts} from "../program-interface";
+import {EnrollmentItem, Plan, SubscriptionAccount} from "../program-interface";
 import {MembershipDetailsDialogInterface} from "./membership-details-dialog.interface";
 
 class MockKeyPressProvider {
@@ -34,7 +34,7 @@ describe('LinkedCustomerMembershipState', () => {
   let component: MembershipDetailsDialogComponent;
   let fixture: ComponentFixture<MembershipDetailsDialogComponent>;
   let customer;
-  let subscriptionAccount: SubscriptionAccounts;
+  let subscriptionAccount: SubscriptionAccount;
   class MockOpenposMediaServiceMobileFalse {
     observe(): Observable<boolean> {
       return of(false);
@@ -107,6 +107,7 @@ describe('LinkedCustomerMembershipState', () => {
           [MediaBreakpoints.DESKTOP_LANDSCAPE, false]
         ]));
       });
+
       describe('keybindsEnabled ', () => {
         describe("configuration keybinds are enabled", () =>{
           it('and menuItem keybind is not enter', function () {
@@ -127,6 +128,7 @@ describe('LinkedCustomerMembershipState', () => {
             expect(component.keybindsEnabled(menuItem)).toBeFalsy();
           });
         });
+
         describe("configuration keybinds are disabled", () =>{
           it('and menuItem keybind is not enter', function () {
             Configuration.enableKeybinds = false;
@@ -151,7 +153,7 @@ describe('LinkedCustomerMembershipState', () => {
 
     describe('template', () => {
       beforeEach(() => {
-        let subscriptionAccounts:SubscriptionAccounts[] = [];
+        let subscriptionAccounts:SubscriptionAccount[] = [];
         let enrollmentItem: EnrollmentItem = {} as EnrollmentItem;
         let plan: Plan = {} as Plan;
         subscriptionAccount = {
@@ -165,38 +167,46 @@ describe('LinkedCustomerMembershipState', () => {
             icon: "signupActionItem.icon",
             title: "signupActionItem.title"
           } as ActionItem
-        } as SubscriptionAccounts;
+        } as SubscriptionAccount;
         subscriptionAccounts.push(subscriptionAccount);
         component.screen.subscriptionAccounts = subscriptionAccounts
         fixture.detectChanges();
       });
+
       it('renders the profile icon in the customer details', () => {
         validateExist(fixture, '.details-wrapper .icon app-icon');
       });
+
       it('renders the customer name in the customer details', () => {
         validateText(fixture, '.details-wrapper .details .details-label', customer.name);
       });
+
       it('renders the customer name in the customer details', () => {
         validateExist(fixture, '.details-wrapper .memberships .list');
       });
+
       describe('tab functionality', () => {
         it('should display tabs', () => {
           validateExist(fixture, '.tabs');
         });
+
         it('should display subscriptionAccountListTitle', function () {
           validateText(fixture, '.tabs .tab-title', subscriptionAccount.listTitle);
         });
+
         it('should display app-enrollment-line-items', function () {
           validateExist(fixture, '.tabs app-enrollment-line-item');
         });
+
         it('should display app-program-plan-details', function () {
           component.screen.subscriptionAccounts[0].enrollmentItems = null;
           fixture.detectChanges();
 
           validateExist(fixture, 'app-program-plan-details');
         });
+
         it('should display have sign-up', function () {
-          validateExist(fixture, '.tabs .sign-up')
+          validateExist(fixture, '.tabs .sign-up');
         });
       });
     });
