@@ -18,7 +18,6 @@
         @extend %page-spaced-content;
         &.mobile {
             .dialog-content {
-                max-height: 300px;
                 ::ng-deep .item-list .selection-list {
                       padding: 2px;
                       margin:8px 0px;
@@ -37,12 +36,30 @@
                 }
             }
         }
-        &.tablet {
+
+        @media (min-height: 900px) {
+            .dialog-content {
+                max-height: 500px;
+            }
+        }
+
+        @media (max-height: 900px) and (min-height: 760px) {
+            .dialog-content {
+                max-height: 400px;
+            }
+        }
+
+        @media (max-height: 760px) and (min-height: 660px) {
             .dialog-content {
                 max-height: 300px;
             }
         }
 
+        @media (max-height: 660px) {
+            .dialog-content {
+                max-height: 200px;
+            }
+        }
 
         .dialog-content {
             overflow: auto;
