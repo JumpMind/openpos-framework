@@ -38,7 +38,6 @@
                         <div *ngIf="screen.customer.membershipSignUpAction">
                             <app-secondary-button responsive-class
                                                   class="membership-sign-up"
-                                                  *ngIf="screen.customer.membershipSignUpAction"
                                                   [disabled]="!screen.customer.membershipSignUpAction?.enabled"
                                                   [actionItem]="screen.customer.membershipSignUpAction"
                                                   (actionClick)="doAction(screen.customer.membershipSignUpAction)"

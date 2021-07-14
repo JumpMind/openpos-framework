@@ -1,4 +1,4 @@
-<app-bacon-strip class="sale-bacon-strip">
+<app-bacon-strip class="sale-bacon-strip" [searchEnabled]="true">
     <div class="sale-outer">
         <div *ngIf="!(isMobile | async)" class="sale-body">
             <section class="orders" *ngIf="screen.orders && screen.orders.length > 0">

@@ -6,7 +6,7 @@
         {{plan.title}}
     </div>
     <div class="plan-copy">
-        <div [innerHtml]="plan.copy"></div>
+        <div [innerHtml]="safeCopy"></div>
     </div>
     <div class="actions">
         <a *ngIf="plan.signupActionItem"

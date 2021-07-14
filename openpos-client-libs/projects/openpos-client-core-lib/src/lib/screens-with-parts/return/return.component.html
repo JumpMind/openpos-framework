@@ -1,4 +1,4 @@
-<app-bacon-strip class="return-bacon-strip">
+<app-bacon-strip class="return-bacon-strip" [searchEnabled]="true">
     <div class="return-outer">
         <div *ngIf="!(isMobile | async)" class="return-body">
             <section class="receipts" *ngIf="receipts && receipts.length > 0">

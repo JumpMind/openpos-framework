@@ -4,6 +4,8 @@ import {ScreenPartComponent} from '../screen-part';
 import {MediaBreakpoints, OpenposMediaService} from "../../../core/media/openpos-media.service";
 import {Observable} from "rxjs";
 import {Plan} from "../../../screens-with-parts/sale/program-interface";
+import {SafeHtml} from "@angular/platform-browser/src/security/dom_sanitization_service";
+import {DomSanitizer} from "@angular/platform-browser";
 
 @Component({
     selector: 'app-plan-details-display',
@@ -12,9 +14,10 @@ import {Plan} from "../../../screens-with-parts/sale/program-interface";
 export class PlanDetailsDisplayComponent extends ScreenPartComponent<PlanDetailsDisplayComponentInterface> {
     @Input()
     plan: Plan;
+    safeCopy: SafeHtml;
     isMobile: Observable<boolean>;
 
-    constructor(injector: Injector, private media: OpenposMediaService) {
+    constructor(injector: Injector, private media: OpenposMediaService, private sanitizer: DomSanitizer) {
         super(injector);
         this.initIsMobile();
     }
@@ -31,5 +34,6 @@ export class PlanDetailsDisplayComponent extends ScreenPartComponent<PlanDetails
     }
 
     screenDataUpdated() {
+        this.safeCopy =  this.sanitizer.bypassSecurityTrustHtml(this.plan.copy);
     }
 }

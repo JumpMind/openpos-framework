@@ -41,12 +41,6 @@ describe('LinkedCustomerMembershipState', () => {
     }
   };
 
-  class MockOpenposMediaServiceMobileTrue {
-    observe(): Observable<boolean> {
-      return of(true);
-    }
-  };
-
   beforeEach(() => {
     customer = {
       name: 'Ige Wana',

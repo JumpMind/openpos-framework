@@ -9,8 +9,7 @@ import {CLIENTCONTEXT} from '../../../core/client-context/client-context-provide
 import {TimeZoneContext} from '../../../core/client-context/time-zone-context';
 import {ActionService} from '../../../core/actions/action.service';
 import {KeyPressProvider} from '../../providers/keypress.provider';
-import {validateDoesNotExist, validateExist, validateIcon, validateText} from '../../../utilites/test-utils';
-import {IActionItem} from '../../../core/actions/action-item.interface';
+import {validateExist, validateText} from '../../../utilites/test-utils';
 import {By} from '@angular/platform-browser';
 import {EnrollmentLineItemComponent} from "./enrollment-line-item.component";
 import {ActionItem} from "../../../core/actions/action-item";
@@ -35,11 +34,6 @@ describe('EnrollmentLineItemComponent', () => {
         }
     };
 
-    class MockOpenposMediaServiceMobileTrue {
-        observe(): Observable<boolean> {
-            return of(true);
-        }
-    };
 
     describe('shared', () => {
         beforeEach( () => {

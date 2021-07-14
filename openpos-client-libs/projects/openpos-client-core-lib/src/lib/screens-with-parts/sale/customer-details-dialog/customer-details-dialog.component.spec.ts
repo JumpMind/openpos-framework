@@ -205,6 +205,7 @@ describe('CustomerDetailsDialog', () => {
               title: 'Some Title'
             } as IActionItem;
             setButtonConfiguration(configuration);
+            component.screen.membershipEnabled = true;
             fixture.detectChanges();
             button = fixture.debugElement.query(By.css(selector));
           });
