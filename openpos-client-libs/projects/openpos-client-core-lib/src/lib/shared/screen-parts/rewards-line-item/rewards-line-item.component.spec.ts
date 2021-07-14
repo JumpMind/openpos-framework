@@ -137,7 +137,7 @@ describe('RewardsLineItemComponent', () => {
             describe('reward', () => {
                 describe('when reward has an amount', () => {
                     beforeEach(() => {
-                        component.reward.amount = 200;
+                        component.reward.reward = 200;
                         fixture.detectChanges();
                     });
                     it('renders the app-currency-text', () => {
@@ -151,7 +151,7 @@ describe('RewardsLineItemComponent', () => {
 
                 describe('when reward does not have an amount', () => {
                     beforeEach(() => {
-                        component.reward.amount = undefined;
+                        component.reward.reward = undefined;
                         fixture.detectChanges();
                     });
                     it('does not render the app-currency-text', () => {
@@ -161,8 +161,8 @@ describe('RewardsLineItemComponent', () => {
 
                 describe('when reward has a percent amount', () => {
                     beforeEach(() => {
-                      component.reward.amountType = 'PCT';
-                      component.reward.amount = .5;
+                      component.reward.rewardType = 'PCT';
+                      component.reward.reward = .5;
                       fixture.detectChanges();
                     });
 

@@ -8,8 +8,8 @@
         <div *ngIf="reward.statusText" class="name" responsive-class>{{reward.statusText}}</div>
     </div>
     <div class="reward" responsive-class>
-        <app-currency-text *ngIf="reward.amount && reward.amountType != 'PCT'" [amountText]="reward.amount"></app-currency-text>
-        <div class="pctReward" *ngIf="reward.amount && reward.amountType == 'PCT'">{{reward.amount * 100}}%</div>
+        <app-currency-text *ngIf="reward.reward && reward.rewardType != 'PCT'" [amountText]="reward.reward"></app-currency-text>
+        <div class="pctReward" *ngIf="reward.reward && reward.rewardType == 'PCT'">{{reward.reward * 100}}% off</div>
     </div>
     <div class="apply">
         <a *ngIf="reward.actionButton"
